@@ -35,8 +35,10 @@ export default function App() {
     isDiagnosticMode, isAdaptationRunning, selectedBrand, setSelectedBrand,
     startPolling, stopPolling,
     runDiagnostics, clearDiagnostics, runAdaptationRoutine,
-    lastDeviceId, lastDeviceName
+    lastDeviceId, lastDeviceName, isCloneDevice
   } = useBluetooth();
+
+  const [hasShownCloneWarning, setHasShownCloneWarning] = useState(false);
 
   const [scannedDevices, setScannedDevices] = useState<BluetoothDevice[]>([]);
   const [manualCmd, setManualCmd] = useState('');
@@ -79,6 +81,17 @@ export default function App() {
       getGarageRecords().then(setGarageRecords);
     }
   }, [activeTab]);
+
+  // Clone Device Warning
+  useEffect(() => {
+    if (isCloneDevice && !hasShownCloneWarning && status === 'connected') {
+      Alert.alert(
+        "Kopya Adaptör Tespit Edildi ⚠️",
+        "ELM327 v2.1 klon adaptör kullandığınız tespit edildi. Bu tip adaptörler düşük kalitelidir ve Odometer okuma gibi 'PRO' özellikleri desteklemeyebilir, hatta bağlantı hatalarına yol açabilir.\n\nEn iyi deneyim için v1.5 veya kaliteli markalı adaptörler (vLinker, OBDLink vb.) kullanmanızı öneririz.",
+        [{ text: "Anladım", onPress: () => setHasShownCloneWarning(true) }]
+      );
+    }
+  }, [isCloneDevice, hasShownCloneWarning, status]);
 
   const handleSaveToGarage = async () => {
     if (!saveMake.trim() || !saveModel.trim()) {
@@ -764,6 +777,16 @@ ${sensorLines || '  Veri okunamadı'}
           • E-posta (Gmail, Outlook vb.){'\n'}
           • SMS / Not uygulamaları{'\n\n'}
           Rapor şunları içerir: VIN, KM, arıza kodları (açıklamalı), motor ışığı mesafesi, arıza silineli mesafe, tüm canlı sensör verileri (RPM, hız, sıcaklık, gaz, yük, IAT, MAP, akü voltajı).
+        </Text>
+      </View>
+
+      <View style={s.panel}>
+        <Text style={s.panelTitle}>🔌 DONANIM UYUMLULUĞU</Text>
+        <Text style={s.panelDesc}>
+          Uygulama ELM327 Bluetooth adaptörleri ile çalışır. Piyasada iki ana sürüm bulunur:{'\n\n'}
+          • <Text style={{ color: C.green, fontWeight: '900' }}>v1.5 Adaptörler (ÖNERİLEN):</Text> Orijinal komut setini destekler. Odometer okuma gibi derin teşhis işlemleri için gereklidir.{'\n'}
+          • <Text style={{ color: C.red, fontWeight: '900' }}>v2.1 Adaptörler (KLON):</Text> Çoğu ucuz adaptör bu sürümdür. 'PRO' komutlarını desteklemez ve bağlantı sorunları yaratabilir.{'\n\n'}
+          En iyi performans için vLinker, OBDLink veya gerçek v1.5 çipler önerilir.
         </Text>
       </View>
 

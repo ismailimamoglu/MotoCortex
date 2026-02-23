@@ -30,6 +30,7 @@ export const useBluetooth = () => {
         lastDeviceId,
         lastDeviceName,
         setLastDevice,
+        isCloneDevice,
     } = useBluetoothStore();
 
     /**
@@ -111,6 +112,7 @@ export const useBluetooth = () => {
             // 1. Initialize Adapter
             await OBDCommandQueue.add(ADAPTER_COMMANDS.RESET);         // ATZ
             await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF);      // ATE0
+            await OBDCommandQueue.add(ADAPTER_COMMANDS.DEVICE_INFO);   // ATI (Detect Clone)
             await OBDCommandQueue.add(ADAPTER_COMMANDS.SPACES_OFF);    // ATS0
             await OBDCommandQueue.add(ADAPTER_COMMANDS.PROTOCOL_AUTO); // ATSP0
 
@@ -263,34 +265,70 @@ export const useBluetooth = () => {
 
             // Odometer Waterfall — try multiple methods until one works
             const odometerBefore = useBluetoothStore.getState().odometer;
+            const isClone = useBluetoothStore.getState().isCloneDevice;
 
             // Attempt 1: Standard OBD-II PID (2019+ vehicles)
             await sendCommand(ADAPTER_COMMANDS.ODOMETER);
 
             // If standard failed, try UDS methods
             if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
-                useBluetoothStore.getState().addLog('ODO: Standard failed, trying UDS...');
+                if (isClone) {
+                    useBluetoothStore.getState().addLog('WARN: Clone device - Deep Scan may fail');
+                }
+                useBluetoothStore.getState().addLog('ODO: Standard failed, trying UDS Waterfall...');
 
-                // Enter extended diagnostic session for better access
-                try { await sendCommand(OEM_COMMANDS.HONDA_SESSION); } catch (e) { /* ignore */ }
-                await new Promise(r => setTimeout(r, 100));
+                // Attempt 2: Generic UDS PIDs on default header
+                const udsPIDs = [
+                    ADAPTER_COMMANDS.ODOMETER_ALT1,
+                    ADAPTER_COMMANDS.ODOMETER_ALT2,
+                    ADAPTER_COMMANDS.ODOMETER_ALT3
+                ];
 
-                // Attempt 2: Common UDS DID F190
-                await sendCommand(ADAPTER_COMMANDS.ODOMETER_ALT1);
+                for (const pid of udsPIDs) {
+                    if (useBluetoothStore.getState().odometer && useBluetoothStore.getState().odometer !== 'UNSUPPORTED' && useBluetoothStore.getState().odometer !== odometerBefore) break;
+                    await sendCommand(pid);
+                }
             }
 
-            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
-                // Attempt 3: UDS DID 1001
-                await sendCommand(ADAPTER_COMMANDS.ODOMETER_ALT2);
-            }
-
-            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
-                // Attempt 4: UDS DID 1102
-                await sendCommand(ADAPTER_COMMANDS.ODOMETER_ALT3);
-            }
-
-            // Brand-specific fallbacks
+            // Honda Specific Deep Scan (Multi-Header)
             const brand = useBluetoothStore.getState().selectedBrand;
+            if ((useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) && brand === 'HONDA') {
+                useBluetoothStore.getState().addLog('ODO: Generic UDS failed, trying Deep Honda Header Scan...');
+                try {
+                    const hondaPIDs = [
+                        OEM_COMMANDS.HONDA_ODOMETER_1,
+                        OEM_COMMANDS.HONDA_ODOMETER_2,
+                        OEM_COMMANDS.HONDA_ODOMETER_3,
+                        OEM_COMMANDS.HONDA_ODOMETER_4,
+                        OEM_COMMANDS.HONDA_ODOMETER_5,
+                        OEM_COMMANDS.HONDA_ODOMETER_6
+                    ];
+                    // Try ECU (7E0) then IPC cluster variants (720, 760)
+                    const headers = [ADAPTER_COMMANDS.HEADER_ECU, ADAPTER_COMMANDS.HEADER_IPC_1, ADAPTER_COMMANDS.HEADER_IPC_2];
+
+                    for (const header of headers) {
+                        if (useBluetoothStore.getState().odometer && useBluetoothStore.getState().odometer !== 'UNSUPPORTED' && useBluetoothStore.getState().odometer !== odometerBefore) break;
+
+                        try {
+                            await sendCommand(header);
+                            await sendCommand(ADAPTER_COMMANDS.EXTENDED_SESSION); // 10 03
+
+                            for (const pid of hondaPIDs) {
+                                await sendCommand(pid);
+                                if (useBluetoothStore.getState().odometer && useBluetoothStore.getState().odometer !== 'UNSUPPORTED' && useBluetoothStore.getState().odometer !== odometerBefore) break;
+                            }
+                        } catch (e) {
+                            console.warn(`Honda Scan failed for header ${header}:`, e);
+                        } finally {
+                            await sendCommand(ADAPTER_COMMANDS.DEFAULT_SESSION).catch(() => { });
+                        }
+                    }
+                } finally {
+                    await sendCommand(ADAPTER_COMMANDS.HEADER_ECU).catch(() => { });
+                }
+            }
+
+            // Yamaha fallback
             if ((useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) && brand === 'YAMAHA') {
                 await sendCommand(OEM_COMMANDS.YAMAHA_ODOMETER);
             }
@@ -407,6 +445,7 @@ export const useBluetooth = () => {
         runDiagnostics,
         clearDiagnostics,
         runAdaptationRoutine,
-        clearLogs
+        clearLogs,
+        isCloneDevice
     };
 };

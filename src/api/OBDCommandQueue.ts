@@ -65,6 +65,14 @@ class OBDCommandQueue {
 
         this.currentBuffer += chunk;
 
+        // Safety check for buffer overflow (e.g. runaway data stream)
+        if (this.currentBuffer.length > 4096) {
+            this.currentBuffer = ''; // Discard buffer
+            useBluetoothStore.getState().addLog('ERR: Buffer Overflow (Dropped)');
+            // Don't finishCommand here, let timeout handle it
+            return;
+        }
+
         // ELM327 ends responses with '>' char
         if (this.currentBuffer.includes('>')) {
             let cleanResponse = this.currentBuffer.replace('>', '').trim();
@@ -88,6 +96,16 @@ class OBDCommandQueue {
     private parseResponse(command: string, response: string) {
         // Remove "SEARCHING..." and spaces
         let clean = response.replace('SEARCHING...', '').trim().replace(/\s+/g, '');
+
+        // ATI (Adapter Identity)
+        if (command === 'ATI') {
+            useBluetoothStore.getState().addLog(`ADAPTER_ID: ${response}`);
+            if (response.toLowerCase().includes('v2.1')) {
+                useBluetoothStore.getState().setIsCloneDevice(true);
+                useBluetoothStore.getState().addLog('DETECTED: Clone/Low-Quality Adapter (v2.1)');
+            }
+            return;
+        }
 
         // Check for error responses
         const isErrorResponse = clean.includes('NODATA') || clean.includes('ERROR') || clean.includes('?');
