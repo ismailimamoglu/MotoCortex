@@ -32,10 +32,23 @@ export const ADAPTER_COMMANDS = {
     ODOMETER: '01A6',         // Total Odometer
     DISTANCE_SINCE_CLEARED: '0131', // Distance traveled since codes cleared
     DISTANCE_MIL_ON: '0121',  // Distance traveled with MIL (Check Engine) on
+
+    // UDS Session Control
+    EXTENDED_SESSION: '10 03', // Enter Extended Diagnostic Session (often required for deep reads)
+    DEFAULT_SESSION: '10 01',  // Return to Default Session
+
+    // Headers (CAN IDs)
+    // Try ATSH 720, ATSH 760, etc. to target Instrument Cluster (IPC) if ECU (7E0) doesn't have the data.
 } as const;
 
 export const OEM_COMMANDS = {
-    HONDA_ODOMETER: '22 11 02', // Example: Honda deep UDS read for Odometer
+    // Honda PCX / Keihin ECU Experiments
+    // 7F 22 31 Error means "Request Out of Range" -> Try Extended Session 10 03 first.
+    HONDA_ODOMETER_1: '22 11 02', // Common Honda
+    HONDA_ODOMETER_2: '22 02 00', // Alternative
+    HONDA_ODOMETER_3: '22 F1 A6', // Standard UDS Odometer
+    HONDA_ODOMETER_4: '22 D0 00', // Another variant
+
     YAMAHA_ODOMETER: '22 12 01', // Example: Yamaha deep UDS read for Odometer
 } as const;
 

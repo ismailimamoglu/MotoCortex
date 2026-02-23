@@ -218,7 +218,7 @@ export const useBluetooth = () => {
         } finally {
             // Schedule the next poll if still active
             if (pollingRef.current) {
-                setTimeout(performPollSync, 0); // Execute next loop as soon as possible after current finishes
+                setTimeout(performPollSync, 50); // Add 50ms delay to prevent UI thread blocking
             }
         }
     };
@@ -267,7 +267,20 @@ export const useBluetooth = () => {
             // Fallback for Specific Brands (OEM Deep Scan)
             const brand = useBluetoothStore.getState().selectedBrand;
             if (brand === 'HONDA') {
-                await sendCommand(OEM_COMMANDS.HONDA_ODOMETER);
+                try {
+                    // 1. Try Extended Session (10 03) to unlock hidden PIDs
+                    await sendCommand(ADAPTER_COMMANDS.EXTENDED_SESSION);
+
+                    // 2. Try known Honda/Keihin Odometer variants
+                    await sendCommand(OEM_COMMANDS.HONDA_ODOMETER_1); // 22 11 02
+                    await sendCommand(OEM_COMMANDS.HONDA_ODOMETER_2); // 22 02 00
+                    await sendCommand(OEM_COMMANDS.HONDA_ODOMETER_3); // 22 F1 A6
+                } finally {
+                    // 3. Return to Default Session (10 01)
+                    // We attempt this even if reading fails, to avoid leaving ECU in diagnostic mode
+                    await sendCommand(ADAPTER_COMMANDS.DEFAULT_SESSION).catch(e => console.warn('Failed to reset session:', e));
+                }
+
             } else if (brand === 'YAMAHA') {
                 await sendCommand(OEM_COMMANDS.YAMAHA_ODOMETER);
             }

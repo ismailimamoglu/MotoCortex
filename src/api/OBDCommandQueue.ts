@@ -65,6 +65,14 @@ class OBDCommandQueue {
 
         this.currentBuffer += chunk;
 
+        // Safety check for buffer overflow (e.g. runaway data stream)
+        if (this.currentBuffer.length > 4096) {
+            this.currentBuffer = ''; // Discard buffer
+            useBluetoothStore.getState().addLog('ERR: Buffer Overflow (Dropped)');
+            // Don't finishCommand here, let timeout handle it or next valid data
+            return;
+        }
+
         // ELM327 ends responses with '>' char
         if (this.currentBuffer.includes('>')) {
             let cleanResponse = this.currentBuffer.replace('>', '').trim();
@@ -92,7 +100,12 @@ class OBDCommandQueue {
         // Check for error responses
         const isErrorResponse = clean.includes('NODATA') || clean.includes('ERROR') || clean.includes('?');
         if (isErrorResponse) {
-            if (command === '01A6' || command === OEM_COMMANDS.HONDA_ODOMETER || command === OEM_COMMANDS.YAMAHA_ODOMETER) {
+            if (command === '01A6' ||
+                command === OEM_COMMANDS.HONDA_ODOMETER_1 ||
+                command === OEM_COMMANDS.HONDA_ODOMETER_2 ||
+                command === OEM_COMMANDS.HONDA_ODOMETER_3 ||
+                command === OEM_COMMANDS.HONDA_ODOMETER_4 ||
+                command === OEM_COMMANDS.YAMAHA_ODOMETER) {
                 useBluetoothStore.getState().setSensorData({ odometer: 'UNSUPPORTED' });
             }
             return;
@@ -216,8 +229,14 @@ class OBDCommandQueue {
             }
         }
         // OEM ODOMETER (Honda / Yamaha deep scan)
-        else if (command === OEM_COMMANDS.HONDA_ODOMETER || command === OEM_COMMANDS.YAMAHA_ODOMETER) {
-            // Mode 22 positive response is 62 + PID. 
+        else if (
+            command === OEM_COMMANDS.HONDA_ODOMETER_1 ||
+            command === OEM_COMMANDS.HONDA_ODOMETER_2 ||
+            command === OEM_COMMANDS.HONDA_ODOMETER_3 ||
+            command === OEM_COMMANDS.HONDA_ODOMETER_4 ||
+            command === OEM_COMMANDS.YAMAHA_ODOMETER
+        ) {
+            // Mode 22 positive response is 62 + PID.
             // e.g., 22 11 02 -> 62 11 02 XX XX XX
             const mode = command.substring(0, 2);
             const pid = command.substring(2).replace(/\s+/g, ''); // "1102"
@@ -301,13 +320,13 @@ class OBDCommandQueue {
         // READ VIN (0902)
         else if (command === '0902') {
             // A typical 0902 multi-frame response looks like "49 02 01 XX XX XX..."
-            // We strip out formatting, the "4902", frame numbers, etc. ELM327 does this partly for us if formatted well, 
+            // We strip out formatting, the "4902", frame numbers, etc. ELM327 does this partly for us if formatted well,
             // but we'll try a basic ASCII extraction on the hex pairs that follow 4902
             if (clean.includes('4902')) {
                 let hexData = clean.substring(clean.indexOf('4902') + 4);
                 // Simple multiline frame strip (e.g. "014:490201...", we just need the raw hex pairs)
                 // Filter out any non-hex chars, and frame indexing (often the first byte per line in multi-line)
-                // For a robust implementation, this needs proper ISO 15765-4 multi-frame assembly, 
+                // For a robust implementation, this needs proper ISO 15765-4 multi-frame assembly,
                 // but basic string replacement often works for direct adapters.
                 let vinAscii = '';
                 for (let i = 0; i < hexData.length; i += 2) {
