@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "MotoCortex",
+    "slug": "MotoCortex-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0a0a"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.anonymous.MotoCortexmobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0a0a"
+      },
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.BLUETOOTH_ADVERTISE"
+      ],
+      "package": "com.anonymous.MotoCortexmobile"
+    },
+    "plugins": [
+      [
+        "with-rn-bluetooth-classic",
+        {
+          "peripheralUsageDescription": "MotoCortex needs Bluetooth to communicate with OBD-II adapters",
+          "alwaysUsageDescription": "MotoCortex uses Bluetooth to maintain connection with diagnostic adapters"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ed445853-1aed-4ed1-91e6-d767416ebf17"
+      }
+    }
+  }
+}
