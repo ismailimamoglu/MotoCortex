@@ -92,8 +92,9 @@ class OBDCommandQueue {
         // Check for error responses
         const isErrorResponse = clean.includes('NODATA') || clean.includes('ERROR') || clean.includes('?');
         if (isErrorResponse) {
-            if (command === '01A6' || command === OEM_COMMANDS.HONDA_ODOMETER || command === OEM_COMMANDS.YAMAHA_ODOMETER) {
-                useBluetoothStore.getState().setSensorData({ odometer: 'UNSUPPORTED' });
+            // Log odometer failures but don't set UNSUPPORTED yet (waterfall will handle)
+            if (command === '01A6' || command.startsWith('22')) {
+                useBluetoothStore.getState().addLog(`ODO_FAIL: ${command} → ${clean.substring(0, 20)}`);
             }
             return;
         }
@@ -201,7 +202,7 @@ class OBDCommandQueue {
                 }
             }
         }
-        // ODOMETER (01A6) - 4 bytes
+        // ODOMETER (01A6) - 4 bytes (Standard OBD-II, only 2019+)
         else if (command === '01A6') {
             const hex = getHexData(command, clean, 4);
             if (hex && hex.length === 8) {
@@ -215,28 +216,55 @@ class OBDCommandQueue {
                 }
             }
         }
-        // OEM ODOMETER (Honda / Yamaha deep scan)
-        else if (command === OEM_COMMANDS.HONDA_ODOMETER || command === OEM_COMMANDS.YAMAHA_ODOMETER) {
-            // Mode 22 positive response is 62 + PID. 
-            // e.g., 22 11 02 -> 62 11 02 XX XX XX
-            const mode = command.substring(0, 2);
-            const pid = command.substring(2).replace(/\s+/g, ''); // "1102"
-            const echo = (parseInt(mode) + 40).toString() + pid; // "621102"
+        // UDS ODOMETER (Mode 22 responses: 62 + DID + data)
+        // Handles: 22F190, 221001, 221102, 221201
+        else if (command.startsWith('22') && command.length >= 6) {
+            const did = command.substring(2); // e.g. "F190", "1001", "1102", "1201"
+            const echo = '62' + did; // e.g. "62F190", "621001"
+
+            useBluetoothStore.getState().addLog(`RX_ODO: echo=${echo} clean=${clean.substring(0, 40)}`);
 
             if (clean.includes(echo)) {
                 const parts = clean.split(echo);
                 if (parts.length > 1) {
-                    // For Honda/Yamaha, Odometer is often 3 bytes (XX XX XX) after the echo
-                    const hexPart = parts[1].substring(0, 6);
-                    if (hexPart.length === 6) {
-                        const a = parseInt(hexPart.substring(0, 2), 16);
-                        const b = parseInt(hexPart.substring(2, 4), 16);
-                        const c = parseInt(hexPart.substring(4, 6), 16);
+                    const dataHex = parts[1];
+                    // Try 4-byte parsing first (most common)
+                    if (dataHex.length >= 8) {
+                        const a = parseInt(dataHex.substring(0, 2), 16);
+                        const b = parseInt(dataHex.substring(2, 4), 16);
+                        const c = parseInt(dataHex.substring(4, 6), 16);
+                        const d = parseInt(dataHex.substring(6, 8), 16);
+                        if (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) {
+                            const km = ((a * 16777216) + (b * 65536) + (c * 256) + d) / 10;
+                            if (km > 0 && km < 999999) {
+                                useBluetoothStore.getState().setSensorData({ odometer: Math.round(km) });
+                                useBluetoothStore.getState().addLog(`ODO_OK: ${Math.round(km)} km (4-byte)`);
+                            }
+                        }
+                    }
+                    // Try 3-byte parsing
+                    else if (dataHex.length >= 6) {
+                        const a = parseInt(dataHex.substring(0, 2), 16);
+                        const b = parseInt(dataHex.substring(2, 4), 16);
+                        const c = parseInt(dataHex.substring(4, 6), 16);
                         if (!isNaN(a) && !isNaN(b) && !isNaN(c)) {
-                            // Example decoding: some use (A*65536 + B*256 + C) / 10
-                            // Let's use standard direct metric parsing for now:
-                            const km = (a * 65536 + b * 256 + c) / 10;
-                            useBluetoothStore.getState().setSensorData({ odometer: Math.round(km) });
+                            const km = (a * 65536 + b * 256 + c);
+                            if (km > 0 && km < 999999) {
+                                useBluetoothStore.getState().setSensorData({ odometer: Math.round(km) });
+                                useBluetoothStore.getState().addLog(`ODO_OK: ${Math.round(km)} km (3-byte)`);
+                            }
+                        }
+                    }
+                    // Try 2-byte parsing (short range)
+                    else if (dataHex.length >= 4) {
+                        const a = parseInt(dataHex.substring(0, 2), 16);
+                        const b = parseInt(dataHex.substring(2, 4), 16);
+                        if (!isNaN(a) && !isNaN(b)) {
+                            const km = (a * 256 + b);
+                            if (km > 0) {
+                                useBluetoothStore.getState().setSensorData({ odometer: km });
+                                useBluetoothStore.getState().addLog(`ODO_OK: ${km} km (2-byte)`);
+                            }
                         }
                     }
                 }

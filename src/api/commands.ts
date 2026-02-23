@@ -29,14 +29,20 @@ export const ADAPTER_COMMANDS = {
     READ_VIN: '0902',         // Read Vehicle Identification Number
 
     // Odometer & Expertise Metrics
-    ODOMETER: '01A6',         // Total Odometer
+    ODOMETER: '01A6',         // Total Odometer (OBD-II 2019+)
+    ODOMETER_ALT1: '22F190',  // UDS Read Odometer (common)
+    ODOMETER_ALT2: '221001',  // UDS Read Odometer (Honda/generic)
+    ODOMETER_ALT3: '221102',  // UDS Read Odometer (Honda variant)
     DISTANCE_SINCE_CLEARED: '0131', // Distance traveled since codes cleared
     DISTANCE_MIL_ON: '0121',  // Distance traveled with MIL (Check Engine) on
 } as const;
 
 export const OEM_COMMANDS = {
-    HONDA_ODOMETER: '22 11 02', // Example: Honda deep UDS read for Odometer
-    YAMAHA_ODOMETER: '22 12 01', // Example: Yamaha deep UDS read for Odometer
+    HONDA_SESSION: '1003',     // Extended Diagnostic Session
+    HONDA_ODOMETER_1: '22F190', // Honda UDS Odometer attempt 1
+    HONDA_ODOMETER_2: '221001', // Honda UDS Odometer attempt 2
+    HONDA_ODOMETER_3: '221102', // Honda UDS Odometer attempt 3
+    YAMAHA_ODOMETER: '221201',  // Yamaha UDS read for Odometer
 } as const;
 
 export type CommandType = typeof ADAPTER_COMMANDS[keyof typeof ADAPTER_COMMANDS];

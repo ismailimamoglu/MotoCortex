@@ -261,15 +261,44 @@ export const useBluetooth = () => {
             await sendCommand(ADAPTER_COMMANDS.READ_VIN);
             await sendCommand(ADAPTER_COMMANDS.READ_DTC);
 
-            // Standard Odometer
+            // Odometer Waterfall — try multiple methods until one works
+            const odometerBefore = useBluetoothStore.getState().odometer;
+
+            // Attempt 1: Standard OBD-II PID (2019+ vehicles)
             await sendCommand(ADAPTER_COMMANDS.ODOMETER);
 
-            // Fallback for Specific Brands (OEM Deep Scan)
+            // If standard failed, try UDS methods
+            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
+                useBluetoothStore.getState().addLog('ODO: Standard failed, trying UDS...');
+
+                // Enter extended diagnostic session for better access
+                try { await sendCommand(OEM_COMMANDS.HONDA_SESSION); } catch (e) { /* ignore */ }
+                await new Promise(r => setTimeout(r, 100));
+
+                // Attempt 2: Common UDS DID F190
+                await sendCommand(ADAPTER_COMMANDS.ODOMETER_ALT1);
+            }
+
+            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
+                // Attempt 3: UDS DID 1001
+                await sendCommand(ADAPTER_COMMANDS.ODOMETER_ALT2);
+            }
+
+            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
+                // Attempt 4: UDS DID 1102
+                await sendCommand(ADAPTER_COMMANDS.ODOMETER_ALT3);
+            }
+
+            // Brand-specific fallbacks
             const brand = useBluetoothStore.getState().selectedBrand;
-            if (brand === 'HONDA') {
-                await sendCommand(OEM_COMMANDS.HONDA_ODOMETER);
-            } else if (brand === 'YAMAHA') {
+            if ((useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) && brand === 'YAMAHA') {
                 await sendCommand(OEM_COMMANDS.YAMAHA_ODOMETER);
+            }
+
+            // If still nothing worked, mark as unsupported
+            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
+                useBluetoothStore.getState().setSensorData({ odometer: 'UNSUPPORTED' });
+                useBluetoothStore.getState().addLog('ODO: All methods failed → UNSUPPORTED');
             }
 
             await sendCommand(ADAPTER_COMMANDS.DISTANCE_SINCE_CLEARED);
