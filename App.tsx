@@ -5,10 +5,10 @@ import { useBluetooth } from './src/hooks/useBluetooth';
 import { BluetoothDevice } from 'react-native-bluetooth-classic';
 import { ADAPTER_COMMANDS } from './src/api/commands';
 import { lookupDTC } from './src/data/dtcDictionary';
-import { saveGarageRecord, getGarageRecords, deleteGarageRecord, GarageRecord } from './src/store/garageStore';
 import BatteryTestModal from './src/components/BatteryTestModal';
 import FreezeFrameModal from './src/components/FreezeFrameModal';
 import PerformanceModal from './src/components/PerformanceModal';
+import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
 
 // ─── Design Tokens ───────────────────────────────────────────────
 const C = {
@@ -32,11 +32,14 @@ export default function App() {
     sendCommand, retryEcu, clearLogs,
     rpm, coolant, speed, throttle, voltage, engineLoad, intakeAirTemp, manifoldPressure,
     dtcs, vin, odometer, distanceSinceCleared, distanceMilOn,
-    isDiagnosticMode, isAdaptationRunning, selectedBrand, setSelectedBrand,
+    isDiagnosticMode, isAdaptationRunning,
     startPolling, stopPolling,
     runDiagnostics, clearDiagnostics, runAdaptationRoutine,
     lastDeviceId, lastDeviceName, isCloneDevice
   } = useBluetooth();
+
+  const [vinHistory, setVinHistory] = useState<GarageRecord[]>([]);
+  const [manualVin, setManualVin] = useState('');
 
   const [hasShownCloneWarning, setHasShownCloneWarning] = useState(false);
 
@@ -44,7 +47,7 @@ export default function App() {
   const [manualCmd, setManualCmd] = useState('');
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isPolling, setIsPolling] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'service' | 'garage' | 'info'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'garage' | 'info'>('dashboard');
   const [showTerminal, setShowTerminal] = useState(false);
   const [isConnectModalVisible, setIsConnectModalVisible] = useState(false);
 
@@ -82,16 +85,19 @@ export default function App() {
     }
   }, [activeTab]);
 
-  // Clone Device Warning
+  // VIN History Check
   useEffect(() => {
-    if (isCloneDevice && !hasShownCloneWarning && status === 'connected') {
-      Alert.alert(
-        "Kopya Adaptör Tespit Edildi ⚠️",
-        "ELM327 v2.1 klon adaptör kullandığınız tespit edildi. Bu tip adaptörler düşük kalitelidir ve Odometer okuma gibi 'PRO' özellikleri desteklemeyebilir, hatta bağlantı hatalarına yol açabilir.\n\nEn iyi deneyim için v1.5 veya kaliteli markalı adaptörler (vLinker, OBDLink vb.) kullanmanızı öneririz.",
-        [{ text: "Anladım", onPress: () => setHasShownCloneWarning(true) }]
-      );
-    }
-  }, [isCloneDevice, hasShownCloneWarning, status]);
+    const checkHistory = async () => {
+      const currentVin = vin || manualVin;
+      if (currentVin && currentVin.length > 5) {
+        const history = await getRecordsByVin(currentVin);
+        setVinHistory(history);
+      } else {
+        setVinHistory([]);
+      }
+    };
+    checkHistory();
+  }, [vin, manualVin]);
 
   const handleSaveToGarage = async () => {
     if (!saveMake.trim() || !saveModel.trim()) {
@@ -101,7 +107,7 @@ export default function App() {
     await saveGarageRecord({
       make: saveMake.trim(),
       model: saveModel.trim(),
-      vin: vin || 'Bilinmiyor',
+      vin: vin || manualVin || 'Bilinmiyor',
       km: odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer}` : 'Bilinmiyor',
       dtcs: dtcs,
     });
@@ -450,23 +456,34 @@ ${sensorLines || '  Veri okunamadı'}
   // ═══════════════════════════════════════════════════════════════
   const renderExpertise = () => (
     <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 30 }}>
-      {/* Brand Selector */}
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>MARKA SEÇİMİ (DERİN TARAMA İÇİN)</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.brandScroll} contentContainerStyle={s.brandScrollContent}>
-          {(['GENERIC', 'HONDA', 'YAMAHA', 'SUZUKI', 'KTM'] as const).map(brand => (
-            <TouchableOpacity
-              key={brand}
-              style={[s.brandChip, selectedBrand === brand && s.brandChipActive]}
-              onPress={() => setSelectedBrand(brand)}
-            >
-              <Text style={[s.brandChipText, selectedBrand === brand && s.brandChipTextActive]}>
-                {brand === 'GENERIC' ? 'STANDART (OBD)' : brand}
-              </Text>
+      {/* VIN History Alert */}
+      {vinHistory.length > 0 && (
+        <View style={[s.warningBanner, { borderColor: C.cyan, backgroundColor: '#002b36' }]}>
+          <Text style={s.warningIcon}>📜</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={[s.warningTitle, { color: C.cyan }]}>ARAÇ GEÇMİŞİ BULUNDU!</Text>
+            <Text style={s.warningBody}>Bu aracın daha önce {vinHistory.length} adet kaydı oluşturulmuş. Garaj sekmesinden geçmişi inceleyebilirsiniz.</Text>
+            <TouchableOpacity onPress={() => setActiveTab('garage')} style={{ marginTop: 8 }}>
+              <Text style={{ color: C.cyan, fontWeight: 'bold' }}>GARAJA GİT ›</Text>
             </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View >
+          </View>
+        </View>
+      )}
+
+      {/* Manual VIN Input fallback */}
+      {!vin && (
+        <View style={s.panel}>
+          <Text style={s.panelTitle}>ŞASİ NO (MANÜEL GİRİŞ)</Text>
+          <Text style={s.panelDesc}>Araç beyni şasi numarasını (VIN) otomatik paylaşmıyorsa buraya yazabilirsiniz.</Text>
+          <TextInput
+            style={{ backgroundColor: '#111', borderWidth: 1, borderColor: '#333', borderRadius: 8, padding: 12, color: C.cyan, fontFamily: C.mono, marginTop: 10 }}
+            value={manualVin}
+            onChangeText={setManualVin}
+            placeholder="VIN yazın..."
+            placeholderTextColor="#444"
+          />
+        </View>
+      )}
 
       <TouchableOpacity
         style={[s.actionBtn, s.actionPurple, (isDiagnosticMode || isAdaptationRunning) && { opacity: 0.5 }]}
@@ -481,7 +498,7 @@ ${sensorLines || '  Veri okunamadı'}
         <Text style={s.panelTitle}>ARAÇ KİMLİĞİ & KİLOMETRE</Text>
         <View style={s.tableRow}>
           <Text style={s.tableLabel}>Şasi No (VIN)</Text>
-          <Text style={s.tableValue}>{vin || '—'}</Text>
+          <Text style={s.tableValue}>{vin || manualVin || '—'}</Text>
         </View>
         <View style={s.tableRow}>
           <Text style={s.tableLabel}>Orijinal KM</Text>
@@ -503,7 +520,7 @@ ${sensorLines || '  Veri okunamadı'}
           <Text style={s.panelTitle}>ARIZA KODLARI (DTC)</Text>
           {dtcs.length > 0 && (
             <TouchableOpacity onPress={() => guardAction(clearDiagnostics)} disabled={isDiagnosticMode} style={s.clearBtn}>
-              <Text style={s.clearBtnText}>SİL</Text>
+              <Text style={s.clearBtnText}>TEMİZLE</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -527,29 +544,69 @@ ${sensorLines || '  Veri okunamadı'}
         )}
       </View>
 
-      <TouchableOpacity
-        style={[s.actionBtn, { marginTop: 8, backgroundColor: '#1e3a5f' }]}
-        onPress={() => guardAction(() => setIsFreezeFrameVisible(true))}
-      >
-        <Text style={s.actionBtnText}>❄️ DONDURULMUŞ VERİ (FREEZE FRAME)</Text>
-      </TouchableOpacity>
+      {/* Action Suite (Export & Save) */}
+      <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
+        <TouchableOpacity
+          style={[s.actionBtn, { flex: 1, backgroundColor: '#075E54' }, isDiagnosticMode && { opacity: 0.5 }]}
+          onPress={handleShareReport}
+          disabled={isDiagnosticMode}
+        >
+          <Text style={[s.actionBtnText, { fontSize: 13 }]}>📤 PAYLAŞ</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[s.actionBtn, { marginTop: 12, backgroundColor: '#075E54' }, isDiagnosticMode && { opacity: 0.5 }]}
-        onPress={handleShareReport}
-        disabled={isDiagnosticMode}
-      >
-        <Text style={s.actionBtnText}>📤 RAPORU PAYLAŞ</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[s.actionBtn, { flex: 1, backgroundColor: '#1e40af' }]}
+          onPress={() => {
+            if (vin || manualVin) {
+              setIsSaveModalVisible(true);
+            } else {
+              Alert.alert('VIN Gerekli', 'Kayıt yapabilmek için şasi numarası (VIN) otomatik gelmeli veya el ile yazılmalıdır.');
+            }
+          }}
+        >
+          <Text style={[s.actionBtnText, { fontSize: 13 }]}>💾 GARAJA KAYDET</Text>
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity
-        style={[s.actionBtn, { marginTop: 8, backgroundColor: '#1e40af' }]}
-        onPress={() => setIsSaveModalVisible(true)}
-      >
-        <Text style={s.actionBtnText}>💾 SONUCU KAYDET (GARAJ)</Text>
-      </TouchableOpacity>
-    </ScrollView >
+      {/* Secondary Actions (Formerly Service) */}
+      <View style={{ marginTop: 20 }}>
+        <Text style={[s.panelTitle, { marginLeft: 16, marginBottom: 8 }]}>EKSTRA İŞLEMLER</Text>
+
+        <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: 16 }}>
+          <TouchableOpacity
+            style={[s.miniAction, { backgroundColor: '#1e3a5f' }]}
+            onPress={() => guardAction(() => setIsFreezeFrameVisible(true))}
+          >
+            <Text style={s.miniActionText}>❄️ FREEZE FRAME</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[s.miniAction, { backgroundColor: '#b45309' }]}
+            onPress={() => guardAction(() => setIsBatteryTestVisible(true))}
+          >
+            <Text style={s.miniActionText}>⚡ AKÜ TESTİ</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: 16, marginTop: 10 }}>
+          <TouchableOpacity
+            style={[s.miniAction, { backgroundColor: '#0e7490' }]}
+            onPress={() => guardAction(() => setIsPerformanceVisible(true))}
+          >
+            <Text style={s.miniActionText}>🏁 PERFORMANS</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[s.miniAction, { backgroundColor: C.red }]}
+            onPress={handleServiceRoutine}
+          >
+            <Text style={s.miniActionText}>🔧 ECU RESET</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
+
 
   // ═══════════════════════════════════════════════════════════════
   // RENDER: Service / Adaptation Tab (Sequential Flow)
@@ -600,78 +657,7 @@ ${sensorLines || '  Veri okunamadı'}
     });
   };
 
-  const renderService = () => (
-    <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 30 }}>
-      {/* Warning */}
-      <View style={s.warningBanner}>
-        <Text style={s.warningIcon}>⚠</Text>
-        <View style={{ flex: 1 }}>
-          <Text style={s.warningTitle}>GÜVENLİK UYARISI</Text>
-          <Text style={s.warningBody}>Bu işlemler sadece kontak açık, motor kapalı (Key ON / Engine OFF) konumdayken yapılmalıdır. Motor çalışırken asla bu işlemleri uygulamayın.</Text>
-        </View>
-      </View>
 
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>SERVİS İŞLEMLERİ</Text>
-        <Text style={s.panelDesc}>
-          Bu buton aşağıdaki işlemleri sırasıyla gerçekleştirir:{`\n\n`}
-          • 1. Adım: Arıza kodlarını (DTC) ve Check Engine ışığını siler{`\n`}
-          • 2. Adım: Yakıt trim değerlerini sıfırlar{`\n`}
-          • 3. Adım: ECU Hard Reset (isteğe bağlı){`\n\n`}
-          Her adımda güvenlik onayı istenir.
-        </Text>
-        <TouchableOpacity
-          style={[s.actionBtn, s.actionCyan, isAdaptationRunning && { opacity: 0.4 }]}
-          onPress={handleServiceRoutine}
-          disabled={isAdaptationRunning || isDiagnosticMode}
-        >
-          <Text style={s.actionBtnText}>{isAdaptationRunning ? '⟳ İŞLENİYOR...' : '🔧 SERVİS ROUTİNİ BAŞLAT'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Battery & Alternator Test */}
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>⚡ AKÜ & MARŞ TESTİ</Text>
-        <Text style={s.panelDesc}>
-          Otomatik 3 aşamalı test:{`\n`}
-          • Dinlenme voltajı (motor kapalı){`\n`}
-          • Marş voltaj düşüşü (5sn ölçüm){`\n`}
-          • Şarj voltajı (motor rölanti)
-        </Text>
-        <TouchableOpacity
-          style={[s.actionBtn, { backgroundColor: '#b45309' }]}
-          onPress={() => guardAction(() => setIsBatteryTestVisible(true))}
-        >
-          <Text style={s.actionBtnText}>⚡ AKÜ TESTİNE BAŞLA</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Performance Timer */}
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>🏁 PERFORMANS TESTİ</Text>
-        <Text style={s.panelDesc}>
-          0-60 km/h ve 0-100 km/h geçiş sürelerini ölçer.{`\n`}
-          Canlı hız verisini kullanarak otomatik başlatır.
-        </Text>
-        <TouchableOpacity
-          style={[s.actionBtn, { backgroundColor: '#0e7490' }]}
-          onPress={() => guardAction(() => setIsPerformanceVisible(true))}
-        >
-          <Text style={s.actionBtnText}>🏁 PERFORMANS TESTİ BAŞLAT</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={[s.panel, { borderColor: C.amber, borderWidth: 1 }]}>
-        <Text style={[s.panelTitle, { color: C.amber }]}>🚨 DİKKAT</Text>
-        <Text style={s.panelDesc}>
-          • İşlem sırasında Bluetooth bağlantısını kesmeyin{`\n`}
-          • Kontağı kapatmayın{`\n`}
-          • Arıza kodu silme geri alınamaz{`\n`}
-          • ECU Reset sadece desteklenen beyin ünitelerinde çalışır
-        </Text>
-      </View>
-    </ScrollView >
-  );
 
   // ═══════════════════════════════════════════════════════════════
   // RENDER: Information Tab
@@ -927,14 +913,14 @@ ${sensorLines || '  Veri okunamadı'}
 
         {/* Tab Bar */}
         <View style={s.tabBar}>
-          {(['dashboard', 'expertise', 'service', 'garage', 'info'] as const).map(tab => (
+          {(['dashboard', 'expertise', 'garage', 'info'] as const).map(tab => (
             <TouchableOpacity
               key={tab}
               style={[s.tabItem, activeTab === tab && s.tabItemActive]}
               onPress={() => setActiveTab(tab)}
             >
               <Text style={[s.tabLabel, activeTab === tab && s.tabLabelActive]}>
-                {tab === 'dashboard' ? 'İZLEME' : tab === 'expertise' ? 'EKSPERTİZ' : tab === 'service' ? 'SERVİS' : tab === 'garage' ? 'GARAJIM' : 'BİLGİ'}
+                {tab === 'dashboard' ? 'İZLEME' : tab === 'expertise' ? 'EKSPERTİZ' : tab === 'garage' ? 'GARAJIM' : 'BİLGİ'}
               </Text>
             </TouchableOpacity>
           ))}
@@ -943,7 +929,6 @@ ${sensorLines || '  Veri okunamadı'}
         {/* Tab Content */}
         {activeTab === 'dashboard' && renderDashboard()}
         {activeTab === 'expertise' && renderExpertise()}
-        {activeTab === 'service' && renderService()}
         {activeTab === 'garage' && renderGarage()}
         {activeTab === 'info' && renderInfo()}
 
@@ -1235,4 +1220,8 @@ const s = StyleSheet.create({
   warningIcon: { color: C.amber, fontSize: 20 },
   warningTitle: { color: C.amber, fontSize: 12, fontWeight: '900', fontFamily: C.mono, marginBottom: 4 },
   warningBody: { color: '#fef08a', fontSize: 11, fontFamily: C.mono, lineHeight: 17 },
+
+  // ── New Styles ──
+  miniAction: { flex: 1, borderRadius: 4, paddingVertical: 12, alignItems: 'center', justifyContent: 'center' },
+  miniActionText: { color: '#fff', fontWeight: '800', fontSize: 11, fontFamily: C.mono },
 });

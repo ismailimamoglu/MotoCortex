@@ -1,6 +1,6 @@
 import BluetoothService from './BluetoothService';
 import { useBluetoothStore } from '../store/useBluetoothStore';
-import { OEM_COMMANDS } from './commands';
+import { ADAPTER_COMMANDS } from './commands';
 
 interface QueueItem {
     command: string;
@@ -234,60 +234,7 @@ class OBDCommandQueue {
                 }
             }
         }
-        // UDS ODOMETER (Mode 22 responses: 62 + DID + data)
-        // Handles: 22F190, 221001, 221102, 221201
-        else if (command.startsWith('22') && command.length >= 6) {
-            const did = command.substring(2); // e.g. "F190", "1001", "1102", "1201"
-            const echo = '62' + did; // e.g. "62F190", "621001"
 
-            useBluetoothStore.getState().addLog(`RX_ODO: echo=${echo} clean=${clean.substring(0, 40)}`);
-
-            if (clean.includes(echo)) {
-                const parts = clean.split(echo);
-                if (parts.length > 1) {
-                    const dataHex = parts[1];
-                    // Try 4-byte parsing first (most common)
-                    if (dataHex.length >= 8) {
-                        const a = parseInt(dataHex.substring(0, 2), 16);
-                        const b = parseInt(dataHex.substring(2, 4), 16);
-                        const c = parseInt(dataHex.substring(4, 6), 16);
-                        const d = parseInt(dataHex.substring(6, 8), 16);
-                        if (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) {
-                            const km = ((a * 16777216) + (b * 65536) + (c * 256) + d) / 10;
-                            if (km > 0 && km < 999999) {
-                                useBluetoothStore.getState().setSensorData({ odometer: Math.round(km) });
-                                useBluetoothStore.getState().addLog(`ODO_OK: ${Math.round(km)} km (4-byte)`);
-                            }
-                        }
-                    }
-                    // Try 3-byte parsing
-                    else if (dataHex.length >= 6) {
-                        const a = parseInt(dataHex.substring(0, 2), 16);
-                        const b = parseInt(dataHex.substring(2, 4), 16);
-                        const c = parseInt(dataHex.substring(4, 6), 16);
-                        if (!isNaN(a) && !isNaN(b) && !isNaN(c)) {
-                            const km = (a * 65536 + b * 256 + c);
-                            if (km > 0 && km < 999999) {
-                                useBluetoothStore.getState().setSensorData({ odometer: Math.round(km) });
-                                useBluetoothStore.getState().addLog(`ODO_OK: ${Math.round(km)} km (3-byte)`);
-                            }
-                        }
-                    }
-                    // Try 2-byte parsing (short range)
-                    else if (dataHex.length >= 4) {
-                        const a = parseInt(dataHex.substring(0, 2), 16);
-                        const b = parseInt(dataHex.substring(2, 4), 16);
-                        if (!isNaN(a) && !isNaN(b)) {
-                            const km = (a * 256 + b);
-                            if (km > 0) {
-                                useBluetoothStore.getState().setSensorData({ odometer: km });
-                                useBluetoothStore.getState().addLog(`ODO_OK: ${km} km (2-byte)`);
-                            }
-                        }
-                    }
-                }
-            }
-        }
         // DISTANCE SINCE CLEARED (0131) - 2 bytes
         else if (command === '0131') {
             const hex = getHexData(command, clean, 2);

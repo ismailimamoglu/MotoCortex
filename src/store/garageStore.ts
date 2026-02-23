@@ -49,3 +49,11 @@ export async function deleteGarageRecord(id: string): Promise<void> {
     const filtered = existing.filter(r => r.id !== id);
     await AsyncStorage.setItem(GARAGE_KEY, JSON.stringify(filtered));
 }
+/**
+ * Get records filtered by VIN
+ */
+export async function getRecordsByVin(vin: string): Promise<GarageRecord[]> {
+    if (!vin || vin === 'Bilinmiyor' || vin === 'Tespit Edilemedi') return [];
+    const all = await getGarageRecords();
+    return all.filter(r => r.vin === vin);
+}

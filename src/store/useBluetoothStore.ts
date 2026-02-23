@@ -27,7 +27,6 @@ interface BluetoothState {
     distanceMilOn: number | null;
     isDiagnosticMode: boolean;
     isAdaptationRunning: boolean;
-    selectedBrand: 'GENERIC' | 'HONDA' | 'YAMAHA' | 'SUZUKI' | 'KTM';
     lastDeviceId: string | null;
     lastDeviceName: string | null;
     isCloneDevice: boolean;
@@ -44,7 +43,6 @@ interface BluetoothState {
     setSensorData: (data: Partial<BluetoothState>) => void;
     setDiagnosticMode: (active: boolean) => void;
     setAdaptationRunning: (active: boolean) => void;
-    setSelectedBrand: (brand: 'GENERIC' | 'HONDA' | 'YAMAHA' | 'SUZUKI' | 'KTM') => void;
     setIsCloneDevice: (value: boolean) => void;
     addLog: (entry: string) => void;
     clearLogs: () => void;
@@ -75,7 +73,6 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     distanceMilOn: null,
     isDiagnosticMode: false,
     isAdaptationRunning: false,
-    selectedBrand: 'GENERIC',
     lastDeviceId: null,
     lastDeviceName: null,
     isCloneDevice: false,
@@ -91,7 +88,6 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setSensorData: (data) => set(data),
     setDiagnosticMode: (active) => set({ isDiagnosticMode: active }),
     setAdaptationRunning: (active) => set({ isAdaptationRunning: active }),
-    setSelectedBrand: (brand) => set({ selectedBrand: brand }),
     setIsCloneDevice: (isCloneDevice) => set({ isCloneDevice }),
     addLog: (entry) => set((state) => ({ logs: [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs] })),
     clearLogs: () => set({ logs: [] }),
@@ -118,7 +114,6 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         distanceMilOn: null,
         isDiagnosticMode: false,
         isAdaptationRunning: false,
-        selectedBrand: 'GENERIC',
         isCloneDevice: false,
     }),
 }));

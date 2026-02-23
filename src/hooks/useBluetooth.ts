@@ -4,7 +4,7 @@ import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import BluetoothService from '../api/BluetoothService';
 import OBDCommandQueue from '../api/OBDCommandQueue';
 import { useBluetoothStore } from '../store/useBluetoothStore';
-import { ADAPTER_COMMANDS, OEM_COMMANDS } from '../api/commands';
+import { ADAPTER_COMMANDS } from '../api/commands';
 
 export const useBluetooth = () => {
     const {
@@ -25,8 +25,6 @@ export const useBluetooth = () => {
         rpm,
         clearLogs,
         reset,
-        selectedBrand,
-        setSelectedBrand,
         lastDeviceId,
         lastDeviceName,
         setLastDevice,
@@ -180,13 +178,6 @@ export const useBluetooth = () => {
         loadSaved();
     }, []);
 
-    // Cleanup on unmount
-    useEffect(() => {
-        return () => {
-            // Optional cleanup
-        };
-    }, []);
-
     const [isPollingActive, setIsPollingActive] = useState(false);
 
     // Keep track of the current polling loop to prevent concurrent loops
@@ -259,88 +250,16 @@ export const useBluetooth = () => {
             // Give the ELM327 a short moment to clear its previous queues
             await new Promise(resolve => setTimeout(resolve, 100));
 
-            // 2. Query Diagnostic Metrics sequentially
-            await sendCommand(ADAPTER_COMMANDS.READ_VIN);
-            await sendCommand(ADAPTER_COMMANDS.READ_DTC);
+            // 2. Query Diagnostic Metrics sequentially (Optimized Linear Flow)
+            useBluetoothStore.getState().addLog('DIAG: Starting linear scan...');
 
-            // Odometer Waterfall — try multiple methods until one works
-            const odometerBefore = useBluetoothStore.getState().odometer;
-            const isClone = useBluetoothStore.getState().isCloneDevice;
+            await sendCommand(ADAPTER_COMMANDS.READ_VIN); // 0902
+            await sendCommand(ADAPTER_COMMANDS.READ_DTC); // 03
+            await sendCommand(ADAPTER_COMMANDS.ODOMETER); // 01A6 (Standard)
+            await sendCommand(ADAPTER_COMMANDS.DISTANCE_SINCE_CLEARED); // 0131
+            await sendCommand(ADAPTER_COMMANDS.DISTANCE_MIL_ON); // 0121
 
-            // Attempt 1: Standard OBD-II PID (2019+ vehicles)
-            await sendCommand(ADAPTER_COMMANDS.ODOMETER);
-
-            // If standard failed, try UDS methods
-            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
-                if (isClone) {
-                    useBluetoothStore.getState().addLog('WARN: Clone device - Deep Scan may fail');
-                }
-                useBluetoothStore.getState().addLog('ODO: Standard failed, trying UDS Waterfall...');
-
-                // Attempt 2: Generic UDS PIDs on default header
-                const udsPIDs = [
-                    ADAPTER_COMMANDS.ODOMETER_ALT1,
-                    ADAPTER_COMMANDS.ODOMETER_ALT2,
-                    ADAPTER_COMMANDS.ODOMETER_ALT3
-                ];
-
-                for (const pid of udsPIDs) {
-                    if (useBluetoothStore.getState().odometer && useBluetoothStore.getState().odometer !== 'UNSUPPORTED' && useBluetoothStore.getState().odometer !== odometerBefore) break;
-                    await sendCommand(pid);
-                }
-            }
-
-            // Honda Specific Deep Scan (Multi-Header)
-            const brand = useBluetoothStore.getState().selectedBrand;
-            if ((useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) && brand === 'HONDA') {
-                useBluetoothStore.getState().addLog('ODO: Generic UDS failed, trying Deep Honda Header Scan...');
-                try {
-                    const hondaPIDs = [
-                        OEM_COMMANDS.HONDA_ODOMETER_1,
-                        OEM_COMMANDS.HONDA_ODOMETER_2,
-                        OEM_COMMANDS.HONDA_ODOMETER_3,
-                        OEM_COMMANDS.HONDA_ODOMETER_4,
-                        OEM_COMMANDS.HONDA_ODOMETER_5,
-                        OEM_COMMANDS.HONDA_ODOMETER_6
-                    ];
-                    // Try ECU (7E0) then IPC cluster variants (720, 760)
-                    const headers = [ADAPTER_COMMANDS.HEADER_ECU, ADAPTER_COMMANDS.HEADER_IPC_1, ADAPTER_COMMANDS.HEADER_IPC_2];
-
-                    for (const header of headers) {
-                        if (useBluetoothStore.getState().odometer && useBluetoothStore.getState().odometer !== 'UNSUPPORTED' && useBluetoothStore.getState().odometer !== odometerBefore) break;
-
-                        try {
-                            await sendCommand(header);
-                            await sendCommand(ADAPTER_COMMANDS.EXTENDED_SESSION); // 10 03
-
-                            for (const pid of hondaPIDs) {
-                                await sendCommand(pid);
-                                if (useBluetoothStore.getState().odometer && useBluetoothStore.getState().odometer !== 'UNSUPPORTED' && useBluetoothStore.getState().odometer !== odometerBefore) break;
-                            }
-                        } catch (e) {
-                            console.warn(`Honda Scan failed for header ${header}:`, e);
-                        } finally {
-                            await sendCommand(ADAPTER_COMMANDS.DEFAULT_SESSION).catch(() => { });
-                        }
-                    }
-                } finally {
-                    await sendCommand(ADAPTER_COMMANDS.HEADER_ECU).catch(() => { });
-                }
-            }
-
-            // Yamaha fallback
-            if ((useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) && brand === 'YAMAHA') {
-                await sendCommand(OEM_COMMANDS.YAMAHA_ODOMETER);
-            }
-
-            // If still nothing worked, mark as unsupported
-            if (useBluetoothStore.getState().odometer === odometerBefore || useBluetoothStore.getState().odometer === null) {
-                useBluetoothStore.getState().setSensorData({ odometer: 'UNSUPPORTED' });
-                useBluetoothStore.getState().addLog('ODO: All methods failed → UNSUPPORTED');
-            }
-
-            await sendCommand(ADAPTER_COMMANDS.DISTANCE_SINCE_CLEARED);
-            await sendCommand(ADAPTER_COMMANDS.DISTANCE_MIL_ON);
+            useBluetoothStore.getState().addLog('DIAG: Scan complete.');
 
         } catch (e) {
             console.error("Diagnostic error:", e);
@@ -402,8 +321,6 @@ export const useBluetooth = () => {
         }
     }, [status, sendCommand, isPollingActive]);
 
-
-
     return {
         status,
         adapterStatus,
@@ -435,8 +352,6 @@ export const useBluetooth = () => {
         distanceMilOn: useBluetoothStore((state) => state.distanceMilOn),
         isDiagnosticMode: useBluetoothStore((state) => state.isDiagnosticMode),
         isAdaptationRunning: useBluetoothStore((state) => state.isAdaptationRunning),
-        selectedBrand: useBluetoothStore((state) => state.selectedBrand),
-        setSelectedBrand: useBluetoothStore((state) => state.setSelectedBrand),
         lastDeviceId,
         lastDeviceName,
 
@@ -449,3 +364,4 @@ export const useBluetooth = () => {
         isCloneDevice
     };
 };
+
