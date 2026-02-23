@@ -39,6 +39,9 @@ export const ADAPTER_COMMANDS = {
 
     // Headers (CAN IDs)
     // Try ATSH 720, ATSH 760, etc. to target Instrument Cluster (IPC) if ECU (7E0) doesn't have the data.
+    HEADER_ECU: 'ATSH 7E0', // Engine Control Unit (Default)
+    HEADER_IPC_1: 'ATSH 720', // Instrument Panel Cluster (Variant 1)
+    HEADER_IPC_2: 'ATSH 760', // Instrument Panel Cluster (Variant 2)
 } as const;
 
 export const OEM_COMMANDS = {

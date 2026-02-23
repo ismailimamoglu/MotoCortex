@@ -268,17 +268,42 @@ export const useBluetooth = () => {
             const brand = useBluetoothStore.getState().selectedBrand;
             if (brand === 'HONDA') {
                 try {
-                    // 1. Try Extended Session (10 03) to unlock hidden PIDs
-                    await sendCommand(ADAPTER_COMMANDS.EXTENDED_SESSION);
+                    const odometerPIDs = [
+                        OEM_COMMANDS.HONDA_ODOMETER_1,
+                        OEM_COMMANDS.HONDA_ODOMETER_2,
+                        OEM_COMMANDS.HONDA_ODOMETER_3,
+                        OEM_COMMANDS.HONDA_ODOMETER_4
+                    ];
+                    const headers = [ADAPTER_COMMANDS.HEADER_ECU, ADAPTER_COMMANDS.HEADER_IPC_1, ADAPTER_COMMANDS.HEADER_IPC_2];
 
-                    // 2. Try known Honda/Keihin Odometer variants
-                    await sendCommand(OEM_COMMANDS.HONDA_ODOMETER_1); // 22 11 02
-                    await sendCommand(OEM_COMMANDS.HONDA_ODOMETER_2); // 22 02 00
-                    await sendCommand(OEM_COMMANDS.HONDA_ODOMETER_3); // 22 F1 A6
+                    for (const header of headers) {
+                        // Check if we already found the odometer
+                        if (useBluetoothStore.getState().odometer && useBluetoothStore.getState().odometer !== 'UNSUPPORTED') {
+                             break;
+                        }
+
+                        try {
+                            // Switch Header
+                            await sendCommand(header);
+                            // Enter Extended Session
+                            await sendCommand(ADAPTER_COMMANDS.EXTENDED_SESSION);
+
+                            // Try all PIDs for this header
+                            for (const pid of odometerPIDs) {
+                                await sendCommand(pid);
+                                // If successful, the store will update odometer.
+                                // We could break early if useBluetoothStore.getState().odometer is set, but continued scanning is safer for discovery.
+                            }
+                        } catch (e) {
+                            console.warn(`Scan failed for header ${header}:`, e);
+                        } finally {
+                            // Reset Session for this header before moving to next
+                            await sendCommand(ADAPTER_COMMANDS.DEFAULT_SESSION).catch(() => {});
+                        }
+                    }
                 } finally {
-                    // 3. Return to Default Session (10 01)
-                    // We attempt this even if reading fails, to avoid leaving ECU in diagnostic mode
-                    await sendCommand(ADAPTER_COMMANDS.DEFAULT_SESSION).catch(e => console.warn('Failed to reset session:', e));
+                    // Always restore Default Header (ECU)
+                    await sendCommand(ADAPTER_COMMANDS.HEADER_ECU).catch(e => console.warn('Failed to reset header:', e));
                 }
 
             } else if (brand === 'YAMAHA') {
