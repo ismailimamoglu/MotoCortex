@@ -239,6 +239,13 @@ export const useBluetooth = () => {
         }
     }, [status, isPollingActive, stopPolling]);
 
+    // Ensure polling stops on unmount to prevent memory leaks
+    useEffect(() => {
+        return () => {
+            stopPolling();
+        };
+    }, [stopPolling]);
+
     const runDiagnostics = useCallback(async () => {
         if (status !== 'connected') return;
 

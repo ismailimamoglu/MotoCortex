@@ -15,17 +15,22 @@ export interface GarageRecord {
 /**
  * Save a new garage record
  */
-export async function saveGarageRecord(record: Omit<GarageRecord, 'id' | 'date'>): Promise<GarageRecord> {
-    const newRecord: GarageRecord = {
-        ...record,
-        id: Date.now().toString(),
-        date: new Date().toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-    };
+export async function saveGarageRecord(record: Omit<GarageRecord, 'id' | 'date'>): Promise<GarageRecord | null> {
+    try {
+        const newRecord: GarageRecord = {
+            ...record,
+            id: Date.now().toString(),
+            date: new Date().toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        };
 
-    const existing = await getGarageRecords();
-    existing.unshift(newRecord); // newest first
-    await AsyncStorage.setItem(GARAGE_KEY, JSON.stringify(existing));
-    return newRecord;
+        const existing = await getGarageRecords();
+        existing.unshift(newRecord); // newest first
+        await AsyncStorage.setItem(GARAGE_KEY, JSON.stringify(existing));
+        return newRecord;
+    } catch (e) {
+        console.error('Failed to save garage record:', e);
+        return null;
+    }
 }
 
 /**
@@ -45,15 +50,24 @@ export async function getGarageRecords(): Promise<GarageRecord[]> {
  * Delete a specific garage record by its ID
  */
 export async function deleteGarageRecord(id: string): Promise<void> {
-    const existing = await getGarageRecords();
-    const filtered = existing.filter(r => r.id !== id);
-    await AsyncStorage.setItem(GARAGE_KEY, JSON.stringify(filtered));
+    try {
+        const existing = await getGarageRecords();
+        const filtered = existing.filter(r => r.id !== id);
+        await AsyncStorage.setItem(GARAGE_KEY, JSON.stringify(filtered));
+    } catch (e) {
+        console.error('Failed to delete garage record:', e);
+    }
 }
 /**
  * Get records filtered by VIN
  */
 export async function getRecordsByVin(vin: string): Promise<GarageRecord[]> {
     if (!vin || vin === 'Bilinmiyor' || vin === 'Tespit Edilemedi') return [];
-    const all = await getGarageRecords();
-    return all.filter(r => r.vin === vin);
+    try {
+        const all = await getGarageRecords();
+        return all.filter(r => r.vin === vin);
+    } catch (e) {
+        console.error('Failed to get records by VIN:', e);
+        return [];
+    }
 }
