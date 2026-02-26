@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const C = {
     bg: '#0a0a0a',
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function PerformanceModal({ visible, onClose, speed }: Props) {
+    const { t } = useTranslation();
     const [state, setState] = useState<TimerState>('idle');
     const [elapsed, setElapsed] = useState(0);
     const [time60, setTime60] = useState<number | null>(null);
@@ -95,9 +97,9 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
             <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
                 {/* Header */}
                 <View style={ps.header}>
-                    <Text style={ps.headerTitle}>PERFORMANS TESTİ</Text>
+                    <Text style={ps.headerTitle}>{t('perf.title')}</Text>
                     <TouchableOpacity onPress={() => { resetTimer(); onClose(); }} style={{ padding: 10 }}>
-                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>KAPAT</Text>
+                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -105,36 +107,36 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                     {/* Big Timer */}
                     <View style={ps.timerContainer}>
                         <Text style={ps.timerValue}>{formatTime(elapsed)}</Text>
-                        <Text style={ps.timerUnit}>SANİYE</Text>
+                        <Text style={ps.timerUnit}>{t('perf.seconds')}</Text>
                     </View>
 
                     {/* Live Speed */}
                     <View style={ps.speedContainer}>
                         <Text style={ps.speedValue}>{speed !== null ? speed : 0}</Text>
-                        <Text style={ps.speedUnit}>KM/H</Text>
+                        <Text style={ps.speedUnit}>{t('perf.speed')}</Text>
                     </View>
 
                     {/* Status */}
                     <View style={{ alignItems: 'center', marginBottom: 20 }}>
                         {state === 'idle' && (
                             <Text style={{ color: C.textSec, fontSize: 11, fontFamily: C.mono, textAlign: 'center' }}>
-                                Butona basın ve harekete geçmeye hazırlanın.
+                                {t('perf.idle')}
                             </Text>
                         )}
                         {state === 'armed' && (
                             <Text style={{ color: C.amber, fontSize: 13, fontWeight: '900', fontFamily: C.mono, textAlign: 'center' }}>
-                                ⏱️ HAZIR! Aracı sürmeye başlayın...{'\n'}
-                                Hız {'>'} 0 olduğunda sayaç başlar.
+                                ⏱️ {t('perf.ready')}{'\n'}
+                                {t('perf.readyDesc')}
                             </Text>
                         )}
                         {state === 'running' && (
                             <Text style={{ color: C.green, fontSize: 13, fontWeight: '900', fontFamily: C.mono, textAlign: 'center' }}>
-                                🏁 ÖLÇÜM YAPILIYOR...
+                                🏁 {t('perf.measuring')}
                             </Text>
                         )}
                         {state === 'done' && (
                             <Text style={{ color: C.cyan, fontSize: 13, fontWeight: '900', fontFamily: C.mono, textAlign: 'center' }}>
-                                ✅ TEST TAMAMLANDI
+                                ✅ {t('perf.done')}
                             </Text>
                         )}
                     </View>
@@ -160,29 +162,25 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                     {/* Controls */}
                     {state === 'idle' && (
                         <TouchableOpacity style={ps.startBtn} onPress={armTimer}>
-                            <Text style={ps.startBtnText}>🏁 TESTİ BAŞLAT</Text>
+                            <Text style={ps.startBtnText}>🏁 {t('perf.start')}</Text>
                         </TouchableOpacity>
                     )}
                     {state === 'running' && (
                         <TouchableOpacity style={[ps.startBtn, { backgroundColor: C.red }]} onPress={stopTimer}>
-                            <Text style={ps.startBtnText}>⏹ DURDUR</Text>
+                            <Text style={ps.startBtnText}>⏹ {t('perf.stop')}</Text>
                         </TouchableOpacity>
                     )}
                     {(state === 'done' || state === 'armed') && (
                         <TouchableOpacity style={[ps.startBtn, { backgroundColor: C.elevated, borderWidth: 1, borderColor: C.border }]} onPress={resetTimer}>
-                            <Text style={[ps.startBtnText, { color: C.textSec }]}>↺ SIFIRLA</Text>
+                            <Text style={[ps.startBtnText, { color: C.textSec }]}>↺ {t('perf.reset')}</Text>
                         </TouchableOpacity>
                     )}
 
                     {/* Instructions */}
                     <View style={[ps.infoPanel, { marginTop: 16 }]}>
-                        <Text style={{ color: C.cyan, fontSize: 11, fontWeight: '800', fontFamily: C.mono, marginBottom: 6 }}>📖 NASIL ÇALIŞIR?</Text>
+                        <Text style={{ color: C.cyan, fontSize: 11, fontWeight: '800', fontFamily: C.mono, marginBottom: 6 }}>📖 {t('perf.howItWorks')}</Text>
                         <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, lineHeight: 16 }}>
-                            1. "Testi Başlat" butonuna basın{'\n'}
-                            2. Araç duruyor olmalı (Hız = 0){'\n'}
-                            3. Hareket etmeye başladığınızda krono başlar{'\n'}
-                            4. 60 km/h ve 100 km/h geçiş süreleri kaydedilir{'\n\n'}
-                            ⚠️ Bu testi güvenli bir alanda yapın!
+                            {t('perf.howDesc')}
                         </Text>
                     </View>
                 </View>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const C = {
     bg: '#0a0a0a',
@@ -31,10 +32,11 @@ interface Props {
 }
 
 export default function BatteryTestModal({ visible, onClose, sendCommand, voltage }: Props) {
+    const { t } = useTranslation();
     const [step, setStep] = useState<TestStep>('idle');
     const [result, setResult] = useState<BatteryTestResult>({ restingV: null, crankingV: null, chargingV: null });
     const [isRunning, setIsRunning] = useState(false);
-    const [statusText, setStatusText] = useState('Teste başlamaya hazır.');
+    const [statusText, setStatusText] = useState(t('battery.ready'));
     const crankingIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const lowestVRef = useRef<number>(999);
 
@@ -58,12 +60,12 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         // ── Step 1: Resting Voltage ──
         setStep('resting');
-        setStatusText('Kontak açık, motor kapalı... Akü voltajı okunuyor...');
+        setStatusText(t('battery.restingStatus'));
         const resting = await readVoltage();
         setResult(prev => ({ ...prev, restingV: resting }));
 
         if (!resting) {
-            setStatusText('Voltaj okunamadı. Bağlantıyı kontrol edin.');
+            setStatusText(t('battery.voltageError'));
             setIsRunning(false);
             setStep('idle');
             return;
@@ -71,7 +73,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         // ── Step 2: Cranking Voltage ──
         setStep('cranking');
-        setStatusText('ŞİMDİ MARŞA BASIN! (5 saniye ölçüm yapılacak)');
+        setStatusText(t('battery.crankingStatus'));
 
         await new Promise<void>((resolve) => {
             let elapsed = 0;
@@ -94,7 +96,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         // ── Step 3: Charging Voltage ──
         setStep('charging');
-        setStatusText('Motor rölantide... Şarj voltajı okunuyor...');
+        setStatusText(t('battery.chargingStatus'));
         // Wait a moment for engine to stabilize
         await new Promise(r => setTimeout(r, 2000));
         const charging = await readVoltage();
@@ -102,13 +104,13 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         setStep('done');
         setIsRunning(false);
-        setStatusText('Test tamamlandı!');
+        setStatusText(t('battery.doneStatus'));
     };
 
     const resetTest = () => {
         setStep('idle');
         setResult({ restingV: null, crankingV: null, chargingV: null });
-        setStatusText('Teste başlamaya hazır.');
+        setStatusText(t('battery.ready'));
         setIsRunning(false);
         if (crankingIntervalRef.current) clearInterval(crankingIntervalRef.current);
     };
@@ -122,21 +124,21 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
         const verdicts: string[] = [];
 
         // Battery resting analysis
-        if (rest >= 12.6) verdicts.push('✅ Akü: Tam dolu (' + rest.toFixed(1) + 'V)');
-        else if (rest >= 12.4) verdicts.push('✅ Akü: İyi durumda (' + rest.toFixed(1) + 'V)');
-        else if (rest >= 12.0) verdicts.push('⚠️ Akü: Zayıflıyor (' + rest.toFixed(1) + 'V)');
-        else verdicts.push('🚨 Akü: Zayıf / Bitmiş (' + rest.toFixed(1) + 'V)');
+        if (rest >= 12.6) verdicts.push(`✅ ${t('battery.verdicts.full')} (${rest.toFixed(1)}V)`);
+        else if (rest >= 12.4) verdicts.push(`✅ ${t('battery.verdicts.good')} (${rest.toFixed(1)}V)`);
+        else if (rest >= 12.0) verdicts.push(`⚠️ ${t('battery.verdicts.weak')} (${rest.toFixed(1)}V)`);
+        else verdicts.push(`🚨 ${t('battery.verdicts.empty')} (${rest.toFixed(1)}V)`);
 
         // Cranking analysis
-        if (crank >= 10.0) verdicts.push('✅ Marş: Normal düşüş (' + crank.toFixed(1) + 'V)');
-        else if (crank >= 9.0) verdicts.push('⚠️ Marş: Düşük voltaj (' + crank.toFixed(1) + 'V)');
-        else verdicts.push('🚨 Marş: Kritik düşüş (' + crank.toFixed(1) + 'V)');
+        if (crank >= 10.0) verdicts.push(`✅ ${t('battery.verdicts.crankNormal')} (${crank.toFixed(1)}V)`);
+        else if (crank >= 9.0) verdicts.push(`⚠️ ${t('battery.verdicts.crankLow')} (${crank.toFixed(1)}V)`);
+        else verdicts.push(`🚨 ${t('battery.verdicts.crankCritical')} (${crank.toFixed(1)}V)`);
 
         // Charging analysis
-        if (charge >= 13.5 && charge <= 14.5) verdicts.push('✅ Şarj: Regülatör normal (' + charge.toFixed(1) + 'V)');
-        else if (charge >= 13.0 && charge < 13.5) verdicts.push('⚠️ Şarj: Düşük şarj (' + charge.toFixed(1) + 'V)');
-        else if (charge > 14.5) verdicts.push('⚠️ Şarj: Aşırı şarj (' + charge.toFixed(1) + 'V)');
-        else verdicts.push('🚨 Şarj: Regülatör arızalı (' + charge.toFixed(1) + 'V)');
+        if (charge >= 13.5 && charge <= 14.5) verdicts.push(`✅ ${t('battery.verdicts.regNormal')} (${charge.toFixed(1)}V)`);
+        else if (charge >= 13.0 && charge < 13.5) verdicts.push(`⚠️ ${t('battery.verdicts.regLow')} (${charge.toFixed(1)}V)`);
+        else if (charge > 14.5) verdicts.push(`⚠️ ${t('battery.verdicts.regHigh')} (${charge.toFixed(1)}V)`);
+        else verdicts.push(`🚨 ${t('battery.verdicts.regFail')} (${charge.toFixed(1)}V)`);
 
         return verdicts;
     };
@@ -146,9 +148,9 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
             <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
                 {/* Header */}
                 <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: C.border }}>
-                    <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '800', fontFamily: C.mono }}>AKÜ & MARŞ TESTİ</Text>
+                    <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '800', fontFamily: C.mono }}>{t('battery.title')}</Text>
                     <TouchableOpacity onPress={() => { resetTest(); onClose(); }} style={{ padding: 10 }}>
-                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>KAPAT</Text>
+                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -160,7 +162,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
                         </Text>
                         {step === 'cranking' && (
                             <Text style={{ color: C.red, fontSize: 20, fontWeight: '900', fontFamily: C.mono, textAlign: 'center', marginTop: 8 }}>
-                                ⚡ {result.crankingV || 'Bekleniyor...'}
+                                ⚡ {result.crankingV || t('common.loading')}
                             </Text>
                         )}
                     </View>
@@ -168,17 +170,17 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
                     {/* Test Results Grid */}
                     <View style={{ flexDirection: 'row', gap: 8, marginBottom: 12 }}>
                         <View style={[ms.resultCard, step === 'resting' && ms.activeCard]}>
-                            <Text style={ms.resultLabel}>DİNLENME</Text>
+                            <Text style={ms.resultLabel}>{t('battery.resting')}</Text>
                             <Text style={ms.resultValue}>{result.restingV || '--'}</Text>
                             <Text style={ms.resultRef}>Ref: 12.4-12.8V</Text>
                         </View>
                         <View style={[ms.resultCard, step === 'cranking' && ms.activeCard]}>
-                            <Text style={ms.resultLabel}>MARŞ</Text>
+                            <Text style={ms.resultLabel}>{t('battery.cranking')}</Text>
                             <Text style={[ms.resultValue, { color: C.amber }]}>{result.crankingV || '--'}</Text>
                             <Text style={ms.resultRef}>Ref: ≥9.6V</Text>
                         </View>
                         <View style={[ms.resultCard, step === 'charging' && ms.activeCard]}>
-                            <Text style={ms.resultLabel}>ŞARJ</Text>
+                            <Text style={ms.resultLabel}>{t('battery.charging')}</Text>
                             <Text style={[ms.resultValue, { color: C.green }]}>{result.chargingV || '--'}</Text>
                             <Text style={ms.resultRef}>Ref: 13.5-14.5V</Text>
                         </View>
@@ -186,14 +188,14 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
                     {/* Current Voltage */}
                     <View style={{ backgroundColor: C.card, borderRadius: 6, padding: 12, borderWidth: 1, borderColor: C.border, marginBottom: 12, alignItems: 'center' }}>
-                        <Text style={{ color: C.textSec, fontSize: 9, fontFamily: C.mono }}>ANLIK VOLTAJ</Text>
+                        <Text style={{ color: C.textSec, fontSize: 9, fontFamily: C.mono }}>{t('battery.instantV')}</Text>
                         <Text style={{ color: C.cyan, fontSize: 28, fontWeight: '900', fontFamily: C.mono }}>{voltage || '--'}</Text>
                     </View>
 
                     {/* Verdict */}
                     {step === 'done' && getVerdict() && (
                         <View style={{ backgroundColor: C.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: C.green, marginBottom: 12 }}>
-                            <Text style={{ color: C.textPri, fontSize: 12, fontWeight: '800', fontFamily: C.mono, marginBottom: 8 }}>📋 DEĞERLENDİRME</Text>
+                            <Text style={{ color: C.textPri, fontSize: 12, fontWeight: '800', fontFamily: C.mono, marginBottom: 8 }}>📋 {t('battery.evaluation')}</Text>
                             {getVerdict()!.map((v, i) => (
                                 <Text key={i} style={{ color: C.textPri, fontSize: 11, fontFamily: C.mono, lineHeight: 20 }}>{v}</Text>
                             ))}
@@ -206,7 +208,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
                             style={{ backgroundColor: C.cyan, borderRadius: 6, paddingVertical: 14, alignItems: 'center' }}
                             onPress={startTest}
                         >
-                            <Text style={{ color: '#000', fontSize: 13, fontWeight: '900', fontFamily: C.mono }}>⚡ TESTİ BAŞLAT</Text>
+                            <Text style={{ color: '#000', fontSize: 13, fontWeight: '900', fontFamily: C.mono }}>⚡ {t('battery.start')}</Text>
                         </TouchableOpacity>
                     )}
                     {step === 'done' && (
@@ -214,7 +216,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
                             style={{ backgroundColor: C.elevated, borderRadius: 6, paddingVertical: 14, alignItems: 'center', borderWidth: 1, borderColor: C.border }}
                             onPress={resetTest}
                         >
-                            <Text style={{ color: C.textSec, fontSize: 13, fontWeight: '900', fontFamily: C.mono }}>↺ TESTİ TEKRARLA</Text>
+                            <Text style={{ color: C.textSec, fontSize: 13, fontWeight: '900', fontFamily: C.mono }}>↺ {t('battery.retry')}</Text>
                         </TouchableOpacity>
                     )}
                     {isRunning && (
@@ -223,13 +225,13 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
                     {/* Instructions */}
                     <View style={{ backgroundColor: C.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: C.border, marginTop: 12 }}>
-                        <Text style={{ color: C.textPri, fontSize: 11, fontWeight: '800', fontFamily: C.mono, marginBottom: 6 }}>📖 TEST PROSEDÜRÜ</Text>
+                        <Text style={{ color: C.textPri, fontSize: 11, fontWeight: '800', fontFamily: C.mono, marginBottom: 6 }}>📖 {t('battery.procedure')}</Text>
                         <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, lineHeight: 18 }}>
-                            1. Kontak açık, motor kapalı → Dinlenme voltajı ölçülür{'\n'}
-                            2. "ŞİMDİ MARŞA BASIN" yazısı çıkınca marşa basın{'\n'}
-                            3. 5 saniye boyunca en düşük voltaj kaydedilir{'\n'}
-                            4. Motor çalışırken şarj/regülatör voltajı ölçülür{'\n\n'}
-                            ⚠️ Test sırasında Bluetooth bağlantısını kesmeyin.
+                            {t('battery.steps.1')}{'\n'}
+                            {t('battery.steps.2')}{'\n'}
+                            {t('battery.steps.3')}{'\n'}
+                            {t('battery.steps.4')}{'\n\n'}
+                            ⚠️ {t('battery.warning')}
                         </Text>
                     </View>
                 </View>

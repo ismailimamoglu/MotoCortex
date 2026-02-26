@@ -11,6 +11,8 @@ import BatteryTestModal from './src/components/BatteryTestModal';
 import FreezeFrameModal from './src/components/FreezeFrameModal';
 import PerformanceModal from './src/components/PerformanceModal';
 import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
+import './src/i18n';
+import { useTranslation } from 'react-i18next';
 
 // ─── Design Tokens ───────────────────────────────────────────────
 const C = {
@@ -28,6 +30,7 @@ const C = {
 };
 
 export default function App() {
+  const { t, i18n } = useTranslation();
   const {
     status, adapterStatus, ecuStatus, logs,
     enableBluetooth, scanDevices, connect, disconnect,
@@ -108,8 +111,8 @@ export default function App() {
     await saveGarageRecord({
       make: saveMake.trim(),
       model: saveModel.trim(),
-      vin: vin || manualVin || 'Bilinmiyor',
-      km: odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer}` : 'Bilinmiyor',
+      vin: vin || manualVin || t('common.unknown'),
+      km: odometer === 'UNSUPPORTED' ? t('common.unsupported') : odometer !== null ? `${odometer}` : t('common.unknown'),
       dtcs: dtcs,
     });
     setIsSaveModalVisible(false);
@@ -122,7 +125,7 @@ export default function App() {
     if (currentVin && currentVin.length > 5) {
       setVinHistory(await getRecordsByVin(currentVin));
     }
-    Alert.alert('Kaydedildi ✅', 'Ekspertiz sonucu garaja eklendi.');
+    Alert.alert(t('expertise.saved'), t('expertise.savedDesc'));
   };
 
 
@@ -145,7 +148,7 @@ export default function App() {
 
   const guardAction = (action: () => void) => {
     if (ecuStatus !== 'connected') {
-      Alert.alert('Bağlantı Gerekli', 'Lütfen bu işlemi başlatmak için önce araca bağlanın.');
+      Alert.alert(t('expertise.connRequired'), t('expertise.connRequiredDesc'));
       setIsConnectModalVisible(true);
       return;
     }
@@ -175,10 +178,10 @@ export default function App() {
 
 📋 ARAÇ KİMLİĞİ
 ━━━━━━━━━━━━━━━━━━━━━━
-  Şasi No (VIN): ${vin || 'Tespit Edilemedi'}
-  Mesafe (KM): ${odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer} km` : 'Bilinmiyor'}
-  Motor Işığı Yanık: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
-  Arıza Silineli: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : 'Bilinmiyor'}
+  ${t('report.vin')}: ${vin || t('report.vinNotFound')}
+  ${t('report.odometer')}: ${odometer === 'UNSUPPORTED' ? t('common.unsupported') : odometer !== null ? `${odometer} km` : t('common.unknown')}
+  ${t('report.milDist')}: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
+  ${t('report.distSinceCleared')}: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : t('common.unknown')}
 
 🔍 ARIZA KODLARI (${dtcs.length} adet)
 ━━━━━━━━━━━━━━━━━━━━━━
@@ -193,7 +196,7 @@ ${sensorLines || '  Veri okunamadı'}
 *Tarih: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}*`;
 
     try {
-      await Share.share({ message: report, title: 'MotoCortex Teşhis Raporu' });
+      await Share.share({ message: report, title: t('report.title') });
     } catch (e) {
       console.error('Report sharing failed:', e);
     }
@@ -207,10 +210,10 @@ ${sensorLines || '  Veri okunamadı'}
   };
 
   const statusLabel = (s: string) => {
-    if (s === 'connected') return 'ONLINE';
-    if (s === 'connecting') return 'BAĞLANIYOR';
-    if (s === 'error') return 'HATA';
-    return 'OFFLINE';
+    if (s === 'connected') return t('connection.online');
+    if (s === 'connecting') return t('connection.connecting');
+    if (s === 'error') return t('connection.error');
+    return t('connection.offline');
   };
 
   // ═══════════════════════════════════════════════════════════════
@@ -228,11 +231,11 @@ ${sensorLines || '  Veri okunamadı'}
       <View style={s.badgeRow}>
         <View style={[s.badge, { borderColor: statusColor(adapterStatus) }]}>
           <View style={[s.badgeDot, { backgroundColor: statusColor(adapterStatus) }]} />
-          <Text style={[s.badgeText, { color: statusColor(adapterStatus) }]}>ADAPTER: {statusLabel(adapterStatus)}</Text>
+          <Text style={[s.badgeText, { color: statusColor(adapterStatus) }]}>{t('connection.adapter')}: {statusLabel(adapterStatus)}</Text>
         </View>
         <View style={[s.badge, { borderColor: statusColor(ecuStatus) }]}>
           <View style={[s.badgeDot, { backgroundColor: statusColor(ecuStatus) }]} />
-          <Text style={[s.badgeText, { color: statusColor(ecuStatus) }]}>ECU: {statusLabel(ecuStatus)}</Text>
+          <Text style={[s.badgeText, { color: statusColor(ecuStatus) }]}>{t('connection.ecu')}: {statusLabel(ecuStatus)}</Text>
         </View>
       </View>
 
@@ -240,7 +243,7 @@ ${sensorLines || '  Veri okunamadı'}
       {adapterStatus !== 'connected' ? (
         <View style={s.connectActions}>
           <TouchableOpacity style={s.scanBtn} onPress={handleScan}>
-            <Text style={s.scanBtnText}>⟐  CİHAZ TARA</Text>
+            <Text style={s.scanBtnText}>⟐  {t('connection.scanDevices')}</Text>
           </TouchableOpacity>
 
           {lastDeviceId && (
@@ -249,38 +252,38 @@ ${sensorLines || '  Veri okunamadı'}
               onPress={() => connect(lastDeviceId, lastDeviceName || 'Last Device')}
               disabled={isDiagnosticMode}
             >
-              <Text style={s.actionBtnText}>↺  SON CİHAZA BAĞLAN ({lastDeviceName})</Text>
+              <Text style={s.actionBtnText}>↺  {t('connection.connectLast')} ({lastDeviceName})</Text>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity style={s.btEnableBtn} onPress={enableBluetooth}>
-            <Text style={s.btEnableBtnText}>BLUETOOTH'U AÇ</Text>
+            <Text style={s.btEnableBtnText}>{t('connection.enableBt')}</Text>
           </TouchableOpacity>
 
           {status === 'scanning' && (
             <View style={s.scanningRow}>
               <ActivityIndicator color={C.cyan} size="small" />
-              <Text style={s.scanningText}>Taranıyor...</Text>
+              <Text style={s.scanningText}>{t('connection.scanning')}</Text>
             </View>
           )}
 
           {scannedDevices.length > 0 && (
             <View style={s.deviceSection}>
-              <Text style={s.deviceSectionTitle}>BULUNAN CİHAZLAR</Text>
+              <Text style={s.deviceSectionTitle}>{t('connection.foundDevices')}</Text>
               {scannedDevices.map(d => (
                 <TouchableOpacity key={d.address} style={s.deviceCard} onPress={() => connect(d.address, d.name)}>
                   <View>
                     <Text style={s.deviceName}>{d.name || 'Bilinmeyen Cihaz'}</Text>
                     <Text style={s.deviceMac}>{d.address}</Text>
                   </View>
-                  <Text style={s.connectLabel}>BAĞLAN ›</Text>
+                  <Text style={s.connectLabel}>{t('connection.connectLabel')} ›</Text>
                 </TouchableOpacity>
               ))}
             </View>
           )}
 
           {scannedDevices.length === 0 && permissionGranted && status !== 'scanning' && (
-            <Text style={s.hintText}>Eşleştirilmiş OBD cihazlarını bulmak için tarayın.</Text>
+            <Text style={s.hintText}>{t('connection.scanHint')}</Text>
           )}
         </View>
       ) : (
@@ -288,19 +291,19 @@ ${sensorLines || '  Veri okunamadı'}
           {ecuStatus === 'connecting' && (
             <View style={s.ecuConnecting}>
               <ActivityIndicator color={C.amber} size="small" />
-              <Text style={[s.scanningText, { color: C.amber }]}>ECU'ya bağlanılıyor...</Text>
+              <Text style={[s.scanningText, { color: C.amber }]}>{t('connection.ecuWait')}</Text>
             </View>
           )}
           {ecuStatus === 'error' && (
             <View style={s.connectActions}>
-              <Text style={s.ecuErrorText}>ECU yanıt vermiyor. Kontağı açın.</Text>
+              <Text style={s.ecuErrorText}>{t('connection.ecuNoResponse')}</Text>
               <TouchableOpacity style={s.retryBtn} onPress={retryEcu}>
-                <Text style={s.retryBtnText}>YENİDEN DENE</Text>
+                <Text style={s.retryBtnText}>{t('connection.retry')}</Text>
               </TouchableOpacity>
             </View>
           )}
           <TouchableOpacity style={s.disconnectBtn} onPress={disconnect}>
-            <Text style={s.disconnectBtnText}>BAĞLANTIYI KES</Text>
+            <Text style={s.disconnectBtnText}>{t('connection.disconnect')}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -337,10 +340,10 @@ ${sensorLines || '  Veri okunamadı'}
             <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: statusColor(ecuStatus) }} />
             <View>
               <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '900', fontFamily: C.mono }}>
-                {ecuStatus === 'connected' ? 'BAĞLI CİHAZ' : 'CİHAZ SEÇMEK İÇİN DOKUN'}
+                {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('dashboard.selectDevice')}
               </Text>
               <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, marginTop: 2 }}>
-                {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : 'Henüz bağlantı yok'}
+                {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : t('dashboard.noConnection')}
               </Text>
             </View>
           </View>
@@ -352,8 +355,8 @@ ${sensorLines || '  Veri okunamadı'}
           <View style={[s.warningBanner, { borderColor: C.red }]}>
             <Text style={s.warningIcon}>🚨</Text>
             <View style={{ flex: 1 }}>
-              <Text style={[s.warningTitle, { color: C.red }]}>AKÜ VOLTAJI DÜŞÜK!</Text>
-              <Text style={s.warningBody}>Akü voltajı {voltage} seviyesinde. Aracı çalıştırın veya şarj edin. Düşük voltajda ECU iletişimi kesilebilir.</Text>
+              <Text style={[s.warningTitle, { color: C.red }]}>{t('dashboard.batteryLow')}</Text>
+              <Text style={s.warningBody}>{t('dashboard.batteryLowDesc', { voltage })}</Text>
             </View>
           </View>
         )}
@@ -361,8 +364,8 @@ ${sensorLines || '  Veri okunamadı'}
           <View style={[s.warningBanner, { borderColor: C.amber }]}>
             <Text style={s.warningIcon}>⚠</Text>
             <View style={{ flex: 1 }}>
-              <Text style={[s.warningTitle, { color: C.amber }]}>AKÜ ZAYIFLIYOR</Text>
-              <Text style={s.warningBody}>Akü voltajı {voltage}. Uzun süreli işlemlerde dikkatli olun.</Text>
+              <Text style={[s.warningTitle, { color: C.amber }]}>{t('dashboard.batteryWarn')}</Text>
+              <Text style={s.warningBody}>{t('dashboard.batteryWarnDesc', { voltage })}</Text>
             </View>
           </View>
         )}
@@ -377,43 +380,43 @@ ${sensorLines || '  Veri okunamadı'}
         <View style={s.sensorGrid}>
           <View style={s.sensorCard}>
             <Text style={s.sensorValue}>{speed !== null ? speed : '--'}</Text>
-            <Text style={s.sensorLabel}>KM/H</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.speed')}</Text>
           </View>
           <View style={s.sensorCard}>
             <Text style={[s.sensorValue, coolant !== null && coolant > 100 ? { color: C.red } : {}]}>
               {coolant !== null ? `${coolant}°` : '--'}
             </Text>
-            <Text style={s.sensorLabel}>SICAKLIK</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.temp')}</Text>
           </View>
           <View style={s.sensorCard}>
             <Text style={s.sensorValue}>{throttle !== null ? `${throttle}%` : '--'}</Text>
-            <Text style={s.sensorLabel}>GAZ</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.throttle')}</Text>
           </View>
           <View style={s.sensorCard}>
-            <Text style={[s.sensorValue, { color: C.cyan, fontSize: 18 }]}>
-              {rpm !== null ? (rpm > 7000 ? 'YÜKSEK' : rpm > 3000 ? 'NORMAL' : 'DÜŞÜK') : '--'}
+            <Text style={[s.sensorValue, rpm !== null && (rpm > 7000 ? { color: C.red } : rpm > 3000 ? { color: C.green } : { color: C.amber }), { fontSize: 18 }]}>
+              {rpm !== null ? (rpm > 7000 ? t('dashboard.statusHigh') : rpm > 3000 ? t('dashboard.statusNormal') : t('dashboard.statusLow')) : '--'}
             </Text>
-            <Text style={s.sensorLabel}>DEVİR DURUMU</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.status')}</Text>
           </View>
           <View style={[s.sensorCard, { borderColor: isBatteryLow ? C.red : isBatteryWarn ? C.amber : C.border }]}>
             <Text style={[s.sensorValue, { color: isBatteryLow ? C.red : isBatteryWarn ? C.amber : C.green }]}>
               {voltage || '--'}
             </Text>
-            <Text style={s.sensorLabel}>AKÜ</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.battery')}</Text>
           </View>
           <View style={s.sensorCard}>
             <Text style={s.sensorValue}>{engineLoad !== null ? `${engineLoad}%` : '--'}</Text>
-            <Text style={s.sensorLabel}>YÜK</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.load')}</Text>
           </View>
           <View style={s.sensorCard}>
             <Text style={[s.sensorValue, intakeAirTemp !== null && intakeAirTemp > 60 ? { color: C.amber } : {}]}>
               {intakeAirTemp !== null ? `${intakeAirTemp}°` : '--'}
             </Text>
-            <Text style={s.sensorLabel}>EMME HAVA</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.intake')}</Text>
           </View>
           <View style={s.sensorCard}>
             <Text style={s.sensorValue}>{manifoldPressure !== null ? manifoldPressure : '--'}</Text>
-            <Text style={s.sensorLabel}>MANİFOLD kPa</Text>
+            <Text style={s.sensorLabel}>{t('dashboard.manifold')}</Text>
           </View>
         </View>
       </ScrollView>
@@ -430,10 +433,10 @@ ${sensorLines || '  Veri okunamadı'}
         <View style={[s.warningBanner, { borderColor: C.cyan, backgroundColor: '#002b36' }]}>
           <Text style={s.warningIcon}>📜</Text>
           <View style={{ flex: 1 }}>
-            <Text style={[s.warningTitle, { color: C.cyan }]}>ARAÇ GEÇMİŞİ BULUNDU!</Text>
-            <Text style={s.warningBody}>Bu aracın daha önce {vinHistory.length} adet kaydı oluşturulmuş. Aşağıdan geçmişi inceleyebilirsiniz.</Text>
+            <Text style={[s.warningTitle, { color: C.cyan }]}>{t('expertise.historyFound')}</Text>
+            <Text style={s.warningBody}>{t('expertise.historyFoundDesc', { count: vinHistory.length })}</Text>
             <TouchableOpacity onPress={() => setIsGarageStatsExpanded(true)} style={{ marginTop: 8 }}>
-              <Text style={{ color: C.cyan, fontWeight: 'bold' }}>GEÇMİŞİ GÖR ›</Text>
+              <Text style={{ color: C.cyan, fontWeight: 'bold' }}>{t('expertise.viewHistory')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -442,13 +445,13 @@ ${sensorLines || '  Veri okunamadı'}
       {/* Manual VIN Input fallback */}
       {!vin && (
         <View style={s.panel}>
-          <Text style={s.panelTitle}>ŞASİ NO (MANÜEL GİRİŞ)</Text>
-          <Text style={s.panelDesc}>Araç beyni şasi numarasını (VIN) otomatik paylaşmıyorsa buraya yazabilirsiniz.</Text>
+          <Text style={s.panelTitle}>{t('expertise.manualVin')}</Text>
+          <Text style={s.panelDesc}>{t('expertise.manualVinDesc')}</Text>
           <TextInput
             style={{ backgroundColor: '#111', borderWidth: 1, borderColor: '#333', borderRadius: 8, padding: 12, color: C.cyan, fontFamily: C.mono, marginTop: 10 }}
             value={manualVin}
             onChangeText={setManualVin}
-            placeholder="VIN yazın..."
+            placeholder={t('expertise.vinPlaceholder')}
             placeholderTextColor="#444"
           />
         </View>
@@ -459,26 +462,26 @@ ${sensorLines || '  Veri okunamadı'}
         onPress={() => guardAction(runDiagnostics)}
         disabled={isDiagnosticMode || isAdaptationRunning}
       >
-        <Text style={s.actionBtnText}>{isDiagnosticMode ? '⟳ TARANIYOR...' : '⬡  EKSPERTİZ TARAMASI BAŞLAT'}</Text>
+        <Text style={s.actionBtnText}>{isDiagnosticMode ? t('expertise.scanning') : `⬡  ${t('expertise.startScan')}`}</Text>
       </TouchableOpacity>
 
       {/* Vehicle Identity */}
       <View style={s.panel}>
-        <Text style={s.panelTitle}>ARAÇ KİMLİĞİ & KİLOMETRE</Text>
+        <Text style={s.panelTitle}>{t('expertise.vehicleIdentity')}</Text>
         <View style={s.tableRow}>
-          <Text style={s.tableLabel}>Şasi No (VIN)</Text>
+          <Text style={s.tableLabel}>{t('expertise.vin')}</Text>
           <Text style={s.tableValue}>{vin || manualVin || '—'}</Text>
         </View>
         <View style={s.tableRow}>
-          <Text style={s.tableLabel}>Orijinal KM</Text>
-          <Text style={s.tableValue}>{odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer} km` : '—'}</Text>
+          <Text style={s.tableLabel}>{t('expertise.odometer')}</Text>
+          <Text style={s.tableValue}>{odometer === 'UNSUPPORTED' ? t('common.unsupported') : odometer !== null ? `${odometer} km` : '—'}</Text>
         </View>
         <View style={s.tableRow}>
-          <Text style={s.tableLabel}>Arıza Silineli</Text>
+          <Text style={s.tableLabel}>{t('expertise.distSinceCleared')}</Text>
           <Text style={s.tableValue}>{distanceSinceCleared !== null ? `${distanceSinceCleared} km` : '—'}</Text>
         </View>
         <View style={[s.tableRow, { borderBottomWidth: 0 }]}>
-          <Text style={s.tableLabel}>Motor Işığı Yanık</Text>
+          <Text style={s.tableLabel}>{t('expertise.milDist')}</Text>
           <Text style={s.tableValue}>{distanceMilOn !== null ? `${distanceMilOn} km` : '—'}</Text>
         </View>
       </View>
@@ -486,16 +489,16 @@ ${sensorLines || '  Veri okunamadı'}
       {/* DTCs */}
       <View style={s.panel}>
         <View style={s.panelHeader}>
-          <Text style={s.panelTitle}>ARIZA KODLARI (DTC)</Text>
+          <Text style={s.panelTitle}>{t('expertise.dtcTitle')}</Text>
           {dtcs.length > 0 && (
             <TouchableOpacity onPress={() => guardAction(clearDiagnostics)} disabled={isDiagnosticMode} style={s.clearBtn}>
-              <Text style={s.clearBtnText}>TEMİZLE</Text>
+              <Text style={s.clearBtnText}>{t('common.clear')}</Text>
             </TouchableOpacity>
           )}
         </View>
         {dtcs.length === 0 ? (
           <View style={s.cleanBadge}>
-            <Text style={s.cleanBadgeText}>✓  HATA KODU YOK — TEMİZ</Text>
+            <Text style={s.cleanBadgeText}>✓  {t('expertise.dtcClean')}</Text>
           </View>
         ) : (
           dtcs.map((dtc, i) => {
@@ -515,7 +518,7 @@ ${sensorLines || '  Veri okunamadı'}
 
       {/* Secondary Actions (Formerly Service) — ABOVE Garage */}
       <View style={{ marginTop: 8 }}>
-        <Text style={[s.panelTitle, { marginLeft: 16, marginBottom: 8 }]}>EKSTRA İŞLEMLER</Text>
+        <Text style={[s.panelTitle, { marginLeft: 16, marginBottom: 8 }]}>{t('expertise.extraActions')}</Text>
 
         <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: 16 }}>
           <TouchableOpacity
@@ -557,7 +560,7 @@ ${sensorLines || '  Veri okunamadı'}
           onPress={() => setIsGarageStatsExpanded(!isGarageStatsExpanded)}
         >
           <Text style={[s.actionBtnText, { color: isGarageStatsExpanded ? C.green : C.textSec, fontSize: 12 }]}>
-            {isGarageStatsExpanded ? '▼ GARAJ VE GEÇMİŞ KAYITLAR' : '📁 GARAJ VE GEÇMİŞ KAYITLAR'}
+            {isGarageStatsExpanded ? `▼ ${t('expertise.garageTitle')}` : `📁 ${t('expertise.garageTitle')}`}
           </Text>
         </TouchableOpacity>
 
@@ -569,7 +572,7 @@ ${sensorLines || '  Veri okunamadı'}
                 onPress={handleShareReport}
                 disabled={isDiagnosticMode}
               >
-                <Text style={[s.actionBtnText, { fontSize: 11 }]}>📤 PAYLAŞ</Text>
+                <Text style={[s.actionBtnText, { fontSize: 11 }]}>📤 {t('expertise.share')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -582,14 +585,14 @@ ${sensorLines || '  Veri okunamadı'}
                   }
                 }}
               >
-                <Text style={[s.actionBtnText, { fontSize: 11 }]}>💾 BU ARACI KAYDET</Text>
+                <Text style={[s.actionBtnText, { fontSize: 11 }]}>💾 {t('expertise.saveVehicle')}</Text>
               </TouchableOpacity>
             </View>
 
             <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>GEÇMİŞ KAYITLAR</Text>
             {garageRecords.length === 0 && vinHistory.length === 0 ? (
               <Text style={{ color: C.textSec, fontSize: 11, fontFamily: C.mono, fontStyle: 'italic', textAlign: 'center', marginVertical: 10 }}>
-                Henüz kaydedilmiş araç bulunmuyor.
+                {t('expertise.noRecords')}
               </Text>
             ) : (
               (vinHistory.length > 0 ? vinHistory : garageRecords).map((item) => (
@@ -621,7 +624,7 @@ ${sensorLines || '  Veri okunamadı'}
                         fontWeight: '800',
                         fontFamily: C.mono,
                       }}>
-                        {item.dtcs.length === 0 ? 'TEMİZ' : `${item.dtcs.length} ARIZA`}
+                        {item.dtcs.length === 0 ? t('expertise.clean') : `${item.dtcs.length} ${t('expertise.faults')}`}
                       </Text>
                     </View>
                   </View>
@@ -719,87 +722,91 @@ ${sensorLines || '  Veri okunamadı'}
         <Text style={s.logoText}>MOTOCORTEX</Text>
         <Text style={[s.logoSub, { color: C.cyan }]}>v7 PRO</Text>
         <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 10, marginTop: 8, textAlign: 'center', paddingHorizontal: 20 }}>
-          Profesyonel motosiklet ve araç teşhis uygulaması.{'\n'}Tüm araçlarla uyumludur.
+          {t('info.desc')}
         </Text>
+      </View>
+
+      {/* Language Switcher */}
+      <View style={{ marginBottom: 24, paddingVertical: 12, backgroundColor: C.card, borderRadius: 8, borderWidth: 1, borderColor: C.border, alignItems: 'center' }}>
+        <Text style={{ color: C.textSec, fontSize: 10, fontWeight: '800', fontFamily: C.mono, marginBottom: 12, letterSpacing: 1 }}>{t('info.language')}</Text>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          {['tr', 'en', 'id'].map((lang) => (
+            <TouchableOpacity
+              key={lang}
+              onPress={async () => {
+                await i18n.changeLanguage(lang);
+                const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+                await AsyncStorage.setItem('user-language', lang);
+              }}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                borderRadius: 4,
+                backgroundColor: i18n.language === lang ? 'rgba(0,212,255,0.1)' : C.elevated,
+                borderWidth: 1,
+                borderColor: i18n.language === lang ? C.cyan : C.border
+              }}
+            >
+              <Text style={{ color: i18n.language === lang ? C.cyan : C.textSec, fontWeight: 'bold', fontFamily: C.mono, fontSize: 12 }}>
+                {lang.toUpperCase()}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
       <TouchableOpacity
         style={[s.actionBtn, { backgroundColor: 'transparent', borderWidth: 2, borderColor: '#7c3aed', marginBottom: 24 }]}
         onPress={() => Alert.alert('Erken Erişim 🎉', 'MotoCortex şu an geliştirme aşamasındadır. Siz erken dönem kullanıcımız olduğunuz için tüm profesyonel özellikler şu an size açıktır. Geri bildirimleriniz bizim için çok değerli!')}
       >
-        <Text style={[s.actionBtnText, { color: '#a78bfa', fontSize: 14 }]}>👑 MotoCortex PRO'ya Yükselt</Text>
+        <Text style={[s.actionBtnText, { color: '#a78bfa', fontSize: 14 }]}>{t('info.upgrade')}</Text>
       </TouchableOpacity>
 
-      <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>YARDIM VE REHBER</Text>
+      <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>{t('info.helpGuide')}</Text>
 
       {/* Middle Section: Accordions */}
       <InfoAccordion
         id="canli"
         icon="📊"
         title="CANLI İZLEME SENSÖRLERİ"
-        content={
-          <Text style={s.panelDesc}>
-            Devir, Hız, Motor Sıcaklığı, Gaz Pozisyonu, Akü Voltajı, Motor Yükü, Emme Hava Sıcaklığı ve Manifold Basıncını (MAP) anlık olarak izleyebilirsiniz.{'\n\n'}
-            Değerler Bluetooth hızınıza bağlı olarak saniyede 1-5 kez yenilenir. Terminal üzerinden UDS / OBD komutları ile araca direkt müdahale edebilirsiniz.
-          </Text>
-        }
+        content={t('info.sections.live.content')}
       />
 
       <InfoAccordion
         id="ekspertiz"
         icon="🔍"
         title="EKSPERTİZ VE GARANTİ"
-        content={
-          <Text style={s.panelDesc}>
-            Uygulama, hataları tespit etmek için ECU (Beyin) kodlarını kullanır. Şasi Numarası (VIN) ve araca kaydedilmiş mevcut kilometre çekilir.{'\n\n'}
-            Ayrıca Check Engine ışığı ile aracın ne kadar mesafe gittiği hesaplanarak geçmiş hatalar belirlenir. Çıkan rapor PDF ve Mesajlaşma ortamlarında paylaşılabilir.
-          </Text>
-        }
+        content={t('info.sections.expertise.content')}
       />
 
       <InfoAccordion
         id="testler"
         icon="⚡"
         title="AKÜ / PERFORMANS TESTLERİ"
-        content={
-          <Text style={s.panelDesc}>
-            Akü testi 3 aşamalıdır: Dinlenme, Marş ve Rölanti Şarj testleri ile batarya/regülatör sağlığınız ölçülür.{'\n\n'}
-            Performans testi, telefonunuzun işlemcisi ve aracınızdan gelen anlık hız verisiyle 0-60 ve 0-100 km/s hızlanma değerlerini 50ms hata payı ile ölçer.
-          </Text>
-        }
+        content={t('info.sections.tests.content')}
       />
 
       <InfoAccordion
         id="donanim"
         icon="🔌"
         title="DONANIM UYUMLULUĞU"
-        content={
-          <Text style={s.panelDesc}>
-            ELM327 Bluetooth (v1.5) önerilir. v2.1 KLON versiyonlu kalitesiz donanımlarla bazı gelişmiş kodlar çalışmayabilir. vLinker ve OBDLink gibi premium adaptörlerde en yüksek hızı alırsınız.
-          </Text>
-        }
+        content={t('info.sections.hardware.content')}
       />
 
       <InfoAccordion
         id="uyarilar"
         icon="⚠️"
         title="ÖNEMLİ UYARILAR"
-        content={
-          <Text style={s.panelDesc}>
-            • Arıza kodu silme işlemi veya ECU Reset fonksiyonu esnasında Kontak AÇIK, Motor KAPALI konumda olmalıdır.{'\n'}
-            • Çalışan araca Reset göndermeyiniz.{'\n'}
-            • Her araç tüm sensörleri desteklemeyebilir, desteklenmeyen sensörlerde "--" görünür.
-          </Text>
-        }
+        content={t('info.sections.warnings.content')}
       />
 
       {/* Bottom Section: Support Links */}
       <View style={{ marginTop: 24, paddingVertical: 20, borderTopWidth: 1, borderTopColor: C.border, alignItems: 'center', gap: 16 }}>
         <TouchableOpacity onPress={() => Linking.openURL('mailto:ismailimamoglu610@gmail.com')}>
-          <Text style={{ color: C.cyan, fontFamily: C.mono, fontSize: 13, fontWeight: '700' }}>📞 DESTEK MERKEZİ</Text>
+          <Text style={{ color: C.cyan, fontFamily: C.mono, fontSize: 13, fontWeight: '700' }}>{t('info.support')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Alert.alert('Teşekkürler!', 'Görüşleriniz için teşekkür ederiz. Play Store üzerinden bize yorum bırakabilirsiniz.')}>
-          <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 12, fontWeight: '700' }}>✉️ GERİ BİLDİRİM GÖNDER</Text>
+        <TouchableOpacity onPress={() => Alert.alert(t('info.thanks'), t('info.thanksDesc'))}>
+          <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 12, fontWeight: '700' }}>✉️ {t('expertise.share').toUpperCase()}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -822,7 +829,7 @@ ${sensorLines || '  Veri okunamadı'}
           <View style={s.topRight}>
             {ecuStatus === 'connected' && (
               <TouchableOpacity onPress={() => retryEcu()}>
-                <Text style={s.topDisconnect}>KOPAR</Text>
+                <Text style={s.topDisconnect}>{t('connection.disconnect').toUpperCase()}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -837,7 +844,7 @@ ${sensorLines || '  Veri okunamadı'}
               onPress={() => setActiveTab(tab)}
             >
               <Text style={[s.tabLabel, activeTab === tab && s.tabLabelActive]}>
-                {tab === 'dashboard' ? 'İZLEME' : tab === 'expertise' ? 'EKSPERTİZ' : 'BİLGİ'}
+                {tab === 'dashboard' ? t('tabs.dashboard') : tab === 'expertise' ? t('tabs.expertise') : t('tabs.info')}
               </Text>
             </TouchableOpacity>
           ))}
@@ -857,9 +864,9 @@ ${sensorLines || '  Veri okunamadı'}
         >
           <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
             <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: C.border }}>
-              <Text style={{ color: C.textPri, fontSize: 16, fontWeight: '800', fontFamily: C.mono }}>BAĞLANTI AYARLARI</Text>
+              <Text style={{ color: C.textPri, fontSize: 16, fontWeight: '800', fontFamily: C.mono }}>{t('connection.foundDevices')}</Text>
               <TouchableOpacity onPress={() => setIsConnectModalVisible(false)} style={{ padding: 10 }}>
-                <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>KAPAT</Text>
+                <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -877,7 +884,7 @@ ${sensorLines || '  Veri okunamadı'}
         >
           <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', padding: 30 }}>
             <View style={{ backgroundColor: C.card, borderRadius: 8, padding: 24, borderWidth: 1, borderColor: C.border }}>
-              <Text style={{ color: C.textPri, fontSize: 16, fontWeight: '800', fontFamily: C.mono, marginBottom: 16 }}>SONUCU KAYDET</Text>
+              <Text style={{ color: C.textPri, fontSize: 16, fontWeight: '800', fontFamily: C.mono, marginBottom: 16 }}>{t('common.save').toUpperCase()}</Text>
               <TextInput
                 style={{ backgroundColor: C.elevated, borderWidth: 1, borderColor: C.border, borderRadius: 4, paddingHorizontal: 14, paddingVertical: 12, color: '#ffffff', fontFamily: C.mono, fontSize: 14, marginBottom: 10 }}
                 value={saveMake}
@@ -898,13 +905,13 @@ ${sensorLines || '  Veri okunamadı'}
                 style={[s.actionBtn, { backgroundColor: '#1e40af' }]}
                 onPress={handleSaveToGarage}
               >
-                <Text style={s.actionBtnText}>KAYDET</Text>
+                <Text style={s.actionBtnText}>{t('common.save').toUpperCase()}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[s.actionBtn, { backgroundColor: C.elevated, marginTop: 8, borderWidth: 1, borderColor: C.border }]}
                 onPress={() => setIsSaveModalVisible(false)}
               >
-                <Text style={[s.actionBtnText, { color: C.textSec }]}>VAZGEÇ</Text>
+                <Text style={[s.actionBtnText, { color: C.textSec }]}>{t('common.cancel').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -919,24 +926,24 @@ ${sensorLines || '  Veri okunamadı'}
         >
           <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
             <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: C.border }}>
-              <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '800', fontFamily: C.mono }}>DETAY: {selectedRecord?.make} {selectedRecord?.model}</Text>
+              <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '800', fontFamily: C.mono }}>{t('common.success')}: {selectedRecord?.make} {selectedRecord?.model}</Text>
               <TouchableOpacity onPress={() => setSelectedRecord(null)} style={{ padding: 10 }}>
-                <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>KAPAT</Text>
+                <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
             {selectedRecord && (
               <ScrollView style={{ padding: 16 }}>
                 <View style={s.panel}>
-                  <Text style={s.panelTitle}>ARAÇ BİLGİSİ</Text>
-                  <View style={s.tableRow}><Text style={s.tableLabel}>Tarih</Text><Text style={s.tableValue}>{selectedRecord.date}</Text></View>
-                  <View style={s.tableRow}><Text style={s.tableLabel}>Marka / Model</Text><Text style={s.tableValue}>{selectedRecord.make} {selectedRecord.model}</Text></View>
-                  <View style={s.tableRow}><Text style={s.tableLabel}>Şasi No (VIN)</Text><Text style={s.tableValue}>{selectedRecord.vin}</Text></View>
-                  <View style={[s.tableRow, { borderBottomWidth: 0 }]}><Text style={s.tableLabel}>Kilometre</Text><Text style={s.tableValue}>{selectedRecord.km} km</Text></View>
+                  <Text style={s.panelTitle}>{t('expertise.vehicleIdentity')}</Text>
+                  <View style={s.tableRow}><Text style={s.tableLabel}>{t('report.date')}</Text><Text style={s.tableValue}>{selectedRecord.date}</Text></View>
+                  <View style={s.tableRow}><Text style={s.tableLabel}>{t('expertise.manualVin')}</Text><Text style={s.tableValue}>{selectedRecord.make} {selectedRecord.model}</Text></View>
+                  <View style={s.tableRow}><Text style={s.tableLabel}>{t('expertise.vin')}</Text><Text style={s.tableValue}>{selectedRecord.vin}</Text></View>
+                  <View style={[s.tableRow, { borderBottomWidth: 0 }]}><Text style={s.tableLabel}>{t('expertise.odometer')}</Text><Text style={s.tableValue}>{selectedRecord.km} km</Text></View>
                 </View>
                 <View style={s.panel}>
-                  <Text style={s.panelTitle}>ARIZA KODLARI</Text>
+                  <Text style={s.panelTitle}>{t('expertise.dtcTitle')}</Text>
                   {selectedRecord.dtcs.length === 0 ? (
-                    <View style={s.cleanBadge}><Text style={s.cleanBadgeText}>✓ TEMİZ</Text></View>
+                    <View style={s.cleanBadge}><Text style={s.cleanBadgeText}>✓ {t('expertise.clean')}</Text></View>
                   ) : (
                     selectedRecord.dtcs.map((dtc, i) => {
                       const desc = lookupDTC(dtc);
@@ -972,7 +979,7 @@ ${sensorLines || '  Veri okunamadı'}
                     ]);
                   }}
                 >
-                  <Text style={s.actionBtnText}>KAYDI SİL</Text>
+                  <Text style={s.actionBtnText}>{t('common.delete').toUpperCase()}</Text>
                 </TouchableOpacity>
               </ScrollView>
             )}

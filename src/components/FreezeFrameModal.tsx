@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const C = {
     bg: '#0a0a0a',
@@ -29,6 +30,7 @@ interface Props {
 }
 
 export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtcs }: Props) {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<FreezeData | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -70,12 +72,12 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
             const coolVal = coolRaw !== null ? coolRaw - 40 : null;
 
             if (rpmVal === null && speedVal === null && coolVal === null) {
-                setError('Dondurulmuş veri bulunamadı. Araç bu özelliği desteklemiyor olabilir.');
+                setError(t('freeze.noData'));
             } else {
                 setData({ rpm: rpmVal, speed: speedVal, coolant: coolVal });
             }
         } catch (e) {
-            setError('Veri okuma hatası: ' + (e instanceof Error ? e.message : String(e)));
+            setError(t('freeze.error') + ': ' + (e instanceof Error ? e.message : String(e)));
         } finally {
             setIsLoading(false);
         }
@@ -92,26 +94,23 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
             <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
                 {/* Header */}
                 <View style={ms.header}>
-                    <Text style={ms.headerTitle}>FREEZE FRAME</Text>
+                    <Text style={ms.headerTitle}>{t('freeze.title')}</Text>
                     <TouchableOpacity onPress={() => { resetState(); onClose(); }} style={{ padding: 10 }}>
-                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>KAPAT</Text>
+                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{ flex: 1, padding: 16 }}>
                     {/* Description */}
-                    <View style={ms.infoPanel}>
-                        <Text style={ms.infoTitle}>❄️ ARIZA ANI HAFIZASI</Text>
-                        <Text style={ms.infoDesc}>
-                            Check Engine ışığı yandığı andaki motor parametrelerini okur.
-                            Bu veriler arıza teşhisinde kritik bilgi sağlar.
-                        </Text>
-                    </View>
+                    <Text style={ms.infoTitle}>❄️ {t('freeze.snapshot')}</Text>
+                    <Text style={ms.infoDesc}>
+                        {t('freeze.desc')}
+                    </Text>
 
                     {!hasDtcs && !data && (
                         <View style={[ms.infoPanel, { borderColor: C.amber }]}>
                             <Text style={{ color: C.amber, fontSize: 11, fontFamily: C.mono, textAlign: 'center' }}>
-                                ⚠️ Kayıtlı arıza kodu yok. Freeze Frame verisi olmayabilir.
+                                ⚠️ {t('freeze.noDtcs')}
                             </Text>
                         </View>
                     )}
@@ -122,7 +121,7 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                             style={ms.actionBtn}
                             onPress={fetchFreezeFrame}
                         >
-                            <Text style={ms.actionBtnText}>❄️ DONDURULMUŞ VERİYİ OKU</Text>
+                            <Text style={ms.actionBtnText}>❄️ {t('freeze.read')}</Text>
                         </TouchableOpacity>
                     )}
 
@@ -131,7 +130,7 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                         <View style={{ alignItems: 'center', marginTop: 20 }}>
                             <ActivityIndicator size="large" color={C.cyan} />
                             <Text style={{ color: C.textSec, fontSize: 11, fontFamily: C.mono, marginTop: 8 }}>
-                                Mode 02 sorgulanıyor...
+                                {t('freeze.loading')}
                             </Text>
                         </View>
                     )}
@@ -147,22 +146,22 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                     {data && (
                         <View style={{ marginTop: 8 }}>
                             <Text style={{ color: C.textPri, fontSize: 12, fontWeight: '800', fontFamily: C.mono, marginBottom: 12, textAlign: 'center' }}>
-                                📸 ARIZA ANINDA KAYDEDILEN DEĞERLER
+                                📸 {t('freeze.values')}
                             </Text>
 
                             <View style={{ flexDirection: 'row', gap: 8, marginBottom: 8 }}>
                                 <View style={ms.resultCard}>
-                                    <Text style={ms.resultLabel}>DEVİR</Text>
+                                    <Text style={ms.resultLabel}>{t('dashboard.rpm')}</Text>
                                     <Text style={ms.resultValue}>{data.rpm !== null ? data.rpm : '--'}</Text>
                                     <Text style={ms.resultUnit}>RPM</Text>
                                 </View>
                                 <View style={ms.resultCard}>
-                                    <Text style={ms.resultLabel}>HIZ</Text>
+                                    <Text style={ms.resultLabel}>{t('dashboard.speed')}</Text>
                                     <Text style={ms.resultValue}>{data.speed !== null ? data.speed : '--'}</Text>
                                     <Text style={ms.resultUnit}>KM/H</Text>
                                 </View>
                                 <View style={ms.resultCard}>
-                                    <Text style={ms.resultLabel}>SICAKLIK</Text>
+                                    <Text style={ms.resultLabel}>{t('dashboard.temp')}</Text>
                                     <Text style={[ms.resultValue, data.coolant !== null && data.coolant > 100 ? { color: C.red } : {}]}>
                                         {data.coolant !== null ? data.coolant : '--'}
                                     </Text>
@@ -174,23 +173,16 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                                 style={[ms.actionBtn, { backgroundColor: C.elevated, borderWidth: 1, borderColor: C.border }]}
                                 onPress={() => { resetState(); }}
                             >
-                                <Text style={[ms.actionBtnText, { color: C.textSec }]}>↺ TEKRAR OKU</Text>
+                                <Text style={[ms.actionBtnText, { color: C.textSec }]}>↺ {t('freeze.retry')}</Text>
                             </TouchableOpacity>
                         </View>
                     )}
 
                     {/* Info */}
-                    <View style={[ms.infoPanel, { marginTop: 16 }]}>
-                        <Text style={ms.infoTitle}>📖 TEKNİK BİLGİ</Text>
-                        <Text style={ms.infoDesc}>
-                            • OBD-II Mode 02: Freeze Frame Data{'\n'}
-                            • PID 020C00: Arıza anı RPM{'\n'}
-                            • PID 020D00: Arıza anı hız{'\n'}
-                            • PID 020500: Arıza anı soğutma suyu sıcaklığı{'\n\n'}
-                            Bu veriler son arıza koduna aittir. Arıza kodları silinince
-                            freeze frame verileri de temizlenir.
-                        </Text>
-                    </View>
+                    <Text style={ms.infoTitle}>📖 {t('freeze.techInfo')}</Text>
+                    <Text style={ms.infoDesc}>
+                        {t('freeze.techDesc')}
+                    </Text>
                 </View>
             </SafeAreaView>
         </Modal>
