@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './global.css';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList, Linking } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { useBluetooth } from './src/hooks/useBluetooth';
@@ -471,15 +471,15 @@ ${sensorLines || '  Veri okunamadı'}
         </View>
         <View style={s.tableRow}>
           <Text style={s.tableLabel}>Orijinal KM</Text>
-          <Text style={s.tableValue}>{odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer} km` : '—'}</Text>
+          <Text style={s.tableValue}>{odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer} km` : 'Desteklenmiyor'}</Text>
         </View>
         <View style={s.tableRow}>
           <Text style={s.tableLabel}>Arıza Silineli</Text>
-          <Text style={s.tableValue}>{distanceSinceCleared !== null ? `${distanceSinceCleared} km` : '—'}</Text>
+          <Text style={s.tableValue}>{distanceSinceCleared !== null ? `${distanceSinceCleared} km` : 'Desteklenmiyor'}</Text>
         </View>
         <View style={[s.tableRow, { borderBottomWidth: 0 }]}>
           <Text style={s.tableLabel}>Motor Işığı Yanık</Text>
-          <Text style={s.tableValue}>{distanceMilOn !== null ? `${distanceMilOn} km` : '—'}</Text>
+          <Text style={s.tableValue}>{distanceMilOn !== null ? `${distanceMilOn} km` : 'Desteklenmiyor'}</Text>
         </View>
       </View>
 
@@ -795,7 +795,7 @@ ${sensorLines || '  Veri okunamadı'}
 
       {/* Bottom Section: Support Links */}
       <View style={{ marginTop: 24, paddingVertical: 20, borderTopWidth: 1, borderTopColor: C.border, alignItems: 'center', gap: 16 }}>
-        <TouchableOpacity onPress={() => Alert.alert('Yardım', 'Destek ekibimize ismailimamoglu610@gmail.com adresinden ulaşabilirsiniz.')}>
+        <TouchableOpacity onPress={() => Linking.openURL('mailto:ismailimamoglu610@gmail.com')}>
           <Text style={{ color: C.cyan, fontFamily: C.mono, fontSize: 13, fontWeight: '700' }}>📞 DESTEK MERKEZİ</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Alert.alert('Teşekkürler!', 'Görüşleriniz için teşekkür ederiz. Play Store üzerinden bize yorum bırakabilirsiniz.')}>
