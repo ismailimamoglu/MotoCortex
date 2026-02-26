@@ -471,15 +471,15 @@ ${sensorLines || '  Veri okunamadı'}
         </View>
         <View style={s.tableRow}>
           <Text style={s.tableLabel}>Orijinal KM</Text>
-          <Text style={s.tableValue}>{odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer} km` : 'Desteklenmiyor'}</Text>
+          <Text style={s.tableValue}>{odometer === 'UNSUPPORTED' ? 'Desteklenmiyor' : odometer !== null ? `${odometer} km` : '—'}</Text>
         </View>
         <View style={s.tableRow}>
           <Text style={s.tableLabel}>Arıza Silineli</Text>
-          <Text style={s.tableValue}>{distanceSinceCleared !== null ? `${distanceSinceCleared} km` : 'Desteklenmiyor'}</Text>
+          <Text style={s.tableValue}>{distanceSinceCleared !== null ? `${distanceSinceCleared} km` : '—'}</Text>
         </View>
         <View style={[s.tableRow, { borderBottomWidth: 0 }]}>
           <Text style={s.tableLabel}>Motor Işığı Yanık</Text>
-          <Text style={s.tableValue}>{distanceMilOn !== null ? `${distanceMilOn} km` : 'Desteklenmiyor'}</Text>
+          <Text style={s.tableValue}>{distanceMilOn !== null ? `${distanceMilOn} km` : '—'}</Text>
         </View>
       </View>
 
