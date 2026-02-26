@@ -197,7 +197,7 @@ export const useBluetooth = () => {
 
             // Priority 2: Low frequency (Coolant, Throttle, Voltage) - polled every 5 cycles
             tickRef.current += 1;
-            if (tickRef.current >= 5) {
+            if (tickRef.current >= 4) {
                 tickRef.current = 0;
                 await sendCommand(ADAPTER_COMMANDS.COOLANT_TEMP);
                 await sendCommand(ADAPTER_COMMANDS.THROTTLE);
@@ -211,7 +211,7 @@ export const useBluetooth = () => {
         } finally {
             // Schedule the next poll if still active
             if (pollingRef.current) {
-                setTimeout(performPollSync, 0); // Execute next loop as soon as possible after current finishes
+                setTimeout(performPollSync, 250); // ~4Hz base interval for RPM/Speed responsiveness
             }
         }
     };

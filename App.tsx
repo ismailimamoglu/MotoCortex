@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './global.css';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import { useBluetooth } from './src/hooks/useBluetooth';
 import { BluetoothDevice } from 'react-native-bluetooth-classic';
 import { ADAPTER_COMMANDS } from './src/api/commands';
@@ -44,11 +46,9 @@ export default function App() {
   const [hasShownCloneWarning, setHasShownCloneWarning] = useState(false);
 
   const [scannedDevices, setScannedDevices] = useState<BluetoothDevice[]>([]);
-  const [manualCmd, setManualCmd] = useState('');
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isPolling, setIsPolling] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'garage' | 'info'>('dashboard');
-  const [showTerminal, setShowTerminal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard');
   const [isConnectModalVisible, setIsConnectModalVisible] = useState(false);
 
   // Garage states
@@ -57,6 +57,9 @@ export default function App() {
   const [saveMake, setSaveMake] = useState('');
   const [saveModel, setSaveModel] = useState('');
   const [selectedRecord, setSelectedRecord] = useState<GarageRecord | null>(null);
+  const [isGarageStatsExpanded, setIsGarageStatsExpanded] = useState(false);
+  const [expandedInfoSection, setExpandedInfoSection] = useState<string | null>(null);
+
   const [isBatteryTestVisible, setIsBatteryTestVisible] = useState(false);
   const [isFreezeFrameVisible, setIsFreezeFrameVisible] = useState(false);
   const [isPerformanceVisible, setIsPerformanceVisible] = useState(false);
@@ -78,12 +81,10 @@ export default function App() {
     }
   }, [ecuStatus]);
 
-  // Load garage records on mount and when tab switches to garage
+  // Load garage records
   useEffect(() => {
-    if (activeTab === 'garage') {
-      getGarageRecords().then(setGarageRecords);
-    }
-  }, [activeTab]);
+    getGarageRecords().then(setGarageRecords);
+  }, []);
 
   // VIN History Check
   useEffect(() => {
@@ -114,8 +115,17 @@ export default function App() {
     setIsSaveModalVisible(false);
     setSaveMake('');
     setSaveModel('');
-    Alert.alert('Kaydedildi ✅', 'Ekspertiz sonucu garajınıza eklendi.');
+    // Refresh records and history
+    const allRecords = await getGarageRecords();
+    setGarageRecords(allRecords);
+    const currentVin = vin || manualVin;
+    if (currentVin && currentVin.length > 5) {
+      setVinHistory(await getRecordsByVin(currentVin));
+    }
+    Alert.alert('Kaydedildi ✅', 'Ekspertiz sonucu garaja eklendi.');
   };
+
+
 
   const checkPermissions = async () => {
     if (Platform.OS === 'android') {
@@ -131,10 +141,7 @@ export default function App() {
   };
 
   const handleScan = async () => { setScannedDevices(await scanDevices()); };
-  const handleSend = async () => {
-    if (!manualCmd.trim()) return;
-    try { await sendCommand(manualCmd); setManualCmd(''); } catch (e) { console.error(e); }
-  };
+
 
   const guardAction = (action: () => void) => {
     if (ecuStatus !== 'connected') {
@@ -311,6 +318,35 @@ ${sensorLines || '  Veri okunamadı'}
 
     return (
       <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 20 }}>
+        {/* Device Connection Card */}
+        <TouchableOpacity
+          style={{
+            backgroundColor: ecuStatus === 'connected' ? 'rgba(0,255,136,0.08)' : C.card,
+            borderWidth: 1.5,
+            borderColor: ecuStatus === 'connected' ? C.green : C.cyan,
+            borderRadius: 12,
+            padding: 16,
+            marginBottom: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+          onPress={() => setIsConnectModalVisible(true)}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: statusColor(ecuStatus) }} />
+            <View>
+              <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '900', fontFamily: C.mono }}>
+                {ecuStatus === 'connected' ? 'BAĞLI CİHAZ' : 'CİHAZ SEÇMEK İÇİN DOKUN'}
+              </Text>
+              <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, marginTop: 2 }}>
+                {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : 'Henüz bağlantı yok'}
+              </Text>
+            </View>
+          </View>
+          <Text style={{ color: ecuStatus === 'connected' ? C.green : C.cyan, fontSize: 18, fontWeight: '900' }}>›</Text>
+        </TouchableOpacity>
+
         {/* Battery Warning */}
         {isBatteryLow && (
           <View style={[s.warningBanner, { borderColor: C.red }]}>
@@ -380,73 +416,6 @@ ${sensorLines || '  Veri okunamadı'}
             <Text style={s.sensorLabel}>MANİFOLD kPa</Text>
           </View>
         </View>
-
-
-        {/* Terminal Toggle */}
-        <View style={{ marginHorizontal: 16, marginBottom: 8 }}>
-          <TouchableOpacity
-            style={[s.actionBtn, { backgroundColor: showTerminal ? C.elevated : C.card, borderWidth: 1, borderColor: showTerminal ? C.cyan : C.border }]}
-            onPress={() => setShowTerminal(!showTerminal)}
-          >
-            <Text style={[s.actionBtnText, { color: showTerminal ? C.cyan : C.textSec, fontSize: 11 }]}>
-              {showTerminal ? '▼ TERMİNALİ KAPAT' : '▶ TERMİNAL AÇ'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Terminal Console */}
-        {showTerminal && (
-          <View style={{ marginHorizontal: 16, marginBottom: 8, backgroundColor: '#000000', borderRadius: 6, borderWidth: 1, borderColor: '#1a3a1a', overflow: 'hidden' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#0a0f0a', borderBottomWidth: 1, borderBottomColor: '#1a3a1a' }}>
-              <Text style={{ color: '#00ff88', fontSize: 11, fontWeight: '800', fontFamily: C.mono }}>TERMINAL</Text>
-              <TouchableOpacity onPress={clearLogs}>
-                <Text style={{ color: '#ff5555', fontSize: 10, fontWeight: 'bold', fontFamily: C.mono }}>TEMİZLE</Text>
-              </TouchableOpacity>
-            </View>
-            <ScrollView style={{ maxHeight: 300, paddingHorizontal: 10, paddingVertical: 6 }} nestedScrollEnabled>
-              {logs.length === 0 ? (
-                <Text style={{ color: '#333', fontSize: 10, fontFamily: C.mono, fontStyle: 'italic' }}>Henüz komut gönderilmedi...</Text>
-              ) : (
-                logs.map((line, i) => (
-                  <Text key={i} style={{
-                    color: line.includes('TX:') ? '#00d4ff' : line.includes('ERR') ? '#ff3b3b' : line.includes('RX:') ? '#00ff88' : '#666',
-                    fontSize: 10, fontFamily: C.mono, lineHeight: 16,
-                  }}>{line}</Text>
-                ))
-              )}
-            </ScrollView>
-            <View style={{ flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#1a3a1a', padding: 6, gap: 6 }}>
-              <TextInput
-                style={{ flex: 1, backgroundColor: '#111', borderWidth: 1, borderColor: '#1a3a1a', borderRadius: 4, paddingHorizontal: 10, paddingVertical: 8, color: '#00ff88', fontFamily: C.mono, fontSize: 12 }}
-                value={manualCmd}
-                onChangeText={setManualCmd}
-                placeholder="OBD komutu yaz... (ATZ, 010C, 22 11 02)"
-                placeholderTextColor="#333"
-                selectionColor="#00ff88"
-              />
-              <TouchableOpacity
-                style={{ backgroundColor: '#00d4ff', borderRadius: 4, paddingHorizontal: 14, justifyContent: 'center' }}
-                onPress={handleSend}
-              >
-                <Text style={{ color: '#000', fontWeight: '900', fontSize: 14 }}>⟩</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ flexDirection: 'row', paddingHorizontal: 6, paddingBottom: 6, gap: 4, flexWrap: 'wrap' }}>
-              <TouchableOpacity style={[s.chip, { borderColor: '#1a3a1a' }]} onPress={() => guardAction(() => sendCommand(ADAPTER_COMMANDS.RPM))}>
-                <Text style={[s.chipText, { color: '#00d4ff' }]}>RPM</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[s.chip, { borderColor: '#1a3a1a' }]} onPress={() => guardAction(() => sendCommand(ADAPTER_COMMANDS.VOLTAGE))}>
-                <Text style={[s.chipText, { color: '#00ff88' }]}>VOLTAJ</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[s.chip, { borderColor: '#1a3a1a' }]} onPress={() => guardAction(() => sendCommand('ATI'))}>
-                <Text style={[s.chipText, { color: '#ffb800' }]}>ATI</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[s.chip, { borderColor: '#1a3a1a' }]} onPress={() => guardAction(() => sendCommand(ADAPTER_COMMANDS.LOAD))}>
-                <Text style={[s.chipText, { color: '#a78bfa' }]}>YÜK</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
       </ScrollView>
     );
   };
@@ -462,9 +431,9 @@ ${sensorLines || '  Veri okunamadı'}
           <Text style={s.warningIcon}>📜</Text>
           <View style={{ flex: 1 }}>
             <Text style={[s.warningTitle, { color: C.cyan }]}>ARAÇ GEÇMİŞİ BULUNDU!</Text>
-            <Text style={s.warningBody}>Bu aracın daha önce {vinHistory.length} adet kaydı oluşturulmuş. Garaj sekmesinden geçmişi inceleyebilirsiniz.</Text>
-            <TouchableOpacity onPress={() => setActiveTab('garage')} style={{ marginTop: 8 }}>
-              <Text style={{ color: C.cyan, fontWeight: 'bold' }}>GARAJA GİT ›</Text>
+            <Text style={s.warningBody}>Bu aracın daha önce {vinHistory.length} adet kaydı oluşturulmuş. Aşağıdan geçmişi inceleyebilirsiniz.</Text>
+            <TouchableOpacity onPress={() => setIsGarageStatsExpanded(true)} style={{ marginTop: 8 }}>
+              <Text style={{ color: C.cyan, fontWeight: 'bold' }}>GEÇMİŞİ GÖR ›</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -544,32 +513,8 @@ ${sensorLines || '  Veri okunamadı'}
         )}
       </View>
 
-      {/* Action Suite (Export & Save) */}
-      <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
-        <TouchableOpacity
-          style={[s.actionBtn, { flex: 1, backgroundColor: '#075E54' }, isDiagnosticMode && { opacity: 0.5 }]}
-          onPress={handleShareReport}
-          disabled={isDiagnosticMode}
-        >
-          <Text style={[s.actionBtnText, { fontSize: 13 }]}>📤 PAYLAŞ</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[s.actionBtn, { flex: 1, backgroundColor: '#1e40af' }]}
-          onPress={() => {
-            if (vin || manualVin) {
-              setIsSaveModalVisible(true);
-            } else {
-              Alert.alert('VIN Gerekli', 'Kayıt yapabilmek için şasi numarası (VIN) otomatik gelmeli veya el ile yazılmalıdır.');
-            }
-          }}
-        >
-          <Text style={[s.actionBtnText, { fontSize: 13 }]}>💾 GARAJA KAYDET</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Secondary Actions (Formerly Service) */}
-      <View style={{ marginTop: 20 }}>
+      {/* Secondary Actions (Formerly Service) — ABOVE Garage */}
+      <View style={{ marginTop: 8 }}>
         <Text style={[s.panelTitle, { marginLeft: 16, marginBottom: 8 }]}>EKSTRA İŞLEMLER</Text>
 
         <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: 16 }}>
@@ -603,6 +548,88 @@ ${sensorLines || '  Veri okunamadı'}
             <Text style={s.miniActionText}>🔧 ECU RESET</Text>
           </TouchableOpacity>
         </View>
+      </View>
+
+      {/* Garage & Past Records Accordion inside Expertise */}
+      <View style={{ marginHorizontal: 16, marginTop: 16, marginBottom: 20 }}>
+        <TouchableOpacity
+          style={[s.actionBtn, { backgroundColor: isGarageStatsExpanded ? C.elevated : C.card, borderWidth: 1, borderColor: isGarageStatsExpanded ? C.green : C.border, paddingVertical: 14 }]}
+          onPress={() => setIsGarageStatsExpanded(!isGarageStatsExpanded)}
+        >
+          <Text style={[s.actionBtnText, { color: isGarageStatsExpanded ? C.green : C.textSec, fontSize: 12 }]}>
+            {isGarageStatsExpanded ? '▼ GARAJ VE GEÇMİŞ KAYITLAR' : '📁 GARAJ VE GEÇMİŞ KAYITLAR'}
+          </Text>
+        </TouchableOpacity>
+
+        {isGarageStatsExpanded && (
+          <View style={{ backgroundColor: C.bg, borderRadius: 6, borderWidth: 1, borderColor: C.border, marginTop: 8, padding: 12 }}>
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 16 }}>
+              <TouchableOpacity
+                style={[s.actionBtn, { flex: 1, backgroundColor: '#075E54', paddingVertical: 12 }, isDiagnosticMode && { opacity: 0.5 }]}
+                onPress={handleShareReport}
+                disabled={isDiagnosticMode}
+              >
+                <Text style={[s.actionBtnText, { fontSize: 11 }]}>📤 PAYLAŞ</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[s.actionBtn, { flex: 1, backgroundColor: '#1e40af', paddingVertical: 12 }]}
+                onPress={() => {
+                  if (vin || manualVin) {
+                    setIsSaveModalVisible(true);
+                  } else {
+                    Alert.alert('VIN Gerekli', 'Kayıt yapabilmek için şasi numarası (VIN) otomatik gelmeli veya el ile yazılmalıdır.');
+                  }
+                }}
+              >
+                <Text style={[s.actionBtnText, { fontSize: 11 }]}>💾 BU ARACI KAYDET</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>GEÇMİŞ KAYITLAR</Text>
+            {garageRecords.length === 0 && vinHistory.length === 0 ? (
+              <Text style={{ color: C.textSec, fontSize: 11, fontFamily: C.mono, fontStyle: 'italic', textAlign: 'center', marginVertical: 10 }}>
+                Henüz kaydedilmiş araç bulunmuyor.
+              </Text>
+            ) : (
+              (vinHistory.length > 0 ? vinHistory : garageRecords).map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={[s.panel, { marginBottom: 8, padding: 12 }]}
+                  onPress={() => setSelectedRecord(item)}
+                >
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ color: C.textPri, fontSize: 13, fontWeight: '800', fontFamily: C.mono }}>
+                        {item.make} {item.model}
+                      </Text>
+                      <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, marginTop: 4 }}>
+                        {item.date} • {item.km} km
+                      </Text>
+                    </View>
+                    <View style={{
+                      backgroundColor: item.dtcs.length === 0 ? 'rgba(0,255,136,0.1)' : 'rgba(255,59,59,0.1)',
+                      borderWidth: 1,
+                      borderColor: item.dtcs.length === 0 ? C.green : C.red,
+                      borderRadius: 4,
+                      paddingHorizontal: 8,
+                      paddingVertical: 4,
+                    }}>
+                      <Text style={{
+                        color: item.dtcs.length === 0 ? C.green : C.red,
+                        fontSize: 9,
+                        fontWeight: '800',
+                        fontFamily: C.mono,
+                      }}>
+                        {item.dtcs.length === 0 ? 'TEMİZ' : `${item.dtcs.length} ARIZA`}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))
+            )}
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -662,226 +689,120 @@ ${sensorLines || '  Veri okunamadı'}
   // ═══════════════════════════════════════════════════════════════
   // RENDER: Information Tab
   // ═══════════════════════════════════════════════════════════════
-  const renderInfo = () => (
-    <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 30 }}>
-      <View style={s.panel}>
-        <Text style={[s.panelTitle, { color: C.cyan, fontSize: 14, marginBottom: 8 }]}>🏍️ MOTOCORTEX v7 PRO</Text>
-        <Text style={s.panelDesc}>
-          Profesyonel motosiklet ve hafif araç teşhis uygulaması. ELM327/vLinker adaptörü ile Bluetooth üzerinden OBD-II protokolü kullanarak araç beynine (ECU) bağlanır.
-        </Text>
-      </View>
+  const toggleInfoAcc = (section: string) => {
+    setExpandedInfoSection(expandedInfoSection === section ? null : section);
+  };
 
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>📊 CANLI İZLEME (8 SENSÖR)</Text>
-        <Text style={s.panelDesc}>
-          • Motor Devri (RPM) — Anlık motor hızı{'\n'}
-          • Araç Hızı (KM/H) — GPS olmadan ECU'dan{'\n'}
-          • Motor Sıcaklığı (°C) — Soğutma suyu sıcaklığı{'\n'}
-          • Gaz Pozisyonu (%) — Gaz kelebeği açıklığı{'\n'}
-          • Devir Durumu — RPM seviye göstergesi{'\n'}
-          • Akü Voltajı (ATRV) — Anlık akü durumu{'\n'}
-          • Motor Yükü (%) — Motorun yüklenme oranı{'\n'}
-          • Emme Hava Sıcaklığı (°C) — IAT sensörü{'\n'}
-          • Manifold Basıncı (kPa) — MAP sensörü{'\n\n'}
-          Tüm veriler saniyede birkaç kez güncellenir. Terminal üzerinden özel OBD/UDS komutları gönderilebilir.
+  const InfoAccordion = ({ id, icon, title, content }: { id: string, icon: string, title: string, content: string | React.ReactNode }) => (
+    <View style={{ marginBottom: 8 }}>
+      <TouchableOpacity
+        style={[s.actionBtn, { backgroundColor: expandedInfoSection === id ? C.elevated : C.card, borderWidth: 1, borderColor: C.border, paddingVertical: 14, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16 }]}
+        onPress={() => toggleInfoAcc(id)}
+      >
+        <Text style={[s.actionBtnText, { color: expandedInfoSection === id ? C.cyan : C.textPri, fontSize: 12 }]}>
+          {icon}  {title}
         </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>🔍 EKSPERTİZ TARAMASI</Text>
-        <Text style={s.panelDesc}>
-          • Şasi Numarası (VIN) — Araç kimliğini okur{'\n'}
-          • Kilometre — ECU'dan orijinal mesafeyi çeker{'\n'}
-          • Arıza Kodları (DTC) — Kayıtlı hata kodlarını okur{'\n'}
-          • Motor Işığı Mesafesi — Check Engine yanık mesafe{'\n'}
-          • Arıza Silineli Mesafe — Son silmeden bu yana km{'\n'}
-          • Freeze Frame — Arıza anındaki motor verileri (Mode 02){'\n\n'}
-          Rapor WhatsApp, Telegram, E-posta veya diğer uygulamalarla paylaşılabilir. Rapor tüm okunan verileri içerir.
-        </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>🔧 SERVİS İŞLEMLERİ</Text>
-        <Text style={s.panelDesc}>
-          • Arıza Kodu Silme (Mode 04) — Tüm DTC'leri temizler{'\n'}
-          • Check Engine Işığı Söndürme — MIL resetler{'\n'}
-          • Yakıt Trim Sıfırlama — Öğrenilmiş değerleri siler{'\n'}
-          • ECU Hard Reset (UDS $11 01) — Beyin ünitesini yeniden başlatır
-        </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>⚡ AKÜ & MARŞ TESTİ</Text>
-        <Text style={s.panelDesc}>
-          Otomatik 3 aşamalı akü/regülatör testi:{'\n\n'}
-          • 1. Dinlenme voltajı (motor kapalı, ref: 12.4-12.8V){'\n'}
-          • 2. Marş voltaj düşüşü (5sn ölçüm, ref: ≥9.6V){'\n'}
-          • 3. Şarj voltajı (motor rölanti, ref: 13.5-14.5V){'\n\n'}
-          Test sonunda otomatik akü, marş ve regülatör değerlendirmesi yapılır.
-        </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>🏁 PERFORMANS TESTİ</Text>
-        <Text style={s.panelDesc}>
-          0-60 km/h ve 0-100 km/h geçiş sürelerini ölçer.{'\n'}
-          Canlı hız verisini kullanarak araç hareket ettiğinde otomatik başlar.{'\n'}
-          Dijital kronometre 50ms çözünürlükte çalışır.
-        </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>❄️ FREEZE FRAME (ARIZA ANI)</Text>
-        <Text style={s.panelDesc}>
-          OBD-II Mode 02 sorguları ile Check Engine ışığı yandığı andaki motor parametrelerini okur:{'\n\n'}
-          • Arıza anı RPM (PID 020C00){'\n'}
-          • Arıza anı hız (PID 020D00){'\n'}
-          • Arıza anı sıcaklık (PID 020500){'\n\n'}
-          Bu veriler arıza teşhisinde kritik bilgi sağlar.
-        </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>📖 DESTEKLENEN HATA KODLARI</Text>
-        <Text style={s.panelDesc}>
-          Uygulama ~50 yaygın P-kodu tanır ve Türkçe açıklamasını gösterir:{'\n\n'}
-          • P01xx — Yakıt ve Hava Sensörleri{'\n'}
-          • P02xx — Enjektör Devreleri{'\n'}
-          • P03xx — Ateşleme / Misfire Hataları{'\n'}
-          • P04xx — Emisyon Sistemi{'\n'}
-          • P05xx — Hız ve Rölanti Kontrol{'\n'}
-          • P07xx — Şanzıman Sistemi{'\n\n'}
-          Bilinmeyen kodlar ham olarak gösterilir.
-        </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>📤 RAPOR PAYLAŞMA</Text>
-        <Text style={s.panelDesc}>
-          Ekspertiz raporunu tüm platformlardan paylaşabilirsiniz:{'\n\n'}
-          • WhatsApp / Telegram / Signal{'\n'}
-          • E-posta (Gmail, Outlook vb.){'\n'}
-          • SMS / Not uygulamaları{'\n\n'}
-          Rapor şunları içerir: VIN, KM, arıza kodları (açıklamalı), motor ışığı mesafesi, arıza silineli mesafe, tüm canlı sensör verileri (RPM, hız, sıcaklık, gaz, yük, IAT, MAP, akü voltajı).
-        </Text>
-      </View>
-
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>🔌 DONANIM UYUMLULUĞU</Text>
-        <Text style={s.panelDesc}>
-          Uygulama ELM327 Bluetooth adaptörleri ile çalışır. Piyasada iki ana sürüm bulunur:{'\n\n'}
-          • <Text style={{ color: C.green, fontWeight: '900' }}>v1.5 Adaptörler (ÖNERİLEN):</Text> Orijinal komut setini destekler. Odometer okuma gibi derin teşhis işlemleri için gereklidir.{'\n'}
-          • <Text style={{ color: C.red, fontWeight: '900' }}>v2.1 Adaptörler (KLON):</Text> Çoğu ucuz adaptör bu sürümdür. 'PRO' komutlarını desteklemez ve bağlantı sorunları yaratabilir.{'\n\n'}
-          En iyi performans için vLinker, OBDLink veya gerçek v1.5 çipler önerilir.
-        </Text>
-      </View>
-
-      <View style={[s.warningBanner, { marginBottom: 8 }]}>
-        <Text style={s.warningIcon}>⚠</Text>
-        <View style={{ flex: 1 }}>
-          <Text style={s.warningTitle}>ÖNEMLİ UYARILAR</Text>
-          <Text style={s.warningBody}>
-            • Servis işlemleri kontak AÇIK / motor KAPALI yapılmalıdır{'\n'}
-            • Arıza kodu silme geri alınamaz{'\n'}
-            • Bluetooth bağlantısı işlem sırasında kesilmemelidir{'\n'}
-            • Her araç her komutu desteklemeyebilir{'\n'}
-            • ECU Reset bazı eski modellerde çalışmaz{'\n'}
-            • Uygulama yalnızca OBD-II uyumlu araçlarla çalışır
-          </Text>
+        <Text style={{ color: C.textSec, fontSize: 12 }}>{expandedInfoSection === id ? '▼' : '▶'}</Text>
+      </TouchableOpacity>
+      {expandedInfoSection === id && (
+        <View style={{ backgroundColor: C.bg, padding: 16, borderWidth: 1, borderTopWidth: 0, borderColor: C.border, borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}>
+          {typeof content === 'string' ? <Text style={s.panelDesc}>{content}</Text> : content}
         </View>
-      </View>
+      )}
+    </View>
+  );
 
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>🏠 GARAJIM (KAYIT SİSTEMİ)</Text>
-        <Text style={s.panelDesc}>
-          Ekspertiz taramasından sonra sonuçlarınızı kaydedebilirsiniz:{'\n\n'}
-          • "SONUCU KAYDET" butonuna basın{'\n'}
-          • Marka ve Model bilgisini girin{'\n'}
-          • VIN, Kilometre ve Arıza kodları otomatik kaydedilir{'\n'}
-          • Garajım sekmesinden geçmiş kayıtlarınıza ulaşın{'\n'}
-          • Detay görüntülemek için kayıda dokunun{'\n'}
-          • Silmek için detay ekranında "KAYDI SİL" butonunu kullanın{'\n\n'}
-          Tüm veriler cihazınızda yerel olarak saklanır.
+  const renderInfo = () => (
+    <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 40 }}>
+      {/* Top Section */}
+      <View style={{ alignItems: 'center', marginBottom: 24, marginTop: 10 }}>
+        <Text style={s.logoText}>MOTOCORTEX</Text>
+        <Text style={[s.logoSub, { color: C.cyan }]}>v7 PRO</Text>
+        <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 10, marginTop: 8, textAlign: 'center', paddingHorizontal: 20 }}>
+          Profesyonel motosiklet ve araç teşhis uygulaması.{'\n'}Tüm araçlarla uyumludur.
         </Text>
       </View>
 
-      <View style={[s.panel, { borderColor: '#7c3aed', borderWidth: 1, marginBottom: 0 }]}>
-        <Text style={[s.panelTitle, { color: '#a78bfa' }]}>⭐ MOTOCORTEX PREMIUM</Text>
-        <Text style={s.panelDesc}>
-          Yakında aktif olacak premium özellikler:{'\n\n'}
-          • Gelişmiş marka-özel derin tarama{'\n'}
-          • Sınırsız garaj kaydı{'\n'}
-          • PDF ekspertiz raporu oluşturma{'\n'}
-          • Öncelikli teknik destek{'\n'}
-          • Reklamsız kullanım
-        </Text>
-        <TouchableOpacity
-          style={[s.actionBtn, { backgroundColor: '#7c3aed', marginTop: 8 }]}
-          onPress={() => Alert.alert('Yakında!', 'Premium özellikler yakında aktif olacak. Geliştirme aşamasındadır.')}
-        >
-          <Text style={s.actionBtnText}>PREMIUM'İ KEŞFET</Text>
+      <TouchableOpacity
+        style={[s.actionBtn, { backgroundColor: 'transparent', borderWidth: 2, borderColor: '#7c3aed', marginBottom: 24 }]}
+        onPress={() => Alert.alert('Erken Erişim 🎉', 'MotoCortex şu an geliştirme aşamasındadır. Siz erken dönem kullanıcımız olduğunuz için tüm profesyonel özellikler şu an size açıktır. Geri bildirimleriniz bizim için çok değerli!')}
+      >
+        <Text style={[s.actionBtnText, { color: '#a78bfa', fontSize: 14 }]}>👑 MotoCortex PRO'ya Yükselt</Text>
+      </TouchableOpacity>
+
+      <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>YARDIM VE REHBER</Text>
+
+      {/* Middle Section: Accordions */}
+      <InfoAccordion
+        id="canli"
+        icon="📊"
+        title="CANLI İZLEME SENSÖRLERİ"
+        content={
+          <Text style={s.panelDesc}>
+            Devir, Hız, Motor Sıcaklığı, Gaz Pozisyonu, Akü Voltajı, Motor Yükü, Emme Hava Sıcaklığı ve Manifold Basıncını (MAP) anlık olarak izleyebilirsiniz.{'\n\n'}
+            Değerler Bluetooth hızınıza bağlı olarak saniyede 1-5 kez yenilenir. Terminal üzerinden UDS / OBD komutları ile araca direkt müdahale edebilirsiniz.
+          </Text>
+        }
+      />
+
+      <InfoAccordion
+        id="ekspertiz"
+        icon="🔍"
+        title="EKSPERTİZ VE GARANTİ"
+        content={
+          <Text style={s.panelDesc}>
+            Uygulama, hataları tespit etmek için ECU (Beyin) kodlarını kullanır. Şasi Numarası (VIN) ve araca kaydedilmiş mevcut kilometre çekilir.{'\n\n'}
+            Ayrıca Check Engine ışığı ile aracın ne kadar mesafe gittiği hesaplanarak geçmiş hatalar belirlenir. Çıkan rapor PDF ve Mesajlaşma ortamlarında paylaşılabilir.
+          </Text>
+        }
+      />
+
+      <InfoAccordion
+        id="testler"
+        icon="⚡"
+        title="AKÜ / PERFORMANS TESTLERİ"
+        content={
+          <Text style={s.panelDesc}>
+            Akü testi 3 aşamalıdır: Dinlenme, Marş ve Rölanti Şarj testleri ile batarya/regülatör sağlığınız ölçülür.{'\n\n'}
+            Performans testi, telefonunuzun işlemcisi ve aracınızdan gelen anlık hız verisiyle 0-60 ve 0-100 km/s hızlanma değerlerini 50ms hata payı ile ölçer.
+          </Text>
+        }
+      />
+
+      <InfoAccordion
+        id="donanim"
+        icon="🔌"
+        title="DONANIM UYUMLULUĞU"
+        content={
+          <Text style={s.panelDesc}>
+            ELM327 Bluetooth (v1.5) önerilir. v2.1 KLON versiyonlu kalitesiz donanımlarla bazı gelişmiş kodlar çalışmayabilir. vLinker ve OBDLink gibi premium adaptörlerde en yüksek hızı alırsınız.
+          </Text>
+        }
+      />
+
+      <InfoAccordion
+        id="uyarilar"
+        icon="⚠️"
+        title="ÖNEMLİ UYARILAR"
+        content={
+          <Text style={s.panelDesc}>
+            • Arıza kodu silme işlemi veya ECU Reset fonksiyonu esnasında Kontak AÇIK, Motor KAPALI konumda olmalıdır.{'\n'}
+            • Çalışan araca Reset göndermeyiniz.{'\n'}
+            • Her araç tüm sensörleri desteklemeyebilir, desteklenmeyen sensörlerde "--" görünür.
+          </Text>
+        }
+      />
+
+      {/* Bottom Section: Support Links */}
+      <View style={{ marginTop: 24, paddingVertical: 20, borderTopWidth: 1, borderTopColor: C.border, alignItems: 'center', gap: 16 }}>
+        <TouchableOpacity onPress={() => Alert.alert('Yardım', 'Destek ekibimize ismailimamoglu610@gmail.com adresinden ulaşabilirsiniz.')}>
+          <Text style={{ color: C.cyan, fontFamily: C.mono, fontSize: 13, fontWeight: '700' }}>📞 DESTEK MERKEZİ</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Alert.alert('Teşekkürler!', 'Görüşleriniz için teşekkür ederiz. Play Store üzerinden bize yorum bırakabilirsiniz.')}>
+          <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 12, fontWeight: '700' }}>✉️ GERİ BİLDİRİM GÖNDER</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
-  );
-
-  // ═══════════════════════════════════════════════════════════════
-  // RENDER: Garage (Saved Records)
-  // ═══════════════════════════════════════════════════════════════
-  const renderGarage = () => (
-    <View style={[s.tabContent, { flex: 1 }]}>
-      {garageRecords.length === 0 ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 }}>
-          <Text style={{ color: C.textSec, fontSize: 36, marginBottom: 12 }}>🏍️</Text>
-          <Text style={{ color: C.textSec, fontSize: 12, fontFamily: C.mono, textAlign: 'center', lineHeight: 20 }}>
-            Henüz kayıtlı araç yok.{'\n'}Ekspertiz taraması yapıp "Sonucu Kaydet" butonuna basın.
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={garageRecords}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingBottom: 20 }}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[s.panel, { marginBottom: 8 }]}
-              onPress={() => setSelectedRecord(item)}
-            >
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '800', fontFamily: C.mono }}>
-                    {item.make} {item.model}
-                  </Text>
-                  <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, marginTop: 4 }}>
-                    VIN: {item.vin} • {item.km} km
-                  </Text>
-                  <Text style={{ color: C.textSec, fontSize: 9, fontFamily: C.mono, marginTop: 2 }}>
-                    {item.date}
-                  </Text>
-                </View>
-                <View style={{
-                  backgroundColor: item.dtcs.length === 0 ? 'rgba(0,255,136,0.1)' : 'rgba(255,59,59,0.1)',
-                  borderWidth: 1,
-                  borderColor: item.dtcs.length === 0 ? C.green : C.red,
-                  borderRadius: 4,
-                  paddingHorizontal: 8,
-                  paddingVertical: 4,
-                }}>
-                  <Text style={{
-                    color: item.dtcs.length === 0 ? C.green : C.red,
-                    fontSize: 9,
-                    fontWeight: '800',
-                    fontFamily: C.mono,
-                  }}>
-                    {item.dtcs.length === 0 ? 'TEMİZ' : `${item.dtcs.length} ARIZA`}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-      )}
-    </View>
   );
 
   // ═══════════════════════════════════════════════════════════════
@@ -899,28 +820,24 @@ ${sensorLines || '  Veri okunamadı'}
             <Text style={s.topVersion}>v7 PRO</Text>
           </View>
           <View style={s.topRight}>
-            <TouchableOpacity
-              onPress={() => setIsConnectModalVisible(true)}
-              style={[s.topBadge, { borderColor: statusColor(ecuStatus), paddingHorizontal: 12 }]}
-            >
-              <View style={[s.topBadgeDot, { backgroundColor: statusColor(ecuStatus) }]} />
-              <Text style={[s.topBadgeText, { color: statusColor(ecuStatus) }]}>
-                {ecuStatus === 'connected' ? 'BAĞLI' : 'CİHAZ SEÇ'}
-              </Text>
-            </TouchableOpacity>
+            {ecuStatus === 'connected' && (
+              <TouchableOpacity onPress={() => retryEcu()}>
+                <Text style={s.topDisconnect}>KOPAR</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
         {/* Tab Bar */}
         <View style={s.tabBar}>
-          {(['dashboard', 'expertise', 'garage', 'info'] as const).map(tab => (
+          {(['dashboard', 'expertise', 'info'] as const).map(tab => (
             <TouchableOpacity
               key={tab}
               style={[s.tabItem, activeTab === tab && s.tabItemActive]}
               onPress={() => setActiveTab(tab)}
             >
               <Text style={[s.tabLabel, activeTab === tab && s.tabLabelActive]}>
-                {tab === 'dashboard' ? 'İZLEME' : tab === 'expertise' ? 'EKSPERTİZ' : tab === 'garage' ? 'GARAJIM' : 'BİLGİ'}
+                {tab === 'dashboard' ? 'İZLEME' : tab === 'expertise' ? 'EKSPERTİZ' : 'BİLGİ'}
               </Text>
             </TouchableOpacity>
           ))}
@@ -929,7 +846,6 @@ ${sensorLines || '  Veri okunamadı'}
         {/* Tab Content */}
         {activeTab === 'dashboard' && renderDashboard()}
         {activeTab === 'expertise' && renderExpertise()}
-        {activeTab === 'garage' && renderGarage()}
         {activeTab === 'info' && renderInfo()}
 
         {/* Connection Modal */}
@@ -1045,7 +961,12 @@ ${sensorLines || '  Veri okunamadı'}
                         text: 'Sil', style: 'destructive', onPress: async () => {
                           await deleteGarageRecord(selectedRecord.id);
                           setSelectedRecord(null);
-                          getGarageRecords().then(setGarageRecords);
+                          const allRecords = await getGarageRecords();
+                          setGarageRecords(allRecords);
+                          const currentVin = vin || manualVin;
+                          if (currentVin && currentVin.length > 5) {
+                            setVinHistory(await getRecordsByVin(currentVin));
+                          }
                         }
                       }
                     ]);
@@ -1081,7 +1002,7 @@ ${sensorLines || '  Veri okunamadı'}
           speed={speed}
         />
       </View>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 }
 
