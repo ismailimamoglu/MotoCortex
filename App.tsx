@@ -221,7 +221,7 @@ ${sensorLines || '  Veri okunamadı'}
       {/* Logo */}
       <View style={s.logoArea}>
         <Text style={s.logoText}>MOTOCORTEX</Text>
-        <Text style={s.logoSub}>v6 PRO</Text>
+        <Text style={s.logoSub}>v7 PRO</Text>
       </View>
 
       {/* Status Badges */}
