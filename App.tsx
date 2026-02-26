@@ -757,7 +757,7 @@ ${sensorLines || '  Veri okunamadı'}
 
       <TouchableOpacity
         style={[s.actionBtn, { backgroundColor: 'transparent', borderWidth: 2, borderColor: '#7c3aed', marginBottom: 24 }]}
-        onPress={() => Alert.alert('Erken Erişim 🎉', 'MotoCortex şu an geliştirme aşamasındadır. Siz erken dönem kullanıcımız olduğunuz için tüm profesyonel özellikler şu an size açıktır. Geri bildirimleriniz bizim için çok değerli!')}
+        onPress={() => Alert.alert(t('info.upgradeAlert'), t('info.upgradeAlertDesc'))}
       >
         <Text style={[s.actionBtnText, { color: '#a78bfa', fontSize: 14 }]}>{t('info.upgrade')}</Text>
       </TouchableOpacity>
@@ -768,35 +768,35 @@ ${sensorLines || '  Veri okunamadı'}
       <InfoAccordion
         id="canli"
         icon="📊"
-        title="CANLI İZLEME SENSÖRLERİ"
+        title={t('info.sections.live.title')}
         content={t('info.sections.live.content')}
       />
 
       <InfoAccordion
         id="ekspertiz"
         icon="🔍"
-        title="EKSPERTİZ VE GARANTİ"
+        title={t('info.sections.expertise.title')}
         content={t('info.sections.expertise.content')}
       />
 
       <InfoAccordion
         id="testler"
         icon="⚡"
-        title="AKÜ / PERFORMANS TESTLERİ"
+        title={t('info.sections.tests.title')}
         content={t('info.sections.tests.content')}
       />
 
       <InfoAccordion
         id="donanim"
         icon="🔌"
-        title="DONANIM UYUMLULUĞU"
+        title={t('info.sections.hardware.title')}
         content={t('info.sections.hardware.content')}
       />
 
       <InfoAccordion
         id="uyarilar"
         icon="⚠️"
-        title="ÖNEMLİ UYARILAR"
+        title={t('info.sections.warnings.title')}
         content={t('info.sections.warnings.content')}
       />
 
