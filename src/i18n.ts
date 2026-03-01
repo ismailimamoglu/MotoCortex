@@ -16,7 +16,12 @@ const resources = {
 const LANGUAGE_KEY = 'user-language';
 
 const initI18n = async () => {
-    let savedLanguage = await AsyncStorage.getItem(LANGUAGE_KEY);
+    let savedLanguage: string | null = null;
+    try {
+        savedLanguage = await AsyncStorage.getItem(LANGUAGE_KEY);
+    } catch (e) {
+        console.warn('Failed to load language preference:', e);
+    }
 
     if (!savedLanguage) {
         const deviceLanguage = Localization.getLocales()[0].languageCode;

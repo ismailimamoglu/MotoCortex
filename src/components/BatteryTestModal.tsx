@@ -115,6 +115,12 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
         if (crankingIntervalRef.current) clearInterval(crankingIntervalRef.current);
     };
 
+    React.useEffect(() => {
+        return () => {
+            if (crankingIntervalRef.current) clearInterval(crankingIntervalRef.current);
+        };
+    }, []);
+
     const getVerdict = () => {
         if (!result.restingV || !result.chargingV) return null;
         const rest = parseFloat(result.restingV.replace('V', ''));
