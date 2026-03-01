@@ -63,6 +63,10 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 if (timerRef.current) clearInterval(timerRef.current);
             }
         }
+
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
     }, [speed, state, visible]);
 
     const armTimer = () => {

@@ -6,8 +6,10 @@ The codebase was audited for performance bottlenecks, memory leaks, and runtime 
 ## 1. Memory Leaks & Cleanup
 **Status:** ⚠️ **FIXED**
 
-*   **Issue:** The `useBluetooth` hook's polling loop (`performPollSync`) used a recursive `setTimeout` strategy. While it handled disconnects, it did not cancel the timeout or stop the loop if the component unmounted while polling was active. This could lead to memory leaks and attempts to update state on unmounted components.
-*   **Fix Applied:** Added a `useEffect` cleanup function in `src/hooks/useBluetooth.ts` to explicitly stop polling when the component unmounts.
+*   **Issue 1:** The `useBluetooth` hook's polling loop (`performPollSync`) used a recursive `setTimeout` strategy. While it handled disconnects, it did not cancel the timeout or stop the loop if the component unmounted while polling was active. This could lead to memory leaks and attempts to update state on unmounted components.
+    *   **Fix Applied:** Added a `useEffect` cleanup function in `src/hooks/useBluetooth.ts` to explicitly stop polling when the component unmounts.
+*   **Issue 2:** Modals (`BatteryTestModal` and `PerformanceModal`) were initializing intervals that were not cleared when the component unmounted.
+    *   **Fix Applied:** Added `useEffect` cleanup functions in `src/components/BatteryTestModal.tsx` and `src/components/PerformanceModal.tsx` to clear these intervals upon component destruction.
 
 ## 2. i18n Safety
 **Status:** ⚠️ **FIXED / WARNING**
