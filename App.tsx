@@ -128,20 +128,18 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
           <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.fuel')} ({fuelUnit})</Text>
         </View>
         <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, coolant !== null && coolant > 100 ? { color: '#ff3b3b' } : {}]}>
-            {coolant !== null ? `${coolant}°` : '--'}
-          </Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.temp')}</Text>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{speed !== null ? speed : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.speed')}</Text>
         </View>
         <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
           <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{throttle !== null ? `${throttle}%` : '--'}</Text>
           <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.throttle')}</Text>
         </View>
         <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={[{ fontSize: 18, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, rpm !== null && (rpm > 7000 ? { color: '#ff3b3b' } : rpm > 3000 ? { color: '#00ff88' } : { color: '#ffb800' })]}>
-            {rpm !== null ? (rpm > 7000 ? t('dashboard.statusHigh') : rpm > 3000 ? t('dashboard.statusNormal') : t('dashboard.statusLow')) : '--'}
+          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, coolant !== null && coolant > 100 ? { color: '#ff3b3b' } : {}]}>
+            {coolant !== null ? `${coolant}°` : '--'}
           </Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.status')}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.temp')}</Text>
         </View>
         <View style={[{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }, { borderColor: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#1e2430' }]}>
           <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, { color: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#00ff88' }]}>
