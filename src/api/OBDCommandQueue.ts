@@ -164,9 +164,40 @@ class OBDCommandQueue {
         else if (command === '010D') {
             const hex = getHexData(command, clean, 1);
             if (hex && hex.length === 2) {
-                const a = parseInt(hex, 16);
-                if (!isNaN(a)) {
-                    useBluetoothStore.getState().setSensorData({ speed: a });
+                const speed = parseInt(hex, 16);
+                if (!isNaN(speed)) {
+                    useBluetoothStore.getState().setSensorData({ speed });
+                }
+            }
+        }
+        // MAF (0110) - 2 bytes -> Fuel Consumption
+        else if (command === '0110') {
+            const hex = getHexData(command, clean, 2);
+            if (hex && hex.length === 4) {
+                const a = parseInt(hex.substring(0, 2), 16);
+                const b = parseInt(hex.substring(2, 4), 16);
+                if (!isNaN(a) && !isNaN(b)) {
+                    const maf_gs = ((a * 256) + b) / 100;
+                    // L/h = (MAF * 3600) / (14.7 * 820) => roughly (MAF * 3600) / 12054 => MAF * 0.2986
+                    const litersPerHour = maf_gs * 0.2986;
+
+                    const state = useBluetoothStore.getState();
+                    const currentSpeed = state.speed || 0;
+
+                    let litersPer100km = null;
+                    if (currentSpeed > 5) {
+                        // L/100km = (L/h * 100) / Speed
+                        litersPer100km = (litersPerHour * 100) / currentSpeed;
+                    }
+
+                    // Cap bounds for UI realism
+                    const cappedLh = Math.min(Math.max(litersPerHour, 0), 99.9);
+                    const cappedL100km = litersPer100km ? Math.min(Math.max(litersPer100km, 0), 99.9) : null;
+
+                    useBluetoothStore.getState().setSensorData({
+                        fuelConsumptionLh: Number(cappedLh.toFixed(1)),
+                        fuelConsumptionL100km: cappedL100km ? Number(cappedL100km.toFixed(1)) : null
+                    });
                 }
             }
         }

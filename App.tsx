@@ -10,6 +10,7 @@ import { lookupDTC } from './src/data/dtcDictionary';
 import BatteryTestModal from './src/components/BatteryTestModal';
 import FreezeFrameModal from './src/components/FreezeFrameModal';
 import PerformanceModal from './src/components/PerformanceModal';
+import { useBluetoothStore } from './src/store/useBluetoothStore';
 import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
 import './src/i18n';
 import { useTranslation } from 'react-i18next';
@@ -29,13 +30,170 @@ const C = {
   mono: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
 };
 
+
+const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectPress }: {
+  ecuStatus: string;
+  lastDeviceName: string | null;
+  onConnectPress: () => void;
+}) => {
+  const { t } = useTranslation();
+
+  const rpm = useBluetoothStore(s => s.rpm);
+  const speed = useBluetoothStore(s => s.speed);
+  const coolant = useBluetoothStore(s => s.coolant);
+  const throttle = useBluetoothStore(s => s.throttle);
+  const voltage = useBluetoothStore(s => s.voltage);
+  const engineLoad = useBluetoothStore(s => s.engineLoad);
+  const intakeAirTemp = useBluetoothStore(s => s.intakeAirTemp);
+  const manifoldPressure = useBluetoothStore(s => s.manifoldPressure);
+  const fuelConsumptionLh = useBluetoothStore(s => s.fuelConsumptionLh);
+  const fuelConsumptionL100km = useBluetoothStore(s => s.fuelConsumptionL100km);
+
+  const isMoving = speed !== null && speed > 5;
+  const displayFuel = isMoving && fuelConsumptionL100km !== null ? fuelConsumptionL100km : fuelConsumptionLh;
+  const fuelUnit = isMoving && fuelConsumptionL100km !== null ? t('dashboard.fuel_100') : t('dashboard.fuel_lh');
+
+  const voltNum = voltage ? parseFloat(voltage.replace('V', '')) : null;
+  const isBatteryLow = voltNum !== null && voltNum < 11.8;
+  const isBatteryWarn = voltNum !== null && voltNum < 12.2 && voltNum >= 11.8;
+
+  const statusColor = (s: string) => {
+    if (s === 'connected') return '#00ff88';
+    if (s === 'connecting') return '#ffb800';
+    if (s === 'error') return '#ff3b3b';
+    return '#6b7280';
+  };
+
+  return (
+    <ScrollView style={{ flex: 1, padding: 16 }} contentContainerStyle={{ paddingBottom: 20 }}>
+      {/* Device Connection Card */}
+      <TouchableOpacity
+        style={{
+          backgroundColor: ecuStatus === 'connected' ? 'rgba(0,255,136,0.08)' : '#111318',
+          borderWidth: 1.5,
+          borderColor: ecuStatus === 'connected' ? '#00ff88' : '#00d4ff',
+          borderRadius: 12,
+          padding: 16,
+          marginBottom: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+        onPress={onConnectPress}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: statusColor(ecuStatus) }} />
+          <View>
+            <Text style={{ color: '#e8eaed', fontSize: 14, fontWeight: '900', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>
+              {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('dashboard.selectDevice')}
+            </Text>
+            <Text style={{ color: '#6b7280', fontSize: 10, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 2 }}>
+              {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : t('dashboard.noConnection')}
+            </Text>
+          </View>
+        </View>
+        <Text style={{ color: ecuStatus === 'connected' ? '#00ff88' : '#00d4ff', fontSize: 18, fontWeight: '900' }}>›</Text>
+      </TouchableOpacity>
+
+      {/* Battery Warning */}
+      {isBatteryLow && (
+        <View style={{ flexDirection: 'row', backgroundColor: 'rgba(255, 184, 0, 0.1)', borderWidth: 1, borderColor: '#ff3b3b', borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' }}>
+          <Text style={{ color: '#ffb800', fontSize: 20 }}>🚨</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: '#ff3b3b', fontSize: 12, fontWeight: '900', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginBottom: 4 }}>{t('dashboard.batteryLow')}</Text>
+            <Text style={{ color: '#fef08a', fontSize: 11, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', lineHeight: 17 }}>{t('dashboard.batteryLowDesc', { voltage })}</Text>
+          </View>
+        </View>
+      )}
+      {isBatteryWarn && (
+        <View style={{ flexDirection: 'row', backgroundColor: 'rgba(255, 184, 0, 0.1)', borderWidth: 1, borderColor: '#ffb800', borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' }}>
+          <Text style={{ color: '#ffb800', fontSize: 20 }}>⚠</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: '#ffb800', fontSize: 12, fontWeight: '900', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginBottom: 4 }}>{t('dashboard.batteryWarn')}</Text>
+            <Text style={{ color: '#fef08a', fontSize: 11, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', lineHeight: 17 }}>{t('dashboard.batteryWarnDesc', { voltage })}</Text>
+          </View>
+        </View>
+      )}
+
+      {/* RPM Hero */}
+      <View style={{ alignItems: 'center', paddingVertical: 24, backgroundColor: '#111318', borderRadius: 4, borderWidth: 1, borderColor: '#1e2430', marginBottom: 16 }}>
+        <Text style={{ fontSize: 72, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{rpm !== null ? rpm : '----'}</Text>
+        <Text style={{ fontSize: 14, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: -4 }}>RPM</Text>
+      </View>
+
+      {/* Sensor Grid */}
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{displayFuel !== null ? displayFuel : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.fuel')} ({fuelUnit})</Text>
+        </View>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, coolant !== null && coolant > 100 ? { color: '#ff3b3b' } : {}]}>
+            {coolant !== null ? `${coolant}°` : '--'}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.temp')}</Text>
+        </View>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{throttle !== null ? `${throttle}%` : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.throttle')}</Text>
+        </View>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[{ fontSize: 18, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, rpm !== null && (rpm > 7000 ? { color: '#ff3b3b' } : rpm > 3000 ? { color: '#00ff88' } : { color: '#ffb800' })]}>
+            {rpm !== null ? (rpm > 7000 ? t('dashboard.statusHigh') : rpm > 3000 ? t('dashboard.statusNormal') : t('dashboard.statusLow')) : '--'}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.status')}</Text>
+        </View>
+        <View style={[{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }, { borderColor: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#1e2430' }]}>
+          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, { color: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#00ff88' }]}>
+            {voltage || '--'}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.battery')}</Text>
+        </View>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{engineLoad !== null ? `${engineLoad}%` : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.load')}</Text>
+        </View>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, intakeAirTemp !== null && intakeAirTemp > 60 ? { color: '#ffb800' } : {}]}>
+            {intakeAirTemp !== null ? `${intakeAirTemp}°` : '--'}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.intake')}</Text>
+        </View>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{manifoldPressure !== null ? manifoldPressure : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.manifold')}</Text>
+        </View>
+      </View>
+    </ScrollView>
+  );
+});
+
+// Modal Wrappers
+const BatteryTestModalWrapper = ({ visible, onClose, sendCommand }: any) => {
+  const voltage = useBluetoothStore(s => s.voltage);
+  return <BatteryTestModal
+    visible={visible}
+    onClose={onClose}
+    sendCommand={sendCommand}
+    voltage={voltage}
+  />;
+};
+
+const PerformanceModalWrapper = ({ visible, onClose }: any) => {
+  const speed = useBluetoothStore(s => s.speed);
+  return <PerformanceModal
+    visible={visible}
+    onClose={onClose}
+    speed={speed}
+  />;
+};
+
 export default function App() {
   const { t, i18n } = useTranslation();
   const {
     status, adapterStatus, ecuStatus, logs,
     enableBluetooth, scanDevices, connect, disconnect,
     sendCommand, retryEcu, clearLogs,
-    rpm, coolant, speed, throttle, voltage, engineLoad, intakeAirTemp, manifoldPressure,
     dtcs, vin, odometer, distanceSinceCleared, distanceMilOn,
     isDiagnosticMode, isAdaptationRunning,
     startPolling, stopPolling,
@@ -156,6 +314,7 @@ export default function App() {
   };
 
   const handleShareReport = async () => {
+    const { rpm, speed, coolant, throttle, engineLoad, intakeAirTemp, manifoldPressure, voltage } = useBluetoothStore.getState();
     const dtcLines = dtcs.length > 0
       ? dtcs.map(dtc => {
         const desc = lookupDTC(dtc);
@@ -313,115 +472,7 @@ ${sensorLines || '  Veri okunamadı'}
   // ═══════════════════════════════════════════════════════════════
   // RENDER: Live Dashboard
   // ═══════════════════════════════════════════════════════════════
-  const renderDashboard = () => {
-    // Battery voltage warning
-    const voltNum = voltage ? parseFloat(voltage.replace('V', '')) : null;
-    const isBatteryLow = voltNum !== null && voltNum < 11.8;
-    const isBatteryWarn = voltNum !== null && voltNum < 12.2 && voltNum >= 11.8;
 
-    return (
-      <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 20 }}>
-        {/* Device Connection Card */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: ecuStatus === 'connected' ? 'rgba(0,255,136,0.08)' : C.card,
-            borderWidth: 1.5,
-            borderColor: ecuStatus === 'connected' ? C.green : C.cyan,
-            borderRadius: 12,
-            padding: 16,
-            marginBottom: 16,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-          onPress={() => setIsConnectModalVisible(true)}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: statusColor(ecuStatus) }} />
-            <View>
-              <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '900', fontFamily: C.mono }}>
-                {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('dashboard.selectDevice')}
-              </Text>
-              <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, marginTop: 2 }}>
-                {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : t('dashboard.noConnection')}
-              </Text>
-            </View>
-          </View>
-          <Text style={{ color: ecuStatus === 'connected' ? C.green : C.cyan, fontSize: 18, fontWeight: '900' }}>›</Text>
-        </TouchableOpacity>
-
-        {/* Battery Warning */}
-        {isBatteryLow && (
-          <View style={[s.warningBanner, { borderColor: C.red }]}>
-            <Text style={s.warningIcon}>🚨</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={[s.warningTitle, { color: C.red }]}>{t('dashboard.batteryLow')}</Text>
-              <Text style={s.warningBody}>{t('dashboard.batteryLowDesc', { voltage })}</Text>
-            </View>
-          </View>
-        )}
-        {isBatteryWarn && (
-          <View style={[s.warningBanner, { borderColor: C.amber }]}>
-            <Text style={s.warningIcon}>⚠</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={[s.warningTitle, { color: C.amber }]}>{t('dashboard.batteryWarn')}</Text>
-              <Text style={s.warningBody}>{t('dashboard.batteryWarnDesc', { voltage })}</Text>
-            </View>
-          </View>
-        )}
-
-        {/* RPM Hero */}
-        <View style={s.rpmHero}>
-          <Text style={s.rpmNumber}>{rpm !== null ? rpm : '----'}</Text>
-          <Text style={s.rpmUnit}>RPM</Text>
-        </View>
-
-        {/* Sensor Grid */}
-        <View style={s.sensorGrid}>
-          <View style={s.sensorCard}>
-            <Text style={s.sensorValue}>{speed !== null ? speed : '--'}</Text>
-            <Text style={s.sensorLabel}>{t('dashboard.speed')}</Text>
-          </View>
-          <View style={s.sensorCard}>
-            <Text style={[s.sensorValue, coolant !== null && coolant > 100 ? { color: C.red } : {}]}>
-              {coolant !== null ? `${coolant}°` : '--'}
-            </Text>
-            <Text style={s.sensorLabel}>{t('dashboard.temp')}</Text>
-          </View>
-          <View style={s.sensorCard}>
-            <Text style={s.sensorValue}>{throttle !== null ? `${throttle}%` : '--'}</Text>
-            <Text style={s.sensorLabel}>{t('dashboard.throttle')}</Text>
-          </View>
-          <View style={s.sensorCard}>
-            <Text style={[s.sensorValue, rpm !== null && (rpm > 7000 ? { color: C.red } : rpm > 3000 ? { color: C.green } : { color: C.amber }), { fontSize: 18 }]}>
-              {rpm !== null ? (rpm > 7000 ? t('dashboard.statusHigh') : rpm > 3000 ? t('dashboard.statusNormal') : t('dashboard.statusLow')) : '--'}
-            </Text>
-            <Text style={s.sensorLabel}>{t('dashboard.status')}</Text>
-          </View>
-          <View style={[s.sensorCard, { borderColor: isBatteryLow ? C.red : isBatteryWarn ? C.amber : C.border }]}>
-            <Text style={[s.sensorValue, { color: isBatteryLow ? C.red : isBatteryWarn ? C.amber : C.green }]}>
-              {voltage || '--'}
-            </Text>
-            <Text style={s.sensorLabel}>{t('dashboard.battery')}</Text>
-          </View>
-          <View style={s.sensorCard}>
-            <Text style={s.sensorValue}>{engineLoad !== null ? `${engineLoad}%` : '--'}</Text>
-            <Text style={s.sensorLabel}>{t('dashboard.load')}</Text>
-          </View>
-          <View style={s.sensorCard}>
-            <Text style={[s.sensorValue, intakeAirTemp !== null && intakeAirTemp > 60 ? { color: C.amber } : {}]}>
-              {intakeAirTemp !== null ? `${intakeAirTemp}°` : '--'}
-            </Text>
-            <Text style={s.sensorLabel}>{t('dashboard.intake')}</Text>
-          </View>
-          <View style={s.sensorCard}>
-            <Text style={s.sensorValue}>{manifoldPressure !== null ? manifoldPressure : '--'}</Text>
-            <Text style={s.sensorLabel}>{t('dashboard.manifold')}</Text>
-          </View>
-        </View>
-      </ScrollView>
-    );
-  };
 
   // ═══════════════════════════════════════════════════════════════
   // RENDER: Expertise / Diagnostics Tab
@@ -851,7 +902,7 @@ ${sensorLines || '  Veri okunamadı'}
         </View>
 
         {/* Tab Content */}
-        {activeTab === 'dashboard' && renderDashboard()}
+        {activeTab === 'dashboard' && <DashboardSpeedometer ecuStatus={ecuStatus} lastDeviceName={lastDeviceName} onConnectPress={() => setIsConnectModalVisible(true)} />}
         {activeTab === 'expertise' && renderExpertise()}
         {activeTab === 'info' && renderInfo()}
 
@@ -987,11 +1038,10 @@ ${sensorLines || '  Veri okunamadı'}
         </Modal>
 
         {/* Battery Test Modal */}
-        <BatteryTestModal
+        <BatteryTestModalWrapper
           visible={isBatteryTestVisible}
           onClose={() => setIsBatteryTestVisible(false)}
           sendCommand={sendCommand}
-          voltage={voltage}
         />
 
         {/* Freeze Frame Modal */}
@@ -1003,10 +1053,9 @@ ${sensorLines || '  Veri okunamadı'}
         />
 
         {/* Performance Modal */}
-        <PerformanceModal
+        <PerformanceModalWrapper
           visible={isPerformanceVisible}
           onClose={() => setIsPerformanceVisible(false)}
-          speed={speed}
         />
       </View>
     </SafeAreaView>

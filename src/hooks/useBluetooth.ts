@@ -7,29 +7,26 @@ import { useBluetoothStore } from '../store/useBluetoothStore';
 import { ADAPTER_COMMANDS } from '../api/commands';
 
 export const useBluetooth = () => {
-    const {
-        status,
-        adapterStatus,
-        ecuStatus,
-        deviceName,
-        deviceId,
-        lastResponse,
-        error,
-        setStatus,
-        setAdapterStatus,
-        setEcuStatus,
-        setDevice,
-        setLastResponse,
-        setError,
-        logs,
-        rpm,
-        clearLogs,
-        reset,
-        lastDeviceId,
-        lastDeviceName,
-        setLastDevice,
-        isCloneDevice,
-    } = useBluetoothStore();
+    const status = useBluetoothStore(s => s.status);
+    const adapterStatus = useBluetoothStore(s => s.adapterStatus);
+    const ecuStatus = useBluetoothStore(s => s.ecuStatus);
+    const deviceName = useBluetoothStore(s => s.deviceName);
+    const deviceId = useBluetoothStore(s => s.deviceId);
+    const lastResponse = useBluetoothStore(s => s.lastResponse);
+    const error = useBluetoothStore(s => s.error);
+    const setStatus = useBluetoothStore(s => s.setStatus);
+    const setAdapterStatus = useBluetoothStore(s => s.setAdapterStatus);
+    const setEcuStatus = useBluetoothStore(s => s.setEcuStatus);
+    const setDevice = useBluetoothStore(s => s.setDevice);
+    const setLastResponse = useBluetoothStore(s => s.setLastResponse);
+    const setError = useBluetoothStore(s => s.setError);
+    const logs = useBluetoothStore(s => s.logs);
+    const clearLogs = useBluetoothStore(s => s.clearLogs);
+    const reset = useBluetoothStore(s => s.reset);
+    const lastDeviceId = useBluetoothStore(s => s.lastDeviceId);
+    const lastDeviceName = useBluetoothStore(s => s.lastDeviceName);
+    const setLastDevice = useBluetoothStore(s => s.setLastDevice);
+    const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
 
     /**
      * Request to enable Bluetooth on the device
@@ -191,14 +188,15 @@ export const useBluetooth = () => {
         }
 
         try {
-            // Priority 1: High frequency (RPM & Speed) - polled every cycle
+            // Priority 1: High frequency (RPM & Fuel Consumption) - polled every cycle
             await sendCommand(ADAPTER_COMMANDS.RPM);
-            await sendCommand(ADAPTER_COMMANDS.SPEED);
+            await sendCommand(ADAPTER_COMMANDS.MAF);
 
-            // Priority 2: Low frequency (Coolant, Throttle, Voltage) - polled every 5 cycles
+            // Priority 2: Low frequency (Speed, Coolant, Throttle, Voltage) - polled every 5 cycles
             tickRef.current += 1;
             if (tickRef.current >= 4) {
                 tickRef.current = 0;
+                await sendCommand(ADAPTER_COMMANDS.SPEED);
                 await sendCommand(ADAPTER_COMMANDS.COOLANT_TEMP);
                 await sendCommand(ADAPTER_COMMANDS.THROTTLE);
                 await sendCommand(ADAPTER_COMMANDS.VOLTAGE);
@@ -335,14 +333,7 @@ export const useBluetooth = () => {
         sendCommand,
         retryEcu,
         logs,
-        rpm,
-        coolant: useBluetoothStore((state) => state.coolant),
-        speed: useBluetoothStore((state) => state.speed),
-        throttle: useBluetoothStore((state) => state.throttle),
-        voltage: useBluetoothStore((state) => state.voltage),
-        engineLoad: useBluetoothStore((state) => state.engineLoad),
-        intakeAirTemp: useBluetoothStore((state) => state.intakeAirTemp),
-        manifoldPressure: useBluetoothStore((state) => state.manifoldPressure),
+        clearLogs,
 
         // Expertise Data
         dtcs: useBluetoothStore((state) => state.dtcs),
@@ -360,7 +351,6 @@ export const useBluetooth = () => {
         runDiagnostics,
         clearDiagnostics,
         runAdaptationRoutine,
-        clearLogs,
         isCloneDevice
     };
 };

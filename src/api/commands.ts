@@ -19,6 +19,7 @@ export const ADAPTER_COMMANDS = {
     COOLANT_TEMP: '0105',     // Coolant Temperature (1 byte)
     LOAD: '0104',             // Engine Load (1 byte)
     INTAKE_AIR_TEMP: '010F',  // Intake Air Temperature (1 byte)
+    MAF: '0110',              // Mass Air Flow (2 bytes)
     MANIFOLD_PRESSURE: '010B', // Manifold Absolute Pressure (1 byte)
     THROTTLE: '0111',         // Throttle Position (1 byte)
 
