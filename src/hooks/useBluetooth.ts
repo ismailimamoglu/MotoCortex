@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Alert } from 'react-native';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import BluetoothService from '../api/BluetoothService';
+import { BluetoothPermissionError } from '../api/BluetoothService';
 import OBDCommandQueue from '../api/OBDCommandQueue';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import { ADAPTER_COMMANDS } from '../api/commands';
@@ -42,20 +43,32 @@ export const useBluetooth = () => {
     }, [setError]);
 
     /**
-     * Scan for paired devices
+     * Scan for paired devices — with graceful permission handling.
+     * BluetoothPermissionError is caught and shown as a polite Alert instead of raw error text.
      */
     const scanDevices = useCallback(async () => {
         setStatus('scanning');
+        setError(null);
         try {
-            return await BluetoothService.scanDevices();
+            const devices = await BluetoothService.scanDevices();
+            setStatus('disconnected');
+            return devices;
         } catch (e) {
+            if (e instanceof BluetoothPermissionError) {
+                // Graceful handling: no red error text, just a polite alert
+                setStatus('disconnected');
+                Alert.alert(
+                    'Bluetooth Bağlantısı',
+                    'Lütfen cihazınızın Bluetooth bağlantısını açın ve MotoCortex uygulamasına Bluetooth izni verdiğinizden emin olun.\n\nAyarlar → Bluetooth → Açık',
+                );
+                return [];
+            }
+            // Unexpected errors — keep original behavior
             setError(e instanceof Error ? e.message : String(e));
             setStatus('error');
             return [];
-        } finally {
-            if (status === 'scanning') setStatus('disconnected');
         }
-    }, [status, setStatus, setError]);
+    }, [setStatus, setError]);
 
     /**
      * Connect to a specific device (Adapter)
@@ -188,9 +201,8 @@ export const useBluetooth = () => {
         }
 
         try {
-            // Priority 1: High frequency (RPM & Fuel Consumption) - polled every cycle
+            // Priority 1: High frequency (RPM) - polled every cycle
             await sendCommand(ADAPTER_COMMANDS.RPM);
-            await sendCommand(ADAPTER_COMMANDS.MAF);
 
             // Priority 2: Low frequency (Speed, Coolant, Throttle, Voltage) - polled every 5 cycles
             tickRef.current += 1;

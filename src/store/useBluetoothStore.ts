@@ -19,8 +19,6 @@ interface BluetoothState {
     engineLoad: number | null;
     intakeAirTemp: number | null;
     manifoldPressure: number | null;
-    fuelConsumptionLh: number | null; // Liters per hour (Idle/Slow)
-    fuelConsumptionL100km: number | null; // Liters per 100km (Moving)
 
     dtcs: string[];
     vin: string | null;
@@ -68,8 +66,6 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     engineLoad: null,
     intakeAirTemp: null,
     manifoldPressure: null,
-    fuelConsumptionLh: null,
-    fuelConsumptionL100km: null,
     dtcs: [],
     vin: null,
     odometer: null,
@@ -111,8 +107,6 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         engineLoad: null,
         intakeAirTemp: null,
         manifoldPressure: null,
-        fuelConsumptionLh: null,
-        fuelConsumptionL100km: null,
         dtcs: [],
         vin: null,
         odometer: null,

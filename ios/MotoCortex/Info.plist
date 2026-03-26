@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.anonymous.MotoCortexmobile</string>
+          <string>com.ismail.motocortex</string>
         </array>
       </dict>
       <dict>
@@ -51,9 +51,11 @@
       <true/>
     </dict>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>MotoCortex uses Bluetooth to maintain connection with diagnostic adapters</string>
+    <string>MotoCortex needs Bluetooth access to connect with BLE (Bluetooth Low Energy) OBD2 adapters and communicate with your vehicle's ECU for live diagnostics.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>MotoCortex needs Bluetooth to communicate with OBD-II adapters</string>
+    <string>Required to discover and connect to your vehicle's diagnostic adapter.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>iOS requires Location permission to scan for nearby Bluetooth Low Energy (BLE) OBD2 devices. Your location data is NEVER tracked, stored, or shared.</string>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

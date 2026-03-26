@@ -14,7 +14,13 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.anonymous.MotoCortexmobile"
+      "bundleIdentifier": "com.ismail.motocortex",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "MotoCortex needs Bluetooth access to connect with BLE (Bluetooth Low Energy) OBD2 adapters and communicate with your vehicle's ECU for live diagnostics.",
+        "NSBluetoothPeripheralUsageDescription": "Required to discover and connect to your vehicle's diagnostic adapter.",
+        "NSLocationWhenInUseUsageDescription": "iOS requires Location permission to scan for nearby Bluetooth Low Energy (BLE) OBD2 devices. Your location data is NEVER tracked, stored, or shared."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,14 +36,15 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.BLUETOOTH_ADVERTISE"
       ],
-      "package": "com.anonymous.MotoCortexmobile"
+      "package": "com.anonymous.MotoCortexmobile",
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       [
         "with-rn-bluetooth-classic",
         {
-          "peripheralUsageDescription": "MotoCortex needs Bluetooth to communicate with OBD-II adapters",
-          "alwaysUsageDescription": "MotoCortex uses Bluetooth to maintain connection with diagnostic adapters"
+          "peripheralUsageDescription": "Required to discover and connect to your vehicle's diagnostic adapter.",
+          "alwaysUsageDescription": "MotoCortex needs Bluetooth access to connect with BLE (Bluetooth Low Energy) OBD2 adapters and communicate with your vehicle's ECU for live diagnostics."
         }
       ],
       [
@@ -47,10 +54,15 @@
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
             "buildToolsVersion": "34.0.0"
+          },
+          "ios": {
+            "useFrameworks": "static"
           }
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics"
     ],
     "extra": {
       "eas": {

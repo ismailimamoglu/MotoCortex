@@ -6,6 +6,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 type DataListener = (data: string) => void;
 type DisconnectCallback = () => void;
 
+/**
+ * Typed error for Bluetooth permission/availability issues.
+ * The hook layer uses this to distinguish permission errors from real errors.
+ */
+export class BluetoothPermissionError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'BluetoothPermissionError';
+    }
+}
+
 class BluetoothService {
     connectedDevice: BluetoothDevice | null = null;
     private dataSubscription: any | null = null;
@@ -15,13 +26,40 @@ class BluetoothService {
     private readonly STORAGE_KEY = '@last_connected_device';
 
     /**
-     * Scans for paired devices (Bluetooth Classic)
+     * Pre-check: verifies Bluetooth is available and enabled on this device.
+     * Throws BluetoothPermissionError if not.
+     */
+    async checkBluetoothState(): Promise<void> {
+        try {
+            const available = await RNBluetoothClassic.isBluetoothAvailable();
+            if (!available) {
+                throw new BluetoothPermissionError('BLUETOOTH_UNAVAILABLE');
+            }
+            const enabled = await RNBluetoothClassic.isBluetoothEnabled();
+            if (!enabled) {
+                throw new BluetoothPermissionError('BLUETOOTH_DISABLED');
+            }
+        } catch (err) {
+            if (err instanceof BluetoothPermissionError) throw err;
+            // Native call itself failed → likely permission denied by OS
+            throw new BluetoothPermissionError('BLUETOOTH_PERMISSION_DENIED');
+        }
+    }
+
+    /**
+     * Scans for paired devices (Bluetooth Classic).
+     * Runs a pre-check first; throws BluetoothPermissionError on BT issues.
      */
     async scanDevices(): Promise<BluetoothDevice[]> {
+        await this.checkBluetoothState();
         try {
             console.log('Scanning for bonded devices...');
             return await RNBluetoothClassic.getBondedDevices();
         } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            if (msg.toLowerCase().includes('permission') || msg.toLowerCase().includes('bluetooth')) {
+                throw new BluetoothPermissionError(msg);
+            }
             console.error('Scan Failed:', err);
             return [];
         }

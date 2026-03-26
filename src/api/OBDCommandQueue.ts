@@ -170,37 +170,6 @@ class OBDCommandQueue {
                 }
             }
         }
-        // MAF (0110) - 2 bytes -> Fuel Consumption
-        else if (command === '0110') {
-            const hex = getHexData(command, clean, 2);
-            if (hex && hex.length === 4) {
-                const a = parseInt(hex.substring(0, 2), 16);
-                const b = parseInt(hex.substring(2, 4), 16);
-                if (!isNaN(a) && !isNaN(b)) {
-                    const maf_gs = ((a * 256) + b) / 100;
-                    // L/h = (MAF * 3600) / (14.7 * 820) => roughly (MAF * 3600) / 12054 => MAF * 0.2986
-                    const litersPerHour = maf_gs * 0.2986;
-
-                    const state = useBluetoothStore.getState();
-                    const currentSpeed = state.speed || 0;
-
-                    let litersPer100km = null;
-                    if (currentSpeed > 5) {
-                        // L/100km = (L/h * 100) / Speed
-                        litersPer100km = (litersPerHour * 100) / currentSpeed;
-                    }
-
-                    // Cap bounds for UI realism
-                    const cappedLh = Math.min(Math.max(litersPerHour, 0), 99.9);
-                    const cappedL100km = litersPer100km ? Math.min(Math.max(litersPer100km, 0), 99.9) : null;
-
-                    useBluetoothStore.getState().setSensorData({
-                        fuelConsumptionLh: Number(cappedLh.toFixed(1)),
-                        fuelConsumptionL100km: cappedL100km ? Number(cappedL100km.toFixed(1)) : null
-                    });
-                }
-            }
-        }
         // COOLANT (0105) - 1 byte
         else if (command === '0105') {
             const hex = getHexData(command, clean, 1);
@@ -248,53 +217,6 @@ class OBDCommandQueue {
                 const a = parseInt(hex, 16);
                 if (!isNaN(a)) {
                     useBluetoothStore.getState().setSensorData({ manifoldPressure: a });
-
-                    // FALLBACK FUEL CONSUMPTION CALCULATION (Speed-Density Method)
-                    // Used if MAF (0110) is not supported by the motorcycle/vehicle.
-                    const state = useBluetoothStore.getState();
-                    // Don't override if MAF is actively providing fuel data
-                    // We assume if fuelConsumptionLh is not null, MAF might be working.
-                    // But to be safe, we calculate it and only use it if MAF fuel is currently null or 0.
-
-                    const rpm = state.rpm || 0;
-                    const iat = state.intakeAirTemp || 25; // Default to 25C if no IAT
-                    // Engine Displacement in Liters (Assuming typical 0.6L for motorcycle if unknown)
-                    const engineDisplacement = 0.6;
-                    // Volumetric Efficiency (Typical 80-85%)
-                    const VE = 0.85;
-
-                    // Required parameters for Speed-Density MAF estimation
-                    if (rpm > 0 && a > 0) {
-                        // IMAP = RPM * MAP / IAT(Kelvin)
-                        const iatKelvin = iat + 273.15;
-                        const imap = (rpm * a) / iatKelvin;
-
-                        // MAF(g/s) = (IMAP / 120) * VE * EngineDisplacement * (MolecularWeightOfAir / UniversalGasConstant)
-                        // Simplified constant for (AirWeight / GasConstant) = ~28.97 / 8.314 ≈ 3.484
-                        // But standard simplified formula: MAF(g/s) ≈ (RPM * MAP / IAT) * (VE * ED / 120)
-
-                        // Let's use standard direct estimation:
-                        // MAF(g/s) = (MAP * RPM * VE * ED) / (120 * IAT_Kelvin) * 28.97 / 8.314
-                        // => MAF(g/s) = (MAP * RPM * 0.85 * 0.6) / (120 * (IAT + 273.15)) * 3.484
-                        const estMafGs = ((a * rpm * VE * engineDisplacement) / (120 * iatKelvin)) * 3.484;
-                        const litersPerHour = estMafGs * 0.2986;
-
-                        const currentSpeed = state.speed || 0;
-                        let litersPer100km = null;
-                        if (currentSpeed > 5) {
-                            litersPer100km = (litersPerHour * 100) / currentSpeed;
-                        }
-
-                        const cappedLh = Math.min(Math.max(litersPerHour, 0), 99.9);
-                        const cappedL100km = litersPer100km ? Math.min(Math.max(litersPer100km, 0), 99.9) : null;
-
-                        // Only set if MAF hasn't set it recently (if we only rely on fallback)
-                        // In reality, if MAF isn't supported, 0110 returns NO DATA and this safely takes over.
-                        useBluetoothStore.getState().setSensorData({
-                            fuelConsumptionLh: Number(cappedLh.toFixed(1)),
-                            fuelConsumptionL100km: cappedL100km ? Number(cappedL100km.toFixed(1)) : null
-                        });
-                    }
                 }
             }
         }

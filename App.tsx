@@ -14,6 +14,8 @@ import { useBluetoothStore } from './src/store/useBluetoothStore';
 import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
 import './src/i18n';
 import { useTranslation } from 'react-i18next';
+import crashlytics from '@react-native-firebase/crashlytics';
+
 
 // ─── Design Tokens ───────────────────────────────────────────────
 const C = {
@@ -46,12 +48,6 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
   const engineLoad = useBluetoothStore(s => s.engineLoad);
   const intakeAirTemp = useBluetoothStore(s => s.intakeAirTemp);
   const manifoldPressure = useBluetoothStore(s => s.manifoldPressure);
-  const fuelConsumptionLh = useBluetoothStore(s => s.fuelConsumptionLh);
-  const fuelConsumptionL100km = useBluetoothStore(s => s.fuelConsumptionL100km);
-
-  const isMoving = speed !== null && speed > 5;
-  const displayFuel = isMoving && fuelConsumptionL100km !== null ? fuelConsumptionL100km : fuelConsumptionLh;
-  const fuelUnit = isMoving && fuelConsumptionL100km !== null ? t('dashboard.fuel_100') : t('dashboard.fuel_lh');
 
   const voltNum = voltage ? parseFloat(voltage.replace('V', '')) : null;
   const isBatteryLow = voltNum !== null && voltNum < 11.8;
@@ -124,10 +120,6 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
       {/* Sensor Grid */}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
         <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{displayFuel !== null ? displayFuel : '--'}</Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.fuel')} ({fuelUnit})</Text>
-        </View>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
           <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{speed !== null ? speed : '--'}</Text>
           <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.speed')}</Text>
         </View>
@@ -140,6 +132,12 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
             {coolant !== null ? `${coolant}°` : '--'}
           </Text>
           <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.temp')}</Text>
+        </View>
+        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[{ fontSize: 18, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, rpm !== null && (rpm > 7000 ? { color: '#ff3b3b' } : rpm > 3000 ? { color: '#00ff88' } : { color: '#ffb800' })]}>
+            {rpm !== null ? (rpm > 7000 ? t('dashboard.statusHigh') : rpm > 3000 ? t('dashboard.statusNormal') : t('dashboard.statusLow')) : '--'}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.status')}</Text>
         </View>
         <View style={[{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }, { borderColor: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#1e2430' }]}>
           <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, { color: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#00ff88' }]}>
@@ -224,6 +222,22 @@ export default function App() {
   const [isPerformanceVisible, setIsPerformanceVisible] = useState(false);
 
   useEffect(() => { checkPermissions(); }, []);
+
+  // Force Crashlytics Initialization
+  useEffect(() => {
+    const initCrashlytics = async () => {
+      try {
+        if (!crashlytics().isCrashlyticsCollectionEnabled) {
+          await crashlytics().setCrashlyticsCollectionEnabled(true);
+        }
+        crashlytics().log('App mounted and Crashlytics initialized');
+        console.log('Crashlytics collection enabled Status:', crashlytics().isCrashlyticsCollectionEnabled);
+      } catch (e) {
+        console.error('Failed to init Crashlytics:', e);
+      }
+    };
+    initCrashlytics();
+  }, []);
 
   useEffect(() => {
     if (ecuStatus === 'connected' && !isPolling) {
@@ -811,6 +825,8 @@ ${sensorLines || '  Veri okunamadı'}
         <Text style={[s.actionBtnText, { color: '#a78bfa', fontSize: 14 }]}>{t('info.upgrade')}</Text>
       </TouchableOpacity>
 
+
+
       <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>{t('info.helpGuide')}</Text>
 
       {/* Middle Section: Accordions */}
@@ -854,7 +870,14 @@ ${sensorLines || '  Veri okunamadı'}
         <TouchableOpacity onPress={() => Linking.openURL('mailto:ismailimamoglu610@gmail.com')}>
           <Text style={{ color: C.cyan, fontFamily: C.mono, fontSize: 13, fontWeight: '700' }}>{t('info.support')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Alert.alert(t('info.thanks'), t('info.thanksDesc'))}>
+        <TouchableOpacity onPress={async () => {
+          try {
+            await Share.share({
+              message: 'Motocortex OBD2 Arıza Tespit Uygulaması ile motosikletinizin durumunu cebinizden takip edin! 🏍️📲',
+              title: 'MotoCortex'
+            });
+          } catch (e) { console.error(e); }
+        }}>
           <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 12, fontWeight: '700' }}>✉️ {t('expertise.share').toUpperCase()}</Text>
         </TouchableOpacity>
       </View>
