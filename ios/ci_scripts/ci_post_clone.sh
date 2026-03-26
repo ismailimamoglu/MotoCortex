@@ -143,6 +143,17 @@ export COCOAPODS_DISABLE_STATS=1
 retry 3 10 pod install --repo-update
 
 # ==================================================================
+#  6. ADIM — Xcode Build Phase'leri için NODE_BINARY yolunu kaydet
+# ==================================================================
+# Xcode build phase scriptleri (Bundle React Native code, Expo configure)
+# ci_post_clone.sh'in PATH'ini devralmaz. .xcode.env.local dosyasına
+# Node.js yolunu yazarak build phase'lerin node'u bulmasını sağlıyoruz.
+NODE_PATH=$(command -v node)
+echo "▸ NODE_BINARY ayarlanıyor: $NODE_PATH"
+echo "export NODE_BINARY=\"$NODE_PATH\"" > "$PROJECT_ROOT/ios/.xcode.env.local"
+echo "  ✓ .xcode.env.local güncellendi"
+
+# ==================================================================
 #  Tamamlandı
 # ==================================================================
 echo ""
