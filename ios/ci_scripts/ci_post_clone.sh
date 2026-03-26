@@ -1,26 +1,25 @@
 #!/usr/bin/env bash
 
-# 1. Adım: Projenin ana dizinine (root) tam olarak çıkıyoruz
+# 1. Adım: Projenin ana dizinine çık
 cd ../..
 
-# 2. Adım: Apple sunucusuna Node.js kuruyoruz (Kritik Adım)
+# 2. Adım: Node.js kurulumu (Burası Build 12'de çalıştı, dokunmuyoruz)
 echo "Node.js kuruluyor..."
 brew install node
 
-# 3. Adım: Gizli anahtarı alıp doğru yere oluşturuyoruz
+# 3. Adım: .plist dosyasını HER İHTİMALE KARŞI 3 farklı yere kopyalıyoruz
+# (Xcode hangisine bakarsa baksın orada bulacak)
 if [ -n "$GOOGLE_SERVICES_INFO" ]; then
-    echo "GoogleService-Info.plist oluşturuluyor..."
+    echo "GoogleService-Info.plist dosyaları yerleştiriliyor..."
     echo "$GOOGLE_SERVICES_INFO" > GoogleService-Info.plist
+    echo "$GOOGLE_SERVICES_INFO" > ios/GoogleService-Info.plist
+    echo "$GOOGLE_SERVICES_INFO" > ios/MotoCortex/GoogleService-Info.plist
 else
     echo "HATA: GOOGLE_SERVICES_INFO değişkeni bulunamadı!"
     exit 1
 fi
 
-# 4. Adım: Artık npm komutunu tanıyacağı için paketleri kurabiliriz
-echo "NPM paketleri kuruluyor..."
+# 4. Adım: Kurulumlar
 npm install
-
-# 5. Adım: Tekrar iOS klasörüne girip Pod'ları kuruyoruz
-echo "Pod'lar kuruluyor..."
 cd ios
 pod install
