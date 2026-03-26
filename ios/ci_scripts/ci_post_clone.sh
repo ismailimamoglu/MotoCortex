@@ -79,10 +79,17 @@ if ! command -v node &>/dev/null; then
 
     NODE_URL="https://nodejs.org/dist/v${NODE_VERSION}/${NODE_DIST}.tar.gz"
     NODE_DIR="$PROJECT_ROOT/.node_local"
+    NODE_TMP="/tmp/${NODE_DIST}.tar.gz"
 
     mkdir -p "$NODE_DIR"
     echo "  ↳ İndiriliyor: $NODE_URL"
-    retry 3 5 curl -fsSL --connect-timeout 30 --max-time 120 "$NODE_URL" | tar xz -C "$NODE_DIR" --strip-components=1
+
+    # Önce dosyayı indir, sonra aç (pipe hatalarını önlemek için)
+    retry 3 5 curl -fSL --connect-timeout 30 --max-time 180 -o "$NODE_TMP" "$NODE_URL"
+
+    echo "  ↳ Arşiv açılıyor…"
+    tar xzf "$NODE_TMP" -C "$NODE_DIR" --strip-components=1
+    rm -f "$NODE_TMP"
 
     export PATH="$NODE_DIR/bin:$PATH"
 
