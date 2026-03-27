@@ -14,7 +14,7 @@
 		2DF4DBEA830F4C4E8BAC47F8 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DEB22FC47544F9B8E23038 /* noop-file.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		71BC9CC00B26F23EB1833431 /* Pods_MotoCortex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C56D4EA20D0BDFE8CD8F7DD /* Pods_MotoCortex.framework */; };
-		8B66CAC566E44FC0A90D5DE5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C8193093769E45B6B8864698 /* GoogleService-Info.plist */; };
+		ACA5BCD42F764308005AA09F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ACA5BCD32F764308005AA09F /* GoogleService-Info.plist */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 /* End PBXBuildFile section */
@@ -31,8 +31,8 @@
 		7A4D352CD337FB3A3BF06240 /* Pods-MotoCortex.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MotoCortex.release.xcconfig"; path = "Target Support Files/Pods-MotoCortex/Pods-MotoCortex.release.xcconfig"; sourceTree = "<group>"; };
 		9C56D4EA20D0BDFE8CD8F7DD /* Pods_MotoCortex.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MotoCortex.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = MotoCortex/SplashScreen.storyboard; sourceTree = "<group>"; };
+		ACA5BCD32F764308005AA09F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C8193093769E45B6B8864698 /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "MotoCortex/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DD1D5820C9979BCD53CD6300 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = MotoCortex/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E7DEB22FC47544F9B8E23038 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "MotoCortex/noop-file.swift"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -61,7 +61,6 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				C8193093769E45B6B8864698 /* GoogleService-Info.plist */,
 				E7DEB22FC47544F9B8E23038 /* noop-file.swift */,
 				567053E5A8584AD5B3918E5B /* MotoCortex-Bridging-Header.h */,
 				DD1D5820C9979BCD53CD6300 /* PrivacyInfo.xcprivacy */,
@@ -120,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				BB2F792C24A3F905000567C9 /* Expo.plist */,
+				ACA5BCD32F764308005AA09F /* GoogleService-Info.plist */,
 			);
 			name = Supporting;
 			path = MotoCortex/Supporting;
@@ -208,8 +208,8 @@
 			files = (
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				ACA5BCD42F764308005AA09F /* GoogleService-Info.plist in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				8B66CAC566E44FC0A90D5DE5 /* GoogleService-Info.plist in Resources */,
 				02901F0257357BDEF6A80CD0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
