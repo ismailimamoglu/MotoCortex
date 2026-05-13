@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './global.css';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList, Linking } from 'react-native';
 import * as FileSystem from 'expo-file-system';
@@ -15,22 +15,18 @@ import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin
 import './src/i18n';
 import { useTranslation } from 'react-i18next';
 import crashlytics from '@react-native-firebase/crashlytics';
+import PermissionGateway from './src/components/PermissionGateway';
+import LiveEngineHero from './src/components/LiveEngineHero';
+import BentoGrid from './src/components/BentoGrid';
+import QuickSettingsModal from './src/components/QuickSettingsModal';
+import { useAppStore } from './src/store/useAppStore';
+import Purchases from 'react-native-purchases';
+import PaywallModal from './src/components/PaywallModal';
+import { useThemeColors, getTheme } from './src/theme';
+import { BluetoothBridgeInitializer } from './src/components/BluetoothBridgeInitializer';
 
 
-// ─── Design Tokens ───────────────────────────────────────────────
-const C = {
-  bg: '#0a0a0a',
-  card: '#111318',
-  elevated: '#1a1d24',
-  border: '#1e2430',
-  cyan: '#00d4ff',
-  green: '#00ff88',
-  red: '#ff3b3b',
-  amber: '#ffb800',
-  textPri: '#e8eaed',
-  textSec: '#6b7280',
-  mono: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-};
+const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
 
 const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectPress }: {
@@ -39,6 +35,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
   onConnectPress: () => void;
 }) => {
   const { t } = useTranslation();
+  const tc = useThemeColors();
 
   const rpm = useBluetoothStore(s => s.rpm);
   const speed = useBluetoothStore(s => s.speed);
@@ -54,10 +51,10 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
   const isBatteryWarn = voltNum !== null && voltNum < 12.2 && voltNum >= 11.8;
 
   const statusColor = (s: string) => {
-    if (s === 'connected') return '#00ff88';
-    if (s === 'connecting') return '#ffb800';
-    if (s === 'error') return '#ff3b3b';
-    return '#6b7280';
+    if (s === 'connected') return tc.green;
+    if (s === 'connecting') return tc.amber;
+    if (s === 'error') return tc.red;
+    return tc.textSec;
   };
 
   return (
@@ -65,9 +62,9 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
       {/* Device Connection Card */}
       <TouchableOpacity
         style={{
-          backgroundColor: ecuStatus === 'connected' ? 'rgba(0,255,136,0.08)' : '#111318',
+          backgroundColor: ecuStatus === 'connected' ? `${tc.green}14` : tc.card,
           borderWidth: 1.5,
-          borderColor: ecuStatus === 'connected' ? '#00ff88' : '#00d4ff',
+          borderColor: ecuStatus === 'connected' ? tc.green : tc.cyan,
           borderRadius: 12,
           padding: 16,
           marginBottom: 16,
@@ -80,84 +77,84 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onConnectP
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: statusColor(ecuStatus) }} />
           <View>
-            <Text style={{ color: '#e8eaed', fontSize: 14, fontWeight: '900', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>
+            <Text style={{ color: tc.textPri, fontSize: 14, fontWeight: '900', fontFamily: MONO }}>
               {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('dashboard.selectDevice')}
             </Text>
-            <Text style={{ color: '#6b7280', fontSize: 10, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 2 }}>
+            <Text style={{ color: tc.textSec, fontSize: 10, fontFamily: MONO, marginTop: 2 }}>
               {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : t('dashboard.noConnection')}
             </Text>
           </View>
         </View>
-        <Text style={{ color: ecuStatus === 'connected' ? '#00ff88' : '#00d4ff', fontSize: 18, fontWeight: '900' }}>›</Text>
+        <Text style={{ color: ecuStatus === 'connected' ? tc.green : tc.cyan, fontSize: 18, fontWeight: '900' }}>›</Text>
       </TouchableOpacity>
 
       {/* Battery Warning */}
       {isBatteryLow && (
-        <View style={{ flexDirection: 'row', backgroundColor: 'rgba(255, 184, 0, 0.1)', borderWidth: 1, borderColor: '#ff3b3b', borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' }}>
-          <Text style={{ color: '#ffb800', fontSize: 20 }}>🚨</Text>
+        <View style={{ flexDirection: 'row', backgroundColor: `${tc.red}1A`, borderWidth: 1, borderColor: tc.red, borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' }}>
+          <Text style={{ color: tc.red, fontSize: 20 }}>🚨</Text>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: '#ff3b3b', fontSize: 12, fontWeight: '900', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginBottom: 4 }}>{t('dashboard.batteryLow')}</Text>
-            <Text style={{ color: '#fef08a', fontSize: 11, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', lineHeight: 17 }}>{t('dashboard.batteryLowDesc', { voltage })}</Text>
+            <Text style={{ color: tc.red, fontSize: 12, fontWeight: '900', fontFamily: MONO, marginBottom: 4 }}>{t('dashboard.batteryLow')}</Text>
+            <Text style={{ color: tc.textSec, fontSize: 11, fontFamily: MONO, lineHeight: 17 }}>{t('dashboard.batteryLowDesc', { voltage })}</Text>
           </View>
         </View>
       )}
       {isBatteryWarn && (
-        <View style={{ flexDirection: 'row', backgroundColor: 'rgba(255, 184, 0, 0.1)', borderWidth: 1, borderColor: '#ffb800', borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' }}>
-          <Text style={{ color: '#ffb800', fontSize: 20 }}>⚠</Text>
+        <View style={{ flexDirection: 'row', backgroundColor: `${tc.amber}1A`, borderWidth: 1, borderColor: tc.amber, borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' }}>
+          <Text style={{ color: tc.amber, fontSize: 20 }}>⚠</Text>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: '#ffb800', fontSize: 12, fontWeight: '900', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginBottom: 4 }}>{t('dashboard.batteryWarn')}</Text>
-            <Text style={{ color: '#fef08a', fontSize: 11, fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', lineHeight: 17 }}>{t('dashboard.batteryWarnDesc', { voltage })}</Text>
+            <Text style={{ color: tc.amber, fontSize: 12, fontWeight: '900', fontFamily: MONO, marginBottom: 4 }}>{t('dashboard.batteryWarn')}</Text>
+            <Text style={{ color: tc.textSec, fontSize: 11, fontFamily: MONO, lineHeight: 17 }}>{t('dashboard.batteryWarnDesc', { voltage })}</Text>
           </View>
         </View>
       )}
 
       {/* RPM Hero */}
-      <View style={{ alignItems: 'center', paddingVertical: 24, backgroundColor: '#111318', borderRadius: 4, borderWidth: 1, borderColor: '#1e2430', marginBottom: 16 }}>
-        <Text style={{ fontSize: 72, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{rpm !== null ? rpm : '----'}</Text>
-        <Text style={{ fontSize: 14, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: -4 }}>RPM</Text>
+      <View style={{ alignItems: 'center', paddingVertical: 24, backgroundColor: tc.card, borderRadius: 4, borderWidth: 1, borderColor: tc.border, marginBottom: 16 }}>
+        <Text style={{ fontSize: 72, fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>{rpm !== null ? rpm : '----'}</Text>
+        <Text style={{ fontSize: 14, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: -4 }}>RPM</Text>
       </View>
 
       {/* Sensor Grid */}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{speed !== null ? speed : '--'}</Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.speed')}</Text>
+        <View style={{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>{speed !== null ? speed : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.speed')}</Text>
         </View>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{throttle !== null ? `${throttle}%` : '--'}</Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.throttle')}</Text>
+        <View style={{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>{throttle !== null ? `${throttle}%` : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.throttle')}</Text>
         </View>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, coolant !== null && coolant > 100 ? { color: '#ff3b3b' } : {}]}>
+        <View style={{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[{ fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO }, coolant !== null && coolant > 100 ? { color: tc.red } : {}]}>
             {coolant !== null ? `${coolant}°` : '--'}
           </Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.temp')}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.temp')}</Text>
         </View>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={[{ fontSize: 18, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, rpm !== null && (rpm > 7000 ? { color: '#ff3b3b' } : rpm > 3000 ? { color: '#00ff88' } : { color: '#ffb800' })]}>
+        <View style={{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[{ fontSize: 18, fontWeight: '900', color: tc.textPri, fontFamily: MONO }, rpm !== null && (rpm > 7000 ? { color: tc.red } : rpm > 3000 ? { color: tc.green } : { color: tc.amber })]}>
             {rpm !== null ? (rpm > 7000 ? t('dashboard.statusHigh') : rpm > 3000 ? t('dashboard.statusNormal') : t('dashboard.statusLow')) : '--'}
           </Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.status')}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.status')}</Text>
         </View>
-        <View style={[{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }, { borderColor: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#1e2430' }]}>
-          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, { color: isBatteryLow ? '#ff3b3b' : isBatteryWarn ? '#ffb800' : '#00ff88' }]}>
+        <View style={[{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }, { borderColor: isBatteryLow ? tc.red : isBatteryWarn ? tc.amber : tc.border }]}>
+          <Text style={[{ fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO }, { color: isBatteryLow ? tc.red : isBatteryWarn ? tc.amber : tc.green }]}>
             {voltage || '--'}
           </Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.battery')}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.battery')}</Text>
         </View>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{engineLoad !== null ? `${engineLoad}%` : '--'}</Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.load')}</Text>
+        <View style={{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>{engineLoad !== null ? `${engineLoad}%` : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.load')}</Text>
         </View>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={[{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }, intakeAirTemp !== null && intakeAirTemp > 60 ? { color: '#ffb800' } : {}]}>
+        <View style={{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={[{ fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO }, intakeAirTemp !== null && intakeAirTemp > 60 ? { color: tc.amber } : {}]}>
             {intakeAirTemp !== null ? `${intakeAirTemp}°` : '--'}
           </Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.intake')}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.intake')}</Text>
         </View>
-        <View style={{ width: '48.5%', backgroundColor: '#111318', borderWidth: 1, borderColor: '#1e2430', borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
-          <Text style={{ fontSize: 28, fontWeight: '900', color: '#e8eaed', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace' }}>{manifoldPressure !== null ? manifoldPressure : '--'}</Text>
-          <Text style={{ fontSize: 10, fontWeight: '700', color: '#6b7280', fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', marginTop: 4, letterSpacing: 2 }}>{t('dashboard.manifold')}</Text>
+        <View style={{ width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' }}>
+          <Text style={{ fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>{manifoldPressure !== null ? manifoldPressure : '--'}</Text>
+          <Text style={{ fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 }}>{t('dashboard.manifold')}</Text>
         </View>
       </View>
     </ScrollView>
@@ -205,8 +202,173 @@ export default function App() {
   const [scannedDevices, setScannedDevices] = useState<BluetoothDevice[]>([]);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isPolling, setIsPolling] = useState(false);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard');
+  const hasOnboarded = useAppStore((state) => state.hasOnboarded);
+  const theme = useAppStore((state) => state.theme);
+  const colors = useThemeColors();
+  const tc = colors;
+
+  const s = useMemo(() => StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: tc.bg,
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    },
+
+    // ── Connection Screen ──
+    connectPage: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 30 },
+    logoArea: { alignItems: 'center', marginBottom: 40 },
+    logoText: { fontSize: 36, fontWeight: '900', color: tc.cyan, fontFamily: MONO, letterSpacing: 4 },
+    logoSub: { fontSize: 14, color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 6 },
+
+    badgeRow: { flexDirection: 'row', gap: 12, marginBottom: 40 },
+    badge: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 6, gap: 6 },
+    badgeDot: { width: 6, height: 6, borderRadius: 3 },
+    badgeText: { fontSize: 10, fontWeight: '800', fontFamily: MONO },
+
+    connectActions: { width: '100%', alignItems: 'center', gap: 12 },
+    scanBtn: { backgroundColor: 'transparent', borderWidth: 2, borderColor: tc.cyan, borderRadius: 4, paddingVertical: 16, paddingHorizontal: 50, width: '100%', alignItems: 'center' },
+    scanBtnText: { color: tc.cyan, fontWeight: '900', fontSize: 16, fontFamily: MONO, letterSpacing: 2 },
+    btEnableBtn: { backgroundColor: tc.elevated, borderRadius: 4, paddingVertical: 12, paddingHorizontal: 30, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: tc.border },
+    btEnableBtnText: { color: tc.textSec, fontWeight: '700', fontSize: 12, fontFamily: MONO },
+
+    scanningRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10 },
+    scanningText: { color: tc.cyan, fontSize: 12, fontFamily: MONO },
+
+    deviceSection: { width: '100%', marginTop: 20 },
+    deviceSectionTitle: { color: tc.textSec, fontSize: 10, fontWeight: '800', fontFamily: MONO, marginBottom: 10, letterSpacing: 2 },
+    deviceCard: { backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, padding: 16, marginBottom: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    deviceName: { color: tc.textPri, fontSize: 14, fontWeight: '700', fontFamily: MONO },
+    deviceMac: { color: tc.textSec, fontSize: 10, fontFamily: MONO, marginTop: 4 },
+    connectLabel: { color: tc.cyan, fontSize: 12, fontWeight: '800', fontFamily: MONO },
+    hintText: { color: tc.textSec, fontSize: 11, fontFamily: MONO, marginTop: 20, textAlign: 'center' },
+
+    ecuConnecting: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 },
+    ecuErrorText: { color: tc.red, fontSize: 12, fontFamily: MONO, textAlign: 'center', marginBottom: 10 },
+    retryBtn: { backgroundColor: tc.amber, borderRadius: 4, paddingVertical: 12, paddingHorizontal: 30, width: '100%', alignItems: 'center', marginBottom: 10 },
+    retryBtnText: { color: tc.card, fontWeight: '900', fontSize: 13, fontFamily: MONO },
+    disconnectBtn: { backgroundColor: 'transparent', borderWidth: 1, borderColor: tc.red, borderRadius: 4, paddingVertical: 10, paddingHorizontal: 30, width: '100%', alignItems: 'center' },
+    disconnectBtnText: { color: tc.red, fontWeight: '700', fontSize: 12, fontFamily: MONO },
+
+    // ── Top Bar ──
+    topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10, backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border },
+    topLeft: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
+    topLogo: { color: tc.cyan, fontSize: 16, fontWeight: '900', fontFamily: MONO, letterSpacing: 2 },
+    topVersion: { color: tc.textSec, fontSize: 10, fontFamily: MONO },
+    topRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+    topBadge: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 4, paddingHorizontal: 8, paddingVertical: 3, gap: 4 },
+    topBadgeDot: { width: 5, height: 5, borderRadius: 3 },
+    topBadgeText: { fontSize: 9, fontWeight: '900', fontFamily: MONO },
+    topDisconnect: { color: tc.red, fontSize: 10, fontWeight: '800', fontFamily: MONO },
+
+    // ── Tab Bar ──
+    tabBar: { flexDirection: 'row', backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border },
+    tabItem: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' },
+    tabItemActive: { borderBottomColor: tc.cyan },
+    tabLabel: { color: tc.textSec, fontSize: 10, fontWeight: '800', fontFamily: MONO, letterSpacing: 1 },
+    tabLabelActive: { color: tc.cyan },
+
+    // ── Tab Content ──
+    tabContent: { flex: 1, paddingHorizontal: 0, paddingTop: 16 },
+    tabContentInner: { paddingHorizontal: 16 },
+
+    // ── Dashboard: RPM ──
+    rpmHero: { alignItems: 'center', paddingVertical: 24, backgroundColor: tc.card, borderRadius: 4, borderWidth: 1, borderColor: tc.border, marginBottom: 16 },
+    rpmNumber: { fontSize: 72, fontWeight: '900', color: tc.textPri, fontFamily: MONO },
+    rpmUnit: { fontSize: 14, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: -4 },
+
+    // ── Dashboard: Sensor Grid ──
+    sensorGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
+    sensorCard: { width: '48.5%', backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' },
+    sensorValue: { fontSize: 28, fontWeight: '900', color: tc.textPri, fontFamily: MONO },
+    sensorLabel: { fontSize: 10, fontWeight: '700', color: tc.textSec, fontFamily: MONO, marginTop: 4, letterSpacing: 2 },
+
+    // ── Quick Command Bar ──
+    quickBar: { marginBottom: 16 },
+    cmdRow: { flexDirection: 'row', gap: 8, marginBottom: 8 },
+    cmdInput: { flex: 1, backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 10, color: tc.textPri, fontFamily: MONO, fontSize: 12 },
+    cmdSend: { backgroundColor: tc.cyan, borderRadius: 4, width: 44, alignItems: 'center', justifyContent: 'center' },
+    cmdSendText: { color: tc.card, fontSize: 20, fontWeight: '900' },
+    chipRow: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
+    chip: { borderWidth: 1, borderColor: tc.cyan, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 6 },
+    chipText: { color: tc.cyan, fontSize: 10, fontWeight: '800', fontFamily: MONO },
+
+    // ── Terminal ──
+    terminalBox: { backgroundColor: tc.bg, borderWidth: 1, borderColor: tc.border, borderRadius: 4, overflow: 'hidden' },
+    terminalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border },
+    terminalTitle: { color: tc.textSec, fontSize: 10, fontWeight: '800', fontFamily: MONO },
+    terminalClear: { color: tc.cyan, fontSize: 10, fontWeight: '700', fontFamily: MONO },
+    terminalScroll: { maxHeight: 160, padding: 10 },
+    terminalLine: { color: tc.green, fontSize: 10, fontFamily: MONO, lineHeight: 16 },
+
+    // ── Panels (Expertise/Service) ──
+    panel: { backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 4, padding: 16, marginBottom: 12 },
+    panelHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    panelTitle: { color: tc.textSec, fontSize: 11, fontWeight: '900', fontFamily: MONO, letterSpacing: 1, marginBottom: 12 },
+    panelDesc: { color: tc.textSec, fontSize: 11, fontFamily: MONO, lineHeight: 18, marginBottom: 16 },
+
+    tableRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: tc.border },
+    tableLabel: { color: tc.textSec, fontSize: 12, fontFamily: MONO },
+    tableValue: { color: tc.textPri, fontSize: 12, fontWeight: '700', fontFamily: MONO },
+
+    // ── Action Buttons ──
+    actionBtn: { borderRadius: 4, paddingVertical: 16, alignItems: 'center' },
+    actionBtnText: { fontWeight: '900', fontSize: 13, fontFamily: MONO, letterSpacing: 1 },
+    actionPurple: { backgroundColor: tc.purple },
+    actionCyan: { backgroundColor: tc.cyan },
+    actionRed: { backgroundColor: tc.red },
+
+    // ── Brand Selector ──
+    brandScroll: { marginHorizontal: -16, paddingHorizontal: 16 },
+    brandScrollContent: { paddingRight: 32, gap: 10 },
+    brandChip: { backgroundColor: tc.elevated, borderWidth: 1, borderColor: tc.border, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 8 },
+    brandChipActive: { backgroundColor: `${tc.cyan}1A`, borderColor: tc.cyan },
+    brandChipText: { color: tc.textSec, fontSize: 11, fontWeight: '700', fontFamily: MONO },
+    brandChipTextActive: { color: tc.cyan, fontWeight: '900' },
+
+    // ── DTC Items ──
+    cleanBadge: { backgroundColor: `${tc.green}14`, borderWidth: 1, borderColor: tc.green, borderRadius: 4, paddingVertical: 14, alignItems: 'center' },
+    cleanBadgeText: { color: tc.green, fontWeight: '800', fontSize: 12, fontFamily: MONO },
+    dtcRow: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: `${tc.red}14`, borderWidth: 1, borderColor: tc.red, borderRadius: 4, paddingHorizontal: 14, paddingVertical: 12, marginBottom: 6 },
+    dtcDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: tc.red },
+    dtcCode: { color: tc.red, fontWeight: '800', fontSize: 14, fontFamily: MONO },
+
+    clearBtn: { backgroundColor: `${tc.red}26`, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 4 },
+    clearBtnText: { color: tc.red, fontSize: 10, fontWeight: '800', fontFamily: MONO },
+
+    // ── Warning Banner ──
+    warningBanner: { flexDirection: 'row', backgroundColor: `${tc.amber}1A`, borderWidth: 1, borderColor: tc.amber, borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' },
+    warningIcon: { color: tc.amber, fontSize: 20 },
+    warningTitle: { color: tc.amber, fontSize: 12, fontWeight: '900', fontFamily: MONO, marginBottom: 4 },
+    warningBody: { color: tc.textSec, fontSize: 11, fontFamily: MONO, lineHeight: 17 },
+
+    // ── New Styles ──
+    miniAction: { flex: 1, borderRadius: 12, paddingVertical: 14, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
+    miniActionText: { fontWeight: '800', fontSize: 11, fontFamily: MONO },
+  }), [tc]);
+
+  const verifyEntitlement = useAppStore((state) => state.verifyEntitlement);
+  const [activeHubView, setActiveHubView] = useState<'hub' | 'sensors' | 'expertise' | 'info'>('hub');
+  const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
+  const [isPaywallVisible, setIsPaywallVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard'); // Kept for legacy fallback views compatibility
   const [isConnectModalVisible, setIsConnectModalVisible] = useState(false);
+
+  // RevenueCat SDK Setup & Secure Offline Receipt Verification
+  useEffect(() => {
+    const initRevenueCat = async () => {
+      try {
+        if (Platform.OS === 'ios') {
+          Purchases.configure({ apiKey: 'appl_your_ios_api_key' });
+        } else if (Platform.OS === 'android') {
+          Purchases.configure({ apiKey: 'goog_your_android_api_key' });
+        }
+        await verifyEntitlement();
+      } catch (e) {
+        console.warn('Failed to configure RevenueCat SDK offline or missing parameters:', e);
+      }
+    };
+    initRevenueCat();
+  }, []);
 
   // Garage states
   const [garageRecords, setGarageRecords] = useState<GarageRecord[]>([]);
@@ -275,7 +437,7 @@ export default function App() {
 
   const handleSaveToGarage = async () => {
     if (!saveMake.trim() || !saveModel.trim()) {
-      Alert.alert('Eksik Bilgi', 'Lütfen Marka ve Model alanını doldurun.');
+      Alert.alert(t('expertise.missingInfo'), t('expertise.missingInfoDesc'));
       return;
     }
     await saveGarageRecord({
@@ -326,58 +488,59 @@ export default function App() {
   };
 
   const handleShareReport = async () => {
+    // Dynamic i18n.t() — called at execution time to match current active language
     const { rpm, speed, coolant, throttle, engineLoad, intakeAirTemp, manifoldPressure, voltage } = useBluetoothStore.getState();
     const dtcLines = dtcs.length > 0
       ? dtcs.map(dtc => {
         const desc = lookupDTC(dtc);
         return desc ? `  • ${dtc} — ${desc}` : `  • ${dtc}`;
       }).join('\n')
-      : '  ✅ HATA KODU YOK — TEMİZ';
+      : `  ✅ ${i18n.t('report.noDtcs')}`;
 
     const sensorLines = [
       rpm !== null ? `  RPM: ${rpm}` : null,
-      speed !== null ? `  Hız: ${speed} km/h` : null,
-      coolant !== null ? `  Motor Sıcaklığı: ${coolant}°C` : null,
-      throttle !== null ? `  Gaz: ${throttle}%` : null,
-      engineLoad !== null ? `  Motor Yükü: ${engineLoad}%` : null,
-      intakeAirTemp !== null ? `  Emme Hava: ${intakeAirTemp}°C` : null,
-      manifoldPressure !== null ? `  Manifold: ${manifoldPressure} kPa` : null,
-      voltage ? `  Akü Voltajı: ${voltage}` : null,
+      speed !== null ? `  ${i18n.t('report.speed')}: ${speed} km/h` : null,
+      coolant !== null ? `  ${i18n.t('report.coolant')}: ${coolant}°C` : null,
+      throttle !== null ? `  ${i18n.t('report.throttle')}: ${throttle}%` : null,
+      engineLoad !== null ? `  ${i18n.t('report.engineLoad')}: ${engineLoad}%` : null,
+      intakeAirTemp !== null ? `  ${i18n.t('report.intakeAir')}: ${intakeAirTemp}°C` : null,
+      manifoldPressure !== null ? `  ${i18n.t('report.manifold')}: ${manifoldPressure} kPa` : null,
+      voltage ? `  ${i18n.t('report.voltage')}: ${voltage}` : null,
     ].filter(Boolean).join('\n');
 
-    const report = `🏍️ ═══ MOTOCORTEX TEŞHİS RAPORU ═══ 🏍️
+    const report = `${i18n.t('report.title')}
 
-📋 ARAÇ KİMLİĞİ
+${i18n.t('report.vehicleIdentity')}
 ━━━━━━━━━━━━━━━━━━━━━━
-  ${t('report.vin')}: ${vin || t('report.vinNotFound')}
-  ${t('report.odometer')}: ${odometer === 'UNSUPPORTED' ? t('common.unsupported') : odometer !== null ? `${odometer} km` : t('common.unknown')}
-  ${t('report.milDist')}: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
-  ${t('report.distSinceCleared')}: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : t('common.unknown')}
+  ${i18n.t('report.vin')}: ${vin || i18n.t('report.vinNotFound')}
+  ${i18n.t('report.odometer')}: ${odometer === 'UNSUPPORTED' ? i18n.t('common.unsupported') : odometer !== null ? `${odometer} km` : i18n.t('common.unknown')}
+  ${i18n.t('report.milDist')}: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
+  ${i18n.t('report.distSinceCleared')}: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : i18n.t('common.unknown')}
 
-🔍 ARIZA KODLARI (${dtcs.length} adet)
+${i18n.t('report.dtcCount', { count: dtcs.length })}
 ━━━━━━━━━━━━━━━━━━━━━━
 ${dtcLines}
 
-📊 CANLI SENSÖR VERİLERİ
+${i18n.t('report.sensorData')}
 ━━━━━━━━━━━━━━━━━━━━━━
-${sensorLines || '  Veri okunamadı'}
+${sensorLines || `  ${i18n.t('report.noData')}`}
 
 ━━━━━━━━━━━━━━━━━━━━━━
-*MotoCortex v7 PRO ile taranmıştır.*
-*Tarih: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}*`;
+*${i18n.t('report.proApp')}*
+*${i18n.t('report.date')}: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}*`;
 
     try {
-      await Share.share({ message: report, title: t('report.title') });
+      await Share.share({ message: report, title: i18n.t('report.title') });
     } catch (e) {
       console.error('Report sharing failed:', e);
     }
   };
 
   const statusColor = (s: string) => {
-    if (s === 'connected') return C.green;
-    if (s === 'connecting') return C.amber;
-    if (s === 'error') return C.red;
-    return C.textSec;
+    if (s === 'connected') return colors.green;
+    if (s === 'connecting') return colors.amber;
+    if (s === 'error') return colors.red;
+    return colors.textSec;
   };
 
   const statusLabel = (s: string) => {
@@ -423,7 +586,7 @@ ${sensorLines || '  Veri okunamadı'}
               onPress={() => connect(lastDeviceId, lastDeviceName || 'Last Device')}
               disabled={isDiagnosticMode}
             >
-              <Text style={s.actionBtnText}>↺  {t('connection.connectLast')} ({lastDeviceName})</Text>
+              <Text style={[s.actionBtnText, { color: tc.card }]}>↺  {t('connection.connectLast')} ({lastDeviceName})</Text>
             </TouchableOpacity>
           )}
 
@@ -433,7 +596,7 @@ ${sensorLines || '  Veri okunamadı'}
 
           {status === 'scanning' && (
             <View style={s.scanningRow}>
-              <ActivityIndicator color={C.cyan} size="small" />
+              <ActivityIndicator color={tc.cyan} size="small" />
               <Text style={s.scanningText}>{t('connection.scanning')}</Text>
             </View>
           )}
@@ -444,7 +607,7 @@ ${sensorLines || '  Veri okunamadı'}
               {scannedDevices.map(d => (
                 <TouchableOpacity key={d.address} style={s.deviceCard} onPress={() => connect(d.address, d.name)}>
                   <View>
-                    <Text style={s.deviceName}>{d.name || 'Bilinmeyen Cihaz'}</Text>
+                    <Text style={s.deviceName}>{d.name || t('connection.unknownDevice')}</Text>
                     <Text style={s.deviceMac}>{d.address}</Text>
                   </View>
                   <Text style={s.connectLabel}>{t('connection.connectLabel')} ›</Text>
@@ -461,8 +624,8 @@ ${sensorLines || '  Veri okunamadı'}
         <View style={s.connectActions}>
           {ecuStatus === 'connecting' && (
             <View style={s.ecuConnecting}>
-              <ActivityIndicator color={C.amber} size="small" />
-              <Text style={[s.scanningText, { color: C.amber }]}>{t('connection.ecuWait')}</Text>
+              <ActivityIndicator color={tc.amber} size="small" />
+              <Text style={[s.scanningText, { color: tc.amber }]}>{t('connection.ecuWait')}</Text>
             </View>
           )}
           {ecuStatus === 'error' && (
@@ -493,13 +656,13 @@ ${sensorLines || '  Veri okunamadı'}
     <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 30 }}>
       {/* VIN History Alert */}
       {vinHistory.length > 0 && (
-        <View style={[s.warningBanner, { borderColor: C.cyan, backgroundColor: '#002b36' }]}>
+        <View style={[s.warningBanner, { borderColor: tc.cyan, backgroundColor: `${tc.cyan}14` }]}>
           <Text style={s.warningIcon}>📜</Text>
           <View style={{ flex: 1 }}>
-            <Text style={[s.warningTitle, { color: C.cyan }]}>{t('expertise.historyFound')}</Text>
-            <Text style={s.warningBody}>{t('expertise.historyFoundDesc', { count: vinHistory.length })}</Text>
+            <Text style={[s.warningTitle, { color: tc.cyan }]}>{t('expertise.historyFound')}</Text>
+            <Text style={[s.warningBody, { color: tc.textSec }]}>{t('expertise.historyFoundDesc', { count: vinHistory.length })}</Text>
             <TouchableOpacity onPress={() => setIsGarageStatsExpanded(true)} style={{ marginTop: 8 }}>
-              <Text style={{ color: C.cyan, fontWeight: 'bold' }}>{t('expertise.viewHistory')}</Text>
+              <Text style={{ color: tc.cyan, fontWeight: 'bold' }}>{t('expertise.viewHistory')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -511,11 +674,11 @@ ${sensorLines || '  Veri okunamadı'}
           <Text style={s.panelTitle}>{t('expertise.manualVin')}</Text>
           <Text style={s.panelDesc}>{t('expertise.manualVinDesc')}</Text>
           <TextInput
-            style={{ backgroundColor: '#111', borderWidth: 1, borderColor: '#333', borderRadius: 8, padding: 12, color: C.cyan, fontFamily: C.mono, marginTop: 10 }}
+            style={{ backgroundColor: tc.card, borderWidth: 1, borderColor: tc.border, borderRadius: 8, padding: 12, color: tc.cyan, fontFamily: MONO, marginTop: 10 }}
             value={manualVin}
             onChangeText={setManualVin}
             placeholder={t('expertise.vinPlaceholder')}
-            placeholderTextColor="#444"
+            placeholderTextColor={tc.textSec}
           />
         </View>
       )}
@@ -525,7 +688,7 @@ ${sensorLines || '  Veri okunamadı'}
         onPress={() => guardAction(runDiagnostics)}
         disabled={isDiagnosticMode || isAdaptationRunning}
       >
-        <Text style={s.actionBtnText}>{isDiagnosticMode ? t('expertise.scanning') : `⬡  ${t('expertise.startScan')}`}</Text>
+        <Text style={[s.actionBtnText, { color: tc.card }]}>{isDiagnosticMode ? t('expertise.scanning') : `⬡  ${t('expertise.startScan')}`}</Text>
       </TouchableOpacity>
 
       {/* Vehicle Identity */}
@@ -571,7 +734,7 @@ ${sensorLines || '  Veri okunamadı'}
                 <View style={s.dtcDot} />
                 <View style={{ flex: 1 }}>
                   <Text style={s.dtcCode}>{dtc}</Text>
-                  {desc && <Text style={{ color: '#ff9999', fontSize: 10, fontFamily: C.mono, marginTop: 2 }}>{desc}</Text>}
+                  {desc && <Text style={{ color: tc.red, opacity: 0.8, fontSize: 10, fontFamily: MONO, marginTop: 2 }}>{desc}</Text>}
                 </View>
               </View>
             );
@@ -579,124 +742,110 @@ ${sensorLines || '  Veri okunamadı'}
         )}
       </View>
 
-      {/* Secondary Actions (Formerly Service) — ABOVE Garage */}
+      {/* Secondary Actions (Formerly Service) */}
       <View style={{ marginTop: 8 }}>
         <Text style={[s.panelTitle, { marginLeft: 16, marginBottom: 8 }]}>{t('expertise.extraActions')}</Text>
 
         <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: 16 }}>
           <TouchableOpacity
-            style={[s.miniAction, { backgroundColor: '#1e3a5f' }]}
+            style={[s.miniAction, { backgroundColor: tc.purple }]}
             onPress={() => guardAction(() => setIsFreezeFrameVisible(true))}
           >
-            <Text style={s.miniActionText}>❄️ FREEZE FRAME</Text>
+            <Text style={[s.miniActionText, { color: tc.card }]}>❄️ {t('freeze.title')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[s.miniAction, { backgroundColor: '#b45309' }]}
+            style={[s.miniAction, { backgroundColor: tc.amber }]}
             onPress={() => guardAction(() => setIsBatteryTestVisible(true))}
           >
-            <Text style={s.miniActionText}>⚡ AKÜ TESTİ</Text>
+            <Text style={[s.miniActionText, { color: tc.card }]}>⚡ {t('battery.title')}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={{ flexDirection: 'row', gap: 10, paddingHorizontal: 16, marginTop: 10 }}>
           <TouchableOpacity
-            style={[s.miniAction, { backgroundColor: '#0e7490' }]}
+            style={[s.miniAction, { backgroundColor: tc.cyan }]}
             onPress={() => guardAction(() => setIsPerformanceVisible(true))}
           >
-            <Text style={s.miniActionText}>🏁 PERFORMANS</Text>
+            <Text style={[s.miniActionText, { color: tc.card }]}>🏁 {t('perf.title')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[s.miniAction, { backgroundColor: C.red }]}
+            style={[s.miniAction, { backgroundColor: tc.red }]}
             onPress={handleServiceRoutine}
           >
-            <Text style={s.miniActionText}>🔧 ECU RESET</Text>
+            <Text style={[s.miniActionText, { color: tc.card }]}>🔧 {t('service.ecuReset')}</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Garage & Past Records Accordion inside Expertise */}
-      <View style={{ marginHorizontal: 16, marginTop: 16, marginBottom: 20 }}>
-        <TouchableOpacity
-          style={[s.actionBtn, { backgroundColor: isGarageStatsExpanded ? C.elevated : C.card, borderWidth: 1, borderColor: isGarageStatsExpanded ? C.green : C.border, paddingVertical: 14 }]}
-          onPress={() => setIsGarageStatsExpanded(!isGarageStatsExpanded)}
-        >
-          <Text style={[s.actionBtnText, { color: isGarageStatsExpanded ? C.green : C.textSec, fontSize: 12 }]}>
-            {isGarageStatsExpanded ? `▼ ${t('expertise.garageTitle')}` : `📁 ${t('expertise.garageTitle')}`}
-          </Text>
-        </TouchableOpacity>
+      {/* Garage & Past Records - Integrated back to Expertise */}
+      <View style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: 30 }}>
+        <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>{t('expertise.garageTitle')}</Text>
+        
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 16 }}>
+          <TouchableOpacity
+            style={[s.actionBtn, { flex: 1, backgroundColor: tc.green, borderRadius: 12, paddingVertical: 14 }, isDiagnosticMode && { opacity: 0.5 }]}
+            onPress={handleShareReport}
+            disabled={isDiagnosticMode}
+          >
+            <Text style={[s.actionBtnText, { fontSize: 11, color: tc.card }]}>📤 {t('expertise.share')}</Text>
+          </TouchableOpacity>
 
-        {isGarageStatsExpanded && (
-          <View style={{ backgroundColor: C.bg, borderRadius: 6, borderWidth: 1, borderColor: C.border, marginTop: 8, padding: 12 }}>
-            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 16 }}>
-              <TouchableOpacity
-                style={[s.actionBtn, { flex: 1, backgroundColor: '#075E54', paddingVertical: 12 }, isDiagnosticMode && { opacity: 0.5 }]}
-                onPress={handleShareReport}
-                disabled={isDiagnosticMode}
-              >
-                <Text style={[s.actionBtnText, { fontSize: 11 }]}>📤 {t('expertise.share')}</Text>
-              </TouchableOpacity>
+          <TouchableOpacity
+            style={[s.actionBtn, { flex: 1, backgroundColor: tc.cyan, borderRadius: 12, paddingVertical: 14 }]}
+            onPress={() => {
+              if (vin || manualVin) {
+                setIsSaveModalVisible(true);
+              } else {
+                Alert.alert(t('expertise.vinRequired'), t('expertise.vinRequiredDesc'));
+              }
+            }}
+          >
+            <Text style={[s.actionBtnText, { fontSize: 11, color: tc.card }]}>💾 {t('expertise.saveVehicle')}</Text>
+          </TouchableOpacity>
+        </View>
 
-              <TouchableOpacity
-                style={[s.actionBtn, { flex: 1, backgroundColor: '#1e40af', paddingVertical: 12 }]}
-                onPress={() => {
-                  if (vin || manualVin) {
-                    setIsSaveModalVisible(true);
-                  } else {
-                    Alert.alert('VIN Gerekli', 'Kayıt yapabilmek için şasi numarası (VIN) otomatik gelmeli veya el ile yazılmalıdır.');
-                  }
-                }}
-              >
-                <Text style={[s.actionBtnText, { fontSize: 11 }]}>💾 {t('expertise.saveVehicle')}</Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>GEÇMİŞ KAYITLAR</Text>
-            {garageRecords.length === 0 && vinHistory.length === 0 ? (
-              <Text style={{ color: C.textSec, fontSize: 11, fontFamily: C.mono, fontStyle: 'italic', textAlign: 'center', marginVertical: 10 }}>
-                {t('expertise.noRecords')}
-              </Text>
-            ) : (
-              (vinHistory.length > 0 ? vinHistory : garageRecords).map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  style={[s.panel, { marginBottom: 8, padding: 12 }]}
-                  onPress={() => setSelectedRecord(item)}
-                >
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ color: C.textPri, fontSize: 13, fontWeight: '800', fontFamily: C.mono }}>
-                        {item.make} {item.model}
-                      </Text>
-                      <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, marginTop: 4 }}>
-                        {item.date} • {item.km} km
-                      </Text>
-                    </View>
-                    <View style={{
-                      backgroundColor: item.dtcs.length === 0 ? 'rgba(0,255,136,0.1)' : 'rgba(255,59,59,0.1)',
-                      borderWidth: 1,
-                      borderColor: item.dtcs.length === 0 ? C.green : C.red,
-                      borderRadius: 4,
-                      paddingHorizontal: 8,
-                      paddingVertical: 4,
-                    }}>
-                      <Text style={{
-                        color: item.dtcs.length === 0 ? C.green : C.red,
-                        fontSize: 9,
-                        fontWeight: '800',
-                        fontFamily: C.mono,
-                      }}>
-                        {item.dtcs.length === 0 ? t('expertise.clean') : `${item.dtcs.length} ${t('expertise.faults')}`}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              ))
-            )}
+        {garageRecords.length === 0 && vinHistory.length === 0 ? (
+          <View style={[s.panel, { paddingVertical: 24, alignItems: 'center', opacity: 0.7 }]}>
+            <Text style={{ color: tc.textSec, fontSize: 11, fontFamily: MONO, fontStyle: 'italic' }}>
+              {t('expertise.noRecords')}
+            </Text>
           </View>
+        ) : (
+          (vinHistory.length > 0 ? vinHistory : garageRecords).map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={[s.panel, { marginBottom: 10, padding: 16, backgroundColor: tc.card }]}
+              onPress={() => setSelectedRecord(item)}
+            >
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: tc.textPri, fontSize: 14, fontWeight: '800', fontFamily: MONO }}>
+                    {item.make} {item.model}
+                  </Text>
+                  <Text style={{ color: tc.textSec, fontSize: 11, fontFamily: MONO, marginTop: 4 }}>
+                    {item.date}
+                  </Text>
+                </View>
+                <View style={{
+                  backgroundColor: item.dtcs.length === 0 ? `${tc.green}1A` : `${tc.red}1A`,
+                  borderWidth: 1,
+                  borderColor: item.dtcs.length === 0 ? tc.green : tc.red,
+                  borderRadius: 6,
+                  paddingHorizontal: 10,
+                  paddingVertical: 6,
+                }}>
+                  <Text style={{ color: item.dtcs.length === 0 ? tc.green : tc.red, fontSize: 10, fontWeight: '900', fontFamily: MONO }}>
+                    {item.dtcs.length === 0 ? t('expertise.clean') : `${item.dtcs.length} ${t('expertise.faults')}`}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))
         )}
       </View>
+
     </ScrollView>
   );
 
@@ -707,34 +856,34 @@ ${sensorLines || '  Veri okunamadı'}
   const handleServiceRoutine = () => {
     guardAction(() => {
       Alert.alert(
-        '⚠️ GÜVENLİK UYARISI',
-        'Bu işlem sırasında:\n\n• Kontak AÇIK olmalı\n• Motor KAPALI olmalı\n• Aracı çalıştırmayın\n\nDevam etmek istiyor musunuz?',
+        t('service.safetyWarning'),
+        t('service.safetyWarningDesc'),
         [
-          { text: 'İptal', style: 'cancel' },
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: 'Devam Et',
+            text: t('hub.continueBtn'),
             onPress: () => {
               Alert.alert(
-                'Adım 1: Arıza Kodlarını Sil',
-                'Tüm kayıtlı arıza kodları (DTC) ve Check Engine ışığı silinecek. Yakıt trim değerleri sıfırlanacak.\n\nBu işlem geri alınamaz!',
+                t('service.step1'),
+                t('service.step1Desc'),
                 [
-                  { text: 'Vazgeç', style: 'cancel' },
+                  { text: t('hub.cancelBtn'), style: 'cancel' },
                   {
-                    text: 'Kodları Sil',
+                    text: t('service.clearCodes'),
                     style: 'destructive',
                     onPress: async () => {
                       await runAdaptationRoutine('fuel');
                       Alert.alert(
-                        'Adım 2: ECU Hard Reset',
-                        'Motor beynine elektriksel sıfırlama (Hard Reset) gönderilecek. Akü söküp takmak gibi çalışır.\n\n⚠️ Desteklemeyen ECU\'larda etkisizdir. Zarar vermez.',
+                        t('service.step2'),
+                        t('service.step2Desc'),
                         [
-                          { text: 'Atla (Bitir)', style: 'cancel', onPress: () => Alert.alert('Tamamlandı ✅', 'Servis işlemleri başarıyla tamamlandı. Aracı yeniden çalıştırabilirsiniz.') },
+                          { text: t('hub.skipBtn'), style: 'cancel', onPress: () => Alert.alert(t('service.completed'), t('service.completedDesc')) },
                           {
-                            text: 'ECU Reset Yap',
+                            text: t('service.ecuReset'),
                             style: 'destructive',
                             onPress: async () => {
                               await runAdaptationRoutine('ecu');
-                              Alert.alert('Tamamlandı ✅', 'Tüm servis işlemleri başarıyla tamamlandı.\n\n• Arıza kodları silindi\n• Yakıt trimleri sıfırlandı\n• ECU resetlendi\n\nAracı yeniden çalıştırabilirsiniz.');
+                              Alert.alert(t('service.completed'), t('service.hardResetDesc'));
                             },
                           },
                         ]
@@ -762,17 +911,17 @@ ${sensorLines || '  Veri okunamadı'}
   const InfoAccordion = ({ id, icon, title, content }: { id: string, icon: string, title: string, content: string | React.ReactNode }) => (
     <View style={{ marginBottom: 8 }}>
       <TouchableOpacity
-        style={[s.actionBtn, { backgroundColor: expandedInfoSection === id ? C.elevated : C.card, borderWidth: 1, borderColor: C.border, paddingVertical: 14, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16 }]}
+        style={[s.actionBtn, { backgroundColor: expandedInfoSection === id ? tc.elevated : tc.card, borderWidth: 1, borderColor: tc.border, paddingVertical: 14, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16 }]}
         onPress={() => toggleInfoAcc(id)}
       >
-        <Text style={[s.actionBtnText, { color: expandedInfoSection === id ? C.cyan : C.textPri, fontSize: 12 }]}>
+        <Text style={[s.actionBtnText, { color: expandedInfoSection === id ? tc.cyan : tc.textPri, fontSize: 12 }]}>
           {icon}  {title}
         </Text>
-        <Text style={{ color: C.textSec, fontSize: 12 }}>{expandedInfoSection === id ? '▼' : '▶'}</Text>
+        <Text style={{ color: tc.textSec, fontSize: 12 }}>{expandedInfoSection === id ? '▼' : '▶'}</Text>
       </TouchableOpacity>
       {expandedInfoSection === id && (
-        <View style={{ backgroundColor: C.bg, padding: 16, borderWidth: 1, borderTopWidth: 0, borderColor: C.border, borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}>
-          {typeof content === 'string' ? <Text style={s.panelDesc}>{content}</Text> : content}
+        <View style={{ backgroundColor: tc.bg, padding: 16, borderWidth: 1, borderTopWidth: 0, borderColor: tc.border, borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}>
+          {typeof content === 'string' ? <Text style={[s.panelDesc, { color: tc.textSec }]}>{content}</Text> : content}
         </View>
       )}
     </View>
@@ -782,48 +931,61 @@ ${sensorLines || '  Veri okunamadı'}
     <ScrollView style={s.tabContent} contentContainerStyle={{ paddingBottom: 40 }}>
       {/* Top Section */}
       <View style={{ alignItems: 'center', marginBottom: 24, marginTop: 10 }}>
-        <Text style={s.logoText}>MOTOCORTEX</Text>
-        <Text style={[s.logoSub, { color: C.cyan }]}>v7 PRO</Text>
-        <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 10, marginTop: 8, textAlign: 'center', paddingHorizontal: 20 }}>
+        <Text style={[s.logoText, { color: colors.cyan }]}>MOTOCORTEX</Text>
+        <Text style={[s.logoSub, { color: colors.cyan }]}>v7 PRO</Text>
+        <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: 10, marginTop: 8, textAlign: 'center', paddingHorizontal: 20 }}>
           {t('info.desc')}
         </Text>
       </View>
 
-      {/* Language Switcher */}
-      <View style={{ marginBottom: 24, paddingVertical: 12, backgroundColor: C.card, borderRadius: 8, borderWidth: 1, borderColor: C.border, alignItems: 'center' }}>
-        <Text style={{ color: C.textSec, fontSize: 10, fontWeight: '800', fontFamily: C.mono, marginBottom: 12, letterSpacing: 1 }}>{t('info.language')}</Text>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          {['tr', 'en', 'id'].map((lang) => (
+      {/* Garage - View Only in Info Tab */}
+      <View style={{ paddingHorizontal: 16, marginTop: 8 }}>
+        <Text style={[s.panelTitle, { marginLeft: 4, marginBottom: 12 }]}>{t('hub.pastRecords')}</Text>
+        
+        {garageRecords.length === 0 && vinHistory.length === 0 ? (
+          <View style={[s.panel, { paddingVertical: 30, alignItems: 'center' }]}>
+            <Text style={{ color: tc.textSec, fontSize: 11, fontFamily: MONO, fontStyle: 'italic' }}>
+              {t('expertise.noRecords')}
+            </Text>
+          </View>
+        ) : (
+          (vinHistory.length > 0 ? vinHistory : garageRecords).map((item) => (
             <TouchableOpacity
-              key={lang}
-              onPress={async () => {
-                await i18n.changeLanguage(lang);
-                const AsyncStorage = require('@react-native-async-storage/async-storage').default;
-                await AsyncStorage.setItem('user-language', lang);
-              }}
-              style={{
-                paddingHorizontal: 16,
-                paddingVertical: 8,
-                borderRadius: 4,
-                backgroundColor: i18n.language === lang ? 'rgba(0,212,255,0.1)' : C.elevated,
-                borderWidth: 1,
-                borderColor: i18n.language === lang ? C.cyan : C.border
-              }}
+              key={item.id}
+              style={[s.panel, { marginBottom: 10, padding: 16 }]}
+              onPress={() => setSelectedRecord(item)}
             >
-              <Text style={{ color: i18n.language === lang ? C.cyan : C.textSec, fontWeight: 'bold', fontFamily: C.mono, fontSize: 12 }}>
-                {lang.toUpperCase()}
-              </Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: tc.textPri, fontSize: 14, fontWeight: '800', fontFamily: MONO }}>
+                    {item.make} {item.model}
+                  </Text>
+                  <Text style={{ color: tc.textSec, fontSize: 11, fontFamily: MONO, marginTop: 4 }}>
+                    {item.date} • {item.km} km
+                  </Text>
+                </View>
+                <View style={{
+                  backgroundColor: item.dtcs.length === 0 ? `${tc.green}1A` : `${tc.red}1A`,
+                  borderWidth: 1,
+                  borderColor: item.dtcs.length === 0 ? tc.green : tc.red,
+                  borderRadius: 4,
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                }}>
+                  <Text style={{
+                    color: item.dtcs.length === 0 ? tc.green : tc.red,
+                    fontSize: 10,
+                    fontWeight: '900',
+                    fontFamily: MONO,
+                  }}>
+                    {item.dtcs.length === 0 ? t('expertise.clean') : `${item.dtcs.length} ${t('expertise.faults')}`}
+                  </Text>
+                </View>
+              </View>
             </TouchableOpacity>
-          ))}
-        </View>
+          ))
+        )}
       </View>
-
-      <TouchableOpacity
-        style={[s.actionBtn, { backgroundColor: 'transparent', borderWidth: 2, borderColor: '#7c3aed', marginBottom: 24 }]}
-        onPress={() => Alert.alert(t('info.upgradeAlert'), t('info.upgradeAlertDesc'))}
-      >
-        <Text style={[s.actionBtnText, { color: '#a78bfa', fontSize: 14 }]}>{t('info.upgrade')}</Text>
-      </TouchableOpacity>
 
 
 
@@ -865,67 +1027,143 @@ ${sensorLines || '  Veri okunamadı'}
         content={t('info.sections.warnings.content')}
       />
 
-      {/* Bottom Section: Support Links */}
-      <View style={{ marginTop: 24, paddingVertical: 20, borderTopWidth: 1, borderTopColor: C.border, alignItems: 'center', gap: 16 }}>
-        <TouchableOpacity onPress={() => Linking.openURL('mailto:ismailimamoglu610@gmail.com')}>
-          <Text style={{ color: C.cyan, fontFamily: C.mono, fontSize: 13, fontWeight: '700' }}>{t('info.support')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={async () => {
-          try {
-            await Share.share({
-              message: 'Motocortex OBD2 Arıza Tespit Uygulaması ile motosikletinizin durumunu cebinizden takip edin! 🏍️📲',
-              title: 'MotoCortex'
-            });
-          } catch (e) { console.error(e); }
-        }}>
-          <Text style={{ color: C.textSec, fontFamily: C.mono, fontSize: 12, fontWeight: '700' }}>✉️ {t('expertise.share').toUpperCase()}</Text>
-        </TouchableOpacity>
+      <View style={{ marginTop: 24, paddingVertical: 20, borderTopWidth: 1, borderTopColor: colors.border, alignItems: 'center' }}>
+        <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: 10 }}>MotoCortex v1.1.0 (16) PRO</Text>
       </View>
     </ScrollView>
   );
 
   // ═══════════════════════════════════════════════════════════════
-  // MAIN RENDER (Unblocked Navigation)
+  // MAIN RENDER (Bento Box / Glassmorphism Paradigm)
   // ═══════════════════════════════════════════════════════════════
-  return (
-    <SafeAreaView style={s.root}>
-      <StatusBar barStyle="light-content" backgroundColor={C.bg} />
+  if (!hasOnboarded) {
+    return <PermissionGateway />;
+  }
 
-      <View style={{ flex: 1 }}>
-        {/* Top Bar */}
-        <View style={s.topBar}>
-          <View style={s.topLeft}>
-            <Text style={s.topLogo}>MOTOCORTEX</Text>
-            <Text style={s.topVersion}>v7 PRO</Text>
+  const isLightMode = theme === 'light';
+
+  return (
+    <BluetoothBridgeInitializer>
+      <SafeAreaView style={[s.root, { backgroundColor: colors.bg }]}>
+        <StatusBar barStyle={colors.statusBarStyle} backgroundColor={colors.bg} />
+
+        <View style={{ flex: 1 }}>
+          {/* Top Header Bar */}
+          <View style={[s.topBar, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+            <View style={s.topLeft}>
+              <Text style={[s.topLogo, { color: colors.cyan }]}>MOTOCORTEX</Text>
+            <View style={[s.topBadge, { borderColor: statusColor(ecuStatus) }]}>
+              <View style={[s.topBadgeDot, { backgroundColor: statusColor(ecuStatus) }]} />
+              <Text style={[s.topBadgeText, { color: statusColor(ecuStatus) }]}>
+                {ecuStatus === 'connected' ? t('hub.bleConnected') : t('hub.bleIdle')}
+              </Text>
+            </View>
           </View>
           <View style={s.topRight}>
+            <View style={{ backgroundColor: `${colors.purple}1F`, borderWidth: 1, borderColor: colors.purple, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 }}>
+              <Text style={{ color: `${colors.purple}CC`, fontSize: 10, fontWeight: '900', fontFamily: MONO }}>👑 PRO</Text>
+            </View>
             {ecuStatus === 'connected' && (
               <TouchableOpacity onPress={() => retryEcu()}>
-                <Text style={s.topDisconnect}>{t('connection.disconnect').toUpperCase()}</Text>
+                <Text style={[s.topDisconnect, { color: colors.red }]}>{t('connection.disconnect').toUpperCase()}</Text>
               </TouchableOpacity>
             )}
           </View>
         </View>
 
-        {/* Tab Bar */}
-        <View style={s.tabBar}>
-          {(['dashboard', 'expertise', 'info'] as const).map(tab => (
+        {/* Central Hub View vs Sub-Views */}
+        {activeHubView === 'hub' ? (
+          <ScrollView style={{ flex: 1, paddingHorizontal: 16 }} contentContainerStyle={{ paddingBottom: 24, paddingTop: 12 }}>
+            {/* Center Hero Widget */}
+            <LiveEngineHero onConnectPress={() => setIsConnectModalVisible(true)} />
+
+            {/* Title above Bento Grid */}
+            <Text style={{ fontSize: 11, fontWeight: '800', color: colors.textSec, letterSpacing: 2, marginBottom: 12, marginTop: 8, fontFamily: MONO }}>
+              {t('hub.controlHub')}
+            </Text>
+
+            {/* Bottom Bento Grid */}
+            <BentoGrid
+              onOpenDiagnostics={() => setActiveHubView('expertise')}
+              onOpenSensors={() => setActiveHubView('sensors')}
+              onOpenProfile={() => setActiveHubView('info')}
+              onOpenSettings={() => setIsSettingsModalVisible(true)}
+              onOpenPaywall={() => setIsPaywallVisible(true)}
+            />
+
+            {/* Quick Support & Share Row */}
+            <View style={{ flexDirection: 'row', gap: 10, marginTop: 12 }}>
+              <TouchableOpacity 
+                style={{ 
+                  flex: 1, 
+                  flexDirection: 'row', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  backgroundColor: colors.card, 
+                  borderWidth: 1, 
+                  borderColor: colors.border, 
+                  borderRadius: 12, 
+                  paddingVertical: 14,
+                  gap: 8
+                }}
+                onPress={() => Linking.openURL('mailto:ismailimamoglu610@gmail.com?subject=MotoCortex Geri Bildirim')}
+              >
+                <Text style={{ color: colors.cyan, fontSize: 18, fontWeight: '900' }}>⬡</Text>
+                <Text style={{ color: colors.textPri, fontSize: 12, fontWeight: '700', fontFamily: MONO }}>{t('info.support')}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={{ 
+                  flex: 1, 
+                  flexDirection: 'row', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  backgroundColor: colors.card, 
+                  borderWidth: 1, 
+                  borderColor: colors.border, 
+                  borderRadius: 12, 
+                  paddingVertical: 14,
+                  gap: 8
+                }}
+                onPress={async () => {
+                  try {
+                    await Share.share({
+                      message: t('report.shareMessage'),
+                      title: 'MotoCortex'
+                    });
+                  } catch (e) { console.error(e); }
+                }}
+              >
+                <Text style={{ color: colors.purple, fontSize: 18, fontWeight: '900' }}>✧</Text>
+                <Text style={{ color: colors.textPri, fontSize: 12, fontWeight: '700', fontFamily: MONO }}>{t('expertise.share')}</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        ) : (
+          <View style={{ flex: 1 }}>
+            {/* Prominent Hub Navigation Header */}
             <TouchableOpacity
-              key={tab}
-              style={[s.tabItem, activeTab === tab && s.tabItemActive]}
-              onPress={() => setActiveTab(tab)}
+              style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 8 }}
+              onPress={() => setActiveHubView('hub')}
+              activeOpacity={0.8}
             >
-              <Text style={[s.tabLabel, activeTab === tab && s.tabLabelActive]}>
-                {tab === 'dashboard' ? t('tabs.dashboard') : tab === 'expertise' ? t('tabs.expertise') : t('tabs.info')}
+              <Text style={{ color: colors.cyan, fontSize: 18, fontWeight: '900' }}>←</Text>
+              <Text style={{ color: colors.textPri, fontSize: 13, fontWeight: '800', fontFamily: MONO }}>
+                {t('hub.backToHub')}
+              </Text>
+              <Text style={{ color: colors.textSec, fontSize: 11, fontFamily: MONO, marginLeft: 'auto' }}>
+                {activeHubView === 'sensors' ? t('hub.liveSensorsView') : activeHubView === 'expertise' ? t('hub.diagnosticsView') : t('hub.vehicleProfileView')}
               </Text>
             </TouchableOpacity>
-          ))}
-        </View>
 
-        {/* Tab Content */}
-        {activeTab === 'dashboard' && <DashboardSpeedometer ecuStatus={ecuStatus} lastDeviceName={lastDeviceName} onConnectPress={() => setIsConnectModalVisible(true)} />}
-        {activeTab === 'expertise' && renderExpertise()}
-        {activeTab === 'info' && renderInfo()}
+            {/* Sub-view Content */}
+            <View style={{ flex: 1 }}>
+              {activeHubView === 'sensors' && <DashboardSpeedometer ecuStatus={ecuStatus} lastDeviceName={lastDeviceName} onConnectPress={() => setIsConnectModalVisible(true)} />}
+              {activeHubView === 'expertise' && renderExpertise()}
+              {activeHubView === 'info' && renderInfo()}
+            </View>
+          </View>
+        )}
 
         {/* Connection Modal */}
         <Modal
@@ -934,11 +1172,11 @@ ${sensorLines || '  Veri okunamadı'}
           transparent={false}
           onRequestClose={() => setIsConnectModalVisible(false)}
         >
-          <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
-            <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: C.border }}>
-              <Text style={{ color: C.textPri, fontSize: 16, fontWeight: '800', fontFamily: C.mono }}>{t('connection.foundDevices')}</Text>
+          <SafeAreaView style={{ flex: 1, backgroundColor: tc.bg }}>
+            <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: tc.border }}>
+              <Text style={{ color: tc.textPri, fontSize: 16, fontWeight: '800', fontFamily: MONO }}>{t('connection.foundDevices')}</Text>
               <TouchableOpacity onPress={() => setIsConnectModalVisible(false)} style={{ padding: 10 }}>
-                <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
+                <Text style={{ color: tc.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: MONO }}>{t('common.cancel').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -954,36 +1192,36 @@ ${sensorLines || '  Veri okunamadı'}
           transparent={true}
           onRequestClose={() => setIsSaveModalVisible(false)}
         >
-          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'center', padding: 30 }}>
-            <View style={{ backgroundColor: C.card, borderRadius: 8, padding: 24, borderWidth: 1, borderColor: C.border }}>
-              <Text style={{ color: C.textPri, fontSize: 16, fontWeight: '800', fontFamily: C.mono, marginBottom: 16 }}>{t('common.save').toUpperCase()}</Text>
+          <View style={{ flex: 1, backgroundColor: colors.overlayHeavy, justifyContent: 'center', padding: 30 }}>
+            <View style={{ backgroundColor: colors.card, borderRadius: 8, padding: 24, borderWidth: 1, borderColor: colors.border }}>
+              <Text style={{ color: colors.textPri, fontSize: 16, fontWeight: '800', fontFamily: MONO, marginBottom: 16 }}>{t('common.save').toUpperCase()}</Text>
               <TextInput
-                style={{ backgroundColor: C.elevated, borderWidth: 1, borderColor: C.border, borderRadius: 4, paddingHorizontal: 14, paddingVertical: 12, color: '#ffffff', fontFamily: C.mono, fontSize: 14, marginBottom: 10 }}
+                style={{ backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border, borderRadius: 4, paddingHorizontal: 14, paddingVertical: 12, color: colors.textPri, fontFamily: MONO, fontSize: 14, marginBottom: 10 }}
                 value={saveMake}
                 onChangeText={setSaveMake}
-                placeholder="Marka (Honda, Yamaha...)"
-                placeholderTextColor={C.textSec}
-                selectionColor={C.cyan}
+                placeholder={t('common.unknown') === 'Bilinmiyor' ? 'Marka (Honda, Yamaha...)' : 'Make (Honda, Yamaha...)'}
+                placeholderTextColor={colors.textSec}
+                selectionColor={colors.cyan}
               />
               <TextInput
-                style={{ backgroundColor: C.elevated, borderWidth: 1, borderColor: C.border, borderRadius: 4, paddingHorizontal: 14, paddingVertical: 12, color: '#ffffff', fontFamily: C.mono, fontSize: 14, marginBottom: 16 }}
+                style={{ backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border, borderRadius: 4, paddingHorizontal: 14, paddingVertical: 12, color: colors.textPri, fontFamily: MONO, fontSize: 14, marginBottom: 16 }}
                 value={saveModel}
                 onChangeText={setSaveModel}
-                placeholder="Model (CBR600, MT07...)"
-                placeholderTextColor={C.textSec}
-                selectionColor={C.cyan}
+                placeholder={t('common.unknown') === 'Bilinmiyor' ? 'Model (CBR600, MT07...)' : 'Model (CBR600, MT07...)'}
+                placeholderTextColor={colors.textSec}
+                selectionColor={colors.cyan}
               />
               <TouchableOpacity
-                style={[s.actionBtn, { backgroundColor: '#1e40af' }]}
+                style={[s.actionBtn, { backgroundColor: colors.cyan }]}
                 onPress={handleSaveToGarage}
               >
-                <Text style={s.actionBtnText}>{t('common.save').toUpperCase()}</Text>
+                <Text style={[s.actionBtnText, { color: tc.card }]}>{t('common.save').toUpperCase()}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[s.actionBtn, { backgroundColor: C.elevated, marginTop: 8, borderWidth: 1, borderColor: C.border }]}
+                style={[s.actionBtn, { backgroundColor: colors.elevated, marginTop: 8, borderWidth: 1, borderColor: colors.border }]}
                 onPress={() => setIsSaveModalVisible(false)}
               >
-                <Text style={[s.actionBtnText, { color: C.textSec }]}>{t('common.cancel').toUpperCase()}</Text>
+                <Text style={[s.actionBtnText, { color: colors.textSec }]}>{t('common.cancel').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -996,11 +1234,11 @@ ${sensorLines || '  Veri okunamadı'}
           transparent={false}
           onRequestClose={() => setSelectedRecord(null)}
         >
-          <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
-            <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: C.border }}>
-              <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '800', fontFamily: C.mono }}>{t('common.success')}: {selectedRecord?.make} {selectedRecord?.model}</Text>
+          <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
+            <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+              <Text style={{ color: colors.textPri, fontSize: 14, fontWeight: '800', fontFamily: MONO }}>{t('common.success')}: {selectedRecord?.make} {selectedRecord?.model}</Text>
               <TouchableOpacity onPress={() => setSelectedRecord(null)} style={{ padding: 10 }}>
-                <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
+                <Text style={{ color: colors.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: MONO }}>{t('common.cancel').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
             {selectedRecord && (
@@ -1024,7 +1262,7 @@ ${sensorLines || '  Veri okunamadı'}
                           <View style={s.dtcDot} />
                           <View style={{ flex: 1 }}>
                             <Text style={s.dtcCode}>{dtc}</Text>
-                            {desc && <Text style={{ color: '#ff9999', fontSize: 10, fontFamily: C.mono, marginTop: 2 }}>{desc}</Text>}
+                            {desc && <Text style={{ color: colors.red, opacity: 0.8, fontSize: 10, fontFamily: MONO, marginTop: 2 }}>{desc}</Text>}
                           </View>
                         </View>
                       );
@@ -1034,10 +1272,10 @@ ${sensorLines || '  Veri okunamadı'}
                 <TouchableOpacity
                   style={[s.actionBtn, s.actionRed, { marginTop: 12 }]}
                   onPress={() => {
-                    Alert.alert('Silme Onayı', 'Bu kaydı silmek istediğinize emin misiniz?', [
-                      { text: 'İptal', style: 'cancel' },
+                    Alert.alert(t('hub.deleteConfirm'), t('hub.deleteConfirmDesc'), [
+                      { text: t('common.cancel'), style: 'cancel' },
                       {
-                        text: 'Sil', style: 'destructive', onPress: async () => {
+                        text: t('common.delete'), style: 'destructive', onPress: async () => {
                           await deleteGarageRecord(selectedRecord.id);
                           setSelectedRecord(null);
                           const allRecords = await getGarageRecords();
@@ -1051,7 +1289,7 @@ ${sensorLines || '  Veri okunamadı'}
                     ]);
                   }}
                 >
-                  <Text style={s.actionBtnText}>{t('common.delete').toUpperCase()}</Text>
+                  <Text style={[s.actionBtnText, { color: tc.card }]}>{t('common.delete').toUpperCase()}</Text>
                 </TouchableOpacity>
               </ScrollView>
             )}
@@ -1078,148 +1316,22 @@ ${sensorLines || '  Veri okunamadı'}
           visible={isPerformanceVisible}
           onClose={() => setIsPerformanceVisible(false)}
         />
+
+        {/* Quick Settings Modal */}
+        <QuickSettingsModal
+          visible={isSettingsModalVisible}
+          onClose={() => setIsSettingsModalVisible(false)}
+        />
+
+        {/* Paywall Modal Overlay */}
+        <PaywallModal
+          visible={isPaywallVisible}
+          onClose={() => setIsPaywallVisible(false)}
+        />
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </BluetoothBridgeInitializer>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// STYLES
-// ═══════════════════════════════════════════════════════════════════
-const s = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: C.bg,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
 
-  // ── Connection Screen ──
-  connectPage: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 30 },
-  logoArea: { alignItems: 'center', marginBottom: 40 },
-  logoText: { fontSize: 36, fontWeight: '900', color: C.cyan, fontFamily: C.mono, letterSpacing: 4 },
-  logoSub: { fontSize: 14, color: C.textSec, fontFamily: C.mono, marginTop: 4, letterSpacing: 6 },
-
-  badgeRow: { flexDirection: 'row', gap: 12, marginBottom: 40 },
-  badge: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 6, gap: 6 },
-  badgeDot: { width: 6, height: 6, borderRadius: 3 },
-  badgeText: { fontSize: 10, fontWeight: '800', fontFamily: C.mono },
-
-  connectActions: { width: '100%', alignItems: 'center', gap: 12 },
-  scanBtn: { backgroundColor: 'transparent', borderWidth: 2, borderColor: C.cyan, borderRadius: 4, paddingVertical: 16, paddingHorizontal: 50, width: '100%', alignItems: 'center' },
-  scanBtnText: { color: C.cyan, fontWeight: '900', fontSize: 16, fontFamily: C.mono, letterSpacing: 2 },
-  btEnableBtn: { backgroundColor: C.elevated, borderRadius: 4, paddingVertical: 12, paddingHorizontal: 30, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: C.border },
-  btEnableBtnText: { color: C.textSec, fontWeight: '700', fontSize: 12, fontFamily: C.mono },
-
-  scanningRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10 },
-  scanningText: { color: C.cyan, fontSize: 12, fontFamily: C.mono },
-
-  deviceSection: { width: '100%', marginTop: 20 },
-  deviceSectionTitle: { color: C.textSec, fontSize: 10, fontWeight: '800', fontFamily: C.mono, marginBottom: 10, letterSpacing: 2 },
-  deviceCard: { backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 4, padding: 16, marginBottom: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  deviceName: { color: C.textPri, fontSize: 14, fontWeight: '700', fontFamily: C.mono },
-  deviceMac: { color: C.textSec, fontSize: 10, fontFamily: C.mono, marginTop: 4 },
-  connectLabel: { color: C.cyan, fontSize: 12, fontWeight: '800', fontFamily: C.mono },
-  hintText: { color: C.textSec, fontSize: 11, fontFamily: C.mono, marginTop: 20, textAlign: 'center' },
-
-  ecuConnecting: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 },
-  ecuErrorText: { color: C.red, fontSize: 12, fontFamily: C.mono, textAlign: 'center', marginBottom: 10 },
-  retryBtn: { backgroundColor: C.amber, borderRadius: 4, paddingVertical: 12, paddingHorizontal: 30, width: '100%', alignItems: 'center', marginBottom: 10 },
-  retryBtnText: { color: '#000', fontWeight: '900', fontSize: 13, fontFamily: C.mono },
-  disconnectBtn: { backgroundColor: 'transparent', borderWidth: 1, borderColor: C.red, borderRadius: 4, paddingVertical: 10, paddingHorizontal: 30, width: '100%', alignItems: 'center' },
-  disconnectBtnText: { color: C.red, fontWeight: '700', fontSize: 12, fontFamily: C.mono },
-
-  // ── Top Bar ──
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10, backgroundColor: C.card, borderBottomWidth: 1, borderBottomColor: C.border },
-  topLeft: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
-  topLogo: { color: C.cyan, fontSize: 16, fontWeight: '900', fontFamily: C.mono, letterSpacing: 2 },
-  topVersion: { color: C.textSec, fontSize: 10, fontFamily: C.mono },
-  topRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  topBadge: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 4, paddingHorizontal: 8, paddingVertical: 3, gap: 4 },
-  topBadgeDot: { width: 5, height: 5, borderRadius: 3 },
-  topBadgeText: { fontSize: 9, fontWeight: '900', fontFamily: C.mono },
-  topDisconnect: { color: C.red, fontSize: 10, fontWeight: '800', fontFamily: C.mono },
-
-  // ── Tab Bar ──
-  tabBar: { flexDirection: 'row', backgroundColor: C.card, borderBottomWidth: 1, borderBottomColor: C.border },
-  tabItem: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 2, borderBottomColor: 'transparent' },
-  tabItemActive: { borderBottomColor: C.cyan },
-  tabLabel: { color: C.textSec, fontSize: 10, fontWeight: '800', fontFamily: C.mono, letterSpacing: 1 },
-  tabLabelActive: { color: C.cyan },
-
-  // ── Tab Content ──
-  tabContent: { flex: 1, padding: 16 },
-
-  // ── Dashboard: RPM ──
-  rpmHero: { alignItems: 'center', paddingVertical: 24, backgroundColor: C.card, borderRadius: 4, borderWidth: 1, borderColor: C.border, marginBottom: 16 },
-  rpmNumber: { fontSize: 72, fontWeight: '900', color: C.textPri, fontFamily: C.mono },
-  rpmUnit: { fontSize: 14, fontWeight: '700', color: C.textSec, fontFamily: C.mono, marginTop: -4 },
-
-  // ── Dashboard: Sensor Grid ──
-  sensorGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
-  sensorCard: { width: '48.5%', backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 4, paddingVertical: 20, alignItems: 'center' },
-  sensorValue: { fontSize: 28, fontWeight: '900', color: C.textPri, fontFamily: C.mono },
-  sensorLabel: { fontSize: 10, fontWeight: '700', color: C.textSec, fontFamily: C.mono, marginTop: 4, letterSpacing: 2 },
-
-  // ── Quick Command Bar ──
-  quickBar: { marginBottom: 16 },
-  cmdRow: { flexDirection: 'row', gap: 8, marginBottom: 8 },
-  cmdInput: { flex: 1, backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 10, color: C.textPri, fontFamily: C.mono, fontSize: 12 },
-  cmdSend: { backgroundColor: C.cyan, borderRadius: 4, width: 44, alignItems: 'center', justifyContent: 'center' },
-  cmdSendText: { color: '#000', fontSize: 20, fontWeight: '900' },
-  chipRow: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
-  chip: { borderWidth: 1, borderColor: C.cyan, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 6 },
-  chipText: { color: C.cyan, fontSize: 10, fontWeight: '800', fontFamily: C.mono },
-
-  // ── Terminal ──
-  terminalBox: { backgroundColor: '#000', borderWidth: 1, borderColor: C.border, borderRadius: 4, overflow: 'hidden' },
-  terminalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, backgroundColor: C.card, borderBottomWidth: 1, borderBottomColor: C.border },
-  terminalTitle: { color: C.textSec, fontSize: 10, fontWeight: '800', fontFamily: C.mono },
-  terminalClear: { color: C.cyan, fontSize: 10, fontWeight: '700', fontFamily: C.mono },
-  terminalScroll: { maxHeight: 160, padding: 10 },
-  terminalLine: { color: C.green, fontSize: 10, fontFamily: C.mono, lineHeight: 16 },
-
-  // ── Panels (Expertise/Service) ──
-  panel: { backgroundColor: C.card, borderWidth: 1, borderColor: C.border, borderRadius: 4, padding: 16, marginBottom: 12 },
-  panelHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  panelTitle: { color: C.textSec, fontSize: 11, fontWeight: '900', fontFamily: C.mono, letterSpacing: 1, marginBottom: 12 },
-  panelDesc: { color: C.textSec, fontSize: 11, fontFamily: C.mono, lineHeight: 18, marginBottom: 16 },
-
-  tableRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: C.border },
-  tableLabel: { color: C.textSec, fontSize: 12, fontFamily: C.mono },
-  tableValue: { color: C.textPri, fontSize: 12, fontWeight: '700', fontFamily: C.mono },
-
-  // ── Action Buttons ──
-  actionBtn: { borderRadius: 4, paddingVertical: 16, alignItems: 'center' },
-  actionBtnText: { color: '#fff', fontWeight: '900', fontSize: 13, fontFamily: C.mono, letterSpacing: 1 },
-  actionPurple: { backgroundColor: '#7c3aed' },
-  actionCyan: { backgroundColor: '#0891b2' },
-  actionRed: { backgroundColor: C.red },
-
-  // ── Brand Selector ──
-  brandScroll: { marginHorizontal: -16, paddingHorizontal: 16 },
-  brandScrollContent: { paddingRight: 32, gap: 10 },
-  brandChip: { backgroundColor: C.elevated, borderWidth: 1, borderColor: C.border, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 8 },
-  brandChipActive: { backgroundColor: 'rgba(0, 212, 255, 0.1)', borderColor: C.cyan },
-  brandChipText: { color: C.textSec, fontSize: 11, fontWeight: '700', fontFamily: C.mono },
-  brandChipTextActive: { color: C.cyan, fontWeight: '900' },
-
-  // ── DTC Items ──
-  cleanBadge: { backgroundColor: 'rgba(0, 255, 136, 0.08)', borderWidth: 1, borderColor: C.green, borderRadius: 4, paddingVertical: 14, alignItems: 'center' },
-  cleanBadgeText: { color: C.green, fontWeight: '800', fontSize: 12, fontFamily: C.mono },
-  dtcRow: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: 'rgba(255, 59, 59, 0.08)', borderWidth: 1, borderColor: C.red, borderRadius: 4, paddingHorizontal: 14, paddingVertical: 12, marginBottom: 6 },
-  dtcDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: C.red },
-  dtcCode: { color: C.red, fontWeight: '800', fontSize: 14, fontFamily: C.mono },
-
-  clearBtn: { backgroundColor: 'rgba(255, 59, 59, 0.15)', borderRadius: 4, paddingHorizontal: 12, paddingVertical: 4 },
-  clearBtnText: { color: C.red, fontSize: 10, fontWeight: '800', fontFamily: C.mono },
-
-  // ── Warning Banner ──
-  warningBanner: { flexDirection: 'row', backgroundColor: 'rgba(255, 184, 0, 0.1)', borderWidth: 1, borderColor: C.amber, borderRadius: 4, padding: 14, marginBottom: 16, gap: 10, alignItems: 'flex-start' },
-  warningIcon: { color: C.amber, fontSize: 20 },
-  warningTitle: { color: C.amber, fontSize: 12, fontWeight: '900', fontFamily: C.mono, marginBottom: 4 },
-  warningBody: { color: '#fef08a', fontSize: 11, fontFamily: C.mono, lineHeight: 17 },
-
-  // ── New Styles ──
-  miniAction: { flex: 1, borderRadius: 4, paddingVertical: 12, alignItems: 'center', justifyContent: 'center' },
-  miniActionText: { color: '#fff', fontWeight: '800', fontSize: 11, fontFamily: C.mono },
-});

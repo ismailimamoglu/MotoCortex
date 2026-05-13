@@ -2,7 +2,7 @@
   "expo": {
     "name": "MotoCortex",
     "slug": "MotoCortex-mobile",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -10,21 +10,23 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0a0a0a"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.ismail.motocortex",
+      "bundleIdentifier": "com.ismail.motocortexv2",
+      "buildNumber": "16",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
-        "NSBluetoothAlwaysUsageDescription": "MotoCortex needs Bluetooth access to connect with BLE (Bluetooth Low Energy) OBD2 adapters and communicate with your vehicle's ECU for live diagnostics.",
-        "NSBluetoothPeripheralUsageDescription": "Required to discover and connect to your vehicle's diagnostic adapter.",
-        "NSLocationWhenInUseUsageDescription": "iOS requires Location permission to scan for nearby Bluetooth Low Energy (BLE) OBD2 devices. Your location data is NEVER tracked, stored, or shared."
+        "UIBackgroundModes": ["bluetooth-central"],
+        "NSBluetoothAlwaysUsageDescription": "MotoCortex uses Bluetooth to maintain a constant diagnostic link with your vehicle's ECU via BLE adapters, enabling live performance monitoring and real-time alerts even when the app is in the background or the screen is off.",
+        "NSBluetoothPeripheralUsageDescription": "MotoCortex requires access to discover and connect to your vehicle's ELM327/OBD2 diagnostic adapter for engine data streaming.",
+        "NSLocationWhenInUseUsageDescription": "iOS requires Location access to perform Bluetooth Low Energy (BLE) device scanning. MotoCortex does NOT track, store, or share your movement data."
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./adaptive-icon.png",
         "backgroundColor": "#0a0a0a"
       },
       "edgeToEdgeEnabled": true,
@@ -41,10 +43,20 @@
     },
     "plugins": [
       [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": true,
+          "modes": [
+            "central"
+          ],
+          "bluetoothAlwaysPermission": "MotoCortex uses Bluetooth to maintain a constant diagnostic link with your vehicle's ECU for live performance monitoring."
+        }
+      ],
+      [
         "with-rn-bluetooth-classic",
         {
-          "peripheralUsageDescription": "Required to discover and connect to your vehicle's diagnostic adapter.",
-          "alwaysUsageDescription": "MotoCortex needs Bluetooth access to connect with BLE (Bluetooth Low Energy) OBD2 adapters and communicate with your vehicle's ECU for live diagnostics."
+          "peripheralUsageDescription": "MotoCortex requires access to discover and connect to your vehicle's diagnostic adapter.",
+          "alwaysUsageDescription": "MotoCortex uses Bluetooth to communicate with your vehicle's ECU for live diagnostics."
         }
       ],
       [

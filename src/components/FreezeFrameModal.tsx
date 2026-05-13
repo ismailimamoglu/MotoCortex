@@ -1,20 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
-
-const C = {
-    bg: '#0a0a0a',
-    card: '#111318',
-    elevated: '#1a1d24',
-    border: '#1e2430',
-    cyan: '#00d4ff',
-    green: '#00ff88',
-    red: '#ff3b3b',
-    amber: '#ffb800',
-    textPri: '#e8eaed',
-    textSec: '#6b7280',
-    mono: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-};
+import { useThemeColors } from '../theme';
 
 interface FreezeData {
     rpm: number | null;
@@ -31,9 +18,12 @@ interface Props {
 
 export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtcs }: Props) {
     const { t } = useTranslation();
+    const colors = useThemeColors();
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<FreezeData | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
     const parseHex = (response: string, echo: string, bytes: number): number | null => {
         const clean = response.replace(/\s+/g, '').replace('SEARCHING...', '');
@@ -91,25 +81,25 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
 
     return (
         <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
-            <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
                 {/* Header */}
-                <View style={ms.header}>
-                    <Text style={ms.headerTitle}>{t('freeze.title')}</Text>
+                <View style={[ms.header, { borderBottomColor: colors.border }]}>
+                    <Text style={[ms.headerTitle, { color: colors.textPri, fontFamily: MONO }]}>{t('freeze.title')}</Text>
                     <TouchableOpacity onPress={() => { resetState(); onClose(); }} style={{ padding: 10 }}>
-                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
+                        <Text style={{ color: colors.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: MONO }}>{t('common.cancel').toUpperCase()}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{ flex: 1, padding: 16 }}>
                     {/* Description */}
-                    <Text style={ms.infoTitle}>❄️ {t('freeze.snapshot')}</Text>
-                    <Text style={ms.infoDesc}>
+                    <Text style={[ms.infoTitle, { color: colors.cyan, fontFamily: MONO }]}>❄️ {t('freeze.snapshot')}</Text>
+                    <Text style={[ms.infoDesc, { color: colors.textSec, fontFamily: MONO }]}>
                         {t('freeze.desc')}
                     </Text>
 
                     {!hasDtcs && !data && (
-                        <View style={[ms.infoPanel, { borderColor: C.amber }]}>
-                            <Text style={{ color: C.amber, fontSize: 11, fontFamily: C.mono, textAlign: 'center' }}>
+                        <View style={[ms.infoPanel, { borderColor: colors.amber, backgroundColor: colors.card }]}>
+                            <Text style={{ color: colors.amber, fontSize: 11, fontFamily: MONO, textAlign: 'center' }}>
                                 ⚠️ {t('freeze.noDtcs')}
                             </Text>
                         </View>
@@ -118,18 +108,18 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                     {/* Action Button */}
                     {!data && !isLoading && (
                         <TouchableOpacity
-                            style={ms.actionBtn}
+                            style={[ms.actionBtn, { backgroundColor: colors.cyan }]}
                             onPress={fetchFreezeFrame}
                         >
-                            <Text style={ms.actionBtnText}>❄️ {t('freeze.read')}</Text>
+                            <Text style={[ms.actionBtnText, { color: colors.card, fontFamily: MONO }]}>❄️ {t('freeze.read')}</Text>
                         </TouchableOpacity>
                     )}
 
                     {/* Loading */}
                     {isLoading && (
                         <View style={{ alignItems: 'center', marginTop: 20 }}>
-                            <ActivityIndicator size="large" color={C.cyan} />
-                            <Text style={{ color: C.textSec, fontSize: 11, fontFamily: C.mono, marginTop: 8 }}>
+                            <ActivityIndicator size="large" color={colors.cyan} />
+                            <Text style={{ color: colors.textSec, fontSize: 11, fontFamily: MONO, marginTop: 8 }}>
                                 {t('freeze.loading')}
                             </Text>
                         </View>
@@ -137,50 +127,50 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
 
                     {/* Error */}
                     {error && (
-                        <View style={[ms.infoPanel, { borderColor: C.red }]}>
-                            <Text style={{ color: C.red, fontSize: 11, fontFamily: C.mono, textAlign: 'center' }}>{error}</Text>
+                        <View style={[ms.infoPanel, { borderColor: colors.red, backgroundColor: colors.card }]}>
+                            <Text style={{ color: colors.red, fontSize: 11, fontFamily: MONO, textAlign: 'center' }}>{error}</Text>
                         </View>
                     )}
 
                     {/* Results */}
                     {data && (
                         <View style={{ marginTop: 8 }}>
-                            <Text style={{ color: C.textPri, fontSize: 12, fontWeight: '800', fontFamily: C.mono, marginBottom: 12, textAlign: 'center' }}>
+                            <Text style={{ color: colors.textPri, fontSize: 12, fontWeight: '800', fontFamily: MONO, marginBottom: 12, textAlign: 'center' }}>
                                 📸 {t('freeze.values')}
                             </Text>
 
                             <View style={{ flexDirection: 'row', gap: 8, marginBottom: 8 }}>
-                                <View style={ms.resultCard}>
-                                    <Text style={ms.resultLabel}>{t('dashboard.rpm')}</Text>
-                                    <Text style={ms.resultValue}>{data.rpm !== null ? data.rpm : '--'}</Text>
-                                    <Text style={ms.resultUnit}>RPM</Text>
+                                <View style={[ms.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                                    <Text style={[ms.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('dashboard.rpm')}</Text>
+                                    <Text style={[ms.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.rpm !== null ? data.rpm : '--'}</Text>
+                                    <Text style={[ms.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>RPM</Text>
                                 </View>
-                                <View style={ms.resultCard}>
-                                    <Text style={ms.resultLabel}>{t('dashboard.speed')}</Text>
-                                    <Text style={ms.resultValue}>{data.speed !== null ? data.speed : '--'}</Text>
-                                    <Text style={ms.resultUnit}>KM/H</Text>
+                                <View style={[ms.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                                    <Text style={[ms.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('dashboard.speed')}</Text>
+                                    <Text style={[ms.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.speed !== null ? data.speed : '--'}</Text>
+                                    <Text style={[ms.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>KM/H</Text>
                                 </View>
-                                <View style={ms.resultCard}>
-                                    <Text style={ms.resultLabel}>{t('dashboard.temp')}</Text>
-                                    <Text style={[ms.resultValue, data.coolant !== null && data.coolant > 100 ? { color: C.red } : {}]}>
+                                <View style={[ms.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                                    <Text style={[ms.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('dashboard.temp')}</Text>
+                                    <Text style={[ms.resultValue, { fontFamily: MONO }, data.coolant !== null && data.coolant > 100 ? { color: colors.red } : { color: colors.textPri }]}>
                                         {data.coolant !== null ? data.coolant : '--'}
                                     </Text>
-                                    <Text style={ms.resultUnit}>°C</Text>
+                                    <Text style={[ms.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>°C</Text>
                                 </View>
                             </View>
 
                             <TouchableOpacity
-                                style={[ms.actionBtn, { backgroundColor: C.elevated, borderWidth: 1, borderColor: C.border }]}
+                                style={[ms.actionBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]}
                                 onPress={() => { resetState(); }}
                             >
-                                <Text style={[ms.actionBtnText, { color: C.textSec }]}>↺ {t('freeze.retry')}</Text>
+                                <Text style={[ms.actionBtnText, { color: colors.textSec, fontFamily: MONO }]}>↺ {t('freeze.retry')}</Text>
                             </TouchableOpacity>
                         </View>
                     )}
 
                     {/* Info */}
-                    <Text style={ms.infoTitle}>📖 {t('freeze.techInfo')}</Text>
-                    <Text style={ms.infoDesc}>
+                    <Text style={[ms.infoTitle, { color: colors.cyan, fontFamily: MONO }]}>📖 {t('freeze.techInfo')}</Text>
+                    <Text style={[ms.infoDesc, { color: colors.textSec, fontFamily: MONO }]}>
                         {t('freeze.techDesc')}
                     </Text>
                 </View>
@@ -198,74 +188,55 @@ const ms = StyleSheet.create({
         alignItems: 'center',
         height: 60,
         borderBottomWidth: 1,
-        borderBottomColor: '#1e2430',
     },
     headerTitle: {
-        color: '#e8eaed',
         fontSize: 14,
         fontWeight: '800',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     },
     infoPanel: {
-        backgroundColor: '#111318',
         borderRadius: 6,
         padding: 14,
         borderWidth: 1,
-        borderColor: '#1e2430',
         marginBottom: 12,
     },
     infoTitle: {
-        color: '#00d4ff',
         fontSize: 12,
         fontWeight: '800',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         marginBottom: 6,
     },
     infoDesc: {
-        color: '#6b7280',
         fontSize: 10,
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         lineHeight: 16,
     },
     actionBtn: {
-        backgroundColor: '#00d4ff',
         borderRadius: 6,
         paddingVertical: 14,
         alignItems: 'center',
         marginBottom: 8,
     },
     actionBtnText: {
-        color: '#000',
         fontSize: 13,
         fontWeight: '900',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     },
     resultCard: {
         flex: 1,
-        backgroundColor: '#111318',
         borderRadius: 6,
         padding: 14,
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#1e2430',
     },
     resultLabel: {
-        color: '#6b7280',
         fontSize: 9,
         fontWeight: '800',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         marginBottom: 4,
     },
     resultValue: {
-        color: '#e8eaed',
         fontSize: 22,
         fontWeight: '900',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     },
     resultUnit: {
-        color: '#6b7280',
         fontSize: 9,
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         marginTop: 4,
     },
 });
+

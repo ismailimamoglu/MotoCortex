@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Alert } from 'react-native';
-import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import { Alert, Platform, Linking } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import BluetoothService from '../api/BluetoothService';
 import { BluetoothPermissionError } from '../api/BluetoothService';
 import OBDCommandQueue from '../api/OBDCommandQueue';
@@ -8,6 +8,7 @@ import { useBluetoothStore } from '../store/useBluetoothStore';
 import { ADAPTER_COMMANDS } from '../api/commands';
 
 export const useBluetooth = () => {
+    const { t } = useTranslation();
     const status = useBluetoothStore(s => s.status);
     const adapterStatus = useBluetoothStore(s => s.adapterStatus);
     const ecuStatus = useBluetoothStore(s => s.ecuStatus);
@@ -30,10 +31,20 @@ export const useBluetooth = () => {
     const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
 
     /**
-     * Request to enable Bluetooth on the device
+     * Request to enable Bluetooth on the device.
+     * On iOS, there is no API to enable BT programmatically — open Settings instead.
+     * On Android, uses the native Classic Bluetooth enablement dialog.
      */
     const enableBluetooth = useCallback(async () => {
         try {
+            if (Platform.OS === 'ios') {
+                // iOS does not allow apps to enable Bluetooth programmatically.
+                // Direct the user to system Settings.
+                Linking.openSettings();
+                return false;
+            }
+            // Android: Dynamic import to avoid loading Classic module on iOS
+            const RNBluetoothClassic = require('react-native-bluetooth-classic').default;
             const enabled = await RNBluetoothClassic.requestBluetoothEnabled();
             return enabled;
         } catch (e) {
@@ -54,21 +65,30 @@ export const useBluetooth = () => {
             setStatus('disconnected');
             return devices;
         } catch (e) {
-            if (e instanceof BluetoothPermissionError) {
-                // Graceful handling: no red error text, just a polite alert
-                setStatus('disconnected');
+            setStatus('disconnected');
+            const msg = e instanceof Error ? e.message : String(e);
+
+            if (msg.includes('BLUETOOTH_NOT_POWERED_ON')) {
                 Alert.alert(
-                    'Bluetooth Bağlantısı',
-                    'Lütfen cihazınızın Bluetooth bağlantısını açın ve MotoCortex uygulamasına Bluetooth izni verdiğinizden emin olun.\n\nAyarlar → Bluetooth → Açık',
+                    t('connection.error'),
+                    t('connection.bluetoothOffDesc') || 'Bluetooth kapalı. Lütfen Bluetooth ayarlarınızı kontrol edin.'
                 );
-                return [];
+            } else if (e instanceof BluetoothPermissionError) {
+                Alert.alert(
+                    t('connection.error'),
+                    t('connection.permissionDesc') || 'Bluetooth izni reddedildi. Lütfen ayarlardan izin verin.'
+                );
+            } else {
+                Alert.alert(
+                    t('connection.error'),
+                    `Tarama Başarısız: ${msg}`
+                );
             }
-            // Unexpected errors — keep original behavior
-            setError(e instanceof Error ? e.message : String(e));
-            setStatus('error');
+            
+            setError(msg);
             return [];
         }
-    }, [setStatus, setError]);
+    }, [setStatus, setError, t]);
 
     /**
      * Connect to a specific device (Adapter)

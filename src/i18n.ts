@@ -6,11 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import tr from './locales/tr.json';
 import en from './locales/en.json';
 import id from './locales/id.json';
+import de from './locales/de.json';
+import es from './locales/es.json';
 
 const resources = {
     tr: { translation: tr },
     en: { translation: en },
     id: { translation: id },
+    de: { translation: de },
+    es: { translation: es },
 };
 
 const LANGUAGE_KEY = 'user-language';
@@ -20,7 +24,7 @@ const initI18n = async () => {
 
     if (!savedLanguage) {
         const deviceLanguage = Localization.getLocales()[0].languageCode;
-        savedLanguage = ['tr', 'en', 'id'].includes(deviceLanguage || '') ? deviceLanguage : 'en';
+        savedLanguage = ['tr', 'en', 'id', 'de', 'es'].includes(deviceLanguage || '') ? deviceLanguage : 'en';
     }
 
     i18n

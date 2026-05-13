@@ -4,6 +4,33 @@
         "expertise": "DIAGNOSTICS",
         "info": "INFO"
     },
+    "hub": {
+        "controlHub": "CONTROL HUB & MODULES",
+        "backToHub": "BACK TO HUB",
+        "liveSensorsView": "Live Sensors",
+        "diagnosticsView": "Diagnostics",
+        "vehicleProfileView": "Vehicle Profile",
+        "bleConnected": "BLE CONNECTED",
+        "bleIdle": "BLE IDLE",
+        "scanningHardware": "SCANNING HARDWARE...",
+        "liveTachometer": "LIVE TACHOMETER",
+        "coolantTemp": "COOLANT TEMP",
+        "pastRecords": "PAST RECORDS",
+        "deleteConfirm": "Delete Confirmation",
+        "deleteConfirmDesc": "Are you sure you want to delete this record?",
+        "continueBtn": "Continue",
+        "cancelBtn": "Cancel",
+        "skipBtn": "Skip (Finish)"
+    },
+    "bento": {
+        "diagnostics": "Diagnostics",
+        "cleanFaults": "0 FAULTS (CLEAN)",
+        "dtcDetected": "{{count}} DTC DETECTED",
+        "liveSensors": "Live Sensors",
+        "realtimeData": "REAL-TIME DATA",
+        "vehicleProfile": "Vehicle Profile",
+        "quickSettings": "Quick Settings"
+    },
     "common": {
         "cancel": "Cancel",
         "ok": "OK",
@@ -38,7 +65,10 @@
         "ecuNoResponse": "ECU not responding. Turn on ignition.",
         "retry": "RETRY",
         "disconnect": "DISCONNECT",
-        "connectLabel": "CONNECT"
+        "connectLabel": "CONNECT",
+        "error": "CONNECTION ERROR",
+        "bluetoothOffDesc": "Bluetooth is powered off. Please check your Bluetooth settings.",
+        "permissionDesc": "Bluetooth permission denied. Please grant permission in settings."
     },
     "dashboard": {
         "selectDevice": "TAP TO SELECT DEVICE",
@@ -152,7 +182,16 @@
         "noData": "No data available",
         "proApp": "Scanned with MotoCortex v7 PRO.",
         "date": "Date",
-        "vinNotFound": "Not Detected"
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO FAULT CODES — CLEAN",
+        "speed": "Speed",
+        "coolant": "Engine Temp",
+        "throttle": "Throttle",
+        "engineLoad": "Engine Load",
+        "intakeAir": "Intake Air",
+        "manifold": "Manifold",
+        "voltage": "Battery Voltage",
+        "shareMessage": "Monitor your motorcycle's health from your pocket with MotoCortex OBD2 Diagnostic App! 🏍️📲\n\nDownload: https://motocortex.app"
     },
     "battery": {
         "title": "BATTERY & CRANKING TEST",

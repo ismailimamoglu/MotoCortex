@@ -1,18 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native';
-
-const C = {
-    bg: '#0a0a0a',
-    card: '#111318',
-    border: '#1e2430',
-    cyan: '#00d4ff',
-    green: '#00ff88',
-    red: '#ff3b3b',
-    amber: '#ffb800',
-    textPri: '#e8eaed',
-    textSec: '#6b7280',
-    mono: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-};
+import { useThemeColors } from '../theme';
 
 const HISTORY_SIZE = 40; // Number of data points to display
 const CHART_HEIGHT = 80;
@@ -29,8 +17,11 @@ interface OscilloscopeProps {
 }
 
 export default function OscilloscopeView({ label, value, unit, color, min, max }: OscilloscopeProps) {
+    const colors = useThemeColors();
     const historyRef = useRef<number[]>(new Array(HISTORY_SIZE).fill(0));
     const [history, setHistory] = useState<number[]>(new Array(HISTORY_SIZE).fill(0));
+
+    const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
     useEffect(() => {
         const v = value !== null ? value : 0;
@@ -49,18 +40,18 @@ export default function OscilloscopeView({ label, value, unit, color, min, max }
     const gridLines = [0.25, 0.5, 0.75];
 
     return (
-        <View style={os.container}>
+        <View style={[os.container, { backgroundColor: colors.card, borderColor: colors.border }]}>
             {/* Header */}
             <View style={os.header}>
                 <View>
-                    <Text style={[os.label, { color }]}>{label}</Text>
-                    <Text style={os.range}>{min} - {max} {unit}</Text>
+                    <Text style={[os.label, { color, fontFamily: MONO }]}>{label}</Text>
+                    <Text style={[os.range, { color: colors.textSec, fontFamily: MONO }]}>{min} - {max} {unit}</Text>
                 </View>
                 <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={[os.currentValue, { color }]}>
+                    <Text style={[os.currentValue, { color, fontFamily: MONO }]}>
                         {value !== null ? value : '--'}
                     </Text>
-                    <Text style={os.unitText}>{unit}</Text>
+                    <Text style={[os.unitText, { color: colors.textSec, fontFamily: MONO }]}>{unit}</Text>
                 </View>
             </View>
 
@@ -70,7 +61,7 @@ export default function OscilloscopeView({ label, value, unit, color, min, max }
                 {gridLines.map((pct, i) => (
                     <View
                         key={i}
-                        style={[os.gridLine, { bottom: pct * CHART_HEIGHT }]}
+                        style={[os.gridLine, { bottom: pct * CHART_HEIGHT, backgroundColor: colors.border, opacity: 0.5 }]}
                     />
                 ))}
 
@@ -118,10 +109,8 @@ export default function OscilloscopeView({ label, value, unit, color, min, max }
 
 const os = StyleSheet.create({
     container: {
-        backgroundColor: '#060808',
         borderRadius: 6,
         borderWidth: 1,
-        borderColor: '#0a1a0a',
         marginBottom: 8,
         overflow: 'hidden',
     },
@@ -136,24 +125,18 @@ const os = StyleSheet.create({
     label: {
         fontSize: 10,
         fontWeight: '900',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         letterSpacing: 1,
     },
     range: {
         fontSize: 7,
-        color: '#333',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         marginTop: 2,
     },
     currentValue: {
         fontSize: 18,
         fontWeight: '900',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     },
     unitText: {
         fontSize: 8,
-        color: '#6b7280',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     },
     chartArea: {
         height: CHART_HEIGHT,
@@ -166,7 +149,6 @@ const os = StyleSheet.create({
         left: 0,
         right: 0,
         height: 1,
-        backgroundColor: '#0a1a0a',
     },
     barsContainer: {
         flexDirection: 'row',
@@ -188,3 +170,4 @@ const os = StyleSheet.create({
         opacity: 0.3,
     },
 });
+

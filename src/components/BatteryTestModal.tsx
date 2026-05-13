@@ -1,20 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
-
-const C = {
-    bg: '#0a0a0a',
-    card: '#111318',
-    elevated: '#1a1d24',
-    border: '#1e2430',
-    cyan: '#00d4ff',
-    green: '#00ff88',
-    red: '#ff3b3b',
-    amber: '#ffb800',
-    textPri: '#e8eaed',
-    textSec: '#6b7280',
-    mono: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-};
+import { useThemeColors } from '../theme';
 
 type TestStep = 'idle' | 'resting' | 'cranking' | 'charging' | 'done';
 
@@ -33,12 +20,15 @@ interface Props {
 
 export default function BatteryTestModal({ visible, onClose, sendCommand, voltage }: Props) {
     const { t } = useTranslation();
+    const colors = useThemeColors();
     const [step, setStep] = useState<TestStep>('idle');
     const [result, setResult] = useState<BatteryTestResult>({ restingV: null, crankingV: null, chargingV: null });
     const [isRunning, setIsRunning] = useState(false);
     const [statusText, setStatusText] = useState(t('battery.ready'));
     const crankingIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const lowestVRef = useRef<number>(999);
+
+    const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
     const readVoltage = useCallback(async (): Promise<string | null> => {
         try {
@@ -143,25 +133,28 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
         return verdicts;
     };
 
+    const cardStyle = [ms.resultCard, { backgroundColor: colors.card, borderColor: colors.border }];
+    const activeCardStyle = [ms.activeCard, { borderColor: colors.cyan, backgroundColor: `${colors.cyan}1A` }];
+
     return (
         <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
-            <SafeAreaView style={{ flex: 1, backgroundColor: C.bg }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
                 {/* Header */}
-                <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: C.border }}>
-                    <Text style={{ color: C.textPri, fontSize: 14, fontWeight: '800', fontFamily: C.mono }}>{t('battery.title')}</Text>
+                <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+                    <Text style={{ color: colors.textPri, fontSize: 14, fontWeight: '800', fontFamily: MONO }}>{t('battery.title')}</Text>
                     <TouchableOpacity onPress={() => { resetTest(); onClose(); }} style={{ padding: 10 }}>
-                        <Text style={{ color: C.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: C.mono }}>{t('common.cancel').toUpperCase()}</Text>
+                        <Text style={{ color: colors.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: MONO }}>{t('common.cancel').toUpperCase()}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{ flex: 1, padding: 16 }}>
                     {/* Status */}
-                    <View style={{ backgroundColor: C.card, borderRadius: 6, padding: 16, borderWidth: 1, borderColor: C.border, marginBottom: 12 }}>
-                        <Text style={{ color: C.amber, fontSize: 12, fontWeight: '800', fontFamily: C.mono, textAlign: 'center' }}>
+                    <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 16, borderWidth: 1, borderColor: colors.border, marginBottom: 12 }}>
+                        <Text style={{ color: colors.amber, fontSize: 12, fontWeight: '800', fontFamily: MONO, textAlign: 'center' }}>
                             {statusText}
                         </Text>
                         {step === 'cranking' && (
-                            <Text style={{ color: C.red, fontSize: 20, fontWeight: '900', fontFamily: C.mono, textAlign: 'center', marginTop: 8 }}>
+                            <Text style={{ color: colors.red, fontSize: 20, fontWeight: '900', fontFamily: MONO, textAlign: 'center', marginTop: 8 }}>
                                 ⚡ {result.crankingV || t('common.loading')}
                             </Text>
                         )}
@@ -169,35 +162,35 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
                     {/* Test Results Grid */}
                     <View style={{ flexDirection: 'row', gap: 8, marginBottom: 12 }}>
-                        <View style={[ms.resultCard, step === 'resting' && ms.activeCard]}>
-                            <Text style={ms.resultLabel}>{t('battery.resting')}</Text>
-                            <Text style={ms.resultValue}>{result.restingV || '--'}</Text>
-                            <Text style={ms.resultRef}>Ref: 12.4-12.8V</Text>
+                        <View style={[...cardStyle, step === 'resting' && activeCardStyle]}>
+                            <Text style={[ms.resultLabel, { color: colors.textSec }]}>{t('battery.resting')}</Text>
+                            <Text style={[ms.resultValue, { color: colors.textPri }]}>{result.restingV || '--'}</Text>
+                            <Text style={[ms.resultRef, { color: colors.textSec }]}>Ref: 12.4-12.8V</Text>
                         </View>
-                        <View style={[ms.resultCard, step === 'cranking' && ms.activeCard]}>
-                            <Text style={ms.resultLabel}>{t('battery.cranking')}</Text>
-                            <Text style={[ms.resultValue, { color: C.amber }]}>{result.crankingV || '--'}</Text>
-                            <Text style={ms.resultRef}>Ref: ≥9.6V</Text>
+                        <View style={[...cardStyle, step === 'cranking' && activeCardStyle]}>
+                            <Text style={[ms.resultLabel, { color: colors.textSec }]}>{t('battery.cranking')}</Text>
+                            <Text style={[ms.resultValue, { color: colors.amber }]}>{result.crankingV || '--'}</Text>
+                            <Text style={[ms.resultRef, { color: colors.textSec }]}>Ref: ≥9.6V</Text>
                         </View>
-                        <View style={[ms.resultCard, step === 'charging' && ms.activeCard]}>
-                            <Text style={ms.resultLabel}>{t('battery.charging')}</Text>
-                            <Text style={[ms.resultValue, { color: C.green }]}>{result.chargingV || '--'}</Text>
-                            <Text style={ms.resultRef}>Ref: 13.5-14.5V</Text>
+                        <View style={[...cardStyle, step === 'charging' && activeCardStyle]}>
+                            <Text style={[ms.resultLabel, { color: colors.textSec }]}>{t('battery.charging')}</Text>
+                            <Text style={[ms.resultValue, { color: colors.green }]}>{result.chargingV || '--'}</Text>
+                            <Text style={[ms.resultRef, { color: colors.textSec }]}>Ref: 13.5-14.5V</Text>
                         </View>
                     </View>
 
                     {/* Current Voltage */}
-                    <View style={{ backgroundColor: C.card, borderRadius: 6, padding: 12, borderWidth: 1, borderColor: C.border, marginBottom: 12, alignItems: 'center' }}>
-                        <Text style={{ color: C.textSec, fontSize: 9, fontFamily: C.mono }}>{t('battery.instantV')}</Text>
-                        <Text style={{ color: C.cyan, fontSize: 28, fontWeight: '900', fontFamily: C.mono }}>{voltage || '--'}</Text>
+                    <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 12, borderWidth: 1, borderColor: colors.border, marginBottom: 12, alignItems: 'center' }}>
+                        <Text style={{ color: colors.textSec, fontSize: 9, fontFamily: MONO }}>{t('battery.instantV')}</Text>
+                        <Text style={{ color: colors.cyan, fontSize: 28, fontWeight: '900', fontFamily: MONO }}>{voltage || '--'}</Text>
                     </View>
 
                     {/* Verdict */}
                     {step === 'done' && getVerdict() && (
-                        <View style={{ backgroundColor: C.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: C.green, marginBottom: 12 }}>
-                            <Text style={{ color: C.textPri, fontSize: 12, fontWeight: '800', fontFamily: C.mono, marginBottom: 8 }}>📋 {t('battery.evaluation')}</Text>
+                        <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: colors.green, marginBottom: 12 }}>
+                            <Text style={{ color: colors.textPri, fontSize: 12, fontWeight: '800', fontFamily: MONO, marginBottom: 8 }}>📋 {t('battery.evaluation')}</Text>
                             {getVerdict()!.map((v, i) => (
-                                <Text key={i} style={{ color: C.textPri, fontSize: 11, fontFamily: C.mono, lineHeight: 20 }}>{v}</Text>
+                                <Text key={i} style={{ color: colors.textPri, fontSize: 11, fontFamily: MONO, lineHeight: 20 }}>{v}</Text>
                             ))}
                         </View>
                     )}
@@ -205,28 +198,28 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
                     {/* Actions */}
                     {step === 'idle' && (
                         <TouchableOpacity
-                            style={{ backgroundColor: C.cyan, borderRadius: 6, paddingVertical: 14, alignItems: 'center' }}
+                            style={{ backgroundColor: colors.cyan, borderRadius: 6, paddingVertical: 14, alignItems: 'center' }}
                             onPress={startTest}
                         >
-                            <Text style={{ color: '#000', fontSize: 13, fontWeight: '900', fontFamily: C.mono }}>⚡ {t('battery.start')}</Text>
+                            <Text style={{ color: colors.card, fontSize: 13, fontWeight: '900', fontFamily: MONO }}>⚡ {t('battery.start')}</Text>
                         </TouchableOpacity>
                     )}
                     {step === 'done' && (
                         <TouchableOpacity
-                            style={{ backgroundColor: C.elevated, borderRadius: 6, paddingVertical: 14, alignItems: 'center', borderWidth: 1, borderColor: C.border }}
+                            style={{ backgroundColor: colors.elevated, borderRadius: 6, paddingVertical: 14, alignItems: 'center', borderWidth: 1, borderColor: colors.border }}
                             onPress={resetTest}
                         >
-                            <Text style={{ color: C.textSec, fontSize: 13, fontWeight: '900', fontFamily: C.mono }}>↺ {t('battery.retry')}</Text>
+                            <Text style={{ color: colors.textSec, fontSize: 13, fontWeight: '900', fontFamily: MONO }}>↺ {t('battery.retry')}</Text>
                         </TouchableOpacity>
                     )}
                     {isRunning && (
-                        <ActivityIndicator size="small" color={C.cyan} style={{ marginTop: 12 }} />
+                        <ActivityIndicator size="small" color={colors.cyan} style={{ marginTop: 12 }} />
                     )}
 
                     {/* Instructions */}
-                    <View style={{ backgroundColor: C.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: C.border, marginTop: 12 }}>
-                        <Text style={{ color: C.textPri, fontSize: 11, fontWeight: '800', fontFamily: C.mono, marginBottom: 6 }}>📖 {t('battery.procedure')}</Text>
-                        <Text style={{ color: C.textSec, fontSize: 10, fontFamily: C.mono, lineHeight: 18 }}>
+                    <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: colors.border, marginTop: 12 }}>
+                        <Text style={{ color: colors.textPri, fontSize: 11, fontWeight: '800', fontFamily: MONO, marginBottom: 6 }}>📖 {t('battery.procedure')}</Text>
+                        <Text style={{ color: colors.textSec, fontSize: 10, fontFamily: MONO, lineHeight: 18 }}>
                             {t('battery.steps.1')}{'\n'}
                             {t('battery.steps.2')}{'\n'}
                             {t('battery.steps.3')}{'\n'}
@@ -243,34 +236,26 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 const ms = StyleSheet.create({
     resultCard: {
         flex: 1,
-        backgroundColor: '#111318',
         borderRadius: 6,
         padding: 12,
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#1e2430',
     },
     activeCard: {
-        borderColor: '#00d4ff',
-        backgroundColor: '#0a1520',
+        borderWidth: 1,
     },
     resultLabel: {
-        color: '#6b7280',
         fontSize: 9,
         fontWeight: '800',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         marginBottom: 4,
     },
     resultValue: {
-        color: '#e8eaed',
         fontSize: 20,
         fontWeight: '900',
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     },
     resultRef: {
-        color: '#6b7280',
         fontSize: 8,
-        fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
         marginTop: 4,
     },
 });
+
