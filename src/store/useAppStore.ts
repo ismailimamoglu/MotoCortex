@@ -1,11 +1,75 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Purchases, { PurchasesPackage } from 'react-native-purchases';
+import Purchases, { PurchasesPackage, CustomerInfo } from 'react-native-purchases';
+import { generateUuid } from '../utils/crypto';
 import i18n from '../i18n';
 
 export type ThemeMode = 'dark' | 'light';
-export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id';
+export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id' | 'it';
+
+/**
+ * Robust helper function to verify if the user has active MotoCortex PRO status.
+ * Evaluates both standard auto-renewable plans (Monthly/Yearly) and 
+ * the custom non-renewing Weekly subscription (motocortex_pro_weekly_nonrenew) 
+ * with a strict manual 7-day expiration check.
+ */
+export const checkIsProStatus = (customerInfo: CustomerInfo): boolean => {
+  // Strict expiration date check to prevent caching/clock exploit or offline loophole
+  const entitlement = customerInfo.entitlements.all['pro_access'] || customerInfo.entitlements.all['pro'];
+  if (entitlement && entitlement.expirationDate) {
+    const expirationTime = new Date(entitlement.expirationDate).getTime();
+    if (expirationTime < Date.now()) {
+      return false; // Immediately revoke access if expired
+    }
+  }
+
+  // 1. Direct active entitlement check (standard Monthly / Yearly Auto-Renewable subscriptions)
+  const hasActiveEntitlement = 
+    typeof customerInfo.entitlements.active['pro_access'] !== 'undefined' ||
+    typeof customerInfo.entitlements.active['pro'] !== 'undefined';
+  if (hasActiveEntitlement) {
+    return true;
+  }
+
+  // 2. Non-Renewing Weekly Subscription fallback calculation (7 days rule)
+  if (customerInfo.nonSubscriptionTransactions && customerInfo.nonSubscriptionTransactions.length > 0) {
+    const weeklyTransactions = customerInfo.nonSubscriptionTransactions.filter(
+      (tx) => tx.productIdentifier === 'motocortex_pro_weekly_nonrenew'
+    );
+
+    if (weeklyTransactions.length > 0) {
+      // Find the absolute latest transaction based on purchase date properties
+      let latestTx = weeklyTransactions[0];
+      let latestTime = new Date(latestTx.purchaseDate).getTime();
+
+      for (let i = 1; i < weeklyTransactions.length; i++) {
+        const tx = weeklyTransactions[i];
+        const txTime = new Date(tx.purchaseDate).getTime();
+        if (txTime > latestTime) {
+          latestTx = tx;
+          latestTime = txTime;
+        }
+      }
+
+      // Calculate expiration date (purchase date + exactly 7 days in milliseconds)
+      const sevenDaysInMillis = 7 * 24 * 60 * 60 * 1000;
+      const expirationTime = latestTime + sevenDaysInMillis;
+
+      // Extract server-side request timestamp to prevent device clock manipulation exploit
+      const requestTime = customerInfo.requestDate
+        ? new Date(customerInfo.requestDate).getTime()
+        : Date.now();
+
+      // Grant PRO access if the server-side request time is before the calculated expiration threshold
+      if (requestTime < expirationTime) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
 
 interface AppState {
   theme: ThemeMode;
@@ -14,15 +78,25 @@ interface AppState {
   hasOnboarded: boolean;
   packages: PurchasesPackage[];
   
+  isSimulationMode: boolean;
+  freeUsageCount: number; // Persistent free trial usage counter
+  appUserId: string | null;
+  deviceUuid: string | null;
+  
   // Actions
   setTheme: (theme: ThemeMode) => void;
   setLanguage: (language: AppLanguage) => Promise<void>;
   setIsPro: (isPro: boolean) => void;
   setHasOnboarded: (hasOnboarded: boolean) => void;
+  toggleSimulationMode: () => void;
+  incrementFreeUsage: () => void; // Track trial count
+  resetFreeUsage: () => void; // Reset trial count
   verifyEntitlement: () => Promise<void>;
   loadOfferings: () => Promise<void>;
   purchasePackage: (pkg: PurchasesPackage) => Promise<boolean>;
   restorePurchases: () => Promise<boolean>;
+  fetchAppUserId: () => Promise<void>;
+  initializeDeviceUuid: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -32,27 +106,73 @@ export const useAppStore = create<AppState>()(
       language: 'en',
       isPro: false,
       hasOnboarded: false,
+      isSimulationMode: false,
       packages: [],
+      freeUsageCount: 0,
+      appUserId: null,
+      deviceUuid: null,
 
       setTheme: (theme) => set({ theme }),
       setLanguage: async (language) => {
         set({ language });
-        if (i18n.isInitialized) {
-          await i18n.changeLanguage(language);
-        }
+        await i18n.changeLanguage(language);
       },
       setIsPro: (isPro) => set({ isPro }),
       setHasOnboarded: (hasOnboarded) => set({ hasOnboarded }),
+      toggleSimulationMode: () => set((state) => {
+        const nextSimMode = !state.isSimulationMode;
+        
+        // Clean up bluetooth store state and remove any mock values
+        const { useTelemetryStore } = require('./useTelemetryStore');
+        const { useBluetoothStore } = require('./useBluetoothStore');
+        
+        // Reset the Bluetooth store to clear any mock/lingering simulator data in memory
+        useBluetoothStore.getState().reset();
+
+        // Evict simulated items from telemetry queue using multi-layered criteria
+        const queue: any[] = useTelemetryStore.getState().telemetry_queue;
+        const simItems = queue.filter((item: any) => {
+          const isSimulatorEcu = item.ecu_id === 'SIM-ECU-001';
+          const isSimulatorProtocol = item.protocol === 'SIMULATED_OBD';
+          const isSimulatorSignature = 
+            item.coolant_temp === 85 && 
+            item.throttle_pos === 18 && 
+            item.dtc_codes &&
+            item.dtc_codes.includes('P0113') && 
+            item.dtc_codes.includes('P0102');
+          return isSimulatorEcu || isSimulatorProtocol || isSimulatorSignature;
+        });
+
+        const realCount = queue.length - simItems.length;
+        simItems.forEach((item: any) => useTelemetryStore.getState().removeTelemetryItem(item.id));
+
+        console.log(
+          `[AppStore] Simulation mode toggled to ${nextSimMode ? 'ON' : 'OFF'}: cleared Bluetooth store state and evicted ${simItems.length} simulated item(s). ${realCount} real protocol item(s) preserved.`
+        );
+
+        return { 
+          isSimulationMode: nextSimMode,
+          freeUsageCount: 0,
+        };
+      }),
+      incrementFreeUsage: () => set((state) => ({ freeUsageCount: state.freeUsageCount + 1 })),
+      resetFreeUsage: () => set({ freeUsageCount: 0 }),
+      initializeDeviceUuid: () => {
+        const currentUuid = useAppStore.getState().deviceUuid;
+        if (!currentUuid) {
+          set({ deviceUuid: generateUuid() });
+        }
+      },
 
       verifyEntitlement: async () => {
         try {
-          // Securely verifies active entitlement against local receipt cache when offline
+          // RevenueCat natively caches customerInfo and resolves with it when offline.
           const customerInfo = await Purchases.getCustomerInfo();
-          const isPro = typeof customerInfo.entitlements.active['pro'] !== 'undefined';
+          const isPro = checkIsProStatus(customerInfo);
           set({ isPro });
         } catch (error) {
-          console.warn('Offline verification fallback or fetch error:', error);
-          // Retains securely persisted state if completely offline and SDK check fails
+          console.warn('[MOTO CORTEX] Offline verification error fetching native RevenueCat cache:', error);
+          // If completely offline and getCustomerInfo throws, we do NOT change isPro to false to avoid locking the user out.
         }
       },
 
@@ -70,11 +190,11 @@ export const useAppStore = create<AppState>()(
       purchasePackage: async (pkg) => {
         try {
           const { customerInfo } = await Purchases.purchasePackage(pkg);
-          const isPro = typeof customerInfo.entitlements.active['pro'] !== 'undefined';
+          const isPro = checkIsProStatus(customerInfo);
           set({ isPro });
           return isPro;
         } catch (error: any) {
-          if (!error.userCancelled) {
+          if (!error?.userCancelled) {
             console.warn('Purchase failed:', error);
           }
           return false;
@@ -84,12 +204,21 @@ export const useAppStore = create<AppState>()(
       restorePurchases: async () => {
         try {
           const customerInfo = await Purchases.restorePurchases();
-          const isPro = typeof customerInfo.entitlements.active['pro'] !== 'undefined';
+          const isPro = checkIsProStatus(customerInfo);
           set({ isPro });
           return isPro;
         } catch (error) {
           console.warn('Restore failed:', error);
           return false;
+        }
+      },
+
+      fetchAppUserId: async () => {
+        try {
+          const appUserId = await Purchases.getAppUserID();
+          set({ appUserId });
+        } catch (error) {
+          console.warn('[MOTO CORTEX] Error fetching RevenueCat appUserID:', error);
         }
       },
     }),
@@ -102,9 +231,12 @@ export const useAppStore = create<AppState>()(
         language: state.language,
         isPro: state.isPro,
         hasOnboarded: state.hasOnboarded,
+        isSimulationMode: state.isSimulationMode,
+        freeUsageCount: state.freeUsageCount,
+        deviceUuid: state.deviceUuid,
       }),
       onRehydrateStorage: () => (state) => {
-        if (state?.language && i18n.isInitialized) {
+        if (state?.language) {
           i18n.changeLanguage(state.language);
         }
       },

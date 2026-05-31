@@ -77,13 +77,31 @@ const DTC_DICTIONARY: Record<string, string> = {
     P0563: 'Sistem Voltajı - Yüksek',
 };
 
+import i18n from '../i18n';
+import { lookupDtcSync, prefetchDtcChunks, prefetchDtcChunksForCodes } from './dtcStorage';
+
 /**
- * Looks up a DTC code and returns its Turkish description.
- * Returns null if the code is not found in the dictionary.
+ * Looks up a DTC code synchronously and returns its localized description.
+ * Returns null if the code is not found.
  */
 export function lookupDTC(code: string): string | null {
     const normalized = code.toUpperCase().trim();
-    return DTC_DICTIONARY[normalized] || null;
+    const i18nKey = `dtc.${normalized}`;
+    
+    if (i18n.isInitialized && i18n.exists(i18nKey)) {
+        return i18n.t(i18nKey);
+    }
+    
+    const currentLang = i18n.language || 'en';
+    if (currentLang.startsWith('tr')) {
+        const localDesc = DTC_DICTIONARY[normalized];
+        if (localDesc) {
+            return localDesc;
+        }
+    }
+    
+    return lookupDtcSync(normalized);
 }
 
+export { prefetchDtcChunks, prefetchDtcChunksForCodes };
 export default DTC_DICTIONARY;

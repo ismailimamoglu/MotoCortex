@@ -1,13 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withRepeat, withSequence, Easing } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import { useThemeColors } from '../theme';
+import { useAppStore } from '../store/useAppStore';
 
 export default function LiveEngineHero({ onConnectPress }: { onConnectPress: () => void }) {
   const { t } = useTranslation();
+  const language = useAppStore((state) => state.language);
   const colors = useThemeColors();
+  const { width, height } = useWindowDimensions();
+
+  const isSmallPhone = height < 820;
+  const isTablet = width >= 600;
 
   // Real engine values from Bluetooth Store
   const rpm = useBluetoothStore((state) => state.rpm);
@@ -40,30 +46,14 @@ export default function LiveEngineHero({ onConnectPress }: { onConnectPress: () 
     };
   }, [isConnected]);
 
-  // Reanimated shared values for smooth background pulse / visual tachometer gauge
-  const pulse = useSharedValue(1);
+  // Reanimated shared values for visual tachometer gauge
   const barWidth = useSharedValue(10);
-
-  useEffect(() => {
-    pulse.value = withRepeat(
-      withSequence(
-        withTiming(1.05, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) })
-      ),
-      -1,
-      true
-    );
-  }, []);
 
   useEffect(() => {
     const targetRpm = rpm !== null ? rpm : isConnected ? 1200 : 0;
     const pct = Math.min(Math.max((targetRpm / 9000) * 100, 8), 100);
     barWidth.value = withTiming(pct, { duration: 300, easing: Easing.out(Easing.quad) });
   }, [rpm, isConnected]);
-
-  const animatedPulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-  }));
 
   const animatedBarStyle = useAnimatedStyle(() => ({
     width: `${barWidth.value}%`,
@@ -75,52 +65,115 @@ export default function LiveEngineHero({ onConnectPress }: { onConnectPress: () 
   const displayECT = coolant !== null ? coolant : isConnected ? 85 : demoECT;
   const isOverheat = typeof displayECT === 'number' && displayECT > 100;
 
+  // Responsive Styles overrides
+  const containerStyle = [
+    s.heroContainer, 
+    { backgroundColor: colors.cardBg, borderColor: colors.cardBorder },
+    isSmallPhone && { marginVertical: 8, paddingTop: 12, borderRadius: 12, borderWidth: 1.5 }
+  ];
+
+  const gaugeTrackStyle = [
+    s.gaugeTrack, 
+    { backgroundColor: `${colors.textPri}0D` },
+    isSmallPhone && { marginHorizontal: 16, marginBottom: 12, height: 4 }
+  ];
+
+  const mainDisplayStyle = [
+    s.mainDisplay,
+    isSmallPhone && { paddingHorizontal: 16, marginBottom: 12 }
+  ];
+
+  const rpmLabelStyle = [
+    s.rpmLabel, 
+    { color: colors.textSec },
+    isSmallPhone && { fontSize: 8, letterSpacing: 1 }
+  ];
+
+  const rpmValueStyle = [
+    s.rpmValue, 
+    { color: colors.textPri },
+    isSmallPhone && { fontSize: 36, lineHeight: 40 }
+  ];
+
+  const unitTextStyle = [
+    s.unitText, 
+    { color: colors.cyan },
+    isSmallPhone && { fontSize: 10 }
+  ];
+
+  const dividerStyle = [
+    s.divider, 
+    { backgroundColor: colors.cardBorder },
+    isSmallPhone && { height: 35, marginHorizontal: 8 }
+  ];
+
+  const metricLabelStyle = [
+    s.metricLabel, 
+    { color: colors.textSec },
+    isSmallPhone && { fontSize: 8, letterSpacing: 0.5 }
+  ];
+
+  const metricValueStyle = [
+    s.metricValue, 
+    { color: isOverheat ? colors.red : colors.textPri },
+    isSmallPhone && { fontSize: 14 }
+  ];
+
+  const footerStatusStyle = [
+    s.footerStatus,
+    {
+      backgroundColor: isConnected ? `${colors.green}0D` : `${colors.amber}0D`,
+      borderTopColor: isConnected ? `${colors.green}26` : `${colors.amber}26`,
+    },
+    isSmallPhone && { paddingHorizontal: 16, paddingVertical: 8 }
+  ];
+
+  const statusTextStyle = [
+    s.statusText, 
+    { color: isConnected ? colors.green : (isScanning ? colors.cyan : colors.amber) },
+    isSmallPhone && { fontSize: 9, letterSpacing: 0.5 }
+  ];
+
   return (
-    <Animated.View style={[s.heroContainer, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder, shadowColor: colors.accentGlow }, animatedPulseStyle]}>
+    <Animated.View style={containerStyle}>
       {/* Decorative Tachometer Arc Bar */}
-      <View style={[s.gaugeTrack, { backgroundColor: `${colors.textPri}0D` }]}>
+      <View style={gaugeTrackStyle}>
         <Animated.View style={[s.gaugeFill, { backgroundColor: colors.cyan }, animatedBarStyle]} />
       </View>
 
-      <View style={s.mainDisplay}>
+      <View style={mainDisplayStyle}>
         <View style={s.rpmBlock}>
-          <Text style={[s.rpmLabel, { color: colors.textSec }]}>{t('hub.liveTachometer')}</Text>
-          <Text style={[s.rpmValue, { color: colors.textPri }]}>{displayRpm}</Text>
-          <Text style={[s.unitText, { color: colors.cyan }]}>RPM</Text>
+          <Text style={rpmLabelStyle}>{t('hub.liveTachometer')}</Text>
+          <Text style={rpmValueStyle}>{displayRpm}</Text>
+          <Text style={unitTextStyle}>RPM</Text>
         </View>
 
-        <View style={[s.divider, { backgroundColor: colors.cardBorder }]} />
+        <View style={dividerStyle} />
 
         <View style={s.secondaryMetrics}>
           {/* Engine Coolant Temperature (replaces Speed) */}
           <View style={s.metricItem}>
-            <Text style={[s.metricLabel, { color: colors.textSec }]}>{t('hub.coolantTemp')}</Text>
-            <Text style={[s.metricValue, { color: isOverheat ? colors.red : colors.textPri }]}>
+            <Text style={metricLabelStyle}>{t('hub.coolantTemp')}</Text>
+            <Text style={metricValueStyle}>
               {displayECT}°C
             </Text>
           </View>
           <View style={s.metricItem}>
-            <Text style={[s.metricLabel, { color: colors.textSec }]}>{t('dashboard.battery')}</Text>
-            <Text style={[s.metricValue, { color: colors.cyan }]}>{voltage || '12.4V'}</Text>
+            <Text style={metricLabelStyle}>{t('dashboard.battery')}</Text>
+            <Text style={[metricValueStyle, { color: colors.cyan }]}>{voltage || '12.4V'}</Text>
           </View>
         </View>
       </View>
 
       {/* Connection Indicator Footer inside Hero */}
       <TouchableOpacity
-        style={[
-          s.footerStatus,
-          {
-            backgroundColor: isConnected ? `${colors.green}0D` : `${colors.amber}0D`,
-            borderTopColor: isConnected ? `${colors.green}26` : `${colors.amber}26`,
-          },
-        ]}
+        style={footerStatusStyle}
         onPress={onConnectPress}
         activeOpacity={0.8}
       >
         <View style={[s.statusDot, { backgroundColor: isConnected ? colors.green : (isScanning ? colors.cyan : colors.amber) }]} />
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <Text style={[s.statusText, { color: isConnected ? colors.green : (isScanning ? colors.cyan : colors.amber) }]}>
+          <Text style={statusTextStyle}>
             {isConnected 
               ? t('dashboard.connectedDevice') 
               : isScanning ? t('hub.scanningHardware') : t('dashboard.selectDevice')}
@@ -137,15 +190,11 @@ const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
 const s = StyleSheet.create({
   heroContainer: {
-    borderWidth: 1,
+    borderWidth: 2.5,
     borderRadius: 20,
     paddingTop: 24,
     overflow: 'hidden',
     marginVertical: 16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 4,
   },
   gaugeTrack: {
     height: 6,

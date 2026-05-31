@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Platform, Touc
 import BLEBridge from '../api/BLEBridge';
 import { State } from 'react-native-ble-plx';
 import { useThemeColors } from '../theme';
+import { useAppStore } from '../store/useAppStore';
 
 interface Props {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface Props {
  */
 export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
   const colors = useThemeColors();
+  const isSimulationMode = useAppStore(s => s.isSimulationMode);
   const [bridgeStatus, setBridgeStatus] = useState<'initializing' | 'ready' | 'error' | 'unauthorized'>('initializing');
   const [hardwareState, setHardwareState] = useState<string>('Unknown');
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
@@ -27,6 +29,13 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
       try {
         const manager = BLEBridge.getInstance();
         
+        // Simulation Mode Bypass
+        if (isSimulationMode) {
+          console.log('[BLEBridge] Simulation Mode Active: Bypassing hardware check.');
+          setBridgeStatus('ready');
+          return;
+        }
+
         // Immediate State Check
         const state = await manager.state();
         setHardwareState(state);
@@ -86,7 +95,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
       if (subscription) subscription.remove();
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, []);
+  }, [isSimulationMode]);
 
   if (bridgeStatus === 'initializing') {
     return (
@@ -120,12 +129,14 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
             <Text style={[s.errorMsg, { color: colors.textPri }]}>{errorDetails}</Text>
           </View>
           
-          <TouchableOpacity 
-            style={[s.settingsBtn, { backgroundColor: colors.cyan }]}
-            onPress={() => Linking.openSettings()}
-          >
-            <Text style={[s.settingsBtnText, { color: colors.card }]}>GO TO SETTINGS</Text>
-          </TouchableOpacity>
+          {bridgeStatus === 'unauthorized' && (
+            <TouchableOpacity 
+              style={[s.settingsBtn, { backgroundColor: colors.cyan }]}
+              onPress={() => Linking.openSettings()}
+            >
+              <Text style={[s.settingsBtnText, { color: colors.card }]}>GO TO SETTINGS</Text>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity 
             style={[s.bypassBtn, { borderColor: colors.textSec }]}

@@ -1,7 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, ScrollView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 type TestStep = 'idle' | 'resting' | 'cranking' | 'charging' | 'done';
 
@@ -21,10 +23,13 @@ interface Props {
 export default function BatteryTestModal({ visible, onClose, sendCommand, voltage }: Props) {
     const { t } = useTranslation();
     const colors = useThemeColors();
+    const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet } = useResponsive();
+    const insets = useSafeAreaInsets();
+    
     const [step, setStep] = useState<TestStep>('idle');
     const [result, setResult] = useState<BatteryTestResult>({ restingV: null, crankingV: null, chargingV: null });
     const [isRunning, setIsRunning] = useState(false);
-    const [statusText, setStatusText] = useState(t('battery.ready'));
+    const [statusKey, setStatusKey] = useState('battery.ready');
     const crankingIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const lowestVRef = useRef<number>(999);
 
@@ -50,12 +55,12 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         // ── Step 1: Resting Voltage ──
         setStep('resting');
-        setStatusText(t('battery.restingStatus'));
+        setStatusKey('battery.restingStatus');
         const resting = await readVoltage();
         setResult(prev => ({ ...prev, restingV: resting }));
 
         if (!resting) {
-            setStatusText(t('battery.voltageError'));
+            setStatusKey('battery.voltageError');
             setIsRunning(false);
             setStep('idle');
             return;
@@ -63,7 +68,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         // ── Step 2: Cranking Voltage ──
         setStep('cranking');
-        setStatusText(t('battery.crankingStatus'));
+        setStatusKey('battery.crankingStatus');
 
         await new Promise<void>((resolve) => {
             let elapsed = 0;
@@ -86,21 +91,20 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         // ── Step 3: Charging Voltage ──
         setStep('charging');
-        setStatusText(t('battery.chargingStatus'));
-        // Wait a moment for engine to stabilize
+        setStatusKey('battery.chargingStatus');
         await new Promise(r => setTimeout(r, 2000));
         const charging = await readVoltage();
         setResult(prev => ({ ...prev, chargingV: charging }));
 
         setStep('done');
         setIsRunning(false);
-        setStatusText(t('battery.doneStatus'));
+        setStatusKey('battery.doneStatus');
     };
 
     const resetTest = () => {
         setStep('idle');
         setResult({ restingV: null, crankingV: null, chargingV: null });
-        setStatusText(t('battery.ready'));
+        setStatusKey('battery.ready');
         setIsRunning(false);
         if (crankingIntervalRef.current) clearInterval(crankingIntervalRef.current);
     };
@@ -113,18 +117,15 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
 
         const verdicts: string[] = [];
 
-        // Battery resting analysis
         if (rest >= 12.6) verdicts.push(`✅ ${t('battery.verdicts.full')} (${rest.toFixed(1)}V)`);
         else if (rest >= 12.4) verdicts.push(`✅ ${t('battery.verdicts.good')} (${rest.toFixed(1)}V)`);
         else if (rest >= 12.0) verdicts.push(`⚠️ ${t('battery.verdicts.weak')} (${rest.toFixed(1)}V)`);
         else verdicts.push(`🚨 ${t('battery.verdicts.empty')} (${rest.toFixed(1)}V)`);
 
-        // Cranking analysis
         if (crank >= 10.0) verdicts.push(`✅ ${t('battery.verdicts.crankNormal')} (${crank.toFixed(1)}V)`);
         else if (crank >= 9.0) verdicts.push(`⚠️ ${t('battery.verdicts.crankLow')} (${crank.toFixed(1)}V)`);
         else verdicts.push(`🚨 ${t('battery.verdicts.crankCritical')} (${crank.toFixed(1)}V)`);
 
-        // Charging analysis
         if (charge >= 13.5 && charge <= 14.5) verdicts.push(`✅ ${t('battery.verdicts.regNormal')} (${charge.toFixed(1)}V)`);
         else if (charge >= 13.0 && charge < 13.5) verdicts.push(`⚠️ ${t('battery.verdicts.regLow')} (${charge.toFixed(1)}V)`);
         else if (charge > 14.5) verdicts.push(`⚠️ ${t('battery.verdicts.regHigh')} (${charge.toFixed(1)}V)`);
@@ -133,129 +134,259 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
         return verdicts;
     };
 
-    const cardStyle = [ms.resultCard, { backgroundColor: colors.card, borderColor: colors.border }];
-    const activeCardStyle = [ms.activeCard, { borderColor: colors.cyan, backgroundColor: `${colors.cyan}1A` }];
+    const sDyn = React.useMemo(() => {
+        const modalWidth = isTablet ? (isLargeTablet ? 650 : 520) : '100%';
+        const modalHeight = isTablet ? '85%' : '100%';
+
+        return {
+            modalOverlay: {
+                ...StyleSheet.absoluteFillObject,
+                justifyContent: isTablet ? 'center' : 'flex-end',
+                alignItems: isTablet ? 'center' : 'stretch',
+                backgroundColor: colors.overlayHeavy,
+            },
+            modalContainer: {
+                width: modalWidth,
+                height: modalHeight,
+                maxHeight: isTablet ? scaleHeight(700) : undefined,
+                alignSelf: 'center' as const,
+                borderRadius: isTablet ? scaleMod(16) : 0,
+                borderWidth: isTablet ? 1.5 : 0,
+                borderColor: colors.border,
+                overflow: 'hidden' as const,
+                paddingTop: isTablet ? 0 : insets.top,
+            },
+            header: {
+                paddingHorizontal: scaleWidth(16),
+                flexDirection: 'row' as const,
+                justifyContent: 'space-between' as const,
+                alignItems: 'center' as const,
+                height: scaleHeight(54),
+                borderBottomWidth: 1,
+            },
+            headerTitle: {
+                fontSize: scaleFont(14),
+                fontWeight: '800' as const,
+                fontFamily: MONO,
+            },
+            cancelBtn: {
+                padding: scaleMod(8),
+            },
+            cancelText: {
+                fontSize: scaleFont(12),
+                fontWeight: 'bold' as const,
+                fontFamily: MONO,
+            },
+            content: {
+                flex: 1,
+                padding: scaleMod(14),
+                paddingBottom: Platform.OS === 'ios' ? insets.bottom + scaleMod(14) : scaleMod(14),
+            },
+            statusCard: {
+                borderRadius: scaleMod(8),
+                padding: scaleMod(12),
+                borderWidth: 1,
+                marginBottom: scaleHeight(10),
+            },
+            statusText: {
+                fontSize: scaleFont(12),
+                fontWeight: '800' as const,
+                fontFamily: MONO,
+                textAlign: 'center' as const,
+            },
+            crankingVal: {
+                fontSize: scaleFont(18),
+                fontWeight: '900' as const,
+                fontFamily: MONO,
+                textAlign: 'center' as const,
+                marginTop: scaleHeight(6),
+            },
+            gridRow: {
+                flexDirection: 'row' as const,
+                gap: scaleMod(8),
+                marginBottom: scaleHeight(10),
+            },
+            resultCard: {
+                flex: 1,
+                borderRadius: scaleMod(8),
+                padding: scaleMod(10),
+                alignItems: 'center' as const,
+                borderWidth: 1,
+            },
+            resultLabel: {
+                fontSize: scaleFont(9),
+                fontWeight: '800' as const,
+                marginBottom: scaleHeight(4),
+            },
+            resultValue: {
+                fontSize: scaleFont(18),
+                fontWeight: '900' as const,
+            },
+            resultRef: {
+                fontSize: scaleFont(8),
+                marginTop: scaleHeight(4),
+            },
+            instantVCard: {
+                borderRadius: scaleMod(8),
+                padding: scaleMod(10),
+                borderWidth: 1,
+                marginBottom: scaleHeight(10),
+                alignItems: 'center' as const,
+            },
+            instantVLabel: {
+                fontSize: scaleFont(9),
+                fontFamily: MONO,
+            },
+            instantVVal: {
+                fontSize: scaleFont(26),
+                fontWeight: '900' as const,
+                fontFamily: MONO,
+            },
+            verdictCard: {
+                borderRadius: scaleMod(8),
+                padding: scaleMod(12),
+                borderWidth: 1,
+                marginBottom: scaleHeight(10),
+            },
+            verdictTitle: {
+                fontSize: scaleFont(12),
+                fontWeight: '800' as const,
+                fontFamily: MONO,
+                marginBottom: scaleHeight(6),
+            },
+            verdictText: {
+                fontSize: scaleFont(11),
+                fontFamily: MONO,
+                lineHeight: scaleFont(16),
+            },
+            actionBtn: {
+                borderRadius: scaleMod(8),
+                paddingVertical: scaleHeight(12),
+                alignItems: 'center' as const,
+            },
+            actionBtnText: {
+                fontSize: scaleFont(13),
+                fontWeight: '900' as const,
+                fontFamily: MONO,
+            },
+            instructionCard: {
+                borderRadius: scaleMod(8),
+                padding: scaleMod(12),
+                borderWidth: 1,
+                marginTop: scaleHeight(10),
+            },
+            instructionTitle: {
+                fontSize: scaleFont(11),
+                fontWeight: '800' as const,
+                fontFamily: MONO,
+                marginBottom: scaleHeight(4),
+            },
+            instructionText: {
+                fontSize: scaleFont(10),
+                fontFamily: MONO,
+                lineHeight: scaleFont(15),
+            }
+        };
+    }, [scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet, isLargeTablet, colors, insets.top, insets.bottom]) as any;
+
+    const cardStyle = [sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }];
+    const activeCardStyle = { borderColor: colors.cyan, backgroundColor: `${colors.cyan}1A` };
 
     return (
-        <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
-            <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
-                {/* Header */}
-                <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: colors.border }}>
-                    <Text style={{ color: colors.textPri, fontSize: 14, fontWeight: '800', fontFamily: MONO }}>{t('battery.title')}</Text>
-                    <TouchableOpacity onPress={() => { resetTest(); onClose(); }} style={{ padding: 10 }}>
-                        <Text style={{ color: colors.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: MONO }}>{t('common.cancel').toUpperCase()}</Text>
-                    </TouchableOpacity>
-                </View>
+        <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
+            <View style={sDyn.modalOverlay}>
+                <View style={[sDyn.modalContainer, { backgroundColor: colors.bg }]}>
+                    {/* Header */}
+                    <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
+                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('battery.title')}</Text>
+                        <TouchableOpacity onPress={() => { resetTest(); onClose(); }} style={sDyn.cancelBtn}>
+                            <Text style={[sDyn.cancelText, { color: colors.cyan }]}>{t('common.cancel').toUpperCase()}</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={{ flex: 1, padding: 16 }}>
-                    {/* Status */}
-                    <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 16, borderWidth: 1, borderColor: colors.border, marginBottom: 12 }}>
-                        <Text style={{ color: colors.amber, fontSize: 12, fontWeight: '800', fontFamily: MONO, textAlign: 'center' }}>
-                            {statusText}
-                        </Text>
-                        {step === 'cranking' && (
-                            <Text style={{ color: colors.red, fontSize: 20, fontWeight: '900', fontFamily: MONO, textAlign: 'center', marginTop: 8 }}>
-                                ⚡ {result.crankingV || t('common.loading')}
+                    <ScrollView style={sDyn.content}>
+                        {/* Status */}
+                        <View style={[sDyn.statusCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                            <Text style={[sDyn.statusText, { color: colors.amber }]}>
+                                {t(statusKey)}
                             </Text>
+                            {step === 'cranking' && (
+                                <Text style={[sDyn.crankingVal, { color: colors.red }]}>
+                                    ⚡ {result.crankingV || t('common.loading')}
+                                </Text>
+                            )}
+                        </View>
+
+                        {/* Test Results Grid */}
+                        <View style={sDyn.gridRow}>
+                            <View style={[...cardStyle, step === 'resting' && activeCardStyle]}>
+                                <Text style={[sDyn.resultLabel, { color: colors.textSec }]}>{t('battery.resting')}</Text>
+                                <Text style={[sDyn.resultValue, { color: colors.textPri }]}>{result.restingV || '--'}</Text>
+                                <Text style={[sDyn.resultRef, { color: colors.textSec }]}>Ref: 12.4-12.8V</Text>
+                            </View>
+                            <View style={[...cardStyle, step === 'cranking' && activeCardStyle]}>
+                                <Text style={[sDyn.resultLabel, { color: colors.textSec }]}>{t('battery.cranking')}</Text>
+                                <Text style={[sDyn.resultValue, { color: colors.amber }]}>{result.crankingV || '--'}</Text>
+                                <Text style={[sDyn.resultRef, { color: colors.textSec }]}>Ref: ≥9.6V</Text>
+                            </View>
+                            <View style={[...cardStyle, step === 'charging' && activeCardStyle]}>
+                                <Text style={[sDyn.resultLabel, { color: colors.textSec }]}>{t('battery.charging')}</Text>
+                                <Text style={[sDyn.resultValue, { color: colors.green }]}>{result.chargingV || '--'}</Text>
+                                <Text style={[sDyn.resultRef, { color: colors.textSec }]}>Ref: 13.5-14.5V</Text>
+                            </View>
+                        </View>
+
+                        {/* Current Voltage */}
+                        <View style={[sDyn.instantVCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                            <Text style={[sDyn.instantVLabel, { color: colors.textSec }]}>{t('battery.instantV')}</Text>
+                            <Text style={[sDyn.instantVVal, { color: colors.cyan }]}>{voltage || '--'}</Text>
+                        </View>
+
+                        {/* Verdict */}
+                        {step === 'done' && getVerdict() && (
+                            <View style={[sDyn.verdictCard, { backgroundColor: colors.card, borderColor: colors.green }]}>
+                                <Text style={[sDyn.verdictTitle, { color: colors.textPri }]}>📋 {t('battery.evaluation')}</Text>
+                                {getVerdict()!.map((v, i) => (
+                                    <Text key={i} style={[sDyn.verdictText, { color: colors.textPri }]}>{v}</Text>
+                                ))}
+                            </View>
                         )}
-                    </View>
 
-                    {/* Test Results Grid */}
-                    <View style={{ flexDirection: 'row', gap: 8, marginBottom: 12 }}>
-                        <View style={[...cardStyle, step === 'resting' && activeCardStyle]}>
-                            <Text style={[ms.resultLabel, { color: colors.textSec }]}>{t('battery.resting')}</Text>
-                            <Text style={[ms.resultValue, { color: colors.textPri }]}>{result.restingV || '--'}</Text>
-                            <Text style={[ms.resultRef, { color: colors.textSec }]}>Ref: 12.4-12.8V</Text>
+                        {/* Actions */}
+                        {step === 'idle' && (
+                            <TouchableOpacity
+                                style={[sDyn.actionBtn, { backgroundColor: colors.cyan }]}
+                                onPress={startTest}
+                            >
+                                <Text style={[sDyn.actionBtnText, { color: colors.card }]}>⚡ {t('battery.start')}</Text>
+                            </TouchableOpacity>
+                        )}
+                        {step === 'done' && (
+                            <TouchableOpacity
+                                style={[sDyn.actionBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]}
+                                onPress={resetTest}
+                            >
+                                <Text style={[sDyn.actionBtnText, { color: colors.textSec }]}>↺ {t('battery.retry')}</Text>
+                            </TouchableOpacity>
+                        )}
+                        {isRunning && (
+                            <ActivityIndicator size="small" color={colors.cyan} style={{ marginTop: scaleHeight(8) }} />
+                        )}
+
+                        {/* Instructions */}
+                        <View style={[sDyn.instructionCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                            <Text style={[sDyn.instructionTitle, { color: colors.textPri }]}>📖 {t('battery.procedure')}</Text>
+                            <Text style={[sDyn.instructionText, { color: colors.textSec }]}>
+                                {t('battery.steps.1')}{'\n'}
+                                {t('battery.steps.2')}{'\n'}
+                                {t('battery.steps.3')}{'\n'}
+                                {t('battery.steps.4')}{'\n\n'}
+                                ⚠️ {t('battery.warning')}
+                            </Text>
                         </View>
-                        <View style={[...cardStyle, step === 'cranking' && activeCardStyle]}>
-                            <Text style={[ms.resultLabel, { color: colors.textSec }]}>{t('battery.cranking')}</Text>
-                            <Text style={[ms.resultValue, { color: colors.amber }]}>{result.crankingV || '--'}</Text>
-                            <Text style={[ms.resultRef, { color: colors.textSec }]}>Ref: ≥9.6V</Text>
-                        </View>
-                        <View style={[...cardStyle, step === 'charging' && activeCardStyle]}>
-                            <Text style={[ms.resultLabel, { color: colors.textSec }]}>{t('battery.charging')}</Text>
-                            <Text style={[ms.resultValue, { color: colors.green }]}>{result.chargingV || '--'}</Text>
-                            <Text style={[ms.resultRef, { color: colors.textSec }]}>Ref: 13.5-14.5V</Text>
-                        </View>
-                    </View>
-
-                    {/* Current Voltage */}
-                    <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 12, borderWidth: 1, borderColor: colors.border, marginBottom: 12, alignItems: 'center' }}>
-                        <Text style={{ color: colors.textSec, fontSize: 9, fontFamily: MONO }}>{t('battery.instantV')}</Text>
-                        <Text style={{ color: colors.cyan, fontSize: 28, fontWeight: '900', fontFamily: MONO }}>{voltage || '--'}</Text>
-                    </View>
-
-                    {/* Verdict */}
-                    {step === 'done' && getVerdict() && (
-                        <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: colors.green, marginBottom: 12 }}>
-                            <Text style={{ color: colors.textPri, fontSize: 12, fontWeight: '800', fontFamily: MONO, marginBottom: 8 }}>📋 {t('battery.evaluation')}</Text>
-                            {getVerdict()!.map((v, i) => (
-                                <Text key={i} style={{ color: colors.textPri, fontSize: 11, fontFamily: MONO, lineHeight: 20 }}>{v}</Text>
-                            ))}
-                        </View>
-                    )}
-
-                    {/* Actions */}
-                    {step === 'idle' && (
-                        <TouchableOpacity
-                            style={{ backgroundColor: colors.cyan, borderRadius: 6, paddingVertical: 14, alignItems: 'center' }}
-                            onPress={startTest}
-                        >
-                            <Text style={{ color: colors.card, fontSize: 13, fontWeight: '900', fontFamily: MONO }}>⚡ {t('battery.start')}</Text>
-                        </TouchableOpacity>
-                    )}
-                    {step === 'done' && (
-                        <TouchableOpacity
-                            style={{ backgroundColor: colors.elevated, borderRadius: 6, paddingVertical: 14, alignItems: 'center', borderWidth: 1, borderColor: colors.border }}
-                            onPress={resetTest}
-                        >
-                            <Text style={{ color: colors.textSec, fontSize: 13, fontWeight: '900', fontFamily: MONO }}>↺ {t('battery.retry')}</Text>
-                        </TouchableOpacity>
-                    )}
-                    {isRunning && (
-                        <ActivityIndicator size="small" color={colors.cyan} style={{ marginTop: 12 }} />
-                    )}
-
-                    {/* Instructions */}
-                    <View style={{ backgroundColor: colors.card, borderRadius: 6, padding: 14, borderWidth: 1, borderColor: colors.border, marginTop: 12 }}>
-                        <Text style={{ color: colors.textPri, fontSize: 11, fontWeight: '800', fontFamily: MONO, marginBottom: 6 }}>📖 {t('battery.procedure')}</Text>
-                        <Text style={{ color: colors.textSec, fontSize: 10, fontFamily: MONO, lineHeight: 18 }}>
-                            {t('battery.steps.1')}{'\n'}
-                            {t('battery.steps.2')}{'\n'}
-                            {t('battery.steps.3')}{'\n'}
-                            {t('battery.steps.4')}{'\n\n'}
-                            ⚠️ {t('battery.warning')}
-                        </Text>
-                    </View>
+                    </ScrollView>
                 </View>
-            </SafeAreaView>
+            </View>
         </Modal>
     );
 }
-
-const ms = StyleSheet.create({
-    resultCard: {
-        flex: 1,
-        borderRadius: 6,
-        padding: 12,
-        alignItems: 'center',
-        borderWidth: 1,
-    },
-    activeCard: {
-        borderWidth: 1,
-    },
-    resultLabel: {
-        fontSize: 9,
-        fontWeight: '800',
-        marginBottom: 4,
-    },
-    resultValue: {
-        fontSize: 20,
-        fontWeight: '900',
-    },
-    resultRef: {
-        fontSize: 8,
-        marginTop: 4,
-    },
-});
-

@@ -1,11 +1,46 @@
 import BluetoothService from './BluetoothService';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import { ADAPTER_COMMANDS } from './commands';
+import * as Logger from '../services/Logger';
+
+/**
+ * Event-loop friendly high-precision sleep helper.
+ * Uses a hybrid approach to avoid blocking UI rendering or causing starvation.
+ * NOTE: requestAnimationFrame is removed to prevent thread freezing in background/lock screen modes.
+ * For complete background telemetry, a native Foreground Service/CoreLocation service should be integrated.
+ */
+export function preciseSleep(ms: number): Promise<void> {
+    const start = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    return new Promise((resolve) => {
+        const check = () => {
+            const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+            const elapsed = now - start;
+            if (elapsed >= ms) {
+                resolve();
+            } else {
+                const remaining = ms - elapsed;
+                if (remaining > 10) {
+                    // Yield event loop using setTimeout to avoid starvation
+                    setTimeout(check, remaining - 4);
+                } else if (typeof setImmediate !== 'undefined') {
+                    // Yield execution on next event loop tick without screen refresh sync (background safe)
+                    setImmediate(check);
+                } else {
+                    // Fallback to minimal setTimeout
+                    setTimeout(check, 1);
+                }
+            }
+        };
+        check();
+    });
+}
+
 
 interface QueueItem {
     command: string;
     resolve: (value: string) => void;
     reject: (reason?: any) => void;
+    timeoutMs?: number;
 }
 
 class OBDCommandQueue {
@@ -13,20 +48,31 @@ class OBDCommandQueue {
     private isProcessing = false;
     private currentBuffer = '';
     private currentCommandTimeout: NodeJS.Timeout | null = null;
-    private readonly TIMEOUT_MS = 10000;
+    private readonly DEFAULT_TIMEOUT_MS = 2000;
+
+    private clearListeners: (() => void)[] = [];
 
     constructor() {
         // Subscribe to Bluetooth data globally
-        BluetoothService.onDataReceived((data) => this.handleData(data));
+        BluetoothService.onDataReceived((data: string) => this.handleData(data));
+    }
+
+    onClear(callback: () => void) {
+        this.clearListeners.push(callback);
+    }
+
+    removeClearListener(callback: () => void) {
+        this.clearListeners = this.clearListeners.filter(cb => cb !== callback);
     }
 
     /**
      * Enqueues a command.
      * @param command The AT/OBD command (e.g., "010C").
+     * @param timeoutMs Custom watchdog timeout (defaults to 2000ms).
      */
-    add(command: string): Promise<string> {
+    add(command: string, timeoutMs?: number): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.queue.push({ command, resolve, reject });
+            this.queue.push({ command, resolve, reject, timeoutMs });
             this.processNext();
         });
     }
@@ -40,16 +86,19 @@ class OBDCommandQueue {
         this.isProcessing = true;
         this.currentBuffer = ''; // Clear buffer for new command
         const item = this.queue[0]; // Peek, don't shift yet (wait for completion)
+        const timeoutMs = item.timeoutMs ?? this.DEFAULT_TIMEOUT_MS;
 
         try {
             this.currentCommandTimeout = setTimeout(() => {
                 const errMsg = `Timeout: ${item.command}`;
                 useBluetoothStore.getState().addLog(`ERR: ${errMsg}`);
+                Logger.log('OBD_TIMEOUT', `Timeout sending command: ${item.command}`);
                 this.finishCommand(new Error(errMsg));
-            }, this.TIMEOUT_MS);
+            }, timeoutMs);
 
             // Send command (CR is appended in BluetoothService)
             useBluetoothStore.getState().addLog(`TX: ${item.command}`);
+            Logger.log('OBD_WRITE', item.command);
             await BluetoothService.write(item.command);
 
         } catch (error) {
@@ -63,6 +112,7 @@ class OBDCommandQueue {
     private handleData(chunk: string) {
         if (!this.isProcessing) return; // Ignore unsolicited data
 
+        Logger.log('OBD_READ_CHUNK', chunk);
         this.currentBuffer += chunk;
 
         // Safety check for buffer overflow (e.g. runaway data stream)
@@ -322,6 +372,24 @@ class OBDCommandQueue {
                 }
             }
         }
+        // READ CALIBRATION ID (0904)
+        else if (command === '0904') {
+            if (clean.includes('4904')) {
+                let hexData = clean.substring(clean.indexOf('4904') + 4);
+                let calIdAscii = '';
+                for (let i = 0; i < hexData.length; i += 2) {
+                    const byteStr = hexData.substring(i, i + 2);
+                    const charCode = parseInt(byteStr, 16);
+                    if (charCode >= 32 && charCode <= 126) {
+                        calIdAscii += String.fromCharCode(charCode);
+                    }
+                }
+                const cleanCalId = calIdAscii.trim();
+                if (cleanCalId) {
+                    useBluetoothStore.getState().setSensorData({ ecuId: cleanCalId });
+                }
+            }
+        }
     }
 
     /**
@@ -338,9 +406,11 @@ class OBDCommandQueue {
         if (item) {
             if (error) {
                 // console.error(`[Queue] Cmd Failed: ${item.command}`, error);
+                Logger.log('OBD_ERROR', `Cmd: ${item.command} - Error: ${error.message || error}`);
                 item.reject(error);
             } else {
                 useBluetoothStore.getState().addLog(`RX: ${result}`);
+                Logger.log('OBD_READ_RESPONSE', `Cmd: ${item.command} - Resp: ${result}`);
 
                 // Parse the response
                 if (result) {
@@ -353,14 +423,37 @@ class OBDCommandQueue {
 
         this.isProcessing = false;
 
-        // Process next item after small delay
-        setTimeout(() => this.processNext(), 20);
+        // Process next item after high-precision event loop-friendly guard time (30ms)
+        preciseSleep(30).then(() => this.processNext());
     }
 
-    clear() {
+    clear(error: Error = new Error('CONNECTION_LOST')) {
+        if (this.currentCommandTimeout) {
+            clearTimeout(this.currentCommandTimeout);
+            this.currentCommandTimeout = null;
+        }
+
+        const pending = [...this.queue];
         this.queue = [];
         this.isProcessing = false;
         this.currentBuffer = '';
+
+        pending.forEach(item => {
+            try {
+                item.reject(error);
+            } catch (e) {
+                console.error('Error rejecting item on queue clear:', e);
+            }
+        });
+
+        // Notify useBluetooth hook or other telemetry loops to break immediately
+        this.clearListeners.forEach(cb => {
+            try {
+                cb();
+            } catch (e) {
+                console.error('Error in OBDCommandQueue clear listener:', e);
+            }
+        });
     }
 }
 

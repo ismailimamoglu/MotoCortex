@@ -28,6 +28,7 @@ export const ADAPTER_COMMANDS = {
     CLEAR_DTC: '04',          // Clear Check Engine Light / DTCs / Trims
     ECU_RESET: '11 01',       // Hard UDS Reset (Standard)
     READ_VIN: '0902',         // Read Vehicle Identification Number
+    READ_CALIBRATION_ID: '0904', // Read Calibration ID / ECU ID
 
     // Odometer & Expertise Metrics
     ODOMETER: '01A6',         // Total Odometer (OBD-II 2019+)

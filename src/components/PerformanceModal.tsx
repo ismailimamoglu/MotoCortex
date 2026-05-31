@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Modal, SafeAreaView, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 type TimerState = 'idle' | 'armed' | 'running' | 'done';
 
@@ -14,6 +16,9 @@ interface Props {
 export default function PerformanceModal({ visible, onClose, speed }: Props) {
     const { t } = useTranslation();
     const colors = useThemeColors();
+    const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet } = useResponsive();
+    const insets = useSafeAreaInsets();
+
     const [state, setState] = useState<TimerState>('idle');
     const [elapsed, setElapsed] = useState(0);
     const [time60, setTime60] = useState<number | null>(null);
@@ -25,12 +30,10 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
 
     const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
-    // Watch speed changes while armed or running
     useEffect(() => {
         if (!visible) return;
 
         if (state === 'armed' && speed !== null && speed > 0) {
-            // Speed detected! Start the timer
             startTimeRef.current = Date.now();
             reached60Ref.current = false;
             reached100Ref.current = false;
@@ -38,7 +41,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
 
             timerRef.current = setInterval(() => {
                 setElapsed(Date.now() - startTimeRef.current);
-            }, 50); // 50ms refresh for smooth timer
+            }, 50);
         }
 
         if (state === 'running' && speed !== null) {
@@ -82,178 +85,215 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
         return seconds.toFixed(2);
     };
 
+    const sDyn = React.useMemo(() => {
+        const modalWidth = isTablet ? (isLargeTablet ? 650 : 520) : '100%';
+        const modalHeight = isTablet ? '85%' : '100%';
+
+        return {
+            modalOverlay: {
+                ...StyleSheet.absoluteFillObject,
+                justifyContent: isTablet ? 'center' : 'flex-end',
+                alignItems: isTablet ? 'center' : 'stretch',
+                backgroundColor: colors.overlayHeavy,
+            },
+            modalContainer: {
+                width: modalWidth,
+                height: modalHeight,
+                maxHeight: isTablet ? scaleHeight(700) : undefined,
+                alignSelf: 'center' as const,
+                borderRadius: isTablet ? scaleMod(16) : 0,
+                borderWidth: isTablet ? 1.5 : 0,
+                borderColor: colors.border,
+                overflow: 'hidden' as const,
+                paddingTop: isTablet ? 0 : insets.top,
+            },
+            header: {
+                paddingHorizontal: scaleWidth(16),
+                flexDirection: 'row' as const,
+                justifyContent: 'space-between' as const,
+                alignItems: 'center' as const,
+                height: scaleHeight(54),
+                borderBottomWidth: 1,
+            },
+            headerTitle: {
+                fontSize: scaleFont(14),
+                fontWeight: '800' as const,
+                fontFamily: MONO,
+            },
+            cancelBtn: {
+                padding: scaleMod(8),
+            },
+            cancelText: {
+                fontSize: scaleFont(12),
+                fontWeight: 'bold' as const,
+                fontFamily: MONO,
+            },
+            content: {
+                flex: 1,
+                padding: scaleMod(14),
+                paddingBottom: insets.bottom + scaleMod(14),
+                justifyContent: 'center' as const,
+            },
+            timerContainer: {
+                alignItems: 'center' as const,
+                marginBottom: scaleHeight(12),
+            },
+            timerValue: {
+                fontSize: scaleFont(54),
+                fontWeight: '900' as const,
+            },
+            timerUnit: {
+                fontSize: scaleFont(11),
+                fontWeight: '800' as const,
+                letterSpacing: 4,
+            },
+            speedContainer: {
+                alignItems: 'center' as const,
+                marginBottom: scaleHeight(20),
+                flexDirection: 'row' as const,
+                justifyContent: 'center' as const,
+                gap: scaleMod(8),
+            },
+            speedValue: {
+                fontSize: scaleFont(32),
+                fontWeight: '900' as const,
+            },
+            speedUnit: {
+                fontSize: scaleFont(14),
+                fontWeight: '800' as const,
+            },
+            resultCard: {
+                flex: 1,
+                borderRadius: scaleMod(8),
+                padding: scaleMod(12),
+                alignItems: 'center' as const,
+                borderWidth: 1,
+            },
+            resultLabel: {
+                fontSize: scaleFont(10),
+                fontWeight: '800' as const,
+                marginBottom: scaleHeight(6),
+            },
+            resultValue: {
+                fontSize: scaleFont(24),
+                fontWeight: '900' as const,
+            },
+            resultUnit: {
+                fontSize: scaleFont(10),
+                marginTop: scaleHeight(4),
+            },
+            startBtn: {
+                borderRadius: scaleMod(8),
+                paddingVertical: scaleHeight(14),
+                alignItems: 'center' as const,
+            },
+            startBtnText: {
+                fontSize: scaleFont(14),
+                fontWeight: '900' as const,
+            },
+            infoPanel: {
+                borderRadius: scaleMod(8),
+                padding: scaleMod(12),
+                borderWidth: 1,
+            },
+        };
+    }, [scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet, isLargeTablet, colors, insets.top, insets.bottom]) as any;
+
     return (
-        <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
-            <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
-                {/* Header */}
-                <View style={[ps.header, { borderBottomColor: colors.border }]}>
-                    <Text style={[ps.headerTitle, { color: colors.textPri, fontFamily: MONO }]}>{t('perf.title')}</Text>
-                    <TouchableOpacity onPress={() => { resetTimer(); onClose(); }} style={{ padding: 10 }}>
-                        <Text style={{ color: colors.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: MONO }}>{t('common.cancel').toUpperCase()}</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={{ flex: 1, padding: 16, justifyContent: 'center' }}>
-                    {/* Big Timer */}
-                    <View style={ps.timerContainer}>
-                        <Text style={[ps.timerValue, { color: colors.textPri, fontFamily: MONO }]}>{formatTime(elapsed)}</Text>
-                        <Text style={[ps.timerUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('perf.seconds')}</Text>
+        <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
+            <View style={sDyn.modalOverlay}>
+                <View style={[sDyn.modalContainer, { backgroundColor: colors.bg }]}>
+                    {/* Header */}
+                    <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
+                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('perf.title')}</Text>
+                        <TouchableOpacity onPress={() => { resetTimer(); onClose(); }} style={sDyn.cancelBtn}>
+                            <Text style={[sDyn.cancelText, { color: colors.cyan }]}>{t('common.cancel').toUpperCase()}</Text>
+                        </TouchableOpacity>
                     </View>
 
-                    {/* Live Speed */}
-                    <View style={ps.speedContainer}>
-                        <Text style={[ps.speedValue, { color: colors.cyan, fontFamily: MONO }]}>{speed !== null ? speed : 0}</Text>
-                        <Text style={[ps.speedUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('perf.speed')}</Text>
-                    </View>
+                    <View style={sDyn.content}>
+                        {/* Big Timer */}
+                        <View style={sDyn.timerContainer}>
+                            <Text style={[sDyn.timerValue, { color: colors.textPri, fontFamily: MONO }]}>{formatTime(elapsed)}</Text>
+                            <Text style={[sDyn.timerUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('perf.seconds')}</Text>
+                        </View>
 
-                    {/* Status */}
-                    <View style={{ alignItems: 'center', marginBottom: 20 }}>
+                        {/* Live Speed */}
+                        <View style={sDyn.speedContainer}>
+                            <Text style={[sDyn.speedValue, { color: colors.cyan, fontFamily: MONO }]}>{speed !== null ? speed : 0}</Text>
+                            <Text style={[sDyn.speedUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('perf.speed')}</Text>
+                        </View>
+
+                        {/* Status */}
+                        <View style={{ alignItems: 'center', marginBottom: scaleHeight(20) }}>
+                            {state === 'idle' && (
+                                <Text style={{ color: colors.textSec, fontSize: scaleFont(11), fontFamily: MONO, textAlign: 'center' }}>
+                                    {t('perf.idle')}
+                                </Text>
+                            )}
+                            {state === 'armed' && (
+                                <Text style={{ color: colors.amber, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
+                                    ⏱️ {t('perf.ready')}{'\n'}
+                                    {t('perf.readyDesc')}
+                                </Text>
+                            )}
+                            {state === 'running' && (
+                                <Text style={{ color: colors.green, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
+                                    🏁 {t('perf.measuring')}
+                                </Text>
+                            )}
+                            {state === 'done' && (
+                                <Text style={{ color: colors.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
+                                    ✅ {t('perf.done')}
+                                </Text>
+                            )}
+                        </View>
+
+                        {/* Results Grid */}
+                        <View style={{ flexDirection: 'row', gap: scaleMod(10), marginBottom: scaleHeight(20) }}>
+                            <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }, time60 !== null && { borderColor: colors.green }]}>
+                                <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>0-60 KM/H</Text>
+                                <Text style={[sDyn.resultValue, { fontFamily: MONO }, time60 !== null ? { color: colors.green } : { color: colors.textPri }]}>
+                                    {time60 !== null ? time60.toFixed(2) : '--'}
+                                </Text>
+                                <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>sn</Text>
+                            </View>
+                            <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }, time100 !== null && { borderColor: colors.cyan }]}>
+                                <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>0-100 KM/H</Text>
+                                <Text style={[sDyn.resultValue, { fontFamily: MONO }, time100 !== null ? { color: colors.cyan } : { color: colors.textPri }]}>
+                                    {time100 !== null ? time100.toFixed(2) : '--'}
+                                </Text>
+                                <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>sn</Text>
+                            </View>
+                        </View>
+
+                        {/* Controls */}
                         {state === 'idle' && (
-                            <Text style={{ color: colors.textSec, fontSize: 11, fontFamily: MONO, textAlign: 'center' }}>
-                                {t('perf.idle')}
-                            </Text>
-                        )}
-                        {state === 'armed' && (
-                            <Text style={{ color: colors.amber, fontSize: 13, fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
-                                ⏱️ {t('perf.ready')}{'\n'}
-                                {t('perf.readyDesc')}
-                            </Text>
+                            <TouchableOpacity style={[sDyn.startBtn, { backgroundColor: colors.cyan }]} onPress={armTimer}>
+                                <Text style={[sDyn.startBtnText, { color: colors.card, fontFamily: MONO }]}>🏁 {t('perf.start')}</Text>
+                            </TouchableOpacity>
                         )}
                         {state === 'running' && (
-                            <Text style={{ color: colors.green, fontSize: 13, fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
-                                🏁 {t('perf.measuring')}
-                            </Text>
+                            <TouchableOpacity style={[sDyn.startBtn, { backgroundColor: colors.red }]} onPress={stopTimer}>
+                                <Text style={[sDyn.startBtnText, { color: colors.card, fontFamily: MONO }]}>⏹ {t('perf.stop')}</Text>
+                            </TouchableOpacity>
                         )}
-                        {state === 'done' && (
-                            <Text style={{ color: colors.cyan, fontSize: 13, fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
-                                ✅ {t('perf.done')}
-                            </Text>
+                        {(state === 'done' || state === 'armed') && (
+                            <TouchableOpacity style={[sDyn.startBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]} onPress={resetTimer}>
+                                <Text style={[sDyn.startBtnText, { color: colors.textSec, fontFamily: MONO }]}>↺ {t('perf.reset')}</Text>
+                            </TouchableOpacity>
                         )}
-                    </View>
 
-                    {/* Results Grid */}
-                    <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }}>
-                        <View style={[ps.resultCard, { backgroundColor: colors.card, borderColor: colors.border }, time60 !== null && { borderColor: colors.green }]}>
-                            <Text style={[ps.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>0-60 KM/H</Text>
-                            <Text style={[ps.resultValue, { fontFamily: MONO }, time60 !== null ? { color: colors.green } : { color: colors.textPri }]}>
-                                {time60 !== null ? time60.toFixed(2) : '--'}
+                        {/* Instructions */}
+                        <View style={[sDyn.infoPanel, { marginTop: scaleHeight(16), backgroundColor: colors.card, borderColor: colors.border }]}>
+                            <Text style={{ color: colors.cyan, fontSize: scaleFont(11), fontWeight: '800', fontFamily: MONO, marginBottom: scaleHeight(6) }}>📖 {t('perf.howItWorks')}</Text>
+                            <Text style={{ color: colors.textSec, fontSize: scaleFont(10), fontFamily: MONO, lineHeight: scaleFont(15) }}>
+                                {t('perf.howDesc')}
                             </Text>
-                            <Text style={[ps.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>sn</Text>
                         </View>
-                        <View style={[ps.resultCard, { backgroundColor: colors.card, borderColor: colors.border }, time100 !== null && { borderColor: colors.cyan }]}>
-                            <Text style={[ps.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>0-100 KM/H</Text>
-                            <Text style={[ps.resultValue, { fontFamily: MONO }, time100 !== null ? { color: colors.cyan } : { color: colors.textPri }]}>
-                                {time100 !== null ? time100.toFixed(2) : '--'}
-                            </Text>
-                            <Text style={[ps.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>sn</Text>
-                        </View>
-                    </View>
-
-                    {/* Controls */}
-                    {state === 'idle' && (
-                        <TouchableOpacity style={[ps.startBtn, { backgroundColor: colors.cyan }]} onPress={armTimer}>
-                            <Text style={[ps.startBtnText, { color: colors.card, fontFamily: MONO }]}>🏁 {t('perf.start')}</Text>
-                        </TouchableOpacity>
-                    )}
-                    {state === 'running' && (
-                        <TouchableOpacity style={[ps.startBtn, { backgroundColor: colors.red }]} onPress={stopTimer}>
-                            <Text style={[ps.startBtnText, { color: colors.card, fontFamily: MONO }]}>⏹ {t('perf.stop')}</Text>
-                        </TouchableOpacity>
-                    )}
-                    {(state === 'done' || state === 'armed') && (
-                        <TouchableOpacity style={[ps.startBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]} onPress={resetTimer}>
-                            <Text style={[ps.startBtnText, { color: colors.textSec, fontFamily: MONO }]}>↺ {t('perf.reset')}</Text>
-                        </TouchableOpacity>
-                    )}
-
-                    {/* Instructions */}
-                    <View style={[ps.infoPanel, { marginTop: 16, backgroundColor: colors.card, borderColor: colors.border }]}>
-                        <Text style={{ color: colors.cyan, fontSize: 11, fontWeight: '800', fontFamily: MONO, marginBottom: 6 }}>📖 {t('perf.howItWorks')}</Text>
-                        <Text style={{ color: colors.textSec, fontSize: 10, fontFamily: MONO, lineHeight: 16 }}>
-                            {t('perf.howDesc')}
-                        </Text>
                     </View>
                 </View>
-            </SafeAreaView>
+            </View>
         </Modal>
     );
 }
-
-const ps = StyleSheet.create({
-    header: {
-        paddingHorizontal: 20,
-        paddingTop: 10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 60,
-        borderBottomWidth: 1,
-    },
-    headerTitle: {
-        fontSize: 14,
-        fontWeight: '800',
-    },
-    timerContainer: {
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    timerValue: {
-        fontSize: 64,
-        fontWeight: '900',
-    },
-    timerUnit: {
-        fontSize: 11,
-        fontWeight: '800',
-        letterSpacing: 4,
-    },
-    speedContainer: {
-        alignItems: 'center',
-        marginBottom: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        gap: 8,
-    },
-    speedValue: {
-        fontSize: 36,
-        fontWeight: '900',
-    },
-    speedUnit: {
-        fontSize: 14,
-        fontWeight: '800',
-    },
-    resultCard: {
-        flex: 1,
-        borderRadius: 8,
-        padding: 16,
-        alignItems: 'center',
-        borderWidth: 1,
-    },
-    resultLabel: {
-        fontSize: 10,
-        fontWeight: '800',
-        marginBottom: 6,
-    },
-    resultValue: {
-        fontSize: 28,
-        fontWeight: '900',
-    },
-    resultUnit: {
-        fontSize: 10,
-        marginTop: 4,
-    },
-    startBtn: {
-        borderRadius: 8,
-        paddingVertical: 16,
-        alignItems: 'center',
-    },
-    startBtnText: {
-        fontSize: 14,
-        fontWeight: '900',
-    },
-    infoPanel: {
-        borderRadius: 6,
-        padding: 14,
-        borderWidth: 1,
-    },
-});
-

@@ -13,12 +13,15 @@
       "backgroundColor": "#000000"
     },
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "bundleIdentifier": "com.ismail.motocortexv2",
-      "buildNumber": "16",
+      "buildNumber": "36",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
-        "UIBackgroundModes": ["bluetooth-central"],
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": [
+          "bluetooth-central"
+        ],
         "NSBluetoothAlwaysUsageDescription": "MotoCortex uses Bluetooth to maintain a constant diagnostic link with your vehicle's ECU via BLE adapters, enabling live performance monitoring and real-time alerts even when the app is in the background or the screen is off.",
         "NSBluetoothPeripheralUsageDescription": "MotoCortex requires access to discover and connect to your vehicle's ELM327/OBD2 diagnostic adapter for engine data streaming.",
         "NSLocationWhenInUseUsageDescription": "iOS requires Location access to perform Bluetooth Low Energy (BLE) device scanning. MotoCortex does NOT track, store, or share your movement data."
@@ -30,6 +33,7 @@
         "backgroundColor": "#0a0a0a"
       },
       "edgeToEdgeEnabled": true,
+      "versionCode": 33,
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
@@ -38,7 +42,7 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.BLUETOOTH_ADVERTISE"
       ],
-      "package": "com.anonymous.MotoCortexmobile",
+      "package": "com.ismail.motocortexv2",
       "googleServicesFile": "./google-services.json"
     },
     "plugins": [
@@ -80,6 +84,10 @@
       "eas": {
         "projectId": "ed445853-1aed-4ed1-91e6-d767416ebf17"
       }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/ed445853-1aed-4ed1-91e6-d767416ebf17"
     }
   }
 }

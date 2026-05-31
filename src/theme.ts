@@ -35,7 +35,7 @@ export const darkTheme: ThemeColors = {
   amber: '#ffb800',
   purple: '#8b5cf6',
   textPri: '#e8eaed',
-  textSec: '#6b7280',
+  textSec: '#a0a0a0',
   textTertiary: '#9ca3af',
   overlay: 'rgba(0, 0, 0, 0.75)',
   overlayHeavy: 'rgba(0, 0, 0, 0.85)',
