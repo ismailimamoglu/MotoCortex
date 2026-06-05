@@ -113,9 +113,12 @@
         "perMonth": "/ay",
         "perYear": "/yıl",
         "legalNotice": "Abonelik, mevcut dönemin bitiminden en az 24 saat önce iptal edilmediği sürece otomatik yenilenir. Abonelikleri Hesap Ayarlarından yönetebilirsiniz.",
+        "legalNoticeAndroid": "Aboneliğiniz, cari dönemin bitiminden en az 24 saat önce iptal edilmediği sürece otomatik olarak yenilenir. Yenileme ücretleri Google hesabınızdan tahsil edilir. Abonelikler dönem sonunda yenilenir. Bunları Hesap Ayarlarınızdan yönetebilirsiniz.",
+        "noPurchasesMsgAndroid": "Google hesabınızla ilişkili aktif bir PRO üyeliği bulunamadı.",
         "terms": "Kullanım Şartları",
         "privacy": "Gizlilik Politikası",
-        "hardwareWarning": "⚠️ Önemli Donanım Notu: Apple yasal kısıtlamaları gereği, iOS cihazlar eski nesil Bluetooth Classic (v2.1) adaptörleri desteklemez. Uygulamayı PRO moduna yükseltmeden önce elinizdeki cihazın Bluetooth LE (4.0+) veya Wi-Fi uyumlu olduğundan emin olun."
+        "hardwareWarning": "⚠️ Önemli Donanım Notu: Apple yasal kısıtlamaları gereği, iOS cihazlar eski nesil Bluetooth Classic (v2.1) adaptörleri desteklemez. Uygulamayı PRO moduna yükseltmeden önce elinizdeki cihazın Bluetooth LE (4.0+) veya Wi-Fi uyumlu olduğundan emin olun.",
+        "hardwareWarningAndroid": "⚠️ Önemli Donanım Notu: Android cihazlar hem Bluetooth Classic hem de Bluetooth LE (4.0+) adaptörleri destekler. PRO moduna geçmeden önce cihazınızın uyumlu olduğundan emin olun."
     },
     "connection": {
         "logoSub": "v7 PRO",
@@ -142,7 +145,12 @@
         "permissionDesc": "Bluetooth izni verilmedi. Lütfen uygulama ayarlarından izin verin.",
         "safeModeActive": "GÜVENLİ MOD AKTİF: Klon veya düşük kaliteli adaptör tespit edildi.",
         "iosBtManual": "Lütfen Kontrol Merkezinden veya Ayarlardan Bluetooth'u açın. iOS cihazlarda Bluetooth otomatik olarak açılamaz.",
-        "iosBleOnly": "Not: iOS cihazlar sadece BLE (Bluetooth Low Energy) destekli OBD2 adaptörleriyle çalışır. Standart (Classic) adaptörler taranamaz."
+        "iosBleOnly": "Not: iOS cihazlar sadece BLE (Bluetooth Low Energy) destekli OBD2 adaptörleriyle çalışır. Standart (Classic) adaptörler taranamaz.",
+        "androidClassicHint": "Not: Standart (Classic) Bluetooth OBD2 adaptörlerinin taramada görünebilmesi için önce Android Bluetooth ayarlarından eşleştirilmiş olması gerekir.",
+        "deviceNotPairedTitle": "Cihaz Eşleşmemiş",
+        "deviceNotPairedDesc": "Klasik Bluetooth OBD2 adaptörlerini bağlamadan önce telefonunuzun Bluetooth ayarlarından eşleştirmeniz gerekir. Sistem ayarlarına yönlendiriliyorsunuz.",
+        "unsupportedDeviceTitle": "Uyumsuz Donanım",
+        "unsupportedDeviceDesc": "Bağlanmaya çalıştığınız cihaz uyumlu bir OBD2 adaptörü değil veya gerekli servisleri desteklemiyor."
     },
     "dashboard": {
         "selectDevice": "CİHAZ SEÇMEK İÇİN DOKUN",
@@ -499,5 +507,6 @@
         "deniedDesc": "Bazı izinler reddedildi. MotoCortex, OBD2 cihazlarını başarıyla tarayamayabilir veya bağlanamayabilir.",
         "proceedAnyway": "Yine de Devam Et",
         "openSettings": "Ayarları Aç"
-    }
+    },
+    "disclaimer": "Tüm ürün adları, logolar ve markalar ilgili sahiplerinin mülkiyetindedir. Bu uygulamada kullanılan tüm şirket, ürün ve hizmet adları yalnızca tanımlama amaçlıdır. Bu isimlerin, logoların ve markaların kullanılması, herhangi bir onay veya sponsorluk anlamına gelmez."
 }

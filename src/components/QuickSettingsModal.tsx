@@ -396,6 +396,20 @@ export default function QuickSettingsModal({ visible, onClose, onTriggerDebug, o
                 </TouchableOpacity>
               )}
             </View>
+
+            {/* Disclaimer */}
+            <Text style={{
+              fontSize: scaleFont(8.5),
+              color: colors.textSec,
+              fontFamily: MONO,
+              marginTop: scaleHeight(20),
+              textAlign: 'center',
+              lineHeight: scaleFont(12),
+              opacity: 0.65,
+              paddingHorizontal: scaleWidth(10),
+            }}>
+              {t('disclaimer')}
+            </Text>
           </ScrollView>
         </View>
       </View>

@@ -113,9 +113,12 @@
         "perMonth": "/mese",
         "perYear": "/anno",
         "legalNotice": "L'abbonamento si rinnova automaticamente a meno che non venga annullato almeno 24 ore prima della fine del periodo corrente. Gestisci gli abbonamenti nelle impostazioni del tuo Account.",
+        "legalNoticeAndroid": "L'abbonamento si rinnova automaticamente a meno che non venga annullato almeno 24 ore prima della fine del periodo corrente. I costi di rinnovo verranno addebitati sul tuo account Google. Gli abbonamenti si rinnovano alla fine del periodo. Puoi gestirli nelle Impostazioni del tuo account.",
+        "noPurchasesMsgAndroid": "Non è stato trovato alcun abbonamento PRO attivo associato al tuo account Google.",
         "terms": "Termini di Servizio",
         "privacy": "Informativa sulla Privacy",
-        "hardwareWarning": "⚠️ Nota hardware importante: a causa delle politiche Apple, i dispositivi iOS non supportano i vecchi adattatori Bluetooth Classic (v2.1). Prima di passare alla modalità PRO, assicurati che il tuo dispositivo diagnostico sia compatibile con Bluetooth LE (4.0+) o Wi-Fi."
+        "hardwareWarning": "⚠️ Nota hardware importante: a causa delle politiche Apple, i dispositivi iOS non supportano i vecchi adattatori Bluetooth Classic (v2.1). Prima di passare alla modalità PRO, assicurati che il tuo dispositivo diagnostico sia compatibile con Bluetooth LE (4.0+) o Wi-Fi.",
+        "hardwareWarningAndroid": "⚠️ Nota hardware importante: i dispositivi Android supportano sia gli adattatori Bluetooth Classic che Bluetooth LE (4.0+). Prima di passare alla modalità PRO, assicurati che il tuo dispositivo diagnostico sia compatibile."
     },
     "connection": {
         "logoSub": "v7 PRO",
@@ -142,7 +145,10 @@
         "permissionDesc": "Permesso Bluetooth negato. Si prega di concedere il permesso nelle impostazioni.",
         "safeModeActive": "MODALITÀ SICURA ATTIVA: Rilevato adattatore clone o di bassa qualità.",
         "iosBtManual": "Si prega di aprire il Centro di controllo o le Impostazioni e attivare il Bluetooth. iOS limita l'attivazione automatica del Bluetooth.",
-        "iosBleOnly": "Nota: i dispositivi iOS supportano solo adattatori BLE (Bluetooth Low Energy). Gli adattatori OBD2 classici non verranno visualizzati."
+        "iosBleOnly": "Nota: i dispositivi iOS supportano solo adattatori BLE (Bluetooth Low Energy). Gli adattatori OBD2 classici non verranno visualizzati.",
+        "androidClassicHint": "Nota: gli adattatori OBD2 Bluetooth classici devono essere prima associati nelle impostazioni di sistema Bluetooth di Android, altrimenti potrebbero non apparire nell'elenco di scansione.",
+        "deviceNotPairedTitle": "Dispositivo non associato",
+        "deviceNotPairedDesc": "Gli adattatori OBD2 Bluetooth classici devono essere prima associati nelle impostazioni del telefono. Verrai reindirizzato alle impostazioni."
     },
     "dashboard": {
         "selectDevice": "TOCCA PER SELEZIONARE IL DISPOSITIVO",
@@ -499,5 +505,6 @@
         "deniedDesc": "Alcune autorizzazioni sono state negate. MotoCortex potrebbe non essere in grado di scansionare o connettersi correttamente ai dispositivi OBD2.",
         "proceedAnyway": "Procedi Comunque",
         "openSettings": "Apri Impostazioni"
-    }
+    },
+    "disclaimer": "Tutti i nomi di prodotti, loghi e marchi sono di proprietà dei rispettivi proprietari. Tutti i nomi di società, prodotti e servizi utilizzati in questa applicazione sono solo a scopo identificativo. L'uso di questi nomi, loghi e marchi non implica alcuna approvazione."
 }

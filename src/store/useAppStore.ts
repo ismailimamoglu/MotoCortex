@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Purchases, { PurchasesPackage, CustomerInfo } from 'react-native-purchases';
+import { Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { generateUuid } from '../utils/crypto';
 import i18n from '../i18n';
 
@@ -96,7 +98,7 @@ interface AppState {
   purchasePackage: (pkg: PurchasesPackage) => Promise<boolean>;
   restorePurchases: () => Promise<boolean>;
   fetchAppUserId: () => Promise<void>;
-  initializeDeviceUuid: () => void;
+  initializeDeviceUuid: () => Promise<void>;
 }
 
 export const useAppStore = create<AppState>()(
@@ -157,10 +159,52 @@ export const useAppStore = create<AppState>()(
       }),
       incrementFreeUsage: () => set((state) => ({ freeUsageCount: state.freeUsageCount + 1 })),
       resetFreeUsage: () => set({ freeUsageCount: 0 }),
-      initializeDeviceUuid: () => {
-        const currentUuid = useAppStore.getState().deviceUuid;
-        if (!currentUuid) {
-          set({ deviceUuid: generateUuid() });
+      initializeDeviceUuid: async () => {
+        let currentUuid = useAppStore.getState().deviceUuid;
+        try {
+          const secureUuid = await SecureStore.getItemAsync('device_uuid');
+          if (secureUuid) {
+            currentUuid = secureUuid;
+          }
+        } catch (e) {
+          console.warn('[SecureStore] Failed to read device_uuid:', e);
+        }
+
+        const nextUuid = currentUuid || generateUuid();
+
+        try {
+          await SecureStore.setItemAsync('device_uuid', nextUuid);
+        } catch (e) {
+          console.warn('[SecureStore] Failed to write device_uuid:', e);
+        }
+
+        if (useAppStore.getState().deviceUuid !== nextUuid) {
+          set({ deviceUuid: nextUuid });
+        }
+
+        if (Platform.OS === 'android') {
+          let currentId = useAppStore.getState().appUserId;
+          try {
+            const secureId = await SecureStore.getItemAsync('app_user_id');
+            if (secureId && secureId.startsWith('AND-')) {
+              currentId = secureId;
+            }
+          } catch (e) {
+            console.warn('[SecureStore] Failed to read app_user_id:', e);
+          }
+
+          if (!currentId || !currentId.startsWith('AND-')) {
+            const cleanUuid = nextUuid.toUpperCase().replace(/-/g, '').substring(0, 16);
+            const nextId = `AND-${cleanUuid}`;
+            try {
+              await SecureStore.setItemAsync('app_user_id', nextId);
+            } catch (e) {
+              console.warn('[SecureStore] Failed to write app_user_id:', e);
+            }
+            set({ appUserId: nextId });
+          } else if (useAppStore.getState().appUserId !== currentId) {
+            set({ appUserId: currentId });
+          }
         }
       },
 

@@ -113,9 +113,12 @@
         "perMonth": "/mes",
         "perYear": "/año",
         "legalNotice": "La suscripción se renueva automáticamente a menos que se cancele al menos 24 horas antes del final del período actual.",
+        "legalNoticeAndroid": "Su suscripción se renueva automáticamente a menos que se cancele al menos 24 horas antes del final del período actual. Las tarifas de renovación se cargarán a su cuenta de Google. Las suscripciones se renuevan al final del período. Puede administrarlas en la Configuración de su cuenta.",
+        "noPurchasesMsgAndroid": "No se encontró ninguna membresía PRO activa asociada con su cuenta de Google.",
         "terms": "Términos de Servicio",
         "privacy": "Política de Privacidad",
-        "hardwareWarning": "⚠️ Nota de hardware importante: Debido a las políticas de Apple, los dispositivos iOS no son compatibles con adaptadores antiguos de Bluetooth Classic (v2.1). Antes de actualizar al modo PRO, asegúrese de que su dispositivo de diagnóstico sea compatible con Bluetooth LE (4.0+) o Wi-Fi."
+        "hardwareWarning": "⚠️ Nota de hardware importante: Debido a las políticas de Apple, los dispositivos iOS no son compatibles con adaptadores antiguos de Bluetooth Classic (v2.1). Antes de actualizar al modo PRO, asegúrese de que su dispositivo de diagnóstico sea compatible con Bluetooth LE (4.0+) o Wi-Fi.",
+        "hardwareWarningAndroid": "⚠️ Nota de hardware importante: Los dispositivos Android admiten adaptadores Bluetooth Classic y Bluetooth LE (4.0+). Antes de actualizar al modo PRO, asegúrese de que su dispositivo de diagnóstico sea compatible."
     },
     "connection": {
         "logoSub": "v7 PRO",
@@ -142,6 +145,9 @@
         "permissionDesc": "Permiso de Bluetooth denegado. Por favor, conceda el permiso en la configuración.",
         "iosBtManual": "Por favor, abra el Centro de Control o Configuración y encienda el Bluetooth. iOS restringe el encendido automático de Bluetooth.",
         "iosBleOnly": "Nota: Los dispositivos iOS solo admiten adaptadores BLE (Bluetooth de baja energía). Los adaptadores OBD2 clásicos no aparecerán.",
+        "androidClassicHint": "Nota: Los adaptadores OBD2 Bluetooth clásicos deben emparejarse primero en la configuración del sistema Android, de lo contrario, es posible que no aparezcan en la lista.",
+        "deviceNotPairedTitle": "Dispositivo no emparejado",
+        "deviceNotPairedDesc": "Los adaptadores OBD2 Bluetooth clásicos deben emparejarse primero en la configuración de su teléfono. Se le redirigirá a la configuración.",
         "safeModeActive": "MODO SEGURO ACTIVO: Se detectó un adaptador clonado o de baja calidad."
     },
     "dashboard": {
@@ -499,5 +505,6 @@
         "deniedDesc": "Se denegaron algunos permisos. Es posible que MotoCortex no pueda escanear o conectarse con éxito a los dispositivos OBD2.",
         "proceedAnyway": "Proceder de todos modos",
         "openSettings": "Abrir Configuración"
-    }
+    },
+    "disclaimer": "Todos los nombres de productos, logotipos y marcas son propiedad de sus respectivos propietarios. Todos los nombres de empresas, productos y servicios utilizados en esta aplicación son solo para fines de identificación. El uso de estos nombres, logotipos y marcas no implica ningún tipo de respaldo."
 }

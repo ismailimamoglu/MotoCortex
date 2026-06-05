@@ -449,6 +449,12 @@ function MainApp() {
   // Initialize the persistent Device UUID
   useEffect(() => {
     initializeDeviceUuid();
+    try {
+      crashlytics().setCrashlyticsCollectionEnabled(true);
+      console.log('[App] Firebase Crashlytics collection enabled programmatically.');
+    } catch (e) {
+      console.warn('[App] Failed to enable Crashlytics collection:', e);
+    }
   }, []);
 
   const [vinHistory, setVinHistory] = useState<GarageRecord[]>([]);
@@ -1169,9 +1175,13 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           {scannedDevices.length === 0 && permissionGranted && status !== 'scanning' && (
             <>
               <Text style={s.hintText}>{t('connection.scanHint')}</Text>
-              {Platform.OS === 'ios' && (
+              {Platform.OS === 'ios' ? (
                 <Text style={[s.hintText, { marginTop: 10, color: tc.amber, fontSize: 10, opacity: 0.8 }]}>
                   {t('connection.iosBleOnly')}
+                </Text>
+              ) : (
+                <Text style={[s.hintText, { marginTop: 10, color: tc.amber, fontSize: 10, opacity: 0.8 }]}>
+                  {t('connection.androidClassicHint')}
                 </Text>
               )}
             </>
@@ -1929,6 +1939,18 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
         >
           <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(9) }}>MotoCortex v1.0.0 (1) {(isPro || isSimulationMode) ? 'PRO' : 'FREE'}</Text>
         </TouchableOpacity>
+        <Text style={{
+          color: colors.textSec,
+          fontFamily: MONO,
+          fontSize: scaleFont(8),
+          textAlign: 'center',
+          opacity: 0.6,
+          lineHeight: scaleFont(11.5),
+          paddingHorizontal: scaleWidth(10),
+          marginBottom: isCompact ? scaleHeight(10) : 0,
+        }}>
+          {t('disclaimer')}
+        </Text>
       </View>
     );
 

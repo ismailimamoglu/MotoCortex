@@ -72,7 +72,9 @@ export const useBluetooth = () => {
         const dd = String(dateObj.getDate()).padStart(2, '0');
         const dateString = `${yyyy}-${mm}-${dd}`;
 
-        const deviceUuid = useAppStore.getState().deviceUuid;
+        const deviceUuid = Platform.OS === 'android'
+            ? useAppStore.getState().appUserId
+            : useAppStore.getState().deviceUuid;
         const sessionDynamicKey = telemetryState.sessionDynamicKey || '';
         const session_hash = await calculateSessionHash(
             deviceUuid,
@@ -305,9 +307,23 @@ export const useBluetooth = () => {
             } else {
                 throw new Error('Adapter connection failed');
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            setError(e instanceof Error ? e.message : 'Connection failed');
+            const msg = e instanceof Error ? e.message : String(e);
+
+            if (msg === 'DEVICE_NOT_PAIRED') {
+                Alert.alert(
+                    t('connection.deviceNotPairedTitle', 'Device Not Paired'),
+                    t('connection.deviceNotPairedDesc', 'Classic Bluetooth OBD2 adapters must be paired in your phone settings first. You are being redirected to settings.')
+                );
+            } else if (msg === 'UNSUPPORTED_DEVICE') {
+                Alert.alert(
+                    t('connection.unsupportedDeviceTitle', 'Uyumsuz Donanım'),
+                    t('connection.unsupportedDeviceDesc', 'Bağlanmaya çalıştığınız cihaz uyumlu bir OBD2 adaptörü değil veya gerekli servisleri desteklemiyor.')
+                );
+            }
+
+            setError(msg);
             setStatus('error');
             setAdapterStatus('error');
         }
@@ -321,10 +337,11 @@ export const useBluetooth = () => {
         setError(null);
         try {
             // 1. Initialize Adapter & Run Pre-paywall Identity Checks (ATI, AT PPS)
-            await OBDCommandQueue.add(ADAPTER_COMMANDS.RESET);         // ATZ
-            await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF);      // ATE0
+            // Timeout set to 5000ms for stable initialization and K-Line 5-Baud wakeup sequences
+            await OBDCommandQueue.add(ADAPTER_COMMANDS.RESET, 5000);         // ATZ
+            await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 5000);      // ATE0
             
-            const atiRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.DEVICE_INFO);   // ATI
+            const atiRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.DEVICE_INFO, 5000);   // ATI
             
             // Check for clone signatures
             let isClone = false;
@@ -335,7 +352,7 @@ export const useBluetooth = () => {
             try {
                 // AT PPS is a check for ELM327 programmable parameters.
                 // Low-quality clone chips usually don't support programmable parameters and return '?'
-                const ppsRes = await OBDCommandQueue.add("AT PPS", 1000);
+                const ppsRes = await OBDCommandQueue.add("AT PPS", 5000);
                 if (ppsRes.includes('?') || ppsRes.toLowerCase().includes('error')) {
                     isClone = true;
                 }
@@ -348,55 +365,49 @@ export const useBluetooth = () => {
                 useBluetoothStore.getState().addLog('DETECTED: Clone/Low-Quality Adapter');
             }
             
-            await OBDCommandQueue.add(ADAPTER_COMMANDS.SPACES_OFF);    // ATS0
-
-            // 2. Dynamic Initialization & Protocol Scan
+            await OBDCommandQueue.add(ADAPTER_COMMANDS.SPACES_OFF, 5000);    // ATS0
+ 
+            // 2. Dynamic Initialization & Autonomous Protocol Scan (ELM327 Engine)
             let ecuConnected = false;
             let rpmRes = '';
-
-            // Scan modern CAN protocols first with a short timeout (AT ST 96 -> 600ms)
-            await OBDCommandQueue.add("AT ST 96");
-            
-            // Try ISO 15765-4 CAN 11bit 500K (AT SP 6)
-            await OBDCommandQueue.add("AT SP 6");
+ 
             try {
-                rpmRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.RPM, 800);
-                if (rpmRes && !rpmRes.includes('NO DATA') && !rpmRes.includes('ERROR') && !rpmRes.includes('UNABLE TO CONNECT')) {
+                // Set ELM327 to Automatic Protocol Search Mode (AT SP 0) - 5000ms timeout
+                await OBDCommandQueue.add("AT SP 0", 5000);
+                
+                // Send 01 00 to wake up vehicle and let ELM327 scan and negotiate protocol automatically.
+                // Watchdog timeout is configured strictly to 5000ms to allow sufficient time for K-Line 5-Baud init.
+                const initRes = await OBDCommandQueue.add("01 00", 5000);
+                
+                // Clean the response by removing 'SEARCHING...' and whitespace to parse the actual hex response
+                const cleanInitRes = initRes ? initRes.replace(/SEARCHING[\s.]*/gi, '').replace(/\r/g, '').replace(/\n/g, '').trim() : '';
+                
+                if (cleanInitRes && 
+                    !cleanInitRes.toUpperCase().includes('NO DATA') && 
+                    !cleanInitRes.toUpperCase().includes('ERROR') && 
+                    !cleanInitRes.toUpperCase().includes('UNABLE TO CONNECT')) {
+                    
                     ecuConnected = true;
+                    
+                    // Ask the adapter which protocol it successfully selected and log it
+                    const selectedProtocol = await OBDCommandQueue.add("AT DP", 5000);
+                    useBluetoothStore.getState().addLog(`AUTONOMOUS_PROTOCOL_SELECTED: ${selectedProtocol.trim()}`);
+                    
+                    // Fetch initial RPM as confirmation
+                    rpmRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.RPM, 5000);
+                } else if (cleanInitRes && cleanInitRes.toUpperCase().includes('UNABLE TO CONNECT')) {
+                    useBluetoothStore.getState().addLog('DIAG: Connection failed with UNABLE TO CONNECT');
                 }
             } catch (e) {
-                // Ignore and proceed to SP 7
-            }
-
-            if (!ecuConnected) {
-                // Try ISO 15765-4 CAN 29bit 500K (AT SP 7)
-                await OBDCommandQueue.add("AT SP 7");
-                try {
-                    rpmRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.RPM, 800);
-                    if (rpmRes && !rpmRes.includes('NO DATA') && !rpmRes.includes('ERROR') && !rpmRes.includes('UNABLE TO CONNECT')) {
-                        ecuConnected = true;
-                    }
-                } catch (e) {
-                    // Ignore and proceed to fallback
-                }
-            }
-
-            if (!ecuConnected) {
-                // Switch to K-Line (ISO 9141-2 / ISO 14230-4) with high timeout and warning
-                setError(t('connection.klineWarning', 'Eski araç protokolü uyarılıyor, bu işlem 3 saniye sürebilir...'));
-                await OBDCommandQueue.add("AT ST FF"); // Max ELM327 timeout (1020ms)
-                await OBDCommandQueue.add("AT SP 5");
+                const msg = e instanceof Error ? e.message : String(e);
+                useBluetoothStore.getState().addLog(`DIAG: Autonomous initialization error: ${msg}`);
                 
-                try {
-                    rpmRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.RPM, 2500); // 2500ms watchdog
-                    if (rpmRes && !rpmRes.includes('NO DATA') && !rpmRes.includes('ERROR') && !rpmRes.includes('UNABLE TO CONNECT')) {
-                        ecuConnected = true;
-                    }
-                } catch (e) {
-                    // Ignore
+                // Safe handling of UNABLE TO CONNECT inside error blocks
+                if (msg.toUpperCase().includes('UNABLE TO CONNECT')) {
+                    useBluetoothStore.getState().addLog('DIAG: Caught UNABLE TO CONNECT exception safely');
                 }
             }
-
+ 
             if (!ecuConnected) {
                 setEcuStatus('error');
                 setError(t('connection.ecuNoResponse', 'Araç yanıt vermiyor, lütfen bağlantıyı tazeleyin.'));

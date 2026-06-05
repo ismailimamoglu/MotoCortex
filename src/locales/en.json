@@ -113,9 +113,12 @@
         "perMonth": "/month",
         "perYear": "/year",
         "legalNotice": "Subscription auto-renews unless cancelled at least 24 hours before end of current period. Manage subscriptions in your Account Settings.",
+        "legalNoticeAndroid": "Subscription auto-renews unless cancelled at least 24 hours before the end of the current period. Renewal fees will be charged to your Google account. Subscriptions renew at the end of the period. You can manage them in your Account Settings.",
+        "noPurchasesMsgAndroid": "No active PRO membership associated with your Google account was found.",
         "terms": "Terms of Service",
         "privacy": "Privacy Policy",
-        "hardwareWarning": "⚠️ Important Hardware Note: Due to Apple policy, iOS devices do not support legacy Bluetooth Classic (v2.1) adapters. Before upgrading to PRO mode, please ensure your diagnostic device is Bluetooth LE (4.0+) or Wi-Fi compatible."
+        "hardwareWarning": "⚠️ Important Hardware Note: Due to Apple policy, iOS devices do not support legacy Bluetooth Classic (v2.1) adapters. Before upgrading to PRO mode, please ensure your diagnostic device is Bluetooth LE (4.0+) or Wi-Fi compatible.",
+        "hardwareWarningAndroid": "⚠️ Important Hardware Note: Android devices support both Bluetooth Classic and Bluetooth LE (4.0+) adapters. Before upgrading to PRO mode, please ensure your diagnostic device is compatible."
     },
     "connection": {
         "logoSub": "v7 PRO",
@@ -142,7 +145,12 @@
         "permissionDesc": "Bluetooth permission denied. Please grant permission in settings.",
         "safeModeActive": "SAFE MODE ACTIVE: Clone/low quality adapter detected.",
         "iosBtManual": "Please open the Control Center or Settings and turn on Bluetooth. iOS restricts automatic Bluetooth toggling.",
-        "iosBleOnly": "Note: iOS devices only support BLE (Bluetooth Low Energy) adapters. Classic Bluetooth OBD2 adapters will not appear here."
+        "iosBleOnly": "Note: iOS devices only support BLE (Bluetooth Low Energy) adapters. Classic Bluetooth OBD2 adapters will not appear here.",
+        "androidClassicHint": "Note: Classic Bluetooth OBD2 adapters must be paired in your Android Bluetooth system settings first, otherwise they may not appear in the scan list.",
+        "deviceNotPairedTitle": "Device Not Paired",
+        "deviceNotPairedDesc": "Classic Bluetooth OBD2 adapters must be paired in your phone settings first. You are being redirected to settings.",
+        "unsupportedDeviceTitle": "Incompatible Hardware",
+        "unsupportedDeviceDesc": "The connected device is not a compatible OBD2 adapter, or the required services could not be mapped."
     },
     "dashboard": {
         "selectDevice": "TAP TO SELECT DEVICE",
@@ -499,5 +507,6 @@
         "deniedDesc": "Some permissions were denied. MotoCortex may not be able to scan or connect to OBD2 devices successfully.",
         "proceedAnyway": "Proceed Anyway",
         "openSettings": "Open Settings"
-    }
+    },
+    "disclaimer": "All product names, logos, and brands are property of their respective owners. All company, product and service names used in this application are for identification purposes only. Use of these names, logos, and brands does not imply endorsement."
 }

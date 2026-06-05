@@ -123,9 +123,14 @@ class OBDCommandQueue {
             return;
         }
 
-        // ELM327 ends responses with '>' char
-        if (this.currentBuffer.includes('>')) {
-            let cleanResponse = this.currentBuffer.replace('>', '').trim();
+        // Wait until the buffer ends with the prompt '>' character
+        const trimmed = this.currentBuffer.trim();
+        if (trimmed.endsWith('>')) {
+            // Remove the prompt '>' character
+            let cleanResponse = trimmed.substring(0, trimmed.length - 1).trim();
+
+            // Clean intermediate "SEARCHING..." responses safely without stripping CR/LF (\r\n)
+            cleanResponse = cleanResponse.replace(/SEARCHING\.*/gi, '').trim();
 
             // Handle ECHO: If response starts with the command itself (e.g. sent "ATZ", received "ATZ..."), remove it.
             const currentItem = this.queue[0];
@@ -134,9 +139,6 @@ class OBDCommandQueue {
             }
 
             this.finishCommand(null, cleanResponse);
-        } else {
-            // Optional: Log partial chunks for extreme debugging
-            // useBluetoothStore.getState().addLog(`PARTIAL: ${chunk}`);
         }
     }
 

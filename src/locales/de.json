@@ -113,9 +113,12 @@
         "perMonth": "/Monat",
         "perYear": "/Jahr",
         "legalNotice": "Das Abonnement verlängert sich automatisch, es sei denn, es wird mindestens 24 Stunden vor Ablauf des aktuellen Zeitraums gekündigt.",
+        "legalNoticeAndroid": "Ihr Abonnement verlängert sich automatisch, sofern es nicht mindestens 24 Stunden vor dem Ende des aktuellen Zeitraums gekündigt wird. Die Verlängerungsgebühren werden Ihrem Google-Konto belastet. Abonnements verlängern sich am Ende des Zeitraums. Sie können sie in Ihren Kontoeinstellungen verwalten.",
+        "noPurchasesMsgAndroid": "Es wurde keine aktive PRO-Mitgliedschaft mit Ihrem Google-Konto gefunden.",
         "terms": "Nutzungsbedingungen",
         "privacy": "Datenschutzrichtlinie",
-        "hardwareWarning": "⚠️ Wichtiger Hardware-Hinweis: Aufgrund von Apple-Richtlinien unterstützen iOS-Geräte keine älteren Bluetooth Classic (v2.1) Adapter. Bitte stellen Sie vor dem Upgrade auf den PRO-Modus sicher, dass Ihr Diagnosegerät mit Bluetooth LE (4.0+) oder WLAN kompatibel ist."
+        "hardwareWarning": "⚠️ Wichtiger Hardware-Hinweis: Aufgrund von Apple-Richtlinien unterstützen iOS-Geräte keine älteren Bluetooth Classic (v2.1) Adapter. Bitte stellen Sie vor dem Upgrade auf den PRO-Modus sicher, dass Ihr Diagnosegerät mit Bluetooth LE (4.0+) oder WLAN kompatibel ist.",
+        "hardwareWarningAndroid": "⚠️ Wichtiger Hardware-Hinweis: Android-Geräte unterstützen sowohl Bluetooth Classic als auch Bluetooth LE (4.0+) Adapter. Bitte stellen Sie vor dem Upgrade auf den PRO-Modus sicher, dass Ihr Diagnosegerät kompatibel ist."
     },
     "connection": {
         "logoSub": "v7 PRO",
@@ -140,8 +143,11 @@
         "error": "VERBINDUNGSFEHLER",
         "bluetoothOffDesc": "Bluetooth ist ausgeschaltet. Bitte überprüfen Sie Ihre Bluetooth-Einstellungen.",
         "permissionDesc": "Bluetooth-Berechtigung verweigert. Bitte erteilen Sie die Berechtigung in den Einstellungen.",
-        "iosBtManual": "Bitte öffnen Sie das Kontrollzentrum oder die Einstellungen und aktivieren Sie Bluetooth. iOS schränkt die automatische Bluetooth-Aktivierung ein.",
+        "iosBtManual": "Bitte öffnen Sie das Kontrollzentrum oder die Einstellungen und aktivieren Sie Bluetooth. iOS schränkt die automatisch Bluetooth-Aktivierung ein.",
         "iosBleOnly": "Hinweis: iOS-Geräte unterstützen nur BLE-Adapter (Bluetooth Low Energy). Klassische OBD2-Adapter werden hier nicht angezeigt.",
+        "androidClassicHint": "Hinweis: Klassische Bluetooth-OBD2-Adapter müssen zuerst in den Android-Bluetooth-Systemeinstellungen gekoppelt werden, da sie sonst möglicherweise nicht in der Scan-Liste angezeigt werden.",
+        "deviceNotPairedTitle": "Gerät nicht gekoppelt",
+        "deviceNotPairedDesc": "Klassische Bluetooth-OBD2-Adapter müssen zuerst in den Bluetooth-Einstellungen Ihres Telefons gekoppelt werden. Sie werden zu den Einstellungen weitergeleitet.",
         "safeModeActive": "SICHERER MODUS AKTIV: Klon- oder minderwertiger Adapter erkannt."
     },
     "dashboard": {
@@ -499,5 +505,6 @@
         "deniedDesc": "Einige Berechtigungen wurden verweigert. MotoCortex kann OBD2-Geräte möglicherweise nicht erfolgreich scannen oder eine Verbindung herstellen.",
         "proceedAnyway": "Trotzdem fortfahren",
         "openSettings": "Einstellungen öffnen"
-    }
+    },
+    "disclaimer": "Alle Produktnamen, Logos und Marken sind Eigentum ihrer jeweiligen Inhaber. Alle in dieser Anwendung verwendeten Firmen-, Produkt- und Dienstleistungsnamen dienen ausschließlich Identifikationszwecken. Die Verwendung dieser Namen, Logos und Marken impliziert keine Befürwortung."
 }
