@@ -144,7 +144,11 @@ class OBDCommandQueue {
     }
 
     private parseMode01Response(command: string, response: string) {
-        let clean = response.replace(/SEARCHING\.*/gi, '');
+        const startIdx = response.indexOf('41');
+        if (startIdx === -1) return;
+        const mode01Payload = response.substring(startIdx);
+
+        let clean = mode01Payload.replace(/SEARCHING\.*/gi, '');
         clean = clean.replace(/[\r\n]+/g, ' ');
         clean = clean.replace(/\b\w+:\s*/g, '');
         clean = clean.replace(/\s+/g, '');
@@ -538,6 +542,7 @@ class OBDCommandQueue {
      * Parses the raw response based on the command using a Switch/If dispatcher.
      */
     private parseResponse(rawCommand: string, response: string) {
+        console.log(`[OBD RAW] Cmd: ${rawCommand} -> Res: ${response.trim()}`);
         const command = rawCommand.replace(/\s+/g, '');
         
         if (command === 'ATI') {

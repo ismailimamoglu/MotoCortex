@@ -57,7 +57,7 @@ export const useBluetooth = () => {
     const triggerTelemetryEnqueue = useCallback(async () => {
         const btState = useBluetoothStore.getState();
         const telemetryState = useTelemetryStore.getState();
-        
+
         if (btState.status !== 'connected' || !telemetryState.activeSessionVehicle) {
             return;
         }
@@ -65,11 +65,11 @@ export const useBluetooth = () => {
         const brand = telemetryState.activeSessionVehicle.brand;
         const model = telemetryState.activeSessionVehicle.model;
         const year = telemetryState.activeSessionVehicle.year;
-        
-        const protocol = useAppStore.getState().isSimulationMode 
-            ? 'SIMULATED_OBD' 
+
+        const protocol = useAppStore.getState().isSimulationMode
+            ? 'SIMULATED_OBD'
             : 'ISO_15765_4_CAN';
-            
+
         const ecu_id = btState.ecuId || 'UNKNOWN_ECU';
         const dtc_codes = btState.dtcs || [];
 
@@ -100,17 +100,17 @@ export const useBluetooth = () => {
 
         const isSimulatorEcu = ecu_id === 'SIM-ECU-001';
         const isSimulatorProtocol = protocol === 'SIMULATED_OBD';
-        const isSimulatorSignature = 
-            coolant_temp === 85 && 
-            throttle_pos === 18 && 
+        const isSimulatorSignature =
+            coolant_temp === 85 &&
+            throttle_pos === 18 &&
             dtc_codes &&
-            dtc_codes.includes('P0113') && 
+            dtc_codes.includes('P0113') &&
             dtc_codes.includes('P0102');
 
-        const isUnknownBrand = !brand || brand.trim().length === 0 || 
-            brand.toLowerCase() === 'bilinmiyor' || 
-            brand.toLowerCase() === 'unknown' || 
-            brand.toLowerCase().includes('demo') || 
+        const isUnknownBrand = !brand || brand.trim().length === 0 ||
+            brand.toLowerCase() === 'bilinmiyor' ||
+            brand.toLowerCase() === 'unknown' ||
+            brand.toLowerCase().includes('demo') ||
             brand.toLowerCase().includes('test');
 
         const isSimulated = useAppStore.getState().isSimulationMode || isSimulatorEcu || isSimulatorProtocol || isSimulatorSignature || isUnknownBrand;
@@ -144,7 +144,7 @@ export const useBluetooth = () => {
             throttle_pos,
             is_simulated: isSimulated
         });
-        
+
         console.log(`[Telemetry] Enqueued telemetry session with hash: ${session_hash} (RPM: ${engine_rpm}, Temp: ${coolant_temp}, Throttle: ${throttle_pos})`);
     }, []);
 
@@ -175,25 +175,25 @@ export const useBluetooth = () => {
                 const selectedText = `${activeVeh.brand.toUpperCase()} ${activeVeh.model.toUpperCase()}`;
                 Alert.alert(
                     t('vehicleSelect.mismatchTitle', 'Araç Uyumsuzluğu'),
-                    t('vehicleSelect.mismatchDesc', { 
+                    t('vehicleSelect.mismatchDesc', {
                         defaultValue: `Bağlanılan aracın şasi numarasından markasının "${make}" olduğu tespit edildi. Seçtiğiniz araç ise "${selectedText}".\n\nAraç seçimini iptal edip doğru marka (${make}) ile yeniden tanımlamak ister misiniz?`,
-                        make: make, 
-                        selected: selectedText 
+                        make: make,
+                        selected: selectedText
                     }),
                     [
                         { text: t('common.no', 'Hayır'), style: 'cancel' },
-                        { 
-                            text: t('common.yes', 'Evet, Düzelt'), 
+                        {
+                            text: t('common.yes', 'Evet, Düzelt'),
                             onPress: () => {
                                 useTelemetryStore.getState().setActiveSessionVehicle(null);
                                 useBluetoothStore.getState().setSuggestedBrandFromVin(make.toLowerCase());
-                            } 
+                            }
                         }
                     ]
                 );
             }
         }
-        
+
         // Write mock DTC file to dynamic local cache on first simulation mode launch to prevent missing chunk errors
         if (useAppStore.getState().isSimulationMode) {
             const dirPath = `${RNFS.CachesDirectoryPath}/dtc_chunks`;
@@ -218,10 +218,10 @@ export const useBluetooth = () => {
                 console.error('[useBluetooth] Failed to create mock dynamic DTC file:', err);
             }
         }
-        
+
         // 1. Preload any existing local JSON chunk for this make to dynamicCache
         await preloadDynamicDtc(make);
-        
+
         // 2. Trigger asynchronous background sync from raw GitHub URL (non-blocking)
         syncManufacturerDtc(make).catch(err => {
             console.error('[useBluetooth] Background DTC sync failed:', err);
@@ -331,7 +331,7 @@ export const useBluetooth = () => {
                     t('connection.scanFailed', 'Scan Failed: ') + msg
                 );
             }
-            
+
             setError(msg);
             return [];
         }
@@ -406,7 +406,7 @@ export const useBluetooth = () => {
                     OBDCommandQueue.clear(new Error('CONNECTION_LOST'));
                     reset();
                     Alert.alert(
-                        t('connection.disconnectedTitle', 'Disconnected!'), 
+                        t('connection.disconnectedTitle', 'Disconnected!'),
                         t('connection.disconnectedDesc', 'Bluetooth connection was unexpectedly lost. Please reconnect.')
                     );
                 });
@@ -474,25 +474,25 @@ export const useBluetooth = () => {
             // 1. Initialize Adapter & Run Pre-paywall Identity Checks (ATI, AT PPS)
             // Timeout set to 5000ms for stable initialization and K-Line 5-Baud wakeup sequences
             await OBDCommandQueue.add(ADAPTER_COMMANDS.RESET, 2000);         // ATZ (Boot can take 1.5s)
-            
+
             // ATZ Boot Uykusu: Cihazın donanımsal olarak tam uyanması için
-            await preciseSleep(250); 
-            
+            await preciseSleep(250);
+
             await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 1000);      // ATE0
             await OBDCommandQueue.add("ATL0", 1000);                         // ATL0 - linefeeds off
             await OBDCommandQueue.add("ATH0", 1000);                         // ATH0 - Headers OFF (critical for clean hex parsing on CAN Bus)
             await OBDCommandQueue.add("ATS0", 1000);                         // ATS0 - Spaces OFF (compact hex responses)
             await OBDCommandQueue.add(ADAPTER_COMMANDS.ADAPTIVE_TIMING, 1000); // AT AT1 - Adaptive Timing On
             await OBDCommandQueue.add(ADAPTER_COMMANDS.TIMEOUT_LIMIT, 1000);  // AT ST 62 - Timeout limit sabitleme (248ms)
-            
+
             const atiRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.DEVICE_INFO, 5000);   // ATI
-            
+
             // Check for clone signatures
             let isClone = false;
             if (atiRes.toLowerCase().includes('v2.1')) {
                 isClone = true;
             }
-            
+
             try {
                 // AT PPS is a check for ELM327 programmable parameters.
                 // Low-quality clone chips usually don't support programmable parameters and return '?'
@@ -503,17 +503,17 @@ export const useBluetooth = () => {
             } catch (ppsErr) {
                 isClone = true;
             }
-            
+
             if (isClone) {
                 useBluetoothStore.getState().setIsCloneDevice(true);
                 useBluetoothStore.getState().addLog('DETECTED: Clone/Low-Quality Adapter');
             }
 
- 
+
             // 2. Dynamic Initialization & Universal Protocol Fallback
             let ecuConnected = false;
             let rpmRes = '';
- 
+
             try {
                 // Evrensel Tarama İlk Hamle: Timeout uzatıp her zaman AT SP 0 ile başla.
                 await OBDCommandQueue.add(ADAPTER_COMMANDS.TIMEOUT_LIMIT, 2000); // AT ST 62
@@ -521,16 +521,16 @@ export const useBluetooth = () => {
 
                 // Send 01 00 to wake up vehicle (8000ms is crucial for K-Line 5-baud slow init)
                 const initRes = await OBDCommandQueue.add("01 00", 8000);
-                
+
                 // Veri Bütünlüğü: \r ve \n KESİNLİKLE silinmeyecek. Sadece SEARCHING, BUS INIT ve noktalar temizlenecek.
                 const cleanInitRes = initRes ? initRes.replace(/(SEARCHING|BUS INIT|ERROR)\.*/gi, '').toUpperCase() : '';
-                
+
                 // Whitelist Hex Doğrulaması: 41 00 veya 4100 içermiyorsa protokol başarısızdır.
                 if (!cleanInitRes || !(cleanInitRes.includes('41 00') || cleanInitRes.includes('4100'))) {
                     useBluetoothStore.getState().addLog(`DIAG: AT SP 0 failed, invalid hex response: [${cleanInitRes}]`);
                     throw new Error("PROTOCOL_FAILED");
                 }
-                
+
                 ecuConnected = true;
                 const selectedProtocol = await OBDCommandQueue.add("AT DP", 5000);
                 const protocolClean = selectedProtocol ? selectedProtocol.trim() : 'UNKNOWN';
@@ -539,18 +539,18 @@ export const useBluetooth = () => {
             } catch (e) {
                 // Şelale (Waterfall) Fallback Şasisi
                 useBluetoothStore.getState().addLog('DIAG: AT SP 0 failed, initiating waterfall fallback sequence...');
-                
+
                 const fallbackProtocols = ["AT SP 6", "AT SP 7", "AT SP 3", "AT SP 5", "AT SP 4"];
-                
+
                 for (const protocol of fallbackProtocols) {
                     try {
                         // Buffer Temizliği ve Amneziyi Engelleme (Re-init)
                         useBluetoothStore.getState().addLog(`DIAG: Buffer temizleniyor (AT WS)...`);
                         await OBDCommandQueue.add("AT WS", 2000);
-                        
+
                         // Fiziksel Donanım Gecikmesi: Çin klonlarının UART hattının uyanması için
                         await preciseSleep(500);
-                        
+
                         // AT WS sonrası ELM327 konfigürasyonlarını yeniden inşa et
                         await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 1000); // ATE0
                         await OBDCommandQueue.add("ATL0", 1000);                    // ATL0
@@ -558,14 +558,14 @@ export const useBluetooth = () => {
                         await OBDCommandQueue.add("ATS0", 1000);                    // ATS0 - Spaces OFF
                         await OBDCommandQueue.add(ADAPTER_COMMANDS.ADAPTIVE_TIMING, 1000); // AT AT1
                         await OBDCommandQueue.add(ADAPTER_COMMANDS.TIMEOUT_LIMIT, 1000);  // AT ST 62
-                        
+
                         useBluetoothStore.getState().addLog(`DIAG: Trying fallback protocol ${protocol}...`);
                         await OBDCommandQueue.add(protocol, 2000);
-                        
+
                         // 8000ms is crucial for K-Line 5-baud slow init
                         const initRes = await OBDCommandQueue.add("01 00", 8000);
                         const cleanInitRes = initRes ? initRes.replace(/(SEARCHING|BUS INIT|ERROR)\.*/gi, '').toUpperCase() : '';
-                        
+
                         // Whitelist Hex Doğrulaması
                         if (cleanInitRes && (cleanInitRes.includes('41 00') || cleanInitRes.includes('4100'))) {
                             ecuConnected = true;
@@ -583,13 +583,13 @@ export const useBluetooth = () => {
                         useBluetoothStore.getState().addLog(`DIAG: Fallback ${protocol} error: ${msg}`);
                     }
                 }
-                
+
                 // Sessiz Ölümü Engelle: Tüm fallback'ler başarısız olduysa exception fırlat
                 if (!ecuConnected) {
                     throw new Error("ALL_PROTOCOLS_FAILED");
                 }
             }
- 
+
             // Protokol İntiharını Engelle: RPM (01 0C) veya diğer canlı telemetri verileri el sıkışma bloğunun tamamen dışındadır.
             try {
                 rpmRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.RPM, 5000);
@@ -600,7 +600,7 @@ export const useBluetooth = () => {
             // 3. Batch Query Handshake Check
             const connectedProtocol = useBluetoothStore.getState().protocol;
             const isCanBus = connectedProtocol && (
-                connectedProtocol.toUpperCase().includes('CAN') || 
+                connectedProtocol.toUpperCase().includes('CAN') ||
                 connectedProtocol.toUpperCase().includes('ISO 15765') ||
                 connectedProtocol.toUpperCase().includes('6') ||
                 connectedProtocol.toUpperCase().includes('7')
@@ -745,8 +745,8 @@ export const useBluetooth = () => {
 
         try {
             const activeKeys = useDashboardStore.getState().activeSensors;
-            const activeConfigs = ALL_SENSORS.filter(s => activeKeys.includes(s.key));
-            
+            const activeSensors = ALL_SENSORS.filter(s => activeKeys.includes(s.key));
+
             const getPid = (sensor: typeof ALL_SENSORS[number]) => {
                 if (sensor.key === 'throttle') {
                     const activeVeh = useTelemetryStore.getState().activeSessionVehicle;
@@ -770,7 +770,7 @@ export const useBluetooth = () => {
 
             const connectedProtocol = useBluetoothStore.getState().protocol;
             const isCanBus = connectedProtocol && (
-                connectedProtocol.toUpperCase().includes('CAN') || 
+                connectedProtocol.toUpperCase().includes('CAN') ||
                 connectedProtocol.toUpperCase().includes('ISO 15765') ||
                 connectedProtocol.toUpperCase().includes('6') ||
                 connectedProtocol.toUpperCase().includes('7')
@@ -778,13 +778,13 @@ export const useBluetooth = () => {
 
             if (isCanBus && isBatchQuerySupportedRef.current) {
                 // CAN-Bus Flow: ATRV + Batch Queries (balanced chunk limit: 4)
-                const hasVoltage = activeConfigs.some(s => s.key === 'voltage');
+                const hasVoltage = activeSensors.some(s => s.key === 'voltage');
                 if (hasVoltage) {
                     await sendCommand('ATRV');
                     if (!pollingRef.current || useBluetoothStore.getState().status !== 'connected') return;
                 }
 
-                const obdPids = activeConfigs
+                const obdPids = activeSensors
                     .filter(s => s.key !== 'voltage')
                     .map(s => getPid(s).replace(/\s+/g, '').substring(2)); // e.g. "0C"
 
@@ -815,7 +815,7 @@ export const useBluetooth = () => {
                 }
             } else {
                 // Sequential Polling Flow (K-Line or CAN-Bus with batch query disabled)
-                for (const sensor of activeConfigs) {
+                for (const sensor of activeSensors) {
                     const pid = sensor.key === 'voltage' ? 'ATRV' : getPid(sensor);
                     try {
                         await sendCommand(pid);
@@ -831,7 +831,7 @@ export const useBluetooth = () => {
                         }
                     }
                     if (!pollingRef.current || useBluetoothStore.getState().status !== 'connected') return;
-                    await preciseSleep(60); // 60ms inter-command breathing space
+                    await preciseSleep(80); // 80ms inter-command breathing space
                 }
             }
         } catch (e) {
@@ -1166,4 +1166,3 @@ export const useBluetooth = () => {
         isBatchQuerySupported
     };
 };
-
