@@ -9,7 +9,7 @@
         "backToHub": "ANA MENÜYE DÖN",
         "liveSensorsView": "Canlı Sensörler",
         "diagnosticsView": "Ekspertiz",
-        "vehicleProfileView": "Araç Profili",
+        "vehicleProfileView": "Uygulama Hakkında",
         "goToExpertise": "EKSPERTİZ'E GİT",
         "goToSensors": "CANLI VERİLERE GİT",
         "bleConnected": "BLE BAĞLI",
@@ -30,7 +30,7 @@
         "dtcDetected": "{{count}} ARIZA TESPİT EDİLDİ",
         "liveSensors": "Canlı Sensörler",
         "realtimeData": "CANLI VERİ AKIŞI",
-        "vehicleProfile": "Araç Profili",
+        "vehicleProfile": "Uygulama Hakkında",
         "quickSettings": "Hızlı Ayarlar",
         "settings": {
             "title": "Hızlı Ayarlar",
@@ -57,8 +57,14 @@
             "idCopied": "Kullanıcı kimliği panoya kopyalandı.",
             "hardwareHealthAndId": "DONANIM SAĞLIĞI & KİMLİK",
             "hardwareModalDesc": "Destek almak veya manuel PRO lisans aktivasyonu yapmak için lütfen yukarıdaki Kullanıcı Kimliğini kopyalayıp bizimle iletişime geçin.",
-            "supportEmailBody": "Merhaba MotoCortex Destek Ekibi,\n\n--- Uygulama Bilgisi ---\nKullanıcı Kimliği: {{userId}}\nLisans Durumu: {{license}}\nBağlantı: {{connection}}\nCihaz Durumu: {{deviceStatus}}\n\n--- Mesajınız ---\n"
-        }
+            "supportEmailBody": "Merhaba MotoCortex Destek Ekibi,\n\n--- Uygulama Bilgisi ---\nKullanıcı Kimliği: {{userId}}\nLisans Durumu: {{license}}\nBağlantı: {{connection}}\nCihaz Durumu: {{deviceStatus}}\n\n--- Mesajınız ---\n",
+            "deviceName": "Cihaz Adı:",
+            "simulationObd": "Simülasyon OBD"
+        },
+        "aboutAppDesc": "Uygulama Bilgileri & Rehber",
+        "supportDesc": "Destek ve İletişim",
+        "shareDesc": "Uygulamayı Paylaş",
+        "noDtc": "TEMİZ"
     },
     "common": {
         "cancel": "İptal",
@@ -87,7 +93,15 @@
         "disabled": "PASİF",
         "freeUsageRemaining": "3 HAKTAN {{count}} KULLANIM KALDI",
         "light": "AYDINLIK",
-        "dark": "KARANLIK"
+        "dark": "KARANLIK",
+        "yes": "Evet, Düzelt",
+        "no": "Hayır",
+        "reset": "VARSAYILAN",
+        "apply": "UYGULA",
+        "back": "Geri",
+        "chassis": "Şasi",
+        "operations": "İşlemler",
+        "close": "KAPAT"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -118,7 +132,11 @@
         "terms": "Kullanım Şartları",
         "privacy": "Gizlilik Politikası",
         "hardwareWarning": "⚠️ Önemli Donanım Notu: Apple yasal kısıtlamaları gereği, iOS cihazlar eski nesil Bluetooth Classic (v2.1) adaptörleri desteklemez. Uygulamayı PRO moduna yükseltmeden önce elinizdeki cihazın Bluetooth LE (4.0+) veya Wi-Fi uyumlu olduğundan emin olun.",
-        "hardwareWarningAndroid": "⚠️ Önemli Donanım Notu: Android cihazlar hem Bluetooth Classic hem de Bluetooth LE (4.0+) adaptörleri destekler. PRO moduna geçmeden önce cihazınızın uyumlu olduğundan emin olun."
+        "hardwareWarningAndroid": "⚠️ Önemli Donanım Notu: Android cihazlar hem Bluetooth Classic hem de Bluetooth LE (4.0+) adaptörleri destekler. PRO moduna geçmeden önce cihazınızın uyumlu olduğundan emin olun.",
+        "errorTitle": "Ürünler Yüklenemedi",
+        "errorDesc": "Ürünler yüklenirken bir hata oluştu, lütfen internet bağlantınızı kontrol edip tekrar deneyin.",
+        "retryBtn": "Tekrar Dene",
+        "loadingPrices": "Fiyatlar yükleniyor..."
     },
     "connection": {
         "logoSub": "v7 PRO",
@@ -171,7 +189,24 @@
         "battery": "AKÜ",
         "load": "YÜK",
         "intake": "EMME HAVA",
-        "manifold": "MANİFOLD kPa"
+        "manifold": "MANİFOLD kPa",
+        "customizeTitle": "GÖSTERGE PANELİ",
+        "customizeSubtitle": "Ekranda görmek istediğiniz sensörleri seçin (En fazla 8).",
+        "layoutType": "Şablon Tipi",
+        "layoutGrid": "GRID",
+        "layoutList": "LİSTE",
+        "customizeButton": "GÖSTERGELERİ DÜZENLE",
+        "coolant": "Motor Sıcaklığı",
+        "voltage": "Akü Voltajı",
+        "engineLoad": "Motor Yükü",
+        "intakeAirTemp": "Emme Havası",
+        "manifoldPressure": "Manifold Basıncı",
+        "ambientTemp": "Dış Sıcaklık",
+        "oilTemp": "Yağ Sıcaklığı",
+        "mafFlow": "MAF Hava Akışı",
+        "timingAdvance": "Ateşleme Avansı",
+        "fuelLevel": "Yakıt Seviyesi",
+        "catalystTemp": "Kat. Sıcaklığı"
     },
     "expertise": {
         "historyFound": "ARAÇ GEÇMİŞİ BULUNDU!",
@@ -428,7 +463,25 @@
         "errorBrand": "Lütfen bir marka seçin veya girin.",
         "errorModel": "Lütfen bir model seçin veya girin.",
         "errorYear": "Lütfen geçerli bir yıl seçin veya girin (örn. 2018).",
-        "noResults": "Sonuç bulunamadı"
+        "noResults": "Sonuç bulunamadı",
+        "selectVehiclePrompt": "LÜTFEN ÖNCE ARACI SEÇİN",
+        "selectedVehicle": "SEÇİLİ ARAÇ",
+        "changeVehicle": "DEĞİŞTİR",
+        "newVehicle": "Yeni Araç Ekle",
+        "titleMenu": "Araç & Bağlantı",
+        "registeredVehiclesLabel": "KAYITLI ARAÇLAR",
+        "viewRegisteredList": "Kayıtlı Araçları Gör",
+        "registeredVehicles": "KAYITLI ARAÇLARIM",
+        "deleteConfirm": "Bu aracı kayıtlı araçlardan silmek istediğinize emin misiniz?",
+        "noRegisteredVehicles": "Kayıtlı araç bulunamadı.",
+        "selectVehicle": "ARAÇ SEÇ",
+        "mismatchTitle": "Araç Uyumsuzluğu",
+        "mismatchDesc": "Bağlanılan aracın şasi numarasından markasının \"{{make}}\" olduğu tespit edildi. Seçtiğiniz araç ise \"{{selected}}\".\n\nAraç seçimini iptal edip doğru marka ({{make}}) ile yeniden tanımlamak ister misiniz?",
+        "operations": {
+            "clearDtc": "Hata Kodları Silindi",
+            "fuelAdaptation": "Yakıt Adaptasyonu",
+            "ecuReset": "ECU Sıfırlama"
+        }
     },
     "brands": {
         "alfa_romeo": "Alfa Romeo",
@@ -508,5 +561,49 @@
         "proceedAnyway": "Yine de Devam Et",
         "openSettings": "Ayarları Aç"
     },
-    "disclaimer": "Tüm ürün adları, logolar ve markalar ilgili sahiplerinin mülkiyetindedir. Bu uygulamada kullanılan tüm şirket, ürün ve hizmet adları yalnızca tanımlama amaçlıdır. Bu isimlerin, logoların ve markaların kullanılması, herhangi bir onay veya sponsorluk anlamına gelmez."
+    "disclaimer": "Tüm ürün adları, logolar ve markalar ilgili sahiplerinin mülkiyetindedir. Bu uygulamada kullanılan tüm şirket, ürün ve hizmet adları yalnızca tanımlama amaçlıdır. Bu isimlerin, logoların ve markaların kullanılması, herhangi bir onay veya sponsorluk anlamına gelmez.",
+    "hiddenFeatures": {
+        "title": "GİZLİ ÖZELLİKLER",
+        "btnLabel": "GİZLİ ÖZELLİK AÇ",
+        "unsupported": "Bu OBD2 adaptörü gizli özellik açmayı desteklemiyor.",
+        "unsupportedDesc": "Orijinal ELM327 v2.1 veya üzeri adaptör gerekiyor. Clone adaptörler bu özelliği desteklemiyor.",
+        "notConnected": "Önce bir araca bağlanın.",
+        "notConnectedDesc": "Gizli özellik açmak için OBD2 cihazı bağlı olmalıdır.",
+        "warning": "Bu değişiklikler araç garantinizi etkileyebilir. Dikkatli kullanın.",
+        "confirmTitle": "Onay Gerekli",
+        "confirmMsg": "Bu özelliği değiştirmek ECU ayarlarını etkiler. Devam etmek istiyor musunuz?",
+        "confirmOk": "Devam Et",
+        "confirmCancel": "Vazgeç",
+        "categoryLighting": "AYDINLATMA",
+        "categorySound": "SES & UYARILAR",
+        "categoryDisplay": "GÖSTERGE PANELİ",
+        "categoryDriving": "SÜRÜŞ",
+        "featureDrl": "Gündüz Farı (DRL)",
+        "featureRearFog": "Arka Sis Lambası Override",
+        "featureDoorChime": "Kapı Uyarı Sesini Kapat",
+        "featureParkingAlert": "Park Freni Sesli Uyarı",
+        "featureRpmWarning": "RPM Limit Uyarısı",
+        "featureFuelSensitivity": "Yakıt Gösterge Hassasiyeti",
+        "featureStartStop": "Start-Stop Varsayılan Kapalı",
+        "featureSportMemory": "Sport Modu Hafızaya Al",
+        "enabled": "AKTİF",
+        "disabled": "PASİF",
+        "writeSuccess": "Özellik başarıyla güncellendi.",
+        "writeError": "Yazma hatası. Lütfen tekrar deneyin.",
+        "simulationBanner": "SİMÜLASYON MODU — Gerçek ECU yazma henüz aktif değil",
+        "closeBtn": "KAPAT",
+        "disclaimerTitle": "SORUMLULUK BEYANI",
+        "disclaimerFeature": "Özellik",
+        "disclaimerBody": "Bu özelliği değiştirmek, aracınızın fabrika ayarlarını ve ECU yazılımını doğrudan etkiler. Aşağıdaki riskleri lütfen dikkatlice okuyun:\n\n• Hatalı uygulama, araç garantinizi geçersiz kılabilir.\n• Bazı değişiklikler araçta kalıcı arızalara veya beklenmedik elektrik hatalarına yol açabilir.\n• İşlem geri alınabilir olsa da bazı ECU modülleri fabrika sıfırlaması gerektirebilir.\n• Bu özelliğin kullanımından doğacak maddi veya manevi tüm zararlardan kullanıcı sorumludur.\n• MotoCortex, bu değişiklikler nedeniyle oluşabilecek herhangi bir arıza veya hasardan sorumlu tutulamaz.\n\nBu uyarıyı dikkatlice okuyup anladığınızı onaylamanız gerekmektedir.",
+        "checkboxTitle": "ONAY GEREKLİ",
+        "check1": "Bu uyarıyı okudum ve araç garantimin etkilenebileceğini anlıyorum.",
+        "check2": "Bu işlemden doğacak arıza veya hasarlardan MotoCortex'in sorumlu olmadığını kabul ediyorum.",
+        "check3": "Tüm riskleri bilerek ve kendi isteğimle bu değişikliği yapmak istiyorum.",
+        "disclaimerCancel": "İPTAL",
+        "disclaimerContinue": "DEVAM ET",
+        "unsupportedTitle": "Desteklenmiyor",
+        "unsupportedMsg": "Bağlı OBD2 cihazı henüz bu özelliği desteklemiyor.\n\nGizli özellik yazma işlemi için uyumlu bir ELM327 v2.1+ adaptör gerekmektedir. Clone veya standart adaptörler bu komutları işleyememektedir.",
+        "unsupportedOk": "Tamam"
+    },
+    "disconnectShort": "KES"
 }

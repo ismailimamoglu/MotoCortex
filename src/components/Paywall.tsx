@@ -17,6 +17,7 @@ import Purchases, { PurchasesPackage } from 'react-native-purchases';
 import { useAppStore, checkIsProStatus } from '../store/useAppStore';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
+import analytics from '@react-native-firebase/analytics';
 
 interface PaywallProps {
   visible: boolean;
@@ -81,55 +82,102 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
     },
   ];
 
-  useEffect(() => {
-    if (visible) {
-      if (USE_MOCK_DATA) {
-        setIsLoadingOfferings(false);
-        const w = mockPackages.find(p => p.identifier === 'weekly_single');
-        const m = mockPackages.find(p => p.identifier === '$rc_monthly');
-        const y = mockPackages.find(p => p.identifier === '$rc_yearly');
-        setWeeklyPkg(w || null);
-        setMonthlyPkg(m || null);
-        setYearlyPkg(y || null);
-        setSelectedPkgId('$rc_yearly');
-        return;
-      }
-
-      const fetchOfferings = async () => {
-        setIsLoadingOfferings(true);
-        try {
-          const offerings = await Purchases.getOfferings();
-          if (offerings.current !== null) {
-            const currentOffering = offerings.current;
-            const standardMonthly = currentOffering.monthly || null;
-            const standardYearly = currentOffering.annual || null;
-            const customWeekly = currentOffering.availablePackages.find(
-              (pkg) => pkg.identifier === 'weekly_single'
-            ) || null;
-
-            if (!customWeekly) {
-              console.log(JSON.stringify(offerings.current, null, 2));
-            }
-
-            setMonthlyPkg(standardMonthly);
-            setYearlyPkg(standardYearly);
-            setWeeklyPkg(customWeekly);
-
-            if (standardYearly) {
-              setSelectedPkgId(standardYearly.identifier);
-            } else if (standardMonthly) {
-              setSelectedPkgId(standardMonthly.identifier);
-            } else if (customWeekly) {
-              setSelectedPkgId(customWeekly.identifier);
-            }
-          }
-        } catch (error) {
-          console.warn('Failed to load offerings in Paywall:', error);
-        } finally {
-          setIsLoadingOfferings(false);
+  const fetchOfferings = async () => {
+    const useLocalFallbacks = () => {
+      const fallbackWeekly: any = {
+        identifier: 'weekly_single',
+        packageType: 'WEEKLY',
+        product: {
+          identifier: 'motocortex_pro_weekly_nonrenew',
+          price: 4.99,
+          priceString: '₺164,99',
+          title: t('paywall.weekly'),
+          description: t('paywall.weeklyDesc'),
         }
       };
+      const fallbackMonthly: any = {
+        identifier: '$rc_monthly',
+        packageType: 'MONTHLY',
+        product: {
+          identifier: 'motocortex_pro_monthly',
+          price: 9.99,
+          priceString: '₺329,99',
+          title: t('paywall.monthly'),
+          description: t('paywall.monthlyDesc'),
+        }
+      };
+      const fallbackYearly: any = {
+        identifier: '$rc_yearly',
+        packageType: 'ANNUAL',
+        product: {
+          identifier: 'motocortex_pro_yearly',
+          price: 29.99,
+          priceString: '₺1.099,99',
+          title: t('paywall.yearly'),
+          description: t('paywall.yearlyDesc'),
+        }
+      };
+      setWeeklyPkg(fallbackWeekly);
+      setMonthlyPkg(fallbackMonthly);
+      setYearlyPkg(fallbackYearly);
+      setSelectedPkgId('$rc_yearly');
+    };
+
+    if (USE_MOCK_DATA) {
+      setIsLoadingOfferings(false);
+      const w = mockPackages.find(p => p.identifier === 'weekly_single');
+      const m = mockPackages.find(p => p.identifier === '$rc_monthly');
+      const y = mockPackages.find(p => p.identifier === '$rc_yearly');
+      setWeeklyPkg(w || null);
+      setMonthlyPkg(m || null);
+      setYearlyPkg(y || null);
+      setSelectedPkgId('$rc_yearly');
+      return;
+    }
+
+    setIsLoadingOfferings(true);
+    try {
+      const offerings = await Purchases.getOfferings();
+      if (offerings.current !== null && offerings.current.availablePackages.length > 0) {
+        const currentOffering = offerings.current;
+        const customWeekly = currentOffering.availablePackages.find(
+          (pkg) => pkg.identifier === 'weekly_single'
+        ) || null;
+        const customMonthly = currentOffering.availablePackages.find(
+          (pkg) => pkg.identifier === 'src_monthly' || pkg.identifier === '$rc_monthly' || pkg.identifier === 'monthly'
+        ) || null;
+        const customYearly = currentOffering.availablePackages.find(
+          (pkg) => pkg.identifier === 'src_annual' || pkg.identifier === '$rc_annual' || pkg.identifier === '$rc_yearly' || pkg.identifier === 'yearly'
+        ) || null;
+
+        setMonthlyPkg(customMonthly);
+        setYearlyPkg(customYearly);
+        setWeeklyPkg(customWeekly);
+
+        if (customYearly) {
+          setSelectedPkgId(customYearly.identifier);
+        } else if (customMonthly) {
+          setSelectedPkgId(customMonthly.identifier);
+        } else if (customWeekly) {
+          setSelectedPkgId(customWeekly.identifier);
+        }
+      } else {
+        useLocalFallbacks();
+      }
+    } catch (error) {
+      console.warn('Failed to load offerings in Paywall, using local fallbacks:', error);
+      useLocalFallbacks();
+    } finally {
+      setIsLoadingOfferings(false);
+    }
+  };
+
+  useEffect(() => {
+    if (visible) {
       fetchOfferings();
+      analytics().logEvent('paywall_viewed', {
+        use_mock: USE_MOCK_DATA
+      }).catch(e => console.warn('[Analytics] Failed paywall_viewed event:', e));
     }
   }, [visible]);
 
@@ -141,11 +189,21 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
 
   const handlePurchase = async (pkg: PurchasesPackage) => {
     setIsPurchasing(true);
+    analytics().logEvent('purchase_initiated', {
+      package_id: pkg.identifier,
+      package_type: pkg.packageType,
+      price: pkg.product.price,
+      price_string: pkg.product.priceString
+    }).catch(e => console.warn('[Analytics] Failed purchase_initiated event:', e));
 
     if (USE_MOCK_DATA) {
       setTimeout(() => {
         setIsPurchasing(false);
         useAppStore.getState().setIsPro(true);
+        analytics().logEvent('purchase_success', {
+          package_id: pkg.identifier,
+          is_mock: true
+        }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
         const congratsTitle = t('paywall.congratsTitle', '🎉 Congratulations!');
         const congratsMsg = t('paywall.congratsMsg', 'Your MotoCortex PRO membership has been successfully activated. Enjoy all professional features!');
         Alert.alert(congratsTitle, congratsMsg);
@@ -155,12 +213,36 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
     }
 
     try {
-      const { customerInfo } = await Purchases.purchasePackage(pkg);
+      let purchaseResult;
+      const isFallbackPkg = !pkg.product.subscriptionPeriod && !pkg.product.introPrice;
+      
+      if (isFallbackPkg) {
+        console.log('[Paywall] Fallback package purchase, querying store product for ID:', pkg.product.identifier);
+        try {
+          const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
+          if (storeProducts && storeProducts.length > 0) {
+            purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
+          } else {
+            purchaseResult = await Purchases.purchasePackage(pkg);
+          }
+        } catch (prodErr) {
+          console.warn('[Paywall] Failed store product query, trying package directly:', prodErr);
+          purchaseResult = await Purchases.purchasePackage(pkg);
+        }
+      } else {
+        purchaseResult = await Purchases.purchasePackage(pkg);
+      }
+
+      const { customerInfo } = purchaseResult;
       setIsPurchasing(false);
       const activePro = checkIsProStatus(customerInfo);
       useAppStore.getState().setIsPro(activePro);
 
       if (activePro) {
+        analytics().logEvent('purchase_success', {
+          package_id: pkg.identifier,
+          is_mock: false
+        }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
         const congratsTitle = t('paywall.congratsTitle', '🎉 Congratulations!');
         const congratsMsg = t('paywall.congratsMsg', 'Your MotoCortex PRO membership has been successfully activated. Enjoy all professional features!');
         Alert.alert(congratsTitle, congratsMsg);
@@ -170,20 +252,30 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       setIsPurchasing(false);
       if (!error?.userCancelled) {
         console.warn('Purchase failed:', error);
+        analytics().logEvent('purchase_failed', {
+          package_id: pkg.identifier,
+          error_message: error?.message || String(error)
+        }).catch(e => console.warn('[Analytics] Failed purchase_failed event:', e));
         const errTitle = t('paywall.errTitle', '❌ Purchase Failed');
         const errMsg = error?.message || t('paywall.errMsg', 'An error occurred during the purchase. Please try again.');
         Alert.alert(errTitle, errMsg);
+      } else {
+        analytics().logEvent('purchase_cancelled', {
+          package_id: pkg.identifier
+        }).catch(e => console.warn('[Analytics] Failed purchase_cancelled event:', e));
       }
     }
   };
 
   const handleRestore = async () => {
     setIsPurchasing(true);
+    analytics().logEvent('purchase_restore_initiated').catch(e => console.warn('[Analytics] Failed restore_initiated event:', e));
 
     if (USE_MOCK_DATA) {
       setTimeout(() => {
         setIsPurchasing(false);
         useAppStore.getState().setIsPro(true);
+        analytics().logEvent('purchase_restore_success', { is_pro: true, is_mock: true }).catch(e => console.warn('[Analytics] Failed restore_success event:', e));
         const successTitle = t('paywall.restoreSuccessTitle', '✅ Purchases Restored');
         const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using MotoCortex PRO features.');
         Alert.alert(successTitle, successMsg);
@@ -198,6 +290,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       const activePro = checkIsProStatus(customerInfo);
       useAppStore.getState().setIsPro(activePro);
 
+      analytics().logEvent('purchase_restore_success', { is_pro: activePro, is_mock: false }).catch(e => console.warn('[Analytics] Failed restore_success event:', e));
       if (activePro) {
         const successTitle = t('paywall.restoreSuccessTitle', '✅ Purchases Restored');
         const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using MotoCortex PRO features.');
@@ -214,6 +307,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       setIsPurchasing(false);
       
       const errorStr = error?.message || String(error);
+      analytics().logEvent('purchase_restore_failed', { error_message: errorStr }).catch(e => console.warn('[Analytics] Failed restore_failed event:', e));
       const isInternalError = errorStr.includes('RevenueCat') || 
                               errorStr.includes('StoreKit') || 
                               errorStr.includes('SSInternalErrorDomain') ||
@@ -258,7 +352,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
   // Dynamic Styles (Memoized to prevent rendering lag during live data activity)
   const sDyn = React.useMemo(() => {
     const modalWidth = isTablet ? (isLargeTablet ? 650 : 520) : '100%';
-    const modalHeight = isTablet ? '85%' : undefined;
+    const modalHeight = isTablet ? '90%' : undefined;
 
     return {
       overlay: {
@@ -270,7 +364,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         width: modalWidth,
         height: modalHeight,
         flex: isTablet ? undefined : 1,
-        maxHeight: isTablet ? scaleHeight(750) : undefined,
+        maxHeight: isTablet ? scaleHeight(920) : undefined,
         overflow: 'hidden' as const,
         borderRadius: isTablet ? scaleMod(20) : 0,
         borderWidth: isTablet ? 1.5 : 0,
@@ -461,7 +555,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         borderTopWidth: 1,
         paddingHorizontal: scaleWidth(16),
         paddingTop: scaleHeight(12),
-        paddingBottom: scaleHeight(14),
+        paddingBottom: isTablet ? scaleHeight(32) : scaleHeight(14),
       },
       ctaButton: {
         borderRadius: scaleMod(14),
@@ -747,11 +841,11 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
               <View style={[sDyn.errorContainer, { borderColor: colors.cardBorder }]}>
                 <Text style={[sDyn.errorTitle, { color: colors.textPri }]}>{t('paywall.errorTitle', 'Failed to Load Offerings')}</Text>
                 <Text style={[sDyn.errorDesc, { color: colors.textSec }]}>
-                  {t('paywall.errorDesc', 'Please check your internet connection and try again. App Store prices cannot be retrieved right now.')}
+                  {t('paywall.errorDesc', 'An error occurred while loading products. Please check your connection and try again.')}
                 </Text>
                 <TouchableOpacity
                   style={[sDyn.retryButton, { backgroundColor: colors.purple }]}
-                  onPress={loadOfferings}
+                  onPress={fetchOfferings}
                 >
                   <Text style={sDyn.retryButtonText}>{t('paywall.retryBtn', 'Retry')}</Text>
                 </TouchableOpacity>

@@ -20,6 +20,12 @@ interface BluetoothState {
     engineLoad: number | null;
     intakeAirTemp: number | null;
     manifoldPressure: number | null;
+    ambientTemp: number | null;
+    oilTemp: number | null;
+    mafFlow: number | null;
+    timingAdvance: number | null;
+    fuelLevel: number | null;
+    catalystTemp: number | null;
 
     dtcs: string[];
     vin: string | null;
@@ -39,6 +45,8 @@ interface BluetoothState {
     lastDtcSyncTime: string | null;
     isAtomicOperationRunning: boolean;
     pendingProRevocation: boolean;
+    suggestedBrandFromVin: string | null;
+    protocol: string | null;
  
     // Actions
     setStatus: (status: ConnectionStatus) => void;
@@ -57,10 +65,12 @@ interface BluetoothState {
     setIsSgwActive: (value: boolean) => void;
     setIsAtomicOperationRunning: (value: boolean) => void;
     setPendingProRevocation: (value: boolean) => void;
+    setSuggestedBrandFromVin: (brand: string | null) => void;
     flushPendingRevocation: () => void;
     triggerPendingRevocation: () => void;
     addLog: (entry: string) => void;
     clearLogs: () => void;
+    setProtocol: (protocol: string | null) => void;
     reset: () => void;
 }
  
@@ -81,6 +91,12 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     engineLoad: null,
     intakeAirTemp: null,
     manifoldPressure: null,
+    ambientTemp: null,
+    oilTemp: null,
+    mafFlow: null,
+    timingAdvance: null,
+    fuelLevel: null,
+    catalystTemp: null,
     dtcs: [],
     vin: null,
     ecuId: null,
@@ -99,6 +115,8 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     lastDtcSyncTime: null,
     isAtomicOperationRunning: false,
     pendingProRevocation: false,
+    suggestedBrandFromVin: null,
+    protocol: null,
  
     setStatus: (status) => set({ status }),
     setAdapterStatus: (status) => set({ adapterStatus: status }),
@@ -134,10 +152,12 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setIsSgwActive: (isSgwActive) => set({ isSgwActive }),
     setIsAtomicOperationRunning: (isAtomicOperationRunning) => set({ isAtomicOperationRunning }),
     setPendingProRevocation: (pendingProRevocation) => set({ pendingProRevocation }),
+    setSuggestedBrandFromVin: (suggestedBrandFromVin) => set({ suggestedBrandFromVin }),
     flushPendingRevocation: () => set({ pendingProRevocation: false }),
     triggerPendingRevocation: () => set({ pendingProRevocation: true }),
     addLog: (entry) => set((state) => ({ logs: [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs] })),
     clearLogs: () => set({ logs: [] }),
+    setProtocol: (protocol) => set({ protocol }),
     reset: () => set({
         status: 'disconnected',
         adapterStatus: 'disconnected',
@@ -154,6 +174,12 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         engineLoad: null,
         intakeAirTemp: null,
         manifoldPressure: null,
+        ambientTemp: null,
+        oilTemp: null,
+        mafFlow: null,
+        timingAdvance: null,
+        fuelLevel: null,
+        catalystTemp: null,
         dtcs: [],
         vin: null,
         ecuId: null,
@@ -170,5 +196,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         lastDtcSyncTime: null,
         isAtomicOperationRunning: false,
         pendingProRevocation: false,
+        suggestedBrandFromVin: null,
+        protocol: null,
     }),
 }));

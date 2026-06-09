@@ -79,6 +79,7 @@ const DTC_DICTIONARY: Record<string, string> = {
 
 import i18n from '../i18n';
 import { lookupDtcSync, prefetchDtcChunks, prefetchDtcChunksForCodes } from './dtcStorage';
+import { SemanticDtcDictionary } from '../utils/DtcDictionary';
 
 /**
  * Looks up a DTC code synchronously and returns its localized description.
@@ -86,6 +87,13 @@ import { lookupDtcSync, prefetchDtcChunks, prefetchDtcChunksForCodes } from './d
  */
 export function lookupDTC(code: string): string | null {
     const normalized = code.toUpperCase().trim();
+    
+    // 1. Semantic map (Highest priority)
+    const semanticDesc = SemanticDtcDictionary[normalized];
+    if (semanticDesc) {
+        return semanticDesc;
+    }
+
     const i18nKey = `dtc.${normalized}`;
     
     if (i18n.isInitialized && i18n.exists(i18nKey)) {

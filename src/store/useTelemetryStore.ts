@@ -28,6 +28,7 @@ export interface SelectedVehicle {
   brand: string;
   model: string;
   year: number;
+  vin?: string;
 }
 
 export interface ChronicFault {
@@ -140,7 +141,8 @@ export const useTelemetryStore = create<TelemetryState>()(
         activeSessionVehicle: activeSessionVehicle ? {
           brand: toSnakeCase(activeSessionVehicle.brand),
           model: toSnakeCase(activeSessionVehicle.model),
-          year: activeSessionVehicle.year
+          year: activeSessionVehicle.year,
+          vin: activeSessionVehicle.vin
         } : null 
       }),
       

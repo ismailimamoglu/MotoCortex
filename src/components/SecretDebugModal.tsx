@@ -18,6 +18,7 @@ import { useBluetoothStore } from '../store/useBluetoothStore';
 import { syncManufacturerDtc } from '../services/DtcSyncService';
 import { useResponsive } from '../hooks/useResponsive';
 import { useAppStore } from '../store/useAppStore';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 interface SecretDebugModalProps {
   visible: boolean;
@@ -326,7 +327,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
             <View style={[sDyn.syncCard, { backgroundColor: `${colors.purple}0b`, borderColor: colors.border, marginBottom: scaleHeight(12) }]}>
               <Text style={[sDyn.sectionTitle, { color: colors.purple, fontFamily: colors.mono }]}>🛠️ GELİŞTİRİCİ ARAÇLARI</Text>
               
-              <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
+              <View style={{ flexDirection: 'row', gap: scaleMod(8), marginBottom: scaleHeight(8) }}>
                 {/* Simulator Mode Toggle */}
                 <TouchableOpacity
                   style={[
@@ -363,6 +364,42 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 >
                   <Text style={[sDyn.actionBtnText, { color: colors.amber, fontFamily: colors.mono }]}>
                     🔄 SIFIRLA ({freeUsageCount}/3)
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
+                {/* Crashlytics Test Button */}
+                <TouchableOpacity
+                  style={[
+                    sDyn.actionBtn,
+                    { 
+                      borderColor: colors.red, 
+                      backgroundColor: `${colors.red}14`,
+                      flex: 1
+                    }
+                  ]}
+                  onPress={() => {
+                    Alert.alert(
+                      "Crash Test",
+                      "Uygulama şimdi kasten çökecektir. Crashlytics entegrasyonunu doğrulamak için bunu onaylayın.",
+                      [
+                        { text: "İptal", style: "cancel" },
+                        {
+                          text: "Çökert",
+                          style: "destructive",
+                          onPress: () => {
+                            crashlytics().log("Test crash triggered by developer");
+                            crashlytics().crash();
+                          }
+                        }
+                      ]
+                    );
+                  }}
+                  activeOpacity={0.8}
+                >
+                  <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>
+                    💥 CRASH TEST (CRASHLYTICS)
                   </Text>
                 </TouchableOpacity>
               </View>

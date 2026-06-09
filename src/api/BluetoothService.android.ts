@@ -107,20 +107,34 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     async waitForEnabled(timeoutMs: number = 5000): Promise<boolean> {
-        const isCurrentlyEnabled = await RNBluetoothClassic.isBluetoothEnabled();
-        if (isCurrentlyEnabled) return true;
+        // First: try the direct check multiple times (state might not yet be propagated)
+        for (let i = 0; i < 3; i++) {
+            try {
+                const isEnabled = await RNBluetoothClassic.isBluetoothEnabled();
+                if (isEnabled) return true;
+            } catch (e) {
+                // ignore transient errors and retry
+            }
+            if (i < 2) await new Promise(r => setTimeout(r, 200));
+        }
+        // Fallback: wait for a state-change event up to timeoutMs
         return new Promise((resolve) => {
             let timer: NodeJS.Timeout;
+            let resolved = false;
             const subscription = RNBluetoothClassic.onStateChanged((event) => {
-                if (event.enabled) {
+                if (event.enabled && !resolved) {
+                    resolved = true;
                     if (timer) clearTimeout(timer);
                     subscription.remove();
                     resolve(true);
                 }
             });
             timer = setTimeout(() => {
-                subscription.remove();
-                resolve(false);
+                if (!resolved) {
+                    resolved = true;
+                    subscription.remove();
+                    resolve(false);
+                }
             }, timeoutMs);
         });
     }
@@ -147,19 +161,52 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     async scanDevices(): Promise<any[]> {
-        // Under Android, we check if Bluetooth classic is enabled, and scan classic.
-        // We could also scan BLE if needed, but classic is primary on Android.
-        const isReady = await this.waitForEnabled(3000);
+        // Check Bluetooth state with retry logic
+        const isReady = await this.waitForEnabled(5000);
         if (!isReady) throw new BluetoothPermissionError('BLUETOOTH_NOT_POWERED_ON');
+
+        const foundMap = new Map<string, any>();
+        const OBD_REGEX = /(OBD|ELM|VLINKER|MONOFE|CARLY|BIMMER)/i;
+
+        // STEP 1: Always get bonded devices first — instant and always works
         try {
-            const discovered = await RNBluetoothClassic.startDiscovery();
             const bonded = await RNBluetoothClassic.getBondedDevices();
-            const allDevices = [...discovered, ...bonded];
-            return Array.from(new Map(allDevices.map(d => [d.address, d])).values());
-        } catch (err) {
-            try { return await RNBluetoothClassic.getBondedDevices(); }
-            catch (fallbackErr) { throw new Error(`SCAN_FAILED: ${err}`); }
+            bonded.forEach(device => {
+                const name = device.name || '';
+                if (OBD_REGEX.test(name)) {
+                    foundMap.set(device.address, device);
+                }
+            });
+        } catch (bondedErr) {
+            console.warn('[BT Android] getBondedDevices failed:', bondedErr);
         }
+
+        // STEP 2: Attempt active discovery (may fail on some devices/permissions — not fatal)
+        try {
+            // Race discovery against a 12s hard timeout to prevent UI freezes
+            const discovered = await Promise.race([
+                RNBluetoothClassic.startDiscovery(),
+                new Promise<any[]>((_, reject) => setTimeout(() => reject(new Error('DISCOVERY_TIMEOUT')), 12000))
+            ]);
+            if (Array.isArray(discovered)) {
+                discovered.forEach(device => {
+                    const name = device.name || '';
+                    if (OBD_REGEX.test(name)) {
+                        const existing = foundMap.get(device.address);
+                        if (existing) {
+                            existing.rssi = device.rssi || existing.rssi;
+                        } else {
+                            foundMap.set(device.address, device);
+                        }
+                    }
+                });
+            }
+        } catch (discoveryErr) {
+            // Discovery failure is non-fatal — bonded devices are still returned
+            console.warn('[BT Android] startDiscovery failed (non-fatal):', discoveryErr);
+        }
+
+        return Array.from(foundMap.values());
     }
 
     onDisconnect(callback: DisconnectCallback) {
@@ -170,24 +217,8 @@ class BluetoothServiceAndroid implements IBluetoothService {
         this.isManualDisconnect = false;
         
         const isBleOrSim = deviceId.includes('BLE') || deviceId.includes('SIM');
-        if (!isBleOrSim) {
-            try {
-                const bonded = await RNBluetoothClassic.getBondedDevices();
-                const isBonded = bonded.some(d => d.address === deviceId);
-                if (!isBonded) {
-                    console.log(`[Bluetooth Android] Device ${deviceId} is not bonded. Launching Bluetooth settings intent.`);
-                    try {
-                        await Linking.sendIntent('android.settings.BLUETOOTH_SETTINGS');
-                    } catch (intentErr) {
-                        try { await Linking.openSettings(); } catch (e) {}
-                    }
-                    throw new Error('DEVICE_NOT_PAIRED');
-                }
-            } catch (err: any) {
-                if (err?.message === 'DEVICE_NOT_PAIRED') throw err;
-                console.warn('[Bluetooth Android] Failed to check bonded status before connecting:', err);
-            }
-        }
+        // Eşleşme (Pairing) Şelalesi - Uygulama İçi Zorunluluk (OS ayarlarına gitmeyi SİLİYORUZ)
+        // Yukarıdaki intent fırlatma bloğu TAMAMEN kaldırıldı.
 
         try {
             let device: BluetoothDevice | undefined;
@@ -200,11 +231,13 @@ class BluetoothServiceAndroid implements IBluetoothService {
                 if (isBleOrSim) {
                     return await this.connectBLE(deviceId);
                 }
-                throw new Error('Device not found');
+                throw new Error('Device not found or not bonded yet');
             }
+            
+            // Eğer cihaz daha önce bağlı değilse connect çağır (Bu aynı zamanda eşleşme isteği atabilir)
             if (!await device.isConnected()) {
                 const connected = await device.connect({ connectorType: 'rfcomm', DELIMITER: '', charset: 'utf-8' });
-                if (!connected) return false;
+                if (!connected) throw new Error('CONNECTION_FAILED_OR_NOT_BONDED');
             }
             this.connectedDevice = device;
             this.startListening();
@@ -213,22 +246,24 @@ class BluetoothServiceAndroid implements IBluetoothService {
             return true;
         } catch (err: any) {
             console.error('Connection Failed:', err);
-            if (err?.message === 'DEVICE_NOT_PAIRED') throw err;
-
+            
             if (!isBleOrSim) {
+                console.log(`[Bluetooth Android] Connection/Bonding failed, attempting autonomous pairDevice fallback for ${deviceId}`);
                 try {
-                    const bonded = await RNBluetoothClassic.getBondedDevices();
-                    const isBonded = bonded.some(d => d.address === deviceId);
-                    if (!isBonded) {
-                        try {
-                            await Linking.sendIntent('android.settings.BLUETOOTH_SETTINGS');
-                        } catch (intentErr) {
-                            try { await Linking.openSettings(); } catch (e) {}
-                        }
-                        throw new Error('DEVICE_NOT_PAIRED');
-                    }
-                } catch (bondedErr: any) {
-                    if (bondedErr?.message === 'DEVICE_NOT_PAIRED') throw bondedErr;
+                    // Eşleşme Şelalesi: Bağlantı başarısızsa otonom pairDevice tetikle.
+                    // RNBluetoothClassic kendi içinde PIN diyalogunu otonom olarak (In-App) tetikler.
+                    await RNBluetoothClassic.pairDevice(deviceId);
+                    
+                    // Eşleşme başarılı olursa yeniden bağlanmayı deneriz.
+                    const device = await RNBluetoothClassic.getConnectedDevice(deviceId) || await RNBluetoothClassic.connectToDevice(deviceId);
+                    this.connectedDevice = device;
+                    this.startListening();
+                    this.reconnectAttempts = 0;
+                    this.startConnectionMonitor();
+                    return true;
+                } catch (pairErr) {
+                    console.error('[Bluetooth Android] Autonomous Pairing fallback failed:', pairErr);
+                    throw new Error('PAIRING_FAILED');
                 }
             }
 
@@ -245,6 +280,13 @@ class BluetoothServiceAndroid implements IBluetoothService {
                 try { await manager.cancelDeviceConnection(this.bleConnectedDevice.id); } catch (e) {}
             }
             const device = await manager.connectToDevice(deviceId);
+            try {
+                Logger.log('BLE_CONNECT', 'Requesting MTU 512...');
+                await device.requestMTU(512);
+                Logger.log('BLE_CONNECT', 'MTU 512 set successfully.');
+            } catch (mtuErr) {
+                Logger.log('BLE_CONNECT_ERR', `MTU 512 failed: ${mtuErr}`);
+            }
             await device.discoverAllServicesAndCharacteristics();
             const services = await device.services();
             let notifyChar: Characteristic | null = null;

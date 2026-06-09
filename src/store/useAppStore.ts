@@ -8,7 +8,7 @@ import { generateUuid } from '../utils/crypto';
 import i18n from '../i18n';
 
 export type ThemeMode = 'dark' | 'light';
-export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id' | 'it';
+export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id' | 'it' | 'ar' | 'zh' | 'da' | 'fi' | 'fr' | 'hi' | 'nl' | 'ja' | 'ko' | 'pl' | 'hu' | 'no' | 'pt' | 'ro' | 'ru' | 'th' | 'uk' | 'el' | 'cs' | 'sv';
 
 /**
  * Robust helper function to verify if the user has active MotoCortex PRO status.
@@ -210,6 +210,25 @@ export const useAppStore = create<AppState>()(
 
       verifyEntitlement: async () => {
         try {
+          const bypass = await AsyncStorage.getItem('bypass_pro');
+          if (bypass === 'true') {
+            const expiryStr = await AsyncStorage.getItem('bypass_pro_expiry');
+            if (expiryStr) {
+              const expiryTime = parseInt(expiryStr, 10);
+              if (!isNaN(expiryTime) && Date.now() < expiryTime) {
+                set({ isPro: true });
+                return;
+              } else {
+                // Expired! Clean up bypass
+                await AsyncStorage.removeItem('bypass_pro');
+                await AsyncStorage.removeItem('bypass_pro_expiry');
+              }
+            } else {
+              // No expiry set (legacy/fallback), keep PRO
+              set({ isPro: true });
+              return;
+            }
+          }
           // RevenueCat natively caches customerInfo and resolves with it when offline.
           const customerInfo = await Purchases.getCustomerInfo();
           const isPro = checkIsProStatus(customerInfo);

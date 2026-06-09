@@ -47,6 +47,7 @@ class OBDCommandQueue {
     private queue: QueueItem[] = [];
     private isProcessing = false;
     private currentBuffer = '';
+    private blacklist: Set<string> = new Set();
     private currentCommandTimeout: NodeJS.Timeout | null = null;
     private readonly DEFAULT_TIMEOUT_MS = 2000;
 
@@ -142,14 +143,403 @@ class OBDCommandQueue {
         }
     }
 
-    /**
-     * Parses the raw response based on the command.
-     */
-    private parseResponse(command: string, response: string) {
-        // Remove "SEARCHING..." and spaces
-        let clean = response.replace('SEARCHING...', '').trim().replace(/\s+/g, '');
+    private parseMode01Response(command: string, response: string) {
+        let clean = response.replace(/SEARCHING\.*/gi, '');
+        clean = clean.replace(/[\r\n]+/g, ' ');
+        clean = clean.replace(/\b\w+:\s*/g, '');
+        clean = clean.replace(/\s+/g, '');
 
-        // ATI (Adapter Identity)
+        const getPidByteLength = (p: string): number => {
+            const up = p.toUpperCase();
+            if (up === '0C' || up === '10' || up === '3C' || up === '42') return 2;
+            if (up === 'A6') return 4;
+            return 1;
+        };
+
+        const parseAndSetPid = (p: string, hex: string) => {
+            if (!hex || hex.length < 2) return;
+            const cleanPid = p.toUpperCase();
+
+            if (cleanPid === '0C') {
+                if (hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setRpm(Math.round(((a * 256) + b) / 4));
+                    }
+                }
+            } else if (cleanPid === '0D') {
+                const speed = parseInt(hex, 16);
+                if (!isNaN(speed)) {
+                    useBluetoothStore.getState().setSensorData({ speed });
+                }
+            } else if (cleanPid === '05') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ coolant: a - 40 });
+                }
+            } else if (cleanPid === '11' || cleanPid === '49') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ throttle: Math.round((a * 100) / 255) });
+                }
+            } else if (cleanPid === '04') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ engineLoad: Math.round((a * 100) / 255) });
+                }
+            } else if (cleanPid === '0F') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ intakeAirTemp: a - 40 });
+                }
+            } else if (cleanPid === '0B') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ manifoldPressure: a });
+                }
+            } else if (cleanPid === '46') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ ambientTemp: a - 40 });
+                }
+            } else if (cleanPid === '5C') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ oilTemp: a - 40 });
+                }
+            } else if (cleanPid === '10') {
+                if (hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setSensorData({ mafFlow: Number((((a * 256) + b) / 100).toFixed(2)) });
+                    }
+                }
+            } else if (cleanPid === '0E') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ timingAdvance: Number((a / 2 - 64).toFixed(1)) });
+                }
+            } else if (cleanPid === '2F') {
+                const a = parseInt(hex, 16);
+                if (!isNaN(a)) {
+                    useBluetoothStore.getState().setSensorData({ fuelLevel: Math.round((a * 100) / 255) });
+                }
+            } else if (cleanPid === '3C') {
+                if (hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setSensorData({ catalystTemp: Number((((a * 256) + b) / 10 - 40).toFixed(1)) });
+                    }
+                }
+            }
+        };
+
+        if (command.length > 4) {
+            const upperCleanBatch = clean.toUpperCase();
+            const startIdx = upperCleanBatch.indexOf('41');
+            if (startIdx !== -1) {
+                let remaining = upperCleanBatch.substring(startIdx + 2);
+                const requestedPids: string[] = [];
+                for (let i = 2; i < command.length; i += 2) {
+                    requestedPids.push(command.substring(i, i + 2).toUpperCase());
+                }
+
+                for (const pid of requestedPids) {
+                    const pidIdx = remaining.indexOf(pid);
+                    if (pidIdx !== -1) {
+                        const bytes = getPidByteLength(pid);
+                        const dataStart = pidIdx + 2;
+                        const dataEnd = dataStart + bytes * 2;
+                        if (dataEnd <= remaining.length) {
+                            const hexVal = remaining.substring(dataStart, dataEnd);
+                            parseAndSetPid(pid, hexVal);
+                            remaining = remaining.substring(dataEnd);
+                        }
+                    }
+                }
+            }
+        } else {
+            const getHexData = (cmd: string, resp: string, bytes: number) => {
+                const mode = cmd.substring(0, 2);
+                const pid = cmd.substring(2, 4);
+                const echo = (parseInt(mode) + 40).toString() + pid;
+
+                if (resp.includes(echo)) {
+                    const parts = resp.split(echo);
+                    if (parts.length > 1) {
+                        return parts[1].substring(0, bytes * 2);
+                    }
+                }
+                return null;
+            };
+
+            if (command === '010C') {
+                const hex = getHexData(command, clean, 2);
+                if (hex && hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setRpm(Math.round(((a * 256) + b) / 4));
+                    }
+                }
+            } else if (command === '010D') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const speed = parseInt(hex, 16);
+                    if (!isNaN(speed)) {
+                        useBluetoothStore.getState().setSensorData({ speed });
+                    }
+                }
+            } else if (command === '0105') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ coolant: a - 40 });
+                    }
+                }
+            } else if (command === '0111') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ throttle: Math.round((a * 100) / 255) });
+                    }
+                }
+            } else if (command === '0149') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ throttle: Math.round((a * 100) / 255) });
+                    }
+                }
+            } else if (command === '0104') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ engineLoad: Math.round((a * 100) / 255) });
+                    }
+                }
+            } else if (command === '010F') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ intakeAirTemp: a - 40 });
+                    }
+                }
+            } else if (command === '010B') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ manifoldPressure: a });
+                    }
+                }
+            } else if (command === '0146') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ ambientTemp: a - 40 });
+                    }
+                }
+            } else if (command === '015C') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ oilTemp: a - 40 });
+                    }
+                }
+            } else if (command === '0110') {
+                const hex = getHexData(command, clean, 2);
+                if (hex && hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setSensorData({ mafFlow: Number((((a * 256) + b) / 100).toFixed(2)) });
+                    }
+                }
+            } else if (command === '010E') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ timingAdvance: Number((a / 2 - 64).toFixed(1)) });
+                    }
+                }
+            } else if (command === '012F') {
+                const hex = getHexData(command, clean, 1);
+                if (hex && hex.length === 2) {
+                    const a = parseInt(hex, 16);
+                    if (!isNaN(a)) {
+                        useBluetoothStore.getState().setSensorData({ fuelLevel: Math.round((a * 100) / 255) });
+                    }
+                }
+            } else if (command === '013C') {
+                const hex = getHexData(command, clean, 2);
+                if (hex && hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setSensorData({ catalystTemp: Number((((a * 256) + b) / 10 - 40).toFixed(1)) });
+                    }
+                }
+            } else if (command === '0142') {
+                const hex = getHexData(command, clean, 2);
+                if (hex && hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        const volts = ((a * 256) + b) / 1000;
+                        useBluetoothStore.getState().setSensorData({ voltage: volts.toFixed(2) + 'V' });
+                    }
+                }
+            } else if (command === '01A6') {
+                const hex = getHexData(command, clean, 4);
+                if (hex && hex.length === 8) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    const c = parseInt(hex.substring(4, 6), 16);
+                    const d = parseInt(hex.substring(6, 8), 16);
+                    if (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) {
+                        const km = ((a * 16777216) + (b * 65536) + (c * 256) + d) / 10;
+                        useBluetoothStore.getState().setSensorData({ odometer: Math.round(km) });
+                    }
+                }
+            } else if (command === '0131') {
+                const hex = getHexData(command, clean, 2);
+                if (hex && hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setSensorData({ distanceSinceCleared: (a * 256) + b });
+                    }
+                }
+            } else if (command === '0121') {
+                const hex = getHexData(command, clean, 2);
+                if (hex && hex.length === 4) {
+                    const a = parseInt(hex.substring(0, 2), 16);
+                    const b = parseInt(hex.substring(2, 4), 16);
+                    if (!isNaN(a) && !isNaN(b)) {
+                        useBluetoothStore.getState().setSensorData({ distanceMilOn: (a * 256) + b });
+                    }
+                }
+            }
+        }
+    }
+
+    private parseMode03Response(command: string, response: string) {
+        let clean = response.replace(/SEARCHING\.*/gi, '');
+        clean = clean.replace(/[\r\n]+/g, '');
+        clean = clean.replace(/[0-9]+:/g, ''); // Remove frame indexes
+        clean = clean.replace(/\s+/g, '');
+
+        if (command === '03') {
+            const startIndex = clean.indexOf('43');
+            if (startIndex !== -1) {
+                // '43' (1 byte) + DTC Count (1 byte = 2 hex chars) = toplam 4 hex char atla
+                const payload = clean.substring(startIndex + 4);
+                const dtcs: string[] = [];
+
+                for (let i = 0; i < payload.length; i += 4) {
+                    const codeHex = payload.substring(i, i + 4);
+                    if (codeHex === '0000' || codeHex.length < 4) continue;
+
+                    const firstCharHex = parseInt(codeHex[0], 16);
+                    if (isNaN(firstCharHex)) continue;
+
+                    // SAE J2012 High Nibble -> DTC Type Letter
+                    let dtcType = '';
+                    if (firstCharHex >= 0 && firstCharHex <= 3) dtcType = 'P';
+                    else if (firstCharHex >= 4 && firstCharHex <= 7) dtcType = 'C';
+                    else if (firstCharHex >= 8 && firstCharHex <= 11) dtcType = 'B';
+                    else if (firstCharHex >= 12 && firstCharHex <= 15) dtcType = 'U';
+
+                    const secondChar = (firstCharHex & 3).toString();
+                    const remainingHex = codeHex.substring(1).toUpperCase();
+                    dtcs.push(`${dtcType}${secondChar}${remainingHex}`);
+                }
+                useBluetoothStore.getState().setSensorData({ dtcs });
+            }
+        } else if (command === '04') {
+            if (clean.includes('44') || clean.toUpperCase().includes('OK')) {
+                useBluetoothStore.getState().setSensorData({ dtcs: [] });
+            }
+        }
+    }
+
+    private parseMode09Response(command: string, response: string) {
+        let clean = response.replace(/SEARCHING\.*/gi, '');
+        clean = clean.replace(/[\r\n]+/g, '');
+        clean = clean.replace(/[0-9]+:/g, ''); // Remove frame indexes (0:, 1:, 2:)
+        clean = clean.replace(/\s+/g, ''); // Saf hex dizilimi için boşlukları sil
+
+        if (command === '0902') {
+            // Global replace KULLANMA! indexOf ile ilk konumu bul, payload'u ondan sonra al.
+            const startIndex = clean.indexOf('4902');
+            if (startIndex === -1) return;
+            // '4902' (4 hex char) atla, payload'u al
+            const payload = clean.substring(startIndex + 4);
+            
+            let vinAscii = '';
+            for (let i = 0; i < payload.length; i += 2) {
+                const byteStr = payload.substring(i, i + 2);
+                if (byteStr.length === 2) {
+                    const charCode = parseInt(byteStr, 16);
+                    if (!isNaN(charCode) && charCode >= 32 && charCode <= 126) {
+                        const char = String.fromCharCode(charCode);
+                        // Yazdırılabilir standart karakterleri (A-Z0-9) al
+                        // Frame index byte'ları (01, 02 vb.) bu filtreden otomatik düşer
+                        if (/[A-Z0-9]/.test(char)) {
+                            vinAscii += char;
+                        }
+                    }
+                }
+            }
+
+            const cleanVin = vinAscii.trim().substring(0, 17);
+            if (cleanVin.length > 0) {
+                useBluetoothStore.getState().setSensorData({ vin: cleanVin });
+            }
+        } else if (command === '0904') {
+            // Global replace KULLANMA! indexOf ile ilk konumu bul.
+            const startIndex = clean.indexOf('4904');
+            if (startIndex === -1) return;
+            const payload = clean.substring(startIndex + 4);
+
+            let calIdAscii = '';
+            for (let i = 0; i < payload.length; i += 2) {
+                const byteStr = payload.substring(i, i + 2);
+                if (byteStr.length === 2) {
+                    const charCode = parseInt(byteStr, 16);
+                    if (!isNaN(charCode) && charCode >= 32 && charCode <= 126) {
+                        const char = String.fromCharCode(charCode);
+                        if (/[A-Z0-9]/.test(char)) {
+                            calIdAscii += char;
+                        }
+                    }
+                }
+            }
+            const cleanCalId = calIdAscii.trim();
+            if (cleanCalId) {
+                useBluetoothStore.getState().setSensorData({ ecuId: cleanCalId });
+            }
+        }
+    }
+
+    /**
+     * Parses the raw response based on the command using a Switch/If dispatcher.
+     */
+    private parseResponse(rawCommand: string, response: string) {
+        const command = rawCommand.replace(/\s+/g, '');
+        
         if (command === 'ATI') {
             useBluetoothStore.getState().addLog(`ADAPTER_ID: ${response}`);
             if (response.toLowerCase().includes('v2.1')) {
@@ -159,244 +549,42 @@ class OBDCommandQueue {
             return;
         }
 
-        // Check for error responses
-        const isErrorResponse = clean.includes('NODATA') || clean.includes('ERROR') || clean.includes('?');
+        let gentleClean = response.replace(/SEARCHING\.*/gi, '').replace(/[\r\n]+/g, ' ').trim();
+        const upperClean = gentleClean.toUpperCase().replace(/\s+/g, '');
+        
+        const isErrorResponse = upperClean.includes('NODATA') 
+            || upperClean.includes('ERROR') 
+            || upperClean.includes('UNABLE')
+            || upperClean.includes('CANERROR')
+            || upperClean.includes('BUSERROR')
+            || upperClean === '?'
+            || upperClean.endsWith('?');
+
         if (isErrorResponse) {
-            // Log odometer failures but don't set UNSUPPORTED yet (waterfall will handle)
+            if (command.startsWith('01') && command !== '0100' && command !== '010C' && command !== '010D' && command !== '0142') {
+                this.blacklist.add(command);
+                useBluetoothStore.getState().addLog(`BLACKLIST: PID ${command} is unsupported and blacklisted.`);
+            }
             if (command === '01A6' || command.startsWith('22')) {
-                useBluetoothStore.getState().addLog(`ODO_FAIL: ${command} → ${clean.substring(0, 20)}`);
+                useBluetoothStore.getState().addLog(`ODO_FAIL: ${command} → ${gentleClean.substring(0, 20)}`);
             }
             return;
         }
 
-        // ATRV (Battery Voltage) - returns raw string like "12.4V"
-        if (command === 'ATRV') {
-            const voltMatch = clean.match(/(\d+\.?\d*)V?/i);
+        if (command.startsWith('01')) {
+            this.parseMode01Response(command, response);
+        } else if (command.startsWith('09')) {
+            this.parseMode09Response(command, response);
+        } else if (command.startsWith('03') || command === '04') {
+            this.parseMode03Response(command, response);
+        } else if (command === 'ATRV') {
+            const voltMatch = response.match(/(\d+\.?\d*)V?/i);
             if (voltMatch) {
                 useBluetoothStore.getState().setSensorData({ voltage: voltMatch[1] + 'V' });
-            }
-            return;
-        }
-
-        // Helper to check for valid response echo (e.g. 010C -> 410C)
-        const checkEcho = (cmd: string, resp: string) => {
-            if (cmd.length !== 4) return false;
-            const mode = cmd.substring(0, 2);
-            const pid = cmd.substring(2, 4);
-            const expectedEcho = (parseInt(mode) + 40).toString() + pid;
-            return resp.includes(expectedEcho);
-        };
-
-        const getHexData = (cmd: string, resp: string, bytes: number) => {
-            const mode = cmd.substring(0, 2);
-            const pid = cmd.substring(2, 4);
-            const echo = (parseInt(mode) + 40).toString() + pid;
-
-            if (resp.includes(echo)) {
-                const parts = resp.split(echo);
-                if (parts.length > 1) {
-                    return parts[1].substring(0, bytes * 2);
-                }
-            }
-            return null;
-        };
-
-        // RPM (010C) - 2 bytes
-        if (command === '010C') {
-            const hex = getHexData(command, clean, 2);
-            if (hex && hex.length === 4) {
-                const a = parseInt(hex.substring(0, 2), 16);
-                const b = parseInt(hex.substring(2, 4), 16);
-                if (!isNaN(a) && !isNaN(b)) {
-                    useBluetoothStore.getState().setRpm(Math.round(((a * 256) + b) / 4));
-                }
-            }
-        }
-        // SPEED (010D) - 1 byte
-        else if (command === '010D') {
-            const hex = getHexData(command, clean, 1);
-            if (hex && hex.length === 2) {
-                const speed = parseInt(hex, 16);
-                if (!isNaN(speed)) {
-                    useBluetoothStore.getState().setSensorData({ speed });
-                }
-            }
-        }
-        // COOLANT (0105) - 1 byte
-        else if (command === '0105') {
-            const hex = getHexData(command, clean, 1);
-            if (hex && hex.length === 2) {
-                const a = parseInt(hex, 16);
-                if (!isNaN(a)) {
-                    useBluetoothStore.getState().setSensorData({ coolant: a - 40 });
-                }
-            }
-        }
-        // THROTTLE (0111) - 1 byte
-        else if (command === '0111') {
-            const hex = getHexData(command, clean, 1);
-            if (hex && hex.length === 2) {
-                const a = parseInt(hex, 16);
-                if (!isNaN(a)) {
-                    useBluetoothStore.getState().setSensorData({ throttle: Math.round((a * 100) / 255) });
-                }
-            }
-        }
-        // ENGINE LOAD (0104) - 1 byte
-        else if (command === '0104') {
-            const hex = getHexData(command, clean, 1);
-            if (hex && hex.length === 2) {
-                const a = parseInt(hex, 16);
-                if (!isNaN(a)) {
-                    useBluetoothStore.getState().setSensorData({ engineLoad: Math.round((a * 100) / 255) });
-                }
-            }
-        }
-        // INTAKE AIR TEMP (010F) - 1 byte
-        else if (command === '010F') {
-            const hex = getHexData(command, clean, 1);
-            if (hex && hex.length === 2) {
-                const a = parseInt(hex, 16);
-                if (!isNaN(a)) {
-                    useBluetoothStore.getState().setSensorData({ intakeAirTemp: a - 40 });
-                }
-            }
-        }
-        // MANIFOLD PRESSURE (010B) - 1 byte
-        else if (command === '010B') {
-            const hex = getHexData(command, clean, 1);
-            if (hex && hex.length === 2) {
-                const a = parseInt(hex, 16);
-                if (!isNaN(a)) {
-                    useBluetoothStore.getState().setSensorData({ manifoldPressure: a });
-                }
-            }
-        }
-        // ODOMETER (01A6) - 4 bytes (Standard OBD-II, only 2019+)
-        else if (command === '01A6') {
-            const hex = getHexData(command, clean, 4);
-            if (hex && hex.length === 8) {
-                const a = parseInt(hex.substring(0, 2), 16);
-                const b = parseInt(hex.substring(2, 4), 16);
-                const c = parseInt(hex.substring(4, 6), 16);
-                const d = parseInt(hex.substring(6, 8), 16);
-                if (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) {
-                    const km = ((a * 16777216) + (b * 65536) + (c * 256) + d) / 10;
-                    useBluetoothStore.getState().setSensorData({ odometer: Math.round(km) });
-                }
-            }
-        }
-
-        // DISTANCE SINCE CLEARED (0131) - 2 bytes
-        else if (command === '0131') {
-            const hex = getHexData(command, clean, 2);
-            if (hex && hex.length === 4) {
-                const a = parseInt(hex.substring(0, 2), 16);
-                const b = parseInt(hex.substring(2, 4), 16);
-                if (!isNaN(a) && !isNaN(b)) {
-                    useBluetoothStore.getState().setSensorData({ distanceSinceCleared: (a * 256) + b });
-                }
-            }
-        }
-        // DISTANCE MIL ON (0121) - 2 bytes
-        else if (command === '0121') {
-            const hex = getHexData(command, clean, 2);
-            if (hex && hex.length === 4) {
-                const a = parseInt(hex.substring(0, 2), 16);
-                const b = parseInt(hex.substring(2, 4), 16);
-                if (!isNaN(a) && !isNaN(b)) {
-                    useBluetoothStore.getState().setSensorData({ distanceMilOn: (a * 256) + b });
-                }
-            }
-        }
-        // READ DTCs (03)
-        else if (command === '03') {
-            if (clean.includes('43')) {
-                // Example response: "43 01 13 00 00 00 00" -> "43011300000000"
-                const dataPart = clean.substring(clean.indexOf('43') + 2);
-                const dtcs: string[] = [];
-
-                for (let i = 0; i < dataPart.length; i += 4) {
-                    const codeHex = dataPart.substring(i, i + 4);
-                    if (codeHex === '0000' || codeHex.length < 4) continue;
-
-                    const firstChar = parseInt(codeHex[0], 16);
-                    let dtcType = '';
-                    switch (firstChar >> 2) { // Top 2 bits
-                        case 0: dtcType = 'P'; break;
-                        case 1: dtcType = 'C'; break;
-                        case 2: dtcType = 'B'; break;
-                        case 3: dtcType = 'U'; break;
-                    }
-
-                    const secondChar = (firstChar & 0x03).toString(); // Bottom 2 bits
-                    const remainingHex = codeHex.substring(1);
-                    dtcs.push(`${dtcType}${secondChar}${remainingHex}`);
-                }
-                useBluetoothStore.getState().setSensorData({ dtcs });
-            }
-        }
-        // CLEAR DTCs (04)
-        else if (command === '04') {
-            // Usually returns "44" on success. We can optimistically clear our local state
-            if (clean.includes('44') || clean.includes('OK')) {
-                useBluetoothStore.getState().setSensorData({ dtcs: [] });
-            }
-        }
-        // READ VIN (0902)
-        else if (command === '0902') {
-            // A typical 0902 multi-frame response looks like "49 02 01 XX XX XX..."
-            // We strip out formatting, the "4902", frame numbers, etc. ELM327 does this partly for us if formatted well, 
-            // but we'll try a basic ASCII extraction on the hex pairs that follow 4902
-            if (clean.includes('4902')) {
-                let hexData = clean.substring(clean.indexOf('4902') + 4);
-                // Simple multiline frame strip (e.g. "014:490201...", we just need the raw hex pairs)
-                // Filter out any non-hex chars, and frame indexing (often the first byte per line in multi-line)
-                // For a robust implementation, this needs proper ISO 15765-4 multi-frame assembly, 
-                // but basic string replacement often works for direct adapters.
-                let vinAscii = '';
-                for (let i = 0; i < hexData.length; i += 2) {
-                    const byteStr = hexData.substring(i, i + 2);
-                    const charCode = parseInt(byteStr, 16);
-                    // Standard ASCII printable range
-                    if (charCode >= 32 && charCode <= 126) {
-                        vinAscii += String.fromCharCode(charCode);
-                    }
-                }
-
-                // Typical VIN is 17 chars. Let's do a loose extraction.
-                const match = vinAscii.match(/[A-HJ-NPR-Z0-9]{17}/);
-                if (match) {
-                    useBluetoothStore.getState().setSensorData({ vin: match[0] });
-                } else if (vinAscii.length >= 17) {
-                    // Fallback string matching
-                    useBluetoothStore.getState().setSensorData({ vin: vinAscii });
-                }
-            }
-        }
-        // READ CALIBRATION ID (0904)
-        else if (command === '0904') {
-            if (clean.includes('4904')) {
-                let hexData = clean.substring(clean.indexOf('4904') + 4);
-                let calIdAscii = '';
-                for (let i = 0; i < hexData.length; i += 2) {
-                    const byteStr = hexData.substring(i, i + 2);
-                    const charCode = parseInt(byteStr, 16);
-                    if (charCode >= 32 && charCode <= 126) {
-                        calIdAscii += String.fromCharCode(charCode);
-                    }
-                }
-                const cleanCalId = calIdAscii.trim();
-                if (cleanCalId) {
-                    useBluetoothStore.getState().setSensorData({ ecuId: cleanCalId });
-                }
             }
         }
     }
 
-    /**
-     * Finalizes the current command (success or error) and moves to next.
-     */
     private finishCommand(error: any | null, result?: string) {
         if (this.currentCommandTimeout) {
             clearTimeout(this.currentCommandTimeout);

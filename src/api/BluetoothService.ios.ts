@@ -80,6 +80,7 @@ class BluetoothServiceIOS implements IBluetoothService {
     private bleWriteCharacteristic: Characteristic | null = null;
     private bleSubscription: any | null = null;
     private bleDataBuffer: string = '';
+    private iosBleBuffer: string = '';
 
     private listeners: DataListener[] = [];
     private disconnectCallback: DisconnectCallback | null = null;
@@ -164,11 +165,41 @@ class BluetoothServiceIOS implements IBluetoothService {
 
         const manager = BLEBridge.getInstance();
         return new Promise((resolve) => {
-            const foundMap = new Map<string, { address: string, name: string }>();
+            const foundMap = new Map<string, any>();
+            
+            // UI Throttling (Boğma) Zırhı: Saniyede 50 paketi engellemek için geçici bellek
+            const lastUpdateMap = new Map<string, number>();
+
             manager.startDeviceScan(null, null, (error, device) => {
                 if (error) return;
                 if (device && device.id) {
-                    foundMap.set(device.id, { address: device.id, name: device.name || 'Bilinmeyen BLE Cihaz' });
+                    const now = Date.now();
+                    const lastUpdate = lastUpdateMap.get(device.id) || 0;
+                    
+                    // Throttle: Aynı cihaz için saniyede (1000ms) en fazla 1 kez işlem yap
+                    if (now - lastUpdate < 1000) return;
+                    lastUpdateMap.set(device.id, now);
+
+                    const name = device.name || device.localName || '';
+                    // Keskin Nişancı Filtresi (Regex Daraltması)
+                    const hasValidName = /(OBD|ELM|VLINKER|MONOFE|CARLY|BIMMER)/i.test(name);
+                    const hasValidUUID = device.serviceUUIDs?.some(uuid => 
+                        uuid.toLowerCase().includes('ffe0') || uuid.toLowerCase().includes('fff0')
+                    );
+
+                    if (hasValidName || hasValidUUID) {
+                        // UI Tekilleştirme (Deduplication) ve RSSI güncelleme
+                        const existing = foundMap.get(device.id);
+                        if (existing) {
+                            existing.rssi = device.rssi;
+                        } else {
+                            foundMap.set(device.id, { 
+                                address: device.id, 
+                                name: name || 'Bilinmeyen BLE Cihaz',
+                                rssi: device.rssi 
+                            });
+                        }
+                    }
                 }
             });
             setTimeout(() => {
@@ -295,6 +326,7 @@ class BluetoothServiceIOS implements IBluetoothService {
             this.bleConnectedDevice = device;
             this.bleWriteCharacteristic = writeChar;
             this.bleDataBuffer = '';
+            this.iosBleBuffer = '';
             if (notifyChar) {
                 this.bleSubscription = device.monitorCharacteristicForService(
                     notifyChar.serviceUUID,
@@ -318,8 +350,16 @@ class BluetoothServiceIOS implements IBluetoothService {
     }
 
     private processBleChunk(chunk: string) {
-        Logger.log('BLE_READ_CHUNK', chunk);
-        this.listeners.forEach(l => l(chunk));
+        Logger.log('BLE_READ_CHUNK_RAW', chunk);
+        this.iosBleBuffer += chunk;
+        while (this.iosBleBuffer.includes('>')) {
+            const index = this.iosBleBuffer.indexOf('>');
+            const fullResponse = this.iosBleBuffer.substring(0, index + 1);
+            this.iosBleBuffer = this.iosBleBuffer.substring(index + 1);
+            
+            Logger.log('BLE_READ_FULL_RESPONSE', fullResponse);
+            this.listeners.forEach(l => l(fullResponse));
+        }
     }
 
     async disconnect() {
@@ -331,6 +371,7 @@ class BluetoothServiceIOS implements IBluetoothService {
             this.bleConnectedDevice = null;
             this.bleWriteCharacteristic = null;
         }
+        this.iosBleBuffer = '';
         this.disconnectCallback = null;
     }
 
