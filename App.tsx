@@ -789,7 +789,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
       onPress={onOpenObdTerminal}
     >
       <Text numberOfLines={1} style={{ color: tc.cyan, fontSize: isTablet ? scaleFont(12.5) : scaleFont(10.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.8 }}>
-        💬 {t('dashboard.obdTerminal', 'OBD SAĞLIK & TERMİNAL').toUpperCase()}
+        💬 {t('dashboard.obdTerminalTitle', 'OBD SAĞLIK & TERMİNAL').toUpperCase()}
       </Text>
       <Text style={{ color: tc.cyan, fontSize: isTablet ? scaleFont(16) : scaleFont(13), fontWeight: '900' }}>{'>'}</Text>
     </TouchableOpacity>

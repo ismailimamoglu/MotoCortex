@@ -114,7 +114,7 @@ export default function ObdTerminalModal({
               </Text>
             </TouchableOpacity>
             <Text allowFontScaling={false} style={[s.headerTitle, { color: tc.textPri, fontSize: scaleFont(13) }]}>
-              {t('dashboard.obdTerminalTitle', 'OBD SAĞLIK & TERMİNAL').toUpperCase()}
+              {t('obdTerminal.title', 'OBD SAĞLIK & TERMİNAL').toUpperCase()}
             </Text>
             <View style={{ width: scaleWidth(60) }} />
           </View>
@@ -126,7 +126,7 @@ export default function ObdTerminalModal({
           >
             {/* 1. OBD TERMINAL */}
             <View style={[s.sectionCard, { backgroundColor: tc.card, borderColor: tc.border }]}>
-              <Text style={[s.sectionTitle, { color: tc.cyan, fontSize: scaleFont(11.5) }]}>💬 OBD TERMİNAL</Text>
+              <Text style={[s.sectionTitle, { color: tc.cyan, fontSize: scaleFont(11.5) }]}>💬 {t('obdTerminal.terminalTitle', 'OBD TERMİNAL')}</Text>
               
               {/* Terminal Screen */}
               <View style={[s.terminalScreen, { backgroundColor: '#050505', borderColor: tc.border }]}>
@@ -138,7 +138,7 @@ export default function ObdTerminalModal({
                 >
                   {terminalHistory.length === 0 ? (
                     <Text style={{ color: '#666', fontFamily: MONO, fontSize: scaleFont(10) }}>
-                      ECU'ya göndermek için aşağıya komut yazın (Örn: 010C, ATRV)
+                      {t('obdTerminal.terminalPlaceholder', "ECU'ya göndermek için aşağıya komut yazın (Örn: 010C, ATRV)")}
                     </Text>
                   ) : (
                     terminalHistory.map((item, idx) => (
@@ -161,7 +161,7 @@ export default function ObdTerminalModal({
               <View style={{ flexDirection: 'row', gap: scaleMod(8), marginTop: scaleHeight(8) }}>
                 <TextInput
                   style={[s.terminalInput, { color: tc.textPri, borderColor: tc.border, backgroundColor: tc.bg, fontFamily: MONO, fontSize: scaleFont(11) }]}
-                  placeholder="Komut girin..."
+                  placeholder={t('obdTerminal.inputPlaceholder', 'Komut girin...')}
                   placeholderTextColor={tc.textSec}
                   value={inputCommand}
                   onChangeText={setInputCommand}
@@ -175,35 +175,35 @@ export default function ObdTerminalModal({
                   onPress={handleSendCommand}
                   disabled={isSending}
                 >
-                  <Text style={{ color: '#000', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(11) }}>GÖNDER</Text>
+                  <Text style={{ color: '#000', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(11) }}>{t('obdTerminal.sendButton', 'GÖNDER')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
             {/* 2. OBD HEALTH STATISTICS */}
             <View style={[s.sectionCard, { backgroundColor: tc.card, borderColor: tc.border }]}>
-              <Text style={[s.sectionTitle, { color: tc.amber, fontSize: scaleFont(11.5) }]}>📊 OBD SAĞLIK İSTATİSTİKLERİ</Text>
+              <Text style={[s.sectionTitle, { color: tc.amber, fontSize: scaleFont(11.5) }]}>📊 {t('obdTerminal.statsTitle', 'OBD SAĞLIK İSTATİSTİKLERİ')}</Text>
               <View style={{ gap: scaleHeight(6) }}>
                 <View style={s.statRow}>
-                  <Text style={[s.statLabel, { color: tc.textSec }]}>Bağlantı Protokolü:</Text>
-                  <Text style={[s.statVal, { color: tc.textPri }]}>{protocol || 'Yok'}</Text>
+                  <Text style={[s.statLabel, { color: tc.textSec }]}>{t('obdTerminal.connectionProtocol', 'Bağlantı Protokolü:')}</Text>
+                  <Text style={[s.statVal, { color: tc.textPri }]}>{protocol || t('obdTerminal.none', 'Yok')}</Text>
                 </View>
                 <View style={s.statRow}>
-                  <Text style={[s.statLabel, { color: tc.textSec }]}>Donanım Kalite Skoru:</Text>
+                  <Text style={[s.statLabel, { color: tc.textSec }]}>{t('obdTerminal.hardwareQualityScore', 'Donanım Kalite Skoru:')}</Text>
                   <Text style={[s.statVal, { color: adapterCapabilityScore > 70 ? tc.green : tc.red }]}>
-                    {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? 'Orijinal' : 'Klon'})
+                    {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? t('obdTerminal.original', 'Orijinal') : t('obdTerminal.clone', 'Klon')})
                   </Text>
                 </View>
                 <View style={s.statRow}>
-                  <Text style={[s.statLabel, { color: tc.textSec }]}>İstek / Yanıt Sayısı:</Text>
+                  <Text style={[s.statLabel, { color: tc.textSec }]}>{t('obdTerminal.requestResponseCount', 'İstek / Yanıt Sayısı:')}</Text>
                   <Text style={[s.statVal, { color: tc.textPri }]}>{telemetryStats.requestsSent} / {telemetryStats.responsesReceived}</Text>
                 </View>
                 <View style={s.statRow}>
-                  <Text style={[s.statLabel, { color: tc.textSec }]}>Zaman Aşımı Adedi:</Text>
+                  <Text style={[s.statLabel, { color: tc.textSec }]}>{t('obdTerminal.timeoutCount', 'Zaman Aşımı Adedi:')}</Text>
                   <Text style={[s.statVal, { color: telemetryStats.timeoutCount > 0 ? tc.amber : tc.textPri }]}>{telemetryStats.timeoutCount}</Text>
                 </View>
                 <View style={s.statRow}>
-                  <Text style={[s.statLabel, { color: tc.textSec }]}>Hata Kurtarma (Recovery):</Text>
+                  <Text style={[s.statLabel, { color: tc.textSec }]}>{t('obdTerminal.recoveryCount', 'Hata Kurtarma (Recovery):')}</Text>
                   <Text style={[s.statVal, { color: telemetryStats.recoveryCount > 0 ? tc.red : tc.textPri }]}>{telemetryStats.recoveryCount}</Text>
                 </View>
               </View>
@@ -212,22 +212,22 @@ export default function ObdTerminalModal({
             {/* 3. DIAGNOSTIC LOG (TEŞHİS GÜNLÜĞÜ) */}
             <View style={[s.sectionCard, { backgroundColor: tc.card, borderColor: tc.border }]}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(8) }}>
-                <Text style={[s.sectionTitle, { color: tc.purple, fontSize: scaleFont(11.5), marginBottom: 0 }]}>📝 TEŞHİS GÜNLÜĞÜ</Text>
+                <Text style={[s.sectionTitle, { color: tc.purple, fontSize: scaleFont(11.5), marginBottom: 0 }]}>📝 {t('obdTerminal.diagnosticLogTitle', 'TEŞHİS GÜNLÜĞÜ')}</Text>
                 <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
                   <TouchableOpacity 
                     style={[s.actionBtnSmall, { borderColor: tc.border, borderWidth: 1 }]}
                     onPress={() => {
                       clearDiagnosticLogs();
-                      Alert.alert(t('common.info'), t('dashboard.logsCleared', 'Loglar temizlendi.'));
+                      Alert.alert(t('common.info', 'Bilgi'), t('dashboard.logsCleared', 'Loglar temizlendi.'));
                     }}
                   >
-                    <Text style={{ color: tc.textSec, fontSize: scaleFont(9), fontFamily: MONO, fontWeight: '700' }}>TEMİZLE</Text>
+                    <Text style={{ color: tc.textSec, fontSize: scaleFont(9), fontFamily: MONO, fontWeight: '700' }}>{t('obdTerminal.clearButton', 'TEMİZLE')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity 
                     style={[s.actionBtnSmall, { backgroundColor: tc.purple }]}
                     onPress={handleShareLogs}
                   >
-                    <Text style={{ color: '#FFF', fontSize: scaleFont(9), fontFamily: MONO, fontWeight: '700' }}>PAYLAŞ 📤</Text>
+                    <Text style={{ color: '#FFF', fontSize: scaleFont(9), fontFamily: MONO, fontWeight: '700' }}>{t('obdTerminal.shareButton', 'PAYLAŞ')} 📤</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -237,7 +237,7 @@ export default function ObdTerminalModal({
                 <ScrollView nestedScrollEnabled={true} style={{ maxHeight: scaleHeight(160) }}>
                   {diagnosticLogs.length === 0 ? (
                     <Text style={{ color: '#555', fontFamily: MONO, fontSize: scaleFont(10), textAlign: 'center', marginVertical: scaleHeight(12) }}>
-                      Herhangi bir teşhis günlüğü kaydı bulunmuyor.
+                      {t('obdTerminal.noLogs', 'Herhangi bir teşhis günlüğü kaydı bulunmuyor.')}
                     </Text>
                   ) : (
                     <Text style={{ color: tc.textSec, fontFamily: MONO, fontSize: scaleFont(9.2), lineHeight: scaleFont(13) }}>
