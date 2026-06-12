@@ -339,7 +339,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                     }
                   ]}
                   onPress={toggleSimulationMode}
-                  activeOpacity={0.8}
+                  activeOpacity={0.4}
                 >
                   <Text style={[sDyn.actionBtnText, { color: isSimulationMode ? colors.green : colors.textPri, fontFamily: colors.mono }]}>
                     {isSimulationMode ? '🟢 SİMÜLATÖR AÇIK' : '⚫ SİMÜLATÖR KAPALI'}
@@ -360,7 +360,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                     resetFreeUsage();
                     Alert.alert("BAŞARILI", "Free Trial sayacı sıfırlandı!");
                   }}
-                  activeOpacity={0.8}
+                  activeOpacity={0.4}
                 >
                   <Text style={[sDyn.actionBtnText, { color: colors.amber, fontFamily: colors.mono }]}>
                     🔄 SIFIRLA ({freeUsageCount}/3)
@@ -396,7 +396,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                       ]
                     );
                   }}
-                  activeOpacity={0.8}
+                  activeOpacity={0.4}
                 >
                   <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>
                     💥 CRASH TEST (CRASHLYTICS)
@@ -425,7 +425,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
               <TouchableOpacity 
                 style={[sDyn.actionBtn, { borderColor: colors.red, backgroundColor: `${colors.red}12` }]} 
                 onPress={handleClear}
-                activeOpacity={0.8}
+                activeOpacity={0.4}
               >
                 <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>TEMİZLE</Text>
               </TouchableOpacity>
@@ -433,7 +433,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
               <TouchableOpacity 
                 style={[sDyn.actionBtn, { borderColor: colors.cyan, backgroundColor: `${colors.cyan}12` }]} 
                 onPress={loadLogsAndInfo}
-                activeOpacity={0.8}
+                activeOpacity={0.4}
               >
                 <Text style={[sDyn.actionBtnText, { color: colors.cyan, fontFamily: colors.mono }]}>YENİLE</Text>
               </TouchableOpacity>
@@ -441,7 +441,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
               <TouchableOpacity 
                 style={[sDyn.actionBtn, sDyn.primaryBtn, { backgroundColor: colors.cyan }]} 
                 onPress={handleShare}
-                activeOpacity={0.8}
+                activeOpacity={0.4}
               >
                 <Text style={[sDyn.actionBtnText, { color: '#000000', fontWeight: '900', fontFamily: colors.mono }]}>PAYLAŞ</Text>
               </TouchableOpacity>

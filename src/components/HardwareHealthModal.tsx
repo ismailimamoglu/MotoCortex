@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, Platform, ScrollView, Alert } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import * as Clipboard from 'expo-clipboard';
 import { useAppStore } from '../store/useAppStore';
@@ -13,11 +13,12 @@ interface HardwareHealthModalProps {
   onClose: () => void;
 }
 
-export default function HardwareHealthModal({ visible, onClose }: HardwareHealthModalProps) {
+function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const appUserId = useAppStore((state) => state.appUserId);
-  const connectionStatus = useBluetoothStore((s) => s.status);
+  const connectionState = useBluetoothStore((s) => s.connectionState);
+  const isConnected = connectionState !== 'DISCONNECTED' && connectionState !== 'CONNECTING';
   const isCloneDevice = useBluetoothStore((s) => s.isCloneDevice);
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet, width, height } = useResponsive();
   const insets = useSafeAreaInsets();
@@ -125,13 +126,7 @@ export default function HardwareHealthModal({ visible, onClose }: HardwareHealth
   }, [scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet, isLargeTablet, width, height, colors, insets.top]) as any;
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}
-    >
-      <View style={sDyn.modalOverlay}>
+    <View style={sDyn.modalOverlay}>
         <View style={[sDyn.modalContainer, { backgroundColor: colors.bg }]}>
           {/* Header */}
           <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
@@ -156,21 +151,21 @@ export default function HardwareHealthModal({ visible, onClose }: HardwareHealth
               <View style={sDyn.row}>
                 <Text style={sDyn.rowLabel}>{t('bento.settings.connectionType', 'Bağlantı Tipi:')}</Text>
                 <Text style={sDyn.rowValue}>
-                  {connectionStatus === 'connected' ? 'BLE' : t('bento.settings.noConnection', 'Bağlantı Yok')}
+                  {isConnected ? 'BLE' : t('bento.settings.noConnection', 'Bağlantı Yok')}
                 </Text>
               </View>
               <View style={sDyn.row}>
                 <Text style={sDyn.rowLabel}>{t('bento.settings.protocol', 'Protokol:')}</Text>
                 <Text style={sDyn.rowValue}>
-                  {connectionStatus === 'connected' ? 'CAN Bus (ISO-15765)' : t('bento.settings.none', 'Yok')}
+                  {isConnected ? 'CAN Bus (ISO-15765)' : t('bento.settings.none', 'Yok')}
                 </Text>
               </View>
               <View style={sDyn.row}>
                 <Text style={sDyn.rowLabel}>{t('bento.settings.deviceStatus', 'Cihaz Durumu:')}</Text>
                 <Text style={[sDyn.rowValue, { 
-                  color: connectionStatus === 'connected' ? (isCloneDevice ? colors.red : colors.green) : colors.textSec, 
+                  color: isConnected ? (isCloneDevice ? colors.red : colors.green) : colors.textSec, 
                 }]}>
-                  {connectionStatus === 'connected' 
+                  {isConnected 
                     ? (isCloneDevice ? t('bento.settings.safeMode', 'Güvenli Mod / Clone Adaptör') : t('bento.settings.original', 'Orijinal')) 
                     : t('bento.settings.deviceNotConnected', 'Cihaz Bağlı Değil')}
                 </Text>
@@ -178,7 +173,7 @@ export default function HardwareHealthModal({ visible, onClose }: HardwareHealth
               <View style={sDyn.row}>
                 <Text style={sDyn.rowLabel}>{t('bento.settings.pollingRate', 'Sorgu Hızı:')}</Text>
                 <Text style={sDyn.rowValue}>
-                  {connectionStatus === 'connected' 
+                  {isConnected 
                     ? (isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Düşük)') : t('bento.settings.pollingHigh', '4 Hz (Yüksek)')) 
                     : t('bento.settings.pollingZero', '0 Hz')}
                 </Text>
@@ -191,7 +186,7 @@ export default function HardwareHealthModal({ visible, onClose }: HardwareHealth
               <TouchableOpacity 
                 style={sDyn.row}
                 onPress={copyToClipboard}
-                activeOpacity={0.7}
+                activeOpacity={0.4}
               >
                 <Text style={[sDyn.rowLabel, { flexShrink: 0 }]}>{t('bento.settings.userIdLabel', 'User ID:')}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(4), flex: 1, justifyContent: 'flex-end', marginLeft: scaleWidth(12) }}>
@@ -205,6 +200,21 @@ export default function HardwareHealthModal({ visible, onClose }: HardwareHealth
           </ScrollView>
         </View>
       </View>
+    );
+}
+
+export default function HardwareHealthModal(props: HardwareHealthModalProps) {
+  if (!props.visible) return null;
+  return (
+    <Modal
+      visible={props.visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={props.onClose}
+    >
+      <SafeAreaProvider>
+        <HardwareHealthModalContent {...props} />
+      </SafeAreaProvider>
     </Modal>
   );
 }

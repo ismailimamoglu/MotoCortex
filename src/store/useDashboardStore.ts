@@ -33,9 +33,9 @@ export const ALL_SENSORS: SensorConfig[] = [
 
 interface DashboardState {
   activeSensors: string[]; // Sensor keys
-  layoutType: 'grid' | 'list';
+  layoutType: 'grid' | 'list' | 'gauge';
   toggleSensor: (key: string) => void;
-  setLayoutType: (layoutType: 'grid' | 'list') => void;
+  setLayoutType: (layoutType: 'grid' | 'list' | 'gauge') => void;
   resetToDefault: () => void;
 }
 

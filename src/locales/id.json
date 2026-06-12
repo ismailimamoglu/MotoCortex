@@ -60,7 +60,19 @@
             "hardwareModalDesc": "Jika Anda membutuhkan bantuan atau aktivasi lisensi PRO manual, silakan salin ID Pengguna di atas dan hubungi kami.",
             "supportEmailBody": "Halo Tim Dukungan MotoCortex,\n\n--- Info Aplikasi ---\nID Pengguna: {{userId}}\nStatus Lisensi: {{license}}\nKoneksi: {{connection}}\nStatus Perangkat: {{deviceStatus}}\n\n--- Pesan ---\n",
             "deviceName": "Nama Perangkat:",
-            "simulationObd": "Simulasi OBD"
+            "simulationObd": "Simulasi OBD",
+            "obdHealthTitle": "STATISTIK KESEHATAN OBD",
+            "txRequests": "Permintaan Dikirim (TX):",
+            "rxResponses": "Tanggapan Diterima (RX):",
+            "timeouts": "Batas Waktu (Timeout):",
+            "recoveries": "Upaya Pemulihan (Recovery):",
+            "avgLatency": "Rata-rata Waktu Tanggapan:",
+            "lastErrorLabel": "Kesalahan Terakhir:",
+            "shareReport": "BAGIKAN LAPORAN DIAGNOSTIK",
+            "diagnosticLog": "LOG DIAGNOSTIK (500 BARIS TERAKHIR)",
+            "noTraffic": "Belum ada lalu lintas data...",
+            "shareError": "Kesalahan Berbagi",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "supportDesc": "Dukungan & Kontak",
         "shareDesc": "Bagikan Aplikasi",
@@ -83,6 +95,8 @@
         "lastDevice": "Perangkat Terakhir",
         "demoMode": "MODE DEMO",
         "demoModeDesc": "Tidak punya perangkat? Uji aplikasi dengan data simulasi.",
+        "enableDemoMode": "AKTIFKAN MODE DEMO",
+        "exitDemoMode": "KELUAR DARI MODE DEMO",
         "proActive": "PRO Aktif",
         "proActiveDesc": "Anda sudah menjadi anggota MOTO CORTEX PRO. Terima kasih!",
         "freeAccount": "MOTO CORTEX FREE",
@@ -101,7 +115,9 @@
         "back": "Kembali",
         "chassis": "Sasis",
         "operations": "Operasi",
-        "close": "TUTUP"
+        "close": "TUTUP",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -162,7 +178,12 @@
         "androidClassicHint": "Catatan: Adaptor OBD2 Bluetooth Klasik harus dipasangkan di pengaturan sistem Android Bluetooth Anda terlebih dahulu, jika tidak, mereka mungkin tidak muncul di daftar pemindaian.",
         "deviceNotPairedTitle": "Perangkat Belum Dipasangkan",
         "deviceNotPairedDesc": "Adaptor OBD2 Bluetooth Klasik harus dipasangkan di pengaturan telepon Anda terlebih dahulu. Anda dialihkan ke pengaturan.",
-        "safeModeActive": "MODE AMAN AKTIF: Terdeteksi adaptor tiruan atau berkualitas rendah."
+        "safeModeActive": "MODE AMAN AKTIF: Terdeteksi adaptor tiruan atau berkualitas rendah.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "KETUK UNTUK MEMILIH PERANGKAT",
@@ -200,7 +221,8 @@
         "mafFlow": "Aliran Udara MAF",
         "timingAdvance": "Timing Pengapian",
         "fuelLevel": "Tingkat Bahan Bakar",
-        "catalystTemp": "Suhu Katalis"
+        "catalystTemp": "Suhu Katalis",
+        "layoutGauge": "DIAL"
     },
     "expertise": {
         "historyFound": "RIWAYAT KENDARAAN DITEMUKAN!",
@@ -235,7 +257,19 @@
         "connRequiredDesc": "Harap hubungkan ke kendaraan terlebih dahulu untuk memulai operasi ini.",
         "chronicFaultsTitle": "Kesalahan Kronis Statistik",
         "chronicFaultsObs": "{{code}} (Pengamatan: {{days}} Hari Unik / Total: {{total}} Kali)",
-        "chronicFaultsPending": "Mengumpulkan Kumpulan Data / Menganalisis Statistik"
+        "chronicFaultsPending": "Mengumpulkan Kumpulan Data / Menganalisis Statistik",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ PERINGATAN KESELAMATAN",
@@ -444,6 +478,7 @@
         "brand": "MEREK",
         "selectBrand": "Pilih Merek...",
         "searchBrand": "Cari Merek...",
+        "searchLanguage": "Cari Bahasa...",
         "customBrandPlaceholder": "Misal: Triumph, CFMoto, Kia...",
         "model": "MODEL",
         "selectModel": "Pilih Model...",

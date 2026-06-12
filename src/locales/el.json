@@ -59,7 +59,8 @@
             "hardwareModalDesc": "Για να λάβετε υποστήριξη ή να πραγματοποιήσετε μη αυτόματη ενεργοποίηση άδειας PRO, αντιγράψτε το User ID παραπάνω και επικοινωνήστε μαζί μας.",
             "supportEmailBody": "Γεια σας Ομάδα Υποστήριξης MotoCortex, --- Πληροφορίες εφαρμογής --- Αναγνωριστικό χρήστη:{{userId}}Κατάσταση άδειας χρήσης:{{license}}Σύνδεσμος:{{connection}}Κατάσταση συσκευής:{{deviceStatus}}--- Το μήνυμά σας ---",
             "deviceName": "Όνομα συσκευής:",
-            "simulationObd": "Προσομοίωση OBD"
+            "simulationObd": "Προσομοίωση OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Πληροφορίες και Οδηγός Εφαρμογής",
         "supportDesc": "Υποστήριξη & Επικοινωνία",
@@ -94,14 +95,16 @@
         "freeUsageRemaining": "{{count}}Η ΧΡΗΣΗ ΠΑΡΑΜΕΝΕΙ ΑΠΟ 3 ΔΙΚΑΙΩΜΑΤΑ",
         "light": "ΦΩΤΕΙΝΗ",
         "dark": "ΣΚΟΤΕΙΝΗ",
-        "yes": "Ναι, διόρθωση",
+        "yes": "Ναι, διορθωση",
         "no": "Όχι",
         "reset": "ΠΡΟΕΠΙΛΟΓΗ",
         "apply": "ΕΦΑΡΜΟΓΗ",
         "back": "Πίσω",
         "chassis": "Πλαίσιο",
         "operations": "Λειτουργίες",
-        "close": "ΚΛΕΙΣΙΜΟ"
+        "close": "ΚΛΕΙΣΙΜΟ",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "Μη συζευγμένη συσκευή",
         "deviceNotPairedDesc": "Πριν συνδέσετε τους κλασικούς προσαρμογείς Bluetooth OBD2, πρέπει να τους αντιστοιχίσετε από τις ρυθμίσεις Bluetooth του τηλεφώνου σας. Κατευθύνεστε στις ρυθμίσεις συστήματος.",
         "unsupportedDeviceTitle": "Μη συμβατό Υλικό",
-        "unsupportedDeviceDesc": "Η συσκευή που προσπαθείτε να συνδέσετε δεν είναι συμβατός προσαρμογέας OBD2 ή δεν υποστηρίζει τις απαιτούμενες υπηρεσίες."
+        "unsupportedDeviceDesc": "Η συσκευή που προσπαθείτε να συνδέσετε δεν είναι συμβατός προσαρμογέας OBD2 ή δεν υποστηρίζει τις απαιτούμενες υπηρεσίες.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "ΑΓΓΙΞΤΕ ΓΙΑ ΕΠΙΛΟΓΗ ΣΥΣΚΕΥΗΣ",
@@ -206,7 +214,8 @@
         "mafFlow": "Ροή Αέρα MAF",
         "timingAdvance": "Αβάνς Ανάφλεξης",
         "fuelLevel": "Στάθμη Καυσίμου",
-        "catalystTemp": "Θερμ. Καταλύτη"
+        "catalystTemp": "Θερμ. Καταλύτη",
+        "layoutGauge": "ΜΕΤΡΗΤΗΣ"
     },
     "expertise": {
         "historyFound": "ΒΡΕΘΗΚΕ ΤΟ ΙΣΤΟΡΙΚΟ ΟΧΗΜΑΤΟΣ!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "Συνδεθείτε πρώτα στο όχημα για να ξεκινήσετε αυτή τη διαδικασία.",
         "chronicFaultsTitle": "Στατιστικά Χρόνια Προβλήματα",
         "chronicFaultsObs": "{{code}}(Παρατήρηση:{{days}}Διαφορετική ημέρα / Σύνολο:{{total}}Φορές)",
-        "chronicFaultsPending": "Συλλογή Δεδομένων / Ανάλυση Στατιστικών"
+        "chronicFaultsPending": "Συλλογή Δεδομένων / Ανάλυση Στατιστικών",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ ΠΡΟΕΙΔΟΠΟΙΗΣΗ ΑΣΦΑΛΕΙΑΣ",

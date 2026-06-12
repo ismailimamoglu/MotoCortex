@@ -6,6 +6,28 @@ import { useAppStore } from '../store/useAppStore';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { useTelemetryStore } from '../store/useTelemetryStore';
+import { triggerHaptic } from '../utils/haptics';
+
+interface BentoButtonProps {
+  style: any;
+  onPress: () => void;
+  children: React.ReactNode;
+  activeOpacity?: number;
+}
+const BentoButton = ({ style, onPress, children, activeOpacity = 0.4 }: BentoButtonProps) => {
+  return (
+    <TouchableOpacity
+      style={style}
+      activeOpacity={activeOpacity}
+      onPress={async () => {
+        triggerHaptic();
+        onPress();
+      }}
+    >
+      {children}
+    </TouchableOpacity>
+  );
+};
 
 interface BentoGridProps {
   onOpenDiagnostics: () => void;
@@ -15,6 +37,7 @@ interface BentoGridProps {
   onOpenPaywall: () => void;
   onOpenSupport: () => void;
   onShareApp: () => void;
+  onDisconnect: () => void;
 }
 
 export default function BentoGrid({
@@ -25,6 +48,7 @@ export default function BentoGrid({
   onOpenPaywall,
   onOpenSupport,
   onShareApp,
+  onDisconnect,
 }: BentoGridProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
@@ -35,20 +59,15 @@ export default function BentoGrid({
   const isPro = useAppStore((state) => state.isPro);
   const theme = useAppStore((state) => state.theme);
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
+  const toggleSimulationMode = useAppStore((state) => state.toggleSimulationMode);
 
   const dtcs = useBluetoothStore((state) => state.dtcs);
-  const vin = useBluetoothStore((state) => state.vin);
-  const odometer = useBluetoothStore((state) => state.odometer);
-  
   const ecuStatus = useBluetoothStore((state) => state.ecuStatus);
   const activeSessionVehicle = useTelemetryStore((state) => state.activeSessionVehicle);
   const isConnected = ecuStatus === 'connected' && !!activeSessionVehicle;
 
   const dtcCount = dtcs.length;
   const isClean = dtcCount === 0;
-
-  const displayVin = vin ? `${vin.slice(0, 5)}...` : 'N/A';
-  const displayOdo = odometer && odometer !== 'UNSUPPORTED' ? `${odometer}km` : '--';
 
   const LANGUAGE_FLAGS: Record<string, string> = {
     en: '🇬🇧', de: '🇩🇪', es: '🇪🇸', tr: '🇹🇷', id: '🇮🇩', it: '🇮🇹',
@@ -59,495 +78,489 @@ export default function BentoGrid({
   };
   const langFlag = LANGUAGE_FLAGS[language] || '🇬🇧';
 
-  // Dynamic Styles generated using the responsive hooks (Memoized for zero re-render overhead)
   const sDyn = React.useMemo(() => {
-    const isPhoneCompact = !isTablet;
     return {
       gridContainer: {
-        gap: isTablet ? scaleMod(10) : scaleMod(8),
-        marginBottom: isTablet ? scaleHeight(16) : scaleHeight(8),
+        gap: scaleMod(8),
       },
       row: {
         flexDirection: 'row' as const,
-        gap: isTablet ? scaleMod(10) : scaleMod(8),
+        gap: scaleMod(8),
       },
-      card: {
+      cardPrimary: {
         flex: 1,
         borderWidth: scaleMod(2.5),
         borderRadius: scaleMod(16),
-        padding: isTablet ? scaleMod(12) : scaleMod(10),
-        minHeight: (isTablet && isPortrait) ? scaleHeight(150) : (isTablet ? scaleHeight(110) : scaleHeight(96)),
+        padding: scaleMod(12),
+        minHeight: scaleMod(114),
+        justifyContent: 'space-between' as const,
+      },
+      cardSecondary: {
+        flex: 1,
+        borderWidth: scaleMod(1.2),
+        borderRadius: scaleMod(12),
+        padding: scaleMod(8),
+        minHeight: scaleMod(60),
         justifyContent: 'space-between' as const,
       },
       cardHeader: {
         flexDirection: 'row' as const,
         justifyContent: 'space-between' as const,
-        alignItems: 'flex-start' as const,
+        alignItems: 'center' as const,
       },
       iconWrapper: {
-        width: scaleMod(32),
-        height: scaleMod(32),
-        borderRadius: scaleMod(8),
+        width: scaleMod(36),
+        height: scaleMod(36),
+        borderRadius: scaleMod(10),
         alignItems: 'center' as const,
         justifyContent: 'center' as const,
       },
       icon: {
-        fontSize: scaleFont(14),
+        fontSize: scaleFont(16),
         fontWeight: '900' as const,
       },
       arrow: {
-        fontSize: scaleFont(16),
+        fontSize: scaleFont(18),
         fontWeight: '700' as const,
-        marginTop: -scaleHeight(2),
-      },
-      lockIconWrapper: {
-        paddingHorizontal: scaleMod(6),
-        paddingVertical: scaleHeight(2),
-        borderRadius: scaleMod(6),
-        marginLeft: 'auto' as const,
-        marginRight: scaleMod(4),
-      },
-      lockIcon: {
-        fontSize: scaleFont(8),
-        fontWeight: '900' as const,
-        fontFamily: MONO,
-        color: '#A855F7',
       },
       cardTitle: {
-        fontSize: isTablet ? scaleFont(12) : scaleFont(10.5),
-        fontWeight: '800' as const,
-        marginTop: scaleHeight(6),
+        fontSize: scaleFont(12.5),
+        fontWeight: '900' as const,
+        marginTop: scaleHeight(4),
         fontFamily: MONO,
       },
       cardSubtitle: {
-        fontSize: isTablet ? scaleFont(9) : scaleFont(8.2),
+        fontSize: scaleFont(9),
         fontWeight: '800' as const,
         marginTop: scaleHeight(2),
         fontFamily: MONO,
       },
-      extraTiny: {
-        fontSize: scaleFont(8),
-        marginTop: scaleHeight(1),
-        fontFamily: MONO,
-      },
-      settingsBadgeRow: {
-        flexDirection: 'row' as const,
+      
+      // Secondary card styles
+      iconWrapperSmall: {
+        width: scaleMod(22),
+        height: scaleMod(22),
+        borderRadius: scaleMod(5),
         alignItems: 'center' as const,
-        gap: scaleMod(6),
-        marginTop: scaleHeight(3),
+        justifyContent: 'center' as const,
       },
-      badgeFlag: {
-        fontSize: scaleFont(12),
+      iconSmall: {
+        fontSize: scaleFont(10.5),
       },
-      themeBadge: {
-        fontSize: scaleFont(8),
+      arrowSmall: {
+        fontSize: scaleFont(11),
+        fontWeight: 'bold' as const,
+      },
+      cardTitleSecondary: {
+        fontSize: scaleFont(7.8),
+        fontWeight: '900' as const,
+        fontFamily: MONO,
+        marginTop: scaleHeight(2),
+      },
+      badgeText: {
+        fontSize: scaleFont(7),
         fontWeight: '800' as const,
-        paddingHorizontal: scaleMod(5),
-        paddingVertical: scaleHeight(2),
-        borderRadius: scaleMod(4),
+        paddingHorizontal: scaleMod(3),
+        paddingVertical: scaleHeight(1),
+        borderRadius: scaleMod(3),
         overflow: 'hidden' as const,
         fontFamily: MONO,
-      },
+      }
     };
-  }, [scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet, isPortrait]);
+  }, [scaleWidth, scaleHeight, scaleMod, scaleFont, colors]);
 
-  const cardBaseStyle = [
-    sDyn.card, 
-    { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }
-  ];
+  const handleDemoPress = () => {
+    const newMode = !isSimulationMode;
+    toggleSimulationMode();
+    if (newMode) {
+      Alert.alert(t('common.demoMode'), t('common.demoModeDesc'));
+    } else {
+      onDisconnect();
+    }
+  };
 
-  return (
-    <View style={useRowLayout ? [sDyn.row, { marginBottom: scaleHeight(16) }] : sDyn.gridContainer}>
-      {useRowLayout ? (
-        <>
+  const handleProPress = () => {
+    if (isPro || isSimulationMode) {
+      Alert.alert(t('common.proActive'), t('common.proActiveDesc'));
+    } else {
+      onOpenPaywall();
+    }
+  };
+
+  // ── TABLET LANDSCAPE VIEW ──
+  if (useRowLayout) {
+    return (
+      <View style={{ gap: scaleMod(10), width: '100%' }}>
+        {/* Primary Row */}
+        <View style={sDyn.row}>
           {/* Card 1: Diagnostics */}
-          <TouchableOpacity
-            style={cardBaseStyle}
+          <BentoButton
+            style={[sDyn.cardPrimary, { backgroundColor: colors.cardBg, borderColor: isConnected ? (isClean ? colors.green : colors.red) : colors.cardBorder }]}
             onPress={onOpenDiagnostics}
-            activeOpacity={0.8}
+            activeOpacity={0.4}
           >
             <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? (isClean ? `${colors.green}1A` : `${colors.red}1A`) : `${colors.textSec}0D`, flexShrink: 0 }]}>
+              <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? (isClean ? `${colors.green}1A` : `${colors.red}1A`) : `${colors.textSec}0D` }]}>
                 <Text style={[sDyn.icon, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
                   {isConnected ? (isClean ? '✓' : '⚠') : '🔍'}
                 </Text>
               </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
+              <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
             </View>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardTitle, { flexShrink: 1 }]}
-            >
-              {t('bento.diagnostics')}
-            </Text>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardSubtitle, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec, flexShrink: 1 }]}
-            >
-              {isConnected 
-                ? (isClean ? t('bento.cleanFaults') : t('bento.dtcDetected', { count: dtcCount }))
-                : t('bento.settings.noConnection', 'Bağlantı Yok')}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Card 2: Live Sensors */}
-          <TouchableOpacity
-            style={cardBaseStyle}
-            onPress={onOpenSensors}
-            activeOpacity={0.8}
-          >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? `${colors.cyan}1A` : `${colors.textSec}0D`, flexShrink: 0 }]}>
-                <Text style={[sDyn.icon, { color: isConnected ? colors.cyan : colors.textSec }]}>
-                  📊
-                </Text>
-              </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-            </View>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardTitle, { flexShrink: 1 }]}
-            >
-              {t('bento.liveSensors')}
-            </Text>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardSubtitle, { color: isConnected ? colors.cyan : colors.textSec, flexShrink: 1 }]}
-            >
-              {isConnected 
-                ? t('bento.realtimeData')
-                : t('bento.settings.noConnection', 'Bağlantı Yok')}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Card 3: Vehicle Profile (About App) */}
-          <TouchableOpacity
-            style={cardBaseStyle}
-            onPress={onOpenProfile}
-            activeOpacity={0.8}
-          >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: 'transparent', flexShrink: 0 }]}>
-                <Image source={require('../../assets/icon.png')} style={{ width: '100%', height: '100%', borderRadius: scaleMod(8) }} />
-              </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-            </View>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardTitle, { flexShrink: 1 }]}
-            >
-              {t('bento.vehicleProfile')}
-            </Text>
-            <View style={{ flexShrink: 1 }}>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardSubtitle, { color: colors.textSec, fontSize: scaleFont(8.5), lineHeight: scaleFont(11.5), flexShrink: 1 }]}
-              >
-                {t('bento.aboutAppDesc', 'Uygulama Bilgileri & Rehber')}
+            <View style={{ marginTop: scaleHeight(8) }}>
+              <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
+                {t('bento.diagnostics').toUpperCase()}
               </Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Card 4: Quick Settings */}
-          <TouchableOpacity
-            style={cardBaseStyle}
-            onPress={onOpenSettings}
-            activeOpacity={0.8}
-          >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: `${colors.amber}1A`, flexShrink: 0 }]}>
-                <Text style={sDyn.icon}>⚙️</Text>
-              </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-            </View>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardTitle, { flexShrink: 1 }]}
-            >
-              {t('bento.quickSettings')}
-            </Text>
-            <View style={[sDyn.settingsBadgeRow, { flexShrink: 0 }]}>
-              <Text style={sDyn.badgeFlag}>{langFlag}</Text>
-              <Text style={[sDyn.themeBadge, { color: colors.cyan, backgroundColor: `${colors.cyan}1A` }]}>
-                {t(`common.${theme}`).toUpperCase()}
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Card 5: Support Center */}
-          <TouchableOpacity
-            style={cardBaseStyle}
-            onPress={onOpenSupport}
-            activeOpacity={0.8}
-          >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: `${colors.cyan}1A`, flexShrink: 0 }]}>
-                <Text style={sDyn.icon}>📍</Text>
-              </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-            </View>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardTitle, { flexShrink: 1 }]}
-            >
-              {t('info.support', 'DESTEK MERKEZİ')}
-            </Text>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardSubtitle, { color: colors.textSec, flexShrink: 1 }]}
-            >
-              {t('bento.supportDesc', 'Destek ve İletişim')}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Card 6: Share App */}
-          <TouchableOpacity
-            style={cardBaseStyle}
-            onPress={onShareApp}
-            activeOpacity={0.8}
-          >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: `${colors.purple}1A`, flexShrink: 0 }]}>
-                <Text style={sDyn.icon}>✨</Text>
-              </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-            </View>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardTitle, { flexShrink: 1 }]}
-            >
-              {t('expertise.share', 'PAYLAŞ')}
-            </Text>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit 
-              minimumFontScale={0.8} 
-              style={[sDyn.cardSubtitle, { color: colors.textSec, flexShrink: 1 }]}
-            >
-              {t('bento.shareDesc', 'Uygulamayı Paylaş')}
-            </Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          {/* Row 1 */}
-          <View style={sDyn.row}>
-            {/* Card 1: Diagnostics */}
-            <TouchableOpacity
-              style={cardBaseStyle}
-              onPress={onOpenDiagnostics}
-              activeOpacity={0.8}
-            >
-              <View style={sDyn.cardHeader}>
-                <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? (isClean ? `${colors.green}1A` : `${colors.red}1A`) : `${colors.textSec}0D`, flexShrink: 0 }]}>
-                  <Text style={[sDyn.icon, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
-                    {isConnected ? (isClean ? '✓' : '⚠') : '🔍'}
-                  </Text>
-                </View>
-                <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-              </View>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardTitle, { flexShrink: 1 }]}
-              >
-                {t('bento.diagnostics')}
-              </Text>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardSubtitle, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec, flexShrink: 1 }]}
-              >
+              <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
                 {isConnected 
                   ? (isClean ? t('bento.cleanFaults') : t('bento.dtcDetected', { count: dtcCount }))
                   : t('bento.settings.noConnection', 'Bağlantı Yok')}
               </Text>
-            </TouchableOpacity>
+            </View>
+          </BentoButton>
 
-            {/* Card 2: Live Sensors */}
-            <TouchableOpacity
-              style={cardBaseStyle}
-              onPress={onOpenSensors}
-              activeOpacity={0.8}
-            >
-              <View style={sDyn.cardHeader}>
-                <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? `${colors.cyan}1A` : `${colors.textSec}0D`, flexShrink: 0 }]}>
-                  <Text style={[sDyn.icon, { color: isConnected ? colors.cyan : colors.textSec }]}>
-                    📊
-                  </Text>
-                </View>
-                <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
+          {/* Card 2: Live Sensors */}
+          <BentoButton
+            style={[sDyn.cardPrimary, { backgroundColor: colors.cardBg, borderColor: isConnected ? colors.cyan : colors.cardBorder }]}
+            onPress={onOpenSensors}
+            activeOpacity={0.4}
+          >
+            <View style={sDyn.cardHeader}>
+              <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? `${colors.cyan}1A` : `${colors.textSec}0D` }]}>
+                <Text style={[sDyn.icon, { color: isConnected ? colors.cyan : colors.textSec }]}>📊</Text>
               </View>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardTitle, { flexShrink: 1 }]}
-              >
-                {t('bento.liveSensors')}
+              <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
+            </View>
+            <View style={{ marginTop: scaleHeight(8) }}>
+              <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
+                {t('bento.liveSensors').toUpperCase()}
               </Text>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardSubtitle, { color: isConnected ? colors.cyan : colors.textSec, flexShrink: 1 }]}
-              >
+              <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? colors.cyan : colors.textSec }]}>
                 {isConnected 
                   ? t('bento.realtimeData')
                   : t('bento.settings.noConnection', 'Bağlantı Yok')}
               </Text>
-            </TouchableOpacity>
+            </View>
+          </BentoButton>
+        </View>
+
+        {/* Secondary Row (6 columns) */}
+        <View style={sDyn.row}>
+          {/* Card 3: Profile/About */}
+          <BentoButton
+            style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+            onPress={onOpenProfile}
+            activeOpacity={0.4}
+          >
+            <View style={sDyn.cardHeader}>
+              <View style={[sDyn.iconWrapperSmall, { backgroundColor: 'transparent' }]}>
+                <Image source={require('../../assets/icon.png')} style={{ width: '100%', height: '100%', borderRadius: scaleMod(4) }} />
+              </View>
+              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+            </View>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
+              {t('bento.vehicleProfile').toUpperCase()}
+            </Text>
+          </BentoButton>
+
+          {/* Card 4: Quick Settings */}
+          <BentoButton
+            style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+            onPress={onOpenSettings}
+            activeOpacity={0.4}
+          >
+            <View style={sDyn.cardHeader}>
+              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.amber}1A` }]}>
+                <Text style={sDyn.iconSmall}>⚙️</Text>
+              </View>
+              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(4) }}>
+              <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
+                {t('bento.quickSettings').toUpperCase()}
+              </Text>
+              <Text style={{ fontSize: scaleFont(9.5), marginLeft: 4 }}>{langFlag}</Text>
+            </View>
+          </BentoButton>
+
+          {/* Card 5: Support */}
+          <BentoButton
+            style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+            onPress={onOpenSupport}
+            activeOpacity={0.4}
+          >
+            <View style={sDyn.cardHeader}>
+              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.cyan}1A` }]}>
+                <Text style={sDyn.iconSmall}>📍</Text>
+              </View>
+              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+            </View>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
+              {t('info.support').toUpperCase()}
+            </Text>
+          </BentoButton>
+
+          {/* Card 6: Share */}
+          <BentoButton
+            style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+            onPress={onShareApp}
+            activeOpacity={0.4}
+          >
+            <View style={sDyn.cardHeader}>
+              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}1A` }]}>
+                <Text style={sDyn.iconSmall}>✨</Text>
+              </View>
+              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+            </View>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
+              {t('expertise.share').toUpperCase()}
+            </Text>
+          </BentoButton>
+
+          {/* Card 7: Demo */}
+          <BentoButton
+            style={[
+              sDyn.cardSecondary, 
+              { 
+                backgroundColor: isSimulationMode ? `${colors.green}14` : colors.cardBg, 
+                borderColor: isSimulationMode ? colors.green : colors.cardBorder 
+              }
+            ]}
+            onPress={handleDemoPress}
+            activeOpacity={0.4}
+          >
+            <View style={sDyn.cardHeader}>
+              <View style={[sDyn.iconWrapperSmall, { backgroundColor: isSimulationMode ? `${colors.green}26` : `${colors.cyan}1A` }]}>
+                <Text style={[sDyn.iconSmall, { color: isSimulationMode ? colors.green : colors.cyan }]}>🎮</Text>
+              </View>
+              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(4) }}>
+              <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
+                {t('common.demoMode').toUpperCase()}
+              </Text>
+              <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSimulationMode ? colors.green : colors.textSec, marginLeft: 4 }} />
+            </View>
+          </BentoButton>
+
+          {/* Card 8: Pro Upgrade */}
+          <BentoButton
+            style={[
+              sDyn.cardSecondary, 
+              { 
+                backgroundColor: (isPro || isSimulationMode) ? `${colors.purple}14` : colors.cardBg, 
+                borderColor: colors.purple 
+              }
+            ]}
+            onPress={handleProPress}
+            activeOpacity={0.4}
+          >
+            <View style={sDyn.cardHeader}>
+              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}26` }]}>
+                <Text style={sDyn.iconSmall}>👑</Text>
+              </View>
+              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(4) }}>
+              <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
+                {(isPro || isSimulationMode) ? t('common.proActive').toUpperCase() : t('common.freeAccount').toUpperCase()}
+              </Text>
+              <Text style={[sDyn.badgeText, { color: '#FFF', backgroundColor: colors.purple, marginLeft: 4 }]}>
+                {(isPro || isSimulationMode) ? 'PRO' : 'FREE'}
+              </Text>
+            </View>
+          </BentoButton>
+        </View>
+      </View>
+    );
+  }
+
+  // ── PORTRAIT PHONE/TABLET VIEW (3 Rows) ──
+  return (
+    <View style={sDyn.gridContainer}>
+      {/* Row 1: Primary Menus */}
+      <View style={sDyn.row}>
+        {/* Card 1: Diagnostics */}
+        <BentoButton
+          style={[sDyn.cardPrimary, { backgroundColor: colors.cardBg, borderColor: isConnected ? (isClean ? colors.green : colors.red) : colors.cardBorder }]}
+          onPress={onOpenDiagnostics}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? (isClean ? `${colors.green}1A` : `${colors.red}1A`) : `${colors.textSec}0D` }]}>
+              <Text style={[sDyn.icon, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
+                {isConnected ? (isClean ? '✓' : '⚠') : '🔍'}
+              </Text>
+            </View>
+            <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
           </View>
-
-          {/* Row 2 */}
-          <View style={sDyn.row}>
-            {/* Card 3: Vehicle Profile (About App) */}
-            <TouchableOpacity
-              style={cardBaseStyle}
-              onPress={onOpenProfile}
-              activeOpacity={0.8}
-            >
-              <View style={sDyn.cardHeader}>
-                <View style={[sDyn.iconWrapper, { backgroundColor: 'transparent', flexShrink: 0 }]}>
-                  <Image source={require('../../assets/icon.png')} style={{ width: '100%', height: '100%', borderRadius: scaleMod(8) }} />
-                </View>
-                <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-              </View>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardTitle, { flexShrink: 1 }]}
-              >
-                {t('bento.vehicleProfile')}
-              </Text>
-              <View style={{ flexShrink: 1 }}>
-                <Text 
-                  numberOfLines={1} 
-                  adjustsFontSizeToFit 
-                  minimumFontScale={0.8} 
-                  style={[sDyn.cardSubtitle, { color: colors.textSec, fontSize: scaleFont(8.5), lineHeight: scaleFont(11.5), flexShrink: 1 }]}
-                >
-                  {t('bento.aboutAppDesc', 'Uygulama Bilgileri & Rehber')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-
-            {/* Card 4: Quick Settings */}
-            <TouchableOpacity
-              style={cardBaseStyle}
-              onPress={onOpenSettings}
-              activeOpacity={0.8}
-            >
-              <View style={sDyn.cardHeader}>
-                <View style={[sDyn.iconWrapper, { backgroundColor: `${colors.amber}1A`, flexShrink: 0 }]}>
-                  <Text style={sDyn.icon}>⚙️</Text>
-                </View>
-                <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-              </View>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardTitle, { flexShrink: 1 }]}
-              >
-                {t('bento.quickSettings')}
-              </Text>
-              <View style={[sDyn.settingsBadgeRow, { flexShrink: 0 }]}>
-                <Text style={sDyn.badgeFlag}>{langFlag}</Text>
-                <Text style={[sDyn.themeBadge, { color: colors.cyan, backgroundColor: `${colors.cyan}1A` }]}>
-                  {t(`common.${theme}`).toUpperCase()}
-                </Text>
-              </View>
-            </TouchableOpacity>
+          <View style={{ marginTop: scaleHeight(8) }}>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
+              {t('bento.diagnostics').toUpperCase()}
+            </Text>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
+              {isConnected 
+                ? (isClean ? t('bento.cleanFaults') : t('bento.dtcDetected', { count: dtcCount }))
+                : t('bento.settings.noConnection', 'Bağlantı Yok')}
+            </Text>
           </View>
+        </BentoButton>
 
-          {/* Row 3 */}
-          <View style={sDyn.row}>
-            {/* Card 5: Support Center */}
-            <TouchableOpacity
-              style={cardBaseStyle}
-              onPress={onOpenSupport}
-              activeOpacity={0.8}
-            >
-              <View style={sDyn.cardHeader}>
-                <View style={[sDyn.iconWrapper, { backgroundColor: `${colors.cyan}1A`, flexShrink: 0 }]}>
-                  <Text style={sDyn.icon}>📍</Text>
-                </View>
-                <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-              </View>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardTitle, { flexShrink: 1 }]}
-              >
-                {t('info.support', 'DESTEK MERKEZİ')}
-              </Text>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardSubtitle, { color: colors.textSec, flexShrink: 1 }]}
-              >
-                {t('bento.supportDesc', 'Destek ve İletişim')}
-              </Text>
-            </TouchableOpacity>
-
-            {/* Card 6: Share App */}
-            <TouchableOpacity
-              style={cardBaseStyle}
-              onPress={onShareApp}
-              activeOpacity={0.8}
-            >
-              <View style={sDyn.cardHeader}>
-                <View style={[sDyn.iconWrapper, { backgroundColor: `${colors.purple}1A`, flexShrink: 0 }]}>
-                  <Text style={sDyn.icon}>✨</Text>
-                </View>
-                <Text style={[sDyn.arrow, { color: colors.textSec, flexShrink: 0 }]}>›</Text>
-              </View>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardTitle, { flexShrink: 1 }]}
-              >
-                {t('expertise.share', 'PAYLAŞ')}
-              </Text>
-              <Text 
-                numberOfLines={1} 
-                adjustsFontSizeToFit 
-                minimumFontScale={0.8} 
-                style={[sDyn.cardSubtitle, { color: colors.textSec, flexShrink: 1 }]}
-              >
-                {t('bento.shareDesc', 'Uygulamayı Paylaş')}
-              </Text>
-            </TouchableOpacity>
+        {/* Card 2: Live Sensors */}
+        <BentoButton
+          style={[sDyn.cardPrimary, { backgroundColor: colors.cardBg, borderColor: isConnected ? colors.cyan : colors.cardBorder }]}
+          onPress={onOpenSensors}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? `${colors.cyan}1A` : `${colors.textSec}0D` }]}>
+              <Text style={[sDyn.icon, { color: isConnected ? colors.cyan : colors.textSec }]}>📊</Text>
+            </View>
+            <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
           </View>
-        </>
-      )}
+          <View style={{ marginTop: scaleHeight(8) }}>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
+              {t('bento.liveSensors').toUpperCase()}
+            </Text>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? colors.cyan : colors.textSec }]}>
+              {isConnected 
+                ? t('bento.realtimeData')
+                : t('bento.settings.noConnection', 'Bağlantı Yok')}
+            </Text>
+          </View>
+        </BentoButton>
+      </View>
+
+      {/* Row 2: Secondary Menus Row 1 (3 Columns) */}
+      <View style={sDyn.row}>
+        {/* Card 3: Profile/About */}
+        <BentoButton
+          style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+          onPress={onOpenProfile}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapperSmall, { backgroundColor: 'transparent' }]}>
+              <Image source={require('../../assets/icon.png')} style={{ width: '100%', height: '100%', borderRadius: scaleMod(4) }} />
+            </View>
+            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+          </View>
+          <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
+            {t('bento.vehicleProfile').toUpperCase()}
+          </Text>
+        </BentoButton>
+
+        {/* Card 4: Quick Settings */}
+        <BentoButton
+          style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+          onPress={onOpenSettings}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.amber}1A` }]}>
+              <Text style={sDyn.iconSmall}>⚙️</Text>
+            </View>
+            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(2) }}>
+            <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
+              {t('bento.quickSettings').toUpperCase()}
+            </Text>
+            <Text style={{ fontSize: scaleFont(9), marginLeft: 2 }}>{langFlag}</Text>
+          </View>
+        </BentoButton>
+
+        {/* Card 5: Support */}
+        <BentoButton
+          style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+          onPress={onOpenSupport}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.cyan}1A` }]}>
+              <Text style={sDyn.iconSmall}>📍</Text>
+            </View>
+            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+          </View>
+          <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
+            {t('info.support').toUpperCase()}
+          </Text>
+        </BentoButton>
+      </View>
+
+      {/* Row 3: Secondary Menus Row 2 (3 Columns) */}
+      <View style={sDyn.row}>
+        {/* Card 6: Share */}
+        <BentoButton
+          style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+          onPress={onShareApp}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}1A` }]}>
+              <Text style={sDyn.iconSmall}>✨</Text>
+            </View>
+            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+          </View>
+          <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
+            {t('expertise.share').toUpperCase()}
+          </Text>
+        </BentoButton>
+
+        {/* Card 7: Demo */}
+        <BentoButton
+          style={[
+            sDyn.cardSecondary, 
+            { 
+              backgroundColor: isSimulationMode ? `${colors.green}14` : colors.cardBg, 
+              borderColor: isSimulationMode ? colors.green : colors.cardBorder 
+            }
+          ]}
+          onPress={handleDemoPress}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapperSmall, { backgroundColor: isSimulationMode ? `${colors.green}26` : `${colors.cyan}1A` }]}>
+              <Text style={[sDyn.iconSmall, { color: isSimulationMode ? colors.green : colors.cyan }]}>🎮</Text>
+            </View>
+            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(2) }}>
+            <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
+              {t('common.demoMode').toUpperCase()}
+            </Text>
+            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSimulationMode ? colors.green : colors.textSec, marginLeft: 4 }} />
+          </View>
+        </BentoButton>
+
+        {/* Card 8: Pro Upgrade */}
+        <BentoButton
+          style={[
+            sDyn.cardSecondary, 
+            { 
+              backgroundColor: (isPro || isSimulationMode) ? `${colors.purple}14` : colors.cardBg, 
+              borderColor: colors.purple 
+            }
+          ]}
+          onPress={handleProPress}
+          activeOpacity={0.4}
+        >
+          <View style={sDyn.cardHeader}>
+            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}26` }]}>
+              <Text style={sDyn.iconSmall}>👑</Text>
+            </View>
+            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(2) }}>
+            <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
+              {(isPro || isSimulationMode) ? t('common.proActive').toUpperCase() : t('common.freeAccount').toUpperCase()}
+            </Text>
+            <Text style={[sDyn.badgeText, { color: '#FFF', backgroundColor: colors.purple, paddingHorizontal: 3, paddingVertical: 1, borderRadius: 3, marginLeft: 2 }]}>
+              {(isPro || isSimulationMode) ? 'PRO' : 'FREE'}
+            </Text>
+          </View>
+        </BentoButton>
+      </View>
     </View>
   );
 }

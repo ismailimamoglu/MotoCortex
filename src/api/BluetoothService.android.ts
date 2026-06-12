@@ -85,7 +85,7 @@ class BluetoothServiceAndroid implements IBluetoothService {
     private bleDataBuffer: string = '';
 
     private dataSubscription: any | null = null;
-    private listeners: DataListener[] = [];
+    private dataListener: DataListener | null = null;
     private disconnectCallback: DisconnectCallback | null = null;
     private connectionMonitorId: ReturnType<typeof setInterval> | null = null;
     private readonly STORAGE_KEY = '@last_connected_device';
@@ -217,59 +217,66 @@ class BluetoothServiceAndroid implements IBluetoothService {
         this.isManualDisconnect = false;
         
         const isBleOrSim = deviceId.includes('BLE') || deviceId.includes('SIM');
-        // Eşleşme (Pairing) Şelalesi - Uygulama İçi Zorunluluk (OS ayarlarına gitmeyi SİLİYORUZ)
-        // Yukarıdaki intent fırlatma bloğu TAMAMEN kaldırıldı.
 
-        try {
-            let device: BluetoothDevice | undefined;
-            try { device = await RNBluetoothClassic.getConnectedDevice(deviceId); } catch (e) {}
-            if (!device) {
-                const bonded = await RNBluetoothClassic.getBondedDevices();
-                device = bonded.find(d => d.address === deviceId);
-            }
-            if (!device) {
-                if (isBleOrSim) {
-                    return await this.connectBLE(deviceId);
+        const connectionPromise = (async () => {
+            try {
+                let device: BluetoothDevice | undefined;
+                try { device = await RNBluetoothClassic.getConnectedDevice(deviceId); } catch (e) {}
+                if (!device) {
+                    const bonded = await RNBluetoothClassic.getBondedDevices();
+                    device = bonded.find(d => d.address === deviceId);
                 }
-                throw new Error('Device not found or not bonded yet');
-            }
-            
-            // Eğer cihaz daha önce bağlı değilse connect çağır (Bu aynı zamanda eşleşme isteği atabilir)
-            if (!await device.isConnected()) {
-                const connected = await device.connect({ connectorType: 'rfcomm', DELIMITER: '', charset: 'utf-8' });
-                if (!connected) throw new Error('CONNECTION_FAILED_OR_NOT_BONDED');
-            }
-            this.connectedDevice = device;
-            this.startListening();
-            this.reconnectAttempts = 0;
-            this.startConnectionMonitor();
-            return true;
-        } catch (err: any) {
-            console.error('Connection Failed:', err);
-            
-            if (!isBleOrSim) {
-                console.log(`[Bluetooth Android] Connection/Bonding failed, attempting autonomous pairDevice fallback for ${deviceId}`);
-                try {
-                    // Eşleşme Şelalesi: Bağlantı başarısızsa otonom pairDevice tetikle.
-                    // RNBluetoothClassic kendi içinde PIN diyalogunu otonom olarak (In-App) tetikler.
-                    await RNBluetoothClassic.pairDevice(deviceId);
-                    
-                    // Eşleşme başarılı olursa yeniden bağlanmayı deneriz.
-                    const device = await RNBluetoothClassic.getConnectedDevice(deviceId) || await RNBluetoothClassic.connectToDevice(deviceId);
-                    this.connectedDevice = device;
-                    this.startListening();
-                    this.reconnectAttempts = 0;
-                    this.startConnectionMonitor();
-                    return true;
-                } catch (pairErr) {
-                    console.error('[Bluetooth Android] Autonomous Pairing fallback failed:', pairErr);
-                    throw new Error('PAIRING_FAILED');
+                if (!device) {
+                    if (isBleOrSim) {
+                        return await this.connectBLE(deviceId);
+                    }
+                    throw new Error('Device not found or not bonded yet');
                 }
-            }
+                
+                // Eğer cihaz daha önce bağlı değilse connect çağır (Bu aynı zamanda eşleşme isteği atabilir)
+                if (!await device.isConnected()) {
+                    const connected = await device.connect({ connectorType: 'rfcomm', DELIMITER: '', charset: 'utf-8' });
+                    if (!connected) throw new Error('CONNECTION_FAILED_OR_NOT_BONDED');
+                }
+                this.connectedDevice = device;
+                this.startListening();
+                this.reconnectAttempts = 0;
+                this.startConnectionMonitor();
+                return true;
+            } catch (err: any) {
+                console.error('Connection Failed:', err);
+                
+                if (!isBleOrSim) {
+                    console.log(`[Bluetooth Android] Connection/Bonding failed, attempting autonomous pairDevice fallback for ${deviceId}`);
+                    try {
+                        // Eşleşme Şelalesi: Bağlantı başarısızsa otonom pairDevice tetikle.
+                        // RNBluetoothClassic kendi içinde PIN diyalogunu otonom olarak (In-App) tetikler.
+                        await RNBluetoothClassic.pairDevice(deviceId);
+                        
+                        // Eşleşme başarılı olursa yeniden bağlanmayı deneriz.
+                        const device = await RNBluetoothClassic.getConnectedDevice(deviceId) || await RNBluetoothClassic.connectToDevice(deviceId);
+                        this.connectedDevice = device;
+                        this.startListening();
+                        this.reconnectAttempts = 0;
+                        this.startConnectionMonitor();
+                        return true;
+                    } catch (pairErr) {
+                        console.error('[Bluetooth Android] Autonomous Pairing fallback failed:', pairErr);
+                        throw new Error('PAIRING_FAILED');
+                    }
+                }
 
-            // Try BLE as fallback
-            return await this.connectBLE(deviceId);
-        }
+                // Try BLE as fallback
+                return await this.connectBLE(deviceId);
+            }
+        })();
+
+        return Promise.race([
+            connectionPromise,
+            new Promise<boolean>((_, reject) => 
+                setTimeout(() => reject(new Error('CONNECTION_TIMEOUT')), 12000)
+            )
+        ]);
     }
 
     private async connectBLE(deviceId: string): Promise<boolean> {
@@ -325,14 +332,17 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     private processBleChunk(chunk: string) {
-        Logger.log('BLE_READ_CHUNK', chunk);
+        Logger.log('BLE_READ_CHUNK_RAW', chunk);
         this.bleDataBuffer += chunk;
-        if (this.bleDataBuffer.includes('\r') || this.bleDataBuffer.includes('>')) {
-            const lines = this.bleDataBuffer.split(/[\r>]/);
-            this.bleDataBuffer = lines.pop() || '';
-            lines.forEach(line => {
-                if (line.trim()) this.listeners.forEach(l => l(line.trim()));
-            });
+        while (this.bleDataBuffer.includes('>')) {
+            const index = this.bleDataBuffer.indexOf('>');
+            const fullResponse = this.bleDataBuffer.substring(0, index + 1);
+            this.bleDataBuffer = this.bleDataBuffer.substring(index + 1);
+            
+            Logger.log('BLE_READ_FULL_RESPONSE', fullResponse);
+            if (this.dataListener) {
+                this.dataListener(fullResponse);
+            }
         }
     }
 
@@ -367,14 +377,26 @@ class BluetoothServiceAndroid implements IBluetoothService {
         await this.connectedDevice.write(command);
     }
 
-    onDataReceived(listener: DataListener) { this.listeners.push(listener); }
-    removeListener(listener: DataListener) { this.listeners = this.listeners.filter(l => l !== listener); }
+    onDataReceived(listener: DataListener) {
+        this.dataListener = listener;
+        const { useBluetoothStore } = require('../store/useBluetoothStore');
+        useBluetoothStore.getState().addLog(`RX_LISTENER_REGISTERED. Active count: 1`);
+    }
+    removeListener(listener: DataListener) {
+        if (this.dataListener === listener) {
+            this.dataListener = null;
+            const { useBluetoothStore } = require('../store/useBluetoothStore');
+            useBluetoothStore.getState().addLog(`RX_LISTENER_REMOVED. Active count: 0`);
+        }
+    }
 
     private startListening() {
         if (!this.connectedDevice) return;
         this.dataSubscription = this.connectedDevice.onDataReceived((event) => {
             Logger.log('BT_READ_CHUNK', event.data);
-            this.listeners.forEach(l => l(event.data));
+            if (this.dataListener) {
+                this.dataListener(event.data);
+            }
         });
     }
 

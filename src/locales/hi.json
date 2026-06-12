@@ -59,7 +59,8 @@
             "hardwareModalDesc": "समर्थन प्राप्त करने या मैन्युअल PRO लाइसेंस सक्रियण करने के लिए, कृपया उपरोक्त उपयोगकर्ता आईडी की प्रतिलिपि बनाएँ और हमसे संपर्क करें।",
             "supportEmailBody": "हेलो मोटोकॉर्टेक्स सपोर्ट टीम, --- आवेदन सूचना --- उपयोगकर्ता आईडी:{{userId}}लाइसेंस स्थिति:{{license}}लिंक:{{connection}}डिवाइस स्थिति:{{deviceStatus}}--- आपका संदेश ---",
             "deviceName": "डिवाइस का नाम:",
-            "simulationObd": "सिमुलेशन OBD"
+            "simulationObd": "सिमुलेशन OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "आवेदन सूचना एवं मार्गदर्शिका",
         "supportDesc": "सहायता और संपर्क",
@@ -101,7 +102,9 @@
         "back": "पीछे",
         "chassis": "चेसिस",
         "operations": "संचालन",
-        "close": "बंद करें"
+        "close": "बंद करें",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "मोटो कॉर्टेक्स प्रो",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "डिवाइस अयुग्मित",
         "deviceNotPairedDesc": "क्लासिक ब्लूटूथ OBD2 एडेप्टर कनेक्ट करने से पहले, आपको उन्हें अपने फ़ोन की ब्लूटूथ सेटिंग्स से पेयर करना होगा। आपको सिस्टम सेटिंग्स पर निर्देशित किया जाता है।",
         "unsupportedDeviceTitle": "असंगत हार्डवेयर",
-        "unsupportedDeviceDesc": "जिस डिवाइस को आप कनेक्ट करने का प्रयास कर रहे हैं वह संगत OBD2 एडाप्टर नहीं है या आवश्यक सेवाओं का समर्थन नहीं करता है।"
+        "unsupportedDeviceDesc": "जिस डिवाइस को आप कनेक्ट करने का प्रयास कर रहे हैं वह संगत OBD2 एडाप्टर नहीं है या आवश्यक सेवाओं का समर्थन नहीं करता है।",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "डिवाइस का चयन करने के लिए स्पर्श करें",
@@ -206,7 +214,8 @@
         "mafFlow": "हवा का बहाव MAF",
         "timingAdvance": "इग्निशन एडवांस",
         "fuelLevel": "ईंधन स्तर",
-        "catalystTemp": "उत्प्रेरक तापमान"
+        "catalystTemp": "उत्प्रेरक तापमान",
+        "layoutGauge": "गेज"
     },
     "expertise": {
         "historyFound": "वाहन का इतिहास मिला!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "कृपया इस प्रक्रिया को शुरू करने के लिए पहले वाहन से कनेक्ट करें।",
         "chronicFaultsTitle": "सांख्यिकीय जीर्ण समस्याएँ",
         "chronicFaultsObs": "{{code}}(अवलोकन:{{days}}अलग-अलग दिन/कुल:{{total}}बार)",
-        "chronicFaultsPending": "डेटा पूल एकत्रित करना/सांख्यिकी का विश्लेषण करना"
+        "chronicFaultsPending": "डेटा पूल एकत्रित करना/सांख्यिकी का विश्लेषण करना",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ सुरक्षा चेतावनी",

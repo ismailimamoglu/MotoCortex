@@ -59,7 +59,8 @@
             "hardwareModalDesc": "หากต้องการรับการสนับสนุนหรือดำเนินการเปิดใช้งานใบอนุญาต PRO ด้วยตนเอง โปรดคัดลอก ID ผู้ใช้ด้านบนและติดต่อเรา",
             "supportEmailBody": "สวัสดีทีมสนับสนุน MotoCortex --- ข้อมูลการสมัคร --- รหัสผู้ใช้:{{userId}}สถานะใบอนุญาต:{{license}}ลิงค์:{{connection}}สถานะอุปกรณ์:{{deviceStatus}}--- ข้อความของคุณ ---",
             "deviceName": "ชื่ออุปกรณ์:",
-            "simulationObd": "การจำลอง OBD"
+            "simulationObd": "การจำลอง OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "ข้อมูลการสมัครและคำแนะนำ",
         "supportDesc": "สนับสนุนและติดต่อ",
@@ -101,7 +102,9 @@
         "back": "ย้อนกลับ",
         "chassis": "แชสซี",
         "operations": "การดำเนินการ",
-        "close": "ปิด"
+        "close": "ปิด",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "โมโต คอร์เท็กซ์ โปร",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "อุปกรณ์ไม่ได้จับคู่",
         "deviceNotPairedDesc": "ก่อนที่จะเชื่อมต่ออะแดปเตอร์ Bluetooth OBD2 แบบคลาสสิก คุณต้องจับคู่อะแดปเตอร์เหล่านั้นจากการตั้งค่า Bluetooth ในโทรศัพท์ของคุณ คุณจะถูกนำไปที่การตั้งค่าระบบ",
         "unsupportedDeviceTitle": "ฮาร์ดแวร์ที่เข้ากันไม่ได้",
-        "unsupportedDeviceDesc": "อุปกรณ์ที่คุณกำลังพยายามเชื่อมต่อไม่ใช่อะแดปเตอร์ OBD2 ที่เข้ากันได้ หรือไม่รองรับบริการที่จำเป็น"
+        "unsupportedDeviceDesc": "อุปกรณ์ที่คุณกำลังพยายามเชื่อมต่อไม่ใช่อะแดปเตอร์ OBD2 ที่เข้ากันได้ หรือไม่รองรับบริการที่จำเป็น",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "แตะเพื่อเลือกอุปกรณ์",
@@ -206,7 +214,8 @@
         "mafFlow": "อัตราการไหลของอากาศ MAF",
         "timingAdvance": "องศาไฟจุดระเบิด",
         "fuelLevel": "ระดับน้ำมันเชื้อเพลิง",
-        "catalystTemp": "ความร้อนแคทตาไลติก"
+        "catalystTemp": "ความร้อนแคทตาไลติก",
+        "layoutGauge": "เกจ"
     },
     "expertise": {
         "historyFound": "พบประวัติยานพาหนะ!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "โปรดเชื่อมต่อกับรถยนต์ก่อนเพื่อเริ่มกระบวนการนี้",
         "chronicFaultsTitle": "ปัญหาเรื้อรังทางสถิติ",
         "chronicFaultsObs": "{{code}}(การสังเกต:{{days}}วันที่แตกต่างกัน / ทั้งหมด:{{total}}ครั้ง)",
-        "chronicFaultsPending": "การรวบรวมกลุ่มข้อมูล / การวิเคราะห์สถิติ"
+        "chronicFaultsPending": "การรวบรวมกลุ่มข้อมูล / การวิเคราะห์สถิติ",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ คำเตือนด้านความปลอดภัย",

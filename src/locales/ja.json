@@ -59,7 +59,8 @@
             "hardwareModalDesc": "サポートを受けるか、手動で PRO ライセンスのアクティベーションを実行するには、上記のユーザー ID をコピーして、お問い合わせください。",
             "supportEmailBody": "MotoCortex サポート チーム、こんにちは。 --- 応募情報 --- ユーザーID:{{userId}}ライセンスステータス:{{license}}リンク:{{connection}}デバイスのステータス:{{deviceStatus}}--- メッセージ ---",
             "deviceName": "デバイス名:",
-            "simulationObd": "シミュレーション OBD"
+            "simulationObd": "シミュレーション OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "アプリケーション情報とガイド",
         "supportDesc": "サポートと連絡先",
@@ -101,7 +102,9 @@
         "back": "戻る",
         "chassis": "車台番号",
         "operations": "操作履歴",
-        "close": "閉じる"
+        "close": "閉じる",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "モト コルテックス プロ",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "デバイスがペアリングされていません",
         "deviceNotPairedDesc": "クラシック Bluetooth OBD2 アダプターを接続する前に、携帯電話の Bluetooth 設定からアダプターをペアリングする必要があります。システム設定に移動します。",
         "unsupportedDeviceTitle": "互換性のないハードウェア",
-        "unsupportedDeviceDesc": "接続しようとしているデバイスは互換性のある OBD2 アダプターではないか、必要なサービスをサポートしていません。"
+        "unsupportedDeviceDesc": "接続しようとしているデバイスは互換性のある OBD2 アダプターではないか、必要なサービスをサポートしていません。",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "タッチしてデバイスを選択します",
@@ -206,7 +214,8 @@
         "mafFlow": "吸入空気量 MAF",
         "timingAdvance": "点火時期",
         "fuelLevel": "燃料残量",
-        "catalystTemp": "触媒温度"
+        "catalystTemp": "触媒温度",
+        "layoutGauge": "メーター"
     },
     "expertise": {
         "historyFound": "車両履歴が見つかりました!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "このプロセスを開始するには、まず車両に接続してください。",
         "chronicFaultsTitle": "統計上の慢性的な問題",
         "chronicFaultsObs": "{{code}}(観察:{{days}}別の日 / 合計:{{total}}回)",
-        "chronicFaultsPending": "データプールの収集/統計の分析"
+        "chronicFaultsPending": "データプールの収集/統計の分析",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ セキュリティ警告",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,13 @@ import {
   Modal,
   TextInput,
   Platform,
+  Alert,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '../hooks/useResponsive';
 import { useThemeColors } from '../theme';
 import { usePurchaseStore } from '../store/usePurchaseStore';
 import { useAppStore } from '../store/useAppStore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface AboutViewProps {
   infoBtStatus: 'granted' | 'denied' | 'checking';
@@ -278,33 +278,48 @@ export default function AboutView({
   onReconfigurePermissions,
   onAccordionToggle,
 }: AboutViewProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const colors = useThemeColors();
   const tc = colors;
-  const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet } = useResponsive();
+  const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont } = useResponsive();
 
   const [expandedInfoSection, setExpandedInfoSection] = useState<string | null>(null);
-  const [clickCount, setClickCount] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [passwordInput, setPasswordInput] = useState('');
 
   const isPro = usePurchaseStore((state) => state.isPro);
+  const language = useAppStore((state) => state.language);
+
+  // Hidden testing backdoor (to be removed on release)
+  const [logoTapCount, setLogoTapCount] = useState(0);
+  const logoTapTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleLogoTap = () => {
+    setLogoTapCount((prev) => {
+      const nextCount = prev + 1;
+      if (nextCount >= 7) {
+        const nextPro = !isPro;
+        useAppStore.getState().setIsBackdoorPro(nextPro);
+        Alert.alert(
+          "MotoCortex Dev Mode", 
+          `PRO Status: ${nextPro ? 'ACTIVE' : 'INACTIVE'}`
+        );
+        return 0;
+      }
+      return nextCount;
+    });
+
+    if (logoTapTimerRef.current) {
+      clearTimeout(logoTapTimerRef.current);
+    }
+    logoTapTimerRef.current = setTimeout(() => {
+      setLogoTapCount(0);
+    }, 2000);
+  };
 
   const toggleInfoAcc = (section: string) => {
     const nextSection = expandedInfoSection === section ? null : section;
     setExpandedInfoSection(nextSection);
     if (onAccordionToggle) {
       onAccordionToggle(nextSection);
-    }
-  };
-
-  const handleTitlePress = () => {
-    const nextCount = clickCount + 1;
-    if (nextCount >= 7) {
-      setClickCount(0);
-      setModalVisible(true);
-    } else {
-      setClickCount(nextCount);
     }
   };
 
@@ -349,8 +364,7 @@ export default function AboutView({
   );
 
   const renderPerformanceGuide = () => {
-    const lang = i18n.language || 'en';
-    const texts = PERFORMANCE_TRANSLATIONS[lang] || PERFORMANCE_TRANSLATIONS['en'];
+    const texts = PERFORMANCE_TRANSLATIONS[language] || PERFORMANCE_TRANSLATIONS['en'];
 
     return (
       <View style={{ gap: scaleHeight(12) }}>
@@ -517,7 +531,7 @@ export default function AboutView({
           gap: 8
         }}
         onPress={onReconfigurePermissions}
-        activeOpacity={0.8}
+        activeOpacity={0.4}
       >
         <Text style={{ color: tc.cyan, fontSize: scaleFont(10), fontWeight: '900', fontFamily: tc.mono }}>
           🛡️ {t('info.reconfigurePermissions').toUpperCase()}
@@ -526,77 +540,35 @@ export default function AboutView({
     </View>
   );
 
-  const renderLeftCol = (isCompact: boolean) => (
-    <View style={{ flex: isCompact ? undefined : 1, gap: isCompact ? scaleHeight(8) : scaleHeight(12) }}>
-      {/* Top Section */}
-      <View style={{ alignItems: 'center', marginBottom: isCompact ? scaleHeight(8) : scaleHeight(16), marginTop: scaleHeight(4) }}>
-        <TouchableWithoutFeedback onPress={handleTitlePress}>
-          <View>
-            <Text style={{
-              fontSize: isCompact ? scaleFont(20) : scaleFont(26),
-              fontWeight: '900',
-              color: tc.cyan,
-              fontFamily: tc.mono,
-              letterSpacing: 4,
-              textAlign: 'center',
-              paddingVertical: scaleHeight(8),
-            }}>
-              MOTOCORTEX
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
-        
+
+
+  return (
+    <View style={{ flex: 1 }}>
+      <ScrollView 
+        style={{ flex: 1 }} 
+        contentContainerStyle={{ 
+          paddingHorizontal: scaleWidth(16), 
+          paddingBottom: scaleHeight(40), 
+          gap: scaleHeight(12), 
+          paddingTop: scaleHeight(12),
+          alignSelf: 'center',
+          width: '100%',
+          maxWidth: 600,
+        }}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={{
-          fontSize: isCompact ? scaleFont(9.5) : scaleFont(11),
-          color: tc.cyan,
+          color: tc.textSec,
+          fontSize: scaleFont(11),
+          fontWeight: '900',
           fontFamily: tc.mono,
-          marginTop: scaleHeight(4),
-          letterSpacing: 6,
-          textAlign: 'center',
+          letterSpacing: 1,
+          marginLeft: 4,
+          marginBottom: scaleHeight(2),
         }}>
-          v2.0.0 [{isPro ? 'PRO' : 'FREE'}]
+          {t('info.helpGuide').toUpperCase()}
         </Text>
-        
-        <Text style={{
-          color: colors.textSec,
-          fontFamily: tc.mono,
-          fontSize: isCompact ? scaleFont(9.5) : scaleFont(10.5),
-          marginTop: scaleHeight(12),
-          textAlign: 'center',
-          paddingHorizontal: scaleWidth(10),
-          lineHeight: scaleFont(14)
-        }}>
-          {DESCRIPTION_TRANSLATIONS[i18n.language] || DESCRIPTION_TRANSLATIONS['en']}
-        </Text>
-      </View>
 
-      {/* Spacer to push details to bottom */}
-      {!isCompact && <View style={{ flex: 1 }} />}
-
-      <View style={{ paddingVertical: isCompact ? scaleHeight(8) : scaleHeight(12), borderTopWidth: 1, borderTopColor: colors.border, alignItems: 'center', flexShrink: 0 }}>
-        <Text style={{ color: colors.textSec, fontFamily: tc.mono, fontSize: scaleFont(9) }}>
-          MotoCortex v2.0.0 (1) {isPro ? 'PRO' : 'FREE'}
-        </Text>
-      </View>
-      
-      <Text style={{
-        color: colors.textSec,
-        fontFamily: tc.mono,
-        fontSize: scaleFont(8),
-        textAlign: 'center',
-        opacity: 0.6,
-        lineHeight: scaleFont(11.5),
-        paddingHorizontal: scaleWidth(10),
-        marginBottom: isCompact ? scaleHeight(10) : 0,
-      }}>
-        {t('disclaimer')}
-      </Text>
-    </View>
-  );
-
-  const renderRightCol = (isCompact: boolean) => {
-    const accordions = (
-      <>
         <InfoAccordion
           id="canli"
           icon="📊"
@@ -630,7 +602,7 @@ export default function AboutView({
         <InfoAccordion
           id="performans_rehberi"
           icon="⚡"
-          title={PERFORMANCE_TRANSLATIONS[i18n.language]?.title || PERFORMANCE_TRANSLATIONS['en'].title}
+          title={PERFORMANCE_TRANSLATIONS[language]?.title || PERFORMANCE_TRANSLATIONS['en'].title}
           content={renderPerformanceGuide()}
         />
         <InfoAccordion
@@ -639,161 +611,9 @@ export default function AboutView({
           title={t('info.sections.onboarding.title')}
           content={renderOnboardingAccordionContent()}
         />
-      </>
-    );
 
-    return (
-      <View style={{ flex: isCompact ? undefined : 1.2, gap: isCompact ? scaleHeight(8) : scaleHeight(12) }}>
-        <Text style={{
-          color: tc.textSec,
-          fontSize: isCompact ? scaleFont(11) : scaleFont(9),
-          fontWeight: '900',
-          fontFamily: tc.mono,
-          letterSpacing: 1,
-          marginLeft: 4,
-          marginBottom: isCompact ? scaleHeight(12) : scaleHeight(2),
-        }}>
-          {t('info.helpGuide')}
-        </Text>
-
-        {isCompact ? (
-          accordions
-        ) : (
-          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: scaleHeight(6), paddingBottom: scaleHeight(10) }}>
-            {accordions}
-          </ScrollView>
-        )}
-      </View>
-    );
-  };
-
-  return (
-    <View style={{ flex: 1 }}>
-      {isTablet ? (
-        <View style={{ flex: 1, paddingHorizontal: scaleWidth(16), paddingBottom: scaleHeight(16), paddingTop: scaleHeight(8), alignSelf: 'center', width: '100%', maxWidth: isLargeTablet ? 900 : undefined }}>
-          <View style={{ flexDirection: 'row', gap: scaleMod(16), flex: 1 }}>
-            {renderLeftCol(false)}
-            {renderRightCol(false)}
-          </View>
-        </View>
-      ) : (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: scaleWidth(16), paddingBottom: scaleHeight(40), gap: scaleHeight(12), paddingTop: scaleHeight(12) }}>
-          {renderLeftCol(true)}
-          {renderRightCol(true)}
-        </ScrollView>
-      )}
-
-      {/* Secret Input Modal */}
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => {
-          setModalVisible(false);
-          setPasswordInput('');
-        }}
-      >
-        <View style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        }}>
-          <View style={{
-            width: scaleWidth(280),
-            backgroundColor: tc.card,
-            borderWidth: 1.5,
-            borderColor: tc.cyan,
-            borderRadius: scaleMod(12),
-            padding: scaleMod(20),
-            gap: scaleHeight(16),
-          }}>
-            <Text style={{
-              color: tc.cyan,
-              fontSize: scaleFont(13),
-              fontFamily: tc.mono,
-              fontWeight: '900',
-              letterSpacing: 1,
-              textAlign: 'center',
-            }}>
-              SECURE ACCESS
-            </Text>
-            <TextInput
-              style={{
-                backgroundColor: tc.bg,
-                borderWidth: 1,
-                borderColor: tc.border,
-                borderRadius: scaleMod(6),
-                color: tc.textPri,
-                fontSize: scaleFont(12),
-                fontFamily: tc.mono,
-                paddingVertical: scaleHeight(8),
-                paddingHorizontal: scaleWidth(12),
-                textAlign: 'center',
-              }}
-              placeholder="••••••"
-              placeholderTextColor={tc.textSec}
-              secureTextEntry={true}
-              value={passwordInput}
-              onChangeText={setPasswordInput}
-              autoFocus={true}
-            />
-            <View style={{ flexDirection: 'row', gap: scaleMod(10) }}>
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  height: scaleHeight(36),
-                  borderRadius: scaleMod(6),
-                  borderWidth: 1,
-                  borderColor: tc.border,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  setModalVisible(false);
-                  setPasswordInput('');
-                }}
-              >
-                <Text style={{ color: tc.textSec, fontSize: scaleFont(11), fontFamily: tc.mono, fontWeight: '700' }}>
-                  CANCEL
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  height: scaleHeight(36),
-                  borderRadius: scaleMod(6),
-                  backgroundColor: tc.cyan,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-                onPress={async () => {
-                  setModalVisible(false);
-                  const isCorrect = passwordInput === 'ömerfaruk';
-                  setPasswordInput('');
-                  if (isCorrect) {
-                    const currentlyPro = usePurchaseStore.getState().isPro;
-                    if (currentlyPro) {
-                      usePurchaseStore.getState().setProStatus(false);
-                      await AsyncStorage.removeItem('bypass_pro');
-                      await AsyncStorage.removeItem('bypass_pro_expiry');
-                    } else {
-                      usePurchaseStore.getState().setProStatus(true);
-                      await AsyncStorage.setItem('bypass_pro', 'true');
-                      const oneYearExpiry = Date.now() + 365 * 24 * 60 * 60 * 1000;
-                      await AsyncStorage.setItem('bypass_pro_expiry', oneYearExpiry.toString());
-                    }
-                  }
-                }}
-              >
-                <Text style={{ color: '#000000', fontSize: scaleFont(11), fontFamily: tc.mono, fontWeight: '900' }}>
-                  ENTER
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        {/* App Info Card removed and moved to main dashboard page */}
+      </ScrollView>
     </View>
   );
 }

@@ -82,7 +82,7 @@ class BluetoothServiceIOS implements IBluetoothService {
     private bleDataBuffer: string = '';
     private iosBleBuffer: string = '';
 
-    private listeners: DataListener[] = [];
+    private dataListener: DataListener | null = null;
     private disconnectCallback: DisconnectCallback | null = null;
     private connectionMonitorId: ReturnType<typeof setInterval> | null = null;
     private readonly STORAGE_KEY = '@last_connected_device';
@@ -358,7 +358,9 @@ class BluetoothServiceIOS implements IBluetoothService {
             this.iosBleBuffer = this.iosBleBuffer.substring(index + 1);
             
             Logger.log('BLE_READ_FULL_RESPONSE', fullResponse);
-            this.listeners.forEach(l => l(fullResponse));
+            if (this.dataListener) {
+                this.dataListener(fullResponse);
+            }
         }
     }
 
@@ -384,8 +386,18 @@ class BluetoothServiceIOS implements IBluetoothService {
         else await this.bleWriteCharacteristic.writeWithResponse(b64);
     }
 
-    onDataReceived(listener: DataListener) { this.listeners.push(listener); }
-    removeListener(listener: DataListener) { this.listeners = this.listeners.filter(l => l !== listener); }
+    onDataReceived(listener: DataListener) {
+        this.dataListener = listener;
+        const { useBluetoothStore } = require('../store/useBluetoothStore');
+        useBluetoothStore.getState().addLog(`RX_LISTENER_REGISTERED. Active count: 1`);
+    }
+    removeListener(listener: DataListener) {
+        if (this.dataListener === listener) {
+            this.dataListener = null;
+            const { useBluetoothStore } = require('../store/useBluetoothStore');
+            useBluetoothStore.getState().addLog(`RX_LISTENER_REMOVED. Active count: 0`);
+        }
+    }
 
     private startConnectionMonitor() {
         this.stopConnectionMonitor();

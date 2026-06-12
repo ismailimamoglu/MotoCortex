@@ -1,4 +1,4 @@
-package com.anonymous.MotoCortexmobile
+package com.ismail.motocortexv2
 
 import android.app.Application
 import android.content.res.Configuration

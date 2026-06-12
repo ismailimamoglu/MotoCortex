@@ -59,7 +59,8 @@
             "hardwareModalDesc": "Chcete-li získat podporu nebo provést manuální aktivaci licence PRO, zkopírujte prosím výše uvedené ID uživatele a kontaktujte nás.",
             "supportEmailBody": "Dobrý den, tým podpory MotoCortex, --- Informace o aplikaci --- ID uživatele:{{userId}}Stav licence:{{license}}Odkaz:{{connection}}Stav zařízení:{{deviceStatus}}--- Vaše zpráva ---",
             "deviceName": "Název zařízení:",
-            "simulationObd": "Simulace OBD"
+            "simulationObd": "Simulace OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Informace o aplikaci a průvodce",
         "supportDesc": "Podpora a Kontakt",
@@ -101,7 +102,9 @@
         "back": "Zpět",
         "chassis": "Podvozek",
         "operations": "Operace",
-        "close": "ZAVŘÍT"
+        "close": "ZAVŘÍT",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "Zařízení nespárováno",
         "deviceNotPairedDesc": "Před připojením klasických Bluetooth OBD2 adaptérů je musíte spárovat z nastavení Bluetooth vašeho telefonu. Budete přesměrováni do nastavení systému.",
         "unsupportedDeviceTitle": "Nekompatibilní hardware",
-        "unsupportedDeviceDesc": "Zařízení, které se pokoušíte připojit, není kompatibilní adaptér OBD2 nebo nepodporuje požadované služby."
+        "unsupportedDeviceDesc": "Zařízení, které se pokoušíte připojit, není kompatibilní adaptér OBD2 nebo nepodporuje požadované služby.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "DOTEKNUTÍM VYBERTE ZAŘÍZENÍ",
@@ -206,7 +214,8 @@
         "mafFlow": "Průtok Vzduchu MAF",
         "timingAdvance": "Předstih Zážehu",
         "fuelLevel": "Hladina Paliva",
-        "catalystTemp": "Teplota Katalyzátoru"
+        "catalystTemp": "Teplota Katalyzátoru",
+        "layoutGauge": "UKAZATEL"
     },
     "expertise": {
         "historyFound": "HISTORIE VOZU NALEZENA!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "Chcete-li zahájit tento proces, nejprve se připojte k vozidlu.",
         "chronicFaultsTitle": "Statistické chronické problémy",
         "chronicFaultsObs": "{{code}}(pozorování:{{days}}jiný den / celkem:{{total}}krát)",
-        "chronicFaultsPending": "Shromažďování datového fondu / analýza statistik"
+        "chronicFaultsPending": "Shromažďování datového fondu / analýza statistik",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ BEZPEČNOSTNÍ UPOZORNĚNÍ",

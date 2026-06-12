@@ -10,6 +10,9 @@ import { useTelemetryStore } from '../store/useTelemetryStore';
 import { getRegisteredVehicles, saveRegisteredVehicle, deleteRegisteredVehicle, SelectedVehicle, getVehicleOperations, VehicleOperation } from '../store/garageStore';
 import { getLocalizedVehicleBrand, getLocalizedVehicleModel, toSnakeCase } from '../utils/vehicleStandardizer';
 import { BRANDS, MODELS_BY_BRAND, YEARS } from '../data/vehicleData';
+import SelectionModal from './SelectionModal';
+import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '../utils/haptics';
 
 const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
@@ -17,6 +20,21 @@ interface LiveEngineHeroProps {
   onConnectPress: () => void;
   onGoToSensors?: () => void;
   onGoToExpertise?: () => void;
+  
+  // Bluetooth props
+  status: string;
+  connectionState: string;
+  ecuStatus: string;
+  adapterStatus: string;
+  scannedDevices: any[];
+  handleScan: () => Promise<void>;
+  handleRealConnect: (id: string, name: string) => void;
+  disconnect: () => void;
+  enableBluetooth: () => Promise<boolean>;
+  lastDeviceId: string | null;
+  lastDeviceName: string | null;
+  retryEcu: () => void;
+  permissionGranted: boolean;
 }
 
 function parseTurkishDate(dateStr: string): Date | null {
@@ -92,7 +110,7 @@ function VehicleOperationsHistory({ vin, colors, scaleFont }: { vin?: string; co
       <TouchableOpacity 
         onPress={() => setIsExpanded(!isExpanded)} 
         style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 2 }}
-        activeOpacity={0.7}
+        activeOpacity={0.4}
       >
         <Text style={{ color: colors.cyan, fontSize: scaleFont(9.5), fontFamily: MONO, fontWeight: 'bold' }}>
           📋 {t('common.operations', 'İŞLEMLER').toUpperCase()} ({operations.length})
@@ -135,7 +153,24 @@ function VehicleOperationsHistory({ vin, colors, scaleFont }: { vin?: string; co
   );
 }
 
-export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToExpertise }: LiveEngineHeroProps) {
+export default function LiveEngineHero({
+  onConnectPress,
+  onGoToSensors,
+  onGoToExpertise,
+  status,
+  connectionState,
+  ecuStatus,
+  adapterStatus,
+  scannedDevices,
+  handleScan,
+  handleRealConnect,
+  disconnect,
+  enableBluetooth,
+  lastDeviceId,
+  lastDeviceName,
+  retryEcu,
+  permissionGranted,
+}: LiveEngineHeroProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, height } = useResponsive();
@@ -173,6 +208,14 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
     getRegisteredVehicles().then(setRegisteredVehicles);
   }, [activeSessionVehicle]);
 
+  const [connectingDeviceId, setConnectingDeviceId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (ecuStatus !== 'connecting') {
+      setConnectingDeviceId(null);
+    }
+  }, [ecuStatus]);
+
   useEffect(() => {
     if (activeSessionVehicle) {
       setShowRegisteredListScreen(false);
@@ -180,13 +223,11 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
   }, [activeSessionVehicle]);
 
   // Real values from Bluetooth Store to update connection status footer
-  const ecuStatus = useBluetoothStore((state) => state.ecuStatus);
-  const status = useBluetoothStore((state) => state.status);
   const isCloneDevice = useBluetoothStore((state) => state.isCloneDevice);
-  const lastDeviceName = useBluetoothStore((state) => state.lastDeviceName);
   const suggestedBrandFromVin = useBluetoothStore((state) => state.suggestedBrandFromVin);
   const setSuggestedBrandFromVin = useBluetoothStore((state) => state.setSuggestedBrandFromVin);
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
+  const toggleSimulationMode = useAppStore((state) => state.toggleSimulationMode);
 
   useEffect(() => {
     if (suggestedBrandFromVin && !activeSessionVehicle) {
@@ -202,12 +243,54 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
 
   const isPressable = !!activeSessionVehicle;
 
+  const [wasConnected, setWasConnected] = useState(isConnected);
+
+  useEffect(() => {
+    if (isConnected && !wasConnected) {
+      const statusText = isCloneDevice 
+        ? t('bento.settings.safeMode', 'Güvenli Mod / Clone Adaptör') 
+        : t('bento.settings.original', 'Orijinal');
+      const rateText = isCloneDevice 
+        ? t('bento.settings.pollingLow', '2 Hz (Düşük)') 
+        : t('bento.settings.pollingHigh', '4 Hz (Yüksek)');
+      const protoText = isSimulationMode 
+        ? t('bento.settings.simulationObd', 'Simülasyon OBD') 
+        : 'CAN Bus (ISO-15765)';
+
+      Alert.alert(
+        t('bento.settings.hardwareHealth', 'DONANIM SAĞLIK BİLGİSİ').toUpperCase(),
+        `${t('common.success', 'Başarılı')}! ${t('common.connected', 'BAĞLI')}\n\n` +
+        `• ${t('bento.settings.connectionType', 'Bağlantı Tipi:')} BLE\n` +
+        `• ${t('bento.settings.deviceName', 'Cihaz Adı:')} ${lastDeviceName || 'OBDII'}\n` +
+        `• ${t('bento.settings.protocol', 'Protokol:')} ${protoText}\n` +
+        `• ${t('bento.settings.deviceStatus', 'Cihaz Durumu:')} ${statusText}\n` +
+        `• ${t('bento.settings.pollingRate', 'Sorgu Hızı:')} ${rateText}`,
+        [{ text: t('common.ok', 'Tamam') }]
+      );
+    }
+    setWasConnected(isConnected);
+  }, [isConnected, wasConnected, isCloneDevice, lastDeviceName, isSimulationMode, t]);
+
   // Sort brands alphabetically based on localized string in current language
   const sortedBrands = React.useMemo(() => {
     return [...BRANDS]
       .filter((b) => b !== 'other')
       .sort((a, b) => t(`brands.${a}`, a).localeCompare(t(`brands.${b}`, b)))
       .concat(['other']);
+  }, [t]);
+
+  const brandOptions = React.useMemo(() => {
+    return sortedBrands.map((brandKey) => ({
+      label: t(`brands.${brandKey}`, brandKey),
+      value: brandKey
+    }));
+  }, [sortedBrands, t]);
+
+  const yearOptions = React.useMemo(() => {
+    return YEARS.map((yr) => ({
+      label: yr === 'other' ? t('brands.other', 'Diğer') : yr,
+      value: yr
+    }));
   }, [t]);
 
   // Filter brands based on search query
@@ -357,6 +440,11 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
         color: colors.textPri,
       },
       dropdownList: {
+        position: 'absolute' as const,
+        top: '100%' as const,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
         borderWidth: 1.5,
         borderRadius: 8,
         marginTop: scaleHeight(2),
@@ -440,18 +528,38 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
     isSmallPhone && { marginVertical: 8, borderRadius: 12, borderWidth: 1.5 }
   ];
 
+  const buttonColor = isConnected
+    ? colors.green
+    : isScanning
+      ? colors.cyan
+      : isPressable
+        ? (isSimulationMode ? colors.green : colors.cyan)
+        : colors.amber;
+
   const footerStatusStyle = [
     sDyn.footerStatus,
     {
-      backgroundColor: isConnected ? `${colors.green}0D` : `${colors.amber}0D`,
-      borderTopColor: isConnected ? `${colors.green}26` : `${colors.amber}26`,
+      backgroundColor: isConnected 
+        ? `${colors.green}0D` 
+        : isScanning
+          ? `${colors.cyan}0D`
+          : isPressable
+            ? (isSimulationMode ? `${colors.green}0D` : `${colors.cyan}0D`)
+            : `${colors.amber}0D`,
+      borderTopColor: isConnected 
+        ? `${colors.green}26` 
+        : isScanning
+          ? `${colors.cyan}26`
+          : isPressable
+            ? (isSimulationMode ? `${colors.green}26` : `${colors.cyan}26`)
+            : `${colors.amber}26`,
     },
     isSmallPhone && { paddingHorizontal: 16, paddingVertical: 8 }
   ];
 
   const statusTextStyle = [
     sDyn.statusText, 
-    { color: isConnected ? colors.green : (isScanning ? colors.cyan : colors.amber) },
+    { color: buttonColor },
     isSmallPhone && { fontSize: 9, letterSpacing: 0.5 }
   ];
 
@@ -460,7 +568,9 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
     : isScanning
       ? t('hub.scanningHardware')
       : isPressable
-        ? t('dashboard.selectDevice')
+        ? (isSimulationMode 
+            ? t('common.exitDemoMode', 'DEMO MODUNDAN ÇIK') 
+            : t('common.enableDemoMode', 'DEMO MODUNU ETKİNLEŞTİR'))
         : t('vehicleSelect.selectVehiclePrompt', 'LÜTFEN ÖNCE ARACI SEÇİN');
 
   return (
@@ -479,7 +589,7 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
                 <TouchableOpacity 
                   onPress={() => setShowRegisteredListScreen(false)}
                   style={{ paddingHorizontal: 12, paddingVertical: 6, backgroundColor: `${colors.textPri}14`, borderRadius: 6 }}
-                  activeOpacity={0.7}
+                  activeOpacity={0.4}
                 >
                   <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(10), fontWeight: 'bold' }}>
                     ← {t('common.back', 'Geri').toUpperCase()}
@@ -515,7 +625,7 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
                             setActiveSessionVehicle(v);
                             setShowRegisteredListScreen(false);
                           }}
-                          activeOpacity={0.7}
+                          activeOpacity={0.4}
                         >
                           <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), fontWeight: '800' }} numberOfLines={1}>
                             🛞 {getLocalizedVehicleBrand(v.brand, t)} {getLocalizedVehicleModel(v.model)}
@@ -540,7 +650,7 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
                             paddingVertical: scaleHeight(6), 
                             borderRadius: 6,
                           }}
-                          activeOpacity={0.7}
+                          activeOpacity={0.4}
                         >
                           <Text style={{ color: colors.red, fontFamily: MONO, fontSize: scaleFont(9.5), fontWeight: '900' }}>
                             🗑️ {t('common.delete', 'SİL').toUpperCase()}
@@ -560,19 +670,319 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
                 {getLocalizedVehicleBrand(activeSessionVehicle.brand, t)} {getLocalizedVehicleModel(activeSessionVehicle.model)}
               </Text>
               <Text style={sDyn.vehicleYear}>{activeSessionVehicle.year}</Text>
-              <TouchableOpacity 
-                style={sDyn.changeBtn} 
-                onPress={() => {
-                  setActiveSessionVehicle(null);
-                  setShowRegDropdown(false);
-                  setShowBrandDropdown(false);
-                  setShowModelDropdown(false);
-                  setShowYearDropdown(false);
-                }}
-                activeOpacity={0.8}
-              >
-                <Text style={sDyn.changeBtnText}>⚡ {t('vehicleSelect.changeVehicle', 'DEĞİŞTİR').toUpperCase()}</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleMod(8), marginTop: scaleHeight(8) }}>
+                <TouchableOpacity 
+                  style={{
+                    backgroundColor: `${colors.textPri}14`,
+                    borderColor: `${colors.textPri}33`,
+                    borderWidth: 1,
+                    borderRadius: scaleMod(6),
+                    paddingHorizontal: scaleWidth(10),
+                    paddingVertical: scaleHeight(6),
+                  }}
+                  onPress={() => {
+                    setActiveSessionVehicle(null);
+                    setShowRegDropdown(false);
+                    setShowBrandDropdown(false);
+                    setShowModelDropdown(false);
+                    setShowYearDropdown(false);
+                  }}
+                  activeOpacity={0.4}
+                >
+                  <Text style={{ color: colors.textPri, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO }}>
+                    ⚡ {t('vehicleSelect.changeVehicle', 'DEĞİŞTİR').toUpperCase()}
+                  </Text>
+                </TouchableOpacity>
+
+                {isConnected && (
+                  <TouchableOpacity 
+                    style={{
+                      backgroundColor: `${colors.red}1A`,
+                      borderColor: `${colors.red}4D`,
+                      borderWidth: 1,
+                      borderRadius: scaleMod(6),
+                      paddingHorizontal: scaleWidth(10),
+                      paddingVertical: scaleHeight(6),
+                    }}
+                    onPress={onConnectPress}
+                    activeOpacity={0.4}
+                  >
+                    <Text 
+                      allowFontScaling={false}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.7}
+                      style={{ color: colors.red, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO }}
+                    >
+                      🔌 {t('connection.disconnect', 'BAĞLANTIYI KES').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              {/* Wrap dynamic connection flow screens in a stable min-height container to prevent layout shifting */}
+              <View style={{ minHeight: isSmallPhone ? scaleHeight(130) : scaleHeight(170), justifyContent: 'center' }}>
+                {/* Bluetooth / Connection Flow Panel */}
+                {!isConnected && ecuStatus !== 'connecting' && ecuStatus !== 'error' && (
+                  <View style={{ gap: scaleHeight(8) }}>
+                    <Text style={sDyn.sectionTitle}>
+                      {t('vehicleSelect.connectionSection', 'OBD CİHAZ BAĞLANTISI').toUpperCase()}
+                    </Text>
+                    
+                    {/* Bluetooth Enable / Scan Buttons Row */}
+                    <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
+                      <TouchableOpacity 
+                        style={{
+                          flex: 1,
+                          backgroundColor: `${colors.cyan}14`,
+                          borderColor: colors.cyan,
+                          borderWidth: 1.5,
+                          borderRadius: scaleMod(8),
+                          paddingVertical: scaleHeight(10),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        onPress={async () => {
+                          triggerHaptic();
+                          if (Platform.OS === 'ios') {
+                            Alert.alert(t('common.warning', 'Warning'), t('connection.iosBtManual'));
+                          } else {
+                            enableBluetooth();
+                          }
+                        }}
+                        activeOpacity={0.4}
+                      >
+                        <Text 
+                          allowFontScaling={false}
+                          numberOfLines={1}
+                          adjustsFontSizeToFit
+                          minimumFontScale={0.7}
+                          style={{ color: colors.cyan, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO }}
+                        >
+                          🔵 {t('connection.enableBt', 'BLUETOOTH AÇ').toUpperCase()}
+                        </Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity 
+                        style={{
+                          flex: 1,
+                          backgroundColor: colors.cyan,
+                          borderRadius: scaleMod(8),
+                          paddingVertical: scaleHeight(10),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        onPress={async () => {
+                          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+                          handleScan();
+                        }}
+                        disabled={status === 'scanning'}
+                        activeOpacity={0.4}
+                      >
+                        <Text 
+                          allowFontScaling={false}
+                          numberOfLines={1}
+                          adjustsFontSizeToFit
+                          minimumFontScale={0.7}
+                          style={{ color: colors.statusBarStyle === 'light-content' ? '#000000' : '#ffffff', fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO }}
+                        >
+                          🔍 {t('connection.scanDevices', 'CİHAZ TARA').toUpperCase()}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    {/* Scanning Status */}
+                    {status === 'scanning' && (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginVertical: scaleHeight(6) }}>
+                        <ActivityIndicator size="small" color={colors.cyan} />
+                        <Text style={{ color: colors.cyan, fontFamily: MONO, fontSize: scaleFont(11), fontWeight: 'bold' }}>
+                          {t('connection.scanning', 'Cihazlar aranıyor...')}
+                        </Text>
+                      </View>
+                    )}
+
+                    {/* Scanned Devices List */}
+                    {scannedDevices.length > 0 && (
+                      <View style={{ marginTop: scaleHeight(4) }}>
+                        <Text style={[sDyn.sectionTitle, { fontSize: scaleFont(8.5), marginBottom: scaleHeight(4) }]}>
+                          {t('connection.foundDevices', 'BULUNAN CİHAZLAR')}
+                        </Text>
+                        <ScrollView 
+                          nestedScrollEnabled={true} 
+                          style={{ maxHeight: scaleHeight(150) }}
+                          contentContainerStyle={{ gap: scaleHeight(4) }}
+                        >
+                          {scannedDevices.map((d) => {
+                            const isThisConnecting = connectingDeviceId === (d.address || d.id);
+                            return (
+                              <TouchableOpacity
+                                key={d.address || d.id}
+                                style={{
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  backgroundColor: isThisConnecting ? `${colors.cyan}0A` : `${colors.textPri}05`,
+                                  borderColor: isThisConnecting ? colors.cyan : colors.cardBorder,
+                                  borderWidth: 1,
+                                  borderRadius: scaleMod(8),
+                                  padding: scaleMod(8),
+                                  opacity: (connectingDeviceId && !isThisConnecting) ? 0.5 : 1,
+                                }}
+                                disabled={!!connectingDeviceId}
+                                onPress={async () => {
+                                  triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+                                  setConnectingDeviceId(d.address || d.id);
+                                  handleRealConnect(d.address || d.id, d.name);
+                                }}
+                                activeOpacity={0.4}
+                              >
+                                <View style={{ flex: 1, marginRight: 8 }}>
+                                  <Text style={{ color: colors.textPri, fontSize: scaleFont(11), fontFamily: MONO, fontWeight: 'bold' }} numberOfLines={1}>
+                                    {d.name || t('connection.unknownDevice')}
+                                  </Text>
+                                  <Text style={{ color: colors.textSec, fontSize: scaleFont(8.5), fontFamily: MONO }} numberOfLines={1}>
+                                    {d.address}
+                                  </Text>
+                                </View>
+                                {isThisConnecting ? (
+                                  <ActivityIndicator size="small" color={colors.cyan} style={{ marginLeft: 8 }} />
+                                ) : (
+                                  <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold', flexShrink: 0 }}>
+                                    {t('connection.connectLabel', 'BAĞLAN')} ›
+                                  </Text>
+                                )}
+                              </TouchableOpacity>
+                            );
+                          })}
+                        </ScrollView>
+                      </View>
+                    )}
+
+                    {/* Connect Last Paired Device Shortcut */}
+                    {lastDeviceId && status !== 'scanning' && scannedDevices.length === 0 && (
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: `${colors.textPri}0A`,
+                          borderColor: `${colors.textPri}1F`,
+                          borderWidth: 1,
+                          borderRadius: scaleMod(8),
+                          paddingVertical: scaleHeight(10),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginTop: scaleHeight(4),
+                        }}
+                        onPress={() => handleRealConnect(lastDeviceId, lastDeviceName || 'Cihaz')}
+                        activeOpacity={0.4}
+                      >
+                        <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontWeight: '800', fontFamily: MONO }}>
+                          ↺ {t('connection.connectLast', 'SON CİHAZA BAĞLAN')} ({lastDeviceName})
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                    
+                    {/* Bluetooth Scan Hint */}
+                    {scannedDevices.length === 0 && permissionGranted && status !== 'scanning' && (
+                      <Text style={{ color: colors.textSec, fontSize: scaleFont(9.2), fontFamily: MONO, textAlign: 'center', marginTop: scaleHeight(4), lineHeight: scaleHeight(14) }}>
+                        {t('connection.scanHint', 'Bluetooth cihazınızın açık ve eşleşmeye hazır olduğundan emin olun.')}
+                      </Text>
+                    )}
+                  </View>
+                )}
+
+                {/* ECU Connecting Stage */}
+                {ecuStatus === 'connecting' && (
+                  <View style={{ alignItems: 'center', justifyContent: 'center', gap: scaleHeight(8), marginVertical: scaleHeight(8), width: '100%' }}>
+                    {adapterStatus === 'connected' && (
+                      <View style={{
+                        backgroundColor: `${colors.green}18`,
+                        borderColor: colors.green,
+                        borderWidth: 1.5,
+                        borderRadius: scaleMod(12),
+                        padding: scaleMod(12),
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: scaleMod(8),
+                        width: '100%',
+                        marginBottom: scaleHeight(12)
+                      }}>
+                        <View style={{ width: scaleMod(8), height: scaleMod(8), borderRadius: scaleMod(4), backgroundColor: colors.green }} />
+                        <Text style={{ color: colors.green, fontFamily: MONO, fontSize: scaleFont(11), fontWeight: '900', letterSpacing: 0.5 }}>
+                          ✓ {t('connection.adapterConnected', 'ADAPTÖRE BAĞLANDI (OK)').toUpperCase()}
+                        </Text>
+                      </View>
+                    )}
+                    <ActivityIndicator size="large" color={colors.amber} />
+                    <Text style={{ color: colors.amber, fontFamily: MONO, fontSize: scaleFont(11), fontWeight: 'bold', textAlign: 'center' }}>
+                      {connectionState === 'CONNECTING' && `${t('connection.ecuWait', 'ECU bağlantısı başlatılıyor, lütfen bekleyin...')} [1/5]`}
+                      {connectionState === 'ADAPTER_CONNECTED' && t('connection.adapterApproved', 'ADAPTÖR ONAYLANDI. YETENEKLER ANALİZ EDİLİYOR... [2/5]')}
+                      {connectionState === 'PROTOCOL_NEGOTIATING' && t('connection.protocolNegotiating', 'PROTOKOL TARANIYOR & UYANDIRMA... [3/5]')}
+                      {connectionState === 'ECU_DETECTED' && t('connection.ecuDetected', 'ECU ALGILANDI, DOĞRULANIYOR... [4/5]')}
+                      {connectionState === 'ECU_RESPONDING' && t('connection.ecuResponding', 'ECU YANIT VERDİ, BAĞLANTI TAMAMLANIYOR... [5/5]')}
+                      {!['CONNECTING', 'ADAPTER_CONNECTED', 'PROTOCOL_NEGOTIATING', 'ECU_DETECTED', 'ECU_RESPONDING'].includes(connectionState) && t('connection.ecuWait', 'ECU bağlantısı başlatılıyor, lütfen bekleyin...')}
+                    </Text>
+                    {connectionState === 'PROTOCOL_NEGOTIATING' && (
+                      <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(9), textAlign: 'center', marginTop: 4 }}>
+                        {t('connection.protocolScanningHint', '(Standart SP5, SP3, SP6, SP7 protokolleri sırayla taranıyor...)')}
+                      </Text>
+                    )}
+                  </View>
+                )}
+
+                {/* ECU Connection Failure / Retry */}
+                {ecuStatus === 'error' && (
+                  <View style={{ alignItems: 'center', marginVertical: scaleHeight(8), gap: scaleHeight(10) }}>
+                    <Text style={{ color: colors.red, fontFamily: MONO, fontSize: scaleFont(11), fontWeight: 'bold', textAlign: 'center', lineHeight: scaleHeight(15) }}>
+                      {connectionState === 'PROTOCOL_FAILED' && t('connection.protocolFailed', '⚠️ UYUMLU PROTOKOL BULUNAMADI! (SP5, SP3, SP4, SP6, SP7 denendi)')}
+                      {connectionState === 'ECU_NOT_FOUND' && t('connection.ecuNotFound', '⚠️ ARAÇ BEYNİ (ECU) YANIT VERMİYOR!')}
+                      {connectionState === 'HARDWARE_FATAL' && t('connection.hardwareFatal', 'Kritik Hata: Donanımınız eski araç protokollerini desteklemeyen sahte bir klondur. Araç ECU\'suna bağlanılamaz. Lütfen kaliteli bir adaptör (v1.5 veya orijinal) edinin.')}
+                      {connectionState !== 'PROTOCOL_FAILED' && connectionState !== 'ECU_NOT_FOUND' && connectionState !== 'HARDWARE_FATAL' && `⚠️ ${t('connection.ecuNoResponse', 'ECU yanıt vermedi. Kontak açık mı?')}`}
+                    </Text>
+                    
+                    <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10), textAlign: 'center' }}>
+                      {t('connection.hardwareCapabilityScore', 'Adaptör Donanım Yetenek Skoru: {{score}}/100', { score: useBluetoothStore.getState().adapterCapabilityScore })}
+                    </Text>
+
+                    <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
+                      <TouchableOpacity 
+                        style={{
+                          backgroundColor: colors.amber,
+                          borderRadius: scaleMod(8),
+                          paddingVertical: scaleHeight(10),
+                          paddingHorizontal: scaleWidth(16),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        onPress={retryEcu}
+                        activeOpacity={0.4}
+                      >
+                        <Text style={{ color: colors.statusBarStyle === 'light-content' ? '#000000' : '#ffffff', fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: MONO }}>
+                          🔄 {t('connection.retry', 'YENİDEN DENE').toUpperCase()}
+                        </Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity 
+                        style={{
+                          backgroundColor: `${colors.textPri}14`,
+                          borderColor: `${colors.textPri}33`,
+                          borderWidth: 1,
+                          borderRadius: scaleMod(8),
+                          paddingVertical: scaleHeight(10),
+                          paddingHorizontal: scaleWidth(16),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        onPress={disconnect}
+                        activeOpacity={0.4}
+                      >
+                        <Text style={{ color: colors.textPri, fontSize: scaleFont(10.5), fontWeight: '800', fontFamily: MONO }}>
+                          {t('common.cancel', 'İptal').toUpperCase()}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
+              </View>
 
               {/* Connection Health Section */}
               {isConnected && (
@@ -620,60 +1030,15 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
                 <TouchableOpacity 
                   style={[sDyn.dropdownTrigger, { backgroundColor: `${colors.textPri}05`, borderColor: colors.cardBorder }]}
                   onPress={() => {
-                    setShowBrandDropdown(!brandSearchQuery ? !showBrandDropdown : true);
-                    setShowRegDropdown(false);
-                    setShowModelDropdown(false);
-                    setShowYearDropdown(false);
+                    setShowBrandDropdown(true);
                   }}
-                  activeOpacity={0.8}
+                  activeOpacity={0.4}
                 >
                   <Text style={sDyn.dropdownTriggerText} numberOfLines={1}>
                     {selectedBrand ? t(`brands.${selectedBrand}`, selectedBrand) : t('vehicleSelect.selectBrand', 'Marka Seçin...')}
                   </Text>
-                  <Text style={{ color: colors.textSec, fontSize: 10 }}>{showBrandDropdown ? '▲' : '▼'}</Text>
+                  <Text style={{ color: colors.textSec, fontSize: 10 }}>▼</Text>
                 </TouchableOpacity>
-
-                {showBrandDropdown && (
-                  <View style={[sDyn.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-                    <TextInput
-                      style={{ 
-                        backgroundColor: `${colors.textPri}05`, 
-                        borderColor: colors.border, 
-                        borderWidth: 1, 
-                        color: colors.textPri, 
-                        fontFamily: MONO, 
-                        fontSize: scaleFont(11),
-                        padding: scaleMod(6),
-                        margin: scaleMod(6),
-                        borderRadius: 6
-                      }}
-                      placeholder={t('vehicleSelect.searchBrand', 'Marka Ara...')}
-                      placeholderTextColor={colors.textSec}
-                      value={brandSearchQuery}
-                      onChangeText={(text) => {
-                        setBrandSearchQuery(text);
-                        setShowBrandDropdown(true);
-                      }}
-                    />
-                    <ScrollView style={{ maxHeight: scaleHeight(130) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
-                      {filteredBrands.map((brandKey) => (
-                        <TouchableOpacity 
-                          key={brandKey}
-                          style={[sDyn.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
-                          onPress={() => {
-                            setSelectedBrand(brandKey);
-                            setShowBrandDropdown(false);
-                            setBrandSearchQuery('');
-                          }}
-                        >
-                          <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: 11.5 }}>
-                            {t(`brands.${brandKey}`, brandKey)}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  </View>
-                )}
 
                 {selectedBrand === 'other' && (
                   <TextInput
@@ -703,60 +1068,15 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
                   style={[sDyn.dropdownTrigger, { backgroundColor: `${colors.textPri}05`, borderColor: colors.cardBorder, opacity: selectedBrand ? 1 : 0.6 }]}
                   disabled={!selectedBrand}
                   onPress={() => {
-                    setShowModelDropdown(!modelSearchQuery ? !showModelDropdown : true);
-                    setShowRegDropdown(false);
-                    setShowBrandDropdown(false);
-                    setShowYearDropdown(false);
+                    setShowModelDropdown(true);
                   }}
-                  activeOpacity={0.8}
+                  activeOpacity={0.4}
                 >
                   <Text style={sDyn.dropdownTriggerText} numberOfLines={1}>
                     {selectedModel ? selectedModelLabel : t('vehicleSelect.selectModel', 'Model Seçin...')}
                   </Text>
-                  <Text style={{ color: colors.textSec, fontSize: 10 }}>{showModelDropdown ? '▲' : '▼'}</Text>
+                  <Text style={{ color: colors.textSec, fontSize: 10 }}>▼</Text>
                 </TouchableOpacity>
-
-                {showModelDropdown && (
-                  <View style={[sDyn.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-                    <TextInput
-                      style={{ 
-                        backgroundColor: `${colors.textPri}05`, 
-                        borderColor: colors.border, 
-                        borderWidth: 1, 
-                        color: colors.textPri, 
-                        fontFamily: MONO, 
-                        fontSize: scaleFont(11),
-                        padding: scaleMod(6),
-                        margin: scaleMod(6),
-                        borderRadius: 6
-                      }}
-                      placeholder={t('vehicleSelect.searchModel', 'Model Ara...')}
-                      placeholderTextColor={colors.textSec}
-                      value={modelSearchQuery}
-                      onChangeText={(text) => {
-                        setModelSearchQuery(text);
-                        setShowModelDropdown(true);
-                      }}
-                    />
-                    <ScrollView style={{ maxHeight: scaleHeight(130) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
-                      {filteredModels.map((opt) => (
-                        <TouchableOpacity 
-                          key={opt.value}
-                          style={[sDyn.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
-                          onPress={() => {
-                            setSelectedModel(opt.value);
-                            setShowModelDropdown(false);
-                            setModelSearchQuery('');
-                          }}
-                        >
-                          <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: 11.5 }}>
-                            {opt.label}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  </View>
-                )}
 
                 {selectedModel === 'other' && (
                   <TextInput
@@ -785,39 +1105,15 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
                 <TouchableOpacity 
                   style={[sDyn.dropdownTrigger, { backgroundColor: `${colors.textPri}05`, borderColor: colors.cardBorder }]}
                   onPress={() => {
-                    setShowYearDropdown(!showYearDropdown);
-                    setShowRegDropdown(false);
-                    setShowBrandDropdown(false);
-                    setShowModelDropdown(false);
+                    setShowYearDropdown(true);
                   }}
-                  activeOpacity={0.8}
+                  activeOpacity={0.4}
                 >
                   <Text style={sDyn.dropdownTriggerText} numberOfLines={1}>
                     {selectedYear ? (selectedYear === 'other' ? t('brands.other', 'Diğer') : selectedYear) : t('vehicleSelect.selectYear', 'Yıl Seçin...')}
                   </Text>
-                  <Text style={{ color: colors.textSec, fontSize: 10 }}>{showYearDropdown ? '▲' : '▼'}</Text>
+                  <Text style={{ color: colors.textSec, fontSize: 10 }}>▼</Text>
                 </TouchableOpacity>
-
-                {showYearDropdown && (
-                  <View style={[sDyn.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-                    <ScrollView style={{ maxHeight: scaleHeight(130) }} nestedScrollEnabled={true}>
-                      {YEARS.map((year) => (
-                        <TouchableOpacity 
-                          key={year}
-                          style={[sDyn.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
-                          onPress={() => {
-                            setSelectedYear(year);
-                            setShowYearDropdown(false);
-                          }}
-                        >
-                          <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: 11.5 }}>
-                            {year === 'other' ? t('brands.other', 'Diğer') : year}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  </View>
-                )}
 
                 {selectedYear === 'other' && (
                   <TextInput
@@ -865,9 +1161,9 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
 
                   handleCreateVehicle(finalBrand, finalModel, finalYear);
                 }}
-                activeOpacity={0.8}
+                activeOpacity={0.4}
               >
-                <Text style={{ color: '#000', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(12) }}>
+                <Text style={{ color: colors.statusBarStyle === 'light-content' ? '#000000' : '#ffffff', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(12) }}>
                   {t('vehicleSelect.confirm', 'DEVAM ET').toUpperCase()}
                 </Text>
               </TouchableOpacity>
@@ -875,22 +1171,18 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
           )}
         </View>
 
-        {/* Connection Button */}
-        <TouchableOpacity
-          style={[footerStatusStyle, !isPressable && { opacity: 0.5 }]}
-          onPress={() => isPressable && onConnectPress()}
-          disabled={!isPressable}
-          activeOpacity={isPressable ? 0.8 : 1}
-        >
-          <View style={[sDyn.statusDot, { backgroundColor: isConnected ? colors.green : (isScanning ? colors.cyan : colors.amber) }]} />
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <Text style={statusTextStyle}>
-              {statusTextStr}
-            </Text>
-            {isScanning && <ActivityIndicator size="small" color={colors.cyan} />}
+        {/* Connection Status Indicator */}
+        {isConnected && (
+          <View style={footerStatusStyle}>
+            <View style={[sDyn.statusDot, { backgroundColor: buttonColor }]} />
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Text style={statusTextStyle}>
+                {statusTextStr}
+              </Text>
+            </View>
+            <Text style={[sDyn.arrow, { color: buttonColor }]}>›</Text>
           </View>
-          <Text style={[sDyn.arrow, { color: isConnected ? colors.green : (isScanning ? colors.cyan : colors.amber) }]}>›</Text>
-        </TouchableOpacity>
+        )}
       </Animated.View>
 
       {/* Quick Navigation Buttons — outside the card, below it, only when connected */}
@@ -911,7 +1203,7 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
               borderColor: `${colors.cyan}4D`,
             }}
             onPress={onGoToSensors}
-            activeOpacity={0.8}
+            activeOpacity={0.4}
           >
             <Text style={{ fontSize: scaleFont(16) }}>📊</Text>
             <Text
@@ -946,7 +1238,7 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
               borderColor: `${colors.green}4D`,
             }}
             onPress={onGoToExpertise}
-            activeOpacity={0.8}
+            activeOpacity={0.4}
           >
             <Text style={{ fontSize: scaleFont(16) }}>🔍</Text>
             <Text
@@ -988,7 +1280,7 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
             setShowModelDropdown(false);
             setShowYearDropdown(false);
           }}
-          activeOpacity={0.8}
+          activeOpacity={0.4}
         >
           <Text style={[sDyn.dropdownTriggerText, { color: colors.cyan, fontSize: scaleFont(11.5) }]} numberOfLines={1}>
             🛞 {t('vehicleSelect.viewRegisteredList', 'Kayıtlı Araçları Gör')} ({registeredVehicles.length})
@@ -996,6 +1288,48 @@ export default function LiveEngineHero({ onConnectPress, onGoToSensors, onGoToEx
           <Text style={{ color: colors.cyan, fontSize: 13, fontWeight: '900', marginRight: 4 }}>{'>'}</Text>
         </TouchableOpacity>
       )}
+
+      {/* Selection Modals */}
+      <SelectionModal
+        visible={showBrandDropdown}
+        onClose={() => setShowBrandDropdown(false)}
+        title={t('vehicleSelect.selectBrand', 'Marka Seçin')}
+        options={brandOptions}
+        selectedValue={selectedBrand}
+        onSelect={(val) => {
+          setSelectedBrand(val);
+          setShowBrandDropdown(false);
+        }}
+        showSearch={true}
+        searchPlaceholder={t('vehicleSelect.searchBrand', 'Marka Ara...')}
+      />
+
+      <SelectionModal
+        visible={showModelDropdown}
+        onClose={() => setShowModelDropdown(false)}
+        title={t('vehicleSelect.selectModel', 'Model Seçin')}
+        options={modelOptions}
+        selectedValue={selectedModel}
+        onSelect={(val) => {
+          setSelectedModel(val);
+          setShowModelDropdown(false);
+        }}
+        showSearch={true}
+        searchPlaceholder={t('vehicleSelect.searchModel', 'Model Ara...')}
+      />
+
+      <SelectionModal
+        visible={showYearDropdown}
+        onClose={() => setShowYearDropdown(false)}
+        title={t('vehicleSelect.selectYear', 'Yıl Seçin')}
+        options={yearOptions}
+        selectedValue={selectedYear}
+        onSelect={(val) => {
+          setSelectedYear(val);
+          setShowYearDropdown(false);
+        }}
+        showSearch={false}
+      />
     </ScrollView>
   );
 }

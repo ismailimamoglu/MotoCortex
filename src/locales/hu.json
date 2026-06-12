@@ -59,7 +59,8 @@
             "hardwareModalDesc": "Támogatás kéréséhez vagy kézi PRO-licenc aktiválásához másolja ki a fenti felhasználói azonosítót, és lépjen kapcsolatba velünk.",
             "supportEmailBody": "Kedves MotoCortex támogatási csapat! --- Alkalmazásinformációk --- Felhasználói azonosító:{{userId}}Licenc állapota:{{license}}Link:{{connection}}Eszköz állapota:{{deviceStatus}}--- Az Ön üzenete ---",
             "deviceName": "Eszköz neve:",
-            "simulationObd": "Szimulációs OBD"
+            "simulationObd": "Szimulációs OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Alkalmazási információk és útmutató",
         "supportDesc": "Támogatás és Kapcsolat",
@@ -101,7 +102,9 @@
         "back": "Vissza",
         "chassis": "Alváz",
         "operations": "Műveletek",
-        "close": "BEZÁRÁS"
+        "close": "BEZÁRÁS",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "Az eszköz párosítása megszüntetve",
         "deviceNotPairedDesc": "A klasszikus Bluetooth OBD2 adapterek csatlakoztatása előtt párosítania kell őket a telefon Bluetooth beállításai között. A rendszer a rendszerbeállításokhoz irányítja.",
         "unsupportedDeviceTitle": "Nem kompatibilis hardver",
-        "unsupportedDeviceDesc": "A csatlakoztatni kívánt eszköz nem kompatibilis OBD2 adapter, vagy nem támogatja a szükséges szolgáltatásokat."
+        "unsupportedDeviceDesc": "A csatlakoztatni kívánt eszköz nem kompatibilis OBD2 adapter, vagy nem támogatja a szükséges szolgáltatásokat.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "Érintse meg az ESZKÖZ KIVÁLASZTÁSÁHOZ",
@@ -206,7 +214,8 @@
         "mafFlow": "MAF Légtömeg",
         "timingAdvance": "Előgyújtás",
         "fuelLevel": "Üzemanyagszint",
-        "catalystTemp": "Katalizátor Temp."
+        "catalystTemp": "Katalizátor Temp.",
+        "layoutGauge": "MŰSZER"
     },
     "expertise": {
         "historyFound": "A JÁRMŰ TÖRTÉNETE MEGTALÁLHATÓ!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "A folyamat elindításához először csatlakozzon a járműhöz.",
         "chronicFaultsTitle": "Krónikus statisztikai problémák",
         "chronicFaultsObs": "{{code}}(Megfigyelés:{{days}}Eltérő nap / Összesen:{{total}}alkalommal)",
-        "chronicFaultsPending": "Adatbázis gyűjtése / Statisztikák elemzése"
+        "chronicFaultsPending": "Adatbázis gyűjtése / Statisztikák elemzése",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ BIZTONSÁGI FIGYELMEZTETÉS",

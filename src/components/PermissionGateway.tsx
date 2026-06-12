@@ -281,7 +281,7 @@ export default function PermissionGateway() {
           style={[sDyn.actionBtn, { backgroundColor: colors.cyan, shadowColor: colors.cyan }, isLoading && sDyn.actionBtnDisabled]}
           onPress={requestPermissions}
           disabled={isLoading}
-          activeOpacity={0.8}
+          activeOpacity={0.4}
         >
           {isLoading ? (
             <ActivityIndicator color={colors.card} size="small" />

@@ -377,6 +377,7 @@ export default function SearchableVehicleSelect({
         <TouchableOpacity 
           style={[styles.button, { backgroundColor: colors.elevated, borderColor: colors.border, borderWidth: 1, marginRight: 8 }]}
           onPress={onCancel}
+          activeOpacity={0.4}
         >
           <Text style={[styles.buttonText, { color: colors.red, fontFamily: MONO, fontSize: scaleFont(11) }]}>
             {cancelText.toUpperCase()}
@@ -386,8 +387,9 @@ export default function SearchableVehicleSelect({
         <TouchableOpacity 
           style={[styles.button, { backgroundColor: colors.cyan }]}
           onPress={handleSave}
+          activeOpacity={0.4}
         >
-          <Text style={[styles.buttonText, { color: '#000', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(11) }]}>
+          <Text style={[styles.buttonText, { color: colors.statusBarStyle === 'light-content' ? '#000000' : '#ffffff', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(11) }]}>
             {confirmText.toUpperCase()}
           </Text>
         </TouchableOpacity>

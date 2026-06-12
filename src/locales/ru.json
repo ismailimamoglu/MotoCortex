@@ -59,7 +59,8 @@
             "hardwareModalDesc": "Чтобы получить поддержку или выполнить активацию PRO-лицензии вручную, скопируйте идентификатор пользователя, указанный выше, и свяжитесь с нами.",
             "supportEmailBody": "Здравствуйте, команда поддержки MotoCortex! --- Информация о приложении --- Идентификатор пользователя:{{userId}}Статус лицензии:{{license}}Ссылка:{{connection}}Статус устройства:{{deviceStatus}}--- Ваше сообщение ---",
             "deviceName": "Имя устройства:",
-            "simulationObd": "Симуляция OBD"
+            "simulationObd": "Симуляция OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Информация о приложении и руководство",
         "supportDesc": "Поддержка и Контакты",
@@ -101,7 +102,9 @@
         "back": "Назад",
         "chassis": "Шасси",
         "operations": "Операции",
-        "close": "ЗАКРЫТЬ"
+        "close": "ЗАКРЫТЬ",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "МОТО КОРТЕКС ПРО",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "Устройство не сопряжено",
         "deviceNotPairedDesc": "Прежде чем подключать классические адаптеры Bluetooth OBD2, необходимо выполнить их сопряжение в настройках Bluetooth вашего телефона. Вы будете перенаправлены в настройки системы.",
         "unsupportedDeviceTitle": "Несовместимое оборудование",
-        "unsupportedDeviceDesc": "Устройство, которое вы пытаетесь подключить, не является совместимым адаптером OBD2 или не поддерживает необходимые службы."
+        "unsupportedDeviceDesc": "Устройство, которое вы пытаетесь подключить, не является совместимым адаптером OBD2 или не поддерживает необходимые службы.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "НАЖМИТЕ, ЧТОБЫ ВЫБРАТЬ УСТРОЙСТВО",
@@ -206,7 +214,8 @@
         "mafFlow": "Расход Воздуха MAF",
         "timingAdvance": "Угол Опережения",
         "fuelLevel": "Уровень Топлива",
-        "catalystTemp": "Темп. Катализатора"
+        "catalystTemp": "Темп. Катализатора",
+        "layoutGauge": "ПРИБОРЫ"
     },
     "expertise": {
         "historyFound": "НАЙДЕНА ИСТОРИЯ АВТОМОБИЛЯ!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "Пожалуйста, сначала подключитесь к автомобилю, чтобы начать этот процесс.",
         "chronicFaultsTitle": "Статистические хронические проблемы",
         "chronicFaultsObs": "{{code}}(Наблюдение:{{days}}в разные дни / всего:{{total}}раз)",
-        "chronicFaultsPending": "Сбор пула данных/анализ статистики"
+        "chronicFaultsPending": "Сбор пула данных/анализ статистики",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ ПРЕДУПРЕЖДЕНИЕ БЕЗОПАСНОСТИ",

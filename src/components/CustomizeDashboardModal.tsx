@@ -38,7 +38,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
   const maxLimit = isKLineProtocol ? 4 : 8;
 
   const [draftSensors, setDraftSensors] = React.useState<string[]>(activeSensors);
-  const [draftLayout, setDraftLayout] = React.useState<'grid' | 'list'>(layoutType);
+  const [draftLayout, setDraftLayout] = React.useState<'grid' | 'list' | 'gauge'>(layoutType);
 
   // Sync draft with store state when modal becomes visible
   React.useEffect(() => {
@@ -273,7 +273,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                 ]}
                 onPress={() => setDraftLayout('grid')}
               >
-                <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'grid' ? '#000' : colors.textPri }]}>
+                <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'grid' ? '#ffffff' : colors.textPri }]}>
                   {t('dashboard.layoutGrid', 'GRID')}
                 </Text>
               </TouchableOpacity>
@@ -287,8 +287,22 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                 ]}
                 onPress={() => setDraftLayout('list')}
               >
-                <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'list' ? '#000' : colors.textPri }]}>
+                <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'list' ? '#ffffff' : colors.textPri }]}>
                   {t('dashboard.layoutList', 'LİSTE')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  sDyn.layoutBtn,
+                  {
+                    backgroundColor: draftLayout === 'gauge' ? colors.purple : 'transparent',
+                    borderColor: draftLayout === 'gauge' ? colors.purple : colors.border
+                  }
+                ]}
+                onPress={() => setDraftLayout('gauge')}
+              >
+                <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'gauge' ? '#ffffff' : colors.textPri }]}>
+                  {t('dashboard.layoutGauge', 'GÖSTERGE')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -353,7 +367,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
               style={[sDyn.footerBtn, { backgroundColor: colors.purple, borderColor: colors.purple }]}
               onPress={handleApply}
             >
-              <Text style={[sDyn.footerBtnText, { color: '#000', fontWeight: '900' }]}>
+              <Text style={[sDyn.footerBtnText, { color: '#ffffff', fontWeight: '900' }]}>
                 {t('common.apply', 'UYGULA')}
               </Text>
             </TouchableOpacity>

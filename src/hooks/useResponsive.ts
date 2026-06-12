@@ -8,7 +8,7 @@ export function useResponsive() {
 
   return useMemo(() => {
     const isPortrait = height >= width;
-    const isTablet = Math.min(width, height) >= 600;
+    const isTablet = Platform.OS === 'ios' ? Platform.isPad : Math.min(width, height) >= 600;
     const isPhone = !isTablet;
     const isLargeTablet = isTablet && Math.max(width, height) >= 900;
     

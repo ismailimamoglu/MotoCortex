@@ -42,6 +42,8 @@ import { State } from 'react-native-ble-plx';
 import CustomizeDashboardModal from './src/components/CustomizeDashboardModal';
 import { useDashboardStore, ALL_SENSORS } from './src/store/useDashboardStore';
 import AboutView from './src/components/AboutView';
+import ObdTerminalModal from './src/components/ObdTerminalModal';
+import LanguageSelectionView from './src/components/LanguageSelectionView';
 
 const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
 
@@ -67,12 +69,169 @@ LogBox.ignoreLogs([
   /AppTransaction Failed/
 ]);
 
-const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpertise, onOpenHardwareHealth, onOpenCustomize }: {
+const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: any, size: number, tc: any }) => {
+  const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont } = useResponsive();
+  
+  // Parse numeric value
+  const numVal = value !== null && value !== undefined ? parseFloat(String(value).replace(/[^0-9.]/g, '')) : 0;
+  
+  // Define ranges for standard sensors
+  let min = 0;
+  let max = 100;
+  if (sensor.key === 'rpm') { min = 0; max = 8000; }
+  else if (sensor.key === 'speed') { min = 0; max = 220; }
+  else if (sensor.key === 'coolant') { min = -20; max = 120; }
+  else if (sensor.key === 'voltage') { min = 9; max = 16; }
+  else if (sensor.key === 'throttle') { min = 0; max = 100; }
+  else if (sensor.key === 'engineLoad') { min = 0; max = 100; }
+  else if (sensor.key === 'oilTemp') { min = 0; max = 150; }
+  else if (sensor.key === 'fuelLevel') { min = 0; max = 100; }
+  else if (sensor.key === 'manifoldPressure') { min = 0; max = 250; }
+  else if (sensor.key === 'intakeAirTemp' || sensor.key === 'ambientTemp') { min = -20; max = 80; }
+  
+  const pct = Math.max(0, Math.min(1, (numVal - min) / (max - min)));
+  // Map 0-1 to angle: -135deg (min) to +135deg (max)
+  const angle = -135 + pct * 270;
+  
+  const displayVal = value !== null && value !== undefined ? String(value).replace(/[A-Za-z]/g, '') : '--';
+  
+  // Generate tick marks at 30 degree intervals (total of 10 ticks: -135, -105, -75, -45, -15, 15, 45, 75, 105, 135)
+  const tickAngles = [-135, -105, -75, -45, -15, 15, 45, 75, 105, 135];
+  
+  return (
+    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+      {/* Subtle background color circle */}
+      <View style={{
+        position: 'absolute',
+        width: size - scaleMod(8),
+        height: size - scaleMod(8),
+        borderRadius: (size - scaleMod(8)) / 2,
+        backgroundColor: `${sensor.color}05`,
+      }} />
+
+      {/* Outer Ring */}
+      <View style={{
+        position: 'absolute',
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        borderWidth: scaleMod(3),
+        borderColor: `${sensor.color}15`,
+        borderTopColor: sensor.color,
+        borderLeftColor: sensor.color,
+        borderRightColor: sensor.color,
+        transform: [{ rotate: '-45deg' }],
+      }} />
+
+      {/* Tick Marks (Çentikler) */}
+      {tickAngles.map((tickAngle, idx) => {
+        // Calculate corresponding value at this tick angle
+        const tickPct = (tickAngle + 135) / 270;
+        const tickVal = min + tickPct * (max - min);
+        const isLit = numVal >= tickVal;
+        const isMajor = idx === 0 || idx === 3 || idx === 6 || idx === 9; // Ticks at -135, -45, 45, 135 are major
+
+        return (
+          <View
+            key={idx}
+            style={{
+              position: 'absolute',
+              width: isMajor ? scaleMod(1.8) : scaleMod(1),
+              height: isMajor ? scaleMod(6) : scaleMod(3.5),
+              backgroundColor: isLit ? sensor.color : `${sensor.color}35`,
+              transform: [
+                { rotate: `${tickAngle}deg` },
+                { translateY: -(size / 2 - scaleMod(4.5)) }
+              ]
+            }}
+          />
+        );
+      })}
+
+      {/* Rotating Needle Container */}
+      <View style={{
+        position: 'absolute',
+        width: size - scaleMod(20),
+        height: size - scaleMod(20),
+        alignItems: 'center',
+        justifyContent: 'center',
+        transform: [{ rotate: `${angle}deg` }]
+      }}>
+        {/* Sleek needle shape pointing up */}
+        <View style={{
+          position: 'absolute',
+          top: scaleMod(4),
+          width: scaleMod(2.2),
+          height: (size - scaleMod(20)) / 2 - scaleMod(4),
+          backgroundColor: sensor.color,
+          borderTopLeftRadius: scaleMod(1.5),
+          borderTopRightRadius: scaleMod(1.5),
+          borderBottomLeftRadius: scaleMod(2.5),
+          borderBottomRightRadius: scaleMod(2.5),
+        }} />
+      </View>
+
+      {/* Center cap */}
+      <View style={{
+        position: 'absolute',
+        width: scaleMod(11),
+        height: scaleMod(11),
+        borderRadius: scaleMod(5.5),
+        backgroundColor: tc.textPri,
+        borderWidth: 1.5,
+        borderColor: tc.bg,
+      }} />
+
+      {/* Scale Numbers (Min / Max) inside the circle */}
+      <Text
+        allowFontScaling={false}
+        style={{
+          position: 'absolute',
+          left: size * 0.22,
+          bottom: size * 0.24,
+          fontSize: scaleFont(7.5),
+          fontWeight: '900',
+          color: tc.textSec,
+          fontFamily: MONO,
+        }}
+      >
+        {min}
+      </Text>
+      <Text
+        allowFontScaling={false}
+        style={{
+          position: 'absolute',
+          right: size * 0.22,
+          bottom: size * 0.24,
+          fontSize: scaleFont(7.5),
+          fontWeight: '900',
+          color: tc.textSec,
+          fontFamily: MONO,
+        }}
+      >
+        {max}
+      </Text>
+
+      {/* Value Text Overlaid */}
+      <View style={{ position: 'absolute', bottom: scaleHeight(11), alignItems: 'center' }}>
+        <Text allowFontScaling={false} style={{ fontSize: scaleFont(11), fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>
+          {displayVal}
+        </Text>
+        <Text allowFontScaling={false} style={{ fontSize: scaleFont(7.5), color: tc.textSec, fontFamily: MONO, fontWeight: '700' }}>
+          {sensor.unit}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpertise, onOpenHardwareHealth, onOpenCustomize, onOpenObdTerminal }: {
   ecuStatus: string;
   lastDeviceName: string | null;
   onGoToExpertise: () => void;
   onOpenHardwareHealth: () => void;
   onOpenCustomize: () => void;
+  onOpenObdTerminal: () => void;
 }) => {
   const { t } = useTranslation();
   const tc = useThemeColors();
@@ -80,8 +239,11 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
 
   const isLandscape = !isPortrait;
 
-  // Read preferences
+  // Read preferences and hardware state
   const { activeSensors, layoutType } = useDashboardStore();
+  const protocol = useBluetoothStore(s => s.protocol);
+  const adapterCapabilityScore = useBluetoothStore(s => s.adapterCapabilityScore);
+  const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
 
   // Read all sensor values from useBluetoothStore
   const sensorValues = {
@@ -122,15 +284,14 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
         borderRadius: scaleMod(12),
         padding: scaleMod(12),
         marginBottom: isTablet ? 0 : scaleHeight(10),
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
+        gap: scaleHeight(6),
         flexShrink: 0,
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(10) }}>
         <View style={{ width: scaleMod(8), height: scaleMod(8), borderRadius: scaleMod(4), backgroundColor: statusColor(ecuStatus) }} />
-        <View style={{ flexShrink: 1 }}>
+        <View style={{ flex: 1 }}>
           <Text style={{ color: tc.textPri, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>
             {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('bento.settings.noConnection', 'Bağlantı Yok')}
           </Text>
@@ -139,6 +300,41 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
           </Text>
         </View>
       </View>
+
+      {/* Auto Hardware Health Info details rendered inline when connected */}
+      {ecuStatus === 'connected' && (
+        <View style={{
+          borderTopWidth: 1,
+          borderTopColor: `${tc.textPri}10`,
+          paddingTop: scaleHeight(6),
+          marginTop: scaleHeight(2),
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: scaleMod(6),
+        }}>
+          <View style={{
+            flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
+            backgroundColor: isCloneDevice ? `${tc.red}12` : `${tc.green}12`,
+            borderRadius: scaleMod(12), paddingHorizontal: scaleMod(8), paddingVertical: scaleHeight(3),
+          }}>
+            <Text style={{ color: isCloneDevice ? tc.red : tc.green, fontSize: scaleFont(8.2), fontFamily: MONO, fontWeight: '800' }}>
+              🛡️ {isCloneDevice ? 'CLONE ADAPTER' : 'ORIGINAL'} ({adapterCapabilityScore}/100)
+            </Text>
+          </View>
+
+          {protocol && (
+            <View style={{
+              flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
+              backgroundColor: `${tc.purple}12`,
+              borderRadius: scaleMod(12), paddingHorizontal: scaleMod(8), paddingVertical: scaleHeight(3),
+            }}>
+              <Text style={{ color: tc.purple, fontSize: scaleFont(8.2), fontFamily: MONO, fontWeight: '800' }}>
+                🔌 {protocol}
+              </Text>
+            </View>
+          )}
+        </View>
+      )}
     </View>
   );
 
@@ -456,6 +652,59 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
     );
   };
 
+  const renderSensorGauge = () => {
+    const itemGap = isTablet ? scaleMod(12) : scaleMod(8);
+    const activeConfigs = ALL_SENSORS.filter(s => activeSensors.includes(s.key));
+    const size = isTablet ? scaleMod(130) : scaleMod(95);
+
+    return (
+      <View style={{ 
+        flexDirection: 'row', 
+        flexWrap: 'wrap', 
+        justifyContent: 'center',
+        gap: itemGap,
+        marginBottom: isTablet ? 0 : scaleHeight(10),
+      }}>
+        {activeConfigs.map((sensor) => {
+          const rawVal = (sensorValues as any)[sensor.key];
+          return (
+            <View 
+              key={sensor.key}
+              style={{
+                backgroundColor: tc.card,
+                borderWidth: 1.2,
+                borderColor: tc.border,
+                borderRadius: scaleMod(12),
+                padding: scaleMod(10),
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: isTablet ? '31.3%' : '47%',
+                height: size + scaleHeight(36),
+              }}
+            >
+              <Text 
+                numberOfLines={1} 
+                style={{ 
+                  fontSize: scaleFont(9.5), 
+                  fontWeight: '700', 
+                  color: tc.textSec, 
+                  fontFamily: MONO,
+                  letterSpacing: 0.5,
+                  textAlign: 'center',
+                  marginBottom: scaleHeight(4)
+                }}
+              >
+                {t(sensor.nameKey, sensor.defaultName).toUpperCase()}
+              </Text>
+              
+              <CircularGauge sensor={sensor} value={rawVal} size={size} tc={tc} />
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
+
   const renderGoToExpertiseButton = () => (
     <TouchableOpacity
       style={{ 
@@ -523,6 +772,29 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
     </TouchableOpacity>
   );
 
+  const renderObdTerminalButton = () => (
+    <TouchableOpacity
+      style={{ 
+        backgroundColor: tc.card, 
+        borderRadius: scaleMod(12), 
+        padding: isTablet ? scaleMod(12) : scaleMod(9), 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        gap: isTablet ? scaleMod(10) : scaleMod(6),
+        borderWidth: 1.5,
+        borderColor: tc.cyan,
+        flexShrink: 0,
+      }}
+      onPress={onOpenObdTerminal}
+    >
+      <Text numberOfLines={1} style={{ color: tc.cyan, fontSize: isTablet ? scaleFont(12.5) : scaleFont(10.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.8 }}>
+        💬 {t('dashboard.obdTerminal', 'OBD SAĞLIK & TERMİNAL').toUpperCase()}
+      </Text>
+      <Text style={{ color: tc.cyan, fontSize: isTablet ? scaleFont(16) : scaleFont(13), fontWeight: '900' }}>{'>'}</Text>
+    </TouchableOpacity>
+  );
+
   if (isTablet) {
     return (
       <View style={{ 
@@ -548,24 +820,16 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
             {renderConnectionCard()}
             {renderBatteryWarning()}
           </View>
-
+ 
           {/* Middle Row: Dynamic Grid or List */}
           <View style={{ flex: 1 }}>
-            {layoutType === 'grid' ? renderSensorGrid() : renderSensorList()}
-            <ChronicFaultsWidget />
+            {layoutType === 'grid' ? renderSensorGrid() : layoutType === 'gauge' ? renderSensorGauge() : renderSensorList()}
           </View>
-
+ 
           {/* Bottom Row: Action/Navigation buttons side-by-side */}
-          <View style={{ flexDirection: 'row', gap: scaleMod(16) }}>
-            <View style={{ flex: 1 }}>
-              {renderGoToExpertiseButton()}
-            </View>
-            <View style={{ flex: 1 }}>
-              {renderCustomizeButton()}
-            </View>
-            <View style={{ flex: 1 }}>
-              {renderHardwareHealthButton()}
-            </View>
+          <View style={{ flexDirection: 'column', gap: scaleMod(12) }}>
+            {renderCustomizeButton()}
+            {renderObdTerminalButton()}
           </View>
         </ScrollView>
       </View>
@@ -591,16 +855,14 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
               {renderBatteryWarning()}
             </ScrollView>
             <View style={{ gap: scaleHeight(6) }}>
-              {renderGoToExpertiseButton()}
               {renderCustomizeButton()}
-              {renderHardwareHealthButton()}
+              {renderObdTerminalButton()}
             </View>
           </View>
 
           {/* Right Column */}
           <ScrollView style={{ flex: 1.2 }} showsVerticalScrollIndicator={false} bounces={false}>
-            {layoutType === 'grid' ? renderSensorGrid() : renderSensorList()}
-            <ChronicFaultsWidget />
+            {layoutType === 'grid' ? renderSensorGrid() : layoutType === 'gauge' ? renderSensorGauge() : renderSensorList()}
           </ScrollView>
         </View>
       </View>
@@ -618,13 +880,11 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
         <View>
           {renderConnectionCard()}
           {renderBatteryWarning()}
-          {layoutType === 'grid' ? renderSensorGrid() : renderSensorList()}
-          <ChronicFaultsWidget />
+          {layoutType === 'grid' ? renderSensorGrid() : layoutType === 'gauge' ? renderSensorGauge() : renderSensorList()}
         </View>
         <View style={{ flexDirection: 'column', gap: scaleMod(12), marginTop: scaleHeight(12) }}>
-          {renderGoToExpertiseButton()}
           {renderCustomizeButton()}
-          {renderHardwareHealthButton()}
+          {renderObdTerminalButton()}
         </View>
       </ScrollView>
     </View>
@@ -662,7 +922,7 @@ const SettingsView = ({ disconnect, setActiveHubView, setIsSecretDebugVisible, s
   const { t } = useTranslation();
   const tc = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet } = useResponsive();
-  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [isLangModalOpen, setIsLangModalOpen] = useState(false);
 
   const isCompact = !isTablet;
   const connectionStatus = useBluetoothStore((state) => state.status);
@@ -797,7 +1057,7 @@ const SettingsView = ({ disconnect, setActiveHubView, setIsSecretDebugVisible, s
             backgroundColor: `${tc.textPri}05`,
             borderColor: tc.border,
           }}
-          onPress={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+          onPress={() => setIsLangModalOpen(true)}
           activeOpacity={0.8}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -806,68 +1066,8 @@ const SettingsView = ({ disconnect, setActiveHubView, setIsSecretDebugVisible, s
               {currentLanguageObj.label}
             </Text>
           </View>
-          <Text style={{ color: tc.textSec, fontSize: 10 }}>{isLangDropdownOpen ? '▲' : '▼'}</Text>
+          <Text style={{ color: tc.textSec, fontSize: 10 }}>▶</Text>
         </TouchableOpacity>
-
-        {/* Inline Scrollable Language Dropdown */}
-        {isLangDropdownOpen && (
-          <View
-            style={{
-              marginTop: scaleHeight(8),
-              borderWidth: 1.2,
-              borderColor: tc.border,
-              borderRadius: 12,
-              backgroundColor: `${tc.textPri}03`,
-              maxHeight: scaleHeight(220),
-              overflow: 'hidden',
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled={true}
-              showsVerticalScrollIndicator={true}
-              contentContainerStyle={{
-                paddingVertical: scaleHeight(4),
-              }}
-            >
-              {sortedLanguages.map((item) => {
-                const isCurrent = item.value === language;
-                return (
-                  <TouchableOpacity
-                    key={item.value}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingVertical: scaleHeight(10),
-                      paddingHorizontal: scaleWidth(14),
-                      borderBottomWidth: 1,
-                      borderBottomColor: `${tc.border}20`,
-                      backgroundColor: isCurrent ? `${tc.cyan}10` : 'transparent',
-                    }}
-                    onPress={async () => {
-                      await setLanguage(item.value as AppLanguage);
-                      setIsLangDropdownOpen(false);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={{ fontSize: scaleFont(14), marginRight: scaleWidth(10) }}>{item.flag}</Text>
-                    <Text
-                      style={{
-                        fontSize: scaleFont(11.5),
-                        fontWeight: isCurrent ? '900' : '700',
-                        fontFamily: MONO,
-                        color: isCurrent ? tc.cyan : tc.textPri,
-                        flex: 1,
-                      }}
-                    >
-                      {item.label}
-                    </Text>
-                    {isCurrent && <Text style={{ color: tc.cyan, fontSize: 11, fontWeight: 'bold' }}>✓</Text>}
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-        )}
       </View>
     </View>
   );
@@ -917,22 +1117,66 @@ const SettingsView = ({ disconnect, setActiveHubView, setIsSecretDebugVisible, s
     </View>
   );
 
+  const renderLangModal = () => (
+    <Modal
+      visible={isLangModalOpen}
+      animationType="slide"
+      transparent={false}
+      onRequestClose={() => setIsLangModalOpen(false)}
+    >
+      <View style={{ flex: 1, backgroundColor: tc.bg, paddingTop: Platform.OS === 'ios' ? 50 : 0 }}>
+        <View style={{
+          paddingHorizontal: scaleWidth(16),
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          height: scaleHeight(54),
+          borderBottomWidth: 1,
+          borderBottomColor: tc.border,
+        }}>
+          <TouchableOpacity onPress={() => setIsLangModalOpen(false)} style={{ padding: scaleMod(8) }}>
+            <Text allowFontScaling={false} style={{ color: tc.cyan, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>
+              {`← ${t('common.back', 'GERİ').toUpperCase()}`}
+            </Text>
+          </TouchableOpacity>
+          <Text allowFontScaling={false} style={{ fontSize: scaleFont(13), fontWeight: '800', fontFamily: MONO, color: tc.textPri }}>
+            {t('bento.settings.language', 'Language').toUpperCase()}
+          </Text>
+          <View style={{ width: scaleWidth(60) }} />
+        </View>
+        <LanguageSelectionView
+          currentLanguage={language}
+          onSelect={(val) => {
+            setLanguage(val);
+            setIsLangModalOpen(false);
+          }}
+        />
+      </View>
+    </Modal>
+  );
+
   if (isTablet) {
     return (
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: scaleWidth(16), paddingBottom: scaleHeight(24), paddingTop: scaleHeight(8), alignSelf: 'center', width: '100%', maxWidth: isLargeTablet ? 900 : undefined }}>
-        <View style={{ flexDirection: 'row', gap: scaleMod(16) }}>
-          {renderLeftSettings(false)}
-          {renderRightSettings(false)}
-        </View>
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: scaleWidth(16), paddingBottom: scaleHeight(24), paddingTop: scaleHeight(8), alignSelf: 'center', width: '100%', maxWidth: isLargeTablet ? 900 : undefined }}>
+          <View style={{ flexDirection: 'row', gap: scaleMod(16) }}>
+            {renderLeftSettings(false)}
+            {renderRightSettings(false)}
+          </View>
+        </ScrollView>
+        {renderLangModal()}
+      </View>
     );
   }
 
   return (
-    <ScrollView style={s.tabContent} contentContainerStyle={{ paddingHorizontal: scaleWidth(16), paddingBottom: scaleHeight(40), gap: scaleHeight(12) }}>
-      {renderLeftSettings(true)}
-      {renderRightSettings(true)}
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={s.tabContent} contentContainerStyle={{ paddingHorizontal: scaleWidth(16), paddingBottom: scaleHeight(40), gap: scaleHeight(12) }}>
+        {renderLeftSettings(true)}
+        {renderRightSettings(true)}
+      </ScrollView>
+      {renderLangModal()}
+    </View>
   );
 };
 
@@ -955,7 +1199,8 @@ function MainApp() {
     isDiagnosticMode, isAdaptationRunning,
     startPolling, stopPolling,
     runDiagnostics, clearDiagnostics, runAdaptationRoutine,
-    lastDeviceId, lastDeviceName, isCloneDevice
+    lastDeviceId, lastDeviceName, isCloneDevice, connectionState,
+    protocol, adapterCapabilityScore
   } = useBluetooth();
 
   // Reset active session telemetry details on disconnect
@@ -1020,18 +1265,21 @@ function MainApp() {
   };
 
   const [versionTapCount, setVersionTapCount] = useState(0);
+  const versionTapTimerRef = useRef<NodeJS.Timeout | null>(null);
   const handleVersionTap = () => {
-    if (!__DEV__) return;
+    if (versionTapTimerRef.current) clearTimeout(versionTapTimerRef.current);
 
     const nextCount = versionTapCount + 1;
-    if (nextCount >= 3) {
+    if (nextCount >= 7) {
       const nextPro = !isPro;
       useAppStore.getState().setIsPro(nextPro);
       setVersionTapCount(0);
       Alert.alert("Dev Mode", `Pro Status: ${nextPro ? 'ACTIVE' : 'INACTIVE'}`);
     } else {
       setVersionTapCount(nextCount);
-      setTimeout(() => setVersionTapCount(0), 1000);
+      versionTapTimerRef.current = setTimeout(() => {
+        setVersionTapCount(0);
+      }, 1500);
     }
   };
 
@@ -1094,16 +1342,15 @@ function MainApp() {
     disconnectBtn: { backgroundColor: 'transparent', borderWidth: 1, borderColor: tc.red, borderRadius: scaleMod(6), paddingVertical: scaleHeight(8), paddingHorizontal: scaleWidth(20), width: '100%', alignItems: 'center' },
     disconnectBtnText: { color: tc.red, fontWeight: '700', fontSize: scaleFont(11.5), fontFamily: MONO },
 
-    // ── Top Bar ──
-    topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: scaleWidth(14), paddingVertical: scaleHeight(8), backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border },
+    topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 16, paddingRight: 24, paddingVertical: scaleHeight(8), backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border },
     topLeft: { flexDirection: 'row', alignItems: 'baseline', gap: scaleMod(6) },
-    topLogo: { color: tc.cyan, fontSize: scaleFont(14.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 2 },
+    topLogo: { color: tc.cyan, fontSize: scaleFont(13.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 1.5 },
     topVersion: { color: tc.textSec, fontSize: scaleFont(9.5), fontFamily: MONO },
-    topRight: { flexDirection: 'row', alignItems: 'center', gap: scaleMod(10) },
+    topRight: { flexDirection: 'row', alignItems: 'center', gap: 8, marginRight: 16 },
     topBadge: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: scaleMod(4), paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(3), gap: scaleMod(4) },
     topBadgeDot: { width: scaleMod(5), height: scaleMod(5), borderRadius: scaleMod(2.5) },
     topBadgeText: { fontSize: scaleFont(8.5), fontWeight: '900', fontFamily: MONO },
-    topDisconnect: { color: tc.red, fontSize: scaleFont(9.5), fontWeight: '800', fontFamily: MONO },
+    topDisconnect: { color: tc.red, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, flexShrink: 0 },
 
     // ── Tab Bar ──
     tabBar: { flexDirection: 'row', backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border },
@@ -1216,8 +1463,8 @@ function MainApp() {
   const [isPaywallVisible, setIsPaywallVisible] = useState(false);
   const [isSecretDebugVisible, setIsSecretDebugVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard'); // Kept for legacy fallback views compatibility
-  const [isConnectModalVisible, setIsConnectModalVisible] = useState(false);
   const [isCustomizeModalVisible, setIsCustomizeModalVisible] = useState(false);
+  const [isObdTerminalVisible, setIsObdTerminalVisible] = useState(false);
 
   // RevenueCat SDK Setup & Secure Offline Receipt Verification
   useEffect(() => {
@@ -1472,17 +1719,9 @@ function MainApp() {
   // No longer blocking navigation when disconnected.
   useEffect(() => {
     if (ecuStatus === 'connected') {
-      setIsConnectModalVisible(false);
       setActiveHubView('hub');
     }
   }, [ecuStatus]);
-
-  // Automatically start scanning when connection modal opens
-  useEffect(() => {
-    if (isConnectModalVisible) {
-      handleScan();
-    }
-  }, [isConnectModalVisible]);
 
   // Load garage records
   useEffect(() => {
@@ -1575,7 +1814,7 @@ function MainApp() {
   const guardAction = (action: () => void) => {
     if (ecuStatus !== 'connected') {
       Alert.alert(t('expertise.connRequired'), t('expertise.connRequiredDesc'));
-      setIsConnectModalVisible(true);
+      setActiveHubView('vehicle');
       return;
     }
     action();
@@ -1704,7 +1943,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       {/* Actions */}
       {adapterStatus !== 'connected' ? (
         <View style={s.connectActions}>
-          <TouchableOpacity style={s.scanBtn} onPress={handleScan}>
+          <TouchableOpacity style={s.scanBtn} onPress={handleScan} activeOpacity={0.4}>
             <Text style={s.scanBtnText}>*  {t('connection.scanDevices')}</Text>
           </TouchableOpacity>
 
@@ -1713,6 +1952,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               style={[s.actionBtn, s.actionCyan, { marginTop: 12, width: '100%', borderRadius: 12 }, isDiagnosticMode && { opacity: 0.5 }]}
               onPress={() => handleRealConnect(lastDeviceId, lastDeviceName || 'Last Device')}
               disabled={isDiagnosticMode}
+              activeOpacity={0.4}
             >
               <Text style={[s.actionBtnText, { color: tc.card }]}>↺  {t('connection.connectLast')} ({lastDeviceName})</Text>
             </TouchableOpacity>
@@ -1724,7 +1964,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
             } else {
               enableBluetooth();
             }
-          }}>
+          }} activeOpacity={0.4}>
             <Text style={s.btEnableBtnText}>{t('connection.enableBt')}</Text>
           </TouchableOpacity>
 
@@ -1739,7 +1979,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
             <View style={s.deviceSection}>
               <Text style={s.deviceSectionTitle}>{t('connection.foundDevices')}</Text>
               {scannedDevices.map(d => (
-                <TouchableOpacity key={d.address || d.id} style={s.deviceCard} onPress={() => handleRealConnect(d.address || d.id, d.name)}>
+                <TouchableOpacity key={d.address || d.id} style={s.deviceCard} onPress={() => handleRealConnect(d.address || d.id, d.name)} activeOpacity={0.3}>
                   <View>
                     <Text style={s.deviceName}>{d.name || t('connection.unknownDevice')}</Text>
                     <Text style={s.deviceMac}>{d.address}</Text>
@@ -1804,14 +2044,55 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       ) : (
         <View style={s.connectActions}>
           {ecuStatus === 'connecting' && (
-            <View style={s.ecuConnecting}>
-              <ActivityIndicator color={tc.amber} size="small" />
-              <Text style={[s.scanningText, { color: tc.amber }]}>{t('connection.ecuWait')}</Text>
+            <View style={{ alignItems: 'center', justifyContent: 'center', gap: 12, marginVertical: 16, width: '100%' }}>
+              {adapterStatus === 'connected' && (
+                <View style={{
+                  backgroundColor: `${tc.green}18`,
+                  borderColor: tc.green,
+                  borderWidth: 1.5,
+                  borderRadius: 12,
+                  padding: 12,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  width: '100%',
+                  marginBottom: 8
+                }}>
+                  <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: tc.green }} />
+                  <Text style={{ color: tc.green, fontFamily: MONO, fontSize: 11, fontWeight: '900', letterSpacing: 0.5 }}>
+                    ✓ {t('connection.adapterConnected', 'ADAPTÖRE BAĞLANDI (OK)').toUpperCase()}
+                  </Text>
+                </View>
+              )}
+              <ActivityIndicator size="large" color={tc.amber} />
+              <Text style={{ color: tc.amber, fontFamily: MONO, fontSize: 11, fontWeight: 'bold', textAlign: 'center', lineHeight: 16 }}>
+                {connectionState === 'CONNECTING' && `${t('connection.ecuWait', 'ECU bağlantısı başlatılıyor, lütfen bekleyin...')} [1/5]`}
+                {connectionState === 'ADAPTER_CONNECTED' && t('connection.adapterApproved', 'ADAPTÖR ONAYLANDI. YETENEKLER ANALİZ EDİLİYOR... [2/5]')}
+                {connectionState === 'PROTOCOL_NEGOTIATING' && t('connection.protocolNegotiating', 'PROTOKOL TARANIYOR & UYANDIRMA... [3/5]')}
+                {connectionState === 'ECU_DETECTED' && t('connection.ecuDetected', 'ECU ALGILANDI, DOĞRULANIYOR... [4/5]')}
+                {connectionState === 'ECU_RESPONDING' && t('connection.ecuResponding', 'ECU YANIT VERDİ, BAĞLANTI TAMAMLANIYOR... [5/5]')}
+                {!['CONNECTING', 'ADAPTER_CONNECTED', 'PROTOCOL_NEGOTIATING', 'ECU_DETECTED', 'ECU_RESPONDING'].includes(connectionState) && t('connection.ecuWait', 'ECU\'ya bağlanılıyor...')}
+              </Text>
+              {connectionState === 'PROTOCOL_NEGOTIATING' && (
+                <Text style={{ color: tc.textSec, fontFamily: MONO, fontSize: 9, textAlign: 'center', marginTop: 2 }}>
+                  {t('connection.protocolScanningHint', '(Standart SP5, SP3, SP6, SP7 protokolleri sırayla taranıyor...)')}
+                </Text>
+              )}
             </View>
           )}
           {ecuStatus === 'error' && (
-            <View style={s.connectActions}>
-              <Text style={s.ecuErrorText}>{t('connection.ecuNoResponse')}</Text>
+            <View style={{ alignItems: 'center', marginVertical: 12, gap: 10, width: '100%' }}>
+              <Text style={{ color: tc.red, fontFamily: MONO, fontSize: 11, fontWeight: 'bold', textAlign: 'center', lineHeight: 15 }}>
+                {connectionState === 'PROTOCOL_FAILED' && t('connection.protocolFailed', '⚠️ UYUMLU PROTOKOL BULUNAMADI! (SP5, SP3, SP6, SP7 denendi)')}
+                {connectionState === 'ECU_NOT_FOUND' && t('connection.ecuNotFound', '⚠️ ARAÇ BEYNİ (ECU) YANIT VERMİYOR!')}
+                {connectionState !== 'PROTOCOL_FAILED' && connectionState !== 'ECU_NOT_FOUND' && `⚠️ ${t('connection.ecuNoResponse', 'ECU yanıt vermedi. Kontak açık mı?')}`}
+              </Text>
+              
+              <Text style={{ color: tc.textSec, fontFamily: MONO, fontSize: 10, textAlign: 'center' }}>
+                {t('connection.hardwareCapabilityScore', 'Adaptör Donanım Yetenek Skoru: {{score}}/100', { score: useBluetoothStore.getState().adapterCapabilityScore })}
+              </Text>
+
               <TouchableOpacity style={s.retryBtn} onPress={retryEcu}>
                 <Text style={s.retryBtnText}>{t('connection.retry')}</Text>
               </TouchableOpacity>
@@ -2023,29 +2304,6 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     </TouchableOpacity>
                   </View>
 
-                  {/* Hidden Features Button */}
-                  <TouchableOpacity
-                    style={[s.miniAction, { backgroundColor: `${tc.purple}CC`, paddingVertical: scaleHeight(8), borderRadius: 8, borderWidth: 1.5, borderColor: tc.purple }]}
-                    onPress={() => {
-                      if (ecuStatus !== 'connected' && !isSimulationMode) {
-                        Alert.alert(
-                          t('hiddenFeatures.notConnected', 'Önce Araça Bağlan'),
-                          t('hiddenFeatures.notConnectedDesc', 'Gizli özellik açmak için OBD2 cihazı bağlı olmalıdır.')
-                        );
-                        return;
-                      }
-                      if (isCloneDevice && !isSimulationMode) {
-                        Alert.alert(
-                          t('hiddenFeatures.unsupported', 'Desteklenmiyor'),
-                          t('hiddenFeatures.unsupportedDesc', 'Orijinal ELM327 v2.1 veya üzeri adaptör gerekiyor.')
-                        );
-                        return;
-                      }
-                      proGuardAction(() => setIsHiddenFeaturesVisible(true));
-                    }}
-                  >
-                    <Text style={[s.miniActionText, { color: tc.card, fontSize: scaleFont(9) }]}>🔓 {t('hiddenFeatures.btnLabel', 'GİZLİ ÖZELLİK AÇ')}</Text>
-                  </TouchableOpacity>
                 </>
               ) : (
                 <>
@@ -2077,56 +2335,12 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     <Text style={[s.miniActionText, { color: tc.card, fontSize: scaleFont(11) }]}>🔧 {t('service.ecuReset')}</Text>
                   </TouchableOpacity>
 
-                  {/* Hidden Features Button */}
-                  <TouchableOpacity
-                    style={[s.miniAction, { backgroundColor: `${tc.purple}CC`, paddingVertical: scaleHeight(11), borderRadius: 8, borderWidth: 1.5, borderColor: tc.purple }]}
-                    onPress={() => {
-                      if (ecuStatus !== 'connected' && !isSimulationMode) {
-                        Alert.alert(
-                          t('hiddenFeatures.notConnected', 'Önce Araça Bağlan'),
-                          t('hiddenFeatures.notConnectedDesc', 'Gizli özellik açmak için OBD2 cihazı bağlı olmalıdır.')
-                        );
-                        return;
-                      }
-                      if (isCloneDevice && !isSimulationMode) {
-                        Alert.alert(
-                          t('hiddenFeatures.unsupported', 'Desteklenmiyor'),
-                          t('hiddenFeatures.unsupportedDesc', 'Orijinal ELM327 v2.1 veya üzeri adaptör gerekiyor.')
-                        );
-                        return;
-                      }
-                      proGuardAction(() => setIsHiddenFeaturesVisible(true));
-                    }}
-                  >
-                    <Text style={[s.miniActionText, { color: tc.card, fontSize: scaleFont(11) }]}>🔓 {t('hiddenFeatures.btnLabel', 'GİZLİ ÖZELLİK AÇ')}</Text>
-                  </TouchableOpacity>
                 </>
               )}
             </View>
           </View>
 
 
-          {/* Jump to Live Sensors */}
-          {isCompact && (
-            <TouchableOpacity
-              style={{ 
-                backgroundColor: tc.cyan, 
-                borderRadius: 12, 
-                padding: scaleMod(10), 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: scaleWidth(8),
-                borderWidth: 1,
-                borderColor: `${tc.cyan}4D`,
-                flexShrink: 0,
-              }}
-              onPress={() => navigateToSensors()}
-            >
-              <Text style={{ color: '#FFF', fontSize: scaleFont(11), fontWeight: '900', fontFamily: MONO, letterSpacing: 1 }}>{t('hub.goToSensors').toUpperCase()}</Text>
-              <Text style={{ color: '#FFF', fontSize: scaleFont(16), fontWeight: '900' }}>{'>'}</Text>
-            </TouchableOpacity>
-          )}
         </View>
       );
     };
@@ -2141,26 +2355,6 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
             </View>
             <ChronicFaultsWidget />
             
-            {/* Jump to Live Sensors */}
-            <TouchableOpacity
-              style={{ 
-                backgroundColor: tc.cyan, 
-                borderRadius: 12, 
-                padding: scaleMod(14), 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: scaleWidth(8),
-                borderWidth: 1,
-                borderColor: `${tc.cyan}4D`,
-                flexShrink: 0,
-                marginTop: scaleHeight(8),
-              }}
-              onPress={() => navigateToSensors()}
-            >
-              <Text style={{ color: '#FFF', fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO, letterSpacing: 1 }}>{t('hub.goToSensors').toUpperCase()}</Text>
-              <Text style={{ color: '#FFF', fontSize: scaleFont(20), fontWeight: '900' }}>{'>'}</Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       );
@@ -2258,23 +2452,23 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           backgroundColor: colors.card,
           borderWidth: 2.5,
           borderColor: isConnected ? colors.green : colors.cyan,
-          borderRadius: scaleMod(22),
+          borderRadius: scaleMod(20),
           paddingHorizontal: scaleMod(18),
-          paddingTop: scaleHeight(16),
-          paddingBottom: scaleHeight(18),
-          marginBottom: scaleHeight(18),
+          paddingVertical: scaleHeight(16),
+          minHeight: scaleHeight(210),
+          justifyContent: 'space-between',
+          marginBottom: scaleHeight(2),
           flexDirection: 'column',
-          gap: scaleHeight(12),
         }}
         onPress={() => setActiveHubView('vehicle')}
-        activeOpacity={0.8}
+        activeOpacity={0.4}
       >
         {/* ── Top Row: icon + title + arrow ── */}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(14) }}>
           <View style={{
-            width: scaleMod(56),
-            height: scaleMod(56),
-            borderRadius: scaleMod(14),
+            width: scaleMod(44),
+            height: scaleMod(44),
+            borderRadius: scaleMod(12),
             overflow: 'hidden',
             alignItems: 'center',
             justifyContent: 'center',
@@ -2285,288 +2479,214 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
 
           <View style={{ flex: 1 }}>
             <Text
+              allowFontScaling={false}
               numberOfLines={1}
               adjustsFontSizeToFit
               minimumFontScale={0.85}
-              style={{ color: colors.textPri, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO, letterSpacing: 1 }}
+              style={{ color: colors.textPri, fontSize: scaleFont(14.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 1 }}
             >
               {t('vehicleSelect.titleMenu', 'ARAÇ & BAĞLANTI').toUpperCase()}
             </Text>
             <Text
+              allowFontScaling={false}
               numberOfLines={1}
               adjustsFontSizeToFit
               minimumFontScale={0.8}
-              style={{ color: colors.textSec, fontSize: scaleFont(10.5), fontFamily: MONO, marginTop: scaleHeight(2) }}
+              style={{ color: colors.textSec, fontSize: scaleFont(10), fontFamily: MONO, marginTop: scaleHeight(1) }}
             >
               {vehicleName
                 ? vehicleName
                 : t('vehicleSelect.selectVehiclePrompt', 'Lütfen Önce Aracı Seçin')}
             </Text>
           </View>
-          <Text style={{ color: isConnected ? colors.green : colors.cyan, fontSize: scaleFont(22), fontWeight: '900', flexShrink: 0 }}>{'>'}</Text>
+          <Text allowFontScaling={false} style={{ color: isConnected ? colors.green : colors.cyan, fontSize: scaleFont(20), fontWeight: '900', flexShrink: 0 }}>{'>'}</Text>
         </View>
 
         {/* ── Divider ── */}
         <View style={{ height: 1, backgroundColor: isConnected ? `${colors.green}30` : `${colors.cyan}25`, borderRadius: 1 }} />
 
-        {/* ── Bottom Row: status pill + extra info chips ── */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(8), flexWrap: 'wrap' }}>
-          {/* Connection status pill */}
-          <View style={{
-            flexDirection: 'row', alignItems: 'center', gap: scaleMod(5),
-            backgroundColor: isConnected ? `${colors.green}18` : `${colors.red}18`,
-            borderRadius: scaleMod(20), paddingHorizontal: scaleMod(10), paddingVertical: scaleHeight(5),
-          }}>
-            <View style={{ width: scaleMod(7), height: scaleMod(7), borderRadius: scaleMod(4), backgroundColor: isConnected ? colors.green : colors.red }} />
-            <Text style={{ color: isConnected ? colors.green : colors.red, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: '800' }}>
-              {isConnected ? t('dashboard.connectedDevice', 'BAĞLI') : t('common.disconnected', 'BAĞLI DEĞİL')}
-            </Text>
-          </View>
-
-          {/* DTC chip — only when connected */}
-          {isConnected && (
+        {/* ── Bottom Row: status pill + extra info chips + auto hardware health stats ── */}
+        {/* ── Middle Row: status pill + extra info chips + auto hardware health stats ── */}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: scaleMod(6), marginVertical: scaleHeight(12) }}>
+            {/* Connection status pill */}
             <View style={{
               flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
-              backgroundColor: dtcs.length > 0 ? `${colors.red}18` : `${colors.green}18`,
-              borderRadius: scaleMod(20), paddingHorizontal: scaleMod(10), paddingVertical: scaleHeight(5),
+              backgroundColor: isConnected ? `${colors.green}18` : `${colors.red}18`,
+              borderRadius: scaleMod(20), paddingHorizontal: scaleMod(9), paddingVertical: scaleHeight(4),
+              flexShrink: 0,
             }}>
-              <Text style={{ fontSize: scaleFont(10) }}>⚠️</Text>
-              <Text style={{ color: dtcs.length > 0 ? colors.red : colors.green, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: '800' }}>
-                {dtcs.length > 0 ? `${dtcs.length} DTC` : t('bento.noDtc', 'TEMİZ')}
+              <View style={{ width: scaleMod(6), height: scaleMod(6), borderRadius: scaleMod(3), backgroundColor: isConnected ? colors.green : colors.red, flexShrink: 0 }} />
+              <Text allowFontScaling={false} numberOfLines={1} style={{ color: isConnected ? colors.green : colors.red, fontSize: scaleFont(9.2), fontFamily: MONO, fontWeight: '800', flexShrink: 0 }}>
+                {isConnected ? t('dashboard.connectedDevice', 'BAĞLI') : t('common.disconnected', 'BAĞLI DEĞİL')}
               </Text>
             </View>
-          )}
 
-          {/* Odometer chip */}
-          {isConnected && odometer && odometer !== 'UNSUPPORTED' && (
-            <View style={{
-              flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
-              backgroundColor: `${colors.amber}18`,
-              borderRadius: scaleMod(20), paddingHorizontal: scaleMod(10), paddingVertical: scaleHeight(5),
-            }}>
-              <Text style={{ fontSize: scaleFont(10) }}>🛣️</Text>
-              <Text style={{ color: colors.amber, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: '800' }}>{odometer} km</Text>
-            </View>
-          )}
+            {/* DTC chip — only when connected */}
+            {isConnected && (
+              <View style={{
+                flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
+                backgroundColor: dtcs.length > 0 ? `${colors.red}18` : `${colors.green}18`,
+                borderRadius: scaleMod(20), paddingHorizontal: scaleMod(9), paddingVertical: scaleHeight(4),
+                flexShrink: 0,
+              }}>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ fontSize: scaleFont(9.2), flexShrink: 0 }}>⚠️</Text>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ color: dtcs.length > 0 ? colors.red : colors.green, fontSize: scaleFont(9.2), fontFamily: MONO, fontWeight: '800', flexShrink: 0 }}>
+                  {dtcs.length > 0 ? `${dtcs.length} DTC` : t('bento.noDtc', 'TEMİZ')}
+                </Text>
+              </View>
+            )}
 
-          {/* "Araç seç" CTA chip */}
-          {!activeSessionVehicle && (
-            <View style={{
-              flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
-              backgroundColor: `${colors.cyan}18`,
-              borderRadius: scaleMod(20), paddingHorizontal: scaleMod(10), paddingVertical: scaleHeight(5),
-            }}>
-              <Text style={{ fontSize: scaleFont(10) }}>🔍</Text>
-              <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: '800' }}>
-                {t('vehicleSelect.selectVehicle', 'ARAÇ SEÇ')}
-              </Text>
-            </View>
-          )}
+            {/* Odometer chip */}
+            {isConnected && odometer && odometer !== 'UNSUPPORTED' && (
+              <View style={{
+                flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
+                backgroundColor: `${colors.amber}18`,
+                borderRadius: scaleMod(20), paddingHorizontal: scaleMod(9), paddingVertical: scaleHeight(4),
+                flexShrink: 0,
+              }}>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ fontSize: scaleFont(9.2), flexShrink: 0 }}>🛣️</Text>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ color: colors.amber, fontSize: scaleFont(9.2), fontFamily: MONO, fontWeight: '800', flexShrink: 0 }}>{odometer} km</Text>
+              </View>
+            )}
+
+            {/* Auto Hardware Health Info: Quality score */}
+            {isConnected && (
+              <View style={{
+                flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
+                backgroundColor: isCloneDevice ? `${colors.red}12` : `${colors.green}12`,
+                borderRadius: scaleMod(20), paddingHorizontal: scaleMod(9), paddingVertical: scaleHeight(4),
+                flexShrink: 0,
+              }}>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ fontSize: scaleFont(9.2), flexShrink: 0 }}>🛡️</Text>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ color: isCloneDevice ? colors.red : colors.green, fontSize: scaleFont(9.2), fontFamily: MONO, fontWeight: '800', flexShrink: 0 }}>
+                  {isCloneDevice ? 'CLONE' : 'ORIGINAL'} {adapterCapabilityScore}%
+                </Text>
+              </View>
+            )}
+
+            {/* Auto Hardware Health Info: Connected Protocol */}
+            {isConnected && protocol && (
+              <View style={{
+                flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
+                backgroundColor: `${colors.purple}12`,
+                borderRadius: scaleMod(20), paddingHorizontal: scaleMod(9), paddingVertical: scaleHeight(4),
+                flexShrink: 0,
+              }}>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ fontSize: scaleFont(9.2), flexShrink: 0 }}>🔌</Text>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ color: colors.purple, fontSize: scaleFont(9.2), fontFamily: MONO, fontWeight: '800', flexShrink: 0 }}>{protocol}</Text>
+              </View>
+            )}
+
+            {/* "Araç seç" CTA chip */}
+            {!activeSessionVehicle && (
+              <View style={{
+                flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
+                backgroundColor: `${colors.cyan}18`,
+                borderRadius: scaleMod(20), paddingHorizontal: scaleMod(9), paddingVertical: scaleHeight(4),
+                flexShrink: 0,
+              }}>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ fontSize: scaleFont(9.2), flexShrink: 0 }}>🔍</Text>
+                <Text allowFontScaling={false} numberOfLines={1} style={{ color: colors.cyan, fontSize: scaleFont(9.2), fontFamily: MONO, fontWeight: '800', flexShrink: 0 }}>
+                  {t('vehicleSelect.selectVehicle', 'ARAÇ SEÇ')}
+                </Text>
+              </View>
+            )}
         </View>
-      </TouchableOpacity>
-    );
-  };
 
-  const renderDemoCard = (isCompact: boolean) => {
-    if (isCompact) {
-      return (
-        <TouchableOpacity 
-          style={{ 
-            backgroundColor: isSimulationMode ? `${colors.green}14` : `${colors.cyan}14`,
-            borderRadius: scaleMod(16),
-            borderWidth: scaleMod(2),
-            borderColor: isSimulationMode ? colors.green : colors.cyan,
-            padding: scaleMod(10),
-            justifyContent: 'space-between',
-            flex: 1,
-            height: scaleHeight(82),
-          }}
-          onPress={() => {
-            const newMode = !isSimulationMode;
-            toggleSimulationMode();
-            if (newMode) {
-              Alert.alert(t('common.demoMode'), t('common.demoModeDesc'));
-            } else {
+        {/* Dynamic Disconnect/Connect Button at the bottom of the card */}
+        {isConnected ? (
+          <TouchableOpacity
+            style={{
+              alignSelf: 'stretch',
+              backgroundColor: `${colors.red}12`,
+              borderColor: colors.red,
+              borderWidth: 1.5,
+              borderRadius: scaleMod(12),
+              paddingVertical: scaleHeight(11),
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={(e) => {
+              e.stopPropagation();
               disconnect();
-            }
-          }}
-          activeOpacity={0.8}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(6), width: '100%' }}>
-            <View style={{ width: scaleMod(18), height: scaleMod(18), borderRadius: scaleMod(9), backgroundColor: isSimulationMode ? `${colors.green}26` : `${colors.cyan}26`, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Text style={{ fontSize: scaleFont(12), color: isSimulationMode ? colors.green : colors.cyan, fontWeight: '900', marginTop: -1 }}>•</Text>
-            </View>
-            <Text 
-              numberOfLines={1} 
-              adjustsFontSizeToFit
-              minimumFontScale={0.75}
-              style={{ color: colors.textPri, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5, flex: 1, flexShrink: 1 }}
-            >
-              {t('common.demoMode').toUpperCase()}
-            </Text>
-          </View>
-          
-          <View style={{ 
-            flexDirection: 'row', 
-            justifyContent: 'flex-end', 
-            alignItems: 'center',
-            marginTop: scaleHeight(4)
-          }}>
-            <View style={{ width: scaleMod(32), height: scaleHeight(18), borderRadius: scaleMod(9), backgroundColor: isSimulationMode ? colors.green : colors.textTertiary, padding: scaleMod(2) }}>
-              <View style={{ width: scaleMod(14), height: scaleMod(14), borderRadius: scaleMod(7), backgroundColor: '#FFF', alignSelf: isSimulationMode ? 'flex-end' : 'flex-start' }} />
-            </View>
-          </View>
-        </TouchableOpacity>
-      );
-    }
-
-    const cardPadding = scaleMod(16);
-    const iconSize = scaleMod(44);
-    const titleSize = scaleFont(13);
-
-    return (
-      <TouchableOpacity 
-        style={{ 
-          backgroundColor: isSimulationMode ? `${colors.green}14` : `${colors.cyan}14`,
-          borderRadius: scaleMod(20),
-          borderWidth: scaleMod(2.5),
-          borderColor: isSimulationMode ? colors.green : colors.cyan,
-          padding: cardPadding,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: scaleMod(16),
-          flex: 1,
-        }}
-        onPress={() => {
-          const newMode = !isSimulationMode;
-          toggleSimulationMode();
-          if (newMode) {
-            Alert.alert(t('common.demoMode'), t('common.demoModeDesc'));
-          } else {
-            disconnect();
-          }
-        }}
-        activeOpacity={0.8}
-      >
-        <View style={{ width: iconSize, height: iconSize, borderRadius: scaleMod(12), backgroundColor: isSimulationMode ? `${colors.green}26` : `${colors.cyan}26`, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Text style={{ fontSize: scaleFont(20), color: isSimulationMode ? colors.green : colors.cyan, fontWeight: '900' }}>•</Text>
-        </View>
-        <View style={{ flex: 1, flexShrink: 1 }}>
-          <Text 
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.8}
-            style={{ color: colors.textPri, fontSize: titleSize, fontWeight: '900', fontFamily: MONO, letterSpacing: 1, flexShrink: 1 }}
+            }}
+            activeOpacity={0.7}
           >
-            {t('common.demoMode').toUpperCase()}
-          </Text>
-        </View>
-        <View style={{ width: scaleMod(40), height: scaleHeight(24), borderRadius: scaleMod(12), backgroundColor: isSimulationMode ? colors.green : colors.textTertiary, padding: scaleMod(2), flexShrink: 0 }}>
-          <View style={{ width: scaleMod(20), height: scaleMod(20), borderRadius: scaleMod(10), backgroundColor: '#FFF', alignSelf: isSimulationMode ? 'flex-end' : 'flex-start' }} />
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const renderProCard = (isCompact: boolean) => {
-    if (isCompact) {
-      return (
-        <TouchableOpacity 
-          activeOpacity={0.8}
-          onPress={() => (!isPro && !isSimulationMode) && setIsPaywallVisible(true)}
-          style={{
-            backgroundColor: (isPro || isSimulationMode) ? `${colors.purple}14` : `${colors.purple}08`,
-            borderRadius: scaleMod(16),
-            borderWidth: scaleMod(2),
-            borderColor: colors.purple,
-            padding: scaleMod(10),
-            justifyContent: 'space-between',
-            flex: 1,
-            height: scaleHeight(82),
-          }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(6), width: '100%' }}>
-            <Text style={{ fontSize: scaleFont(13), flexShrink: 0 }}>{(isPro || isSimulationMode) ? '👑' : '🛡️'}</Text>
             <Text 
-              numberOfLines={1} 
+              allowFontScaling={false} 
+              numberOfLines={1}
               adjustsFontSizeToFit
               minimumFontScale={0.7}
-              style={{ color: colors.textPri, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5, flex: 1, flexShrink: 1 }}
+              style={{ color: colors.red, fontSize: scaleFont(10.5), fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}
             >
-              {(isPro || isSimulationMode) ? t('common.proActive').toUpperCase() : t('common.freeAccount').toUpperCase()}
+              {t('connection.disconnect', 'BAĞLANTIYI KES').toUpperCase()}
             </Text>
-          </View>
-          
-          <View style={{ 
-            backgroundColor: colors.purple, 
-            paddingVertical: scaleHeight(4), 
-            borderRadius: scaleMod(6), 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            marginTop: scaleHeight(4),
-            flexShrink: 0,
-          }}>
-            <Text style={{ color: '#FFF', fontSize: scaleFont(8.5), fontWeight: '900', fontFamily: MONO }}>
-              {(!isPro && !isSimulationMode) ? t('common.upgrade').toUpperCase() : t('common.active').toUpperCase()}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      );
-    }
-
-    const cardPadding = scaleMod(16);
-    const iconSize = scaleMod(44);
-    const titleSize = scaleFont(13);
-
-    return (
-      <TouchableOpacity 
-        activeOpacity={0.8}
-        onPress={() => (!isPro && !isSimulationMode) && setIsPaywallVisible(true)}
-        style={{
-          backgroundColor: (isPro || isSimulationMode) ? `${colors.purple}14` : `${colors.purple}08`,
-          borderRadius: scaleMod(20),
-          borderWidth: scaleMod(2.5),
-          borderColor: colors.purple,
-          padding: cardPadding,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: scaleMod(16),
-          flex: 1,
-        }}
-      >
-        <View style={{ 
-          width: iconSize, 
-          height: iconSize, 
-          borderRadius: scaleMod(12), 
-          backgroundColor: `${colors.purple}26`, 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}>
-          <Text style={{ fontSize: scaleFont(20) }}>{(isPro || isSimulationMode) ? '👑' : '🛡️'}</Text>
-        </View>
-        <View style={{ flex: 1, flexShrink: 1 }}>
-          <Text 
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.8}
-            style={{ color: colors.textPri, fontSize: titleSize, fontWeight: '900', fontFamily: MONO, letterSpacing: 1, flexShrink: 1 }}
-          >
-            {(isPro || isSimulationMode) ? t('common.proActive').toUpperCase() : t('common.freeAccount').toUpperCase()}
-          </Text>
-        </View>
-        {(!isPro && !isSimulationMode) ? (
-          <View style={{ backgroundColor: colors.purple, paddingHorizontal: scaleWidth(12), paddingVertical: scaleHeight(8), borderRadius: scaleMod(10), flexShrink: 0 }}>
-            <Text style={{ color: '#FFF', fontSize: scaleFont(11), fontWeight: '900', fontFamily: MONO }}>{t('common.upgrade').toUpperCase()}</Text>
-          </View>
+          </TouchableOpacity>
         ) : (
-          <View style={{ backgroundColor: `${colors.purple}26`, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(6), borderRadius: scaleMod(8), borderWidth: 1, borderColor: colors.purple, flexShrink: 0 }}>
-            <Text style={{ color: colors.purple, fontSize: scaleFont(9), fontWeight: '900', fontFamily: MONO }}>{t('common.active').toUpperCase()}</Text>
+          <View style={{ flexDirection: 'row', gap: scaleMod(8), alignSelf: 'stretch' }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                backgroundColor: `${colors.cyan}14`,
+                borderColor: colors.cyan,
+                borderWidth: 1.5,
+                borderRadius: scaleMod(12),
+                paddingVertical: scaleHeight(11),
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={(e) => {
+                e.stopPropagation();
+                if (Platform.OS === 'ios') {
+                  Alert.alert(t('common.warning', 'Warning'), t('connection.iosBtManual'));
+                } else {
+                  enableBluetooth();
+                }
+              }}
+              activeOpacity={0.7}
+            >
+              <Text 
+                allowFontScaling={false} 
+                numberOfLines={1} 
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
+                style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5 }}
+              >
+                🔵 {t('connection.enableBt', 'BLUETOOTH AÇ').toUpperCase()}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                backgroundColor: colors.cyan,
+                borderRadius: scaleMod(12),
+                paddingVertical: scaleHeight(11),
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={(e) => {
+                e.stopPropagation();
+                setActiveHubView('vehicle');
+              }}
+              activeOpacity={0.7}
+            >
+              <Text 
+                allowFontScaling={false} 
+                numberOfLines={1} 
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
+                style={{ color: colors.statusBarStyle === 'light-content' ? '#000000' : '#ffffff', fontSize: scaleFont(10), fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5 }}
+              >
+                🔍 {t('connection.connectDevice', 'CİHAZA BAĞLAN').toUpperCase()}
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </TouchableOpacity>
     );
   };
+
 
   // ===============================================================
   // MAIN RENDER (Bento Box / Glassmorphism Paradigm)
@@ -2613,7 +2733,17 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                 <Text style={{ color: `${colors.purple}CC`, fontSize: 10, fontWeight: '900', fontFamily: MONO }}>👑 PRO</Text>
               </TouchableOpacity>
               {ecuStatus === 'connected' && (
-                <TouchableOpacity onPress={() => disconnect()}>
+                <TouchableOpacity 
+                  onPress={() => disconnect()} 
+                  style={{ 
+                    paddingHorizontal: 8, 
+                    paddingVertical: 4, 
+                    backgroundColor: `${colors.red}1F`, 
+                    borderRadius: 12, 
+                    borderWidth: 1, 
+                    borderColor: colors.red 
+                  }}
+                >
                   <Text style={[s.topDisconnect, { color: colors.red }]}>
                     {isPhone ? t('connection.disconnectShort').toUpperCase() : t('connection.disconnect').toUpperCase()}
                   </Text>
@@ -2649,12 +2779,25 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
         {/* Central Hub View vs Sub-Views */}
         {activeHubView === 'hub' ? (
           isTablet ? (
-            <View style={{ flex: 1, paddingHorizontal: scaleWidth(16), paddingTop: scaleHeight(8), alignSelf: 'center', width: '100%', maxWidth: 720, justifyContent: 'space-between', paddingBottom: scaleHeight(24) }}>
-              <View style={{ gap: scaleHeight(16), marginTop: scaleHeight(8) }}>
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{
+                flexGrow: 1,
+                paddingHorizontal: scaleWidth(16),
+                paddingTop: scaleHeight(8),
+                alignSelf: 'center',
+                width: '100%',
+                maxWidth: 720,
+                justifyContent: 'space-between',
+                paddingBottom: scaleHeight(24)
+              }}
+              showsVerticalScrollIndicator={false}
+            >
+              <View style={{ width: '100%', gap: scaleHeight(12), marginTop: scaleHeight(8) }}>
                 {renderVehicleConnectionCard()}
 
-                <View>
-                  <Text style={{ fontSize: scaleFont(12), fontWeight: '800', color: colors.textSec, letterSpacing: 2, marginBottom: scaleHeight(12), marginTop: scaleHeight(4), fontFamily: MONO }}>
+                <View style={{ marginTop: scaleHeight(4) }}>
+                  <Text style={{ fontSize: scaleFont(12), fontWeight: '800', color: colors.textSec, letterSpacing: 2, marginBottom: scaleHeight(8), marginTop: scaleHeight(2), fontFamily: MONO }}>
                     {t('hub.controlHub').toUpperCase()}
                   </Text>
                   <BentoGrid
@@ -2665,48 +2808,95 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     onOpenPaywall={() => setIsPaywallVisible(true)}
                     onOpenSupport={handleSupportEmail}
                     onShareApp={handleShareApp}
+                    onDisconnect={disconnect}
                   />
                 </View>
               </View>
 
-              <View style={{ flexDirection: 'row', gap: scaleHeight(12), flexShrink: 0 }}>
-                {renderDemoCard(false)}
-                {renderProCard(false)}
+              {/* Version and Disclaimer at main dashboard bottom */}
+              <View style={{ alignItems: 'center', marginTop: scaleHeight(20), gap: scaleHeight(4), width: '100%' }}>
+                <TouchableOpacity onPress={handleVersionTap} activeOpacity={0.8}>
+                  <Text style={{
+                    color: colors.textSec,
+                    fontFamily: MONO,
+                    fontSize: scaleFont(8),
+                    fontWeight: '700',
+                    textAlign: 'center',
+                  }}>
+                    MotoCortex v2.0.0 (1) {isPro ? 'PRO' : 'FREE'}
+                  </Text>
+                </TouchableOpacity>
+                <Text style={{
+                  color: colors.textSec,
+                  fontFamily: MONO,
+                  fontSize: scaleFont(7),
+                  textAlign: 'center',
+                  opacity: 0.65,
+                  lineHeight: scaleFont(11),
+                  paddingHorizontal: scaleWidth(20),
+                }}>
+                  {t('disclaimer')}
+                </Text>
               </View>
-            </View>
+            </ScrollView>
           ) : (
-            <View
-              style={{
-                flex: 1,
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{
+                flexGrow: 1,
                 paddingHorizontal: scaleWidth(16),
-                paddingBottom: isSmallPhone ? scaleHeight(16) : scaleHeight(24),
-                paddingTop: isSmallPhone ? scaleHeight(4) : scaleHeight(12),
-                justifyContent: 'space-between'
+                paddingBottom: isSmallPhone ? scaleHeight(8) : scaleHeight(16),
+                paddingTop: isSmallPhone ? scaleHeight(2) : scaleHeight(8),
+                justifyContent: 'space-between',
               }}
+              showsVerticalScrollIndicator={false}
             >
-              <View style={{ gap: isSmallPhone ? scaleHeight(8) : scaleHeight(12) }}>
+              <View style={{ width: '100%', gap: scaleHeight(12), marginTop: scaleHeight(8) }}>
                 {renderVehicleConnectionCard()}
 
-                <Text style={{ fontSize: isSmallPhone ? scaleFont(9) : scaleFont(11), fontWeight: '800', color: colors.textSec, letterSpacing: 2, marginBottom: isSmallPhone ? scaleHeight(4) : scaleHeight(8), marginTop: isSmallPhone ? scaleHeight(4) : scaleHeight(8), fontFamily: MONO }}>
-                  {t('hub.controlHub')}
+                <View style={{ width: '100%' }}>
+                  <Text style={{ fontSize: isSmallPhone ? scaleFont(9) : scaleFont(11), fontWeight: '800', color: colors.textSec, letterSpacing: 2, marginBottom: scaleHeight(6), fontFamily: MONO }}>
+                    {t('hub.controlHub').toUpperCase()}
+                  </Text>
+                  <BentoGrid
+                    onOpenDiagnostics={() => setActiveHubView('expertise')}
+                    onOpenSensors={() => navigateToSensors()}
+                    onOpenProfile={() => setActiveHubView('info')}
+                    onOpenSettings={() => setActiveHubView('settings')}
+                    onOpenPaywall={() => setIsPaywallVisible(true)}
+                    onOpenSupport={handleSupportEmail}
+                    onShareApp={handleShareApp}
+                    onDisconnect={disconnect}
+                  />
+                </View>
+              </View>
+
+              {/* 3. Version and Disclaimer at main dashboard bottom */}
+              <View style={{ alignItems: 'center', gap: scaleHeight(2), width: '100%' }}>
+                <TouchableOpacity onPress={handleVersionTap} activeOpacity={0.8}>
+                  <Text style={{
+                    color: colors.textSec,
+                    fontFamily: MONO,
+                    fontSize: scaleFont(7.5),
+                    fontWeight: '700',
+                    textAlign: 'center',
+                  }}>
+                    MotoCortex v2.0.0 (1) {isPro ? 'PRO' : 'FREE'}
+                  </Text>
+                </TouchableOpacity>
+                <Text style={{
+                  color: colors.textSec,
+                  fontFamily: MONO,
+                  fontSize: scaleFont(6.8),
+                  textAlign: 'center',
+                  opacity: 0.65,
+                  lineHeight: scaleFont(10),
+                  paddingHorizontal: scaleWidth(10),
+                }}>
+                  {t('disclaimer')}
                 </Text>
-
-                <BentoGrid
-                  onOpenDiagnostics={() => setActiveHubView('expertise')}
-                  onOpenSensors={() => navigateToSensors()}
-                  onOpenProfile={() => setActiveHubView('info')}
-                  onOpenSettings={() => setActiveHubView('settings')}
-                  onOpenPaywall={() => setIsPaywallVisible(true)}
-                  onOpenSupport={handleSupportEmail}
-                  onShareApp={handleShareApp}
-                />
               </View>
-
-              <View style={{ flexDirection: 'row', gap: scaleMod(8), flexShrink: 0 }}>
-                {renderDemoCard(true)}
-                {renderProCard(true)}
-              </View>
-            </View>
+            </ScrollView>
           )
         ) : (
           <View style={{ flex: 1 }}>
@@ -2734,6 +2924,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                   onGoToExpertise={() => setActiveHubView('expertise')}
                   onOpenHardwareHealth={() => setIsHardwareHealthVisible(true)}
                   onOpenCustomize={() => setIsCustomizeModalVisible(true)}
+                  onOpenObdTerminal={() => setIsObdTerminalVisible(true)}
                 />
               )}
               {activeHubView === 'expertise' && renderExpertise()}
@@ -2753,36 +2944,31 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     if (isConnected) {
                       disconnect();
                     } else {
-                      setIsConnectModalVisible(true);
+                      setActiveHubView('vehicle');
                     }
                   }}
                   onGoToSensors={() => navigateToSensors()}
                   onGoToExpertise={() => setActiveHubView('expertise')}
+                  status={status}
+                  connectionState={connectionState}
+                  ecuStatus={ecuStatus}
+                  adapterStatus={adapterStatus}
+                  scannedDevices={scannedDevices}
+                  handleScan={handleScan}
+                  handleRealConnect={handleRealConnect}
+                  disconnect={disconnect}
+                  enableBluetooth={enableBluetooth}
+                  lastDeviceId={lastDeviceId}
+                  lastDeviceName={lastDeviceName}
+                  retryEcu={retryEcu}
+                  permissionGranted={permissionGranted}
                 />
               )}
             </View>
           </View>
         )}
 
-        {/* Connection Modal */}
-        <Modal
-          visible={isConnectModalVisible}
-          animationType="slide"
-          transparent={false}
-          onRequestClose={() => setIsConnectModalVisible(false)}
-        >
-          <SafeAreaView style={{ flex: 1, backgroundColor: tc.bg }}>
-            <View style={{ paddingHorizontal: 20, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 60, borderBottomWidth: 1, borderBottomColor: tc.border }}>
-              <Text style={{ color: tc.textPri, fontSize: 16, fontWeight: '800', fontFamily: MONO }}>{t('connection.foundDevices')}</Text>
-              <TouchableOpacity onPress={() => setIsConnectModalVisible(false)} style={{ padding: 10 }}>
-                <Text style={{ color: tc.cyan, fontSize: 14, fontWeight: 'bold', fontFamily: MONO }}>{t('common.cancel').toUpperCase()}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ flex: 1 }}>
-              {renderConnectionScreen()}
-            </View>
-          </SafeAreaView>
-        </Modal>
+
 
         {/* Save to Garage Overlay */}
         {isSaveModalVisible && (
@@ -2932,6 +3118,13 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       <CustomizeDashboardModal
         visible={isCustomizeModalVisible}
         onClose={() => setIsCustomizeModalVisible(false)}
+      />
+
+      {/* OBD Terminal & Health Stats Modal */}
+      <ObdTerminalModal
+        visible={isObdTerminalVisible}
+        onClose={() => setIsObdTerminalVisible(false)}
+        sendCommand={sendCommand}
       />
 
       {/* Paywall Modal Overlay */}

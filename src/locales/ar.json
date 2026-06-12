@@ -59,7 +59,8 @@
             "hardwareModalDesc": "للحصول على الدعم أو إجراء تنشيط ترخيص PRO يدويًا، يرجى نسخ معرف المستخدم أعلاه والاتصال بنا.",
             "supportEmailBody": "مرحبًا فريق دعم MotoCortex، --- معلومات التطبيق --- معرف المستخدم:{{userId}}حالة الترخيص:{{license}}الرابط:{{connection}}حالة الجهاز:{{deviceStatus}}--- رسالتك ---",
             "deviceName": "اسم الجهاز:",
-            "simulationObd": "محاكاة OBD"
+            "simulationObd": "محاكاة OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "معلومات التطبيق ودليل",
         "supportDesc": "الدعم والاتصال",
@@ -101,7 +102,9 @@
         "back": "رجوع",
         "chassis": "الهيكل",
         "operations": "العمليات",
-        "close": "إغلاق"
+        "close": "إغلاق",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "موتو كورتيكس برو",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "الجهاز غير مقترن",
         "deviceNotPairedDesc": "قبل توصيل محولات Bluetooth Obd2 الكلاسيكية، تحتاج إلى إقرانها من إعدادات Bluetooth بهاتفك. يتم توجيهك إلى إعدادات النظام.",
         "unsupportedDeviceTitle": "الأجهزة غير المتوافقة",
-        "unsupportedDeviceDesc": "الجهاز الذي تحاول توصيله ليس محولًا متوافقًا مع نظام التشغيل Obd2 أو لا يدعم الخدمات المطلوبة."
+        "unsupportedDeviceDesc": "الجهاز الذي تحاول توصيله ليس محولًا متوافقًا مع نظام التشغيل Obd2 أو لا يدعم الخدمات المطلوبة.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "المس لتحديد الجهاز",
@@ -206,7 +214,8 @@
         "mafFlow": "تدفق الهواء MAF",
         "timingAdvance": "توقيت الإشعال",
         "fuelLevel": "مستوى الوقود",
-        "catalystTemp": "حرارة المحفز"
+        "catalystTemp": "حرارة المحفز",
+        "layoutGauge": "مقياس"
     },
     "expertise": {
         "historyFound": "تم العثور على تاريخ السيارة!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "يرجى الاتصال بالمركبة أولاً لبدء هذه العملية.",
         "chronicFaultsTitle": "المشاكل الإحصائية المزمنة",
         "chronicFaultsObs": "{{code}}(الملاحظة:{{days}}يوم مختلف / الإجمالي:{{total}}مرات)",
-        "chronicFaultsPending": "جمع البيانات / تحليل الإحصائيات"
+        "chronicFaultsPending": "جمع البيانات / تحليل الإحصائيات",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ تحذير أمني",

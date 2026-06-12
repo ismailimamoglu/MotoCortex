@@ -115,7 +115,7 @@ export default function HiddenFeaturesModal({ visible, onClose, vehicleName }: P
   }: { checked: boolean; onPress: () => void; label: string }) => (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.4}
       style={{ flexDirection: 'row', alignItems: 'flex-start', gap: scaleMod(10), marginBottom: scaleHeight(14) }}
     >
       <View style={{
@@ -160,7 +160,7 @@ export default function HiddenFeaturesModal({ visible, onClose, vehicleName }: P
               </Text>
             ) : null}
           </View>
-          <TouchableOpacity onPress={onClose} style={{ padding: scaleMod(8) }} activeOpacity={0.7}>
+          <TouchableOpacity onPress={onClose} style={{ padding: scaleMod(8) }} activeOpacity={0.4}>
             <Text style={{ color: colors.cyan, fontSize: scaleFont(13), fontWeight: '800', fontFamily: MONO }}>
               ✕ {t('hiddenFeatures.closeBtn', 'KAPAT')}
             </Text>
@@ -219,7 +219,7 @@ export default function HiddenFeaturesModal({ visible, onClose, vehicleName }: P
                     return (
                       <TouchableOpacity
                         key={feature.key}
-                        activeOpacity={0.8}
+                        activeOpacity={0.4}
                         onPress={() => openSheet(feature.key, feature.labelKey)}
                         style={{
                           flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
@@ -338,7 +338,7 @@ export default function HiddenFeaturesModal({ visible, onClose, vehicleName }: P
                       borderRadius: scaleMod(12), borderWidth: 1, borderColor: border,
                       alignItems: 'center',
                     }}
-                    activeOpacity={0.7}
+                    activeOpacity={0.4}
                   >
                     <Text style={{ color: textSec, fontSize: scaleFont(12), fontFamily: MONO, fontWeight: '700' }}>
                       {t('hiddenFeatures.disclaimerCancel', 'İPTAL')}

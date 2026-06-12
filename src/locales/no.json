@@ -59,7 +59,8 @@
             "hardwareModalDesc": "For å få støtte eller utføre manuell PRO-lisensaktivering, vennligst kopier bruker-IDen ovenfor og kontakt oss.",
             "supportEmailBody": "Hei MotoCortex Support Team, --- Søknadsinformasjon --- Bruker-ID:{{userId}}Lisensstatus:{{license}}Link:{{connection}}Enhetsstatus:{{deviceStatus}}--- Din melding ---",
             "deviceName": "Enhetsnavn:",
-            "simulationObd": "Simulering OBD"
+            "simulationObd": "Simulering OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Søknadsinformasjon og veiledning",
         "supportDesc": "Brukerstøtte & Kontakt",
@@ -101,7 +102,9 @@
         "back": "Tilbake",
         "chassis": "Chassis",
         "operations": "Operasjoner",
-        "close": "LUKK"
+        "close": "LUKK",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "Enhet ikke paret",
         "deviceNotPairedDesc": "Før du kobler til klassiske Bluetooth OBD2-adaptere, må du pare dem fra telefonens Bluetooth-innstillinger. Du blir ledet til systeminnstillingene.",
         "unsupportedDeviceTitle": "Inkompatibel maskinvare",
-        "unsupportedDeviceDesc": "Enheten du prøver å koble til er ikke en kompatibel OBD2-adapter eller støtter ikke de nødvendige tjenestene."
+        "unsupportedDeviceDesc": "Enheten du prøver å koble til er ikke en kompatibel OBD2-adapter eller støtter ikke de nødvendige tjenestene.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "TRYKK FOR Å VELGE ENHET",
@@ -206,7 +214,8 @@
         "mafFlow": "MAF Luftstrøm",
         "timingAdvance": "Tenningsforovering",
         "fuelLevel": "Drivstoffnivå",
-        "catalystTemp": "Katalysatortemp."
+        "catalystTemp": "Katalysatortemp.",
+        "layoutGauge": "MÅLER"
     },
     "expertise": {
         "historyFound": "KJØRETØYHISTORIE FUNNET!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "Koble til kjøretøyet først for å starte denne prosessen.",
         "chronicFaultsTitle": "Statistiske kroniske problemer",
         "chronicFaultsObs": "{{code}}(Observasjon:{{days}}Annen dag / totalt:{{total}}ganger)",
-        "chronicFaultsPending": "Samle datapool / analysere statistikk"
+        "chronicFaultsPending": "Samle datapool / analysere statistikk",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ SIKKERHETSADVARSEL",

@@ -3,6 +3,20 @@ import { VehicleMake } from '../utils/vinDecoder';
 
 type ConnectionStatus = 'disconnected' | 'scanning' | 'connecting' | 'connected' | 'error';
 
+export interface TelemetryStats {
+    requestsSent: number;
+    responsesReceived: number;
+    timeoutCount: number;
+    recoveryCount: number;
+    avgResponseTime: number;
+    lastError: string | null;
+}
+
+export interface DiagnosticDtcArray extends Array<string> {
+    isNotScanned?: boolean;
+    errorState?: 'TIMEOUT' | 'CONNECTION_LOST' | 'ERROR_UNABLE_TO_READ' | 'HARDWARE_FATAL_RECOVERY_FAILED' | null;
+}
+
 interface BluetoothState {
     status: ConnectionStatus;
     adapterStatus: ConnectionStatus;
@@ -27,7 +41,7 @@ interface BluetoothState {
     fuelLevel: number | null;
     catalystTemp: number | null;
 
-    dtcs: string[];
+    dtcs: DiagnosticDtcArray;
     vin: string | null;
     ecuId: string | null;
     odometer: number | 'UNSUPPORTED' | null;
@@ -48,6 +62,16 @@ interface BluetoothState {
     suggestedBrandFromVin: string | null;
     protocol: string | null;
  
+    supportedPids: string[];
+    guardTime: number;
+    lastSuccessfulResponseAt: number | null;
+    recoveryAttempts: number;
+    watchdogTimeoutLimit: number;
+    telemetryStats: TelemetryStats;
+    diagnosticLogs: string[];
+    adapterCapabilityScore: number;
+    connectionState: 'DISCONNECTED' | 'CONNECTING' | 'ADAPTER_CONNECTED' | 'PROTOCOL_NEGOTIATING' | 'ECU_DETECTED' | 'ECU_RESPONDING' | 'TELEMETRY_ACTIVE' | 'ECU_NOT_FOUND' | 'PROTOCOL_FAILED' | 'DIAGNOSTICS_ACTIVE' | 'HARDWARE_FATAL';
+
     // Actions
     setStatus: (status: ConnectionStatus) => void;
     setAdapterStatus: (status: ConnectionStatus) => void;
@@ -71,8 +95,20 @@ interface BluetoothState {
     addLog: (entry: string) => void;
     clearLogs: () => void;
     setProtocol: (protocol: string | null) => void;
+    addDiagnosticLog: (log: string) => void;
+    clearDiagnosticLogs: () => void;
+    resetRecoveryAttempts: () => void;
+    incrementRecoveryAttempts: () => void;
+    updateTelemetryStats: (stats: Partial<TelemetryStats>) => void;
     reset: () => void;
 }
+
+const createInitialDtcs = (): DiagnosticDtcArray => {
+    const arr: DiagnosticDtcArray = [];
+    arr.isNotScanned = true;
+    arr.errorState = null;
+    return arr;
+};
  
 export const useBluetoothStore = create<BluetoothState>((set) => ({
     status: 'disconnected',
@@ -97,7 +133,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     timingAdvance: null,
     fuelLevel: null,
     catalystTemp: null,
-    dtcs: [],
+    dtcs: createInitialDtcs(),
     vin: null,
     ecuId: null,
     odometer: null,
@@ -117,6 +153,23 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     pendingProRevocation: false,
     suggestedBrandFromVin: null,
     protocol: null,
+
+    supportedPids: [],
+    guardTime: 100,
+    lastSuccessfulResponseAt: null,
+    recoveryAttempts: 0,
+    watchdogTimeoutLimit: 5000,
+    telemetryStats: {
+        requestsSent: 0,
+        responsesReceived: 0,
+        timeoutCount: 0,
+        recoveryCount: 0,
+        avgResponseTime: 0,
+        lastError: null,
+    },
+    diagnosticLogs: [],
+    connectionState: 'DISCONNECTED',
+    adapterCapabilityScore: 100,
  
     setStatus: (status) => set({ status }),
     setAdapterStatus: (status) => set({ adapterStatus: status }),
@@ -126,7 +179,41 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setLastResponse: (lastResponse) => set({ lastResponse }),
     setError: (error) => set({ error }),
     setRpm: (rpm) => set({ rpm }),
-    setSensorData: (data) => set(data),
+    setSensorData: (data) => set((state) => {
+        const nextData = { ...data };
+        if (nextData.connectionState) {
+            if (['TELEMETRY_ACTIVE', 'DIAGNOSTICS_ACTIVE'].includes(nextData.connectionState)) {
+                nextData.status = 'connected';
+                nextData.ecuStatus = 'connected';
+                nextData.adapterStatus = 'connected';
+            } else if (nextData.connectionState === 'DISCONNECTED') {
+                nextData.status = 'disconnected';
+                nextData.ecuStatus = 'disconnected';
+                nextData.adapterStatus = 'disconnected';
+            } else if (['CONNECTING', 'ADAPTER_CONNECTED', 'PROTOCOL_NEGOTIATING'].includes(nextData.connectionState)) {
+                nextData.status = 'connecting';
+                nextData.adapterStatus = 'connecting';
+                nextData.ecuStatus = 'disconnected';
+            } else if (['ECU_DETECTED', 'ECU_RESPONDING'].includes(nextData.connectionState)) {
+                nextData.status = 'connecting';
+                nextData.adapterStatus = 'connected';
+                nextData.ecuStatus = 'connecting';
+            } else if (nextData.connectionState === 'ECU_NOT_FOUND') {
+                nextData.status = 'error';
+                nextData.ecuStatus = 'error';
+                nextData.adapterStatus = 'connected';
+            } else if (nextData.connectionState === 'PROTOCOL_FAILED') {
+                nextData.status = 'error';
+                nextData.ecuStatus = 'error';
+                nextData.adapterStatus = 'connected';
+            } else if (nextData.connectionState === 'HARDWARE_FATAL') {
+                nextData.status = 'error';
+                nextData.ecuStatus = 'error';
+                nextData.adapterStatus = 'error';
+            }
+        }
+        return nextData;
+    }),
     setDiagnosticMode: (active) => set((state) => {
         const nextDiag = active;
         return { 
@@ -158,6 +245,23 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     addLog: (entry) => set((state) => ({ logs: [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs] })),
     clearLogs: () => set({ logs: [] }),
     setProtocol: (protocol) => set({ protocol }),
+
+    addDiagnosticLog: (log) => set((state) => {
+        const timestamp = new Date().toLocaleTimeString('tr-TR', { hour12: false });
+        const entry = `[${timestamp}] ${log}`;
+        const newLogs = [...state.diagnosticLogs, entry];
+        if (newLogs.length > 500) {
+            newLogs.shift();
+        }
+        return { diagnosticLogs: newLogs };
+    }),
+    clearDiagnosticLogs: () => set({ diagnosticLogs: [] }),
+    resetRecoveryAttempts: () => set({ recoveryAttempts: 0 }),
+    incrementRecoveryAttempts: () => set((state) => ({ recoveryAttempts: state.recoveryAttempts + 1 })),
+    updateTelemetryStats: (newStats) => set((state) => ({
+        telemetryStats: { ...state.telemetryStats, ...newStats }
+    })),
+
     reset: () => set({
         status: 'disconnected',
         adapterStatus: 'disconnected',
@@ -180,7 +284,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         timingAdvance: null,
         fuelLevel: null,
         catalystTemp: null,
-        dtcs: [],
+        dtcs: createInitialDtcs(),
         vin: null,
         ecuId: null,
         odometer: null,
@@ -198,5 +302,22 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         pendingProRevocation: false,
         suggestedBrandFromVin: null,
         protocol: null,
+
+        supportedPids: [],
+        guardTime: 100,
+        lastSuccessfulResponseAt: null,
+        recoveryAttempts: 0,
+        watchdogTimeoutLimit: 5000,
+        telemetryStats: {
+            requestsSent: 0,
+            responsesReceived: 0,
+            timeoutCount: 0,
+            recoveryCount: 0,
+            avgResponseTime: 0,
+            lastError: null,
+        },
+        diagnosticLogs: [],
+        connectionState: 'DISCONNECTED',
+        adapterCapabilityScore: 100,
     }),
 }));

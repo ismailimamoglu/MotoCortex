@@ -17,6 +17,13 @@ export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id' | 'it' | 'ar' | 'zh' 
  * with a strict manual 7-day expiration check.
  */
 export const checkIsProStatus = (customerInfo: CustomerInfo): boolean => {
+  // Developer Backdoor check to bypass RevenueCat sandbox timeouts during local testing
+  try {
+    if (useAppStore.getState().isBackdoorPro) {
+      return true;
+    }
+  } catch (e) {}
+
   // Strict expiration date check to prevent caching/clock exploit or offline loophole
   const entitlement = customerInfo.entitlements.all['pro_access'] || customerInfo.entitlements.all['pro'];
   if (entitlement && entitlement.expirationDate) {
@@ -77,6 +84,7 @@ interface AppState {
   theme: ThemeMode;
   language: AppLanguage;
   isPro: boolean;
+  isBackdoorPro: boolean;
   hasOnboarded: boolean;
   packages: PurchasesPackage[];
   
@@ -89,6 +97,7 @@ interface AppState {
   setTheme: (theme: ThemeMode) => void;
   setLanguage: (language: AppLanguage) => Promise<void>;
   setIsPro: (isPro: boolean) => void;
+  setIsBackdoorPro: (isBackdoorPro: boolean) => void;
   setHasOnboarded: (hasOnboarded: boolean) => void;
   toggleSimulationMode: () => void;
   incrementFreeUsage: () => void; // Track trial count
@@ -107,6 +116,7 @@ export const useAppStore = create<AppState>()(
       theme: 'dark',
       language: 'en',
       isPro: false,
+      isBackdoorPro: false,
       hasOnboarded: false,
       isSimulationMode: false,
       packages: [],
@@ -120,6 +130,9 @@ export const useAppStore = create<AppState>()(
         await i18n.changeLanguage(language);
       },
       setIsPro: (isPro) => set({ isPro }),
+      setIsBackdoorPro: (isBackdoorPro) => {
+        set({ isBackdoorPro, isPro: isBackdoorPro });
+      },
       setHasOnboarded: (hasOnboarded) => set({ hasOnboarded }),
       toggleSimulationMode: () => set((state) => {
         const nextSimMode = !state.isSimulationMode;
@@ -210,25 +223,6 @@ export const useAppStore = create<AppState>()(
 
       verifyEntitlement: async () => {
         try {
-          const bypass = await AsyncStorage.getItem('bypass_pro');
-          if (bypass === 'true') {
-            const expiryStr = await AsyncStorage.getItem('bypass_pro_expiry');
-            if (expiryStr) {
-              const expiryTime = parseInt(expiryStr, 10);
-              if (!isNaN(expiryTime) && Date.now() < expiryTime) {
-                set({ isPro: true });
-                return;
-              } else {
-                // Expired! Clean up bypass
-                await AsyncStorage.removeItem('bypass_pro');
-                await AsyncStorage.removeItem('bypass_pro_expiry');
-              }
-            } else {
-              // No expiry set (legacy/fallback), keep PRO
-              set({ isPro: true });
-              return;
-            }
-          }
           // RevenueCat natively caches customerInfo and resolves with it when offline.
           const customerInfo = await Purchases.getCustomerInfo();
           const isPro = checkIsProStatus(customerInfo);
@@ -292,11 +286,11 @@ export const useAppStore = create<AppState>()(
       partialize: (state) => ({
         theme: state.theme,
         language: state.language,
-        isPro: state.isPro,
         hasOnboarded: state.hasOnboarded,
         isSimulationMode: state.isSimulationMode,
         freeUsageCount: state.freeUsageCount,
         deviceUuid: state.deviceUuid,
+        isBackdoorPro: state.isBackdoorPro,
       }),
       onRehydrateStorage: () => (state) => {
         if (state?.language) {

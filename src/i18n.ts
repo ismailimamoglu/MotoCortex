@@ -63,6 +63,8 @@ i18n
         resources,
         lng: 'en', // Uygulamanın ana dili İngilizce (açılışta ingilizce)
         fallbackLng: 'en',
+        fallbackNS: 'translation',
+        returnEmptyString: false, // Boş çeviri girildiğinde İngilizce fallback'in çalışmasını sağlar
         compatibilityJSON: 'v4',
         interpolation: {
             escapeValue: false,

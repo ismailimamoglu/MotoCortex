@@ -60,7 +60,8 @@
             "hardwareModalDesc": "Se hai bisogno di supporto o dell'attivazione manuale della licenza PRO, copia l'ID utente qui sopra e contattaci.",
             "supportEmailBody": "Ciao Team di Supporto MotoCortex,\n\n--- Info App ---\nID Utente: {{userId}}\nStato Licenza: {{license}}\nConnessione: {{connection}}\nStato Dispositivo: {{deviceStatus}}\n\n--- Messaggio ---\n",
             "deviceName": "Nome dispositivo:",
-            "simulationObd": "Simulazione OBD"
+            "simulationObd": "Simulazione OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "supportDesc": "Supporto & Contatti",
         "shareDesc": "Condividi l'app",
@@ -101,7 +102,9 @@
         "back": "Indietro",
         "chassis": "Telaio",
         "operations": "Operazioni",
-        "close": "CHIUDI"
+        "close": "CHIUDI",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -162,7 +165,12 @@
         "iosBleOnly": "Nota: i dispositivi iOS supportano solo adattatori BLE (Bluetooth Low Energy). Gli adattatori OBD2 classici non verranno visualizzati.",
         "androidClassicHint": "Nota: gli adattatori OBD2 Bluetooth classici devono essere prima associati nelle impostazioni di sistema Bluetooth di Android, altrimenti potrebbero non apparire nell'elenco di scansione.",
         "deviceNotPairedTitle": "Dispositivo non associato",
-        "deviceNotPairedDesc": "Gli adattatori OBD2 Bluetooth classici devono essere prima associati nelle impostazioni del telefono. Verrai reindirizzato alle impostazioni."
+        "deviceNotPairedDesc": "Gli adattatori OBD2 Bluetooth classici devono essere prima associati nelle impostazioni del telefono. Verrai reindirizzato alle impostazioni.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "TOCCA PER SELEZIONARE IL DISPOSITIVO",
@@ -200,7 +208,8 @@
         "mafFlow": "Flusso d'Aria MAF",
         "timingAdvance": "Anticipo Accensione",
         "fuelLevel": "Livello Carburante",
-        "catalystTemp": "Temp. Catalizzatore"
+        "catalystTemp": "Temp. Catalizzatore",
+        "layoutGauge": "INDICATORE"
     },
     "expertise": {
         "historyFound": "RILEVATA CRONOLOGIA VEICOLO!",
@@ -235,7 +244,19 @@
         "connRequiredDesc": "Si prega di connettersi al veicolo prima di avviare questa operazione.",
         "chronicFaultsTitle": "Guasti cronici statistici",
         "chronicFaultsObs": "{{code}} (Osservazione: {{days}} giorni unici / Totale: {{total}} volte)",
-        "chronicFaultsPending": "Raccolta pool di dati / Analisi delle statistiche"
+        "chronicFaultsPending": "Raccolta pool di dati / Analisi delle statistiche",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ AVVERTIMENTO DI SICUREZZA",

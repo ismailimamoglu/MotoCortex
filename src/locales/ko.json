@@ -59,7 +59,8 @@
             "hardwareModalDesc": "지원을 받거나 수동으로 PRO 라이선스 활성화를 수행하려면 위의 사용자 ID를 복사하여 당사에 문의하십시오.",
             "supportEmailBody": "안녕하세요 MotoCortex 지원팀, --- 지원정보 --- 사용자 ID:{{userId}}라이센스 상태:{{license}}링크:{{connection}}장치 상태:{{deviceStatus}}--- 귀하의 메시지 ---",
             "deviceName": "기기 이름:",
-            "simulationObd": "시뮬레이션 OBD"
+            "simulationObd": "시뮬레이션 OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "신청안내 및 안내",
         "supportDesc": "지원 및 문의",
@@ -101,7 +102,9 @@
         "back": "뒤로",
         "chassis": "차대번호",
         "operations": "작업 내역",
-        "close": "닫기"
+        "close": "닫기",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "모토 코텍스 프로",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "장치가 페어링되지 않음",
         "deviceNotPairedDesc": "클래식 Bluetooth OBD2 어댑터를 연결하기 전에 휴대폰의 Bluetooth 설정에서 페어링해야 합니다. 시스템 설정으로 이동됩니다.",
         "unsupportedDeviceTitle": "호환되지 않는 하드웨어",
-        "unsupportedDeviceDesc": "연결하려는 장치가 호환되는 OBD2 어댑터가 아니거나 필요한 서비스를 지원하지 않습니다."
+        "unsupportedDeviceDesc": "연결하려는 장치가 호환되는 OBD2 어댑터가 아니거나 필요한 서비스를 지원하지 않습니다.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "기기를 선택하려면 터치하세요.",
@@ -192,7 +200,7 @@
         "manifold": "매니폴드 kPa",
         "customizeTitle": "대시보드 설정",
         "customizeSubtitle": "화면에 표시할 센서를 선택하십시오(최대 8개).",
-        "layoutType": "레이아웃 스타일",
+        "layoutType": "레이아이웃 스타일",
         "layoutGrid": "그리드",
         "layoutList": "리스트",
         "customizeButton": "대시보드 설정",
@@ -206,7 +214,8 @@
         "mafFlow": "공기 유량 MAF",
         "timingAdvance": "점화 진각",
         "fuelLevel": "연료 레벨",
-        "catalystTemp": "촉매 온도"
+        "catalystTemp": "촉매 온도",
+        "layoutGauge": "게이지"
     },
     "expertise": {
         "historyFound": "차량 기록이 발견되었습니다!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "이 프로세스를 시작하려면 먼저 차량에 연결하세요.",
         "chronicFaultsTitle": "통계적 만성 문제",
         "chronicFaultsObs": "{{code}}(관찰:{{days}}다른 날 / 총:{{total}}회)",
-        "chronicFaultsPending": "데이터 풀 수집/통계 분석"
+        "chronicFaultsPending": "데이터 풀 수집/통계 분석",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ 보안 경고",

@@ -59,7 +59,8 @@
             "hardwareModalDesc": "Om ondersteuning te krijgen of een handmatige PRO-licentie te activeren, kopieert u de bovenstaande gebruikers-ID en neemt u contact met ons op.",
             "supportEmailBody": "Hallo MotoCortex-ondersteuningsteam, --- Applicatie-informatie --- Gebruikers-ID:{{userId}}Licentiestatus:{{license}}Link:{{connection}}Apparaatstatus:{{deviceStatus}}--- Jouw bericht ---",
             "deviceName": "Apparaatnaam:",
-            "simulationObd": "Simulatie OBD"
+            "simulationObd": "Simulatie OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Applicatie-informatie en gids",
         "supportDesc": "Ondersteuning & Contact",
@@ -101,7 +102,9 @@
         "back": "Terug",
         "chassis": "Chassis",
         "operations": "Operaties",
-        "close": "SLUITEN"
+        "close": "SLUITEN",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "Apparaat ontkoppeld",
         "deviceNotPairedDesc": "Voordat u klassieke Bluetooth-OBD2-adapters aansluit, moet u ze koppelen via de Bluetooth-instellingen van uw telefoon. U wordt doorverwezen naar de systeeminstellingen.",
         "unsupportedDeviceTitle": "Incompatibele hardware",
-        "unsupportedDeviceDesc": "Het apparaat dat u probeert aan te sluiten is geen compatibele OBD2-adapter of ondersteunt de vereiste services niet."
+        "unsupportedDeviceDesc": "Het apparaat dat u probeert aan te sluiten is geen compatibele OBD2-adapter of ondersteunt de vereiste services niet.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "RAAK AAN OM APPARAAT TE SELECTEREN",
@@ -206,7 +214,8 @@
         "mafFlow": "MAF Luchtstroom",
         "timingAdvance": "Ontstekingstijdstip",
         "fuelLevel": "Brandstofniveau",
-        "catalystTemp": "Katalysatortemp."
+        "catalystTemp": "Katalysatortemp.",
+        "layoutGauge": "METER"
     },
     "expertise": {
         "historyFound": "VOERTUIGGESCHIEDENIS GEVONDEN!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "Maak eerst verbinding met het voertuig om dit proces te starten.",
         "chronicFaultsTitle": "Statistische chronische problemen",
         "chronicFaultsObs": "{{code}}(Waarneming:{{days}}Verschillende dag / Totaal:{{total}}keer)",
-        "chronicFaultsPending": "Gegevenspool verzamelen / Statistieken analyseren"
+        "chronicFaultsPending": "Gegevenspool verzamelen / Statistieken analyseren",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ VEILIGHEIDSWAARSCHUWING",

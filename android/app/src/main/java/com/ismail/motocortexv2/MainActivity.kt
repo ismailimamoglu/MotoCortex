@@ -1,4 +1,4 @@
-package com.anonymous.MotoCortexmobile
+package com.ismail.motocortexv2
 
 import android.os.Build
 import android.os.Bundle

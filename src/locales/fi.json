@@ -59,7 +59,8 @@
             "hardwareModalDesc": "Saadaksesi tukea tai suorittaaksesi manuaalisen PRO-lisenssin aktivoinnin, kopioi yllä oleva käyttäjätunnus ja ota meihin yhteyttä.",
             "supportEmailBody": "Hei MotoCortex-tukitiimi, --- Hakemuksen tiedot --- Käyttäjätunnus:{{userId}}Lisenssin tila:{{license}}Linkki:{{connection}}Laitteen tila:{{deviceStatus}}--- Viestisi ---",
             "deviceName": "Laitteen nimi:",
-            "simulationObd": "Simulaatio OBD"
+            "simulationObd": "Simulaatio OBD",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Sovelluksen tiedot ja opas",
         "supportDesc": "Tuki ja Yhteystiedot",
@@ -101,7 +102,9 @@
         "back": "Takaisin",
         "chassis": "Alusta",
         "operations": "Toiminnot",
-        "close": "SULJE"
+        "close": "SULJE",
+        "share": "SHARE",
+        "info": "Info"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -168,7 +171,12 @@
         "deviceNotPairedTitle": "Laite on paritettu",
         "deviceNotPairedDesc": "Ennen kuin yhdistät klassiset Bluetooth OBD2 -sovittimet, sinun on muodostettava pariliitos puhelimen Bluetooth-asetuksista. Sinut ohjataan järjestelmäasetuksiin.",
         "unsupportedDeviceTitle": "Yhteensopimaton laitteisto",
-        "unsupportedDeviceDesc": "Laite, jota yrität yhdistää, ei ole yhteensopiva OBD2-sovitin tai se ei tue vaadittuja palveluita."
+        "unsupportedDeviceDesc": "Laite, jota yrität yhdistää, ei ole yhteensopiva OBD2-sovitin tai se ei tue vaadittuja palveluita.",
+        "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
+        "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
+        "sendButton": "SEND",
+        "ecuResponseLabel": "ECU RESPONSE:",
+        "adapterConnected": "ADAPTER CONNECTED (OK)"
     },
     "dashboard": {
         "selectDevice": "VALITSE LAITE KOSKETAAN",
@@ -206,7 +214,8 @@
         "mafFlow": "MAF Ilmavirtaus",
         "timingAdvance": "Sytytysennakko",
         "fuelLevel": "Polttoainetaso",
-        "catalystTemp": "Katalysaattorin Lämpö"
+        "catalystTemp": "Katalysaattorin Lämpö",
+        "layoutGauge": "MITTARI"
     },
     "expertise": {
         "historyFound": "AJONEUVON HISTORIA LÖYTYNYT!",
@@ -241,7 +250,19 @@
         "connRequiredDesc": "Yhdistä ensin ajoneuvoon aloittaaksesi tämän prosessin.",
         "chronicFaultsTitle": "Tilastolliset krooniset ongelmat",
         "chronicFaultsObs": "{{code}}(Havainto:{{days}}Eri päivä / Yhteensä:{{total}}kertaa)",
-        "chronicFaultsPending": "Tietopankin kerääminen / tilastojen analysointi"
+        "chronicFaultsPending": "Tietopankin kerääminen / tilastojen analysointi",
+        "notScanned": "Not Scanned",
+        "notScannedDesc": "Please press the scan button on the top right to read diagnostic codes.",
+        "scanFailed": "SCAN FAILED",
+        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "scannedSystems": "SCANNED SYSTEMS",
+        "moduleEngine": "Engine Control Unit (ECU)",
+        "moduleAbs": "Anti-lock Braking System (ABS)",
+        "moduleTcm": "Transmission Control Module (TCM)",
+        "moduleBcm": "Body Control Module (BCM)"
     },
     "service": {
         "safetyWarning": "⚠️ TURVALLISUUSVAROITUS",
