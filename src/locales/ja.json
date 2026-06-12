@@ -60,7 +60,18 @@
             "supportEmailBody": "MotoCortex サポート チーム、こんにちは。 --- 応募情報 --- ユーザーID:{{userId}}ライセンスステータス:{{license}}リンク:{{connection}}デバイスのステータス:{{deviceStatus}}--- メッセージ ---",
             "deviceName": "デバイス名:",
             "simulationObd": "シミュレーション OBD",
-            "noLogsToShare": "There are no diagnostic logs to share."
+            "noLogsToShare": "There are no diagnostic logs to share.",
+            "obdHealthTitle": "",
+            "txRequests": "",
+            "rxResponses": "",
+            "timeouts": "",
+            "recoveries": "",
+            "avgLatency": "",
+            "lastErrorLabel": "",
+            "shareReport": "",
+            "diagnosticLog": "",
+            "noTraffic": "",
+            "shareError": ""
         },
         "aboutAppDesc": "アプリケーション情報とガイド",
         "supportDesc": "サポートと連絡先",
@@ -104,7 +115,9 @@
         "operations": "操作履歴",
         "close": "閉じる",
         "share": "SHARE",
-        "info": "Info"
+        "info": "Info",
+        "enableDemoMode": "",
+        "exitDemoMode": ""
     },
     "paywall": {
         "crownBadge": "モト コルテックス プロ",
@@ -176,7 +189,17 @@
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
         "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
-        "adapterConnected": "ADAPTER CONNECTED (OK)"
+        "adapterConnected": "ADAPTER CONNECTED (OK)",
+        "connectDevice": "",
+        "adapterApproved": "",
+        "protocolNegotiating": "",
+        "ecuDetected": "",
+        "ecuResponding": "",
+        "protocolScanningHint": "",
+        "protocolFailed": "",
+        "ecuNotFound": "",
+        "hardwareCapabilityScore": "",
+        "hardwareFatal": ""
     },
     "dashboard": {
         "selectDevice": "タッチしてデバイスを選択します",
@@ -502,7 +525,8 @@
             "clearDtc": "エラーコードがクリアされました",
             "fuelAdaptation": "燃料適応リセット",
             "ecuReset": "ECUリセット"
-        }
+        },
+        "searchLanguage": ""
     },
     "brands": {
         "alfa_romeo": "アルファロメオ",

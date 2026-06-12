@@ -60,7 +60,18 @@
             "supportEmailBody": "안녕하세요 MotoCortex 지원팀, --- 지원정보 --- 사용자 ID:{{userId}}라이센스 상태:{{license}}링크:{{connection}}장치 상태:{{deviceStatus}}--- 귀하의 메시지 ---",
             "deviceName": "기기 이름:",
             "simulationObd": "시뮬레이션 OBD",
-            "noLogsToShare": "There are no diagnostic logs to share."
+            "noLogsToShare": "There are no diagnostic logs to share.",
+            "obdHealthTitle": "",
+            "txRequests": "",
+            "rxResponses": "",
+            "timeouts": "",
+            "recoveries": "",
+            "avgLatency": "",
+            "lastErrorLabel": "",
+            "shareReport": "",
+            "diagnosticLog": "",
+            "noTraffic": "",
+            "shareError": ""
         },
         "aboutAppDesc": "신청안내 및 안내",
         "supportDesc": "지원 및 문의",
@@ -104,7 +115,9 @@
         "operations": "작업 내역",
         "close": "닫기",
         "share": "SHARE",
-        "info": "Info"
+        "info": "Info",
+        "enableDemoMode": "",
+        "exitDemoMode": ""
     },
     "paywall": {
         "crownBadge": "모토 코텍스 프로",
@@ -176,7 +189,17 @@
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
         "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
-        "adapterConnected": "ADAPTER CONNECTED (OK)"
+        "adapterConnected": "ADAPTER CONNECTED (OK)",
+        "connectDevice": "",
+        "adapterApproved": "",
+        "protocolNegotiating": "",
+        "ecuDetected": "",
+        "ecuResponding": "",
+        "protocolScanningHint": "",
+        "protocolFailed": "",
+        "ecuNotFound": "",
+        "hardwareCapabilityScore": "",
+        "hardwareFatal": ""
     },
     "dashboard": {
         "selectDevice": "기기를 선택하려면 터치하세요.",
@@ -502,7 +525,8 @@
             "clearDtc": "에러 코드 삭제됨",
             "fuelAdaptation": "연료 적응 초기화",
             "ecuReset": "ECU 초기화"
-        }
+        },
+        "searchLanguage": ""
     },
     "brands": {
         "alfa_romeo": "알파로메오",

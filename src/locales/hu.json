@@ -60,7 +60,18 @@
             "supportEmailBody": "Kedves MotoCortex támogatási csapat! --- Alkalmazásinformációk --- Felhasználói azonosító:{{userId}}Licenc állapota:{{license}}Link:{{connection}}Eszköz állapota:{{deviceStatus}}--- Az Ön üzenete ---",
             "deviceName": "Eszköz neve:",
             "simulationObd": "Szimulációs OBD",
-            "noLogsToShare": "There are no diagnostic logs to share."
+            "noLogsToShare": "There are no diagnostic logs to share.",
+            "obdHealthTitle": "",
+            "txRequests": "",
+            "rxResponses": "",
+            "timeouts": "",
+            "recoveries": "",
+            "avgLatency": "",
+            "lastErrorLabel": "",
+            "shareReport": "",
+            "diagnosticLog": "",
+            "noTraffic": "",
+            "shareError": ""
         },
         "aboutAppDesc": "Alkalmazási információk és útmutató",
         "supportDesc": "Támogatás és Kapcsolat",
@@ -104,7 +115,9 @@
         "operations": "Műveletek",
         "close": "BEZÁRÁS",
         "share": "SHARE",
-        "info": "Info"
+        "info": "Info",
+        "enableDemoMode": "",
+        "exitDemoMode": ""
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -176,7 +189,17 @@
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
         "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
-        "adapterConnected": "ADAPTER CONNECTED (OK)"
+        "adapterConnected": "ADAPTER CONNECTED (OK)",
+        "connectDevice": "",
+        "adapterApproved": "",
+        "protocolNegotiating": "",
+        "ecuDetected": "",
+        "ecuResponding": "",
+        "protocolScanningHint": "",
+        "protocolFailed": "",
+        "ecuNotFound": "",
+        "hardwareCapabilityScore": "",
+        "hardwareFatal": ""
     },
     "dashboard": {
         "selectDevice": "Érintse meg az ESZKÖZ KIVÁLASZTÁSÁHOZ",
@@ -502,7 +525,8 @@
             "clearDtc": "Hibakódok törölve",
             "fuelAdaptation": "Üzemanyag adaptáció visszaállítása",
             "ecuReset": "ECU visszaállítása"
-        }
+        },
+        "searchLanguage": ""
     },
     "brands": {
         "alfa_romeo": "Alfa Romeo",

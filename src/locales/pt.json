@@ -60,7 +60,18 @@
             "supportEmailBody": "Olá Equipe de Suporte MotoCortex, --- Informações do aplicativo --- ID do usuário:{{userId}}Status da licença:{{license}}Ligação:{{connection}}Status do dispositivo:{{deviceStatus}}--- Sua mensagem ---",
             "deviceName": "Nome do Dispositivo:",
             "simulationObd": "Simulação OBD",
-            "noLogsToShare": "There are no diagnostic logs to share."
+            "noLogsToShare": "There are no diagnostic logs to share.",
+            "obdHealthTitle": "",
+            "txRequests": "",
+            "rxResponses": "",
+            "timeouts": "",
+            "recoveries": "",
+            "avgLatency": "",
+            "lastErrorLabel": "",
+            "shareReport": "",
+            "diagnosticLog": "",
+            "noTraffic": "",
+            "shareError": ""
         },
         "aboutAppDesc": "Informações e Guia de Aplicação",
         "supportDesc": "Suporte e Contato",
@@ -104,7 +115,9 @@
         "operations": "Operações",
         "close": "FECHAR",
         "share": "SHARE",
-        "info": "Info"
+        "info": "Info",
+        "enableDemoMode": "",
+        "exitDemoMode": ""
     },
     "paywall": {
         "crownBadge": "MOTO CÓRTEX PRO",
@@ -176,7 +189,17 @@
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
         "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
-        "adapterConnected": "ADAPTER CONNECTED (OK)"
+        "adapterConnected": "ADAPTER CONNECTED (OK)",
+        "connectDevice": "",
+        "adapterApproved": "",
+        "protocolNegotiating": "",
+        "ecuDetected": "",
+        "ecuResponding": "",
+        "protocolScanningHint": "",
+        "protocolFailed": "",
+        "ecuNotFound": "",
+        "hardwareCapabilityScore": "",
+        "hardwareFatal": ""
     },
     "dashboard": {
         "selectDevice": "TOQUE PARA SELECIONAR O DISPOSITIVO",
@@ -502,7 +525,8 @@
             "clearDtc": "Códigos de Erro Apagados",
             "fuelAdaptation": "Redefinição de Adaptação de Combustível",
             "ecuReset": "Redefinição do ECU"
-        }
+        },
+        "searchLanguage": ""
     },
     "brands": {
         "alfa_romeo": "Alfa Romeo",

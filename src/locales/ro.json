@@ -60,7 +60,18 @@
             "supportEmailBody": "Salutare Echipa de asistență MotoCortex, --- Informații despre aplicație --- ID utilizator:{{userId}}Stare licență:{{license}}Link:{{connection}}Stare dispozitiv:{{deviceStatus}}--- Mesajul dvs. ---",
             "deviceName": "Nume dispozitiv:",
             "simulationObd": "Simulare OBD",
-            "noLogsToShare": "There are no diagnostic logs to share."
+            "noLogsToShare": "There are no diagnostic logs to share.",
+            "obdHealthTitle": "",
+            "txRequests": "",
+            "rxResponses": "",
+            "timeouts": "",
+            "recoveries": "",
+            "avgLatency": "",
+            "lastErrorLabel": "",
+            "shareReport": "",
+            "diagnosticLog": "",
+            "noTraffic": "",
+            "shareError": ""
         },
         "aboutAppDesc": "Informații despre aplicație și ghid",
         "supportDesc": "Suport și Contact",
@@ -104,7 +115,9 @@
         "operations": "Operațiuni",
         "close": "ÎNCHIDE",
         "share": "SHARE",
-        "info": "Info"
+        "info": "Info",
+        "enableDemoMode": "",
+        "exitDemoMode": ""
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -176,7 +189,17 @@
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
         "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
-        "adapterConnected": "ADAPTER CONNECTED (OK)"
+        "adapterConnected": "ADAPTER CONNECTED (OK)",
+        "connectDevice": "",
+        "adapterApproved": "",
+        "protocolNegotiating": "",
+        "ecuDetected": "",
+        "ecuResponding": "",
+        "protocolScanningHint": "",
+        "protocolFailed": "",
+        "ecuNotFound": "",
+        "hardwareCapabilityScore": "",
+        "hardwareFatal": ""
     },
     "dashboard": {
         "selectDevice": "Atingeți pentru a SELECTA DISPOZITIVUL",
@@ -502,7 +525,8 @@
             "clearDtc": "Coduri de eroare șterse",
             "fuelAdaptation": "Resetare adaptare combustibil",
             "ecuReset": "Resetare ECU"
-        }
+        },
+        "searchLanguage": ""
     },
     "brands": {
         "alfa_romeo": "Alfa Romeo",

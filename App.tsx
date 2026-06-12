@@ -16,7 +16,7 @@ import HardwareHealthModal from './src/components/HardwareHealthModal';
 import HiddenFeaturesModal from './src/components/HiddenFeaturesModal';
 import { useBluetoothStore } from './src/store/useBluetoothStore';
 import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
-import './src/i18n';
+import i18n from './src/i18n';
 import { useTranslation } from 'react-i18next';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
@@ -3138,6 +3138,28 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
 }
 
 export default function App() {
+  const [initialized, setInitialized] = useState(i18n.isInitialized);
+
+  useEffect(() => {
+    if (!i18n.isInitialized) {
+      const handleInitialized = () => {
+        setInitialized(true);
+      };
+      i18n.on('initialized', handleInitialized);
+      return () => {
+        i18n.off('initialized', handleInitialized);
+      };
+    }
+  }, []);
+
+  if (!initialized) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#00ffff" />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <MainApp />

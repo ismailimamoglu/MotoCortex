@@ -60,7 +60,18 @@
             "supportEmailBody": "您好 MotoCortex 支持团队， --- 应用信息 --- 用户 ID：{{userId}}许可证状态：{{license}}链接：{{connection}}设备状态：{{deviceStatus}}--- 您的留言 ---",
             "deviceName": "设备名称:",
             "simulationObd": "模拟 OBD",
-            "noLogsToShare": "There are no diagnostic logs to share."
+            "noLogsToShare": "There are no diagnostic logs to share.",
+            "obdHealthTitle": "",
+            "txRequests": "",
+            "rxResponses": "",
+            "timeouts": "",
+            "recoveries": "",
+            "avgLatency": "",
+            "lastErrorLabel": "",
+            "shareReport": "",
+            "diagnosticLog": "",
+            "noTraffic": "",
+            "shareError": ""
         },
         "aboutAppDesc": "申请信息和指南",
         "supportDesc": "支持与联系",
@@ -104,7 +115,9 @@
         "operations": "操作历史",
         "close": "关闭",
         "share": "SHARE",
-        "info": "Info"
+        "info": "Info",
+        "enableDemoMode": "",
+        "exitDemoMode": ""
     },
     "paywall": {
         "crownBadge": "摩托皮质专业版",
@@ -176,7 +189,17 @@
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
         "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
-        "adapterConnected": "ADAPTER CONNECTED (OK)"
+        "adapterConnected": "ADAPTER CONNECTED (OK)",
+        "connectDevice": "",
+        "adapterApproved": "",
+        "protocolNegotiating": "",
+        "ecuDetected": "",
+        "ecuResponding": "",
+        "protocolScanningHint": "",
+        "protocolFailed": "",
+        "ecuNotFound": "",
+        "hardwareCapabilityScore": "",
+        "hardwareFatal": ""
     },
     "dashboard": {
         "selectDevice": "触摸选择设备",
@@ -502,7 +525,8 @@
             "clearDtc": "故障码已清除",
             "fuelAdaptation": "燃油自适应重置",
             "ecuReset": "ECU重置"
-        }
+        },
+        "searchLanguage": ""
     },
     "brands": {
         "alfa_romeo": "阿尔法·罗密欧",

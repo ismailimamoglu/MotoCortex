@@ -60,7 +60,18 @@
             "supportEmailBody": "Hej MotoCortex Support Team, --- Ansökningsinformation --- Användar-ID:{{userId}}Licensstatus:{{license}}Länk:{{connection}}Enhetsstatus:{{deviceStatus}}--- Ditt meddelande ---",
             "deviceName": "Enhetsnamn:",
             "simulationObd": "Simulering OBD",
-            "noLogsToShare": "There are no diagnostic logs to share."
+            "noLogsToShare": "There are no diagnostic logs to share.",
+            "obdHealthTitle": "",
+            "txRequests": "",
+            "rxResponses": "",
+            "timeouts": "",
+            "recoveries": "",
+            "avgLatency": "",
+            "lastErrorLabel": "",
+            "shareReport": "",
+            "diagnosticLog": "",
+            "noTraffic": "",
+            "shareError": ""
         },
         "aboutAppDesc": "Ansökningsinformation och guide",
         "supportDesc": "Support & Kontakt",
@@ -104,7 +115,9 @@
         "operations": "Operationer",
         "close": "STÄNG",
         "share": "SHARE",
-        "info": "Info"
+        "info": "Info",
+        "enableDemoMode": "",
+        "exitDemoMode": ""
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -176,7 +189,17 @@
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
         "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
-        "adapterConnected": "ADAPTER CONNECTED (OK)"
+        "adapterConnected": "ADAPTER CONNECTED (OK)",
+        "connectDevice": "",
+        "adapterApproved": "",
+        "protocolNegotiating": "",
+        "ecuDetected": "",
+        "ecuResponding": "",
+        "protocolScanningHint": "",
+        "protocolFailed": "",
+        "ecuNotFound": "",
+        "hardwareCapabilityScore": "",
+        "hardwareFatal": ""
     },
     "dashboard": {
         "selectDevice": "TRYCK FÖR ATT VÄLJA ENHET",
@@ -502,7 +525,8 @@
             "clearDtc": "Felkoder raderade",
             "fuelAdaptation": "Återställning av bränsleadaptation",
             "ecuReset": "ECU-återställning"
-        }
+        },
+        "searchLanguage": ""
     },
     "brands": {
         "alfa_romeo": "Alfa Romeo",
