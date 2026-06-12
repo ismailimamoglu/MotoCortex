@@ -64,7 +64,7 @@ export default function BentoGrid({
   const dtcs = useBluetoothStore((state) => state.dtcs);
   const ecuStatus = useBluetoothStore((state) => state.ecuStatus);
   const activeSessionVehicle = useTelemetryStore((state) => state.activeSessionVehicle);
-  const isConnected = ecuStatus === 'connected' && !!activeSessionVehicle;
+  const isConnected = ecuStatus === 'connected';
 
   const dtcCount = dtcs.length;
   const isClean = dtcCount === 0;
