@@ -1,6 +1,16 @@
 import BluetoothService from './BluetoothService';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import * as Logger from '../services/Logger';
+import CommandScheduler from '../core/queue/CommandScheduler';
+import { RxState, ELMParser } from '../core/parser/ELMParser';
+import { BLEFragmentationBuffer } from '../core/parser/BLEFragmentationBuffer';
+import ISOTPDecoder from '../core/parser/ISOTPDecoder';
+import KWPFrameDecoder from '../core/parser/KWPFrameDecoder';
+import FlowControlManager from '../core/parser/FlowControlManager';
+import SessionHealthMonitor from '../core/monitor/SessionHealthMonitor';
+import DiagnosticSessionRecorder from '../core/monitor/DiagnosticSessionRecorder';
+import AppLifecycleCoordinator from '../core/transport/AppLifecycleCoordinator';
+import { PidRegistry } from '../core/pids/PidRegistry';
 
 /**
  * Event-loop friendly high-precision sleep helper.
@@ -29,27 +39,55 @@ export function preciseSleep(ms: number): Promise<void> {
 }
 
 class OBDCommandQueue {
-    private queueChain: Promise<void> = Promise.resolve();
-    private rawResponseBuffer = '';
-    private blacklist: Set<string> = new Set();
-    private currentSessionId = 0;
-    
-    // Silence detection timeout
-    private silenceTimeout: any = null;
+    private rawResponseBuffer: string;
+    private blacklist: Set<string>;
+    private currentSessionId: number;
+    private silenceTimeout: any;
 
-    // Active command tracking
-    private activeResolver: ((value: string) => void) | null = null;
-    private activeRejecter: ((reason: any) => void) | null = null;
-    private activeSessionId = 0;
-    private activeCommand = '';
-    private commandStartTimestamp = 0;
-    private commandTimeoutTimer: any = null;
+    private activeResolver: ((value: string) => void) | null;
+    private activeRejecter: ((reason: any) => void) | null;
+    private activeSessionId: number;
+    private activeCommand: string;
+    private commandStartTimestamp: number;
+    private commandTimeoutTimer: any;
+    private sessionCancellationError: Error | null;
     
     private readonly DEFAULT_TIMEOUT_MS = 2000;
-    private clearListeners: (() => void)[] = [];
+    private clearListeners: (() => void)[];
+
+    private elmParser: ELMParser;
+    private fragmentBuffer: BLEFragmentationBuffer;
 
     constructor() {
+        this.rawResponseBuffer = '';
+        this.blacklist = new Set();
+        this.currentSessionId = 0;
+        this.silenceTimeout = null;
+        this.sessionCancellationError = null;
+
+        this.activeResolver = null;
+        this.activeRejecter = null;
+        this.activeSessionId = 0;
+        this.activeCommand = '';
+        this.commandStartTimestamp = 0;
+        this.commandTimeoutTimer = null;
+        
+        this.clearListeners = [];
+        this.elmParser = new ELMParser();
+        this.fragmentBuffer = new BLEFragmentationBuffer();
+
         BluetoothService.onDataReceived((data: string) => this.handleData(data));
+        CommandScheduler.setExecutionFunction((command: string, timeoutMs?: number) => this.executeCommand(command, timeoutMs));
+
+        AppLifecycleCoordinator.onBackground(() => {
+            useBluetoothStore.getState().addLog("LIFECYCLE: App backgrounded. Flushing queue and halting scheduler.");
+            this.clear(new Error("APP_BACKGROUNDED"));
+        });
+        
+        AppLifecycleCoordinator.onForeground(() => {
+            useBluetoothStore.getState().addLog("LIFECYCLE: App foregrounded. Resuming queue and flushing UART.");
+            BluetoothService.write('\r').catch(() => {});
+        });
     }
 
     onClear(callback: () => void) {
@@ -61,22 +99,33 @@ class OBDCommandQueue {
     }
 
     add(command: string, timeoutMs?: number): Promise<string> {
+        const cleanCmd = command.replace(/\s+/g, '').toUpperCase();
+        
+        const isTelemetry = cleanCmd.startsWith('010C') || cleanCmd.startsWith('010D') || cleanCmd.startsWith('0105') || cleanCmd.startsWith('0111') || cleanCmd.startsWith('0104') || cleanCmd.startsWith('012F');
+        const priority = isTelemetry ? 'HIGH' : 'LOW';
+        const estimatedCost = isTelemetry ? 30 : 150;
+
         const commandSessionId = this.currentSessionId;
         return new Promise<string>((resolve, reject) => {
-            // Queue execution inside the isolated sequential mutex chain
-            this.queueChain = this.queueChain
-                .then(() => {
+            CommandScheduler.add(command, priority, estimatedCost, timeoutMs)
+                .then((result) => {
                     if (commandSessionId !== this.currentSessionId) {
-                        throw new Error('SESSION_CANCELLED');
+                        reject(new Error('SESSION_CANCELLED'));
+                    } else {
+                        resolve(result);
                     }
-                    return this.executeCommand(command, timeoutMs);
                 })
-                .then(
-                    (result) => resolve(result),
-                    (err) => {
+                .catch((err) => {
+                    if (commandSessionId !== this.currentSessionId) {
+                        if (err === this.sessionCancellationError || (this.sessionCancellationError && err && err.message === this.sessionCancellationError.message)) {
+                            reject(err);
+                        } else {
+                            reject(new Error('SESSION_CANCELLED'));
+                        }
+                    } else {
                         reject(err);
                     }
-                );
+                });
         });
     }
 
@@ -91,6 +140,9 @@ class OBDCommandQueue {
             this.activeResolver = resolve;
             this.activeRejecter = reject;
             this.activeCommand = command;
+            
+            this.elmParser.startCommand();
+            this.fragmentBuffer.clear();
             this.rawResponseBuffer = '';
             this.commandStartTimestamp = Date.now();
 
@@ -98,9 +150,9 @@ class OBDCommandQueue {
             const store = useBluetoothStore.getState();
 
             store.addDiagnosticLog(`TX: ${command}`);
-            store.updateTelemetryStats({
-                requestsSent: store.telemetryStats.requestsSent + 1
-            });
+            SessionHealthMonitor.recordRequest();
+            DiagnosticSessionRecorder.recordTx(command);
+
             store.addLog(`TRANSPORT_BUSY_ON: command=${command}`);
             store.addLog(`TX: ${command}`);
             Logger.log('OBD_WRITE', command);
@@ -110,6 +162,8 @@ class OBDCommandQueue {
                 const errMsg = `Timeout: ${command}`;
                 store.addLog(`ERR: ${errMsg}`);
                 Logger.log('OBD_TIMEOUT', `Timeout sending command: ${command}`);
+                SessionHealthMonitor.recordTimeout();
+                DiagnosticSessionRecorder.recordErr(command, errMsg);
                 this.finishCommand(new Error(errMsg));
             }, actualTimeoutMs);
 
@@ -118,7 +172,7 @@ class OBDCommandQueue {
                 clearTimeout(this.silenceTimeout);
             }
             this.silenceTimeout = setTimeout(() => {
-                if (this.rawResponseBuffer.length > 0) {
+                if (this.elmParser.getRawResponse().length > 0) {
                     this.completeCommandFlow();
                 }
             }, 50);
@@ -146,22 +200,25 @@ class OBDCommandQueue {
         }
 
         Logger.log('OBD_READ_CHUNK', chunk);
-        this.rawResponseBuffer += chunk;
+        
+        this.fragmentBuffer.append(chunk);
+        
+        const rxState = this.elmParser.appendChunk(chunk);
 
-        if (this.rawResponseBuffer.length > 4096) {
-            this.rawResponseBuffer = '';
+        if (this.elmParser.getRawResponse().length > 4096) {
             useBluetoothStore.getState().addLog('ERR: Buffer Overflow (Dropped)');
+            SessionHealthMonitor.recordParseError();
             this.finishCommand(new Error('BUFFER_OVERFLOW'));
             return;
         }
 
-        const trimmed = this.rawResponseBuffer.trim();
-        if (trimmed.endsWith('>')) {
+        const trimmed = this.elmParser.getRawResponse().trim();
+        if (rxState === RxState.PROMPT_RECEIVED || trimmed.endsWith('>')) {
             this.completeCommandFlow();
         } else {
             // Debounce silence detector: reschedule timeout if prompt character is not received
             this.silenceTimeout = setTimeout(() => {
-                if (this.rawResponseBuffer.length > 0) {
+                if (this.elmParser.getRawResponse().length > 0) {
                     this.completeCommandFlow();
                 }
             }, 50);
@@ -174,18 +231,34 @@ class OBDCommandQueue {
             this.silenceTimeout = null;
         }
 
-        const rawResponse = this.rawResponseBuffer.trim();
-        let cleanResponse = rawResponse;
+        const rawResponse = this.elmParser.getRawResponse();
+        const sanitized = this.elmParser.sanitize(rawResponse, this.activeCommand);
+        
+        const uniqueTokens = this.structuralDeduplicate(sanitized);
 
-        if (cleanResponse.endsWith('>')) {
-            cleanResponse = cleanResponse.substring(0, cleanResponse.length - 1).trim();
+        let decoded = '';
+        
+        const isCanMultiFrame = uniqueTokens.some(line => {
+            const clean = line.toUpperCase().replace(/\s+/g, '');
+            return /(7E810|18DAF11010|7E82[0-9A-F]|18DAF1102[0-9A-F])/.test(clean);
+        });
+
+        const store = useBluetoothStore.getState();
+        const activeProtocol = store.protocol || '';
+        const isKLineProtocol = activeProtocol === '4' || activeProtocol === '5' || activeProtocol.includes('KWP') || activeProtocol.includes('9141');
+
+        if (isCanMultiFrame) {
+            decoded = ISOTPDecoder.decode(uniqueTokens);
+            
+            if (FlowControlManager.shouldInjectManualFlowControl(uniqueTokens)) {
+                store.addLog("TX Flow Control: 30 00 00");
+                BluetoothService.write("30 00 00\r").catch(() => {});
+            }
+        } else if (isKLineProtocol) {
+            decoded = KWPFrameDecoder.decode(uniqueTokens);
+        } else {
+            decoded = this.isoTpDecoder(uniqueTokens, this.activeCommand);
         }
-
-        // Token-Based structural deduplication (replaces blind regex calls)
-        const uniqueTokens = this.structuralDeduplicate(cleanResponse);
-
-        // Lightweight multi-frame ISO-TP parser
-        const decoded = this.isoTpDecoder(uniqueTokens, this.activeCommand);
 
         this.finishCommand(null, decoded);
     }
@@ -196,7 +269,6 @@ class OBDCommandQueue {
         for (const line of lines) {
             const trimmed = line.trim();
             if (!trimmed) continue;
-            // Discard consecutive duplicates
             if (uniqueLines.length > 0 && uniqueLines[uniqueLines.length - 1] === trimmed) {
                 continue; 
             }
@@ -251,11 +323,9 @@ class OBDCommandQueue {
             if (hasSpaces) {
                 const tokens = cleanLine.split(/\s+/);
                 
-                // 1. Filter and Strip CAN Header if present
                 if (tokens.length > 0) {
                     const first = tokens[0].toUpperCase();
                     if (/^(7E[8-9A-F]|18DAF1[0-9A-F]{2})$/.test(first)) {
-                        // STRICT Engine ECU Filter: If it is not Engine (7E8 / 18DAF110), discard the line!
                         if (first !== '7E8' && first !== '18DAF110') {
                             continue; 
                         }
@@ -263,7 +333,6 @@ class OBDCommandQueue {
                     }
                 }
                 
-                // 2. Strip frame index prefixes
                 if (tokens.length > 0) {
                     const first = tokens[0].toUpperCase();
                     if (/^\d+:$/.test(first)) {
@@ -271,16 +340,15 @@ class OBDCommandQueue {
                     }
                 }
                 
-                // 3. Strip ISO-TP protocol control bytes
                 if (tokens.length > 0) {
                     const pci = tokens[0].toUpperCase();
                     if (pci === '10' && tokens.length > 1) {
-                        tokens.shift(); // remove 10
-                        tokens.shift(); // remove length byte
+                        tokens.shift();
+                        tokens.shift();
                     } else if (/^2[0-9A-F]$/.test(pci)) {
-                        tokens.shift(); // remove 2X
+                        tokens.shift();
                     } else if (/^0[1-7]$/.test(pci)) {
-                        tokens.shift(); // remove 0X
+                        tokens.shift();
                     }
                 }
                 
@@ -288,20 +356,18 @@ class OBDCommandQueue {
             } else {
                 let upperLine = cleanLine.toUpperCase();
                 
-                // 1. Filter and Strip CAN Header if present (compact format)
                 if (upperLine.startsWith('7E8')) {
                     cleanLine = cleanLine.substring(3);
                     upperLine = upperLine.substring(3);
                 } else if (upperLine.startsWith('7E9') || upperLine.startsWith('7EA') || upperLine.startsWith('7EB') || upperLine.startsWith('7EC') || upperLine.startsWith('7ED') || upperLine.startsWith('7EE') || upperLine.startsWith('7EF')) {
-                    continue; // Skip non-engine headers
+                    continue;
                 } else if (upperLine.startsWith('18DAF110')) {
                     cleanLine = cleanLine.substring(8);
                     upperLine = upperLine.substring(8);
                 } else if (upperLine.startsWith('18DAF1')) {
-                    continue; // Skip non-engine 29-bit CAN headers
+                    continue;
                 }
 
-                // 2. Strip frame index prefixes
                 const frameNumMatch = upperLine.match(/^(\d+:)/);
                 if (frameNumMatch) {
                     const len = frameNumMatch[1].length;
@@ -309,7 +375,6 @@ class OBDCommandQueue {
                     upperLine = upperLine.substring(len);
                 }
 
-                // 3. Strip ISO-TP protocol control bytes
                 if (upperLine.startsWith('10') && upperLine.length >= 4) {
                     cleanLine = cleanLine.substring(4);
                 } else if (/^2[0-9A-F]/.test(upperLine)) {
@@ -351,58 +416,86 @@ class OBDCommandQueue {
             if (hex.length >= 8) d = parseInt(hex.substring(6, 8), 16);
 
             switch (p) {
-                case '0C': // RPM
-                    if (!isNaN(a) && !isNaN(b)) useBluetoothStore.getState().setRpm(Math.round(((a * 256) + b) / 4));
+                case '0C':
+                    if (!isNaN(a) && !isNaN(b)) {
+                        const rpm = Math.round(((a * 256) + b) / 4);
+                        const storeState = useBluetoothStore.getState();
+                        const prevRpm = storeState.rpm;
+                        const lastSuccess = storeState.lastSuccessfulResponseAt || Date.now();
+                        const elapsed = Date.now() - lastSuccess;
+                        const pidDef = PidRegistry.getPid('01', '0C');
+                        if (pidDef && PidRegistry.validateTemporalSanity(pidDef, rpm, prevRpm, elapsed)) {
+                            storeState.setRpm(rpm);
+                        } else if (pidDef && prevRpm !== null) {
+                            storeState.addLog(`TEMPORAL_SANITY: Dropped RPM jump anomaly. Prev: ${prevRpm}, New: ${rpm}, Elapsed: ${elapsed}ms`);
+                        } else {
+                            storeState.setRpm(rpm);
+                        }
+                    }
                     break;
-                case '0D': // Speed
-                    if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ speed: a });
+                case '0D':
+                    if (!isNaN(a)) {
+                        const speed = a;
+                        const storeState = useBluetoothStore.getState();
+                        const prevSpeed = storeState.speed;
+                        const lastSuccess = storeState.lastSuccessfulResponseAt || Date.now();
+                        const elapsed = Date.now() - lastSuccess;
+                        const pidDef = PidRegistry.getPid('01', '0D');
+                        if (pidDef && PidRegistry.validateTemporalSanity(pidDef, speed, prevSpeed, elapsed)) {
+                            storeState.setSensorData({ speed });
+                        } else if (pidDef && prevSpeed !== null) {
+                            storeState.addLog(`TEMPORAL_SANITY: Dropped Speed jump anomaly. Prev: ${prevSpeed}, New: ${speed}, Elapsed: ${elapsed}ms`);
+                        } else {
+                            storeState.setSensorData({ speed });
+                        }
+                    }
                     break;
-                case '05': // Coolant
+                case '05':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ coolant: a - 40 });
                     break;
-                case '11': // Throttle
+                case '11':
                 case '49':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ throttle: Math.round((a * 100) / 255) });
                     break;
-                case '04': // Engine Load
+                case '04':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ engineLoad: Math.round((a * 100) / 255) });
                     break;
-                case '2F': // Fuel Level
+                case '2F':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ fuelLevel: Math.round((a * 100) / 255) });
                     break;
-                case '0F': // Intake Temp
+                case '0F':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ intakeAirTemp: a - 40 });
                     break;
-                case '46': // Ambient Temp
+                case '46':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ ambientTemp: a - 40 });
                     break;
-                case '5C': // Oil Temp
+                case '5C':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ oilTemp: a - 40 });
                     break;
-                case '0B': // Manifold Pressure
+                case '0B':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ manifoldPressure: a });
                     break;
-                case '10': // MAF
+                case '10':
                     if (!isNaN(a) && !isNaN(b)) useBluetoothStore.getState().setSensorData({ mafFlow: Number((((a * 256) + b) / 100).toFixed(2)) });
                     break;
-                case '0E': // Timing Advance
+                case '0E':
                     if (!isNaN(a)) useBluetoothStore.getState().setSensorData({ timingAdvance: Number((a / 2 - 64).toFixed(1)) });
                     break;
-                case '3C': // Catalyst Temp
+                case '3C':
                     if (!isNaN(a) && !isNaN(b)) useBluetoothStore.getState().setSensorData({ catalystTemp: Number((((a * 256) + b) / 10 - 40).toFixed(1)) });
                     break;
-                case '42': // Voltage
+                case '42':
                     if (!isNaN(a) && !isNaN(b)) useBluetoothStore.getState().setSensorData({ voltage: (((a * 256) + b) / 1000).toFixed(2) + 'V' });
                     break;
-                case 'A6': // Odometer
+                case 'A6':
                     if (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) {
                         useBluetoothStore.getState().setSensorData({ odometer: Math.round(((a * 16777216) + (b * 65536) + (c * 256) + d) / 10) });
                     }
                     break;
-                case '31': // Distance Since Cleared
+                case '31':
                     if (!isNaN(a) && !isNaN(b)) useBluetoothStore.getState().setSensorData({ distanceSinceCleared: (a * 256) + b });
                     break;
-                case '21': // Distance MIL on
+                case '21':
                     if (!isNaN(a) && !isNaN(b)) useBluetoothStore.getState().setSensorData({ distanceMilOn: (a * 256) + b });
                     break;
             }
@@ -437,13 +530,12 @@ class OBDCommandQueue {
                 }
                 const startIndex = clean.indexOf('43');
                 if (startIndex !== -1) {
-                    let payload = clean.substring(startIndex + 2); // Strip Mode 03 header '43'
+                    let payload = clean.substring(startIndex + 2);
                     
                     if (payload.length >= 2) {
                         const countByte = parseInt(payload.substring(0, 2), 16);
-                        // If count byte * 4 is less than or equal to the remaining string length, it represents count (CAN-bus)
                         if (!isNaN(countByte) && countByte > 0 && countByte * 4 <= payload.length - 2) {
-                            payload = payload.substring(2); // Skip count byte
+                            payload = payload.substring(2);
                         }
                     }
 
@@ -465,7 +557,6 @@ class OBDCommandQueue {
                     }
                 }
             }
-            // Deduplicate the scanned codes
             const uniqueDtcs = Array.from(new Set(dtcs));
             useBluetoothStore.getState().setSensorData({ dtcs: uniqueDtcs });
         } else if (command === '04') {
@@ -606,15 +697,13 @@ class OBDCommandQueue {
                 const isTimeout = error.message && error.message.includes('Timeout');
                 store.addDiagnosticLog(`ERR: ${cmd} - ${error.message || error}`);
                 if (isTimeout) {
-                    store.updateTelemetryStats({
-                        timeoutCount: store.telemetryStats.timeoutCount + 1,
-                        lastError: error.message
-                    });
+                    SessionHealthMonitor.recordTimeout();
                 } else {
                     store.updateTelemetryStats({
                         lastError: error.message || String(error)
                     });
                 }
+                DiagnosticSessionRecorder.recordErr(cmd, error.message || String(error));
                 Logger.log('OBD_ERROR', `Cmd: ${cmd} - Error: ${error.message || error}`);
                 rejecter(error);
             } else {
@@ -622,7 +711,11 @@ class OBDCommandQueue {
                 useBluetoothStore.getState().addLog(`RX: ${result}`);
                 Logger.log('OBD_READ_RESPONSE', `Cmd: ${cmd} - Resp: ${result}`);
 
+                const elapsed = Date.now() - this.commandStartTimestamp;
+                SessionHealthMonitor.recordResponse(elapsed);
+
                 if (result) {
+                    DiagnosticSessionRecorder.recordRx(cmd, result, elapsed);
                     const cleanCompact = result.replace(/\s+/g, '').toUpperCase();
                     if (/^(41|42|43|47|49)/.test(cleanCompact)) {
                         store.setSensorData({
@@ -633,16 +726,6 @@ class OBDCommandQueue {
                     this.parseResponse(cmd, result);
                 }
 
-                const elapsed = Date.now() - this.commandStartTimestamp;
-                const oldStats = store.telemetryStats;
-                const newReceived = oldStats.responsesReceived + 1;
-                const newAvg = Math.round(((oldStats.avgResponseTime * oldStats.responsesReceived) + elapsed) / newReceived);
-
-                store.updateTelemetryStats({
-                    responsesReceived: newReceived,
-                    avgResponseTime: newAvg
-                });
-
                 store.resetRecoveryAttempts();
                 resolver(result || '');
             }
@@ -651,8 +734,11 @@ class OBDCommandQueue {
 
     clear(error: Error = new Error('CONNECTION_LOST')) {
         useBluetoothStore.getState().addLog(`QUEUE_CLEAR: reason=${error.message || String(error)}`);
+        this.sessionCancellationError = error;
         this.currentSessionId++;
         
+        CommandScheduler.clear(error, new Error('SESSION_CANCELLED'));
+
         if (this.commandTimeoutTimer) {
             clearTimeout(this.commandTimeoutTimer);
             this.commandTimeoutTimer = null;
@@ -671,10 +757,9 @@ class OBDCommandQueue {
             try { rejecter(error); } catch {}
         }
 
-        this.queueChain = Promise.resolve();
         this.rawResponseBuffer = '';
+        this.fragmentBuffer.clear();
         
-        // Auto-retry/clear action: flush hardware byte leftovers
         BluetoothService.write('\r').catch(err => {
             useBluetoothStore.getState().addLog(`ERR: Hardware flush write fail: ${err.message || String(err)}`);
         });

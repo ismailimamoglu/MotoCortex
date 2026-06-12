@@ -1,77 +1,59 @@
-# MotoCortex Global OBD2 Uyumluluk ve Kararlılık Planı v2.0 (Genişletilmiş Revizyon)
+# MotoCortex Global OBD2 Uyumluluk ve Kararlılık Planı v5.2 (Dondurulmuş Nihai Sürüm)
 
-Bu plan, **mimar1.md**, **mimar2.md** ve yeni eklenen **mimar3.md** (Donanımsal K-Line & Wake-Up Pulse Sınırlılıkları) raporlarını birleştirerek, sahadaki eski/uyumsuz ECU'lar ve kalitesiz klon adaptörlerden kaynaklanan bağlantı kayıplarını çözmek üzere hazırlanmış kapsamlı ve detaylı bir aksiyon planıdır.
-
----
-
-## 1. Tespit Edilen Yapısal Problemler ve Analiz
-
-1.  **K-Line Donanımsal Eksiklik (Transceiver Fiziksel Hatası)**: Ucuz Çin malı ELM327 v2.1 klonlarının çoğunda K-Line sinyallerini taşıyacak donanımsal alıcı-verici (transceiver) çipi eksiktir. Adaptöre yazılımsal olarak `AT SP 5` veya `AT SP 3` gönderilse bile elektriksel olarak hatta sinyal basılamaz.
-2.  **Yanıtsız Kapasite Sorguları (01 00 Blokesi)**: 2011 Dacia Logan gibi eski araç ECU'ları standart `01 00` (Kapasite Keşfi) komutuna yanıt vermeyi reddedebilir. FSM (Durum Makinesi) bu sorgudan yanıt alamayınca protokolün başarısız olduğunu düşünüp bağlantıyı koparır.
-3.  **Yetersiz İlklendirme Akımı (ECU Wake-Up Sorunu)**: Renault/Dacia grubu K-Line araçları, ECU'yu uyandırmak için 5-Baud yavaş ilklendirme (Slow Init) sinyaline ihtiyaç duyar. Standart `AT SP 0` bu elektriksel uyarımı gönderemez.
-4.  **Kullanıcının Karanlıkta Kalması**: Adaptör bağlandığı halde ECU'ya ulaşılamadığında ekranda sonsuza kadar dönen bir yüklenme animasyonu kalır. Sorunun telefon/uygulama kaynaklı mı yoksa sahte donanım kaynaklı mı olduğu kullanıcıya dürüstçe açıklanmamaktadır.
+Bu plan, **mimar1.md**, **mimar2.md** ve **mimar3.md** raporlarındaki tüm mimari geri bildirimleri eksiksiz karşılayacak şekilde güncellenmiş ve **v5.2 Nihai Sürüm (Architecture Frozen)** seviyesine yükseltilmiştir. Bu mimari çekirdek (Core OBD2 Framework), MotoCortex'i Torque Pro ve Car Scanner kalitesinde global bir oyuncu yapacak altyapıya sahiptir.
 
 ---
 
-## 2. Somut Revizyon ve Çözüm Planı
+## 1. 6 Katmanlı Mimari Yapı (6-Layer Diagnostic Stack)
 
-```mermaid
-graph TD
-    A[Adaptör Bağlantısı] --> B{Yetenek Testi: AT AL / AT H1}
-    B -- ? veya ERROR fırlatır --> C[Hardware Blacklist: K-Line Desteklemeyen Klon Hatası Fırlat]
-    B -- Başarılı --> D{AT SP 0 ile Başlat}
-    D -- 01 0C Sorgusu Başarılı --> E[Bağlantıyı Doğrula: TELEMETRY_ACTIVE]
-    D -- 01 0C Başarısız veya Hata --> F[Fiziksel Uyandırma ve Fallback Ağacı]
-    F --> G[Zorla AT Z -> AT E0 -> AT ST FF -> AT IIA 10 -> AT SI]
-    G --> H{Protokol Sırayla Dene: SP 6 -> SP 7 -> SP 5}
-    H -- 01 0C ile Test Et --> I[Başarılı: Bağlan]
-    H -- Tümü Başarısız --> J[Hata Raporla]
-```
+Nesne yönelimli ve katı izolasyon kurallarına dayalı olarak kod tabanını 7 mikro modüle böldük ve "God Object" kilitlenmelerini ortadan kaldırdık:
 
-### Faz 1: Donanım Kara Listesi ve Hızlı Teşhis (Hardware Blacklisting)
-Kullanıcıyı boşuna bekletmemek adına, adaptöre bağlandığımız ilk saniyede K-Line donanım testi gerçekleştirilecektir.
-
-*   **Aksiyon**: `initializeAndCheckEcu` başlangıcında adaptöre `AT AL` (Uzun mesajlara izin ver) ve `AT H1` (Header göster) komutları gönderilir.
-*   **Kabul Kriteri**: Klon veya kırpılmış donanımlar bu komutlara `?` veya `ERROR` yanıtı verir.
-*   **Hata Durumu**: Eğer donanım testi başarısız olursa, ECU bağlantı döngüsü anında kırılacak ve state makinesi `HARDWARE_FATAL` durumuna çekilip arayüze neon kırmızı renkle şu hata basılacaktır:
-    > **"Kritik Hata: Donanımınız eski araç protokollerini desteklemeyen sahte bir klondur. 2011 Dacia ECU'suna bağlanılamaz. Lütfen kaliteli bir adaptör (v1.5 veya orijinal) edinin."**
+1.  **Katman 1: Transport Adapter Layer (`TransportAdapter.ts`)** - Ortak bir arayüz tanımlayarak Android için `ClassicBluetoothTransport.ts` (RFCOMM) ve iOS/Android için `BLETransport.ts` (BLE GATT UART - **Write Mutex** kilidi ile) olarak ikiye ayrılmıştır.
+2.  **Katman 2: Adapter Driver (`AdapterProfileRegistry.ts`)** - Parmak izi testleri ve gecikme benchmarking testlerine göre Tier S/A/C profillerinden birini eşleştirir ve hız sınırlarını (`safePollIntervalMs`) ayarlar.
+3.  **Katman 3: Protocol Engine (`ProtocolEngine.ts` / `VehicleProfileDB.ts`)** - Garajdaki araç profilinin (marka, model, yıl, bölge, yakıt tipi, K-Line init stratejisi, hedef adres tarayıcısı) parametrelerine göre sezgisel protokol taraması yapar ve K-Line Slow-Init uyandırma palsi basar.
+4.  **Katman 4: Scheduling & Parsing**
+    *   **4A: Command Scheduler & Rate Limiter (`CommandScheduler.ts` & `CommandRateLimiter.ts`)** - EDF zamanlayıcısı, SJF önceliklendirmesi, Circuit Breaker mekanizması, Exponential Backoff Cooldown algoritması ve **CommandRateLimiter (Flood Koruması)**.
+    *   **4B: Fragment Buffer (`BLEFragmentationBuffer.ts`)** - BLE paketlerini reassemble eder ve null baytları (`\0`) ayıklar.
+    *   **4C: Frame Decoders (`ELMParser.ts`, `ISOTPDecoder.ts`, `KWPFrameDecoder.ts`, `FlowControlManager.ts`)** - Token öncelik yöneticisi, intermediate `SEARCHING` yönetimi, KWP Checksum hesaplayıcı ve çoklu satır CAN taleplerini tetiklemek için **FlowControlManager (Akış Kontrol Yöneticisi - Feature Flag Destekli)**.
+5.  **Katman 5: PID Engine (`PidRegistry.ts`)** - Sensör formüllerini standart (80+ PID) ve üretici (Hyundai, Renault vb.) bazında yönetir. Güvenlik doğrulamaları, Temporal Sanity (sıçrama koruması) ve **OEM Database Versioning (Bulut Güncelleme Sürümü)** içerir.
+6.  **Katman 6: App API (`SessionHealthMonitor.ts`, `DiagnosticSessionRecorder.ts` & `AppLifecycleCoordinator.ts`)** - Dinamik bağlantı sağlık skorlaması yapar, Firebase bulut telemetri analitiğini koordine eder, **AppLifecycleCoordinator (iOS Bluetooth Arka Plan Yöneticisi)** ile arka plan geçişlerini yönetir ve saha incelemeleri için **DiagnosticSessionRecorder (Teşhis Günlük Kaydedicisi)** barındırır.
 
 ---
 
-### Faz 2: Fiziksel Uyandırma (Wake-Up Pulse) Enjeksiyonu
-Renault ve Dacia grubunun eski K-Line ECU'larını uyandırmak için elektriksel uyarım (Slow Init) Mutex kuyruğunun en başına enjekte edilecektir.
+## 2. v5.2 Sürümüyle Eklenen Kritik Onay Şartları
 
-*   **Aksiyon**: Otomatik protokol arama başarısız olduğunda veya K-Line protokollerine geçildiğinde şu agresif başlatma dizisi kuyruğa sürülür:
-    1.  `AT Z` (Tam donanımsal sıfırlama)
-    2.  `AT E0` (Yankıyı kapat)
-    3.  `AT ST FF` (Zaman aşımını maksimum olan 1 saniyeye çek - K-Line yanıt süresi için şart)
-    4.  `AT IIA 10` (ECU adresini Renault/Dacia K-Line için zorla `10` yap)
-    5.  `AT SI` (Slow Init - 5 Baud elektriksel uyandırma sinyalini hatta enjekte et)
+### 1. BLE Yazma Mutex Kilidi (`BLETransport.ts` - Katman 1)
+*   BLE donanımları üzerinden yazma (write) işlemlerini asenkron olarak kuyruğa sokacak bir **Write Mutex** mekanizması kurulmuştur. Bu sayede, telemetri ve teşhis komutlarının aynı anda Bluetooth portuna yazma isteği göndermesiyle oluşan veri çakışmaları (race condition) %100 önlenecektir.
 
----
+### 2. iOS Bluetooth Arka Plan Yöneticisi (`AppLifecycleCoordinator.ts` - Katman 6)
+*   Apple'ın agresif arka plan Bluetooth kısıtlamalarını yönetmek amacıyla, uygulamanın arka plana geçişi anında kuyruk temizlenecek ve zamanlayıcı dondurulacaktır. Uygulama ön plana döndüğünde (`AppState == active`) ise port temizlenerek telemetri otomatik olarak yeniden başlatılacaktır.
 
-### Faz 3: "Kör İlklendirme" (Blind Polling) ve 01 0C (RPM) Doğrulaması
-Bağlantının kurulup kurulmadığını test etmek için yanıtı kesin olan ve her ECU'nun dönmek zorunda olduğu devir sorgusu kullanılacaktır.
+### 3. Şasi Numarası (VIN) Kurtarma Adımları (Fallback - useBluetooth.ts)
+*   Eski Renault/Dacia ECU'larında standart `09 02` sorgusunun başarısız olması durumuna karşın, sırasıyla üreticiye özel KWP komutları denenecek, tüm yollar tükenirse bağlantı koparılmak yerine şasi numarası `UNAVAILABLE` olarak etiketlenip devam edilecektir.
 
-*   **Aksiyon**: Protokol doğrulaması yapılırken `01 00` (Kapasite Keşfi) yerine doğrudan **`01 0C` (Motor Devri)** komutu gönderilecektir.
-*   **Mantık**: `01 0C` komutuna gelen yanıt `410C` formatındaysa (motor çalışmasa dahi `410C0000` döner), ECU'nun hatta olduğu kesinleşir. Bu durumda kapasite haritası yoksayılarak bağlantı durumu doğrudan `TELEMETRY_ACTIVE` durumuna zorlanacaktır.
+### 4. Akış Kontrol Manuel Enjeksiyon Koruma Bayrağı (`FlowControlManager.ts`)
+*   Klon adaptörlerin manuel enjeksiyonlara tepki vermeyip kilitlenmesi riskini azaltmak için manuel Flow Control (`30 00 00`) gönderimi profile bağlı bir feature flag (`supportsManualFlowControl: boolean`) arkasına alınmıştır. Varsayılan olarak otomatik Flow Control kullanılacak, sadece bayrak aktif olduğunda manuel enjeksiyon yapılacaktır.
+
+### 5. OEM Veritabanı Veri Kaynakları (PidRegistry.ts)
+*   Üreticiye özel (Hyundai, Renault, Toyota Hybrid, BMW) PID formülleri ve Mode 22 haritaları; **python-OBD**, **OpenXC**, **OpenVehicleDiag** ve **SavvyCAN** açık kaynaklı kütüphanelerinden derlenerek bir veritabanı şeması oluşturulmuş ve sprintlere bölünmüştür.
 
 ---
 
 ## 3. Kod Dosyalarında Yapılacak Değişiklikler
 
-### 1. `src/hooks/useBluetooth.ts`
-*   `initializeAndCheckEcu` fonksiyonunun başına `AT AL` ve `AT H1` yetenek testi eklenecektir. Başarısızlık durumunda state güncellenerek özel hata mesajı atılacaktır.
-*   Protokol doğrulama komutları `"01 00"` yerine `"01 0C"` olarak güncellenecektir.
-*   K-Line/ISO fallback kısmına `AT Z -> AT E0 -> AT ST FF -> AT IIA 10 -> AT SI` uyandırma enjeksiyonu entegre edilecektir.
-
-### 2. `App.tsx` (Arayüz Katmanı)
-*   ECU bağlantı durumlarında eğer `isCloneDevice` fatal hata durumuna geçtiyse veya donanım K-Line testinden kaldıysa, yüklenme animasyonu kırılarak dürüst neon kırmızı hata mesajı render edilecektir.
-
----
-
-## 4. Doğrulama ve Test Adımları
-
-1.  **Klon Adaptör Testi**: Sahte v2.1 adaptör takılarak `AT AL` testinin başarısız olması tetiklenmeli ve arayüzde doğru neon kırmızı mesajın belirdiği doğrulanmalıdır.
-2.  **Kör İlklendirme Testi**: 2011 Dacia modelinde `01 00` yoksayılarak `01 0C` ile doğrudan `TELEMETRY_ACTIVE` moduna geçildiği test edilmelidir.
-3.  **Elektriksel Slow Init Testi**: K-Line araçlarda `AT SI` sinyalinin gönderildiği teşhis günlüklerinden takip edilmelidir.
+1.  **[TransportAdapter.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/transport/TransportAdapter.ts) [NEW]** - BLE ve Classic BT transport soyutlaması.
+2.  **[BLETransport.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/transport/BLETransport.ts) [NEW]** - Write Mutex kilitli BLE UART sürücüsü.
+3.  **[CommandScheduler.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/queue/CommandScheduler.ts) [NEW]** - EDF ve SJF zamanlama asenkron kuyruk motoru.
+4.  **[CommandRateLimiter.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/queue/CommandRateLimiter.ts) [NEW]** - Donanım profiline göre hız sınırlayıcı.
+5.  **[BLEFragmentationBuffer.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/parser/BLEFragmentationBuffer.ts) [NEW]** - Delimited veri tamponu ve null bayt filtresi.
+6.  **[ELMParser.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/parser/ELMParser.ts) [NEW]** - FSM durum makinesi, token öncelik çözücüsü ve yankı temizleyici.
+7.  **[FlowControlManager.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/parser/FlowControlManager.ts) [NEW]** - Çoklu satır akış yöneticisi.
+8.  **[ISOTPDecoder.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/parser/ISOTPDecoder.ts) [NEW]** - CAN ISO-TP paket birleştirici.
+9.  **[KWPFrameDecoder.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/parser/KWPFrameDecoder.ts) [NEW]** - K-Line KWP2000 paket birleştirici ve Checksum doğrulayıcı.
+10. **[PidRegistry.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/pids/PidRegistry.ts) [NEW]** - 80+ PID kataloğu, Güven Skoru, Temporal Sanity sıçrama koruması ve OEM bulut sürüm denetimi.
+11. **[VehicleProfileDB.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/pids/VehicleProfileDB.ts) [NEW]** - Araç bazlı taramaheuristics veritabanı.
+12. **[DiagnosticSessionRecorder.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/monitor/DiagnosticSessionRecorder.ts) [NEW]** - TX/RX oturum kaydedici günlük sistemi.
+13. **[AppLifecycleCoordinator.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/transport/AppLifecycleCoordinator.ts) [NEW]** - iOS arka plan BLE kısıtlayıcı koordine sınıfı.
+14. **[SessionHealthMonitor.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/core/monitor/SessionHealthMonitor.ts) [NEW]** - RTT, timeout ve bulut analitik entegrasyonu.
+15. **[OBDCommandQueue.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/api/OBDCommandQueue.ts) [MODIFY]** - Modülleri yöneten hafif facade köprü sınıfı.
+16. **[useBluetooth.ts](file:///Users/ismailimamoglu/Desktop/MotoCortex/src/hooks/useBluetooth.ts) [MODIFY]** - Handshake parmak izi, Slow-Init wake-up ve blind polling doğrulaması entegrasyonu.

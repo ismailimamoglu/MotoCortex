@@ -4,6 +4,14 @@ if (!(global as any).mockWriteTrace) {
 }
 (global as any).mockSessionId = 0;
 
+jest.mock('react-native', () => ({
+    AppState: {
+        addEventListener: jest.fn(() => ({
+            remove: jest.fn(),
+        })),
+    },
+}));
+
 import OBDCommandQueue from '../OBDCommandQueue';
 
 // Mock all possible platform resolutions to ensure the mock is applied
@@ -23,7 +31,9 @@ jest.mock('../BluetoothService', () => {
                 
                 // Only trigger response if the session has not changed (simulating dropped packets on disconnect)
                 if ((global as any).mockSessionId === sessionAtWrite && (global as any).mockDataListener) {
-                    (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
+                    if (cmd.trim() !== '') {
+                        (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
+                    }
                 }
             })
         }
@@ -46,7 +56,9 @@ jest.mock('../BluetoothService.ios', () => {
                 
                 // Only trigger response if the session has not changed (simulating dropped packets on disconnect)
                 if ((global as any).mockSessionId === sessionAtWrite && (global as any).mockDataListener) {
-                    (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
+                    if (cmd.trim() !== '') {
+                        (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
+                    }
                 }
             })
         }
@@ -69,7 +81,9 @@ jest.mock('../BluetoothService.android', () => {
                 
                 // Only trigger response if the session has not changed (simulating dropped packets on disconnect)
                 if ((global as any).mockSessionId === sessionAtWrite && (global as any).mockDataListener) {
-                    (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
+                    if (cmd.trim() !== '') {
+                        (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
+                    }
                 }
             })
         }
@@ -124,7 +138,7 @@ describe('OBDCommandQueue Mutex and Session Management Tests', () => {
 
         await Promise.all([p1, p2, p3, p4, p5]);
 
-        const mockWriteTrace = (global as any).mockWriteTrace;
+        const mockWriteTrace = (global as any).mockWriteTrace.filter((x: string) => !x.includes('\r'));
 
         // Verify that the write calls and resolution events happened in exact sequential order
         expect(mockWriteTrace[0]).toBe('write_start:01 0C');

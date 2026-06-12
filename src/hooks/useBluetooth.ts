@@ -519,7 +519,6 @@ export const useBluetooth = () => {
             await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 1000); 
 
             // 2. Yetenek Testleri (AT AL / AT H1)
-            // Eğer donanım testi başarısız olursa, ECU bağlantı döngüsü anında kırılacak ve state makinesi HARDWARE_FATAL durumuna çekilecek.
             let hardwareOk = true;
             try {
                 const alRes = await OBDCommandQueue.add("ATAL", 1000);
@@ -579,9 +578,9 @@ export const useBluetooth = () => {
 
             // 3. SP0 ile Blind Polling (01 0C)
             try {
+                useBluetoothStore.getState().addLog('DIAG: Trying Auto Protocol (AT SP 0)...');
                 await OBDCommandQueue.add("AT SP 0", 2000);
                 
-                // RPM (01 0C) ile Blind Polling yapıyoruz
                 const initRes = await OBDCommandQueue.add("01 0C", 8000);
                 const cleanInitRes = initRes ? initRes.replace(/(SEARCHING|BUS INIT)\.*/gi, '').toUpperCase() : '';
 
@@ -603,50 +602,96 @@ export const useBluetooth = () => {
                 useBluetoothStore.getState().setProtocol(protocolClean);
                 useBluetoothStore.getState().addLog(`AUTONOMOUS_PROTOCOL_SELECTED: ${protocolClean}`);
             } catch (e) {
-                useBluetoothStore.getState().addLog('DIAG: AT SP 0 failed or invalid, initiating waterfall fallback sequence...');
+                useBluetoothStore.getState().addLog('DIAG: AT SP 0 failed or invalid, initiating K-Line Target Address Scanning fallback...');
                 
-                // Fallback sadece standart K-Line ve CAN protokollerini sırayla denesin
-                const fallbackProtocols = ["AT SP 5", "AT SP 3", "AT SP 4", "AT SP 6", "AT SP 7"];
-
-                for (const protocol of fallbackProtocols) {
-                    try {
-                        useBluetoothStore.getState().addLog(`DIAG: Buffer temizleniyor (AT WS)...`);
-                        await OBDCommandQueue.add("AT WS", 2000);
-                        await preciseSleep(500);
-
-                        await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 1000); 
-                        await OBDCommandQueue.add("ATL0", 1000); 
-                        await OBDCommandQueue.add("ATS0", 1000); 
-                        await OBDCommandQueue.add(ADAPTER_COMMANDS.ADAPTIVE_TIMING, 1000); 
-                        await OBDCommandQueue.add(ADAPTER_COMMANDS.TIMEOUT_LIMIT, 1000);
-
-                        useBluetoothStore.getState().addLog(`DIAG: Trying fallback protocol ${protocol}...`);
-                        await OBDCommandQueue.add(protocol, 2000);
-                        await preciseSleep(500); // 500ms delay to let adapter process and adapt to the new protocol
-
-                        const initRes = await OBDCommandQueue.add("01 0C", 8000);
-                        const cleanInitRes = initRes ? initRes.replace(/(SEARCHING|BUS INIT)\.*/gi, '').toUpperCase() : '';
-
-                        const isOk = cleanInitRes && 
-                                     (cleanInitRes.includes('41 0C') || cleanInitRes.includes('410C')) && 
-                                     !cleanInitRes.includes('ERROR') && 
-                                     !cleanInitRes.includes('CAN ERROR') && 
-                                     !cleanInitRes.includes('NO DATA') && 
-                                     !cleanInitRes.includes('?');
-
-                        if (isOk) {
-                            ecuConnected = true;
-                            const selectedProtocol = await OBDCommandQueue.add("AT DP", 5000);
-                            const protocolClean = selectedProtocol ? selectedProtocol.trim() : 'UNKNOWN';
-                            useBluetoothStore.getState().setProtocol(protocolClean);
-                            useBluetoothStore.getState().addLog(`FALLBACK_PROTOCOL_SELECTED: ${protocolClean}`);
-                            break; 
-                        } else {
-                            useBluetoothStore.getState().addLog(`PROTOCOL=${protocol.replace(/\s+/g, '')}, COMMAND=010C, RAW=${initRes || 'NULL'}`);
+                // K-Line Slow-Init Wake-up target addresses and protocols scan
+                const targetAddresses = [0x10, 0x33, 0x81];
+                const klineProtocols = ["5", "4"]; // ATSP5 = KWP Fast, ATSP4 = KWP Slow
+                
+                for (const address of targetAddresses) {
+                    if (ecuConnected) break;
+                    const addressHex = address.toString(16).toUpperCase().padStart(2, '0');
+                    
+                    for (const proto of klineProtocols) {
+                        try {
+                            useBluetoothStore.getState().addLog(`DIAG: Scanning K-Line Address 0x${addressHex} Protocol ATSP${proto}...`);
+                            
+                            OBDCommandQueue.clear(new Error('KLINE_SCAN_RESET'));
+                            await preciseSleep(250);
+                            
+                            await OBDCommandQueue.add("AT Z", 2000);
+                            await preciseSleep(300); // 300ms settle delay after reset
+                            
+                            await OBDCommandQueue.add("AT E0", 1000);
+                            await OBDCommandQueue.add("AT ST FF", 1000);
+                            await OBDCommandQueue.add(`AT IIA ${addressHex}`, 1000);
+                            await OBDCommandQueue.add(`AT SP ${proto}`, 1000);
+                            
+                            // Trigger initialization using AT SI
+                            const initSI = await OBDCommandQueue.add("AT SI", 4000);
+                            await preciseSleep(300); // 300ms settle delay (Condition key requirement)
+                            
+                            useBluetoothStore.getState().addLog(`DIAG: Init SI Response: ${initSI}`);
+                            
+                            const initRes = await OBDCommandQueue.add("01 0C", 8000);
+                            const cleanInitRes = initRes ? initRes.replace(/(SEARCHING|BUS INIT)\.*/gi, '').toUpperCase() : '';
+                            
+                            const isOk = cleanInitRes && 
+                                         (cleanInitRes.includes('41 0C') || cleanInitRes.includes('410C')) && 
+                                         !cleanInitRes.includes('ERROR') && 
+                                         !cleanInitRes.includes('CAN ERROR') && 
+                                         !cleanInitRes.includes('NO DATA') && 
+                                         !cleanInitRes.includes('?');
+                            
+                            if (isOk) {
+                                ecuConnected = true;
+                                useBluetoothStore.getState().setProtocol(`ISO 14230-4 (KWP, 0x${addressHex})`);
+                                useBluetoothStore.getState().addLog(`K-LINE_PROTOCOL_SELECTED: KWP ATSP${proto} Address 0x${addressHex}`);
+                                break;
+                            }
+                        } catch (scanErr) {
+                            useBluetoothStore.getState().addLog(`DIAG: Scan K-Line 0x${addressHex} Proto ATSP${proto} failed: ${scanErr}`);
                         }
-                    } catch (fallbackErr) {
-                        const msg = fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr);
-                        useBluetoothStore.getState().addLog(`PROTOCOL=${protocol.replace(/\s+/g, '')}, COMMAND=010C, RAW=ERROR: ${msg}`);
+                    }
+                }
+                
+                // If K-Line scan fails, try CAN protocols (6 & 7) as a final standard waterfall fallback
+                if (!ecuConnected) {
+                    useBluetoothStore.getState().addLog('DIAG: K-Line Scan failed, trying standard CAN-bus waterfall fallbacks...');
+                    const canProtocols = ["AT SP 6", "AT SP 7"];
+                    for (const protocol of canProtocols) {
+                        try {
+                            OBDCommandQueue.clear(new Error('CAN_FALLBACK_RESET'));
+                            await preciseSleep(250);
+                            
+                            await OBDCommandQueue.add("AT Z", 2000);
+                            await preciseSleep(100);
+                            await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 1000);
+                            await OBDCommandQueue.add("ATL0", 1000);
+                            await OBDCommandQueue.add("ATS0", 1000);
+                            await OBDCommandQueue.add(protocol, 2000);
+                            
+                            const initRes = await OBDCommandQueue.add("01 0C", 8000);
+                            const cleanInitRes = initRes ? initRes.replace(/(SEARCHING|BUS INIT)\.*/gi, '').toUpperCase() : '';
+                            
+                            const isOk = cleanInitRes && 
+                                         (cleanInitRes.includes('41 0C') || cleanInitRes.includes('410C')) && 
+                                         !cleanInitRes.includes('ERROR') && 
+                                         !cleanInitRes.includes('CAN ERROR') && 
+                                         !cleanInitRes.includes('NO DATA') && 
+                                         !cleanInitRes.includes('?');
+                            
+                            if (isOk) {
+                                ecuConnected = true;
+                                const selectedProtocol = await OBDCommandQueue.add("AT DP", 5000);
+                                const protocolClean = selectedProtocol ? selectedProtocol.trim() : 'UNKNOWN';
+                                useBluetoothStore.getState().setProtocol(protocolClean);
+                                useBluetoothStore.getState().addLog(`CAN_FALLBACK_PROTOCOL_SELECTED: ${protocolClean}`);
+                                break;
+                            }
+                        } catch (canErr) {
+                            useBluetoothStore.getState().addLog(`DIAG: CAN Fallback ${protocol} failed: ${canErr}`);
+                        }
                     }
                 }
 
@@ -1215,16 +1260,49 @@ export const useBluetooth = () => {
         try {
             useBluetoothStore.getState().addLog('DIAG: Starting linear scan...');
 
-            // VIN (0902)
+            // layered VIN fallback (09 02 -> Mode 22 Renault KWP -> UNAVAILABLE)
+            let vin = '';
             try {
+                useBluetoothStore.getState().addLog('DIAG: VIN query Step 1 (09 02)...');
                 await sendCommand(ADAPTER_COMMANDS.READ_VIN);
-                const vin = useBluetoothStore.getState().vin;
-                if (vin) {
-                    await handleVinReceived(vin);
+                vin = useBluetoothStore.getState().vin || '';
+                if (!vin || vin.toUpperCase().includes('ERROR') || vin.toUpperCase().includes('NODATA') || vin === 'UNAVAILABLE') {
+                    throw new Error('NO_DATA');
                 }
-            } catch (vinErr: any) {
-                const msg = vinErr.message || String(vinErr);
-                useBluetoothStore.getState().addLog(`DIAG: VIN read failed: ${msg}`);
+            } catch (e0902) {
+                useBluetoothStore.getState().addLog('DIAG: VIN query Step 1 (09 02) failed, trying Step 2 (Mode 22 Renault KWP)...');
+                try {
+                    const vinRenaultKwp = await OBDCommandQueue.add('22 F1 90', 5000);
+                    const cleanRes = vinRenaultKwp.toUpperCase().replace(/\s+/g, '');
+                    const marker = '62F190';
+                    const idx = cleanRes.indexOf(marker);
+                    if (idx !== -1) {
+                        const payload = cleanRes.substring(idx + marker.length);
+                        let vinAscii = '';
+                        for (let i = 0; i < payload.length; i += 2) {
+                            const charCode = parseInt(payload.substring(i, i + 2), 16);
+                            if (!isNaN(charCode) && charCode >= 32 && charCode <= 126) {
+                                const char = String.fromCharCode(charCode);
+                                if (/[A-Z0-9]/.test(char)) {
+                                    vinAscii += char;
+                                }
+                            }
+                        }
+                        vin = vinAscii.trim().substring(0, 17);
+                    }
+                    if (vin && vin.length >= 8) {
+                        useBluetoothStore.getState().setSensorData({ vin });
+                    } else {
+                        throw new Error('INVALID_VIN');
+                    }
+                } catch (eRenault) {
+                    useBluetoothStore.getState().addLog('DIAG: VIN query Step 2 (Mode 22 Renault KWP) failed. Setting VIN to UNAVAILABLE.');
+                    vin = 'UNAVAILABLE';
+                    useBluetoothStore.getState().setSensorData({ vin: 'UNAVAILABLE' });
+                }
+            }
+            if (vin && vin !== 'UNAVAILABLE') {
+                await handleVinReceived(vin);
             }
 
             // CAL ID (0904)
