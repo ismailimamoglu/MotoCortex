@@ -11,6 +11,7 @@ import SessionHealthMonitor from '../core/monitor/SessionHealthMonitor';
 import DiagnosticSessionRecorder from '../core/monitor/DiagnosticSessionRecorder';
 import AppLifecycleCoordinator from '../core/transport/AppLifecycleCoordinator';
 import { PidRegistry } from '../core/pids/PidRegistry';
+import { ProtocolEngine } from '../core/connection/ProtocolEngine';
 
 /**
  * Event-loop friendly high-precision sleep helper.
@@ -38,6 +39,11 @@ export function preciseSleep(ms: number): Promise<void> {
     });
 }
 
+export enum LineState {
+    READY = 'READY',
+    INTERRUPTING = 'INTERRUPTING'
+}
+
 class OBDCommandQueue {
     private rawResponseBuffer: string;
     private blacklist: Set<string>;
@@ -57,6 +63,11 @@ class OBDCommandQueue {
 
     private elmParser: ELMParser;
     private fragmentBuffer: BLEFragmentationBuffer;
+
+    private lineState: LineState = LineState.READY;
+    private interruptPromiseResolver: (() => void) | null = null;
+    private interruptSilenceTimer: any = null;
+    private interruptAbsoluteTimer: any = null;
 
     constructor() {
         this.rawResponseBuffer = '';
@@ -157,13 +168,27 @@ class OBDCommandQueue {
             store.addLog(`TX: ${command}`);
             Logger.log('OBD_WRITE', command);
 
-            // 1. Setup absolute timeout timer
-            this.commandTimeoutTimer = setTimeout(() => {
+            // 1. Setup absolute timeout timer with state-based UART interrupt recovery
+            this.commandTimeoutTimer = setTimeout(async () => {
                 const errMsg = `Timeout: ${command}`;
                 store.addLog(`ERR: ${errMsg}`);
                 Logger.log('OBD_TIMEOUT', `Timeout sending command: ${command}`);
                 SessionHealthMonitor.recordTimeout();
                 DiagnosticSessionRecorder.recordErr(command, errMsg);
+
+                this.lineState = LineState.INTERRUPTING;
+                try {
+                    await BluetoothService.write('\r');
+                    const avgRtt = SessionHealthMonitor.getAverageRtt();
+                    const silenceWindow = Math.max(200, Math.min(1000, Math.round(avgRtt * 1.5)));
+                    await this.waitForPromptOrSilence(silenceWindow);
+                } catch (recoveryErr) {
+                    store.addLog(`ERR: UART recovery failed: ${recoveryErr}`);
+                } finally {
+                    BluetoothService.clearBuffer();
+                    this.lineState = LineState.READY;
+                }
+
                 this.finishCommand(new Error(errMsg));
             }, actualTimeoutMs);
 
@@ -177,7 +202,8 @@ class OBDCommandQueue {
                 }
             }, 50);
 
-            // 3. Write command to transport layer
+            // 3. Write command to transport layer with Pre-TX buffer flush for absolute sequential determinism
+            BluetoothService.clearBuffer();
             BluetoothService.write(command).catch(err => {
                 this.finishCommand(err);
             });
@@ -194,6 +220,25 @@ class OBDCommandQueue {
 
     private handleData(chunk: string) {
         if (!this.activeResolver) return;
+
+        // If we are currently in the interrupt recovery sequence, consume chunks
+        // to look for a prompt or silence, but do not pass data to the OBD command parser
+        if (this.lineState === LineState.INTERRUPTING) {
+            this.rawResponseBuffer += chunk;
+            if (chunk.includes('>')) {
+                this.resolveInterruptWait();
+            } else {
+                if (this.interruptSilenceTimer) {
+                    clearTimeout(this.interruptSilenceTimer);
+                }
+                const avgRtt = SessionHealthMonitor.getAverageRtt();
+                const silenceWindow = Math.max(200, Math.min(1000, Math.round(avgRtt * 1.5)));
+                this.interruptSilenceTimer = setTimeout(() => {
+                    this.resolveInterruptWait();
+                }, silenceWindow);
+            }
+            return;
+        }
 
         if (this.silenceTimeout) {
             clearTimeout(this.silenceTimeout);
@@ -247,6 +292,11 @@ class OBDCommandQueue {
         const activeProtocol = store.protocol || '';
         const isKLineProtocol = activeProtocol === '4' || activeProtocol === '5' || activeProtocol.includes('KWP') || activeProtocol.includes('9141');
 
+        let legacyDecoded = '';
+        try {
+            legacyDecoded = this.isoTpDecoder(uniqueTokens, this.activeCommand);
+        } catch (e) {}
+
         if (isCanMultiFrame) {
             decoded = ISOTPDecoder.decode(uniqueTokens);
             
@@ -258,6 +308,13 @@ class OBDCommandQueue {
             decoded = KWPFrameDecoder.decode(uniqueTokens);
         } else {
             decoded = this.isoTpDecoder(uniqueTokens, this.activeCommand);
+        }
+
+        // Shadow Mode Verification: Compare modular decoders against legacy regex parsing
+        if (legacyDecoded && decoded && legacyDecoded.trim() !== decoded.trim()) {
+            const warningLog = `SHADOW_MODE_MISMATCH: Cmd: ${this.activeCommand}, Legacy: [${legacyDecoded}], New: [${decoded}]`;
+            store.addStructuredLog({ event: 'SHADOW_MODE_MISMATCH', command: this.activeCommand, legacy: legacyDecoded, new: decoded });
+            store.addLog(warningLog);
         }
 
         this.finishCommand(null, decoded);
@@ -415,21 +472,36 @@ class OBDCommandQueue {
             if (hex.length >= 6) c = parseInt(hex.substring(4, 6), 16);
             if (hex.length >= 8) d = parseInt(hex.substring(6, 8), 16);
 
-            switch (p) {
+             switch (p) {
                 case '0C':
                     if (!isNaN(a) && !isNaN(b)) {
                         const rpm = Math.round(((a * 256) + b) / 4);
                         const storeState = useBluetoothStore.getState();
+                        const pidLastUpdateTimes = storeState.pidLastUpdateTimes || {};
+                        const lastSuccess = pidLastUpdateTimes['0C'] || 0;
+                        const nowWall = Date.now();
+                        const elapsed = lastSuccess === 0 ? 9999 : nowWall - lastSuccess;
+
+                        if (elapsed >= 0 && elapsed < 30) {
+                            return; // skip update, let time accumulate
+                        }
+
                         const prevRpm = storeState.rpm;
-                        const lastSuccess = storeState.lastSuccessfulResponseAt || Date.now();
-                        const elapsed = Date.now() - lastSuccess;
                         const pidDef = PidRegistry.getPid('01', '0C');
                         if (pidDef && PidRegistry.validateTemporalSanity(pidDef, rpm, prevRpm, elapsed)) {
                             storeState.setRpm(rpm);
+                            storeState.setSensorData({
+                                pidLastUpdateTimes: { ...pidLastUpdateTimes, '0C': nowWall },
+                                lastSuccessfulResponseAt: nowWall
+                            });
                         } else if (pidDef && prevRpm !== null) {
                             storeState.addLog(`TEMPORAL_SANITY: Dropped RPM jump anomaly. Prev: ${prevRpm}, New: ${rpm}, Elapsed: ${elapsed}ms`);
                         } else {
                             storeState.setRpm(rpm);
+                            storeState.setSensorData({
+                                pidLastUpdateTimes: { ...pidLastUpdateTimes, '0C': nowWall },
+                                lastSuccessfulResponseAt: nowWall
+                            });
                         }
                     }
                     break;
@@ -437,16 +509,31 @@ class OBDCommandQueue {
                     if (!isNaN(a)) {
                         const speed = a;
                         const storeState = useBluetoothStore.getState();
+                        const pidLastUpdateTimes = storeState.pidLastUpdateTimes || {};
+                        const lastSuccess = pidLastUpdateTimes['0D'] || 0;
+                        const nowWall = Date.now();
+                        const elapsed = lastSuccess === 0 ? 9999 : nowWall - lastSuccess;
+
+                        if (elapsed >= 0 && elapsed < 30) {
+                            return; // skip update, let time accumulate
+                        }
+
                         const prevSpeed = storeState.speed;
-                        const lastSuccess = storeState.lastSuccessfulResponseAt || Date.now();
-                        const elapsed = Date.now() - lastSuccess;
                         const pidDef = PidRegistry.getPid('01', '0D');
                         if (pidDef && PidRegistry.validateTemporalSanity(pidDef, speed, prevSpeed, elapsed)) {
-                            storeState.setSensorData({ speed });
+                            storeState.setSensorData({
+                                speed,
+                                pidLastUpdateTimes: { ...pidLastUpdateTimes, '0D': nowWall },
+                                lastSuccessfulResponseAt: nowWall
+                            });
                         } else if (pidDef && prevSpeed !== null) {
                             storeState.addLog(`TEMPORAL_SANITY: Dropped Speed jump anomaly. Prev: ${prevSpeed}, New: ${speed}, Elapsed: ${elapsed}ms`);
                         } else {
-                            storeState.setSensorData({ speed });
+                            storeState.setSensorData({
+                                speed,
+                                pidLastUpdateTimes: { ...pidLastUpdateTimes, '0D': nowWall },
+                                lastSuccessfulResponseAt: nowWall
+                            });
                         }
                     }
                     break;
@@ -749,6 +836,18 @@ class OBDCommandQueue {
             this.silenceTimeout = null;
         }
 
+        if (this.interruptSilenceTimer) {
+            clearTimeout(this.interruptSilenceTimer);
+            this.interruptSilenceTimer = null;
+        }
+
+        if (this.interruptAbsoluteTimer) {
+            clearTimeout(this.interruptAbsoluteTimer);
+            this.interruptAbsoluteTimer = null;
+        }
+
+        this.resolveInterruptWait();
+
         const rejecter = this.activeRejecter;
         this.activeResolver = null;
         this.activeRejecter = null;
@@ -759,7 +858,9 @@ class OBDCommandQueue {
 
         this.rawResponseBuffer = '';
         this.fragmentBuffer.clear();
+        this.lineState = LineState.READY;
         
+        BluetoothService.clearBuffer();
         BluetoothService.write('\r').catch(err => {
             useBluetoothStore.getState().addLog(`ERR: Hardware flush write fail: ${err.message || String(err)}`);
         });
@@ -767,6 +868,53 @@ class OBDCommandQueue {
         this.clearListeners.forEach(cb => {
             try { cb(); } catch {}
         });
+    }
+
+    private waitForPromptOrSilence(silenceWindowMs: number): Promise<void> {
+        return new Promise<void>((resolve) => {
+            this.interruptPromiseResolver = resolve;
+
+            // Livelock Guard: absolute timeout dynamic ceiling of silenceWindowMs + 300ms
+            const absoluteTimeoutLimit = silenceWindowMs + 300;
+            this.interruptAbsoluteTimer = setTimeout(() => {
+                const store = useBluetoothStore.getState();
+                const warningLog = `WARN: Interrupt recovery absolute timeout (${absoluteTimeoutLimit}ms) reached. Forcing READY.`;
+                store.addStructuredLog({ event: 'UART_RECOVERY_ABSOLUTE_TIMEOUT', limit: absoluteTimeoutLimit });
+                store.addLog(warningLog);
+                this.resolveInterruptWait();
+            }, absoluteTimeoutLimit);
+
+            const resetSilenceTimer = () => {
+                if (this.interruptSilenceTimer) {
+                    clearTimeout(this.interruptSilenceTimer);
+                }
+                this.interruptSilenceTimer = setTimeout(() => {
+                    if (this.interruptAbsoluteTimer) {
+                        clearTimeout(this.interruptAbsoluteTimer);
+                        this.interruptAbsoluteTimer = null;
+                    }
+                    this.resolveInterruptWait();
+                }, silenceWindowMs);
+            };
+
+            resetSilenceTimer();
+        });
+    }
+
+    private resolveInterruptWait() {
+        if (this.interruptSilenceTimer) {
+            clearTimeout(this.interruptSilenceTimer);
+            this.interruptSilenceTimer = null;
+        }
+        if (this.interruptAbsoluteTimer) {
+            clearTimeout(this.interruptAbsoluteTimer);
+            this.interruptAbsoluteTimer = null;
+        }
+        const resolve = this.interruptPromiseResolver;
+        this.interruptPromiseResolver = null;
+        if (resolve) {
+            resolve();
+        }
     }
 }
 

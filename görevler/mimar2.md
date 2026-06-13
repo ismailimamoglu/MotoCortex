@@ -1,514 +1,566 @@
-Bu planı satır satır inceledim. Kısa cevap: v5.1 artık “onay verilebilir” seviyede. Önceki versiyonlarda gördüğüm mimari risklerin büyük kısmı çözülmüş. Eğer ben bu projede principal architect olsaydım, bu plana conditional approval (9.4/10) verirdim — yani uygulamaya geçebilirsiniz, ama production’a çıkmadan önce çözmen gereken birkaç kritik nokta daha var.
+Bu plan şimdiye kadarki en olgun planınız — bunu net söyleyebilirim. Torque Pro / Car Scanner seviyesine yaklaşan şey artık sadece “PID okuyabiliyor olmak” değil; kirli donanım, bozuk clone adapter, packet jitter, protocol fallback, offline telemetry corruption gibi gerçek dünya kaosunu yönetebilmek. Bu planın güzel tarafı tam olarak buna odaklanması.
+
+Ama satır satır incelediğimde hâlâ global release’i riske atan 4 P0 ve 5 P1 boşluk görüyorum.
 
 Genel Skor
-Kategori	Skor
-Mimari Tasarım	9.7
-Modülerlik	9.8
-Clone ELM327 Dayanıklılığı	9.3
-Legacy Araç Desteği (K-Line)	9.4
-Modern CAN Desteği	9.7
-Test Edilebilirlik	9.2
-Global Ölçeklenebilirlik	9.4
-Güçlü Yanlar (çok iyi)
-1) Artık God Object yok
+Alan	Puan
+OBD Transport Robustness	9.4/10
+Protocol Recovery	9.1/10
+Telemetry Resilience	8.8/10
+Observability / Debugging	9.3/10
+Global Device Compatibility	8.4/10
+Final score: 9.0 / 10
 
-En büyük artı bu.
+Bu haliyle:
 
-Önceden:
+Beta → evet
+Limited launch → evet
+Global scale → henüz tam değil
 
-Queue
-Parser
-Bluetooth
-PID decode
-Retry logic
+Neden? Aşağıda.
 
-hepsi OBDCommandQueue.ts içine doluyordu.
+Güçlü Yanlar (Gerçekten İyi Olanlar)
+1) State-based UART recovery — doğru yönde dev adım
 
-Şimdi ayrılmış:
+Bu planın en güçlü kısmı bu.
 
-TransportAdapter.ts
-CommandScheduler.ts
-ELMParser.ts
-ISOTPDecoder.ts
-KWPFrameDecoder.ts
-PidRegistry.ts
-SessionHealthMonitor.ts
+Eski sistem:
 
-Bu enterprise seviye yaklaşım.
+timeout
+clearBuffer
+next command
 
-Bu mimariyi ben şuna benzetiyorum:
+Bu kumardı.
 
-Layer 1 = Driver
-Layer 2 = Hardware abstraction
-Layer 3 = Protocol negotiation
-Layer 4 = Runtime scheduling
-Layer 5 = Semantic decoding
-Layer 6 = UI/API
+Yeni sistem:
 
-Bu çok temiz.
+timeout
+→ send '\r'
+→ INTERRUPTING
+→ wait prompt OR silence
+→ clear buffer
+→ READY
 
-Onay: ✅
+Bu ciddi şekilde daha doğru.
 
-2) Transport abstraction doğru karar
+Özellikle clone ELM327’lerde:
 
-Bu kritik.
+prompt geç gelir
+echo geç gelir
+adapter junk data spamler
 
-Senin uygulamada iki adapter family var:
+State machine bunları daha iyi yönetir.
 
-Classic Bluetooth adapter
+Güçlü taraf
 
-Örn:
+Artık “time-based magic numbers” yerine event-driven recovery var.
 
-OBDLink
-Vgate
-ELM327 clones
+Bu enterprise yaklaşımı.
 
-Bunlar RFCOMM kullanıyor.
+Approved: ✅
 
-BLE adapter
+2) Adaptive polling
 
-Bazıları:
+Bu da çok önemli.
 
-UART over GATT
+Saha testinde yaşadığınız:
 
-Sorun:
-BLE packet fragmentation çok pis.
+rölantide RPM geliyor
+gaz verince queue şişiyor
+ECU cevap veremiyor
+timeout
 
-Örnek:
+Bu klasik over-polling.
 
-Normal response:
+AdaptivePollingController ile:
 
-41 0C 1A F8 >
+RTT yükselirse poll düşüyor
+timeout artarsa poll düşüyor
+queue şişerse poll düşüyor
 
-BLE ile gelebilir:
+Doğru.
 
-41 0
-C 1
-A F8
->
+Health score formülü de mantıklı:
 
-Senin:
-BLEFragmentationBuffer
+health=0.5RTT+0.3timeout+0.2queue
 
-eklemen çok doğru.
+Bu ağırlıklar mantıklı çünkü:
 
-Onay: ✅
+RTT en önemli
+timeout ikinci
+queue üçüncü
 
-3) EDF scheduler > static queue
+Approved: ✅
 
-Önceki 5:1 queue fena değildi ama ideal değildi.
+3) Profile-specific re-init
 
-Sorun:
+Bu çok iyi düşünülmüş.
 
-Eğer:
+En büyük hata şuydu:
 
-RPM
-Speed
-Coolant
-TPS
-Fuel Trim
+Her adapter aynı değil.
 
-sürekli high priority ise:
+Clone:
 
-VIN/DTC starvation oluşabiliyor.
+ATZ
+ATE0
+ATH1
 
-EDF bunu çözüyor.
+OBDLink:
 
-Command örneği:
+ATZ
+ATE0
+ATL0
+ATS0
+ATH1
+ATAT1
+ATAL
 
-[
- { cmd:"010C", deadline: +50ms },
- { cmd:"0902", deadline: +3000ms }
-]
+Clone’a ATAL yollarsan freeze olabilir.
 
-Scheduler earliest deadline seçiyor.
+Bu ayrım gerekliydi.
 
-Bu:
+Approved: ✅
 
-low latency telemetry
-starvation protection
+4) Expanded FSM
 
-sağlıyor.
+Bu da çok iyi.
 
-Onay: ✅
+Eski:
 
-4) Circuit breaker brilliant
+CONNECTED / DISCONNECTED
 
-Burası çok iyi.
+Bu debug için yetersiz.
 
-Clone adapter’larda sık görülen durum:
+Yeni:
 
-BUFFER FULL
-BUFFER FULL
-...
-adapter dead
+DISCONNECTED
+ADAPTER_CONNECTING
+ADAPTER_CONNECTED
+INITIALIZING
+PROTOCOL_SCANNING
+ECU_HANDSHAKE
+TELEMETRY_ACTIVE
+DEGRADED
+RECOVERY
+HARDWARE_FATAL
 
-Ya da:
+Mükemmel.
 
-NO DATA
-BUS ERROR
-CAN ERROR
+Support team için çok değerli.
 
-3 timeout / 5 sec → degraded mode
+Approved: ✅
 
-Bu production-grade.
+5) Structured diagnostic logs
 
-Senin şu mantığın:
+Bu global scale’de kritik.
 
-telemetry açık kalsın
-diagnostics dursun
+User der ki:
 
-çok doğru.
+“Honda PCX bağlanmıyor”
 
-Onay: ✅
+Eski log:
 
-5) CommandRateLimiter gerekliydi
+connection failed
 
-Bu ekleme önemli.
+Anlamsız.
 
-Cheap clone ELM327’lerde buffer küçük.
+Yeni:
 
-Bazıları:
-
-128 byte
-256 byte
-
-20 command/sec clone için ölüm.
-
-Tier-based limiter iyi:
-
-Tier S:
-20 cmd/s
-
-Tier A:
-10 cmd/s
-
-Tier C:
-3 cmd/s
-
-Bu sahada çok fark yaratır.
-
-Onay: ✅
-
-6) SEARCHING state handling
-
-Bu çok kritik.
-
-Birçok app şu bug’a sahip:
-
-ECU response:
-
-SEARCHING...
-41 0C 0A 1C
->
-
-Parser SEARCHING... görünce timeout sanıyor.
-
-Sen:
-
-intermediate state
-
-demişsin.
-
-Bu doğru.
-
-Onay: ✅
-
-7) K-Line decoder eklenmesi (çok kritik)
-
-Burası Dacia için game changer.
-
-Dacia Logan 2011 çoğu markette:
-
-ISO 9141-2
-veya
-KWP2000
-
-CAN olmayabilir.
-
-Çoğu app sadece CAN optimize.
-
-Senin:
-
-KWPFrameDecoder.ts
-
-eklemen legacy araçlar için şart.
-
-Örnek KWP:
-
-80 F1 10 41 0C 0A 1C CS
-
-Checksum validation yapman çok iyi.
-
-Onay: ✅
-
-8) Telemetry jump detection
-
-Bu benim özellikle sevdiğim kısım.
-
-Clone adapter bug:
-
-RPM:
-
-900
-920
-7800   <- garbage frame
-910
-
-UI:
-needle zıplıyor.
-
-User:
-“motor patladı mı?”
-
-Sen:
-
-maxRpmJumpPer100ms = 1500
-
-ile filtreliyorsun.
-
-Harika.
-
-Onay: ✅
-
-Şimdi kritik eksikler (bunları çözmeden 10/10 diyemem)
-KRİTİK-1 — BLE write serialization açık yazılmamış
-
-Bu büyük.
-
-Şu an:
-
-write(data)
-
-var.
-
-Ama soru:
-
-BLE transport aynı anda 2 write alırsa?
-
-Örnek:
-
-Thread A:
-
-010C
-
-Thread B:
-
-0902
-
-Race condition olabilir.
-
-Ben şunu isterim:
-
-BLETransport write mutex
-
-Pseudo:
-
-await writeLock.acquire()
-try {
-  await characteristic.write(...)
-} finally {
-  release()
+{
+  "adapter":"clone_v2.1",
+  "protocol":"ISO9141",
+  "state":"ECU_HANDSHAKE",
+  "avgRtt":780,
+  "timeoutRate":0.42
 }
 
-Eklenmeli.
+Bu altın değerinde.
 
-Eksik: ⚠️
+Approved: ✅
 
-KRİTİK-2 — iOS Bluetooth background behavior
+Şimdi kritik eleştiriler
+P0-1: Adapter fingerprinting hâlâ zayıf
 
-Sen React Native + iOS yapıyorsun.
+Bu plan diyor:
 
-iOS’ta:
-Apple background Bluetooth agresif.
+Benchmark:
 
-Problem:
-
-App background:
-
-notifications throttle
-BLE suspend
-reconnect fail
-
-Planında yok:
-
-app foreground/background transitions
-reconnect policy
-
-Ben şu modülü eklerdim:
-
-AppLifecycleCoordinator.ts
-
-State:
-
-foreground
-background
-suspended
-resumed
-
-Önemli.
-
-Eksik: ⚠️
-
-KRİTİK-3 — VIN read fallback eksik
-
-VIN normalde:
-
-Mode 09 PID 02
-
+ATI
+AT@1
+0100
+010C
 0902
 
-Ama bazı ECU:
+Burada sorun var.
 
-desteklemiyor.
+Problem
 
-Özellikle:
+Bazı adapterlar:
 
-eski Renault
-Dacia
-PSA
+ATI yalan söyler
+v2.1 der ama clone’dur
+AT@1 unsupported
+VIN support yok
+0902 timeout
 
-Fallback lazım:
+Yani:
 
-0902
+command capability != real hardware capability
 
-Fail →
+Bu büyük fark.
 
-KWP custom request
+Eksik olan
 
-veya
+Fingerprint sadece command success ile olmamalı.
 
-VIN unavailable
+Şunlar da score’a girmeli:
 
-Şu an plan:
-VIN logic generic.
+Write stability
 
-Yetersiz.
+Bir write kaç ms sürdü?
 
-Eksik: ⚠️
+Prompt latency variance
 
-KRİTİK-4 — OEM PID database source yok
+Jitter yüksek mi?
 
-Burası product açısından en kritik konu.
+Buffer contamination ratio
 
-Plan diyor:
+Garbage byte oranı?
 
-Phase 2:
+Fragmentation behavior
 
-Hyundai OEM
+BLE chunk pattern?
 
-Phase 3:
+Tavsiyem
 
-Renault/Dacia OEM
+Yeni scoring:
 
-Ama data nereden gelecek?
+capabilityScore =
+0.25 commandSuccess
++0.20 avgRtt
++0.20 rttVariance
++0.15 garbageRatio
++0.20 promptStability
 
-OEM PID bulmak zor.
+Şu anki plan bunun %50’sini kapsıyor.
 
-Kaynaklar:
+Risk: P0
 
-service manuals
-reverse engineering
-community dumps
+P0-2: UART recovery’da hidden deadlock var
 
-Şunları araştırman lazım:
+Bu en kritik bug olabilir.
 
-python-OBD repository
-OpenVehicleDiag repository
-SavvyCAN repository
-Wireshark
+Plan:
 
-OEM DB olmadan:
-global scanner olamazsın.
+wait prompt OR silence
 
-Eksik: ⚠️⚠️
-
-KRİTİK-5 — FlowControlManager riskli
-
-Bu satır dikkatimi çekti:
-
-manually transmits 30 00 00
-
-Bu tehlikeli.
-
-Sebep:
-
-Bazı clone ELM:
-manual flow control desteklemez.
-
-Bazı ECU:
-custom FC ister.
-
-Universal:
-
-30 00 00
-
-her zaman güvenli değil.
-
-Ben öneririm:
-
-Default:
-AUTO FLOW CONTROL
-
-Manual FC:
-feature flag ile.
+Ama ya adapter sürekli çöp basıyorsa?
 
 Örneğin:
 
-supportsManualFlowControl: boolean
+?\r?\r?\r?\r
 
-Şu an plan agresif.
+Prompt yok.
 
-Eksik: ⚠️⚠️
+Silence yok.
 
-GitHub / Open Source araştırman gereken çekirdek projeler
+Absolute timeout:
+1000 ms.
 
-En önemli referanslar:
+Güzel.
 
-Python ecosystem
-python-OBD
-OBDwiz docs
-CAN tooling
-SavvyCAN
-cantools
-Reverse engineering
-OpenGarages
-comma.ai
-Ben olsam Sprint planını şöyle bölerdim
-Sprint 1 — Core transport
-TransportAdapter
-BLE buffer
-parser
-Sprint 2 — Scheduler
-EDF
-rate limiter
-circuit breaker
-Sprint 3 — Protocol engine
-CAN
-K-Line
-handshake
-Sprint 4 — PID engine
-80+ standard PIDs
-confidence scoring
-Sprint 5 — OEM intelligence
-Hyundai
-Dacia
-Renault
-Sprint 6 — Cloud learning
-telemetry analytics
-failure clustering
-Final kararım
+Ama sonra ne?
 
-Bu plan için kararım:
+Plan söylemiyor.
 
-Mimari onay:
+Eksik davranış
 
-EVET — APPROVED WITH 5 CONDITIONS
+1000 ms dolunca:
 
-Onay şartları:
+Ne olacak?
 
-BLE write mutex ekle
-iOS lifecycle manager ekle
-VIN fallback ekle
-OEM DB source planı yaz
-Manual flow control feature flag yap
+Aşağıdakilerden biri olmalı:
+
+Option A
+
+Hard reset adapter
+
+disconnect
+reconnect
+Option B
+
+Enter HARDWARE_FATAL
+
+Şu an belirsiz.
+
+Bu production’da ciddi sorun.
+
+Ben olsam:
+
+if interrupt timeout:
+   recoveryAttempts++
+   if >3:
+       HARDWARE_FATAL
+   else:
+       adapter reconnect
+
+Şu an plan eksik.
+
+Risk: P0
+
+P0-3: Polling controller hysteresis yetmez
+
+Burada ciddi bir control systems problemi var.
+
+Plan:
+
+delta > 50ms ise polling değişsin
+
+Yeterli değil.
+
+Örnek:
+
+RTT:
+
+120
+170
+130
+180
+140
+190
+
+Health score:
+up-down-up-down.
+
+Hysteresis tek başına oscillation önlemez.
+
+Gerekli olan
+
+EMA smoothing.
+
+Örneğin:
+
+EMA=αcurrent+(1−α)previous
+
+alpha:
+
+0.2
+
+Böylece spike’lar filtrelenir.
+
+AdaptivePollingController’a eklenmeli:
+
+smoothedRtt = ema(rtt)
+smoothedTimeoutRate = ema(timeoutRate)
+
+Olmazsa:
+poll interval sürekli zıplar.
+
+Risk: P0
+
+P0-4: Structured logs memory leak yaratabilir
+
+Plan:
+
+structuredLogs: string[]
+
+Bu tehlikeli.
+
+Saha testi:
+
+30 dakika
+20 logs/sec
+
+= 36,000 log
+
+JS memory patlar.
+
+Çözüm
+
+Ring buffer.
+
+Örneğin:
+
+MAX_LOGS = 500
+
+Yeni log gelince:
+
+if logs.length >= MAX_LOGS:
+   logs.shift()
+
+veya daha iyisi circular array.
+
+Şu an eksik.
+
+Risk: P0
+
+P1’ler
+P1-1: Telemetry quota count + bytes yeterli değil
+
+Şu an:
+
+2000 item
+1.5 MB
+
+İyi ama eksik.
+
+Bir telemetry item:
+
+bazen 100 byte
+bazen 5 KB JSON
+
+Count limit misleading.
+
+Ben ayrıca koyarım:
+
+MAX_SINGLE_ITEM_BYTES = 8KB
+
+Büyük paketleri reject.
+
+P1-2: Structured logs JSON stringify pahalı
+
+React Native JS thread’de:
+
+JSON.stringify(log)
+
+yük olabilir.
+
+Özellikle 20 Hz logging.
+
+Çözüm:
+
+Sampling.
+
+log every 2 sec
+or on state change
+P1-3: PID bazlı timestamp sadece RPM + Speed için var
+
+Saha testinizde sadece RPM değil:
+
+TPS
+MAP
+Coolant
+AFR
+
+de sapabilir.
+
+Şu an:
+
+lastRpmUpdateTime
+lastSpeedUpdateTime
+
+Bu scalable değil.
+
+Daha iyi
+
+Generic map:
+
+Map<PID, Timestamp>
+
+Örnek:
+
+pidLastUpdateTimes[pid]
+
+Bu daha enterprise.
+
+P1-4: K-Line init hâlâ fazla statik
+
+300 ms sleep.
+
+Bazı araçlar:
+
+200 yeter
+bazı ECU 800 ister
+
+Static delay global optimum değil.
+
+Daha iyi:
+
+Adaptive K-Line settle delay.
+
+P1-5: Missing shadow mode
+
+Bu çok önemli.
+
+Global rollout’ta direkt switch tehlikeli.
+
+Önerim:
+
+v5.2 ve v5.3 paralel çalışsın.
+
+Decision:
+
+new parser result
+old parser result
+compare
+
+Mismatch logla.
+
+Buna shadow mode denir.
+
+Enterprise rollout böyle yapılır.
+
+Mimari eleştiri (önemli)
+
+Bir şey gözüme çarpıyor.
+
+useBluetooth.ts hâlâ fazla şişkin.
+
+Sen mimariyi katmanlara ayırdın ama burada hâlâ:
+
+FSM
+protocol scan
+polling
+recovery
+VIN
+diagnostics
+
+toplanmış gibi.
+
+Bu dosya muhtemelen yine God Object olmaya gidiyor.
+
+Ben parçalarım:
+
+ConnectionStateMachine.ts
+ProtocolNegotiator.ts
+RecoveryCoordinator.ts
+PollingOrchestrator.ts
+
+Bu refactor orta vadede gerekli.
+
+Global launch verdict
+
+Benim kararımsa:
+
+Şu haliyle
+
+Global release için hayır.
+
+Neden?
+
+Çünkü 4 blocker var:
+
+fingerprint yetersiz
+interrupt deadlock path eksik
+polling smoothing eksik
+logs memory leak riski
+Benim önerdiğim final sprint
+Sprint G (zorunlu)
+UART deadlock resolution
+EMA smoothing
+Ring buffer logs
+Sprint H (zorunlu)
+Advanced adapter fingerprinting
+Generic PID timestamp map
+Sprint I (çok önerilir)
+useBluetooth.ts split
+shadow mode rollout
+
+Bu 3 sprint sonrası puan:
+
+9.0 → 9.7/10
+
+Ve o noktada rahatlıkla şunu derim:
+
+MotoCortex artık sadece çalışan bir OBD app değil, global pazarda rekabet edebilecek bir diagnostic platform.

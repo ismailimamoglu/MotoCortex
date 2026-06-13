@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION upsert_telemetry(payload JSONB)
 RETURNS VOID AS $$
 BEGIN
   INSERT INTO anonymous_diagnostic_telemetry (
+    created_at,
     brand, 
     model, 
     year, 
@@ -24,6 +25,7 @@ BEGIN
     hit_count
   )
   VALUES (
+    COALESCE((payload->>'created_at')::timestamp with time zone, timezone('utc'::text, now())),
     payload->>'brand',
     payload->>'model',
     (payload->>'year')::integer,
@@ -38,7 +40,7 @@ BEGIN
   )
   ON CONFLICT (session_hash) DO UPDATE
   SET hit_count = anonymous_diagnostic_telemetry.hit_count + 1,
-      created_at = timezone('utc'::text, now()),
+      created_at = COALESCE((payload->>'created_at')::timestamp with time zone, timezone('utc'::text, now())),
       engine_rpm = EXCLUDED.engine_rpm,
       coolant_temp = EXCLUDED.coolant_temp,
       throttle_pos = EXCLUDED.throttle_pos;

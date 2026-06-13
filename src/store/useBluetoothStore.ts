@@ -70,7 +70,9 @@ interface BluetoothState {
     telemetryStats: TelemetryStats;
     diagnosticLogs: string[];
     adapterCapabilityScore: number;
-    connectionState: 'DISCONNECTED' | 'CONNECTING' | 'ADAPTER_CONNECTED' | 'PROTOCOL_NEGOTIATING' | 'ECU_DETECTED' | 'ECU_RESPONDING' | 'TELEMETRY_ACTIVE' | 'ECU_NOT_FOUND' | 'PROTOCOL_FAILED' | 'DIAGNOSTICS_ACTIVE' | 'HARDWARE_FATAL';
+    connectionState: 'DISCONNECTED' | 'ADAPTER_CONNECTING' | 'ADAPTER_CONNECTED' | 'INITIALIZING' | 'PROTOCOL_SCANNING' | 'ECU_HANDSHAKE' | 'TELEMETRY_ACTIVE' | 'DEGRADED' | 'RECOVERY' | 'HARDWARE_FATAL';
+    pidLastUpdateTimes: Record<string, number>;
+    structuredLogs: string[];
 
     // Actions
     setStatus: (status: ConnectionStatus) => void;
@@ -97,6 +99,8 @@ interface BluetoothState {
     setProtocol: (protocol: string | null) => void;
     addDiagnosticLog: (log: string) => void;
     clearDiagnosticLogs: () => void;
+    addStructuredLog: (log: any) => void;
+    clearStructuredLogs: () => void;
     resetRecoveryAttempts: () => void;
     incrementRecoveryAttempts: () => void;
     updateTelemetryStats: (stats: Partial<TelemetryStats>) => void;
@@ -170,6 +174,8 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     diagnosticLogs: [],
     connectionState: 'DISCONNECTED',
     adapterCapabilityScore: 100,
+    pidLastUpdateTimes: {},
+    structuredLogs: [],
  
     setStatus: (status) => set({ status }),
     setAdapterStatus: (status) => set({ adapterStatus: status }),
@@ -182,7 +188,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setSensorData: (data) => set((state) => {
         const nextData = { ...data };
         if (nextData.connectionState) {
-            if (['TELEMETRY_ACTIVE', 'DIAGNOSTICS_ACTIVE'].includes(nextData.connectionState)) {
+            if (['TELEMETRY_ACTIVE', 'DEGRADED'].includes(nextData.connectionState)) {
                 nextData.status = 'connected';
                 nextData.ecuStatus = 'connected';
                 nextData.adapterStatus = 'connected';
@@ -190,27 +196,26 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
                 nextData.status = 'disconnected';
                 nextData.ecuStatus = 'disconnected';
                 nextData.adapterStatus = 'disconnected';
-            } else if (['CONNECTING', 'ADAPTER_CONNECTED', 'PROTOCOL_NEGOTIATING'].includes(nextData.connectionState)) {
+            } else if (['ADAPTER_CONNECTING', 'ADAPTER_CONNECTED', 'INITIALIZING', 'PROTOCOL_SCANNING'].includes(nextData.connectionState)) {
                 nextData.status = 'connecting';
                 nextData.adapterStatus = 'connecting';
                 nextData.ecuStatus = 'disconnected';
-            } else if (['ECU_DETECTED', 'ECU_RESPONDING'].includes(nextData.connectionState)) {
+            } else if (nextData.connectionState === 'ECU_HANDSHAKE') {
                 nextData.status = 'connecting';
                 nextData.adapterStatus = 'connected';
                 nextData.ecuStatus = 'connecting';
-            } else if (nextData.connectionState === 'ECU_NOT_FOUND') {
-                nextData.status = 'error';
-                nextData.ecuStatus = 'error';
-                nextData.adapterStatus = 'connected';
-            } else if (nextData.connectionState === 'PROTOCOL_FAILED') {
-                nextData.status = 'error';
-                nextData.ecuStatus = 'error';
+            } else if (nextData.connectionState === 'RECOVERY') {
+                nextData.status = 'connecting';
+                nextData.ecuStatus = 'connecting';
                 nextData.adapterStatus = 'connected';
             } else if (nextData.connectionState === 'HARDWARE_FATAL') {
                 nextData.status = 'error';
                 nextData.ecuStatus = 'error';
                 nextData.adapterStatus = 'error';
             }
+        }
+        if (data.pidLastUpdateTimes) {
+            nextData.pidLastUpdateTimes = { ...state.pidLastUpdateTimes, ...data.pidLastUpdateTimes };
         }
         return nextData;
     }),
@@ -256,6 +261,15 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         return { diagnosticLogs: newLogs };
     }),
     clearDiagnosticLogs: () => set({ diagnosticLogs: [] }),
+    addStructuredLog: (log) => set((state) => {
+        const entry = typeof log === 'string' ? log : JSON.stringify(log);
+        const newLogs = [...state.structuredLogs, entry];
+        if (newLogs.length > 500) {
+            newLogs.shift();
+        }
+        return { structuredLogs: newLogs };
+    }),
+    clearStructuredLogs: () => set({ structuredLogs: [] }),
     resetRecoveryAttempts: () => set({ recoveryAttempts: 0 }),
     incrementRecoveryAttempts: () => set((state) => ({ recoveryAttempts: state.recoveryAttempts + 1 })),
     updateTelemetryStats: (newStats) => set((state) => ({
@@ -319,5 +333,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         diagnosticLogs: [],
         connectionState: 'DISCONNECTED',
         adapterCapabilityScore: 100,
+        pidLastUpdateTimes: {},
+        structuredLogs: [],
     }),
 }));

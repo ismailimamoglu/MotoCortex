@@ -18,7 +18,7 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
   const colors = useThemeColors();
   const appUserId = useAppStore((state) => state.appUserId);
   const connectionState = useBluetoothStore((s) => s.connectionState);
-  const isConnected = connectionState !== 'DISCONNECTED' && connectionState !== 'CONNECTING';
+  const isConnected = connectionState !== 'DISCONNECTED' && connectionState !== 'ADAPTER_CONNECTING';
   const isCloneDevice = useBluetoothStore((s) => s.isCloneDevice);
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet, width, height } = useResponsive();
   const insets = useSafeAreaInsets();

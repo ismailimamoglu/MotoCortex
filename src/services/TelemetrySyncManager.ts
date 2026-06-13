@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTelemetryStore, TelemetryItem } from '../store/useTelemetryStore';
+import { useBluetoothStore } from '../store/useBluetoothStore';
 import { useAppStore } from '../store/useAppStore';
 import { supabase } from '../api/supabaseClient';
 import * as Logger from './Logger';
@@ -9,7 +10,6 @@ let NetInfo: any = null;
 try {
   const NetInfoModule = require('@react-native-community/netinfo');
   const tempNetInfo = NetInfoModule.default || NetInfoModule;
-  // If the native module is null/missing, evaluating its properties might throw, or we can check its validity.
   if (tempNetInfo && typeof tempNetInfo.fetch === 'function') {
     NetInfo = tempNetInfo;
   }
@@ -45,20 +45,114 @@ const BATCH_SIZE = 5;
 const BASE_DELAY_MS = 2000;
 const MAX_DELAY_MS = 30000;
 
-export function useTelemetrySync() {
-  const isSyncingRef = useRef(false);
-  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const attemptRef = useRef(0);
+export class TelemetrySyncManager {
+  private static instance: TelemetrySyncManager | null = null;
+  private isSyncing = false;
+  private syncTimeout: NodeJS.Timeout | null = null;
+  private attempt = 0;
+  private badPacketCount = 0;
 
-  const removeTelemetryItem = useTelemetryStore((state) => state.removeTelemetryItem);
-  const incrementRetryCount = useTelemetryStore((state) => state.incrementRetryCount);
+  private rehydrationResolver: (() => void) | null = null;
+  private syncSubscriptionRelease: (() => void) | null = null;
+  private bluetoothSubscriptionRelease: (() => void) | null = null;
+  private isNetInfoConnected = true;
 
-  const syncQueue = async () => {
-    // =====================================================================
-    // SIMULATION GUARD — Hard gate: never sync simulated data to Supabase.
+  private constructor() {}
+
+  public static getInstance(): TelemetrySyncManager {
+    if (!TelemetrySyncManager.instance) {
+      TelemetrySyncManager.instance = new TelemetrySyncManager();
+    }
+    return TelemetrySyncManager.instance;
+  }
+
+  public setNetInfoConnected(connected: boolean): void {
+    this.isNetInfoConnected = connected;
+  }
+
+  private async awaitQueueRehydration(): Promise<void> {
+    if (useTelemetryStore.getState().isQueueLoaded) {
+      return;
+    }
+    return new Promise<void>((resolve) => {
+      this.rehydrationResolver = resolve;
+    });
+  }
+
+  public start(): void {
+    this.setupSubscriptions();
+  }
+
+  public stop(): void {
+    this.releaseSubscription();
+    if (this.syncTimeout) {
+      clearTimeout(this.syncTimeout);
+      this.syncTimeout = null;
+    }
+    if (this.bluetoothSubscriptionRelease) {
+      this.bluetoothSubscriptionRelease();
+      this.bluetoothSubscriptionRelease = null;
+    }
+  }
+
+  private releaseSubscription(): void {
+    if (this.syncSubscriptionRelease) {
+      this.syncSubscriptionRelease();
+      this.syncSubscriptionRelease = null;
+      Logger.log('TELEMETRY_SYNC', 'Released Zustand telemetry queue subscription.');
+    }
+  }
+
+  private setupSubscriptions(): void {
+    this.setupTelemetrySubscription();
+
+    if (!this.bluetoothSubscriptionRelease) {
+      let prevConnectionState = useBluetoothStore.getState().connectionState;
+      let prevVehicle = useTelemetryStore.getState().activeSessionVehicle;
+
+      this.bluetoothSubscriptionRelease = useBluetoothStore.subscribe((state) => {
+        const connState = state.connectionState;
+        const activeVehicle = useTelemetryStore.getState().activeSessionVehicle;
+
+        const isRecovery = connState === 'RECOVERY';
+        const isSessionEnded = connState === 'DISCONNECTED' && prevConnectionState !== 'DISCONNECTED';
+        const isProfileChanged = JSON.stringify(activeVehicle) !== JSON.stringify(prevVehicle);
+
+        if (isRecovery || isSessionEnded || isProfileChanged) {
+          Logger.log('TELEMETRY_SYNC', `Subscription cleanup triggered. Recovery: ${isRecovery}, Session Ended: ${isSessionEnded}, Profile Changed: ${isProfileChanged}`);
+          this.releaseSubscription();
+        } else if (connState === 'TELEMETRY_ACTIVE' && !this.syncSubscriptionRelease) {
+          Logger.log('TELEMETRY_SYNC', 'Re-subscribing telemetry queue on TELEMETRY_ACTIVE connectionState.');
+          this.setupTelemetrySubscription();
+        }
+
+        prevConnectionState = connState;
+        prevVehicle = activeVehicle;
+      });
+    }
+  }
+
+  private setupTelemetrySubscription(): void {
+    this.releaseSubscription();
+    let prevLoaded = useTelemetryStore.getState().isQueueLoaded;
+    this.syncSubscriptionRelease = useTelemetryStore.subscribe((state) => {
+      const currentLoaded = state.isQueueLoaded;
+      if (currentLoaded && !prevLoaded) {
+        if (this.rehydrationResolver) {
+          const resolve = this.rehydrationResolver;
+          this.rehydrationResolver = null;
+          resolve();
+        }
+        if (this.isNetInfoConnected) {
+          this.syncQueue();
+        }
+      }
+      prevLoaded = currentLoaded;
+    });
+  }
+
+  public async syncQueue(): Promise<void> {
     // Evicts simulated/demo items based on protocol, ECU ID, or sensor signature.
-    // Real offline field data (ISO_15765_4_CAN, etc.) is preserved until internet is available.
-    // =====================================================================
     const allQueue = useTelemetryStore.getState().telemetry_queue;
     const simItems = allQueue.filter((item: TelemetryItem) => {
       const isSimulatorEcu = item.ecu_id === 'SIM-ECU-001';
@@ -81,7 +175,11 @@ export function useTelemetrySync() {
 
     if (simItems.length > 0) {
       const realCount = allQueue.length - simItems.length;
-      simItems.forEach(item => useTelemetryStore.getState().removeTelemetryItem(item.id));
+      simItems.forEach(item => {
+        if (useTelemetryStore.getState().isQueueLoaded) {
+          useTelemetryStore.getState().removeTelemetryItem(item.id);
+        }
+      });
       Logger.log(
         'TELEMETRY_SYNC',
         `GUARD: Evicted ${simItems.length} simulated item(s) from queue. ${realCount} real item(s) preserved.`
@@ -93,18 +191,25 @@ export function useTelemetrySync() {
       return;
     }
 
-    if (isSyncingRef.current) return;
-    isSyncingRef.current = true;
+    if (this.isSyncing) return;
+    this.isSyncing = true;
     
-    if (syncTimeoutRef.current) {
-      clearTimeout(syncTimeoutRef.current);
-      syncTimeoutRef.current = null;
+    if (this.syncTimeout) {
+      clearTimeout(this.syncTimeout);
+      this.syncTimeout = null;
     }
 
     Logger.log('TELEMETRY_SYNC', 'Sync loop started');
 
     try {
       while (true) {
+        // EVENT-DRIVEN PROMISE LOCK: Block loop and await rehydration if queue is not loaded
+        if (!useTelemetryStore.getState().isQueueLoaded) {
+          Logger.log('TELEMETRY_SYNC', 'GUARD: Queue is not loaded — locking sync loop and awaiting rehydration.');
+          await this.awaitQueueRehydration();
+          Logger.log('TELEMETRY_SYNC', 'GUARD: Queue rehydrated — resuming sync loop.');
+        }
+
         // Re-check simulation mode at each batch iteration (mode could toggle mid-sync)
         if (useAppStore.getState().isSimulationMode) {
           const allQueue = useTelemetryStore.getState().telemetry_queue;
@@ -120,7 +225,11 @@ export function useTelemetrySync() {
             return isSimulatorEcu || isSimulatorProtocol || isSimulatorSignature;
           });
           const realCount = allQueue.length - simItems.length;
-          simItems.forEach(item => useTelemetryStore.getState().removeTelemetryItem(item.id));
+          simItems.forEach(item => {
+            if (useTelemetryStore.getState().isQueueLoaded) {
+              useTelemetryStore.getState().removeTelemetryItem(item.id);
+            }
+          });
           Logger.log(
             'TELEMETRY_SYNC',
             `GUARD: Mid-sync sim mode detected — evicted ${simItems.length} simulated item(s). ${realCount} real item(s) preserved.`
@@ -131,7 +240,7 @@ export function useTelemetrySync() {
         const queue = useTelemetryStore.getState().telemetry_queue;
         if (queue.length === 0) {
           Logger.log('TELEMETRY_SYNC', 'Queue is empty. Sync completed.');
-          attemptRef.current = 0;
+          this.attempt = 0;
           break;
         }
 
@@ -145,8 +254,10 @@ export function useTelemetrySync() {
             const lastSuccessfulHash = await AsyncStorage.getItem('last_successful_session_hash');
             if (lastSuccessfulHash === item.session_hash) {
               Logger.log('TELEMETRY_SYNC', `HARD-GATE: Evicting duplicate offline scan with hash: ${item.session_hash}`);
-              removeTelemetryItem(item.id);
-              continue; // Skip Supabase API call and proceed to the next item
+              if (useTelemetryStore.getState().isQueueLoaded) {
+                useTelemetryStore.getState().removeTelemetryItem(item.id);
+              }
+              continue;
             }
           } catch (storageErr) {
             Logger.log('TELEMETRY_SYNC', `Error reading from AsyncStorage during hard-gate check: ${storageErr}`);
@@ -162,7 +273,8 @@ export function useTelemetrySync() {
             session_hash: item.session_hash,
             engine_rpm: item.engine_rpm,
             coolant_temp: item.coolant_temp,
-            throttle_pos: item.throttle_pos
+            throttle_pos: item.throttle_pos,
+            created_at: item.created_at
           };
 
           Logger.log('TELEMETRY_SYNC', `Syncing session: ${item.session_hash}`);
@@ -173,9 +285,6 @@ export function useTelemetrySync() {
             if (error) {
               Logger.log('TELEMETRY_SYNC', `Error posting telemetry: ${error.message} (Status: ${status})`);
               
-              // Dead Letter Queue validation:
-              // If status is 400 (Bad Request), or it's a structural database schema constraint fail,
-              // we increment the retry count. If it exceeds 3 retries, discard it.
               const isValidationError = status === 400 || (status >= 401 && status < 500) || error.message.toLowerCase().includes('validation') || error.message.toLowerCase().includes('syntax');
               
               if (isValidationError) {
@@ -184,17 +293,24 @@ export function useTelemetrySync() {
                 
                 if (currentRetries >= 2) {
                   Logger.log('TELEMETRY_SYNC', `Dead Letter Queue: Discarding corrupted item ${item.session_hash} after 3 failed attempts.`);
-                  removeTelemetryItem(item.id);
+                  if (useTelemetryStore.getState().isQueueLoaded) {
+                    useTelemetryStore.getState().removeTelemetryItem(item.id);
+                  }
                 } else {
-                  incrementRetryCount(item.id);
+                  if (useTelemetryStore.getState().isQueueLoaded) {
+                    useTelemetryStore.getState().incrementRetryCount(item.id);
+                  }
                 }
+
+                this.badPacketCount = this.badPacketCount + 1;
+                const pacingDelay = Math.min(2000, 50 * Math.pow(2, this.badPacketCount));
+                Logger.log('TELEMETRY_SYNC', `Validation error paced delay: ${pacingDelay}ms`);
+                await new Promise(r => setTimeout(r, pacingDelay));
               } else {
-                // Treats as network error or server overload (5xx / network timeout)
                 networkErrorOccurred = true;
                 break;
               }
             } else {
-              // Successfully posted
               Logger.log('TELEMETRY_SYNC', `Successfully synced session: ${item.session_hash}`);
               try {
                 await AsyncStorage.setItem('last_successful_session_hash', item.session_hash);
@@ -202,8 +318,11 @@ export function useTelemetrySync() {
               } catch (storageErr) {
                 Logger.log('TELEMETRY_SYNC', `Failed to write last_successful_session_hash to AsyncStorage: ${storageErr}`);
               }
-              removeTelemetryItem(item.id);
-              attemptRef.current = 0; // Reset backoff attempts on successful send
+              if (useTelemetryStore.getState().isQueueLoaded) {
+                useTelemetryStore.getState().removeTelemetryItem(item.id);
+              }
+              this.attempt = 0;
+              this.badPacketCount = 0;
             }
           } catch (postErr: any) {
             Logger.log('TELEMETRY_SYNC', `Network error posting telemetry: ${postErr.message || postErr}`);
@@ -212,21 +331,18 @@ export function useTelemetrySync() {
           }
         }
 
-        // If a network error occurred, halt the sync loop and schedule a retry
         if (networkErrorOccurred) {
-          const attempt = attemptRef.current;
-          attemptRef.current = attempt + 1;
+          const attemptVal = this.attempt;
+          this.attempt = attemptVal + 1;
           
-          // Exponential backoff: base_delay * 2^attempt
-          const backoffDelay = Math.min(MAX_DELAY_MS, BASE_DELAY_MS * Math.pow(2, attempt));
-          // Jitter: +/- 500ms
+          const backoffDelay = Math.min(MAX_DELAY_MS, BASE_DELAY_MS * Math.pow(2, this.attempt));
           const jitter = Math.random() * 1000 - 500;
           const finalDelay = Math.max(1000, backoffDelay + jitter);
 
-          Logger.log('TELEMETRY_SYNC', `Network sync halted. Retrying in ${Math.round(finalDelay)}ms (Attempt #${attemptRef.current})`);
+          Logger.log('TELEMETRY_SYNC', `Network sync halted. Retrying in ${Math.round(finalDelay)}ms (Attempt #${this.attempt})`);
           
-          syncTimeoutRef.current = setTimeout(() => {
-            syncQueue();
+          this.syncTimeout = setTimeout(() => {
+            this.syncQueue();
           }, finalDelay);
           break;
         }
@@ -234,33 +350,35 @@ export function useTelemetrySync() {
     } catch (e: any) {
       Logger.log('TELEMETRY_SYNC', `Sync loop exception: ${e.message}`);
     } finally {
-      isSyncingRef.current = false;
+      this.isSyncing = false;
     }
-  };
+  }
+}
 
+export function useTelemetrySync() {
   useEffect(() => {
-    // Listen to network status changes
+    const manager = TelemetrySyncManager.getInstance();
+    manager.start();
+
     const unsubscribe = SafeNetInfo.addEventListener((state: any) => {
       const isConnected = state.isConnected && state.isInternetReachable !== false;
-      Logger.log('TELEMETRY_SYNC', `Network changed. Connected: ${isConnected}`);
+      manager.setNetInfoConnected(isConnected);
       if (isConnected) {
-        syncQueue();
+        manager.syncQueue();
       }
     });
 
-    // Run initial sync check
     SafeNetInfo.fetch().then((state: any) => {
       const isConnected = state.isConnected && state.isInternetReachable !== false;
+      manager.setNetInfoConnected(isConnected);
       if (isConnected) {
-        syncQueue();
+        manager.syncQueue();
       }
     });
 
     return () => {
       unsubscribe();
-      if (syncTimeoutRef.current) {
-        clearTimeout(syncTimeoutRef.current);
-      }
+      manager.stop();
     };
   }, []);
 }

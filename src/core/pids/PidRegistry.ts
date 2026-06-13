@@ -420,13 +420,20 @@ export class PidRegistry {
         previousValue: number | null,
         elapsedMs: number
     ): boolean {
-        if (previousValue === null || elapsedMs <= 0) {
+        if (previousValue === null) {
             return true;
         }
 
         if (pidDef.maxJumpPer100ms !== undefined) {
             const delta = Math.abs(value - previousValue);
-            const allowedJump = (pidDef.maxJumpPer100ms / 100) * elapsedMs;
+            const calcElapsed = Math.max(10, Math.min(60, elapsedMs));
+            let allowedJump = (pidDef.maxJumpPer100ms / 100) * calcElapsed;
+            
+            // Jitter Lag Compensation: Inject 1.50 tolerance multiplier for lag > 60ms
+            if (elapsedMs > 60) {
+                allowedJump = allowedJump * 1.50;
+            }
+
             if (delta > allowedJump) {
                 return false;
             }

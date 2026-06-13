@@ -129,14 +129,14 @@ export class CommandScheduler {
         const isTimeout = error?.message && error.message.includes('Timeout');
         if (isTimeout) {
             const now = Date.now();
-            if (now - this.timeoutWindowStart > 8000) {
+            if (now - this.timeoutWindowStart > 5000) {
                 this.timeoutWindowStart = now;
                 this.timeoutCount = 1;
             } else {
                 this.timeoutCount++;
             }
 
-            // Circuit Breaker: 3 timeouts in 8 seconds (tweak suggested by mimar) -> Degrade
+            // Circuit Breaker: 3 timeouts in 5 seconds -> Degrade
             if (this.timeoutCount >= 3 && this.mode === SchedulerMode.NORMAL) {
                 this.mode = SchedulerMode.DEGRADED;
                 this.consecutiveSuccessCount = 0;
@@ -147,6 +147,10 @@ export class CommandScheduler {
 
     getMode(): SchedulerMode {
         return this.mode;
+    }
+
+    getQueueLength(): number {
+        return this.queue.length;
     }
 
     clear(activeError: Error, queueError: Error) {

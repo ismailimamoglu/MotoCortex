@@ -398,6 +398,10 @@ class BluetoothServiceIOS implements IBluetoothService {
             useBluetoothStore.getState().addLog(`RX_LISTENER_REMOVED. Active count: 0`);
         }
     }
+    clearBuffer() {
+        this.bleDataBuffer = '';
+        this.iosBleBuffer = '';
+    }
 
     private startConnectionMonitor() {
         this.stopConnectionMonitor();

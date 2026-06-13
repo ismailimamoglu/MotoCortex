@@ -55,3 +55,48 @@ export async function calculateSessionHash(
     return `fallback_${Math.abs(hash).toString(16)}_${Date.now()}`;
   }
 }
+
+/**
+ * Converts a hex string into a Uint8Array.
+ */
+export function hexToUint8Array(hexString: string): Uint8Array {
+  const cleanHex = hexString.replace(/\s+/g, '');
+  const len = cleanHex.length;
+  if (len % 2 !== 0) {
+    throw new Error('Invalid hex string');
+  }
+  const array = new Uint8Array(len / 2);
+  for (let i = 0; i < len; i += 2) {
+    array[i / 2] = parseInt(cleanHex.substring(i, i + 2), 16);
+  }
+  return array;
+}
+
+/**
+ * Converts a string into a Uint8Array (compatible with JS engines lacking TextEncoder).
+ */
+export function stringToUint8Array(str: string): Uint8Array {
+  const arr = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) {
+    arr[i] = str.charCodeAt(i) & 0xFF;
+  }
+  return arr;
+}
+
+import nacl from 'tweetnacl';
+
+/**
+ * Verifies Ed25519 signature of the given data using the public key hex and signature hex.
+ */
+export function verifyEd25519Signature(data: string, signatureHex: string, publicKeyHex: string): boolean {
+  try {
+    const msgBytes = stringToUint8Array(data);
+    const sigBytes = hexToUint8Array(signatureHex);
+    const pubKeyBytes = hexToUint8Array(publicKeyHex);
+    return nacl.sign.detached.verify(msgBytes, sigBytes, pubKeyBytes);
+  } catch (e) {
+    console.error('[Crypto] Ed25519 verification failed:', e);
+    return false;
+  }
+}
+

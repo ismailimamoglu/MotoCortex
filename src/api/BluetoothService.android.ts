@@ -389,6 +389,9 @@ class BluetoothServiceAndroid implements IBluetoothService {
             useBluetoothStore.getState().addLog(`RX_LISTENER_REMOVED. Active count: 0`);
         }
     }
+    clearBuffer() {
+        this.bleDataBuffer = '';
+    }
 
     private startListening() {
         if (!this.connectedDevice) return;

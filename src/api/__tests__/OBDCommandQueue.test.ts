@@ -35,7 +35,8 @@ jest.mock('../BluetoothService', () => {
                         (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
                     }
                 }
-            })
+            }),
+            clearBuffer: jest.fn()
         }
     };
 });
@@ -60,7 +61,8 @@ jest.mock('../BluetoothService.ios', () => {
                         (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
                     }
                 }
-            })
+            }),
+            clearBuffer: jest.fn()
         }
     };
 });
@@ -85,7 +87,8 @@ jest.mock('../BluetoothService.android', () => {
                         (global as any).mockDataListener(`41 ${cmd.substring(3)} RESP_${cmd}\r>`);
                     }
                 }
-            })
+            }),
+            clearBuffer: jest.fn()
         }
     };
 });

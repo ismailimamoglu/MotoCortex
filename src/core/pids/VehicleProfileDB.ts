@@ -1,3 +1,5 @@
+import RNFS from 'react-native-fs';
+
 export interface VehicleProfile {
     id: string;
     make: string;
@@ -12,6 +14,7 @@ export interface VehicleProfile {
 }
 
 export class VehicleProfileDB {
+    private static loadedProfiles: VehicleProfile[] = [];
     private static profiles: VehicleProfile[] = [
         {
             id: "dacia_logan_2011_kline",
@@ -101,16 +104,38 @@ export class VehicleProfileDB {
         }
     ];
 
+    public static async reloadProfiles(): Promise<void> {
+        const filePath = `${RNFS.DocumentDirectoryPath}/oem_profiles.json`;
+        try {
+            const exists = await RNFS.exists(filePath);
+            if (exists) {
+                const content = await RNFS.readFile(filePath, 'utf8');
+                const data = JSON.parse(content);
+                if (Array.isArray(data)) {
+                    this.loadedProfiles = data;
+                    return;
+                }
+            }
+        } catch (e) {
+            console.error('[VehicleProfileDB] Failed to load dynamic profiles:', e);
+        }
+        this.loadedProfiles = [];
+    }
+
+    public static getActiveProfiles(): VehicleProfile[] {
+        return this.loadedProfiles.length > 0 ? this.loadedProfiles : this.profiles;
+    }
+
     public static getProfileById(id: string): VehicleProfile | undefined {
-        return this.profiles.find(p => p.id === id);
+        return this.getActiveProfiles().find(p => p.id === id);
     }
 
     public static getProfilesByMake(make: string): VehicleProfile[] {
-        return this.profiles.filter(p => p.make.toLowerCase() === make.toLowerCase());
+        return this.getActiveProfiles().filter(p => p.make.toLowerCase() === make.toLowerCase());
     }
 
     public static getAllProfiles(): VehicleProfile[] {
-        return [...this.profiles];
+        return [...this.getActiveProfiles()];
     }
 
     /**

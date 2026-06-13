@@ -22,6 +22,7 @@ export interface IBluetoothService {
     write(data: string): Promise<void>;
     onDataReceived(listener: DataListener): void;
     removeListener(listener: DataListener): void;
+    clearBuffer(): void;
     saveLastDevice(deviceId: string, deviceName: string): Promise<void>;
     getLastDevice(): Promise<{ id: string; name: string } | null>;
 }

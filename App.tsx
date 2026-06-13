@@ -876,6 +876,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
         showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between', paddingBottom: scaleHeight(80) }}
         bounces={true}
+        scrollEnabled={height < scaleHeight(700)}
       >
         <View>
           {renderConnectionCard()}
@@ -1246,6 +1247,13 @@ function MainApp() {
   const initializeDeviceUuid = useAppStore((state) => state.initializeDeviceUuid);
   const appUserId = useAppStore((state) => state.appUserId);
   const language = useAppStore((state) => state.language);
+
+  // Sync language selection to i18n instance on rehydration and updates
+  useEffect(() => {
+    if (language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
 
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -2067,14 +2075,13 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               )}
               <ActivityIndicator size="large" color={tc.amber} />
               <Text style={{ color: tc.amber, fontFamily: MONO, fontSize: 11, fontWeight: 'bold', textAlign: 'center', lineHeight: 16 }}>
-                {connectionState === 'CONNECTING' && `${t('connection.ecuWait', 'ECU bağlantısı başlatılıyor, lütfen bekleyin...')} [1/5]`}
+                {connectionState === 'ADAPTER_CONNECTING' && `${t('connection.ecuWait', 'ECU bağlantısı başlatılıyor, lütfen bekleyin...')} [1/5]`}
                 {connectionState === 'ADAPTER_CONNECTED' && t('connection.adapterApproved', 'ADAPTÖR ONAYLANDI. YETENEKLER ANALİZ EDİLİYOR... [2/5]')}
-                {connectionState === 'PROTOCOL_NEGOTIATING' && t('connection.protocolNegotiating', 'PROTOKOL TARANIYOR & UYANDIRMA... [3/5]')}
-                {connectionState === 'ECU_DETECTED' && t('connection.ecuDetected', 'ECU ALGILANDI, DOĞRULANIYOR... [4/5]')}
-                {connectionState === 'ECU_RESPONDING' && t('connection.ecuResponding', 'ECU YANIT VERDİ, BAĞLANTI TAMAMLANIYOR... [5/5]')}
-                {!['CONNECTING', 'ADAPTER_CONNECTED', 'PROTOCOL_NEGOTIATING', 'ECU_DETECTED', 'ECU_RESPONDING'].includes(connectionState) && t('connection.ecuWait', 'ECU\'ya bağlanılıyor...')}
+                {connectionState === 'PROTOCOL_SCANNING' && t('connection.protocolNegotiating', 'PROTOKOL TARANIYOR & UYANDIRMA... [3/5]')}
+                {connectionState === 'ECU_HANDSHAKE' && t('connection.ecuResponding', 'ECU YANIT VERDİ, BAĞLANTI TAMAMLANIYOR... [4/5]')}
+                {!['ADAPTER_CONNECTING', 'ADAPTER_CONNECTED', 'PROTOCOL_SCANNING', 'ECU_HANDSHAKE'].includes(connectionState) && t('connection.ecuWait', 'ECU\'ya bağlanılıyor...')}
               </Text>
-              {connectionState === 'PROTOCOL_NEGOTIATING' && (
+              {connectionState === 'PROTOCOL_SCANNING' && (
                 <Text style={{ color: tc.textSec, fontFamily: MONO, fontSize: 9, textAlign: 'center', marginTop: 2 }}>
                   {t('connection.protocolScanningHint', '(Standart SP5, SP3, SP6, SP7 protokolleri sırayla taranıyor...)')}
                 </Text>
@@ -2084,9 +2091,8 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           {ecuStatus === 'error' && (
             <View style={{ alignItems: 'center', marginVertical: 12, gap: 10, width: '100%' }}>
               <Text style={{ color: tc.red, fontFamily: MONO, fontSize: 11, fontWeight: 'bold', textAlign: 'center', lineHeight: 15 }}>
-                {connectionState === 'PROTOCOL_FAILED' && t('connection.protocolFailed', '⚠️ UYUMLU PROTOKOL BULUNAMADI! (SP5, SP3, SP6, SP7 denendi)')}
-                {connectionState === 'ECU_NOT_FOUND' && t('connection.ecuNotFound', '⚠️ ARAÇ BEYNİ (ECU) YANIT VERMİYOR!')}
-                {connectionState !== 'PROTOCOL_FAILED' && connectionState !== 'ECU_NOT_FOUND' && `⚠️ ${t('connection.ecuNoResponse', 'ECU yanıt vermedi. Kontak açık mı?')}`}
+                {connectionState === 'HARDWARE_FATAL' && `⚠️ ${t('connection.ecuNoResponse', 'ECU yanıt vermedi. Kontak açık mı?')}`}
+                {connectionState !== 'HARDWARE_FATAL' && `⚠️ ${t('connection.ecuNoResponse', 'ECU yanıt vermedi. Kontak açık mı?')}`}
               </Text>
               
               <Text style={{ color: tc.textSec, fontFamily: MONO, fontSize: 10, textAlign: 'center' }}>
