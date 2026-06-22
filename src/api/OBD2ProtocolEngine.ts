@@ -4,6 +4,11 @@ import { CircuitState, ProtocolCircuitBreaker } from '../core/connection/Protoco
 import { TransportRateLimiter } from '../core/transport/TransportRateLimiter';
 import { AssembledFrame, BLEMultiFrameAssembler } from '../core/parser/BLEMultiFrameAssembler';
 
+export enum CommandTrack {
+  PRIORITY = 'PRIORITY',
+  STREAM = 'STREAM',
+}
+
 export interface ProtocolEngineConfig {
   rttSampleSize: number;
   rttMultiplier: number;
@@ -11,6 +16,7 @@ export interface ProtocolEngineConfig {
   timeoutFloorMs: number;
   timeoutCeilingMs: number;
   minCommandSpacingMs: number;
+  maxStreamQueueDepth: number;
 }
 
 export interface EngineResponse {
@@ -20,16 +26,21 @@ export interface EngineResponse {
   isMultiFrame: boolean;
   rttMs: number;
   timeoutMs: number;
+  track: CommandTrack;
 }
 
 export interface SendOptions {
   timeoutMs?: number;
+  track?: CommandTrack;
 }
 
 export interface EngineDiagnostics {
   connectionState: ConnectionState;
   circuitState: CircuitState;
-  queueDepth: number;
+  priorityDepth: number;
+  streamDepth: number;
+  streamPaused: boolean;
+  inFlight: string | null;
   rttSamples: number;
   averageRttMs: number;
   nextAdaptiveTimeoutMs: number;
@@ -37,6 +48,7 @@ export interface EngineDiagnostics {
 
 interface PendingCommand {
   command: string;
+  track: CommandTrack;
   resolve: (response: EngineResponse) => void;
   reject: (error: Error) => void;
   explicitTimeoutMs?: number;
@@ -49,14 +61,19 @@ const DEFAULT_CONFIG: ProtocolEngineConfig = {
   timeoutFloorMs: 500,
   timeoutCeilingMs: 5000,
   minCommandSpacingMs: 60,
+  maxStreamQueueDepth: 8,
 };
 
 /**
- * System 2 — the protocol orchestration layer.
+ * System 2 — protocol orchestration layer.
  *
  * Sits on top of the BluetoothManager transport and binds the circuit breaker,
  * rate limiter and multi-frame assembler into a single serialized request/response
- * engine with an adaptive, RTT-driven timeout model.
+ * engine with an adaptive, RTT-driven timeout model and a preemptive two-track queue.
+ *
+ * Wire atomicity invariant: at most one command is ever on the wire (`active`). A new
+ * command is dispatched only after the current one resolves, fails or times out, so a
+ * priority preemption can never interrupt an in-flight packet mid-stream.
  */
 export class OBD2ProtocolEngine {
   private readonly manager: BluetoothManager;
@@ -65,7 +82,10 @@ export class OBD2ProtocolEngine {
   private readonly assembler: BLEMultiFrameAssembler;
   private readonly config: ProtocolEngineConfig;
 
-  private readonly queue: PendingCommand[] = [];
+  private readonly priorityQueue: PendingCommand[] = [];
+  private readonly streamQueue: PendingCommand[] = [];
+  private streamPaused = false;
+
   private active: PendingCommand | null = null;
   private activeTimer: ReturnType<typeof setTimeout> | null = null;
   private activeDispatchedAt = 0;
@@ -89,7 +109,8 @@ export class OBD2ProtocolEngine {
     this.manager = manager;
     this.breaker = breaker;
     this.config = { ...DEFAULT_CONFIG, ...config };
-    this.rateLimiter = rateLimiter ?? new TransportRateLimiter({ minIntervalMs: this.config.minCommandSpacingMs });
+    this.rateLimiter =
+      rateLimiter ?? new TransportRateLimiter({ minIntervalMs: this.config.minCommandSpacingMs });
     this.assembler = assembler;
   }
 
@@ -106,39 +127,81 @@ export class OBD2ProtocolEngine {
     this.connectionState = this.manager.getState();
   }
 
-  dispose(): void {
+  stop(): void {
+    this.destroy();
+  }
+
+  destroy(): void {
     this.started = false;
     this.disposed = true;
+
+    this.manager.off('stateChange', this.handleStateChange);
+    this.manager.off('data', this.handleData);
+    this.breaker.detach();
+    this.rateLimiter.detach();
     this.unsubscribers.splice(0, this.unsubscribers.length).forEach((unsubscribe) => unsubscribe());
+
     this.abortAll(new Error('ENGINE_DISPOSED'));
-    this.assembler.reset();
+    this.assembler.clear();
   }
 
   send(command: string, options: SendOptions = {}): Promise<EngineResponse> {
+    const track = options.track ?? CommandTrack.PRIORITY;
     if (this.disposed) {
       return Promise.reject(new Error('ENGINE_DISPOSED'));
     }
     return new Promise<EngineResponse>((resolve, reject) => {
-      this.queue.push({ command, resolve, reject, explicitTimeoutMs: options.timeoutMs });
+      const item: PendingCommand = {
+        command,
+        track,
+        resolve,
+        reject,
+        explicitTimeoutMs: options.timeoutMs,
+      };
+      if (track === CommandTrack.PRIORITY) {
+        this.enqueuePriority(item);
+      } else {
+        this.enqueueStream(item);
+      }
       this.scheduleDispatch();
     });
+  }
+
+  stream(command: string, options: Omit<SendOptions, 'track'> = {}): Promise<EngineResponse> {
+    return this.send(command, { ...options, track: CommandTrack.STREAM });
   }
 
   getDiagnostics(): EngineDiagnostics {
     return {
       connectionState: this.connectionState,
       circuitState: this.breaker.getState(),
-      queueDepth: this.queue.length + (this.active ? 1 : 0),
+      priorityDepth: this.priorityQueue.length,
+      streamDepth: this.streamQueue.length,
+      streamPaused: this.streamPaused,
+      inFlight: this.active ? this.active.command : null,
       rttSamples: this.rttHistory.length,
       averageRttMs: this.averageRtt(),
       nextAdaptiveTimeoutMs: this.computeAdaptiveTimeout(),
     };
   }
 
+  private enqueuePriority(item: PendingCommand): void {
+    this.priorityQueue.push(item);
+    this.streamPaused = true;
+  }
+
+  private enqueueStream(item: PendingCommand): void {
+    if (this.streamQueue.length >= this.config.maxStreamQueueDepth) {
+      const stale = this.streamQueue.shift();
+      stale?.reject(new Error('STREAM_COALESCED'));
+    }
+    this.streamQueue.push(item);
+  }
+
   private handleStateChange = (event: StateChangeEvent): void => {
     this.connectionState = event.current;
     if (event.current !== ConnectionState.READY) {
-      this.assembler.reset();
+      this.assembler.clear();
       this.abortAll(new Error('CONNECTION_NOT_READY'));
     }
   };
@@ -160,12 +223,33 @@ export class OBD2ProtocolEngine {
     }, 0);
   }
 
+  private selectNext(): PendingCommand | null {
+    if (this.priorityQueue.length > 0) {
+      return this.priorityQueue.shift() as PendingCommand;
+    }
+
+    if (this.streamPaused) {
+      this.flushStreamBacklog();
+      this.streamPaused = false;
+      return null;
+    }
+
+    if (this.streamQueue.length > 0) {
+      return this.streamQueue.shift() as PendingCommand;
+    }
+
+    return null;
+  }
+
   private async dispatch(): Promise<void> {
-    if (this.disposed || this.active || this.queue.length === 0) {
+    if (this.disposed || this.active) {
       return;
     }
 
-    const item = this.queue.shift() as PendingCommand;
+    const item = this.selectNext();
+    if (!item) {
+      return;
+    }
     this.active = item;
 
     if (!this.breaker.canExecute()) {
@@ -195,7 +279,7 @@ export class OBD2ProtocolEngine {
     const timeoutMs = item.explicitTimeoutMs ?? this.computeAdaptiveTimeout();
     this.activeTimeoutMs = timeoutMs;
     this.activeDispatchedAt = Date.now();
-    this.assembler.reset();
+    this.assembler.clear();
 
     this.activeTimer = setTimeout(() => this.failActive(new Error('TIMEOUT')), timeoutMs);
 
@@ -223,6 +307,7 @@ export class OBD2ProtocolEngine {
       isMultiFrame: frame.isMultiFrame,
       rttMs,
       timeoutMs: this.activeTimeoutMs,
+      track: item.track,
     });
 
     this.scheduleDispatch();
@@ -233,10 +318,17 @@ export class OBD2ProtocolEngine {
 
     const item = this.active;
     this.clearActiveTimer();
+    this.assembler.clear();
     this.breaker.recordFailure();
     this.active = null;
     item.reject(error);
     this.scheduleDispatch();
+  }
+
+  private flushStreamBacklog(): void {
+    if (this.streamQueue.length === 0) return;
+    const stale = this.streamQueue.splice(0, this.streamQueue.length);
+    stale.forEach((item) => item.reject(new Error('STREAM_FLUSHED')));
   }
 
   private abortAll(error: Error): void {
@@ -246,8 +338,12 @@ export class OBD2ProtocolEngine {
       this.active = null;
       item.reject(error);
     }
-    const pending = this.queue.splice(0, this.queue.length);
-    pending.forEach((item) => item.reject(error));
+    const drained = [
+      ...this.priorityQueue.splice(0, this.priorityQueue.length),
+      ...this.streamQueue.splice(0, this.streamQueue.length),
+    ];
+    drained.forEach((item) => item.reject(error));
+    this.streamPaused = false;
     this.rateLimiter.flush();
   }
 

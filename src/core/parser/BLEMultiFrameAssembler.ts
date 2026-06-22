@@ -55,8 +55,12 @@ export class BLEMultiFrameAssembler {
     return frames;
   }
 
-  reset(): void {
+  clear(): void {
     this.buffer = '';
+  }
+
+  reset(): void {
+    this.clear();
   }
 
   peekBuffer(): string {
