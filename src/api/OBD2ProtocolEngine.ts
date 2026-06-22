@@ -97,6 +97,14 @@ function scheduleMicrotask(callback: () => void): void {
 }
 
 /**
+ * After this many back-to-back microtask dispatches the loop deliberately yields to a
+ * macro-task. This prevents a tight microtask chain (e.g. a backlog of instantly rejected
+ * commands while the circuit is OPEN) from starving the Hermes thread, guaranteeing the
+ * UI / Reanimated frame pool keeps draining under sustained 20Hz polling.
+ */
+const MICROTASK_YIELD_THRESHOLD = 8;
+
+/**
  * System 2 — protocol orchestration layer.
  *
  * Owns the full ELM327 handshake waterfall at the singleton level (independent of any
@@ -134,6 +142,7 @@ export class OBD2ProtocolEngine {
   private started = false;
   private disposed = false;
   private dispatchScheduled = false;
+  private microtaskHops = 0;
   private readonly unsubscribers: Unsubscribe[] = [];
 
   constructor(
@@ -344,10 +353,19 @@ export class OBD2ProtocolEngine {
   private scheduleDispatch(): void {
     if (this.dispatchScheduled) return;
     this.dispatchScheduled = true;
-    scheduleMicrotask(() => {
+
+    const run = () => {
       this.dispatchScheduled = false;
       void this.dispatch();
-    });
+    };
+
+    if (this.microtaskHops >= MICROTASK_YIELD_THRESHOLD) {
+      this.microtaskHops = 0;
+      setTimeout(run, 0);
+    } else {
+      this.microtaskHops += 1;
+      scheduleMicrotask(run);
+    }
   }
 
   private selectNext(): PendingCommand | null {
@@ -375,6 +393,7 @@ export class OBD2ProtocolEngine {
 
     const item = this.selectNext();
     if (!item) {
+      this.microtaskHops = 0;
       return;
     }
     this.active = item;

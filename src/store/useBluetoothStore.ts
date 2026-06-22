@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { VehicleMake } from '../utils/vinDecoder';
 
-type ConnectionStatus = 'disconnected' | 'scanning' | 'connecting' | 'connected' | 'error';
+export type ConnectionStatus = 'disconnected' | 'scanning' | 'connecting' | 'connected' | 'error';
 
-interface BluetoothState {
+export interface BluetoothState {
     status: ConnectionStatus;
     adapterStatus: ConnectionStatus;
     ecuStatus: ConnectionStatus;

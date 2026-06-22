@@ -17,7 +17,7 @@ import {
   parseVINResponse,
   parseVoltageResponse,
 } from '../core/parser/OBDResponseParser';
-import { useBluetoothStore } from '../store/useBluetoothStore';
+import { useBluetoothStore, BluetoothState } from '../store/useBluetoothStore';
 
 export type TelemetryListener = (response: EngineResponse) => void;
 
@@ -36,7 +36,7 @@ export interface DiagnosticEngineApi {
 
 type StoreStatus = 'disconnected' | 'scanning' | 'connecting' | 'connected' | 'error';
 
-const PID_STORE_KEY: Record<string, string> = {
+const PID_STORE_KEY: Record<string, keyof BluetoothState> = {
   '0C': 'rpm',
   '0D': 'speed',
   '05': 'coolant',
@@ -83,12 +83,11 @@ function applyResponseToStore(response: EngineResponse): void {
   const command = response.command.replace(/\s+/g, '').toUpperCase();
   const store = useBluetoothStore.getState();
   const setSensorData = store.setSensorData;
-  type SensorPatch = Parameters<typeof setSensorData>[0];
 
   if (command === 'ATRV') {
     const voltage = parseVoltageResponse(response.assembled);
     if (voltage) {
-      setSensorData({ voltage } as SensorPatch);
+      setSensorData({ voltage });
     }
     return;
   }
@@ -96,7 +95,7 @@ function applyResponseToStore(response: EngineResponse): void {
   if (command === '0902') {
     const vin = parseVINResponse(response.assembled);
     if (vin) {
-      setSensorData({ vin } as SensorPatch);
+      setSensorData({ vin });
     }
     return;
   }
@@ -104,13 +103,13 @@ function applyResponseToStore(response: EngineResponse): void {
   if (command === '0904') {
     const ecuId = parseCalibrationIdResponse(response.assembled);
     if (ecuId) {
-      setSensorData({ ecuId } as SensorPatch);
+      setSensorData({ ecuId });
     }
     return;
   }
 
   if (command === '03') {
-    setSensorData({ dtcs: parseDTCResponse(response.assembled) } as SensorPatch);
+    setSensorData({ dtcs: parseDTCResponse(response.assembled) });
     return;
   }
 
@@ -120,7 +119,7 @@ function applyResponseToStore(response: EngineResponse): void {
     if (!key) return;
     const value = parsePIDResponse(pid, response.assembled);
     if (typeof value === 'number' && Number.isFinite(value)) {
-      setSensorData({ [key]: value } as SensorPatch);
+      setSensorData({ [key]: value } as Partial<BluetoothState>);
     }
   }
 }

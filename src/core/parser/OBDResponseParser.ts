@@ -42,6 +42,11 @@ const FRAME_INDEX_GLOBAL = /(^|\s)[0-9A-F]+:\s*/g;
 const NOISE_GLOBAL = /(SEARCHING\.*|BUS\s*INIT\.*|BUSINIT\.*)/g;
 const ERROR_TOKENS = ['NODATA', 'ERROR', 'UNABLE', 'BUSBUSY', 'BUSERROR', 'CANERROR', 'STOPPED', 'BUFFERFULL', 'FBERROR', 'RXERROR', '7F'];
 
+/** SAE J1979 diagnostic trouble code shape — anything else is adapter echo noise. */
+const DTC_PATTERN = /^[PCBU][0-9A-F]{4}$/;
+/** Null DTC: a clean "no faults" marker that must never be surfaced as a raw code. */
+const DTC_NO_FAULT = 'P0000';
+
 function normaliseHex(raw: string): string {
   return raw
     .toUpperCase()
@@ -130,6 +135,10 @@ export function parseDTCResponse(rawHex: string): string[] {
     const secondDigit = (highNibble & 3).toString();
     const remainder = codeHex.slice(1);
     const code = `${typeLetter}${secondDigit}${remainder}`;
+
+    if (!DTC_PATTERN.test(code) || code === DTC_NO_FAULT) {
+      continue;
+    }
     if (!codes.includes(code)) {
       codes.push(code);
     }
