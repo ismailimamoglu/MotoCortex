@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './global.css';
-import { AppState, StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList, Linking, useWindowDimensions, KeyboardAvoidingView, LogBox, Image } from 'react-native';
+import { AppState, StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList, Linking, useWindowDimensions, KeyboardAvoidingView, LogBox, Image, Animated } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,7 +13,6 @@ import BatteryTestModal from './src/components/BatteryTestModal';
 import FreezeFrameModal from './src/components/FreezeFrameModal';
 import PerformanceModal from './src/components/PerformanceModal';
 import HardwareHealthModal from './src/components/HardwareHealthModal';
-import HiddenFeaturesModal from './src/components/HiddenFeaturesModal';
 import { useBluetoothStore } from './src/store/useBluetoothStore';
 import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
 import i18n from './src/i18n';
@@ -29,6 +28,7 @@ import * as Clipboard from 'expo-clipboard';
 import { useAppStore, checkIsProStatus, ThemeMode, AppLanguage } from './src/store/useAppStore';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 import Paywall from './src/components/Paywall';
+import ContextualPaywallModal from './src/components/ContextualPaywallModal';
 import { useThemeColors, getTheme } from './src/theme';
 import { BluetoothBridgeInitializer } from './src/components/BluetoothBridgeInitializer';
 import { useResponsive } from './src/hooks/useResponsive';
@@ -45,7 +45,7 @@ import AboutView from './src/components/AboutView';
 import ObdTerminalModal from './src/components/ObdTerminalModal';
 import LanguageSelectionView from './src/components/LanguageSelectionView';
 
-const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
 // Guard font scaling globally to prevent OS accessibility text sizing from breaking the UI layout
 if ((Text as any).defaultProps) {
@@ -69,11 +69,66 @@ LogBox.ignoreLogs([
   /AppTransaction Failed/
 ]);
 
+// [v7.5.0 FIX-4] SHIMMER SENSOR CARD
+// Displayed during PID capability discovery (supportedPids.length === 0 while connected).
+// Prevents the UI from flashing unsupported sensor cards before discovery completes.
+const ShimmerSensorCard = React.memo(({ width, height, tc, scaleMod }: {
+  width: string | number;
+  height: number;
+  tc: any;
+  scaleMod: (n: number) => number;
+}) => {
+  const shimmerOpacity = React.useRef(new Animated.Value(0.25)).current;
+  React.useEffect(() => {
+    const anim = Animated.loop(
+      Animated.sequence([
+        Animated.timing(shimmerOpacity, { toValue: 0.6, duration: 850, useNativeDriver: true }),
+        Animated.timing(shimmerOpacity, { toValue: 0.25, duration: 850, useNativeDriver: true }),
+      ])
+    );
+    anim.start();
+    return () => anim.stop();
+  }, [shimmerOpacity]);
+
+  return (
+    <Animated.View
+      style={{
+        width: width as any,
+        height,
+        backgroundColor: tc.card,
+        borderWidth: 1.2,
+        borderColor: tc.border,
+        borderLeftWidth: 4,
+        borderLeftColor: tc.border,
+        borderRadius: scaleMod(8),
+        opacity: shimmerOpacity,
+      }}
+    />
+  );
+});
+
 const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: any, size: number, tc: any }) => {
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont } = useResponsive();
   
   // Parse numeric value
   const numVal = value !== null && value !== undefined ? parseFloat(String(value).replace(/[^0-9.]/g, '')) : 0;
+
+  const lastSmoothedVal = React.useRef<number | null>(null);
+  const prevRawVal = React.useRef<number | null>(null);
+
+  let displayNumVal = numVal;
+  if (sensor.key === 'rpm') {
+    if (lastSmoothedVal.current === null) {
+      lastSmoothedVal.current = numVal;
+      prevRawVal.current = numVal;
+    } else if (numVal !== prevRawVal.current) {
+      const delta = Math.abs(numVal - lastSmoothedVal.current);
+      const alpha = Math.max(0.15, Math.min(0.85, 0.15 + delta / 3000));
+      lastSmoothedVal.current = alpha * numVal + (1 - alpha) * lastSmoothedVal.current;
+      prevRawVal.current = numVal;
+    }
+    displayNumVal = lastSmoothedVal.current;
+  }
   
   // Define ranges for standard sensors
   let min = 0;
@@ -89,11 +144,14 @@ const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: 
   else if (sensor.key === 'manifoldPressure') { min = 0; max = 250; }
   else if (sensor.key === 'intakeAirTemp' || sensor.key === 'ambientTemp') { min = -20; max = 80; }
   
-  const pct = Math.max(0, Math.min(1, (numVal - min) / (max - min)));
+  const pct = Math.max(0, Math.min(1, (displayNumVal - min) / (max - min)));
   // Map 0-1 to angle: -135deg (min) to +135deg (max)
   const angle = -135 + pct * 270;
   
-  const displayVal = value !== null && value !== undefined ? String(value).replace(/[A-Za-z]/g, '') : '--';
+  let displayVal = value !== null && value !== undefined ? String(value).replace(/[A-Za-z]/g, '') : '--';
+  if (sensor.key === 'rpm' && value !== null && value !== undefined) {
+    displayVal = String(Math.round(displayNumVal));
+  }
   
   // Generate tick marks at 30 degree intervals (total of 10 ticks: -135, -105, -75, -45, -15, 15, 45, 75, 105, 135)
   const tickAngles = [-135, -105, -75, -45, -15, 15, 45, 75, 105, 135];
@@ -244,6 +302,11 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
   const protocol = useBluetoothStore(s => s.protocol);
   const adapterCapabilityScore = useBluetoothStore(s => s.adapterCapabilityScore);
   const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
+  // [v7.5.0 FIX-4] PID capability discovery state
+  // isPidDiscoveryComplete: true when CapabilityDiscoveryManager has populated supportedPids,
+  // or when not connected (no shimmer needed in disconnected state).
+  const supportedPids = useBluetoothStore(s => s.supportedPids);
+  const isPidDiscoveryComplete = ecuStatus !== 'connected' || supportedPids.length > 0;
 
   // Read all sensor values from useBluetoothStore
   const sensorValues = {
@@ -318,7 +381,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
             borderRadius: scaleMod(12), paddingHorizontal: scaleMod(8), paddingVertical: scaleHeight(3),
           }}>
             <Text style={{ color: isCloneDevice ? tc.red : tc.green, fontSize: scaleFont(8.2), fontFamily: MONO, fontWeight: '800' }}>
-              🛡️ {isCloneDevice ? 'CLONE ADAPTER' : 'ORIGINAL'} ({adapterCapabilityScore}/100)
+              🛡️ {isCloneDevice ? t('dashboard.adapterClone') : t('dashboard.adapterOriginal')} ({adapterCapabilityScore}/100)
             </Text>
           </View>
 
@@ -474,7 +537,35 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
 
   const renderSensorGrid = () => {
     const itemGap = isTablet ? scaleMod(10) : scaleMod(6);
-    const activeConfigs = ALL_SENSORS.filter(s => activeSensors.includes(s.key));
+
+    // [v7.5.0 FIX-4] SHIMMER LOADING STATE during PID capability discovery
+    if (!isPidDiscoveryComplete) {
+      const shimmerCount = Math.max(activeSensors.length, 4);
+      const shimmerStyles = Array.from({ length: shimmerCount }, (_, idx) =>
+        getCardStyle(idx, shimmerCount)
+      );
+      return (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: itemGap, marginBottom: isTablet ? 0 : scaleHeight(10) }}>
+          {shimmerStyles.map((cfg, idx) => (
+            <ShimmerSensorCard key={`shimmer-grid-${idx}`} width={cfg.width} height={cfg.height} tc={tc} scaleMod={scaleMod} />
+          ))}
+        </View>
+      );
+    }
+
+    // [v7.5.0 FIX-4] DEFENSIVE PID SUPPORT MASKING
+    // s.pid?.replace: optional chaining guards against null/undefined pid fields.
+    // Critical PIDs (RPM 0C, Speed 0D, Coolant 05) bypass the supportedPids check —
+    // CapabilityDiscoveryManager always injects them into the emergency baseline.
+    const CRITICAL_PIDS = ['0C', '0D', '05'];
+    const activeConfigs = ALL_SENSORS.filter(s => {
+      if (!activeSensors.includes(s.key)) return false;
+      const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
+      if (!pidHex) return true; // guard: if pid field missing, show card
+      if (CRITICAL_PIDS.includes(pidHex)) return true;
+      return supportedPids.some(p => p === pidHex || p.startsWith(pidHex + '@'));
+    });
+
 
     return (
       <View style={{ 
@@ -558,9 +649,29 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
   };
 
   const renderSensorList = () => {
-    const activeConfigs = ALL_SENSORS.filter(s => activeSensors.includes(s.key));
     const cardPad = isTablet ? scaleHeight(12) : scaleHeight(8);
     const itemGap = isTablet ? scaleMod(10) : scaleMod(6);
+
+    // [v7.5.0 FIX-4] Shimmer loading state during PID discovery
+    if (!isPidDiscoveryComplete) {
+      const shimmerCount = Math.max(activeSensors.length, 4);
+      return (
+        <View style={{ flexDirection: isTablet ? 'row' : 'column', flexWrap: isTablet ? 'wrap' : 'nowrap', justifyContent: isTablet ? 'space-between' : 'flex-start', gap: itemGap, marginBottom: isTablet ? 0 : scaleHeight(10) }}>
+          {Array.from({ length: shimmerCount }, (_, idx) => (
+            <ShimmerSensorCard key={`shimmer-list-${idx}`} width={isTablet ? '48.5%' : '100%'} height={scaleHeight(58)} tc={tc} scaleMod={scaleMod} />
+          ))}
+        </View>
+      );
+    }
+
+    const CRITICAL_PIDS = ['0C', '0D', '05'];
+    const activeConfigs = ALL_SENSORS.filter(s => {
+      if (!activeSensors.includes(s.key)) return false;
+      const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
+      if (!pidHex) return true;
+      if (CRITICAL_PIDS.includes(pidHex)) return true;
+      return supportedPids.some(p => p === pidHex || p.startsWith(pidHex + '@'));
+    });
 
     return (
       <View style={{ 
@@ -615,7 +726,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
                       marginTop: scaleHeight(1.5) 
                     }}
                   >
-                    PID: {sensor.pid}
+                    {t('dashboard.pidLabel', { pid: sensor.pid })}
                   </Text>
                 </View>
               </View>
@@ -654,8 +765,29 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
 
   const renderSensorGauge = () => {
     const itemGap = isTablet ? scaleMod(12) : scaleMod(8);
-    const activeConfigs = ALL_SENSORS.filter(s => activeSensors.includes(s.key));
     const size = isTablet ? scaleMod(130) : scaleMod(95);
+
+    // [v7.5.0 FIX-4] Shimmer loading state during PID discovery
+    if (!isPidDiscoveryComplete) {
+      const shimmerCount = Math.max(activeSensors.length, 4);
+      const gaugeCardSize = size + scaleHeight(36);
+      return (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: itemGap, marginBottom: isTablet ? 0 : scaleHeight(10) }}>
+          {Array.from({ length: shimmerCount }, (_, idx) => (
+            <ShimmerSensorCard key={`shimmer-gauge-${idx}`} width={isTablet ? '31.3%' : '47%'} height={gaugeCardSize} tc={tc} scaleMod={scaleMod} />
+          ))}
+        </View>
+      );
+    }
+
+    const CRITICAL_PIDS = ['0C', '0D', '05'];
+    const activeConfigs = ALL_SENSORS.filter(s => {
+      if (!activeSensors.includes(s.key)) return false;
+      const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
+      if (!pidHex) return true;
+      if (CRITICAL_PIDS.includes(pidHex)) return true;
+      return supportedPids.some(p => p === pidHex || p.startsWith(pidHex + '@'));
+    });
 
     return (
       <View style={{ 
@@ -1199,10 +1331,13 @@ function MainApp() {
     dtcs, vin, odometer, distanceSinceCleared, distanceMilOn,
     isDiagnosticMode, isAdaptationRunning,
     startPolling, stopPolling,
-    runDiagnostics, clearDiagnostics, runAdaptationRoutine,
+    runDiagnostics, clearDiagnostics, runAdaptationRoutine, proGuardAction,
     lastDeviceId, lastDeviceName, isCloneDevice, connectionState,
     protocol, adapterCapabilityScore
   } = useBluetooth();
+
+  const connectionProgress = useBluetoothStore((s) => s.connectionProgress);
+  const connectionSteps = useBluetoothStore((s) => s.connectionSteps);
 
   // Reset active session telemetry details on disconnect
   useEffect(() => {
@@ -1687,7 +1822,6 @@ function MainApp() {
   const [isBatteryTestVisible, setIsBatteryTestVisible] = useState(false);
   const [isFreezeFrameVisible, setIsFreezeFrameVisible] = useState(false);
   const [isPerformanceVisible, setIsPerformanceVisible] = useState(false);
-  const [isHiddenFeaturesVisible, setIsHiddenFeaturesVisible] = useState(false);
 
 
 
@@ -1828,15 +1962,6 @@ function MainApp() {
     action();
   };
 
-  const proGuardAction = (action: () => void) => {
-    // Eğer kullanıcı PRO değilse VE Simülasyon modunda değilse paywall'u aç!
-    if (!isPro && !isSimulationMode) {
-      setIsPaywallVisible(true);
-      return;
-    }
-    guardAction(action);
-  };
-
   const hasFreeUsage = () => {
     return isPro || isSimulationMode || (useAppStore.getState().freeUsageCount < 3);
   };
@@ -1933,6 +2058,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       {/* Logo */}
       <TouchableOpacity style={s.logoArea} activeOpacity={0.8} onPress={handleLogoTap}>
         <Text style={s.logoText}>MOTOCORTEX</Text>
+        <Text style={[s.logoText, { fontSize: scaleFont(16), letterSpacing: 2, marginTop: scaleHeight(2) }]}>OBD2 SCANNER</Text>
         <Text style={s.logoSub}>v7 PRO {isSimulationMode ? '(SIM)' : ''}</Text>
       </TouchableOpacity>
 
@@ -2052,40 +2178,58 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       ) : (
         <View style={s.connectActions}>
           {ecuStatus === 'connecting' && (
-            <View style={{ alignItems: 'center', justifyContent: 'center', gap: 12, marginVertical: 16, width: '100%' }}>
-              {adapterStatus === 'connected' && (
-                <View style={{
-                  backgroundColor: `${tc.green}18`,
-                  borderColor: tc.green,
-                  borderWidth: 1.5,
-                  borderRadius: 12,
-                  padding: 12,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  width: '100%',
-                  marginBottom: 8
-                }}>
-                  <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: tc.green }} />
-                  <Text style={{ color: tc.green, fontFamily: MONO, fontSize: 11, fontWeight: '900', letterSpacing: 0.5 }}>
-                    ✓ {t('connection.adapterConnected', 'ADAPTÖRE BAĞLANDI (OK)').toUpperCase()}
-                  </Text>
-                </View>
-              )}
-              <ActivityIndicator size="large" color={tc.amber} />
-              <Text style={{ color: tc.amber, fontFamily: MONO, fontSize: 11, fontWeight: 'bold', textAlign: 'center', lineHeight: 16 }}>
-                {connectionState === 'ADAPTER_CONNECTING' && `${t('connection.ecuWait', 'ECU bağlantısı başlatılıyor, lütfen bekleyin...')} [1/5]`}
-                {connectionState === 'ADAPTER_CONNECTED' && t('connection.adapterApproved', 'ADAPTÖR ONAYLANDI. YETENEKLER ANALİZ EDİLİYOR... [2/5]')}
-                {connectionState === 'PROTOCOL_SCANNING' && t('connection.protocolNegotiating', 'PROTOKOL TARANIYOR & UYANDIRMA... [3/5]')}
-                {connectionState === 'ECU_HANDSHAKE' && t('connection.ecuResponding', 'ECU YANIT VERDİ, BAĞLANTI TAMAMLANIYOR... [4/5]')}
-                {!['ADAPTER_CONNECTING', 'ADAPTER_CONNECTED', 'PROTOCOL_SCANNING', 'ECU_HANDSHAKE'].includes(connectionState) && t('connection.ecuWait', 'ECU\'ya bağlanılıyor...')}
-              </Text>
-              {connectionState === 'PROTOCOL_SCANNING' && (
-                <Text style={{ color: tc.textSec, fontFamily: MONO, fontSize: 9, textAlign: 'center', marginTop: 2 }}>
-                  {t('connection.protocolScanningHint', '(Standart SP5, SP3, SP6, SP7 protokolleri sırayla taranıyor...)')}
+            <View style={{ alignItems: 'stretch', gap: scaleMod(14), marginVertical: scaleHeight(16), width: '100%' }}>
+              {/* Progress Bar Header */}
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(2) }}>
+                <Text style={{ color: tc.textPri, fontFamily: MONO, fontSize: scaleFont(12), fontWeight: '900', letterSpacing: 0.5 }}>
+                  {t('connection.connectingECU', 'ECU BAĞLANTISI').toUpperCase()}
                 </Text>
-              )}
+                <Text style={{ color: tc.cyan, fontFamily: MONO, fontSize: scaleFont(14), fontWeight: '900' }}>
+                  %{connectionProgress}
+                </Text>
+              </View>
+
+              {/* Progress Bar Line */}
+              <View style={{ height: scaleHeight(8), width: '100%', backgroundColor: `${tc.border}66`, borderRadius: scaleMod(4), overflow: 'hidden' }}>
+                <View style={{ height: '100%', width: `${connectionProgress}%`, backgroundColor: tc.cyan, borderRadius: scaleMod(4) }} />
+              </View>
+
+              {/* Steps Checklist Card */}
+              <View style={{ backgroundColor: tc.card, borderWidth: 1.2, borderColor: tc.border, borderRadius: scaleMod(12), padding: scaleMod(14), gap: scaleMod(10) }}>
+                {connectionSteps.map((step) => {
+                  const isIdle = step.status === 'idle';
+                  const isPending = step.status === 'pending';
+                  const isSuccess = step.status === 'success';
+                  const isFailed = step.status === 'failed';
+
+                  let statusIcon = '⚪';
+                  let textColor = tc.textSec;
+                  let fontW: 'normal' | 'bold' | '900' = 'normal';
+
+                  if (isPending) {
+                    statusIcon = '⏳';
+                    textColor = tc.amber;
+                    fontW = 'bold';
+                  } else if (isSuccess) {
+                    statusIcon = '✅';
+                    textColor = tc.green;
+                    fontW = 'bold';
+                  } else if (isFailed) {
+                    statusIcon = '❌';
+                    textColor = tc.red;
+                    fontW = 'bold';
+                  }
+
+                  return (
+                    <View key={step.id} style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(10) }}>
+                      <Text style={{ fontSize: scaleFont(12.5) }}>{statusIcon}</Text>
+                      <Text style={{ flex: 1, color: textColor, fontFamily: MONO, fontSize: scaleFont(10.5), fontWeight: fontW }}>
+                        {t(step.labelKey, step.defaultLabel).toUpperCase()}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
             </View>
           )}
           {ecuStatus === 'error' && (
@@ -2127,6 +2271,27 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       const labelSz = isCompact ? scaleFont(9) : scaleFont(11);
       const valSz = isCompact ? scaleFont(9) : scaleFont(11);
       const titleSz = isCompact ? scaleFont(9) : scaleFont(11);
+
+      // Contextual ASO copywriting: dynamic persuasion text based on DTC system group
+      const getContextualDtcDesc = (dtcCode: string): string => {
+        const upper = dtcCode.toUpperCase();
+        const prefix = upper.charAt(0);
+        const subGroup = upper.substring(1, 3);
+        switch (prefix) {
+          case 'P':
+            if (subGroup === '01') return t('dtcContext.cooling', 'Critical cooling hazard detected. View detailed repair steps →');
+            if (subGroup === '03') return t('dtcContext.ignition', 'Ignition system issue detected. View detailed repair steps →');
+            return t('dtcContext.powertrain', 'This fault may affect fuel economy and engine performance. Unlock full diagnosis →');
+          case 'C':
+            return t('dtcContext.chassis', 'Chassis safety system alert. Unlock PRO for full analysis →');
+          case 'B':
+            return t('dtcContext.body', 'Body electronics fault found. Upgrade for complete diagnostics →');
+          case 'U':
+            return t('dtcContext.network', 'Communication network error. PRO unlocks full troubleshooting →');
+          default:
+            return t('dtcContext.fallback', 'Unlock detailed fault analysis, repair costs & risk assessment →');
+        }
+      };
       
       return (
         <View style={{ flex: 1, gap: isCompact ? scaleHeight(8) : scaleHeight(16) }}>
@@ -2195,7 +2360,11 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
             <View style={[s.panelHeader, { marginBottom: isCompact ? scaleHeight(4) : scaleHeight(8) }]}>
               <Text style={[s.panelTitle, { marginBottom: 0, fontSize: titleSz }]}>{t('expertise.dtcTitle')}</Text>
               {dtcs.length > 0 && (
-                <TouchableOpacity onPress={() => guardAction(clearDiagnostics)} disabled={isDiagnosticMode} style={s.clearBtn}>
+                <TouchableOpacity onPress={() => {
+                  try {
+                    proGuardAction(clearDiagnostics);
+                  } catch (e) {}
+                }} disabled={isDiagnosticMode} style={s.clearBtn}>
                   <Text style={[s.clearBtnText, { fontSize: isCompact ? scaleFont(9) : scaleFont(11) }]}>{t('common.clear')}</Text>
                 </TouchableOpacity>
               )}
@@ -2232,28 +2401,48 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               isCompact ? (
                 dtcs.map((dtc, i) => {
                   const desc = lookupDTC(dtc);
+                  const isPro = useAppStore.getState().isPro;
+                  const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
                   return (
-                    <View key={i} style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]} >
+                    <TouchableOpacity
+                      key={i}
+                      style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
+                      onPress={() => {
+                        if (!isPro) {
+                          useBluetoothStore.getState().setPaywallContext(dtc);
+                        }
+                      }}
+                    >
                       <View style={s.dtcDot} />
                       <View style={{ flex: 1 }}>
                         <Text style={[s.dtcCode, { fontSize: scaleFont(11) }]}>{dtc}</Text>
-                        {desc && <Text style={{ color: tc.red, opacity: 0.8, fontSize: scaleFont(9), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(12) }}>{desc}</Text>}
+                        {desc && <Text style={{ color: tc.red, opacity: 0.8, fontSize: scaleFont(9), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(12) }}>{displayDesc}</Text>}
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   );
                 })
               ) : (
                 <View style={{ gap: scaleHeight(4) }}>
                   {dtcs.map((dtc, i) => {
                     const desc = lookupDTC(dtc);
+                    const isPro = useAppStore.getState().isPro;
+                    const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
                     return (
-                      <View key={i} style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]} >
+                      <TouchableOpacity
+                        key={i}
+                        style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
+                        onPress={() => {
+                          if (!isPro) {
+                            useBluetoothStore.getState().setPaywallContext(dtc);
+                          }
+                        }}
+                      >
                         <View style={s.dtcDot} />
                         <View style={{ flex: 1 }}>
                           <Text style={[s.dtcCode, { fontSize: scaleFont(10) }]}>{dtc}</Text>
-                          {desc && <Text style={{ color: tc.red, opacity: 0.8, fontSize: scaleFont(8), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(11) }}>{desc}</Text>}
+                          {desc && <Text style={{ color: tc.red, opacity: 0.8, fontSize: scaleFont(8), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(11) }}>{displayDesc}</Text>}
                         </View>
-                      </View>
+                      </TouchableOpacity>
                     );
                   })}
                 </View>
@@ -2565,7 +2754,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               }}>
                 <Text allowFontScaling={false} numberOfLines={1} style={{ fontSize: scaleFont(9.2), flexShrink: 0 }}>🛡️</Text>
                 <Text allowFontScaling={false} numberOfLines={1} style={{ color: isCloneDevice ? colors.red : colors.green, fontSize: scaleFont(9.2), fontFamily: MONO, fontWeight: '800', flexShrink: 0 }}>
-                  {isCloneDevice ? 'CLONE' : 'ORIGINAL'} {adapterCapabilityScore}%
+                  {isCloneDevice ? t('dashboard.adapterCloneShort') : t('dashboard.adapterOriginalShort')} {adapterCapabilityScore}%
                 </Text>
               </View>
             )}
@@ -2718,10 +2907,10 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                   s.topLogo,
                   {
                     color: colors.cyan,
-                    fontSize: isPhone ? (isSimulationMode ? scaleFont(12) : scaleFont(13.5)) : scaleFont(14.5),
-                    letterSpacing: isPhone ? 1 : 2
+                    fontSize: isPhone ? (isSimulationMode ? scaleFont(10.5) : scaleFont(11.5)) : scaleFont(13),
+                    letterSpacing: 0.5
                   }
-                ]}>MOTOCORTEX {isSimulationMode ? 'SIM' : ''}</Text>
+                ]}>MOTOCORTEX OBD2 {isSimulationMode ? 'SIM' : ''}</Text>
               </TouchableOpacity>
               <View style={[s.topBadge, { borderColor: statusColor(ecuStatus) }]}>
                 <View style={[s.topBadgeDot, { backgroundColor: statusColor(ecuStatus) }]} />
@@ -2731,13 +2920,6 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               </View>
             </View>
             <View style={s.topRight}>
-              <TouchableOpacity 
-                activeOpacity={0.7}
-                onPress={() => (isPro || isSimulationMode) ? Alert.alert(t('common.proActive'), t('common.proActiveDesc')) : setIsPaywallVisible(true)}
-                style={{ backgroundColor: `${colors.purple}1F`, borderWidth: 1, borderColor: colors.purple, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 }}
-              >
-                <Text style={{ color: `${colors.purple}CC`, fontSize: 10, fontWeight: '900', fontFamily: MONO }}>👑 PRO</Text>
-              </TouchableOpacity>
               {ecuStatus === 'connected' && (
                 <TouchableOpacity 
                   onPress={() => disconnect()} 
@@ -3094,16 +3276,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           onClose={() => setIsPerformanceVisible(false)}
         />
 
-        {/* Hidden Features Modal */}
-        <HiddenFeaturesModal
-          visible={isHiddenFeaturesVisible}
-          onClose={() => setIsHiddenFeaturesVisible(false)}
-          vehicleName={
-            activeSessionVehicle
-              ? `${activeSessionVehicle.brand} ${activeSessionVehicle.model} ${activeSessionVehicle.year || ''}`.trim()
-              : undefined
-          }
-        />
+
 
       </View>
       </SafeAreaView>
@@ -3138,6 +3311,9 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
         visible={isPaywallVisible}
         onClose={() => setIsPaywallVisible(false)}
       />
+
+      {/* Contextual Paywall Modal */}
+      <ContextualPaywallModal />
       </View>
     </BluetoothBridgeInitializer>
   );

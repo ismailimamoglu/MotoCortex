@@ -565,4 +565,4 @@ export default function BentoGrid({
   );
 }
 
-const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';

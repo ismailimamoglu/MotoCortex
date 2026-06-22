@@ -1,27 +1,34 @@
 export class ISOTPDecoder {
+    /**
+     * Global Hardened Multi-ECU aware ISO-TP Decoder
+     */
     decode(lines: string[]): string {
-        let isMultiFrame = false;
-        let totalLength = 0;
-        let accumulatedHex = '';
-        
-        const processedPayloads: string[] = [];
+        const pendingBuffers = new Map<string, { totalLength: number; accumulatedHex: string; isMulti: boolean }>();
+        const stablePayloads: string[] = [];
 
         for (const line of lines) {
             let cleanLine = line.toUpperCase().replace(/\s+/g, '');
-            if (!cleanLine) continue;
+            if (!cleanLine || cleanLine.includes("CANERROR") || cleanLine.includes("?") || cleanLine.includes("STOPPED")) continue;
 
-            // 1. Strip CAN Arbitration headers
-            if (cleanLine.startsWith('7E8')) {
+            let ecuId = "7E8";
+            let hasHeader = false;
+
+            if (cleanLine.startsWith('7E8') || cleanLine.startsWith('7E9') || cleanLine.startsWith('7EA') ||
+                cleanLine.startsWith('7EB') || cleanLine.startsWith('7EC') || cleanLine.startsWith('7ED') ||
+                cleanLine.startsWith('7EE') || cleanLine.startsWith('7EF')) {
+                ecuId = cleanLine.substring(0, 3);
                 cleanLine = cleanLine.substring(3);
-            } else if (cleanLine.startsWith('7E9') || cleanLine.startsWith('7EA') || cleanLine.startsWith('7EB') || cleanLine.startsWith('7EC') || cleanLine.startsWith('7ED') || cleanLine.startsWith('7EE') || cleanLine.startsWith('7EF')) {
-                continue; // Discard non-engine CAN frames
-            } else if (cleanLine.startsWith('18DAF110')) {
+                hasHeader = true;
+            } else if (cleanLine.startsWith('18DAF110') || cleanLine.startsWith('18DAF118') || cleanLine.startsWith('18DAF1')) {
+                ecuId = cleanLine.substring(0, 8);
                 cleanLine = cleanLine.substring(8);
-            } else if (cleanLine.startsWith('18DAF1')) {
-                continue; // Discard other 29-bit CAN frames
+                hasHeader = true;
             }
 
-            // 2. Strip multi-line tag prefixes (e.g. "0:")
+            if (hasHeader && ecuId !== '7E8' && ecuId !== '18DAF110') {
+                continue;
+            }
+
             const indexMatch = cleanLine.match(/^(\d+:)/);
             if (indexMatch) {
                 cleanLine = cleanLine.substring(indexMatch[1].length);
@@ -29,44 +36,54 @@ export class ISOTPDecoder {
 
             if (cleanLine.length < 2) continue;
 
-            // 3. Parse ISO-TP PCI (Protocol Control Information) byte
+            // --- CLONE ADAPTER UART OVERFLOW / MERGE GUARD ---
+            // After removing header and prefix, the payload (PCI + Data bytes) 
+            // should not exceed 8 bytes (16 hex characters) for a standard CAN frame.
+            if (cleanLine.length > 16) {
+                continue;
+            }
+
             const pciType = parseInt(cleanLine.substring(0, 1), 16);
-            
+
             if (pciType === 0) {
-                // Single Frame (SF): 0X -> X is length
+                // Single Frame (SF)
                 const length = parseInt(cleanLine.substring(1, 2), 16);
                 if (length > 0 && cleanLine.length >= 2 + (length * 2)) {
-                    processedPayloads.push(cleanLine.substring(2, 2 + (length * 2)));
+                    stablePayloads.push(cleanLine.substring(2, 2 + (length * 2)));
                 }
             } else if (pciType === 1) {
-                // First Frame (FF): 1X YY -> XYY is 12-bit length
-                isMultiFrame = true;
-                totalLength = parseInt(cleanLine.substring(1, 4), 16);
-                accumulatedHex = cleanLine.substring(4);
+                // First Frame (FF)
+                const totalLength = parseInt(cleanLine.substring(1, 4), 16);
+                pendingBuffers.set(ecuId, {
+                    totalLength: totalLength * 2,
+                    accumulatedHex: cleanLine.substring(4),
+                    isMulti: true
+                });
             } else if (pciType === 2) {
-                // Consecutive Frame (CF): 2X -> X is sequence number
-                if (isMultiFrame) {
-                    accumulatedHex += cleanLine.substring(2);
+                // Consecutive Frame (CF)
+                const currentCtx = pendingBuffers.get(ecuId);
+                if (currentCtx && currentCtx.isMulti) {
+                    currentCtx.accumulatedHex += cleanLine.substring(2);
+
+                    if (currentCtx.accumulatedHex.length >= currentCtx.totalLength) {
+                        stablePayloads.push(currentCtx.accumulatedHex.substring(0, currentCtx.totalLength));
+                        pendingBuffers.delete(ecuId);
+                    }
                 }
             } else if (pciType === 3) {
-                // Flow Control (FC): Discard
                 continue;
             } else {
-                // If there's no recognizable PCI prefix, keep raw line
-                processedPayloads.push(cleanLine);
+                stablePayloads.push(cleanLine);
             }
         }
 
-        if (isMultiFrame && accumulatedHex.length > 0) {
-            // Trim to target totalLength if it exceeds
-            const maxChars = totalLength * 2;
-            if (accumulatedHex.length > maxChars) {
-                accumulatedHex = accumulatedHex.substring(0, maxChars);
+        for (const [_, ctx] of pendingBuffers) {
+            if (ctx.accumulatedHex.length > 0) {
+                stablePayloads.push(ctx.accumulatedHex.substring(0, ctx.totalLength));
             }
-            processedPayloads.push(accumulatedHex);
         }
 
-        const joinedHex = processedPayloads.join('');
+        const joinedHex = stablePayloads.join('');
         const formatted: string[] = [];
         for (let i = 0; i < joinedHex.length; i += 2) {
             formatted.push(joinedHex.substring(i, i + 2));

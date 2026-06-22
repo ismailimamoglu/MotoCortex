@@ -84,10 +84,25 @@ jest.mock('../../utils/crypto', () => ({
     calculateSessionHash: jest.fn().mockResolvedValue('mock-hash'),
 }));
 
+let mockBluetoothState = {
+    dtcs: [] as any[],
+    connectingDeviceId: null as string | null,
+};
+
+const mockSetConnectingDeviceId = (id: string | null) => {
+    mockBluetoothState.connectingDeviceId = id;
+};
+
+const mockReset = () => {
+    mockBluetoothState.connectingDeviceId = null;
+};
+
 jest.mock('../useBluetoothStore', () => ({
     useBluetoothStore: {
         getState: () => ({
-            dtcs: [],
+            ...mockBluetoothState,
+            setConnectingDeviceId: mockSetConnectingDeviceId,
+            reset: mockReset,
         }),
         subscribe: jest.fn(() => jest.fn()),
     }
@@ -485,5 +500,25 @@ describe('useTelemetryStore Tests', () => {
         };
         const migrated = storeConfig.migrate(stateV2, 2);
         expect(migrated).toEqual(stateV2);
+    });
+
+    test('14. BluetoothStore Integration - connectingDeviceId is safely reset to null on successful connection/cancellation', () => {
+        const { useBluetoothStore } = require('../useBluetoothStore');
+        
+        useBluetoothStore.getState().setConnectingDeviceId('OBD-DEVICE-ID-1');
+        expect(useBluetoothStore.getState().connectingDeviceId).toBe('OBD-DEVICE-ID-1');
+        
+        useBluetoothStore.getState().setConnectingDeviceId(null);
+        expect(useBluetoothStore.getState().connectingDeviceId).toBeNull();
+    });
+
+    test('15. BluetoothStore Integration - connectingDeviceId is safely reset to null on connection exception/reset', () => {
+        const { useBluetoothStore } = require('../useBluetoothStore');
+        
+        useBluetoothStore.getState().setConnectingDeviceId('OBD-DEVICE-ID-2');
+        expect(useBluetoothStore.getState().connectingDeviceId).toBe('OBD-DEVICE-ID-2');
+        
+        useBluetoothStore.getState().reset();
+        expect(useBluetoothStore.getState().connectingDeviceId).toBeNull();
     });
 });

@@ -6,6 +6,7 @@ import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { generateUuid } from '../utils/crypto';
 import i18n from '../i18n';
+import { useBluetoothStore } from './useBluetoothStore';
 
 export type ThemeMode = 'dark' | 'light';
 export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id' | 'it' | 'ar' | 'zh' | 'da' | 'fi' | 'fr' | 'hi' | 'nl' | 'ja' | 'ko' | 'pl' | 'hu' | 'no' | 'pt' | 'ro' | 'ru' | 'th' | 'uk' | 'el' | 'cs' | 'sv';
@@ -20,6 +21,15 @@ export const checkIsProStatus = (customerInfo: CustomerInfo): boolean => {
   // Developer Backdoor check to bypass RevenueCat sandbox timeouts during local testing
   try {
     if (useAppStore.getState().isBackdoorPro) {
+      return true;
+    }
+  } catch (e) {}
+
+  // RAM Session Memory Lock: if connection is active and PRO was previously unlocked, hold state to prevent driving interruptions
+  try {
+    const state = useAppStore.getState();
+    const btState = useBluetoothStore.getState();
+    if (state.isSessionProMemoryLock && btState.status === 'connected') {
       return true;
     }
   } catch (e) {}
@@ -85,6 +95,7 @@ interface AppState {
   language: AppLanguage;
   isPro: boolean;
   isBackdoorPro: boolean;
+  isSessionProMemoryLock: boolean;
   hasOnboarded: boolean;
   packages: PurchasesPackage[];
   
@@ -108,6 +119,7 @@ interface AppState {
   restorePurchases: () => Promise<boolean>;
   fetchAppUserId: () => Promise<void>;
   initializeDeviceUuid: () => Promise<void>;
+  activateLocalGracePeriod: (txId: string) => Promise<void>;
 }
 
 export const useAppStore = create<AppState>()(
@@ -117,6 +129,7 @@ export const useAppStore = create<AppState>()(
       language: 'en',
       isPro: false,
       isBackdoorPro: false,
+      isSessionProMemoryLock: false,
       hasOnboarded: false,
       isSimulationMode: false,
       packages: [],
@@ -129,9 +142,17 @@ export const useAppStore = create<AppState>()(
         set({ language });
         await i18n.changeLanguage(language);
       },
-      setIsPro: (isPro) => set({ isPro }),
+      setIsPro: (isPro) => {
+        set({ isPro });
+        if (isPro) {
+          set({ isSessionProMemoryLock: true });
+        }
+      },
       setIsBackdoorPro: (isBackdoorPro) => {
         set({ isBackdoorPro, isPro: isBackdoorPro });
+        if (isBackdoorPro) {
+          set({ isSessionProMemoryLock: true });
+        }
       },
       setHasOnboarded: (hasOnboarded) => set({ hasOnboarded }),
       toggleSimulationMode: () => set((state) => {
@@ -221,12 +242,56 @@ export const useAppStore = create<AppState>()(
         }
       },
 
+      activateLocalGracePeriod: async (txId: string) => {
+        const timestamp = Date.now();
+        const deviceUuid = useAppStore.getState().deviceUuid || 'fallback-device-uuid';
+        const { signReceipt } = require('../utils/IapBridge');
+        const signature = await signReceipt(timestamp, txId, deviceUuid);
+        const receipt = { timestamp, transactionId: txId, signature };
+        try {
+          await SecureStore.setItemAsync('motocortex_grace_receipt', JSON.stringify(receipt));
+          set({ isPro: true, isSessionProMemoryLock: true });
+        } catch (err) {
+          console.error('[AppStore] Failed to save grace receipt:', err);
+        }
+      },
+
       verifyEntitlement: async () => {
+        // First check RAM memory lock
+        const btState = useBluetoothStore.getState();
+        if (useAppStore.getState().isSessionProMemoryLock && btState.status === 'connected') {
+          set({ isPro: true });
+          return;
+        }
+
+        // Check local grace period receipt in SecureStore
+        try {
+          const stored = await SecureStore.getItemAsync('motocortex_grace_receipt');
+          if (stored) {
+            const receipt = JSON.parse(stored);
+            const deviceUuid = useAppStore.getState().deviceUuid || 'fallback-device-uuid';
+            const { verifyReceipt } = require('../utils/IapBridge');
+            const isValid = await verifyReceipt(receipt, deviceUuid);
+            if (isValid) {
+              const age = Date.now() - receipt.timestamp;
+              if (age >= 0 && age < 24 * 60 * 60 * 1000) {
+                set({ isPro: true });
+                return;
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('[AppStore] Grace period verification error:', err);
+        }
+
         try {
           // RevenueCat natively caches customerInfo and resolves with it when offline.
           const customerInfo = await Purchases.getCustomerInfo();
           const isPro = checkIsProStatus(customerInfo);
           set({ isPro });
+          if (isPro) {
+            set({ isSessionProMemoryLock: true });
+          }
         } catch (error) {
           console.warn('[MOTO CORTEX] Offline verification error fetching native RevenueCat cache:', error);
           // If completely offline and getCustomerInfo throws, we do NOT change isPro to false to avoid locking the user out.
@@ -291,10 +356,16 @@ export const useAppStore = create<AppState>()(
         freeUsageCount: state.freeUsageCount,
         deviceUuid: state.deviceUuid,
         isBackdoorPro: state.isBackdoorPro,
+        isPro: state.isPro,
+        // isSessionProMemoryLock intentionally EXCLUDED — RAM-only lock
       }),
       onRehydrateStorage: () => (state) => {
         if (state?.language) {
           i18n.changeLanguage(state.language);
+        }
+        // Deterministic cold restart cleanup: destroy stale session lock
+        if (state) {
+          state.isSessionProMemoryLock = false;
         }
       },
     }

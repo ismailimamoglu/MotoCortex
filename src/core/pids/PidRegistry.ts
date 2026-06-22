@@ -1,3 +1,5 @@
+import { useTelemetryStore } from '../../store/useTelemetryStore';
+
 export interface PidDefinition {
     mode: string;
     pid: string;
@@ -9,6 +11,16 @@ export interface PidDefinition {
     decode: (bytes: number[]) => number | string;
     maxJumpPer100ms?: number; // Temporal sanity check constraint
     weight?: number; // Confidence level weight for heuristics
+}
+
+export interface TelemetryHealthAggregator {
+    packetLoss: number;
+    averageRtt: number;
+    decoderErrors: number;
+    queueDepth: number;
+    bleFragmentationRate: number;
+    commandTimeoutRate: number;
+    parserRecoveryCount: number;
 }
 
 const standardPidsList: PidDefinition[] = [
@@ -420,6 +432,14 @@ export class PidRegistry {
         previousValue: number | null,
         elapsedMs: number
     ): boolean {
+        if (pidDef.name === 'ENGINE_RPM') {
+            const activeVeh = useTelemetryStore.getState().activeSessionVehicle;
+            const dynamicLimit = (activeVeh as any)?.maxRpmLimit ?? 16000;
+            if (value > dynamicLimit) {
+                return false;
+            }
+        }
+
         if (previousValue === null) {
             return true;
         }

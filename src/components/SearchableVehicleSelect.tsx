@@ -29,7 +29,7 @@ export default function SearchableVehicleSelect({
   const colors = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet } = useResponsive();
 
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   // Selection states
   const [selectedBrand, setSelectedBrand] = useState<string>('');

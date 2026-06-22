@@ -104,7 +104,7 @@ export default function PermissionGateway() {
     }
   };
 
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   // Dynamic Styles generated using the responsive hooks (Memoized for zero re-render overhead)
   const sDyn = React.useMemo(() => {
@@ -298,4 +298,4 @@ export default function PermissionGateway() {
   );
 }
 
-const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';

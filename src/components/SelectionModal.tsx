@@ -63,7 +63,7 @@ function SelectionModalContent({
     return options.filter((opt) => opt.label.toLowerCase().includes(q));
   }, [options, searchQuery, showSearch]);
 
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   const sDyn = React.useMemo(() => {
     return {

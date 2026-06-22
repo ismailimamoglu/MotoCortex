@@ -251,10 +251,36 @@ class BluetoothServiceAndroid implements IBluetoothService {
                     try {
                         // Eşleşme Şelalesi: Bağlantı başarısızsa otonom pairDevice tetikle.
                         // RNBluetoothClassic kendi içinde PIN diyalogunu otonom olarak (In-App) tetikler.
-                        await RNBluetoothClassic.pairDevice(deviceId);
+                        const pairedDevice = await RNBluetoothClassic.pairDevice(deviceId);
                         
-                        // Eşleşme başarılı olursa yeniden bağlanmayı deneriz.
-                        const device = await RNBluetoothClassic.getConnectedDevice(deviceId) || await RNBluetoothClassic.connectToDevice(deviceId);
+                        // Propagation delay guard for OS bluetooth stack sync
+                        await new Promise(resolve => setTimeout(resolve, 150));
+                        
+                        const bonded = await RNBluetoothClassic.getBondedDevices();
+                        let device = bonded.find(d => d.address === deviceId);
+                        if (!device) {
+                            try { device = await RNBluetoothClassic.getConnectedDevice(deviceId); } catch (e) {}
+                        }
+                        if (!device && pairedDevice) {
+                            // Fallback directly to the reference returned by pairDevice
+                            device = pairedDevice;
+                        }
+                        if (!device) throw new Error('DEVICE_NOT_FOUND_AFTER_PAIRING');
+                        
+                        // Bonding Provisioning and SDP Channel Rehydration Assurance
+                        const isDeviceBonded = device.bonded === true || (await RNBluetoothClassic.getBondedDevices()).some(d => d.address === deviceId);
+                        if (!isDeviceBonded) {
+                            throw new Error('BONDING_PROVISIONING_FAILED_NOT_BONDED');
+                        }
+                        const sdpChannelsRehydrated = device.address && device.type ? true : false;
+                        if (!sdpChannelsRehydrated) {
+                            throw new Error('SDP_CHANNELS_NOT_REHYDRATED');
+                        }
+
+                        if (!await device.isConnected()) {
+                            const connected = await device.connect({ connectorType: 'rfcomm', DELIMITER: '', charset: 'utf-8' });
+                            if (!connected) throw new Error('CONNECTION_FAILED_AFTER_PAIRING');
+                        }
                         this.connectedDevice = device;
                         this.startListening();
                         this.reconnectAttempts = 0;
@@ -460,6 +486,10 @@ class BluetoothServiceAndroid implements IBluetoothService {
             const data = await AsyncStorage.getItem(this.STORAGE_KEY);
             return data ? JSON.parse(data) : null;
         } catch (e) { return null; }
+    }
+
+    async shutdownCurrentSocket(): Promise<void> {
+        await this.disconnect();
     }
 }
 

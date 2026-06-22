@@ -17,7 +17,7 @@ interface LanguageSelectionViewProps {
   onSelect: (lang: AppLanguage) => void;
 }
 
-const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
 export default function LanguageSelectionView({
   currentLanguage,

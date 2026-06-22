@@ -35,7 +35,7 @@ export default function ObdTerminalModal({
   const [terminalHistory, setTerminalHistory] = useState<{ type: 'cmd' | 'res' | 'err'; text: string; time: string }[]>([]);
   const [isSending, setIsSending] = useState(false);
 
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   // Read telemetry stats and diagnostic logs from Bluetooth store
   const { protocol, adapterCapabilityScore, telemetryStats, diagnosticLogs, clearDiagnosticLogs } = useBluetoothStore();
@@ -310,11 +310,11 @@ const s = StyleSheet.create({
     paddingVertical: 2,
   },
   statLabel: {
-    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
     fontSize: 11,
   },
   statVal: {
-    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
     fontSize: 11,
     fontWeight: '800',
   },

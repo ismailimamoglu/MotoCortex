@@ -14,7 +14,7 @@ import SelectionModal from './SelectionModal';
 import * as Haptics from 'expo-haptics';
 import { triggerHaptic } from '../utils/haptics';
 
-const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
 interface LiveEngineHeroProps {
   onConnectPress: () => void;
@@ -177,6 +177,9 @@ export default function LiveEngineHero({
 
   const isSmallPhone = height < 820;
 
+  const connectionProgress = useBluetoothStore((state) => state.connectionProgress);
+  const connectingDeviceId = useBluetoothStore((state) => state.connectingDeviceId);
+
   // Telemetry Store (Active Vehicle)
   const activeSessionVehicle = useTelemetryStore((state) => state.activeSessionVehicle);
   const setActiveSessionVehicle = useTelemetryStore((state) => state.setActiveSessionVehicle);
@@ -208,13 +211,6 @@ export default function LiveEngineHero({
     getRegisteredVehicles().then(setRegisteredVehicles);
   }, [activeSessionVehicle]);
 
-  const [connectingDeviceId, setConnectingDeviceId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (ecuStatus !== 'connecting') {
-      setConnectingDeviceId(null);
-    }
-  }, [ecuStatus]);
 
   useEffect(() => {
     if (activeSessionVehicle) {
@@ -827,16 +823,29 @@ export default function LiveEngineHero({
                                   borderRadius: scaleMod(8),
                                   padding: scaleMod(8),
                                   opacity: (connectingDeviceId && !isThisConnecting) ? 0.5 : 1,
+                                  overflow: 'hidden',
                                 }}
-                                disabled={!!connectingDeviceId}
+                                disabled={connectingDeviceId !== null}
                                 onPress={async () => {
                                   triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-                                  setConnectingDeviceId(d.address || d.id);
                                   handleRealConnect(d.address || d.id, d.name);
                                 }}
                                 activeOpacity={0.4}
                               >
-                                <View style={{ flex: 1, marginRight: 8 }}>
+                                {isThisConnecting && (
+                                  <View
+                                    style={{
+                                      position: 'absolute',
+                                      left: 0,
+                                      top: 0,
+                                      bottom: 0,
+                                      width: `${connectionProgress}%`,
+                                      backgroundColor: `${colors.cyan}20`,
+                                      zIndex: 0,
+                                    }}
+                                  />
+                                )}
+                                <View style={{ flex: 1, marginRight: 8, zIndex: 1 }}>
                                   <Text style={{ color: colors.textPri, fontSize: scaleFont(11), fontFamily: MONO, fontWeight: 'bold' }} numberOfLines={1}>
                                     {d.name || t('connection.unknownDevice')}
                                   </Text>
@@ -844,13 +853,17 @@ export default function LiveEngineHero({
                                     {d.address}
                                   </Text>
                                 </View>
-                                {isThisConnecting ? (
-                                  <ActivityIndicator size="small" color={colors.cyan} style={{ marginLeft: 8 }} />
-                                ) : (
-                                  <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold', flexShrink: 0 }}>
-                                    {t('connection.connectLabel', 'BAĞLAN')} ›
-                                  </Text>
-                                )}
+                                <View style={{ zIndex: 1 }}>
+                                  {isThisConnecting ? (
+                                    <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold', flexShrink: 0 }}>
+                                      {t('connection.progressFormat', '{{progress}}%').replace('{{progress}}', String(connectionProgress))}
+                                    </Text>
+                                  ) : (
+                                    <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold', flexShrink: 0 }}>
+                                      {t('connection.connectLabel', 'BAĞLAN')} ›
+                                    </Text>
+                                  )}
+                                </View>
                               </TouchableOpacity>
                             );
                           })}
@@ -912,7 +925,9 @@ export default function LiveEngineHero({
                         </Text>
                       </View>
                     )}
-                    <ActivityIndicator size="large" color={colors.amber} />
+                    <View style={{ width: '100%', height: scaleHeight(8), backgroundColor: `${colors.amber}20`, borderRadius: 4, overflow: 'hidden', marginVertical: scaleHeight(8) }}>
+                      <View style={{ width: `${connectionProgress}%`, height: '100%', backgroundColor: colors.amber, borderRadius: 4 }} />
+                    </View>
                     <Text style={{ color: colors.amber, fontFamily: MONO, fontSize: scaleFont(11), fontWeight: 'bold', textAlign: 'center' }}>
                       {connectionState === 'CONNECTING' && `${t('connection.ecuWait', 'ECU bağlantısı başlatılıyor, lütfen bekleyin...')} [1/5]`}
                       {connectionState === 'ADAPTER_CONNECTED' && t('connection.adapterApproved', 'ADAPTÖR ONAYLANDI. YETENEKLER ANALİZ EDİLİYOR... [2/5]')}

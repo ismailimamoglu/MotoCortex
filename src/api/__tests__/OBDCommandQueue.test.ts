@@ -10,6 +10,50 @@ jest.mock('react-native', () => ({
             remove: jest.fn(),
         })),
     },
+    Platform: {
+        OS: 'android',
+    },
+}));
+
+jest.mock('@react-native-async-storage/async-storage', () => ({
+    setItem: jest.fn().mockResolvedValue(true),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+}));
+
+jest.mock('react-native-purchases', () => ({
+    __esModule: true,
+    default: {
+        configure: jest.fn(),
+        getOfferings: jest.fn(),
+        purchasePackage: jest.fn(),
+        getCustomerInfo: jest.fn(),
+    },
+}));
+
+jest.mock('expo-secure-store', () => ({
+    setItemAsync: jest.fn(),
+    getItemAsync: jest.fn(),
+    deleteItemAsync: jest.fn(),
+}));
+
+jest.mock('expo-crypto', () => ({
+    CryptoDigestAlgorithm: {
+        SHA256: 'SHA-256',
+    },
+    digestStringAsync: jest.fn().mockResolvedValue('mock-hash'),
+}));
+
+jest.mock('expo-constants', () => ({
+    __esModule: true,
+    default: {
+        expoConfig: {
+            extra: {
+                EXPO_PUBLIC_SUPABASE_URL: 'https://mock.supabase.co',
+                EXPO_PUBLIC_SUPABASE_ANON_KEY: 'mock-key',
+            },
+        },
+    },
 }));
 
 import OBDCommandQueue from '../OBDCommandQueue';

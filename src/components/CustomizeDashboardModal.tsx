@@ -90,7 +90,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
 
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet } = useResponsive();
 
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   // Dynamic Styles (Memoized to prevent lag)
   const sDyn = React.useMemo(() => {
@@ -335,7 +335,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                         {t(sensor.nameKey, sensor.defaultName)}
                       </Text>
                       <Text style={[sDyn.sensorDetail, { color: colors.textSec, fontFamily: MONO }]}>
-                        PID: {sensor.pid} • Birim: {sensor.unit}
+                        PID: {sensor.pid} • {t('dashboard.unit', 'Birim')}: {sensor.unit}
                       </Text>
                     </View>
                   </View>

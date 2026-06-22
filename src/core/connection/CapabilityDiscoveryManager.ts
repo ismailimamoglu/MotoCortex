@@ -1,0 +1,138 @@
+// src/core/connection/CapabilityDiscoveryManager.ts
+// MotoCortex v7.9.9 - Hardened Multi-ECU Routing Engine (Type-Fixed)
+
+import OBDCommandQueue from '../../api/OBDCommandQueue';
+import { useBluetoothStore } from '../../store/useBluetoothStore';
+
+export class CapabilityDiscoveryManager {
+    private static DEFAULT_EMERGENCY_PIDS = ['0C@7E8', '0D@7E8', '05@7E8', '11@7E8'];
+
+    /**
+     * Discovers supported PIDs and constructs a deterministic PID-to-ECU Routing Table.
+     * Uses Explicit Node Multiplexing (PID@HEADER) to avoid transmission data masking.
+     */
+    public static async discoverSupportedPids(): Promise<void> {
+        const store = useBluetoothStore.getState();
+        store.addLog('CAPABILITY_DISCOVERY: Starting multi-node routing table discovery.');
+
+        const blockPids = ['00', '20', '40', '60'];
+        const blockStatus: Record<string, 'supported' | 'unsupported' | 'unknown'> = {};
+
+        const pidRoutingTable: Record<string, string[]> = {};
+        const masterSupportedPids: string[] = []; // Biçim: "PID@HEADER" (Örn: "0C@7E8")
+
+        for (const block of blockPids) {
+            const cmd = `01 ${block}`;
+            let success = false;
+            let attempts = 0;
+
+            while (attempts < 2 && !success) {
+                attempts++;
+                try {
+                    store.addLog(`CAPABILITY_DISCOVERY: Probing block 01${block} (Attempt ${attempts}/2)`);
+                    const res = await OBDCommandQueue.add(cmd, 1500);
+
+                    const clean = res ? res.replace(/\s+/g, '').toUpperCase() : '';
+                    const hasData = clean.includes('41' + block) &&
+                        !clean.includes('NODATA') &&
+                        !clean.includes('ERROR') &&
+                        !clean.includes('CANERROR') &&
+                        !clean.includes('?');
+
+                    if (hasData) {
+                        this.parseAndRoutePids(res, block, pidRoutingTable, masterSupportedPids);
+                        blockStatus[cmd] = 'supported';
+                        success = true;
+                        store.addLog(`CAPABILITY_DISCOVERY: Block 01${block} mapped. Total unique nodes in registry: ${masterSupportedPids.length}`);
+
+                        const nextBlockHex = (parseInt(block, 16) + 0x20).toString(16).toUpperCase();
+                        const blockCheckFound = masterSupportedPids.some(p => p.startsWith(nextBlockHex));
+                        if (!blockCheckFound && block !== '00') {
+                            store.addLog(`CAPABILITY_DISCOVERY: Perimeter complete. Next block ${nextBlockHex} absent.`);
+                            break;
+                        }
+                    } else {
+                        store.addLog(`CAPABILITY_DISCOVERY: Block 01${block} response invalid.`);
+                    }
+                } catch (err) {
+                    store.addLog(`CAPABILITY_DISCOVERY: Block 01${block} exception: ${err}`);
+                }
+            }
+
+            if (!success) {
+                blockStatus[cmd] = 'unknown';
+                break;
+            }
+        }
+
+        if (masterSupportedPids.length === 0) {
+            this.DEFAULT_EMERGENCY_PIDS.forEach(pKey => {
+                const [pid, node] = pKey.split('@');
+                pidRoutingTable[pid] = [node];
+            });
+
+            // TypeScript Tür Katı Kuralını Esnet (as any)
+            store.setSensorData({
+                supportedPids: this.DEFAULT_EMERGENCY_PIDS,
+                pidRoutingTable: pidRoutingTable,
+                pidBlocksStatus: blockStatus
+            } as any);
+        } else {
+            ['0C', '0D', '05', '11'].forEach(pid => {
+                if (!pidRoutingTable[pid]) pidRoutingTable[pid] = ['7E8'];
+                if (!masterSupportedPids.includes(`${pid}@7E8`)) masterSupportedPids.push(`${pid}@7E8`);
+            });
+
+            // TypeScript Tür Katı Kuralını Esnet (as any)
+            store.setSensorData({
+                supportedPids: masterSupportedPids,
+                pidRoutingTable: pidRoutingTable,
+                pidBlocksStatus: blockStatus
+            } as any);
+        }
+    }
+
+    /**
+     * Multiplexing Aware Parser Engine
+     */
+    private static parseAndRoutePids(response: string, offsetHex: string, table: Record<string, string[]>, masterList: string[]): void {
+        const lines = response.toUpperCase().split(/[\r\n]+/).map(l => l.trim().replace(/\s+/g, ''));
+        const marker = '41' + offsetHex.toUpperCase();
+        const offset = parseInt(offsetHex, 16);
+
+        for (const line of lines) {
+            const idx = line.indexOf(marker);
+            if (idx === -1) continue;
+
+            let nodeHeader = "7E8";
+            if (line.startsWith('7E8') || line.startsWith('7E9') || line.startsWith('7EA') || line.startsWith('7EB')) {
+                nodeHeader = line.substring(0, 3);
+            } else if (line.startsWith('18DAF1')) {
+                nodeHeader = line.substring(0, 8);
+            }
+
+            const bitmaskHex = line.substring(idx + marker.length, idx + marker.length + 8);
+            if (bitmaskHex.length < 8) continue;
+
+            for (let byteIdx = 0; byteIdx < 4; byteIdx++) {
+                const byteVal = parseInt(bitmaskHex.substring(byteIdx * 2, byteIdx * 2 + 2), 16);
+                if (isNaN(byteVal)) continue;
+
+                for (let bitIdx = 0; bitIdx < 8; bitIdx++) {
+                    const isSupported = (byteVal & (1 << (7 - bitIdx))) !== 0;
+                    if (isSupported) {
+                        const pidNum = offset + (byteIdx * 8) + bitIdx + 1;
+                        const pidHex = pidNum.toString(16).toUpperCase().padStart(2, '0');
+
+                        if (!table[pidHex]) table[pidHex] = [];
+                        if (!table[pidHex].includes(nodeHeader)) table[pidHex].push(nodeHeader);
+
+                        const multiplexKey = `${pidHex}@${nodeHeader}`;
+                        if (!masterList.includes(multiplexKey)) masterList.push(multiplexKey);
+                    }
+                }
+            }
+        }
+    }
+}
+export default CapabilityDiscoveryManager;

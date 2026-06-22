@@ -1,4 +1,4 @@
-import { CommandScheduler, SchedulerMode } from '../CommandScheduler';
+import CommandScheduler, { CommandSchedulerClass, SchedulerMode } from '../CommandScheduler';
 import { useBluetoothStore } from '../../../store/useBluetoothStore';
 
 jest.mock('../../../store/useBluetoothStore', () => {
@@ -14,11 +14,11 @@ jest.mock('../../../store/useBluetoothStore', () => {
 });
 
 describe('CommandScheduler Unit Tests', () => {
-    let scheduler: CommandScheduler;
+    let scheduler: CommandSchedulerClass;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        scheduler = new CommandScheduler();
+        scheduler = new CommandSchedulerClass();
     });
 
     test('1. Executes a single command successfully', async () => {

@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
+import { useAppStore } from '../store/useAppStore';
 
 type TestStep = 'idle' | 'resting' | 'cranking' | 'charging' | 'done';
 
@@ -33,7 +34,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
     const crankingIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const lowestVRef = useRef<number>(999);
 
-    const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+    const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
     const readVoltage = useCallback(async (): Promise<string | null> => {
         try {
@@ -110,6 +111,11 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
     };
 
     const getVerdict = () => {
+        const isPro = useAppStore.getState().isPro;
+        if (!isPro) {
+            return [`🔒 PRO Required - ${t('battery.verdictLocked', 'Detaylı akü değerlendirme raporu ve marş analizi grafik motoru için PRO paketine yükseltin.')}`];
+        }
+
         if (!result.restingV || !result.chargingV) return null;
         const rest = parseFloat(result.restingV.replace('V', ''));
         const crank = result.crankingV ? parseFloat(result.crankingV.replace('V', '')) : rest;

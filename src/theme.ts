@@ -25,11 +25,11 @@ export interface ThemeColors {
 }
 
 export const darkTheme: ThemeColors = {
-  bg: '#0a0a0a',
-  card: '#111318',
-  elevated: '#1a1d24',
-  border: '#1e2430',
-  cyan: '#00d4ff',
+  bg: '#12131a',
+  card: '#191b26',
+  elevated: '#212433',
+  border: '#2a2d3d',
+  cyan: '#007eff',
   green: '#00ff88',
   red: '#ff3b3b',
   amber: '#ffb800',
@@ -40,9 +40,9 @@ export const darkTheme: ThemeColors = {
   overlay: 'rgba(0, 0, 0, 0.75)',
   overlayHeavy: 'rgba(0, 0, 0, 0.85)',
   cardBorder: 'rgba(255, 255, 255, 0.08)',
-  cardBg: 'rgba(17, 19, 24, 0.65)',
-  accentGlow: '#00d4ff',
-  mono: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+  cardBg: 'rgba(25, 27, 38, 0.65)',
+  accentGlow: '#007eff',
+  mono: Platform.OS === 'ios' ? 'System' : 'sans-serif',
   statusBarStyle: 'light-content',
 };
 
@@ -51,7 +51,7 @@ export const lightTheme: ThemeColors = {
   card: '#ffffff',
   elevated: '#f9fafb',
   border: 'rgba(0, 0, 0, 0.08)',
-  cyan: '#0891b2',
+  cyan: '#0055ff',
   green: '#059669',
   red: '#dc2626',
   amber: '#d97706',
@@ -63,8 +63,8 @@ export const lightTheme: ThemeColors = {
   overlayHeavy: 'rgba(0, 0, 0, 0.65)',
   cardBorder: 'rgba(0, 0, 0, 0.08)',
   cardBg: 'rgba(255, 255, 255, 0.85)',
-  accentGlow: '#000000',
-  mono: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+  accentGlow: '#0055ff',
+  mono: Platform.OS === 'ios' ? 'System' : 'sans-serif',
   statusBarStyle: 'dark-content',
 };
 

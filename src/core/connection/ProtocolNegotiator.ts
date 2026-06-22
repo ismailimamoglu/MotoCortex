@@ -16,6 +16,22 @@ export class ProtocolNegotiator {
 
         store.addLog('BENCHMARK_START: Commencing behavior-based fingerprinting.');
 
+        // [v7.5.1 FIX-3] COLD RESET & PRE-FLIGHT DRAIN
+        // Diagnostic log evidence: ATI → "?" (dirty buffer from prior session).
+        // Dirty UART state contaminates benchmark commands, yielding false low scores.
+        // Fix: AT Z → hard RX flush → 1200ms hardware cooldown before first benchmark cmd.
+        // 1200ms accounts for: ELM327 boot banner flush (≈600ms) + clone adapter UART drain
+        // overhead (≈400ms) + margin for slow BLE notification delivery (≈200ms).
+        store.addLog('PRE_FLIGHT_DRAIN: Sending AT Z cold reset before benchmark...');
+        try {
+            await OBDCommandQueue.add('AT Z', 2000);
+        } catch {
+            store.addLog('PRE_FLIGHT_DRAIN: AT Z command failed or timed out — proceeding with buffer flush.');
+        }
+        OBDCommandQueue.flushRxBuffer(); // Hard-destroy boot banner bytes + prior session garbage
+        store.addLog('PRE_FLIGHT_DRAIN: RX buffer flushed. Applying 1200ms hardware cooldown...');
+        await preciseSleep(1200); // Hardware settle: ELM boot + BLE drain + clone adapter margin
+
         for (const cmd of benchmarkCommands) {
             const start = Date.now();
             try {

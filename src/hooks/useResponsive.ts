@@ -18,7 +18,9 @@ export function useResponsive() {
     const effectiveFontScale = Math.min(fontScale, maxFontScale);
     const fs = (size: number, factor = 0.5) => {
       const scaledSize = moderateScale(size, factor);
-      return scaledSize * effectiveFontScale;
+      // Scale up all primary text by 1.2pt, except small bottom hint/version text (size <= 10)
+      const bonus = size > 10 ? 1.2 : 0;
+      return (scaledSize + bonus) * effectiveFontScale;
     };
 
     return {

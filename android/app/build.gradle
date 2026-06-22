@@ -91,7 +91,7 @@ android {
         applicationId 'com.ismail.motocortexv2'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 41
+        versionCode 46
         versionName "1.1.0"
     }
     signingConfigs {
@@ -101,6 +101,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -109,7 +117,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -118,8 +126,10 @@ android {
     }
     packagingOptions {
         jniLibs {
-            useLegacyPackaging (findProperty('expo.useLegacyPackaging')?.toBoolean() ?: false)
+            useLegacyPackaging = false
         }
+        exclude 'lib/armeabi-v7a/**/*.so'
+        exclude 'lib/x86/**/*.so'
     }
     androidResources {
         ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -177,3 +187,46 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+
+// Custom task to realign all C++ native libraries to 16 KB boundaries before packaging
+tasks.register("realignNativeLibs") {
+    doLast {
+        def libDirs = [
+            file("${buildDir}/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib"),
+            file("${buildDir}/intermediates/stripped_native_libs/release/stripReleaseDebugSymbols/out/lib")
+        ]
+        libDirs.each { libDir ->
+            if (libDir.exists()) {
+                println "Realigning native libraries in ${libDir}..."
+                libDir.eachFileRecurse { file ->
+                    if (file.name.endsWith(".so")) {
+                        println "Realigning: ${file.absolutePath}"
+                        exec {
+                            commandLine 'python3', "${rootDir}/../scripts/realign_elf.py", file.absolutePath
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name == "packageReleaseBundle" || task.name == "buildReleasePreBundle") {
+        task.dependsOn("realignNativeLibs")
+    }
+}
+tasks.configureEach { task ->
+    if (task.name == "realignNativeLibs") {
+        def mergeTask = tasks.findByName("mergeReleaseNativeLibs")
+        if (mergeTask != null) {
+            task.dependsOn(mergeTask)
+            task.mustRunAfter(mergeTask)
+        }
+        def stripTask = tasks.findByName("stripReleaseDebugSymbols")
+        if (stripTask != null) {
+            task.dependsOn(stripTask)
+            task.mustRunAfter(stripTask)
+        }
+    }
+}

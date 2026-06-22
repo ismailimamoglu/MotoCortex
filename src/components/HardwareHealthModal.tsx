@@ -23,7 +23,7 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet, width, height } = useResponsive();
   const insets = useSafeAreaInsets();
 
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   const copyToClipboard = async () => {
     if (appUserId) {

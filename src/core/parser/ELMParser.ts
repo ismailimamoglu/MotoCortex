@@ -6,10 +6,10 @@ export enum RxState {
 }
 
 export const TERMINAL_TOKENS = [
-    "OK", "?", ">", "NO DATA", "STOPPED", 
-    "CAN ERROR", "BUS ERROR", "BUFFER FULL", 
-    "UNABLE TO CONNECT", "ERROR", 
-    "BUS INIT...ERROR", "LV RESET", "FB ERROR", 
+    "OK", "?", ">", "NO DATA", "STOPPED",
+    "CAN ERROR", "BUS ERROR", "BUFFER FULL",
+    "UNABLE TO CONNECT", "ERROR",
+    "BUS INIT...ERROR", "LV RESET", "FB ERROR",
     "DATA ERROR", "RX ERROR"
 ];
 
@@ -25,6 +25,17 @@ export const TOKEN_PRIORITIES: Record<string, number> = {
     "DATA ERROR": 25,
     "RX ERROR": 20,
     ">": 10
+};
+
+// Global ECU Kimlik Sicili - Multi-ECU Rol Dağıtımı İçin Kurumsal Katman
+export const GLOBAL_ECU_REGISTRY: Record<string, 'ENGINE' | 'TRANSMISSION' | 'HYBRID' | 'BATTERY' | 'UNKNOWN'> = {
+    "7E0": "ENGINE",
+    "7E8": "ENGINE",       // Motor Kontrol Ünitesi (ECM)
+    "7E9": "TRANSMISSION", // Şanzıman Kontrol Ünitesi (TCM)
+    "7EA": "HYBRID",       // Hibrit Güç Yönetimi (HCU)
+    "7EB": "BATTERY",      // Batarya Yönetim Sistemi (BMS)
+    "18DAF110": "ENGINE",  // 29-Bit Standart Motor
+    "18DAF118": "TRANSMISSION"
 };
 
 export class ELMParser {
@@ -46,13 +57,11 @@ export class ELMParser {
         const trimmed = this.rawResponseBuffer.trim();
         const uppercase = trimmed.toUpperCase().replace(/\s+/g, '');
 
-        // Check for intermediate SEARCHING state
         if (uppercase.includes('SEARCHING') && !uppercase.includes('SEARCHING...DONE')) {
             this.state = RxState.SEARCHING;
             return this.state;
         }
 
-        // Token Search & Priority Resolution
         let foundTerminal = false;
         let highestPriority = -1;
 
@@ -83,7 +92,6 @@ export class ELMParser {
     }
 
     sanitize(rawResponse: string, command: string): string {
-        // Strip echoes and clean up prompt symbols
         let clean = rawResponse.trim();
         if (clean.endsWith('>')) {
             clean = clean.substring(0, clean.length - 1).trim();
@@ -98,8 +106,7 @@ export class ELMParser {
             if (!trimmedLine) continue;
 
             const lineClean = trimmedLine.toUpperCase().replace(/\s+/g, '');
-            
-            // Remove command echoes (e.g. 010C at the start of response lines)
+
             if (lineClean === cmdClean || lineClean.startsWith('AT')) {
                 continue;
             }

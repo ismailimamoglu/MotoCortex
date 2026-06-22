@@ -158,7 +158,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
   return <>{children}</>;
 };
 
-const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
 const s = StyleSheet.create({
   root: {

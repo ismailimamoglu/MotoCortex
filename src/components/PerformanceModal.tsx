@@ -4,6 +4,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
+import * as SecureStore from 'expo-secure-store';
+import { useAppStore } from '../store/useAppStore';
+import { useBluetoothStore } from '../store/useBluetoothStore';
+import { Alert } from 'react-native';
 
 type TimerState = 'idle' | 'armed' | 'running' | 'done';
 
@@ -28,7 +32,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
     const reached60Ref = useRef(false);
     const reached100Ref = useRef(false);
 
-    const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+    const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
     useEffect(() => {
         if (!visible) return;
@@ -58,13 +62,70 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
         }
     }, [speed, state, visible]);
 
-    const armTimer = () => {
+    const armTimer = async () => {
+        const isPro = useAppStore.getState().isPro;
+        if (!isPro) {
+            // Check daily limit for free teaser (3 runs per day)
+            try {
+                const stored = await SecureStore.getItemAsync('motocortex_perf_teaser_counter');
+                const todayStr = new Date().toDateString();
+                let counter = { date: '', count: 0 };
+                if (stored) {
+                    try { counter = JSON.parse(stored); } catch { counter = { date: '', count: 0 }; }
+                }
+                // Reset counter if day changed
+                if (counter.date !== todayStr) {
+                    counter = { date: todayStr, count: 0 };
+                }
+                if (counter.count >= 3) {
+                    Alert.alert(
+                        t('perfTeaser.limitTitle', 'Günlük Sınır Aşıldı'),
+                        t('perfTeaser.limitDesc', 'Günlük 3 ücretsiz 0-60 km/h test sınırına ulaştınız. Sınırsız test ve 0-100 km/h ölçümleri için PRO paketine yükseltin.'),
+                        [
+                            { text: t('common.cancel'), style: 'cancel' },
+                            { text: t('common.upgrade'), onPress: () => {
+                                useBluetoothStore.getState().setPaywallContext('PERF_TEASER_LIMIT');
+                            }}
+                        ]
+                    );
+                    return;
+                }
+            } catch (err) {
+                console.warn('[PerformanceModal] SecureStore read failed:', err);
+            }
+        }
+
         setState('armed');
         setElapsed(0);
         setTime60(null);
         setTime100(null);
         reached60Ref.current = false;
         reached100Ref.current = false;
+    };
+
+    const stopTimer = () => {
+        setState('done');
+        if (timerRef.current) clearInterval(timerRef.current);
+        
+        // If free user successfully finished 0-60, increment daily counter
+        const isPro = useAppStore.getState().isPro;
+        if (!isPro) {
+            (async () => {
+                try {
+                    const todayStr = new Date().toDateString();
+                    const stored = await SecureStore.getItemAsync('motocortex_perf_teaser_counter');
+                    let counter = { date: todayStr, count: 0 };
+                    if (stored) {
+                        try { counter = JSON.parse(stored); } catch {}
+                    }
+                    if (counter.date !== todayStr) {
+                        counter = { date: todayStr, count: 0 };
+                    }
+                    counter.count += 1;
+                    await SecureStore.setItemAsync('motocortex_perf_teaser_counter', JSON.stringify(counter));
+                } catch {}
+            })();
+        }
     };
 
     const resetTimer = () => {
@@ -75,10 +136,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
         if (timerRef.current) clearInterval(timerRef.current);
     };
 
-    const stopTimer = () => {
-        setState('done');
-        if (timerRef.current) clearInterval(timerRef.current);
-    };
+
 
     const formatTime = (ms: number) => {
         const seconds = ms / 1000;

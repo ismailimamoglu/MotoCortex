@@ -56,6 +56,12 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
     removeItem: jest.fn(),
 }));
 
+jest.mock('../supabaseClient', () => ({
+    supabase: {
+        rpc: jest.fn().mockResolvedValue({ error: null, status: 200 }),
+    }
+}));
+
 import OBDCommandQueue, { LineState } from '../OBDCommandQueue';
 import BluetoothService from '../BluetoothService';
 
@@ -133,7 +139,8 @@ jest.mock('../../core/queue/CommandScheduler', () => {
                 return queue.executeCommand(command, timeoutMs);
             }),
             clear: jest.fn(),
-            setExecutionFunction: jest.fn()
+            setExecutionFunction: jest.fn(),
+            setLockGuard: jest.fn()
         }
     };
 });
@@ -172,10 +179,11 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
         const clearSpy = jest.spyOn(BluetoothService, 'clearBuffer');
 
         const p = OBDCommandQueue.add('010C', 1000); // 1000ms timeout
+        await Promise.resolve(); // Flush microtasks so executeCommand schedules the timeout timer
 
         // Fast-forward time to trigger timeout
         jest.advanceTimersByTime(1001);
-        await Promise.resolve();
+        await Promise.resolve(); // Flush microtasks so write('\r') is executed
 
         // Verify write was called with '\r' (recovery interrupt)
         expect(writeSpy).toHaveBeenCalledWith('\r');
@@ -183,7 +191,7 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
 
         // Advance timers to trigger recovery completion
         jest.advanceTimersByTime(501);
-        await Promise.resolve();
+        await Promise.resolve(); // Flush microtasks so finishCommand is called
 
         // Check promise rejected due to timeout
         await expect(p).rejects.toThrow('Timeout: 010C');
@@ -194,16 +202,17 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
         const queue: any = OBDCommandQueue;
 
         const p = OBDCommandQueue.add('010D', 1000);
+        await Promise.resolve(); // Flush microtasks so executeCommand schedules the timeout timer
 
         // Trigger timeout
         jest.advanceTimersByTime(1001);
-        await Promise.resolve();
+        await Promise.resolve(); // Flush microtasks so write('\r') is executed
         expect(queue.lineState).toBe(LineState.INTERRUPTING);
 
         // Advance timers by silenceWindow (e.g. 200ms default under mock)
         // Livelock Guard absolute limit: silenceWindow + 300 = 500ms
         jest.advanceTimersByTime(501);
-        await Promise.resolve();
+        await Promise.resolve(); // Flush microtasks so finishCommand is called
 
         // LineState should be reset back to READY
         expect(queue.lineState).toBe(LineState.READY);

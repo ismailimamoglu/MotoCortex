@@ -28,7 +28,7 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
     const [data, setData] = useState<FreezeData | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+    const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
     const parseHex = (response: string, echo: string, bytes: number): number | null => {
         const clean = response.replace(/\s+/g, '').replace('SEARCHING...', '');

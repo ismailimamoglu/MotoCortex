@@ -57,20 +57,55 @@ const resources = {
     sv: { translation: sv },
 };
 
+// Rate limiting tracker to prevent Bridge Flooding on high-frequency UI updates
+const reportedMissingKeys = new Set<string>();
+
 i18n
     .use(initReactI18next)
     .init({
         resources,
-        lng: 'en', // Uygulamanın ana dili İngilizce (açılışta ingilizce)
+        lng: 'en',
         fallbackLng: 'en',
         fallbackNS: 'translation',
-        returnEmptyString: false, // Boş çeviri girildiğinde İngilizce fallback'in çalışmasını sağlar
+        returnEmptyString: false,
         compatibilityJSON: 'v4',
+        debug: false,
         interpolation: {
             escapeValue: false,
         },
         react: {
             useSuspense: false,
+        },
+        /**
+         * [v7.4.9] Production i18n Safety Valve — Missing Key Handler
+         *
+         * When any of the 26 locale files is missing a key, i18next falls
+         * back to 'en' (fallbackLng). This handler additionally logs the
+         * missing key to Firebase Crashlytics as a non-fatal breadcrumb,
+         * so we can detect translation gaps in production telemetry
+         * without crashing the app.
+         *
+         * saveMissing must be true for this handler to fire.
+         */
+        saveMissing: true,
+        missingKeyHandler: (lngs, namespace, key, fallbackValue) => {
+            const keyIdentifier = `${namespace}:${key}`;
+            if (reportedMissingKeys.has(keyIdentifier)) return;
+            reportedMissingKeys.add(keyIdentifier);
+
+            try {
+                // Lazy-load crashlytics to avoid native module resolution
+                // failures in Jest test environment.
+                const crashlytics = require('@react-native-firebase/crashlytics').default;
+                
+                // Enforce instant server logging instead of breadcrumb-only log
+                crashlytics().recordError(
+                    new Error(`Missing i18n translation key: [${keyIdentifier}]`)
+                );
+            } catch {
+                // Crashlytics may not be initialized during cold start or
+                // in test environments; swallow silently to prevent crash.
+            }
         },
     });
 

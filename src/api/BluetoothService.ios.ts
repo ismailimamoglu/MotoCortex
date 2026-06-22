@@ -377,6 +377,10 @@ class BluetoothServiceIOS implements IBluetoothService {
         this.disconnectCallback = null;
     }
 
+    async shutdownCurrentSocket(): Promise<void> {
+        await this.disconnect();
+    }
+
     async write(data: string): Promise<void> {
         const command = data.endsWith('\r') ? data : data + '\r';
         if (!this.bleConnectedDevice || !this.bleWriteCharacteristic) throw new Error('Not connected');

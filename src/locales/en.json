@@ -150,7 +150,8 @@
         "terms": "Terms of Service",
         "privacy": "Privacy Policy",
         "hardwareWarning": "⚠️ Important Hardware Note: Due to Apple policy, iOS devices do not support legacy Bluetooth Classic (v2.1) adapters. Before upgrading to PRO mode, please ensure your diagnostic device is Bluetooth LE (4.0+) or Wi-Fi compatible.",
-        "hardwareWarningAndroid": "⚠️ Important Hardware Note: Android devices support both Bluetooth Classic and Bluetooth LE (4.0+) adapters. Before upgrading to PRO mode, please ensure your diagnostic device is compatible."
+        "hardwareWarningAndroid": "⚠️ Important Hardware Note: Android devices support both Bluetooth Classic and Bluetooth LE (4.0+) adapters. Before upgrading to PRO mode, please ensure your diagnostic device is compatible.",
+        "contextualDesc": "Upgrade to MotoCortex PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
     },
     "connection": {
         "logoSub": "v7 PRO",
@@ -172,6 +173,7 @@
         "disconnect": "DISCONNECT",
         "disconnectShort": "DISC",
         "connectLabel": "CONNECT",
+        "progressFormat": "{{progress}}%",
         "error": "CONNECTION ERROR",
         "bluetoothOffDesc": "Bluetooth is powered off. Please check your Bluetooth settings.",
         "permissionDesc": "Bluetooth permission denied. Please grant permission in settings.",
@@ -237,7 +239,12 @@
         "fuelLevel": "Fuel Level",
         "catalystTemp": "Catalyst Temp",
         "layoutGauge": "GAUGE",
-        "obdTerminalTitle": "OBD HEALTH & TERMINAL"
+        "obdTerminalTitle": "OBD HEALTH & TERMINAL",
+        "adapterClone": "CLONE ADAPTER",
+        "adapterOriginal": "ORIGINAL",
+        "adapterCloneShort": "CLONE",
+        "adapterOriginalShort": "ORIGINAL",
+        "pidLabel": "PID: {{pid}}"
     },
     "expertise": {
         "historyFound": "VEHICLE HISTORY FOUND!",
@@ -606,49 +613,6 @@
         "openSettings": "Open Settings"
     },
     "disclaimer": "All product names, logos, and brands are property of their respective owners. All company, product and service names used in this application are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.",
-    "hiddenFeatures": {
-        "title": "HIDDEN FEATURES",
-        "btnLabel": "UNLOCK HIDDEN FEATURES",
-        "unsupported": "This OBD2 adapter does not support hidden feature unlocking.",
-        "unsupportedDesc": "Original ELM327 v2.1 or higher is required. Clone adapters do not support this feature.",
-        "notConnected": "Please connect to a vehicle first.",
-        "notConnectedDesc": "An OBD2 device must be connected to unlock hidden features.",
-        "warning": "These changes may affect your vehicle warranty. Use with caution.",
-        "confirmTitle": "Confirmation Required",
-        "confirmMsg": "Changing this feature affects ECU settings. Do you want to continue?",
-        "confirmOk": "Continue",
-        "confirmCancel": "Cancel",
-        "categoryLighting": "LIGHTING",
-        "categorySound": "SOUND & ALERTS",
-        "categoryDisplay": "INSTRUMENT PANEL",
-        "categoryDriving": "DRIVING",
-        "featureDrl": "Daytime Running Lights (DRL)",
-        "featureRearFog": "Rear Fog Light Override",
-        "featureDoorChime": "Disable Door Chime",
-        "featureParkingAlert": "Parking Brake Audible Alert",
-        "featureRpmWarning": "RPM Limit Warning",
-        "featureFuelSensitivity": "Fuel Gauge Sensitivity",
-        "featureStartStop": "Start-Stop Default Off",
-        "featureSportMemory": "Sport Mode Memory",
-        "enabled": "ENABLED",
-        "disabled": "DISABLED",
-        "writeSuccess": "Feature updated successfully.",
-        "writeError": "Write error. Please try again.",
-        "simulationBanner": "SIMULATION MODE — Real ECU writing not yet active",
-        "closeBtn": "CLOSE",
-        "disclaimerTitle": "LIABILITY DISCLAIMER",
-        "disclaimerFeature": "Feature",
-        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• MotoCortex cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
-        "checkboxTitle": "CONFIRMATION REQUIRED",
-        "check1": "I have read this warning and understand that my vehicle warranty may be affected.",
-        "check2": "I acknowledge that MotoCortex is not responsible for any faults or damages resulting from this operation.",
-        "check3": "I wish to make this change knowingly and of my own free will, accepting all risks.",
-        "disclaimerCancel": "CANCEL",
-        "disclaimerContinue": "CONTINUE",
-        "unsupportedTitle": "Not Supported",
-        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands.",
-        "unsupportedOk": "OK"
-    },
     "obdTerminal": {
         "title": "OBD HEALTH & TERMINAL",
         "terminalTitle": "OBD TERMINAL",
@@ -669,5 +633,18 @@
         "shareButton": "SHARE",
         "noLogs": "No diagnostic logs found."
     },
-    "disconnectShort": "DISC"
+    "disconnectShort": "DISC",
+    "dtcContext": {
+        "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
+        "cooling": "Critical cooling hazard detected. View detailed repair steps →",
+        "ignition": "Ignition system issue detected. View detailed repair steps →",
+        "chassis": "Chassis safety system alert. Unlock PRO for full analysis →",
+        "body": "Body electronics fault found. Upgrade for complete diagnostics →",
+        "network": "Communication network error. PRO unlocks full troubleshooting →",
+        "fallback": "Unlock detailed fault analysis, repair costs & risk assessment →"
+    },
+    "perfTeaser": {
+        "limitTitle": "Daily Limit Reached",
+        "limitDesc": "You have reached the daily limit of 3 free 0-60 km/h tests. Upgrade to PRO for unlimited tests and 0-100 km/h measurements."
+    }
 }

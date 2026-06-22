@@ -18,7 +18,7 @@ export default function VehicleSelectModal({ visible, onDisconnect }: VehicleSel
   const setActiveSessionVehicle = useTelemetryStore((state) => state.setActiveSessionVehicle);
   const activeSessionVehicle = useTelemetryStore((state) => state.activeSessionVehicle);
 
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   if (!visible) {
     return null;

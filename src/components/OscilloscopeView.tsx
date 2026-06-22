@@ -21,7 +21,7 @@ export default function OscilloscopeView({ label, value, unit, color, min, max }
     const historyRef = useRef<number[]>(new Array(HISTORY_SIZE).fill(0));
     const [history, setHistory] = useState<number[]>(new Array(HISTORY_SIZE).fill(0));
 
-    const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+    const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
     useEffect(() => {
         const v = value !== null ? value : 0;

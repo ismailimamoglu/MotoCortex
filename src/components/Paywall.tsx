@@ -34,7 +34,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
   const insets = useSafeAreaInsets();
   const topInset = insets.top > 0 ? insets.top : (Platform.OS === 'ios' ? 47 : 0);
   const bottomInset = insets.bottom > 0 ? insets.bottom : (Platform.OS === 'ios' ? 34 : 0);
-  const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
   const loadOfferings = useAppStore((state) => state.loadOfferings);
   const isPro = useAppStore((state) => state.isPro);
@@ -943,4 +943,4 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
   );
 }
 
-const MONO = Platform.OS === 'ios' ? 'Menlo' : 'monospace';
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';

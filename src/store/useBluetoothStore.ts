@@ -17,6 +17,13 @@ export interface DiagnosticDtcArray extends Array<string> {
     errorState?: 'TIMEOUT' | 'CONNECTION_LOST' | 'ERROR_UNABLE_TO_READ' | 'HARDWARE_FATAL_RECOVERY_FAILED' | null;
 }
 
+export interface ConnectionStep {
+    id: string;
+    labelKey: string;
+    defaultLabel: string;
+    status: 'idle' | 'pending' | 'success' | 'failed';
+}
+
 interface BluetoothState {
     status: ConnectionStatus;
     adapterStatus: ConnectionStatus;
@@ -71,11 +78,20 @@ interface BluetoothState {
     diagnosticLogs: string[];
     adapterCapabilityScore: number;
     connectionState: 'DISCONNECTED' | 'ADAPTER_CONNECTING' | 'ADAPTER_CONNECTED' | 'INITIALIZING' | 'PROTOCOL_SCANNING' | 'ECU_HANDSHAKE' | 'TELEMETRY_ACTIVE' | 'DEGRADED' | 'RECOVERY' | 'HARDWARE_FATAL';
+    connectionProgress: number;
+    connectionSteps: ConnectionStep[];
+    failedProtocols: string[];
+    pidBlocksStatus: Record<string, 'supported' | 'unsupported' | 'unknown'>;
     pidLastUpdateTimes: Record<string, number>;
     structuredLogs: string[];
+    connectingDeviceId: string | null;
+    paywallContext: string | null;
 
     // Actions
     setStatus: (status: ConnectionStatus) => void;
+    setConnectingDeviceId: (id: string | null) => void;
+    setPaywallContext: (code: string | null) => void;
+    clearPaywallContext: () => void;
     setAdapterStatus: (status: ConnectionStatus) => void;
     setEcuStatus: (status: ConnectionStatus) => void;
     setDevice: (name: string, id: string) => void;
@@ -173,11 +189,25 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     },
     diagnosticLogs: [],
     connectionState: 'DISCONNECTED',
+    connectionProgress: 0,
+    connectionSteps: [
+        { id: 'adapter', labelKey: 'connection.stepAdapter', defaultLabel: 'Adapter Connection & Cap Score', status: 'idle' },
+        { id: 'protocol', labelKey: 'connection.stepProtocol', defaultLabel: 'OBD2 Protocol Negotiation', status: 'idle' },
+        { id: 'handshake', labelKey: 'connection.stepHandshake', defaultLabel: 'ECU Communication Verification', status: 'idle' },
+        { id: 'stabilization', labelKey: 'connection.stepStabilization', defaultLabel: 'Active Telemetry Loop Stabilization', status: 'idle' }
+    ],
+    failedProtocols: [],
+    pidBlocksStatus: {},
     adapterCapabilityScore: 100,
     pidLastUpdateTimes: {},
     structuredLogs: [],
+    connectingDeviceId: null,
+    paywallContext: null,
  
     setStatus: (status) => set({ status }),
+    setConnectingDeviceId: (connectingDeviceId) => set({ connectingDeviceId }),
+    setPaywallContext: (paywallContext) => set({ paywallContext }),
+    clearPaywallContext: () => set({ paywallContext: null }),
     setAdapterStatus: (status) => set({ adapterStatus: status }),
     setEcuStatus: (status) => set({ ecuStatus: status }),
     setDevice: (deviceName, deviceId) => set({ deviceName, deviceId }),
@@ -332,8 +362,19 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         },
         diagnosticLogs: [],
         connectionState: 'DISCONNECTED',
+        connectionProgress: 0,
+        connectionSteps: [
+            { id: 'adapter', labelKey: 'connection.stepAdapter', defaultLabel: 'Adapter Connection & Cap Score', status: 'idle' },
+            { id: 'protocol', labelKey: 'connection.stepProtocol', defaultLabel: 'OBD2 Protocol Negotiation', status: 'idle' },
+            { id: 'handshake', labelKey: 'connection.stepHandshake', defaultLabel: 'ECU Communication Verification', status: 'idle' },
+            { id: 'stabilization', labelKey: 'connection.stepStabilization', defaultLabel: 'Active Telemetry Loop Stabilization', status: 'idle' }
+        ],
+        failedProtocols: [],
+        pidBlocksStatus: {},
         adapterCapabilityScore: 100,
         pidLastUpdateTimes: {},
         structuredLogs: [],
+        connectingDeviceId: null,
+        paywallContext: null,
     }),
 }));
