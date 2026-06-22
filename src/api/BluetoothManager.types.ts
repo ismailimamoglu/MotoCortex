@@ -74,6 +74,15 @@ export type BluetoothEventListener<E extends BluetoothEventName> = (
 export type Unsubscribe = () => void;
 
 /**
+ * Narrow contract that any subsystem (circuit breaker, rate limiter) can depend on
+ * to receive connection state transitions without importing the concrete manager.
+ * The BluetoothManager satisfies this structurally via its TypedEventEmitter `on`.
+ */
+export interface ConnectionStateSource {
+  on(event: 'stateChange', listener: (payload: StateChangeEvent) => void): Unsubscribe;
+}
+
+/**
  * Minimal structural contract describing the parts of a
  * react-native-bluetooth-classic device instance that the manager consumes.
  * Declared locally to keep the engine resilient against minor type-surface
