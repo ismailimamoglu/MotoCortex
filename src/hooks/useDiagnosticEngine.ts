@@ -192,6 +192,9 @@ export function useDiagnosticEngine(): DiagnosticEngineApi {
       offDevice();
       offError();
       pollingActive = false;
+      // Release the transport (stops heartbeat, flushes buffers, tears down the socket)
+      // before detaching the engine so no listener observes a half-dead connection.
+      void bluetoothManager.disconnect();
       obd2ProtocolEngine.destroy();
     };
   }, []);

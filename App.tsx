@@ -38,6 +38,7 @@ import SearchableVehicleSelect from './src/components/SearchableVehicleSelect';
 import { toSnakeCase, getLocalizedVehicleBrand, getLocalizedVehicleModel } from './src/utils/vehicleStandardizer';
 import * as Location from 'expo-location';
 import BLEBridge from './src/api/BLEBridge';
+import SandboxDevGate from './src/screens/sandbox/SandboxDevGate';
 import { State } from 'react-native-ble-plx';
 import CustomizeDashboardModal from './src/components/CustomizeDashboardModal';
 import { useDashboardStore, ALL_SENSORS } from './src/store/useDashboardStore';
@@ -2948,6 +2949,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <MainApp />
+      <SandboxDevGate />
     </SafeAreaProvider>
   );
 }
