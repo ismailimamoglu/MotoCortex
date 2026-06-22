@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import bluetoothManager from '../api/BluetoothManager';
 import obd2ProtocolEngine, {
@@ -10,11 +10,14 @@ import {
   DiscoveredDevice,
   StateChangeEvent,
 } from '../api/BluetoothManager.types';
-
-export interface InitStep {
-  command: string;
-  timeoutMs: number;
-}
+import {
+  parseCalibrationIdResponse,
+  parseDTCResponse,
+  parsePIDResponse,
+  parseVINResponse,
+  parseVoltageResponse,
+} from '../core/parser/OBDResponseParser';
+import { useBluetoothStore } from '../store/useBluetoothStore';
 
 export type TelemetryListener = (response: EngineResponse) => void;
 
@@ -27,126 +30,146 @@ export interface DiagnosticEngineApi {
   connect: (deviceId: string) => Promise<boolean>;
   disconnect: () => Promise<void>;
   sendCommand: (command: string, timeoutMs?: number) => Promise<EngineResponse>;
-  startTelemetry: (pids: string[], listener: TelemetryListener, intervalMs?: number) => void;
+  startTelemetry: (pids: string[], intervalMs?: number, listener?: TelemetryListener) => void;
   stopTelemetry: () => void;
 }
 
-const ELM_INIT_SEQUENCE: InitStep[] = [
-  { command: 'ATZ', timeoutMs: 2000 },
-  { command: 'ATE0', timeoutMs: 1000 },
-  { command: 'ATL0', timeoutMs: 1000 },
-  { command: 'ATH0', timeoutMs: 1000 },
-  { command: 'ATS0', timeoutMs: 1000 },
-  { command: 'AT AT1', timeoutMs: 1000 },
-  { command: 'AT ST 62', timeoutMs: 1000 },
-];
+type StoreStatus = 'disconnected' | 'scanning' | 'connecting' | 'connected' | 'error';
 
-const PROTOCOL_WATERFALL = ['AT SP 0', 'AT SP 6', 'AT SP 7', 'AT SP 3', 'AT SP 5', 'AT SP 4'];
+const PID_STORE_KEY: Record<string, string> = {
+  '0C': 'rpm',
+  '0D': 'speed',
+  '05': 'coolant',
+  '11': 'throttle',
+  '49': 'throttle',
+  '04': 'engineLoad',
+  '0F': 'intakeAirTemp',
+  '0B': 'manifoldPressure',
+  '46': 'ambientTemp',
+  '5C': 'oilTemp',
+  '10': 'mafFlow',
+  '0E': 'timingAdvance',
+  '2F': 'fuelLevel',
+  '3C': 'catalystTemp',
+  A6: 'odometer',
+  '31': 'distanceSinceCleared',
+  '21': 'distanceMilOn',
+};
 
 const DEFAULT_TELEMETRY_INTERVAL_MS = 50;
 
-async function runElmHandshake(): Promise<boolean> {
-  for (const step of ELM_INIT_SEQUENCE) {
+let pollingActive = false;
+let pollPids: string[] = [];
+let pollInterval = DEFAULT_TELEMETRY_INTERVAL_MS;
+let externalListener: TelemetryListener | null = null;
+
+function mapConnectionStatus(state: ConnectionState): StoreStatus {
+  switch (state) {
+    case ConnectionState.SCANNING:
+      return 'scanning';
+    case ConnectionState.CONNECTING:
+    case ConnectionState.RECONNECTING:
+      return 'connecting';
+    case ConnectionState.READY:
+      return 'connected';
+    case ConnectionState.ERROR:
+      return 'error';
+    default:
+      return 'disconnected';
+  }
+}
+
+function applyResponseToStore(response: EngineResponse): void {
+  const command = response.command.replace(/\s+/g, '').toUpperCase();
+  const store = useBluetoothStore.getState();
+  const setSensorData = store.setSensorData;
+  type SensorPatch = Parameters<typeof setSensorData>[0];
+
+  if (command === 'ATRV') {
+    const voltage = parseVoltageResponse(response.assembled);
+    if (voltage) {
+      setSensorData({ voltage } as SensorPatch);
+    }
+    return;
+  }
+
+  if (command === '0902') {
+    const vin = parseVINResponse(response.assembled);
+    if (vin) {
+      setSensorData({ vin } as SensorPatch);
+    }
+    return;
+  }
+
+  if (command === '0904') {
+    const ecuId = parseCalibrationIdResponse(response.assembled);
+    if (ecuId) {
+      setSensorData({ ecuId } as SensorPatch);
+    }
+    return;
+  }
+
+  if (command === '03') {
+    setSensorData({ dtcs: parseDTCResponse(response.assembled) } as SensorPatch);
+    return;
+  }
+
+  if (command.startsWith('01') && command.length >= 4) {
+    const pid = command.slice(2, 4);
+    const key = PID_STORE_KEY[pid];
+    if (!key) return;
+    const value = parsePIDResponse(pid, response.assembled);
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      setSensorData({ [key]: value } as SensorPatch);
+    }
+  }
+}
+
+async function runPollCycle(): Promise<void> {
+  if (!pollingActive) return;
+
+  for (const pid of pollPids) {
+    if (!pollingActive) return;
     try {
-      await obd2ProtocolEngine.send(step.command, { timeoutMs: step.timeoutMs });
+      const response = await obd2ProtocolEngine.stream(pid);
+      applyResponseToStore(response);
+      externalListener?.(response);
     } catch {
-      /* a single missed AT line is tolerated; protocol probe below is authoritative */
+      /* coalesced / flushed / circuit-open stream rejections are non-fatal by design */
     }
   }
 
-  for (const protocol of PROTOCOL_WATERFALL) {
-    try {
-      await obd2ProtocolEngine.send(protocol, { timeoutMs: 2000 });
-      const probe = await obd2ProtocolEngine.send('01 00', { timeoutMs: 8000 });
-      const hex = probe.assembled.toUpperCase().replace(/\s+/g, '');
-      if (hex.includes('4100')) {
-        return true;
-      }
-    } catch {
-      /* advance to the next protocol in the waterfall */
-    }
+  if (pollingActive) {
+    setTimeout(() => {
+      void runPollCycle();
+    }, pollInterval);
   }
-
-  return false;
 }
 
 export function useDiagnosticEngine(): DiagnosticEngineApi {
   const [connectionState, setConnectionState] = useState<ConnectionState>(
     bluetoothManager.getState()
   );
-  const [ecuReady, setEcuReady] = useState(false);
+  const [ecuReady, setEcuReady] = useState(obd2ProtocolEngine.isProtocolReady());
   const [devices, setDevices] = useState<DiscoveredDevice[]>([]);
   const [lastError, setLastError] = useState<string | null>(null);
-
-  const handshakeRunningRef = useRef(false);
-  const pollingRef = useRef(false);
-  const pidsRef = useRef<string[]>([]);
-  const telemetryListenerRef = useRef<TelemetryListener | null>(null);
-  const telemetryIntervalRef = useRef(DEFAULT_TELEMETRY_INTERVAL_MS);
-
-  const stopTelemetry = useCallback(() => {
-    pollingRef.current = false;
-  }, []);
-
-  const pollCycle = useCallback(async () => {
-    if (!pollingRef.current) return;
-
-    const pids = pidsRef.current;
-    for (const pid of pids) {
-      if (!pollingRef.current) return;
-      try {
-        const response = await obd2ProtocolEngine.stream(pid);
-        telemetryListenerRef.current?.(response);
-      } catch {
-        /* stream rejections (coalesced/flushed/circuit-open) are non-fatal by design */
-      }
-    }
-
-    if (pollingRef.current) {
-      setTimeout(() => {
-        void pollCycle();
-      }, telemetryIntervalRef.current);
-    }
-  }, []);
-
-  const startTelemetry = useCallback(
-    (pids: string[], listener: TelemetryListener, intervalMs: number = DEFAULT_TELEMETRY_INTERVAL_MS) => {
-      pidsRef.current = pids;
-      telemetryListenerRef.current = listener;
-      telemetryIntervalRef.current = Math.max(0, intervalMs);
-      if (pollingRef.current) return;
-      pollingRef.current = true;
-      void pollCycle();
-    },
-    [pollCycle]
-  );
-
-  const initialiseEcu = useCallback(async () => {
-    if (handshakeRunningRef.current) return;
-    handshakeRunningRef.current = true;
-    setEcuReady(false);
-    try {
-      const ok = await runElmHandshake();
-      setEcuReady(ok);
-      setLastError(ok ? null : 'ECU_HANDSHAKE_FAILED');
-    } catch (error) {
-      setEcuReady(false);
-      setLastError(error instanceof Error ? error.message : String(error));
-    } finally {
-      handshakeRunningRef.current = false;
-    }
-  }, []);
 
   useEffect(() => {
     obd2ProtocolEngine.start();
 
     const offState = bluetoothManager.on('stateChange', (event: StateChangeEvent) => {
       setConnectionState(event.current);
-      if (event.current === ConnectionState.READY) {
-        void initialiseEcu();
-      } else {
-        setEcuReady(false);
+      const store = useBluetoothStore.getState();
+      store.setStatus(mapConnectionStatus(event.current));
+      store.setAdapterStatus(mapConnectionStatus(event.current));
+      if (event.current !== ConnectionState.READY) {
+        store.setEcuStatus('disconnected');
       }
+    });
+
+    const offReady = obd2ProtocolEngine.onProtocolReady((ready) => {
+      setEcuReady(ready);
+      useBluetoothStore.getState().setEcuStatus(ready ? 'connected' : 'connecting');
     });
 
     const offDevice = bluetoothManager.on('deviceFound', (device: DiscoveredDevice) => {
@@ -159,24 +182,27 @@ export function useDiagnosticEngine(): DiagnosticEngineApi {
     });
 
     const offError = bluetoothManager.on('error', (error) => {
-      setLastError(`${error.code}: ${error.message}`);
+      const message = `${error.code}: ${error.message}`;
+      setLastError(message);
+      useBluetoothStore.getState().setError(message);
     });
 
     return () => {
       offState();
+      offReady();
       offDevice();
       offError();
-      pollingRef.current = false;
+      pollingActive = false;
       obd2ProtocolEngine.destroy();
     };
-  }, [initialiseEcu]);
+  }, []);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (next: AppStateStatus) => {
       if (next === 'active') {
         void bluetoothManager.resume();
       } else if (next === 'background' || next === 'inactive') {
-        pollingRef.current = false;
+        pollingActive = false;
         void bluetoothManager.pause();
       }
     });
@@ -197,12 +223,33 @@ export function useDiagnosticEngine(): DiagnosticEngineApi {
   }, []);
 
   const disconnect = useCallback(async () => {
-    pollingRef.current = false;
+    pollingActive = false;
     await bluetoothManager.disconnect();
   }, []);
 
-  const sendCommand = useCallback((command: string, timeoutMs?: number) => {
-    return obd2ProtocolEngine.send(command, { timeoutMs, track: CommandTrack.PRIORITY });
+  const sendCommand = useCallback(async (command: string, timeoutMs?: number) => {
+    const response = await obd2ProtocolEngine.send(command, {
+      timeoutMs,
+      track: CommandTrack.PRIORITY,
+    });
+    applyResponseToStore(response);
+    return response;
+  }, []);
+
+  const startTelemetry = useCallback(
+    (pids: string[], intervalMs: number = DEFAULT_TELEMETRY_INTERVAL_MS, listener?: TelemetryListener) => {
+      pollPids = pids;
+      pollInterval = Math.max(0, intervalMs);
+      externalListener = listener ?? null;
+      if (pollingActive) return;
+      pollingActive = true;
+      void runPollCycle();
+    },
+    []
+  );
+
+  const stopTelemetry = useCallback(() => {
+    pollingActive = false;
   }, []);
 
   return {

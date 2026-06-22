@@ -9,6 +9,11 @@ export enum CommandTrack {
   STREAM = 'STREAM',
 }
 
+export interface InitStep {
+  command: string;
+  timeoutMs: number;
+}
+
 export interface ProtocolEngineConfig {
   rttSampleSize: number;
   rttMultiplier: number;
@@ -37,6 +42,7 @@ export interface SendOptions {
 export interface EngineDiagnostics {
   connectionState: ConnectionState;
   circuitState: CircuitState;
+  ecuReady: boolean;
   priorityDepth: number;
   streamDepth: number;
   streamPaused: boolean;
@@ -45,6 +51,8 @@ export interface EngineDiagnostics {
   averageRttMs: number;
   nextAdaptiveTimeoutMs: number;
 }
+
+export type ProtocolReadyListener = (ready: boolean) => void;
 
 interface PendingCommand {
   command: string;
@@ -64,12 +72,37 @@ const DEFAULT_CONFIG: ProtocolEngineConfig = {
   maxStreamQueueDepth: 8,
 };
 
+const ELM_INIT_SEQUENCE: InitStep[] = [
+  { command: 'ATZ', timeoutMs: 2000 },
+  { command: 'ATE0', timeoutMs: 1000 },
+  { command: 'ATL0', timeoutMs: 1000 },
+  { command: 'ATH0', timeoutMs: 1000 },
+  { command: 'ATS0', timeoutMs: 1000 },
+  { command: 'AT AT1', timeoutMs: 1000 },
+  { command: 'AT ST 62', timeoutMs: 1000 },
+];
+
+const PROTOCOL_WATERFALL = ['AT SP 0', 'AT SP 6', 'AT SP 7', 'AT SP 3', 'AT SP 5', 'AT SP 4'];
+const ECU_PROBE_COMMAND = '01 00';
+const ECU_PROBE_TIMEOUT_MS = 8000;
+const ECU_PROBE_SIGNATURE = '4100';
+
+const microtaskHost = globalThis as unknown as { queueMicrotask?: (callback: () => void) => void };
+function scheduleMicrotask(callback: () => void): void {
+  if (typeof microtaskHost.queueMicrotask === 'function') {
+    microtaskHost.queueMicrotask(callback);
+  } else {
+    void Promise.resolve().then(callback);
+  }
+}
+
 /**
  * System 2 — protocol orchestration layer.
  *
- * Sits on top of the BluetoothManager transport and binds the circuit breaker,
- * rate limiter and multi-frame assembler into a single serialized request/response
- * engine with an adaptive, RTT-driven timeout model and a preemptive two-track queue.
+ * Owns the full ELM327 handshake waterfall at the singleton level (independent of any
+ * React lifecycle), binds the circuit breaker, rate limiter and multi-frame assembler,
+ * and serializes all traffic through a preemptive two-track queue with an adaptive,
+ * RTT-driven timeout model.
  *
  * Wire atomicity invariant: at most one command is ever on the wire (`active`). A new
  * command is dispatched only after the current one resolves, fails or times out, so a
@@ -93,6 +126,10 @@ export class OBD2ProtocolEngine {
 
   private readonly rttHistory: number[] = [];
   private connectionState: ConnectionState = ConnectionState.IDLE;
+
+  private ecuReady = false;
+  private handshakeRunning = false;
+  private readonly readyListeners = new Set<ProtocolReadyListener>();
 
   private started = false;
   private disposed = false;
@@ -143,6 +180,61 @@ export class OBD2ProtocolEngine {
 
     this.abortAll(new Error('ENGINE_DISPOSED'));
     this.assembler.clear();
+    this.setEcuReady(false);
+    this.readyListeners.clear();
+  }
+
+  onProtocolReady(listener: ProtocolReadyListener): Unsubscribe {
+    this.readyListeners.add(listener);
+    return () => {
+      this.readyListeners.delete(listener);
+    };
+  }
+
+  isProtocolReady(): boolean {
+    return this.ecuReady;
+  }
+
+  /**
+   * Executes the full ELM327 initialisation and protocol-discovery waterfall.
+   * Lives at the singleton level so an unmounting screen can never tear a handshake
+   * apart mid-flight. Re-entrant calls are coalesced; an early link loss aborts cleanly.
+   */
+  async initializeProtocol(): Promise<boolean> {
+    if (this.handshakeRunning) {
+      return this.ecuReady;
+    }
+    if (this.connectionState !== ConnectionState.READY) {
+      return false;
+    }
+
+    this.handshakeRunning = true;
+    this.setEcuReady(false);
+
+    try {
+      for (const step of ELM_INIT_SEQUENCE) {
+        if (this.connectionState !== ConnectionState.READY) {
+          return false;
+        }
+        await this.silentSend(step.command, step.timeoutMs);
+      }
+
+      for (const protocol of PROTOCOL_WATERFALL) {
+        if (this.connectionState !== ConnectionState.READY) {
+          return false;
+        }
+        const established = await this.tryProtocol(protocol);
+        if (established) {
+          this.setEcuReady(true);
+          return true;
+        }
+      }
+
+      this.setEcuReady(false);
+      return false;
+    } finally {
+      this.handshakeRunning = false;
+    }
   }
 
   send(command: string, options: SendOptions = {}): Promise<EngineResponse> {
@@ -175,6 +267,7 @@ export class OBD2ProtocolEngine {
     return {
       connectionState: this.connectionState,
       circuitState: this.breaker.getState(),
+      ecuReady: this.ecuReady,
       priorityDepth: this.priorityQueue.length,
       streamDepth: this.streamQueue.length,
       streamPaused: this.streamPaused,
@@ -183,6 +276,37 @@ export class OBD2ProtocolEngine {
       averageRttMs: this.averageRtt(),
       nextAdaptiveTimeoutMs: this.computeAdaptiveTimeout(),
     };
+  }
+
+  private async tryProtocol(protocol: string): Promise<boolean> {
+    try {
+      await this.send(protocol, { timeoutMs: 2000 });
+      const probe = await this.send(ECU_PROBE_COMMAND, { timeoutMs: ECU_PROBE_TIMEOUT_MS });
+      const hex = probe.assembled.toUpperCase().replace(/\s+/g, '');
+      return hex.includes(ECU_PROBE_SIGNATURE);
+    } catch {
+      return false;
+    }
+  }
+
+  private async silentSend(command: string, timeoutMs: number): Promise<void> {
+    try {
+      await this.send(command, { timeoutMs });
+    } catch {
+      /* a single missed AT configuration line is tolerated; the probe is authoritative */
+    }
+  }
+
+  private setEcuReady(ready: boolean): void {
+    if (this.ecuReady === ready) return;
+    this.ecuReady = ready;
+    this.readyListeners.forEach((listener) => {
+      try {
+        listener(ready);
+      } catch {
+        /* listener faults must not break engine state propagation */
+      }
+    });
   }
 
   private enqueuePriority(item: PendingCommand): void {
@@ -200,7 +324,10 @@ export class OBD2ProtocolEngine {
 
   private handleStateChange = (event: StateChangeEvent): void => {
     this.connectionState = event.current;
-    if (event.current !== ConnectionState.READY) {
+    if (event.current === ConnectionState.READY) {
+      void this.initializeProtocol();
+    } else {
+      this.setEcuReady(false);
       this.assembler.clear();
       this.abortAll(new Error('CONNECTION_NOT_READY'));
     }
@@ -217,10 +344,10 @@ export class OBD2ProtocolEngine {
   private scheduleDispatch(): void {
     if (this.dispatchScheduled) return;
     this.dispatchScheduled = true;
-    setTimeout(() => {
+    scheduleMicrotask(() => {
       this.dispatchScheduled = false;
       void this.dispatch();
-    }, 0);
+    });
   }
 
   private selectNext(): PendingCommand | null {
