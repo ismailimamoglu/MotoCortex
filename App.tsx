@@ -1932,12 +1932,18 @@ function MainApp() {
   const handleScan = async () => {
     setScannedDevices([]);
 
-    // scanDevices() internally:
-    //   1. Sets status to 'scanning'
-    //   2. Handles all Android permission requests (BT + Location)
-    //   3. Returns bonded OBD devices immediately, then appends discovered ones
-    //   4. Resets status to 'disconnected' when done
     try {
+      const isEnabled = await RNBluetoothClassic.isBluetoothEnabled();
+      if (!isEnabled) {
+        const opened = await enableBluetooth();
+        if (!opened) return;
+        // Wait up to 3 seconds for it to register as enabled
+        for (let i = 0; i < 6; i++) {
+          if (await RNBluetoothClassic.isBluetoothEnabled()) break;
+          await new Promise(r => setTimeout(r, 500));
+        }
+      }
+
       const devices = await scanDevices();
       if (devices.length > 0) {
         setScannedDevices(devices.map((d: any) => ({
@@ -3317,31 +3323,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
         onRequestClose={() => setIsDiagVisible(false)}
       >
         <View style={{ flex: 1, backgroundColor: colors.bg }}>
-          {/* Close button floating inside the modal */}
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              top: scaleHeight(12),
-              right: scaleWidth(16),
-              zIndex: 10000,
-              backgroundColor: `${colors.red}1a`,
-              borderWidth: 1.2,
-              borderColor: colors.red,
-              borderRadius: scaleMod(8),
-              paddingHorizontal: scaleWidth(12),
-              paddingVertical: scaleHeight(6),
-            }}
-            onPress={() => setIsDiagVisible(false)}
-          >
-            <Text style={{
-              color: colors.red,
-              fontSize: scaleFont(11),
-              fontWeight: '900',
-              fontFamily: MONO,
-            }}>{t('common.close', 'CLOSE').toUpperCase()}</Text>
-          </TouchableOpacity>
-
-          <DashboardSandbox />
+          <DashboardSandbox onClose={() => setIsDiagVisible(false)} />
         </View>
       </Modal>
       </View>

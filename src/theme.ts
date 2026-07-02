@@ -25,10 +25,10 @@ export interface ThemeColors {
 }
 
 export const darkTheme: ThemeColors = {
-  bg: '#12131a',
-  card: '#191b26',
-  elevated: '#212433',
-  border: '#2a2d3d',
+  bg: '#161722',
+  card: '#212333',
+  elevated: '#2b2e42',
+  border: '#343952',
   cyan: '#007eff',
   green: '#00ff88',
   red: '#ff3b3b',
@@ -40,7 +40,7 @@ export const darkTheme: ThemeColors = {
   overlay: 'rgba(0, 0, 0, 0.75)',
   overlayHeavy: 'rgba(0, 0, 0, 0.85)',
   cardBorder: 'rgba(255, 255, 255, 0.08)',
-  cardBg: 'rgba(25, 27, 38, 0.65)',
+  cardBg: 'rgba(33, 35, 51, 0.65)',
   accentGlow: '#007eff',
   mono: Platform.OS === 'ios' ? 'System' : 'sans-serif',
   statusBarStyle: 'light-content',

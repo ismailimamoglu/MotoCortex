@@ -858,9 +858,29 @@ export default function LiveEngineHero({
                                 </View>
                                 <View style={{ zIndex: 1 }}>
                                   {isThisConnecting ? (
-                                    <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold', flexShrink: 0 }}>
-                                      {t('connection.progressFormat', '{{progress}}%').replace('{{progress}}', String(connectionProgress))}
-                                    </Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(8) }}>
+                                      <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold' }}>
+                                        {t('connection.progressFormat', '{{progress}}%').replace('{{progress}}', String(connectionProgress))}
+                                      </Text>
+                                      <TouchableOpacity
+                                        onPress={async () => {
+                                          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+                                          await disconnect();
+                                        }}
+                                        style={{
+                                          backgroundColor: `${colors.red}1a`,
+                                          borderColor: colors.red,
+                                          borderWidth: 1,
+                                          borderRadius: scaleMod(4),
+                                          paddingHorizontal: scaleWidth(6),
+                                          paddingVertical: scaleHeight(2),
+                                        }}
+                                      >
+                                        <Text style={{ color: colors.red, fontSize: scaleFont(8.5), fontWeight: '900', fontFamily: MONO }}>
+                                          {t('connection.cancel', 'İPTAL').toUpperCase()}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    </View>
                                   ) : (
                                     <View style={{
                                       backgroundColor: colors.cyan,

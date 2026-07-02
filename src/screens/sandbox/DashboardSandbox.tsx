@@ -23,7 +23,11 @@ interface DiscoveredDevice {
   name: string;
 }
 
-export default function DashboardSandbox() {
+interface DashboardSandboxProps {
+  onClose?: () => void;
+}
+
+export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet } = useResponsive();
@@ -101,7 +105,7 @@ export default function DashboardSandbox() {
 
   // ─── Transient Subscription Pattern for Logs ─────────────────────────────
   const [isPaused, setIsPaused] = useState(false);
-  const [logSnapshot, setLogSnapshot] = useState<string[]>([]);
+  const [logSnapshot, setLogSnapshot] = useState<string[]>(() => useBluetoothStore.getState().logs);
   const isPausedRef = useRef(false);
 
   useEffect(() => {
@@ -230,7 +234,35 @@ export default function DashboardSandbox() {
         borderBottomWidth: 1.5,
         borderBottomColor: colors.border,
         marginBottom: scaleHeight(12),
-        paddingRight: scaleWidth(80), // Reserved space for absolute modal Close button
+      },
+      closeBtn: {
+        backgroundColor: `${colors.red}1a`,
+        borderColor: colors.red,
+        borderWidth: 1,
+        borderRadius: scaleMod(6),
+        paddingHorizontal: scaleWidth(10),
+        paddingVertical: scaleHeight(4),
+      },
+      closeBtnText: {
+        color: colors.red,
+        fontSize: scaleFont(9.5),
+        fontWeight: '900' as const,
+        fontFamily: MONO,
+      },
+      cancelConnectBtn: {
+        backgroundColor: `${colors.red}1a`,
+        borderColor: colors.red,
+        borderWidth: 1,
+        borderRadius: scaleMod(8),
+        paddingVertical: scaleHeight(8),
+        alignItems: 'center' as const,
+        marginTop: scaleHeight(8),
+      },
+      cancelConnectBtnText: {
+        color: colors.red,
+        fontWeight: '900' as const,
+        fontSize: scaleFont(11),
+        fontFamily: MONO,
       },
       headerTitle: {
         fontSize: scaleFont(12.5), // Lowered from 16 to fit responsive boundaries
@@ -467,10 +499,19 @@ export default function DashboardSandbox() {
       <View style={sDyn.container}>
         {/* Header */}
         <View style={sDyn.header}>
-          <Text style={sDyn.headerTitle}>⚡ {t('sandbox.title', 'Sandbox Telemetry Control').toUpperCase()}</Text>
-          <Text style={sDyn.fpsText}>{t('sandbox.fps', { fps })}</Text>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.headerTitle, { flex: 1 }]}>
+            ⚡ {t('sandbox.title', 'Sandbox Telemetry Control').toUpperCase()}
+          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(8) }}>
+            <Text style={sDyn.fpsText}>{t('sandbox.fps', { fps })}</Text>
+            {onClose && (
+              <TouchableOpacity style={sDyn.closeBtn} onPress={onClose}>
+                <Text style={sDyn.closeBtnText}>{t('common.close', 'CLOSE').toUpperCase()}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-
+ 
         {/* Dynamic Connected vs Disconnected State */}
         {!isConnectedToEcu ? (
           // DISCONNECTED STATE: Device setup, OBD Health statistics, and full-height raw terminal
@@ -489,76 +530,65 @@ export default function DashboardSandbox() {
                   {getStatusText(ecuStatus).toUpperCase()}
                 </Text>
               </View>
+              {connectionStatus === 'connecting' && (
+                <TouchableOpacity
+                  style={sDyn.cancelConnectBtn}
+                  onPress={disconnect}
+                >
+                  <Text style={sDyn.cancelConnectBtnText}>
+                    {t('connection.cancel', 'İPTAL ET').toUpperCase()}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
-
+ 
             {/* OBD Health Statistics Card */}
             <View style={sDyn.statusCard}>
               <Text style={[sDyn.sectionTitle, { color: colors.amber }]}>📊 {t('obdTerminal.statsTitle', 'OBD SAĞLIK İSTATİSTİKLERİ')}</Text>
               <View style={{ gap: scaleHeight(4) }}>
                 <View style={sDyn.statusRow}>
-                  <Text style={sDyn.statusLabel}>{t('obdTerminal.connectionProtocol', 'Bağlantı Protokolü:')}</Text>
-                  <Text style={[sDyn.statusValue, { color: colors.textPri }]}>{protocol || t('obdTerminal.none', 'Yok')}</Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                    {t('obdTerminal.connectionProtocol', 'Bağlantı Protokolü:')}
+                  </Text>
+                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
+                    {protocol || t('obdTerminal.none', 'Yok')}
+                  </Text>
                 </View>
                 <View style={sDyn.statusRow}>
-                  <Text style={sDyn.statusLabel}>{t('obdTerminal.hardwareQualityScore', 'Donanım Kalite Skoru:')}</Text>
-                  <Text style={[sDyn.statusValue, { color: adapterCapabilityScore > 70 ? colors.green : colors.red }]}>
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                    {t('obdTerminal.hardwareQualityScore', 'Donanım Kalite Skoru:')}
+                  </Text>
+                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: adapterCapabilityScore > 70 ? colors.green : colors.red }]}>
                     {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? t('obdTerminal.original', 'Orijinal') : t('obdTerminal.clone', 'Klon')})
                   </Text>
                 </View>
                 <View style={sDyn.statusRow}>
-                  <Text style={sDyn.statusLabel}>{t('obdTerminal.requestResponseCount', 'İstek / Yanıt Sayısı:')}</Text>
-                  <Text style={[sDyn.statusValue, { color: colors.textPri }]}>{telemetryStats.requestsSent} / {telemetryStats.responsesReceived}</Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                    {t('obdTerminal.requestResponseCount', 'İstek / Yanıt Sayısı:')}
+                  </Text>
+                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
+                    {telemetryStats.requestsSent} / {telemetryStats.responsesReceived}
+                  </Text>
                 </View>
                 <View style={sDyn.statusRow}>
-                  <Text style={sDyn.statusLabel}>{t('obdTerminal.timeoutCount', 'Zaman Aşımı Adedi:')}</Text>
-                  <Text style={[sDyn.statusValue, { color: telemetryStats.timeoutCount > 0 ? colors.amber : colors.textPri }]}>{telemetryStats.timeoutCount}</Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                    {t('obdTerminal.timeoutCount', 'Zaman Aşımı Adedi:')}
+                  </Text>
+                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.timeoutCount > 0 ? colors.amber : colors.textPri }]}>
+                    {telemetryStats.timeoutCount}
+                  </Text>
                 </View>
                 <View style={sDyn.statusRow}>
-                  <Text style={sDyn.statusLabel}>{t('obdTerminal.recoveryCount', 'Hata Kurtarma (Recovery):')}</Text>
-                  <Text style={[sDyn.statusValue, { color: telemetryStats.recoveryCount > 0 ? colors.red : colors.textPri }]}>{telemetryStats.recoveryCount}</Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                    {t('obdTerminal.recoveryCount', 'Hata Kurtarma (Recovery):')}
+                  </Text>
+                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.recoveryCount > 0 ? colors.red : colors.textPri }]}>
+                    {telemetryStats.recoveryCount}
+                  </Text>
                 </View>
               </View>
             </View>
-
-            {/* Device Scanner Card */}
-            <View style={sDyn.controlCard}>
-              <Text style={sDyn.sectionTitle}>🛰️ {t('sandbox.discoveredDevices', 'DISCOVERED DEVICES')}</Text>
-              
-              {isScanning ? (
-                <ActivityIndicator size="small" color={colors.cyan} style={{ marginVertical: scaleHeight(12) }} />
-              ) : (
-                <FlatList
-                  data={discoveredDevices}
-                  keyExtractor={(item) => item.id}
-                  style={sDyn.deviceList}
-                  renderItem={({ item }) => (
-                    <View style={sDyn.deviceItem}>
-                      <Text numberOfLines={1} style={sDyn.deviceName}>
-                        {item.name || t('connection.unknownDevice', 'Unknown Device')}
-                      </Text>
-                      <TouchableOpacity
-                        style={sDyn.connectBtn}
-                        onPress={() => connect(item.id, item.name)}
-                      >
-                        <Text style={sDyn.connectBtnText}>{t('sandbox.connect', 'CONNECT')}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  nestedScrollEnabled={true}
-                />
-              )}
-
-              <TouchableOpacity
-                style={sDyn.scanBtn}
-                onPress={startScanning}
-                disabled={isScanning}
-              >
-                <Text style={sDyn.scanBtnText}>
-                  {isScanning ? t('sandbox.scanning', 'Scanning...') : t('sandbox.scan', 'Scan Devices').toUpperCase()}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
+ 
             {/* Full height raw terminal with docked custom command TextInput */}
             <View style={[sDyn.terminalCard, { flex: 1 }]}>
               <View style={sDyn.terminalHeader}>
