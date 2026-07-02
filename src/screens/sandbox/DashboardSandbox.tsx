@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -89,16 +89,31 @@ export default function DashboardSandbox() {
     }
   };
 
-  // Raw UART logs logic with freeze capability
+  // ─── Transient subscription pattern ─────────────────────────────────────────
+  // PERF FIX: useBluetoothStore((s) => s.logs) doğrudan abone olma 20Hz'de
+  // saniyede 20 re-render tetikler ve ekranı dondurur.
+  // store.subscribe() ile transient modele geçiyoruz:
+  //   - isPausedRef her zaman güncel değeri tutar (stale closure problemi yok)
+  //   - Sadece setLogSnapshot çağrıldığında React yeniden render eder
   const [isPaused, setIsPaused] = useState(false);
   const [logSnapshot, setLogSnapshot] = useState<string[]>([]);
-  const logs = useBluetoothStore((s) => s.logs);
+  const isPausedRef = useRef(false);
 
+  // isPausedRef'i her isPaused değişiminde güncelle
   useEffect(() => {
-    if (!isPaused) {
-      setLogSnapshot(logs);
-    }
-  }, [logs, isPaused]);
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
+
+  // Store'a transient subscriber bağla — component mount'ta bir kez çalışır
+  useEffect(() => {
+    const unsubscribe = useBluetoothStore.subscribe((state) => {
+      if (!isPausedRef.current) {
+        setLogSnapshot(state.logs.slice(0));
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
 
   // Dynamic Styles
   const sDyn = React.useMemo(() => {

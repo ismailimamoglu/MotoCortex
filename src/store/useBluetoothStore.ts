@@ -278,11 +278,12 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     flushPendingRevocation: () => set({ pendingProRevocation: false }),
     triggerPendingRevocation: () => set({ pendingProRevocation: true }),
     addLog: (entry) => set((state) => {
-        const nextLogs = [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs];
-        if (nextLogs.length > 500) {
-            nextLogs.length = 500;
-        }
-        return { logs: nextLogs };
+        // PERF FIX: Spread operatörü 20Hz'de saniyede 20 tam dizi kopyası üretir.
+        // Unshift ile başa ekle, length > 500 ise pop ile kuyruktan at (O(1) son eleman),
+        // ardından tek bir slice(0) ile Zustand için yeni referans oluştur.
+        state.logs.unshift(`[${new Date().toLocaleTimeString()}] ${entry}`);
+        if (state.logs.length > 500) state.logs.pop();
+        return { logs: state.logs.slice(0) };
     }),
     clearLogs: () => set({ logs: [] }),
     setProtocol: (protocol) => set({ protocol }),

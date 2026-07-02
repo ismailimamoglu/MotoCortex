@@ -164,6 +164,16 @@ export class OBD2ProtocolEngine {
    private lastCommandWasReset: boolean = false;
    private stallCounter: number = 0;
 
+   /**
+    * Optional callback injected by useBluetooth.ts to trigger K-Line fallback
+    * when the OBD engine detects a '?' response on ATSP6/ATSP7 mid-session.
+    */
+   private kLineFallbackCallback: (() => void) | null = null;
+
+   public onKLineFallback(cb: () => void): void {
+       this.kLineFallbackCallback = cb;
+   }
+
    constructor() {  
        this.elmParser = new ELMParser();  
        this.fragmentBuffer = new BLEMultiFrameAssembler();
@@ -688,29 +698,45 @@ export class OBD2ProtocolEngine {
            this.stallCounter++;
        } else if (trimmedResult === '?') {
            this.stallCounter++;
-           
-           // Advanced command clone detection (ATCFC0 / CFC0 / CFC1, etc.)
+
+           // ── ATSP6 / ATSP7 CAN clone block → trigger K-Line fallback ───────
+           if (cleanCmd === 'ATSP6' || cleanCmd === 'ATSP7') {
+               useBluetoothStore.getState().addLog(
+                   `[ResponseInterceptor] CLONE_BLOCK: Protocol ${cleanCmd} returned '?'. Non-CAN clone detected. Dispatching K-Line fallback.`
+               );
+               if (this.kLineFallbackCallback) {
+                   // Dispatch on next macro-task to avoid re-entrancy inside finishCommand
+                   setTimeout(() => this.kLineFallbackCallback!(), 0);
+               }
+           }
+
+           // ── Advanced command clone detection (ATCFC0 / CFC0 / CFC1) ──────
            if (cleanCmd.includes('CFC0') || cleanCmd.includes('CFC1') || cleanCmd.includes('FC')) {
-               useBluetoothStore.getState().addLog(`[ResponseInterceptor] Advanced command ${cleanCmd} failed with '?'. Lowering capability score and flagging clone device.`);
+               useBluetoothStore.getState().addLog(
+                   `[ResponseInterceptor] Advanced command ${cleanCmd} failed with '?'. Lowering capability score and flagging clone device.`
+               );
                useBluetoothStore.getState().setSensorData({
                    adapterCapabilityScore: 30,
                    isCloneDevice: true
                });
            }
        } else {
-           // Check if response is gibberish/garbage
+           // ── Garbage / anlamsız hex tespiti ───────────────────────────────
+           // FIX: '|' karakteri karakter sınıfı ([]) içinde alternation DEĞİL, literal boru karakteridir.
+           // Düzeltilmiş yapı: iki ayrı alternatif dalı olan doğru regex.
            const isTest = process.env.NODE_ENV === 'test';
-           const isGarbage = !isTest && trimmedResult.length > 0 && !/^[0-9A-Fa-f\s>?:OK|SEARCHING|UNABLE|ERROR|STOPPED|BUS|INIT|NO\sDATA]+$/.test(trimmedResult);
+           const SAFE_RESPONSE_RE = /^[0-9A-Fa-f\s>?:.]+$|^(?:OK|SEARCHING|UNABLE TO CONNECT|ERROR|STOPPED|BUS INIT|BUS BUSY|NO DATA|BUFFER FULL|FB ERROR|RX ERROR)$/i;
+           const isGarbage = !isTest && trimmedResult.length > 0 && !SAFE_RESPONSE_RE.test(trimmedResult);
            if (isGarbage) {
                this.stallCounter++;
                useBluetoothStore.getState().addLog(`[ResponseInterceptor] Garbage response detected: "${trimmedResult}"`);
            } else {
-               // Successful valid response: reset stall counter
+               // Geçerli yanıt → stallCounter sıfırla
                this.stallCounter = 0;
            }
        }
 
-       // ADAPTER_STALL Check
+       // ── ADAPTER_STALL tespiti & warm-start kurtarma ───────────────────
        if (this.stallCounter >= 3) {
            useBluetoothStore.getState().addLog(`[ResponseInterceptor] ADAPTER_STALL detected after 3 consecutive failures. Reinitiating recovery.`);
            this.stallCounter = 0; // Reset counter to prevent recovery loop
