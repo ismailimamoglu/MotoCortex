@@ -64,6 +64,7 @@ jest.mock('../supabaseClient', () => ({
 
 import OBDCommandQueue, { LineState } from '../OBDCommandQueue';
 import BluetoothService from '../BluetoothService';
+import SQLiteStorage from '../../core/database/SQLiteStorage';
 
 // Mock BluetoothService
 jest.mock('../BluetoothService', () => {
@@ -230,6 +231,7 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
             AsyncStorage.setItem.mockClear();
             AsyncStorage.getItem.mockClear();
             AsyncStorage.removeItem.mockClear();
+            SQLiteStorage.clearAll();
             
             useTelemetryStore.setState({
                 telemetry_queue: [],
@@ -279,36 +281,21 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
             expect(state.telemetry_queue[1].session_hash).toBe('memory-1');
         });
 
-        test('5. Telemetry writes to AsyncStorage are debounced for 5000ms', () => {
-            const setItemSpy = jest.spyOn(AsyncStorage, 'setItem');
+        test('5. Telemetry writes to SQLite are immediate', () => {
             useTelemetryStore.setState({ isQueueLoaded: true });
 
             useTelemetryStore.getState().enqueueTelemetry({
                 brand: 'Renault', model: 'Clio', year: 2020, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'h-deb-1', engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false
             });
 
-            // Timer at 3000ms: no write should have occurred yet
-            jest.advanceTimersByTime(3000);
-            expect(setItemSpy).not.toHaveBeenCalledWith('motocortex-telemetry-queue', expect.any(String));
-
-            // Timer at 5001ms: write should execute
-            jest.advanceTimersByTime(2001);
-            expect(setItemSpy).toHaveBeenCalledWith('motocortex-telemetry-queue', expect.any(String));
+            // Verify it was immediately written to SQLiteStorage
+            const items = SQLiteStorage.getAllItems();
+            expect(items.some(x => x.session_hash === 'h-deb-1')).toBe(true);
         });
 
-        test('6. flushQueueToDisk immediately writes telemetry queue and clears timeout', async () => {
-            const setItemSpy = jest.spyOn(AsyncStorage, 'setItem');
-            useTelemetryStore.setState({ isQueueLoaded: true });
-
-            useTelemetryStore.getState().enqueueTelemetry({
-                brand: 'Renault', model: 'Clio', year: 2020, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'h-flush-1', engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false
-            });
-
+        test('6. flushQueueToDisk is a safe no-op', async () => {
             const { flushQueueToDisk } = require('../../store/useTelemetryStore');
-            await flushQueueToDisk();
-
-            // Should have been called immediately without waiting for 5000ms
-            expect(setItemSpy).toHaveBeenCalledWith('motocortex-telemetry-queue', expect.any(String));
+            await expect(flushQueueToDisk()).resolves.toBeUndefined();
         });
 
         test('7. migrate function in Zustand configuration removes telemetry_queue and migrates it to isolated key', async () => {
@@ -402,84 +389,58 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
             expect(mockRemove).not.toHaveBeenCalled();
         });
 
-        test('11. Priority FIFO pruning under memory + disk merge: if merging memory + disk items exceeds 1.5MB limit, success: true items are pruned first', async () => {
-            const diskQueue = [
-                {
-                    id: `disk-0`,
+        test('11. Priority FIFO pruning: success: true items are pruned first when queue exceeds 2000', async () => {
+            const initialQueue: any[] = [];
+            for (let i = 0; i < 1999; i++) {
+                initialQueue.push({
+                    id: `disk-${i}`,
                     brand: 'renault',
                     model: 'model',
                     year: 2020,
                     protocol: 'CAN',
                     ecu_id: 'ECU',
                     dtc_codes: [],
-                    session_hash: `hash-disk-0`,
-                    retry_count: 0,
-                    engine_rpm: 2000,
-                    coolant_temp: 90,
-                    throttle_pos: 20,
-                    is_simulated: false
-                },
-                {
-                    id: `disk-1`,
-                    brand: 'renault',
-                    model: 'model',
-                    year: 2020,
-                    protocol: 'CAN',
-                    ecu_id: 'ECU',
-                    dtc_codes: [],
-                    session_hash: `hash-disk-1`,
+                    session_hash: `hash-disk-${i}`,
                     retry_count: 0,
                     engine_rpm: 2000,
                     coolant_temp: 90,
                     throttle_pos: 20,
                     is_simulated: false,
-                    success: true // synced item
-                }
-            ];
-
-            const memoryQueue = [
-                {
-                    id: `mem-0`,
-                    brand: 'renault',
-                    model: 'model',
-                    year: 2020,
-                    protocol: 'CAN',
-                    ecu_id: 'ECU',
-                    dtc_codes: [],
-                    session_hash: `hash-mem-0`,
-                    retry_count: 0,
-                    engine_rpm: 2000,
-                    coolant_temp: 90,
-                    throttle_pos: 20,
-                    is_simulated: false
-                }
-            ];
-
-            useTelemetryStore.setState({
-                isQueueLoaded: false,
-                telemetry_queue: memoryQueue,
-                telemetryQueueBytes: 300
+                    success: false
+                });
+            }
+            initialQueue.push({
+                id: `disk-synced`,
+                brand: 'renault',
+                model: 'model',
+                year: 2020,
+                protocol: 'CAN',
+                ecu_id: 'ECU',
+                dtc_codes: [],
+                session_hash: `hash-disk-synced`,
+                retry_count: 0,
+                engine_rpm: 2000,
+                coolant_temp: 90,
+                throttle_pos: 20,
+                is_simulated: false,
+                success: true
             });
 
-            AsyncStorage.getItem.mockResolvedValueOnce(JSON.stringify(diskQueue));
+            for (const item of initialQueue) {
+                SQLiteStorage.enqueueTelemetry(item);
+            }
+            useTelemetryStore.setState({
+                telemetry_queue: SQLiteStorage.getAllItems(),
+                isQueueLoaded: true
+            });
 
-            const { initializeTelemetryQueue } = require('../../store/useTelemetryStore');
-            await initializeTelemetryQueue();
-
-            // Override queue bytes to be just below 1.5MB (e.g. 1499900 bytes)
-            useTelemetryStore.setState({ telemetryQueueBytes: 1499900 });
-
-            // Enqueue new item to push total past 1.5MB
             useTelemetryStore.getState().enqueueTelemetry({
                 brand: 'Renault', model: 'Clio', year: 2020, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'hash-new-prune', engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false
             });
 
             const updatedState = useTelemetryStore.getState();
-            // The item with success: true (disk-1) should be pruned
-            expect(updatedState.telemetry_queue.find((x: any) => x.id === 'disk-1')).toBeUndefined();
-            // Unsynced items (disk-0 and mem-0) should remain
+            expect(updatedState.telemetry_queue.find((x: any) => x.id === 'disk-synced')).toBeUndefined();
             expect(updatedState.telemetry_queue.find((x: any) => x.id === 'disk-0')).toBeDefined();
-            expect(updatedState.telemetry_queue.find((x: any) => x.id === 'mem-0')).toBeDefined();
         });
 
         test('12. AsyncStorage migration fails gracefully: if migrate runs but AsyncStorage throws an error, it logs the error and clears telemetry_queue without crashing', async () => {
@@ -618,9 +579,11 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
                 });
             }
 
+            for (const item of initialQueue) {
+                SQLiteStorage.enqueueTelemetry(item);
+            }
             useTelemetryStore.setState({
-                telemetry_queue: initialQueue,
-                telemetryQueueBytes: 2000 * 150,
+                telemetry_queue: SQLiteStorage.getAllItems(),
                 isQueueLoaded: true
             });
 

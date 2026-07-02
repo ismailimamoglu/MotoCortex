@@ -1,6 +1,7 @@
 module.exports = {
   roots: ['<rootDir>/src'],
   preset: 'react-native',
+  setupFiles: ['<rootDir>/jest.setup.js'],
   moduleFileExtensions: [
     'android.ts',
     'ios.ts',

@@ -21,6 +21,7 @@ export class PollingOrchestrator {
         }
 
         this.isPollingActive = true;
+        OBDCommandQueue.setPollingActive(true);
         store.addLog('POLLING_ORCHESTRATOR: Commencing Hardened Multiplexed Telemetry Pipeline.');
 
         // 1. ADIM: Sensör isteklerini hedef donanım düğümlerine göre kümele (Batching)
@@ -104,6 +105,7 @@ export class PollingOrchestrator {
 
     public static stopPolling(): void {
         this.isPollingActive = false;
+        OBDCommandQueue.setPollingActive(false);
         this.currentActiveHeader = '7E8';
     }
 }

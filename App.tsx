@@ -44,6 +44,7 @@ import { useDashboardStore, ALL_SENSORS } from './src/store/useDashboardStore';
 import AboutView from './src/components/AboutView';
 import ObdTerminalModal from './src/components/ObdTerminalModal';
 import LanguageSelectionView from './src/components/LanguageSelectionView';
+import SandboxDevGate from './src/screens/sandbox/SandboxDevGate';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -3345,6 +3346,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <MainApp />
+      <SandboxDevGate />
     </SafeAreaProvider>
   );
 }

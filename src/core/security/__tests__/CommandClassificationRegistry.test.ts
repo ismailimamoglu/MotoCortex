@@ -153,9 +153,19 @@ describe('CommandClassificationRegistry', () => {
             expect(() => assertHardwareGate('a t z', false)).toThrow('HARDWARE_GATE_VIOLATION');
         });
 
-        // 8 new aggressive branch test cases for v7.4 coverage sprint
-        it('handles unknown commands correctly by defaulting to READ_ONLY', () => {
-            expect(classifyCommand('UNKNOWN_TEST_COMMAND')).toBe(CommandClass.READ_ONLY);
+        it('handles unknown commands correctly based on isMoving context', () => {
+            // When static, unknown command is READ_ONLY
+            expect(classifyCommand('UNKNOWN_TEST_COMMAND', false)).toBe(CommandClass.READ_ONLY);
+            // When moving, unknown command is DANGEROUS
+            expect(classifyCommand('UNKNOWN_TEST_COMMAND', true)).toBe(CommandClass.DANGEROUS);
+            expect(classifyCommand('3D0102', true)).toBe(CommandClass.DANGEROUS); // OEM memory write
+            expect(classifyCommand('14', true)).toBe(CommandClass.DANGEROUS); // OEM clear DTC
+
+            // Whitelisted standard safe commands are still READ_ONLY/OEM_READ_ONLY even when moving
+            expect(classifyCommand('010C', true)).toBe(CommandClass.READ_ONLY); // speed/RPM
+            expect(classifyCommand('0902', true)).toBe(CommandClass.READ_ONLY); // VIN
+            expect(classifyCommand('ATI', true)).toBe(CommandClass.READ_ONLY); // AT query
+            expect(classifyCommand('22F190', true)).toBe(CommandClass.OEM_READ_ONLY); // Read DID
         });
 
         it('handles truncated packets gracefully', () => {

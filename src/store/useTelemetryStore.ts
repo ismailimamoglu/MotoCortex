@@ -8,6 +8,7 @@ import { supabase } from '../api/supabaseClient';
 import { calculateSessionHash } from '../utils/crypto';
 import { useBluetoothStore } from './useBluetoothStore';
 import { ProtocolEngine } from '../core/connection/ProtocolEngine';
+import SQLiteStorage from '../core/database/SQLiteStorage';
 
 export interface TelemetryItem {
   id: string; // Internal temporary ID
@@ -83,39 +84,12 @@ export const estimateQueueBytes = (queue: TelemetryItem[]): number => {
   return queue.reduce((sum, item) => sum + estimateItemBytes(item), 0);
 };
 
-let saveTimeout: any = null;
-
 export const saveQueueAsync = async (queue: TelemetryItem[]) => {
-  const store = useTelemetryStore.getState();
-  if (!store.isQueueLoaded) {
-    return; // Don't overwrite disk data before lazy-loading completes
-  }
-  if (saveTimeout) {
-    clearTimeout(saveTimeout);
-  }
-  saveTimeout = setTimeout(async () => {
-    try {
-      await AsyncStorage.setItem('motocortex-telemetry-queue', JSON.stringify(queue));
-      saveTimeout = null;
-    } catch (err) {
-      console.error('[Telemetry Store] Failed to save telemetry queue:', err);
-    }
-  }, 5000); // Debounce write operations to 5000ms
+  // No-op: SQLite writes are synchronous and instant.
 };
 
 export const flushQueueToDisk = async () => {
-  if (saveTimeout) {
-    clearTimeout(saveTimeout);
-    saveTimeout = null;
-  }
-  const store = useTelemetryStore.getState();
-  if (!store.isQueueLoaded) return;
-  try {
-    await AsyncStorage.setItem('motocortex-telemetry-queue', JSON.stringify(store.telemetry_queue));
-    console.log('[Telemetry Store] Flushed telemetry queue to disk.');
-  } catch (err) {
-    console.error('[Telemetry Store] Failed to flush telemetry queue:', err);
-  }
+  // No-op: SQLite writes are synchronous and instant.
 };
 
 export const initializeTelemetryQueue = async () => {
@@ -123,23 +97,26 @@ export const initializeTelemetryQueue = async () => {
   if (store.isQueueLoaded) return;
   try {
     const stored = await AsyncStorage.getItem('motocortex-telemetry-queue');
-    let diskQueue: TelemetryItem[] = [];
     if (stored) {
-      diskQueue = JSON.parse(stored);
+      const diskQueue: TelemetryItem[] = JSON.parse(stored);
+      for (const item of diskQueue) {
+        SQLiteStorage.enqueueTelemetry(item);
+      }
+      await AsyncStorage.removeItem('motocortex-telemetry-queue');
+      console.log(`[Telemetry Store] Migrated ${diskQueue.length} items from AsyncStorage to SQLite.`);
     }
-    // Chronological Merge & FIFO Rule: [...diskData, ...memoryData]
-    const currentQueue = useTelemetryStore.getState().telemetry_queue;
-    const mergedQueue = [...diskQueue, ...currentQueue];
-    const bytes = estimateQueueBytes(mergedQueue);
+
+    const items = SQLiteStorage.getAllItems();
+    const bytes = estimateQueueBytes(items);
 
     useTelemetryStore.setState({
-      telemetry_queue: mergedQueue,
+      telemetry_queue: items,
       telemetryQueueBytes: bytes,
       isQueueLoaded: true
     });
-    console.log(`[Telemetry Store] Lazy-loaded queue completed. Merged ${diskQueue.length} disk items with ${currentQueue.length} memory items.`);
+    console.log(`[Telemetry Store] Lazy-loaded queue completed from SQLite. Total items: ${items.length}`);
   } catch (err) {
-    console.error('[Telemetry Store] Failed to lazy load telemetry queue:', err);
+    console.error('[Telemetry Store] Failed to lazy load telemetry queue from SQLite:', err);
     useTelemetryStore.setState({ isQueueLoaded: true });
   }
 };
@@ -214,80 +191,43 @@ export const useTelemetryStore = create<TelemetryState>()(
           return state;
         }
 
-        let currentBytes = state.telemetryQueueBytes;
-        if (currentBytes === 0 && state.telemetry_queue.length > 0) {
-          currentBytes = estimateQueueBytes(state.telemetry_queue);
-        }
-
-        const newQueue = [...state.telemetry_queue, newItem];
-        let newBytes = currentBytes + newItemSize;
-
-        // Supabase'e henüz gönderilmemiş (success: false) kayıtları silmemek için Supabase'e gönderilmiş (success: true) kayıtları öncelikli temizle.
-        while (newQueue.length > 2000 || (newQueue.length > 0 && newBytes > 1500000)) {
-          const syncedIndex = newQueue.findIndex(q => q.success === true);
-          if (syncedIndex !== -1) {
-            const removed = newQueue.splice(syncedIndex, 1)[0];
-            newBytes -= estimateItemBytes(removed);
-          } else {
-            const removed = newQueue.shift();
-            if (removed) {
-              newBytes -= estimateItemBytes(removed);
-              try {
-                const DiagnosticSessionRecorder = require('../core/monitor/DiagnosticSessionRecorder').default;
-                DiagnosticSessionRecorder.recordErr('QUEUE_OVERFLOW_DATA_DROPPED', `Dropped oldest unsynced telemetry item with hash: ${removed.session_hash}`);
-              } catch (err) {
-                console.error('[Telemetry Store] Failed to log overflow drop:', err);
-              }
-            }
-          }
-        }
-
-        saveQueueAsync(newQueue);
+        SQLiteStorage.enqueueTelemetry(newItem);
+        const updatedQueue = SQLiteStorage.getAllItems();
+        const newBytes = estimateQueueBytes(updatedQueue);
 
         return {
-          telemetry_queue: newQueue,
-          telemetryQueueBytes: Math.max(0, newBytes)
+          telemetry_queue: updatedQueue,
+          telemetryQueueBytes: newBytes
         };
       }),
 
       dequeueTelemetry: (count) => set((state) => {
         if (!state.isQueueLoaded) return state;
         const dequeued = state.telemetry_queue.slice(0, count);
-        const size = estimateQueueBytes(dequeued);
-        let currentBytes = state.telemetryQueueBytes;
-        if (currentBytes === 0 && state.telemetry_queue.length > 0) {
-          currentBytes = estimateQueueBytes(state.telemetry_queue);
+        for (const item of dequeued) {
+          SQLiteStorage.removeTelemetryItem(item.id);
         }
-        const newQueue = state.telemetry_queue.slice(count);
-        saveQueueAsync(newQueue);
+        const updatedQueue = SQLiteStorage.getAllItems();
         return {
-          telemetry_queue: newQueue,
-          telemetryQueueBytes: Math.max(0, currentBytes - size)
+          telemetry_queue: updatedQueue,
+          telemetryQueueBytes: estimateQueueBytes(updatedQueue)
         };
       }),
 
       incrementRetryCount: (id) => set((state) => {
         if (!state.isQueueLoaded) return state;
-        const newQueue = state.telemetry_queue.map((item) =>
-          item.id === id ? { ...item, retry_count: item.retry_count + 1 } : item
-        );
-        saveQueueAsync(newQueue);
-        return { telemetry_queue: newQueue };
+        SQLiteStorage.incrementRetryCount(id);
+        const updatedQueue = SQLiteStorage.getAllItems();
+        return { telemetry_queue: updatedQueue };
       }),
 
       removeTelemetryItem: (id) => set((state) => {
         if (!state.isQueueLoaded) return state;
-        const removed = state.telemetry_queue.find(q => q.id === id);
-        const size = removed ? estimateItemBytes(removed) : 0;
-        let currentBytes = state.telemetryQueueBytes;
-        if (currentBytes === 0 && state.telemetry_queue.length > 0) {
-          currentBytes = estimateQueueBytes(state.telemetry_queue);
-        }
-        const newQueue = state.telemetry_queue.filter((item) => item.id !== id);
-        saveQueueAsync(newQueue);
+        SQLiteStorage.removeTelemetryItem(id);
+        const updatedQueue = SQLiteStorage.getAllItems();
         return {
-          telemetry_queue: newQueue,
-          telemetryQueueBytes: Math.max(0, currentBytes - size)
+          telemetry_queue: updatedQueue,
+          telemetryQueueBytes: estimateQueueBytes(updatedQueue)
         };
       }),
 

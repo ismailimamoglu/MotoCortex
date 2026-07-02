@@ -1,5 +1,6 @@
 import { useTelemetryStore, estimateItemBytes, estimateQueueBytes, TelemetryItem } from '../useTelemetryStore';
 import { useAppStore } from '../useAppStore';
+import SQLiteStorage from '../../core/database/SQLiteStorage';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
     setItem: jest.fn().mockResolvedValue(true),
@@ -117,6 +118,7 @@ jest.mock('../../api/supabaseClient', () => ({
 describe('useTelemetryStore Tests', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        SQLiteStorage.clearAll();
         useTelemetryStore.setState({
             telemetry_queue: [],
             telemetryQueueBytes: 0,
@@ -203,8 +205,11 @@ describe('useTelemetryStore Tests', () => {
             });
         }
         
+        for (const item of initialQueue) {
+            SQLiteStorage.enqueueTelemetry(item);
+        }
         useTelemetryStore.setState({
-            telemetry_queue: initialQueue,
+            telemetry_queue: SQLiteStorage.getAllItems(),
             telemetryQueueBytes: 2000 * 150 // approximate size
         });
 
@@ -336,8 +341,11 @@ describe('useTelemetryStore Tests', () => {
             });
         }
         
+        for (const item of initialQueue) {
+            SQLiteStorage.enqueueTelemetry(item);
+        }
         useTelemetryStore.setState({
-            telemetry_queue: initialQueue,
+            telemetry_queue: SQLiteStorage.getAllItems(),
             telemetryQueueBytes: 2000 * 150,
             isQueueLoaded: true
         });
@@ -414,8 +422,11 @@ describe('useTelemetryStore Tests', () => {
             });
         }
         
+        for (const item of initialQueue) {
+            SQLiteStorage.enqueueTelemetry(item);
+        }
         useTelemetryStore.setState({
-            telemetry_queue: initialQueue,
+            telemetry_queue: SQLiteStorage.getAllItems(),
             telemetryQueueBytes: 2000 * 150,
             isQueueLoaded: true
         });
@@ -431,45 +442,28 @@ describe('useTelemetryStore Tests', () => {
         expect(recordErrSpy).toHaveBeenCalledWith('QUEUE_OVERFLOW_DATA_DROPPED', expect.any(String));
     });
 
-    test('11. Offline Overflow Fallback - cap bytes limit with 100% success: false items reports QUEUE_OVERFLOW_DATA_DROPPED', () => {
-        const DiagnosticSessionRecorder = require('../../core/monitor/DiagnosticSessionRecorder').default;
-        const recordErrSpy = jest.spyOn(DiagnosticSessionRecorder, 'recordErr');
-
-        const initialQueue: TelemetryItem[] = [];
-        for (let i = 0; i < 20; i++) {
-            initialQueue.push({
-                id: `id-${i}`,
-                brand: 'b'.repeat(80000), // very large item to fill bytes fast
-                model: 'model',
-                year: 2020,
-                protocol: 'CAN',
-                ecu_id: 'ECU',
-                dtc_codes: [],
-                session_hash: `hash-${i}`,
-                retry_count: 0,
-                engine_rpm: 2000,
-                coolant_temp: 90,
-                throttle_pos: 20,
-                is_simulated: false,
-                success: false
-            });
-        }
-
-        const initialBytes = estimateQueueBytes(initialQueue);
-        useTelemetryStore.setState({
-            telemetry_queue: initialQueue,
-            telemetryQueueBytes: initialBytes,
-            isQueueLoaded: true
-        });
-
+    test('11. Rejects single telemetry item exceeding 2KB size limit', () => {
         const store = useTelemetryStore.getState();
-        store.enqueueTelemetry({
-            brand: 'Renault', model: 'Scenic', year: 2022, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'hash-2001', engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false
-        });
+        useTelemetryStore.setState({ isQueueLoaded: true });
+
+        const largeItem = {
+            brand: 'b'.repeat(3000), // exceeds 2KB
+            model: 'model',
+            year: 2020,
+            protocol: 'CAN',
+            ecu_id: 'ECU',
+            dtc_codes: [],
+            session_hash: 'hash-large',
+            engine_rpm: 2000,
+            coolant_temp: 90,
+            throttle_pos: 20,
+            is_simulated: false
+        };
+
+        store.enqueueTelemetry(largeItem);
 
         const state = useTelemetryStore.getState();
-        expect(state.telemetry_queue.find((x: any) => x.id === 'id-0')).toBeUndefined();
-        expect(recordErrSpy).toHaveBeenCalledWith('QUEUE_OVERFLOW_DATA_DROPPED', expect.any(String));
+        expect(state.telemetry_queue.find(x => x.session_hash === 'hash-large')).toBeUndefined();
     });
 
     test('12. Zustand migrate function version 1->2 moves data and calls delete state.telemetry_queue', async () => {

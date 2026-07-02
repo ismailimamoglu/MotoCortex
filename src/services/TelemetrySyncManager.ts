@@ -51,6 +51,7 @@ export class TelemetrySyncManager {
   private syncTimeout: NodeJS.Timeout | null = null;
   private attempt = 0;
   private badPacketCount = 0;
+  private abortSignal: AbortSignal | null = null;
 
   private rehydrationResolver: (() => void) | null = null;
   private syncSubscriptionRelease: (() => void) | null = null;
@@ -203,6 +204,10 @@ export class TelemetrySyncManager {
 
     try {
       while (true) {
+        if (this.abortSignal?.aborted) {
+          Logger.log('TELEMETRY_SYNC', 'Sync loop aborted by signal.');
+          break;
+        }
         // EVENT-DRIVEN PROMISE LOCK: Block loop and await rehydration if queue is not loaded
         if (!useTelemetryStore.getState().isQueueLoaded) {
           Logger.log('TELEMETRY_SYNC', 'GUARD: Queue is not loaded — locking sync loop and awaiting rehydration.');
@@ -249,6 +254,9 @@ export class TelemetrySyncManager {
         let networkErrorOccurred = false;
 
         for (const item of batch) {
+          if (this.abortSignal?.aborted) {
+            break;
+          }
           // Hard-gate check (Ağ Filtresi):
           try {
             const lastSuccessfulHash = await AsyncStorage.getItem('last_successful_session_hash');
@@ -280,7 +288,11 @@ export class TelemetrySyncManager {
           Logger.log('TELEMETRY_SYNC', `Syncing session: ${item.session_hash}`);
 
           try {
-            const { error, status } = await supabase.rpc('upsert_telemetry', { payload });
+            const options: any = {};
+            if (this.abortSignal) {
+              options.signal = this.abortSignal;
+            }
+            const { error, status } = await supabase.rpc('upsert_telemetry', { payload }, options);
 
             if (error) {
               Logger.log('TELEMETRY_SYNC', `Error posting telemetry: ${error.message} (Status: ${status})`);
@@ -351,6 +363,24 @@ export class TelemetrySyncManager {
       Logger.log('TELEMETRY_SYNC', `Sync loop exception: ${e.message}`);
     } finally {
       this.isSyncing = false;
+    }
+  }
+
+  public async syncQueueWithTimeout(timeoutMs: number = 15000): Promise<void> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      this.abortSignal = controller.signal;
+      await this.syncQueue();
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        Logger.log('TELEMETRY_SYNC', 'Network sync aborted due to 15s background timeout.');
+      } else {
+        throw err;
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      this.abortSignal = null;
     }
   }
 }

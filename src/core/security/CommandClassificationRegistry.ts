@@ -49,7 +49,7 @@ export function normalizeCommand(raw: string): string {
  *   READ_ONLY:
  *     - Everything else (Mode 01, 03, 09, AT queries, etc.)
  */
-export function classifyCommand(rawCmd: string): CommandClass {
+export function classifyCommand(rawCmd: string, isMoving: boolean = false): CommandClass {
     const cmd = normalizeCommand(rawCmd);
 
     // 1. DANGEROUS checks (highest priority)
@@ -73,7 +73,27 @@ export function classifyCommand(rawCmd: string): CommandClass {
     if (cmd.startsWith('22')) return CommandClass.OEM_READ_ONLY;
     if (cmd.startsWith('21')) return CommandClass.OEM_READ_ONLY;
 
-    // 6. Everything else is standard READ_ONLY (Mode 01, 03, 09, generic AT commands)
+    // 6. Whitelist of safe commands when moving
+    const isStandardSafe = 
+        cmd.startsWith('01') || 
+        cmd.startsWith('02') || 
+        cmd.startsWith('03') || 
+        cmd.startsWith('07') || 
+        cmd.startsWith('09') || 
+        cmd.startsWith('0A') ||
+        (cmd.startsWith('AT') && cmd !== 'ATZ');
+
+    if (isStandardSafe) {
+        return CommandClass.READ_ONLY;
+    }
+
+    // 7. Context-Aware Fallback
+    if (isMoving) {
+        // If vehicle is in motion, any unknown command is treated as DANGEROUS to protect passenger safety!
+        return CommandClass.DANGEROUS;
+    }
+
+    // Otherwise, standard fallback for static diagnostics (for flexibility)
     return CommandClass.READ_ONLY;
 }
 
