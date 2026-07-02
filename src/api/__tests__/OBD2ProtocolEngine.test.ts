@@ -139,4 +139,54 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
         // Motor yerel durumundaki currentSpeed=50'ye güvenerek komutu yine de bloklamalıdır!
         await expect((engine as any).executeCommand('ATZ')).rejects.toThrow('BLOCK_COMMAND_VEHICLE_IN_MOTION');
     });
+
+    test('5. Bad Clone CAN Rejection (ATCFC0 ve benzeri gelişmiş komutlar ? dönerse clone flag set edilmeli ve skor düşürülmeli)', async () => {
+        // Mock BluetoothService to return "?" for advanced flow control commands
+        const writeSpy = jest.spyOn(require('../BluetoothService').default, 'write').mockImplementation((cmd: any) => {
+            setTimeout(() => {
+                if (mockRegisteredCallback) {
+                    if (cmd.includes('ATCFC0') || cmd.includes('FC')) {
+                        mockRegisteredCallback('?\r\n>');
+                    } else {
+                        mockRegisteredCallback('OK\r\n>');
+                    }
+                }
+            }, 0);
+            return Promise.resolve(true);
+        });
+
+        // Run the command
+        const res = await (engine as any).executeCommand('ATCFC0');
+        expect(res.trim()).toBe('?');
+
+        // Check if capability score is downgraded to 30 and clone flag is set
+        const store = useBluetoothStore.getState();
+        expect(store.isCloneDevice).toBe(true);
+        expect(store.adapterCapabilityScore).toBe(30);
+
+        writeSpy.mockRestore();
+    });
+
+    test('6. ADAPTER_STALL Kurtarma Mekanizması (Arka arkaya 3 kez ? veya timeout alınırsa kuyruk temizlenmeli ve ATWS basılmalı)', async () => {
+        const writeSpy = jest.spyOn(require('../BluetoothService').default, 'write').mockImplementation(() => Promise.resolve(true));
+        
+        // Trigger 2 failures first
+        (engine as any).finishCommand(null, '?');
+        (engine as any).finishCommand(new Error('Timeout'));
+        expect((engine as any).stallCounter).toBe(2);
+
+        // Third failure triggers recovery
+        const clearSpy = jest.spyOn(engine, 'clear');
+        (engine as any).finishCommand(null, '?');
+
+        expect(clearSpy).toHaveBeenCalled();
+        expect((engine as any).stallCounter).toBe(0); // Reset after recovery
+        
+        // Wait briefly for recovery command write to happen
+        await new Promise(resolve => setTimeout(resolve, 150));
+        expect(writeSpy).toHaveBeenCalledWith('ATWS\r');
+
+        writeSpy.mockRestore();
+        clearSpy.mockRestore();
+    });
 });

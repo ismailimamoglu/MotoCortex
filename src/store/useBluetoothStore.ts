@@ -277,7 +277,13 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setSuggestedBrandFromVin: (suggestedBrandFromVin) => set({ suggestedBrandFromVin }),
     flushPendingRevocation: () => set({ pendingProRevocation: false }),
     triggerPendingRevocation: () => set({ pendingProRevocation: true }),
-    addLog: (entry) => set((state) => ({ logs: [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs] })),
+    addLog: (entry) => set((state) => {
+        const nextLogs = [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs];
+        if (nextLogs.length > 500) {
+            nextLogs.length = 500;
+        }
+        return { logs: nextLogs };
+    }),
     clearLogs: () => set({ logs: [] }),
     setProtocol: (protocol) => set({ protocol }),
 

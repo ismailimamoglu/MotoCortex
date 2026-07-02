@@ -20,6 +20,7 @@ interface LiveEngineHeroProps {
   onConnectPress: () => void;
   onGoToSensors?: () => void;
   onGoToExpertise?: () => void;
+  onOpenDiag?: () => void;
   
   // Bluetooth props
   status: string;
@@ -157,6 +158,7 @@ export default function LiveEngineHero({
   onConnectPress,
   onGoToSensors,
   onGoToExpertise,
+  onOpenDiag,
   status,
   connectionState,
   ecuStatus,
@@ -224,6 +226,7 @@ export default function LiveEngineHero({
   const setSuggestedBrandFromVin = useBluetoothStore((state) => state.setSuggestedBrandFromVin);
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
   const toggleSimulationMode = useAppStore((state) => state.toggleSimulationMode);
+  const isPro = useAppStore((state) => state.isPro);
 
   useEffect(() => {
     if (suggestedBrandFromVin && !activeSessionVehicle) {
@@ -1034,6 +1037,46 @@ export default function LiveEngineHero({
                     </View>
                   </View>
                 </View>
+              )}
+              {isPro && onOpenDiag && (
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingVertical: scaleHeight(10),
+                    paddingHorizontal: scaleWidth(14),
+                    backgroundColor: `${colors.cyan}0b`,
+                    borderColor: `${colors.cyan}26`,
+                    borderWidth: 1.2,
+                    borderRadius: scaleMod(8),
+                    marginTop: scaleHeight(12),
+                  }}
+                  onPress={() => {
+                    triggerHaptic();
+                    onOpenDiag();
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(8) }}>
+                    <Text style={{ fontSize: scaleFont(12) }}>🛠️</Text>
+                    <Text style={{
+                      color: colors.cyan,
+                      fontFamily: MONO,
+                      fontSize: scaleFont(10.5),
+                      fontWeight: '800',
+                      letterSpacing: 0.5,
+                    }}>
+                      {t('sandbox.advancedTerminal', 'Advanced Connection Terminal (DIAG)')}
+                    </Text>
+                  </View>
+                  <Text style={{
+                    color: colors.cyan,
+                    fontFamily: MONO,
+                    fontSize: scaleFont(12),
+                    fontWeight: '900',
+                  }}>›</Text>
+                </TouchableOpacity>
               )}
             </View>
           ) : (

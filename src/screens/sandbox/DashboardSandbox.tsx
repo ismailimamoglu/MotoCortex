@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
-  ScrollView,
   FlatList,
   SafeAreaView,
   ActivityIndicator,
@@ -14,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../../theme';
 import { useResponsive } from '../../hooks/useResponsive';
 import { useDiagnosticEngine } from './useDiagnosticEngine';
+import { useBluetoothStore } from '../../store/useBluetoothStore';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -90,6 +89,17 @@ export default function DashboardSandbox() {
     }
   };
 
+  // Raw UART logs logic with freeze capability
+  const [isPaused, setIsPaused] = useState(false);
+  const [logSnapshot, setLogSnapshot] = useState<string[]>([]);
+  const logs = useBluetoothStore((s) => s.logs);
+
+  useEffect(() => {
+    if (!isPaused) {
+      setLogSnapshot(logs);
+    }
+  }, [logs, isPaused]);
+
   // Dynamic Styles
   const sDyn = React.useMemo(() => {
     return {
@@ -160,7 +170,7 @@ export default function DashboardSandbox() {
         marginBottom: scaleHeight(8),
       },
       deviceList: {
-        maxHeight: scaleHeight(120),
+        maxHeight: scaleHeight(100),
         marginBottom: scaleHeight(10),
       },
       deviceItem: {
@@ -212,7 +222,7 @@ export default function DashboardSandbox() {
         flexWrap: 'wrap' as const,
         justifyContent: 'space-between' as const,
         gap: scaleMod(8),
-        marginBottom: scaleHeight(16),
+        marginBottom: scaleHeight(12),
       },
       tile: {
         width: '48.5%',
@@ -247,7 +257,7 @@ export default function DashboardSandbox() {
       },
       actionContainer: {
         gap: scaleHeight(8),
-        marginBottom: scaleHeight(20),
+        marginBottom: scaleHeight(12),
       },
       stressBtn: {
         borderRadius: scaleMod(10),
@@ -260,8 +270,48 @@ export default function DashboardSandbox() {
         fontFamily: MONO,
         letterSpacing: 0.5,
       },
+      terminalCard: {
+        backgroundColor: '#0d0e12',
+        borderRadius: scaleMod(12),
+        borderWidth: 1.2,
+        borderColor: colors.border,
+        padding: scaleMod(10),
+        marginBottom: scaleHeight(12),
+      },
+      terminalHeader: {
+        flexDirection: 'row' as const,
+        justifyContent: 'space-between' as const,
+        alignItems: 'center' as const,
+        marginBottom: scaleHeight(6),
+        borderBottomWidth: 1,
+        borderBottomColor: `${colors.border}33`,
+        paddingBottom: scaleHeight(6),
+      },
+      terminalTitle: {
+        fontSize: scaleFont(10.5),
+        fontWeight: '900' as const,
+        color: colors.cyan,
+        fontFamily: MONO,
+        letterSpacing: 0.5,
+      },
+      pauseBtn: {
+        backgroundColor: `${colors.cyan}14`,
+        borderColor: colors.cyan,
+        borderWidth: 1,
+        borderRadius: scaleMod(4),
+        paddingHorizontal: scaleWidth(8),
+        paddingVertical: scaleHeight(3),
+      },
+      pauseBtnText: {
+        color: colors.cyan,
+        fontSize: scaleFont(9.5),
+        fontWeight: '900' as const,
+        fontFamily: MONO,
+      },
     };
   }, [colors, scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet]) as any;
+
+  const isConnectedToEcu = ecuStatus === 'connected';
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -272,148 +322,231 @@ export default function DashboardSandbox() {
           <Text style={sDyn.fpsText}>{t('sandbox.fps', { fps })}</Text>
         </View>
 
-        {/* Connection Status Card */}
-        <View style={sDyn.statusCard}>
-          <View style={sDyn.statusRow}>
-            <Text style={sDyn.statusLabel}>{t('sandbox.connectionStatus', 'Connection Status:')}</Text>
-            <Text style={[sDyn.statusValue, { color: getStatusColor(connectionStatus) }]}>
-              {getStatusText(connectionStatus).toUpperCase()}
-            </Text>
-          </View>
-          <View style={sDyn.statusRow}>
-            <Text style={sDyn.statusLabel}>{t('sandbox.ecuStatus', 'ECU Status:')}</Text>
-            <Text style={[sDyn.statusValue, { color: getStatusColor(ecuStatus) }]}>
-              {getStatusText(ecuStatus).toUpperCase()}
-            </Text>
-          </View>
-        </View>
+        {/* Dynamic Connected vs Disconnected State */}
+        {!isConnectedToEcu ? (
+          // DISCONNECTED STATE: Device setup and full-height raw terminal
+          <View style={{ flex: 1 }}>
+            {/* Connection Status Card */}
+            <View style={sDyn.statusCard}>
+              <View style={sDyn.statusRow}>
+                <Text style={sDyn.statusLabel}>{t('sandbox.connectionStatus', 'Connection Status:')}</Text>
+                <Text style={[sDyn.statusValue, { color: getStatusColor(connectionStatus) }]}>
+                  {getStatusText(connectionStatus).toUpperCase()}
+                </Text>
+              </View>
+              <View style={sDyn.statusRow}>
+                <Text style={sDyn.statusLabel}>{t('sandbox.ecuStatus', 'ECU Status:')}</Text>
+                <Text style={[sDyn.statusValue, { color: getStatusColor(ecuStatus) }]}>
+                  {getStatusText(ecuStatus).toUpperCase()}
+                </Text>
+              </View>
+            </View>
 
-        {/* Device Discovery & Controller */}
-        <View style={sDyn.controlCard}>
-          <Text style={sDyn.sectionTitle}>🛰️ {t('sandbox.discoveredDevices', 'DISCOVERED DEVICES')}</Text>
-          
-          {isScanning ? (
-            <ActivityIndicator size="small" color={colors.cyan} style={{ marginVertical: scaleHeight(12) }} />
-          ) : (
-            <FlatList
-              data={discoveredDevices}
-              keyExtractor={(item) => item.id}
-              style={sDyn.deviceList}
-              renderItem={({ item }) => (
-                <View style={sDyn.deviceItem}>
-                  <Text numberOfLines={1} style={sDyn.deviceName}>
-                    {item.name || t('connection.unknownDevice', 'Unknown Device')}
-                  </Text>
-                  <TouchableOpacity
-                    style={sDyn.connectBtn}
-                    onPress={() => connectDevice(item.id, item.name)}
-                  >
-                    <Text style={sDyn.connectBtnText}>{t('sandbox.connect', 'CONNECT')}</Text>
-                  </TouchableOpacity>
-                </View>
+            {/* Device Scanner Card */}
+            <View style={sDyn.controlCard}>
+              <Text style={sDyn.sectionTitle}>🛰️ {t('sandbox.discoveredDevices', 'DISCOVERED DEVICES')}</Text>
+              
+              {isScanning ? (
+                <ActivityIndicator size="small" color={colors.cyan} style={{ marginVertical: scaleHeight(12) }} />
+              ) : (
+                <FlatList
+                  data={discoveredDevices}
+                  keyExtractor={(item) => item.id}
+                  style={sDyn.deviceList}
+                  renderItem={({ item }) => (
+                    <View style={sDyn.deviceItem}>
+                      <Text numberOfLines={1} style={sDyn.deviceName}>
+                        {item.name || t('connection.unknownDevice', 'Unknown Device')}
+                      </Text>
+                      <TouchableOpacity
+                        style={sDyn.connectBtn}
+                        onPress={() => connectDevice(item.id, item.name)}
+                      >
+                        <Text style={sDyn.connectBtnText}>{t('sandbox.connect', 'CONNECT')}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  nestedScrollEnabled={true}
+                />
               )}
-              nestedScrollEnabled={true}
-            />
-          )}
 
-          <TouchableOpacity
-            style={sDyn.scanBtn}
-            onPress={startScanning}
-            disabled={isScanning}
-          >
-            <Text style={sDyn.scanBtnText}>
-              {isScanning ? t('sandbox.scanning', 'Scanning...') : t('sandbox.scan', 'Scan Devices').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <TouchableOpacity
+                style={sDyn.scanBtn}
+                onPress={startScanning}
+                disabled={isScanning}
+              >
+                <Text style={sDyn.scanBtnText}>
+                  {isScanning ? t('sandbox.scanning', 'Scanning...') : t('sandbox.scan', 'Scan Devices').toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* 4 Telemetry Grids/Tiles */}
-        <View style={sDyn.telemetryGrid}>
-          {/* RPM Tile */}
-          <View style={[sDyn.tile, { backgroundColor: `${colors.cyan}0f`, borderLeftWidth: 4, borderLeftColor: colors.cyan }]}>
-            <Text style={sDyn.tileHeader}>⚙️ {t('sandbox.rpm', 'Engine RPM').toUpperCase()}</Text>
-            <View style={sDyn.tileValueRow}>
-              <Text style={[sDyn.tileValue, { color: colors.cyan }]}>
-                {rpm !== null ? Math.round(rpm) : '--'}
-              </Text>
-              {rpm !== null && <Text style={sDyn.tileUnit}>rpm</Text>}
+            {/* Full height raw terminal */}
+            <View style={[sDyn.terminalCard, { flex: 1 }]}>
+              <View style={sDyn.terminalHeader}>
+                <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
+                <TouchableOpacity
+                  style={sDyn.pauseBtn}
+                  onPress={() => setIsPaused(!isPaused)}
+                >
+                  <Text style={sDyn.pauseBtnText}>
+                    {isPaused ? t('sandbox.resume', 'RESUME') : t('sandbox.pause', 'PAUSE')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <FlatList
+                data={logSnapshot}
+                keyExtractor={(item, index) => `${index}-${item}`}
+                renderItem={({ item }) => {
+                  const isTx = item.includes('TX:');
+                  const isRx = item.includes('RX:');
+                  const itemColor = isTx ? colors.purple : isRx ? colors.green : colors.textPri;
+                  return (
+                    <Text style={{
+                      color: itemColor,
+                      fontFamily: MONO,
+                      fontSize: scaleFont(9),
+                      lineHeight: scaleHeight(13),
+                      marginBottom: 2
+                    }}>
+                      {item}
+                    </Text>
+                  );
+                }}
+                inverted={!isPaused}
+                initialNumToRender={20}
+                maxToRenderPerBatch={15}
+                windowSize={5}
+              />
             </View>
           </View>
+        ) : (
+          // CONNECTED STATE: Telemetry gauges, 20Hz Controls & shrunken raw terminal
+          <View style={{ flex: 1 }}>
+            {/* 4 Telemetry Grids/Tiles */}
+            <View style={sDyn.telemetryGrid}>
+              <View style={[sDyn.tile, { backgroundColor: `${colors.cyan}0f`, borderLeftWidth: 4, borderLeftColor: colors.cyan }]}>
+                <Text style={sDyn.tileHeader}>⚙️ {t('sandbox.rpm', 'Engine RPM').toUpperCase()}</Text>
+                <View style={sDyn.tileValueRow}>
+                  <Text style={[sDyn.tileValue, { color: colors.cyan }]}>
+                    {rpm !== null ? Math.round(rpm) : '--'}
+                  </Text>
+                  {rpm !== null && <Text style={sDyn.tileUnit}>rpm</Text>}
+                </View>
+              </View>
 
-          {/* Speed Tile */}
-          <View style={[sDyn.tile, { backgroundColor: `${colors.purple}0f`, borderLeftWidth: 4, borderLeftColor: colors.purple }]}>
-            <Text style={sDyn.tileHeader}>🏎️ {t('sandbox.speed', 'Vehicle Speed').toUpperCase()}</Text>
-            <View style={sDyn.tileValueRow}>
-              <Text style={[sDyn.tileValue, { color: colors.purple }]}>
-                {speed !== null ? speed : '--'}
-              </Text>
-              {speed !== null && <Text style={sDyn.tileUnit}>km/h</Text>}
+              <View style={[sDyn.tile, { backgroundColor: `${colors.purple}0f`, borderLeftWidth: 4, borderLeftColor: colors.purple }]}>
+                <Text style={sDyn.tileHeader}>🏎️ {t('sandbox.speed', 'Vehicle Speed').toUpperCase()}</Text>
+                <View style={sDyn.tileValueRow}>
+                  <Text style={[sDyn.tileValue, { color: colors.purple }]}>
+                    {speed !== null ? speed : '--'}
+                  </Text>
+                  {speed !== null && <Text style={sDyn.tileUnit}>km/h</Text>}
+                </View>
+              </View>
+
+              <View style={[sDyn.tile, { backgroundColor: `${colors.red}0f`, borderLeftWidth: 4, borderLeftColor: colors.red }]}>
+                <Text style={sDyn.tileHeader}>🌡️ {t('sandbox.coolant', 'Coolant Temp').toUpperCase()}</Text>
+                <View style={sDyn.tileValueRow}>
+                  <Text style={[sDyn.tileValue, { color: colors.red }]}>
+                    {coolant !== null ? coolant : '--'}
+                  </Text>
+                  {coolant !== null && <Text style={sDyn.tileUnit}>°C</Text>}
+                </View>
+              </View>
+
+              <View style={[sDyn.tile, { backgroundColor: `${colors.amber}0f`, borderLeftWidth: 4, borderLeftColor: colors.amber }]}>
+                <Text style={sDyn.tileHeader}>🔌 {t('sandbox.throttle', 'Throttle Position').toUpperCase()}</Text>
+                <View style={sDyn.tileValueRow}>
+                  <Text style={[sDyn.tileValue, { color: colors.amber }]}>
+                    {throttle !== null ? throttle : '--'}
+                  </Text>
+                  {throttle !== null && <Text style={sDyn.tileUnit}>%</Text>}
+                </View>
+              </View>
+            </View>
+
+            {/* Action Controls */}
+            <View style={sDyn.actionContainer}>
+              <TouchableOpacity
+                style={[
+                  sDyn.stressBtn,
+                  {
+                    backgroundColor: isStressActive ? `${colors.red}1a` : colors.cyan,
+                    borderWidth: isStressActive ? 1.2 : 0,
+                    borderColor: isStressActive ? colors.red : 'transparent',
+                  },
+                ]}
+                onPress={() => {
+                  if (isStressActive) {
+                    stopTelemetry();
+                  } else {
+                    startTelemetry(['0C', '0D', '05', '11'], 50);
+                  }
+                }}
+              >
+                <Text
+                  style={[
+                    sDyn.stressBtnText,
+                    { color: isStressActive ? colors.red : '#000000' },
+                  ]}
+                >
+                  {isStressActive
+                    ? t('sandbox.stressBtnStop', 'Stop Telemetry Loop').toUpperCase()
+                    : t('sandbox.stressBtnStart', 'Start 20Hz Stress').toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[sDyn.stressBtn, { backgroundColor: `${colors.red}20`, borderWidth: 1.2, borderColor: colors.red }]}
+                onPress={disconnectDevice}
+              >
+                <Text style={[sDyn.stressBtnText, { color: colors.red }]}>
+                  🔌 {t('sandbox.stopDisconnect', 'Stop / Disconnect').toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Shrunken terminal */}
+            <View style={[sDyn.terminalCard, { height: scaleHeight(185), flex: 0 }]}>
+              <View style={sDyn.terminalHeader}>
+                <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
+                <TouchableOpacity
+                  style={sDyn.pauseBtn}
+                  onPress={() => setIsPaused(!isPaused)}
+                >
+                  <Text style={sDyn.pauseBtnText}>
+                    {isPaused ? t('sandbox.resume', 'RESUME') : t('sandbox.pause', 'PAUSE')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <FlatList
+                data={logSnapshot}
+                keyExtractor={(item, index) => `${index}-${item}`}
+                renderItem={({ item }) => {
+                  const isTx = item.includes('TX:');
+                  const isRx = item.includes('RX:');
+                  const itemColor = isTx ? colors.purple : isRx ? colors.green : colors.textPri;
+                  return (
+                    <Text style={{
+                      color: itemColor,
+                      fontFamily: MONO,
+                      fontSize: scaleFont(9),
+                      lineHeight: scaleHeight(13),
+                      marginBottom: 2
+                    }}>
+                      {item}
+                    </Text>
+                  );
+                }}
+                inverted={!isPaused}
+                initialNumToRender={15}
+                maxToRenderPerBatch={10}
+                windowSize={3}
+              />
             </View>
           </View>
-
-          {/* Coolant Tile */}
-          <View style={[sDyn.tile, { backgroundColor: `${colors.red}0f`, borderLeftWidth: 4, borderLeftColor: colors.red }]}>
-            <Text style={sDyn.tileHeader}>🌡️ {t('sandbox.coolant', 'Coolant Temp').toUpperCase()}</Text>
-            <View style={sDyn.tileValueRow}>
-              <Text style={[sDyn.tileValue, { color: colors.red }]}>
-                {coolant !== null ? coolant : '--'}
-              </Text>
-              {coolant !== null && <Text style={sDyn.tileUnit}>°C</Text>}
-            </View>
-          </View>
-
-          {/* Throttle Tile */}
-          <View style={[sDyn.tile, { backgroundColor: `${colors.amber}0f`, borderLeftWidth: 4, borderLeftColor: colors.amber }]}>
-            <Text style={sDyn.tileHeader}>🔌 {t('sandbox.throttle', 'Throttle Position').toUpperCase()}</Text>
-            <View style={sDyn.tileValueRow}>
-              <Text style={[sDyn.tileValue, { color: colors.amber }]}>
-                {throttle !== null ? throttle : '--'}
-              </Text>
-              {throttle !== null && <Text style={sDyn.tileUnit}>%</Text>}
-            </View>
-          </View>
-        </View>
-
-        {/* Action Controls */}
-        <View style={sDyn.actionContainer}>
-          <TouchableOpacity
-            style={[
-              sDyn.stressBtn,
-              {
-                backgroundColor: isStressActive ? `${colors.red}1a` : colors.cyan,
-                borderWidth: isStressActive ? 1.2 : 0,
-                borderColor: isStressActive ? colors.red : 'transparent',
-              },
-            ]}
-            onPress={() => {
-              if (isStressActive) {
-                stopTelemetry();
-              } else {
-                startTelemetry(['0C', '0D', '05', '11'], 50);
-              }
-            }}
-          >
-            <Text
-              style={[
-                sDyn.stressBtnText,
-                { color: isStressActive ? colors.red : '#000000' },
-              ]}
-            >
-              {isStressActive
-                ? t('sandbox.stressBtnStop', 'Stop Telemetry Loop').toUpperCase()
-                : t('sandbox.stressBtnStart', 'Start 20Hz Stress').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[sDyn.stressBtn, { backgroundColor: `${colors.red}20`, borderWidth: 1.2, borderColor: colors.red }]}
-            onPress={disconnectDevice}
-          >
-            <Text style={[sDyn.stressBtnText, { color: colors.red }]}>
-              🔌 {t('sandbox.stopDisconnect', 'Stop / Disconnect').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        )}
       </View>
     </SafeAreaView>
   );

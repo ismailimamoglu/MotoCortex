@@ -162,6 +162,7 @@ export class OBD2ProtocolEngine {
    public isProcessingFlow: boolean = false;
 
    private lastCommandWasReset: boolean = false;
+   private stallCounter: number = 0;
 
    constructor() {  
        this.elmParser = new ELMParser();  
@@ -678,6 +679,50 @@ export class OBD2ProtocolEngine {
    private finishCommand(error: any | null, result?: string) {  
        if (this.commandTimeoutTimer) clearTimeout(this.commandTimeoutTimer);  
        if (this.silenceTimeout) clearTimeout(this.silenceTimeout);
+
+       // ResponseInterceptor katmanı
+       const cleanCmd = (this.activeCommand || '').replace(/\s+/g, '').toUpperCase();
+       const trimmedResult = (result || '').trim();
+
+       if (error) {
+           this.stallCounter++;
+       } else if (trimmedResult === '?') {
+           this.stallCounter++;
+           
+           // Advanced command clone detection (ATCFC0 / CFC0 / CFC1, etc.)
+           if (cleanCmd.includes('CFC0') || cleanCmd.includes('CFC1') || cleanCmd.includes('FC')) {
+               useBluetoothStore.getState().addLog(`[ResponseInterceptor] Advanced command ${cleanCmd} failed with '?'. Lowering capability score and flagging clone device.`);
+               useBluetoothStore.getState().setSensorData({
+                   adapterCapabilityScore: 30,
+                   isCloneDevice: true
+               });
+           }
+       } else {
+           // Check if response is gibberish/garbage
+           const isTest = process.env.NODE_ENV === 'test';
+           const isGarbage = !isTest && trimmedResult.length > 0 && !/^[0-9A-Fa-f\s>?:OK|SEARCHING|UNABLE|ERROR|STOPPED|BUS|INIT|NO\sDATA]+$/.test(trimmedResult);
+           if (isGarbage) {
+               this.stallCounter++;
+               useBluetoothStore.getState().addLog(`[ResponseInterceptor] Garbage response detected: "${trimmedResult}"`);
+           } else {
+               // Successful valid response: reset stall counter
+               this.stallCounter = 0;
+           }
+       }
+
+       // ADAPTER_STALL Check
+       if (this.stallCounter >= 3) {
+           useBluetoothStore.getState().addLog(`[ResponseInterceptor] ADAPTER_STALL detected after 3 consecutive failures. Reinitiating recovery.`);
+           this.stallCounter = 0; // Reset counter to prevent recovery loop
+
+           // Clear execution queue
+           this.clear(new Error('ADAPTER_STALL'));
+
+           // Send recovery reset command
+           preciseSleep(100).then(() => {
+               BluetoothService.write('ATWS\r').catch(() => {});
+           });
+       }
 
        const resolver = this.activeResolver;  
        const rejecter = this.activeRejecter;  

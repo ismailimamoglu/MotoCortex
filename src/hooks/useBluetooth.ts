@@ -181,8 +181,7 @@ export const useBluetooth = () => {
 
            updateStep('adapter', 'success', 25);  
            updateStep('protocol', 'pending', 35);  
-           ConnectionStateMachine.transitionTo(ConnectionState.PROTOCOL_SCANNING);
-
+           ConnectionStateMachine.transitionTo(ConnectionState.PROTOCOL_SCANNING);            
            let ecuConnected = false;  
            let rpmRes = '';
 
@@ -204,115 +203,131 @@ export const useBluetooth = () => {
                useBluetoothStore.getState().setProtocol(selectedProtocol ? selectedProtocol.trim() : 'UNKNOWN');  
            } catch (e) {  
                ProtocolCircuitBreaker.recordFailure("0");  
-               useBluetoothStore.getState().addLog('DIAG: AT SP 0 failed or invalid, K-Line address fallback active...');
+               useBluetoothStore.getState().addLog('DIAG: AT SP 0 failed or invalid, executing CAN-first fallback ring (SP 6 -> SP 7 -> SP 5 -> SP 3)...');
 
-               const targetAddresses = VehicleProfileDB.getKLineAddressUnion();  
-               const klineProtocols = ["5", "4"];
+               // 1. Try CAN-Bus fallback first (SP 6 -> SP 7)
+               const canProtocols = ["6", "7"];
+               for (const proto of canProtocols) {
+                   if (ecuConnected) break;
+                   const protocolCmd = `AT SP ${proto}`;
+                   if (ProtocolCircuitBreaker.isBlacklisted(protocolCmd)) continue;
 
-               for (const address of targetAddresses) {  
-                   if (ecuConnected) break;  
-                   const addressHex = address.toString(16).toUpperCase().padStart(2, '0');
+                   try {
+                       OBDCommandQueue.setAtomicLock(true);
+                       OBDCommandQueue.clear(new Error('CAN_FALLBACK_RESET'));
+                       await preciseSleep(250);
 
-                   for (const proto of klineProtocols) {  
-                       const protoKey = `${proto}_0x${addressHex}`;  
-                       if (ProtocolCircuitBreaker.isBlacklisted(protoKey)) continue;  
-                       try {  
-                           useBluetoothStore.getState().addLog(`DIAG: Scanning K-Line Address 0x${addressHex} Protocol ATSP${proto}...`);  
-                           OBDCommandQueue.setAtomicLock(true);  
-                           OBDCommandQueue.clear(new Error('KLINE_SCAN_RESET'));  
-                           await preciseSleep(250);
+                       const atzRes = await OBDCommandQueue.add("AT Z", 2000);
+                       if ((atzRes || '').toUpperCase().trim() === 'STOPPED') {
+                           await waitForELMPrompt(1500); await preciseSleep(2000); BluetoothService.clearBuffer();
+                       } else {
+                           await waitForELMPrompt();
+                       }
+                       OBDCommandQueue.flushRxBuffer();
+                       await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 1000);
+                       await OBDCommandQueue.add("ATL0", 1000);
+                       await OBDCommandQueue.add("ATS0", 1000);
 
-                           const atzResKLine = await OBDCommandQueue.add("AT Z", 2000);  
-                           const atzCleanKLine = (atzResKLine || '').toUpperCase().trim();  
-                           if (atzCleanKLine === 'STOPPED' || atzCleanKLine === '') {  
-                               await waitForELMPrompt(1500);  
-                               await preciseSleep(2000);  
-                               BluetoothService.clearBuffer();  
-                           } else {  
-                               await waitForELMPrompt();  
-                           }  
-                           OBDCommandQueue.flushRxBuffer();
-
-                           await OBDCommandQueue.add("AT E0", 1000);  
-                           await OBDCommandQueue.add("AT ST 96", 1000);  
-                           await OBDCommandQueue.add(`AT SP ${proto}`, 1000);  
-                           await preciseSleep(300);  
-                           await OBDCommandQueue.add(`AT IIA ${addressHex}`, 1000);
-
-                           if (proto !== '5') {  
-                               let swInterbyteActive = false;  
-                               try {  
-                                   const atIbRes = await OBDCommandQueue.add("AT IB 10", 1000);  
-                                   if ((atIbRes || '').toUpperCase().trim().includes('?')) swInterbyteActive = true;  
-                               } catch { swInterbyteActive = true; }  
-                               if (swInterbyteActive) await preciseSleep(10);  
-                               const initSI = await OBDCommandQueue.add("AT SI", 4000);  
-                               await preciseSleep(300);  
-                           } else {  
-                               await preciseSleep(150);  
-                           }
-
-                           const klineHandshakeCmd = "01 00";  
-                           const initRes = await OBDCommandQueue.add(klineHandshakeCmd, 8000);  
+                       useBluetoothStore.getState().addLog(`DIAG: Testing CAN Protocol ATSP${proto}...`);
+                       const spRes = await OBDCommandQueue.add(protocolCmd, 2000);
+                       
+                       // PROTOCOL-LEVEL CLONE BLOCK: Check if ATSP returns '?'
+                       if ((spRes || '').trim() === '?') {
+                           useBluetoothStore.getState().addLog(`CLONE_BLOCK: Protocol ATSP${proto} returned '?'. Non-CAN clone device detected. Skipping CAN fallback.`);
+                           ProtocolCircuitBreaker.recordFailure(protocolCmd);
                            OBDCommandQueue.setAtomicLock(false);
+                           break; // Skip the rest of CAN fallback (break the CAN loop)
+                       }
 
-                           ecuConnected = verifyHandshakeResponse(initRes, klineHandshakeCmd);  
-                           if (ecuConnected) {  
-                               useBluetoothStore.getState().setProtocol(`ISO 14230-4 (KWP, 0x${addressHex})`);  
-                               break;  
-                           } else {  
-                               ProtocolCircuitBreaker.recordFailure(protoKey);  
-                           }  
-                       } catch (scanErr) {  
-                           OBDCommandQueue.setAtomicLock(false);  
-                           ProtocolCircuitBreaker.recordFailure(protoKey);  
-                       }  
-                   }  
+                       const initRes = await OBDCommandQueue.add("01 0C", 8000);
+                       OBDCommandQueue.setAtomicLock(false);
+                       ecuConnected = verifyHandshakeResponse(initRes, "01 0C");
+
+                       if (ecuConnected) {
+                           const selectedProtocol = await OBDCommandQueue.add("AT DP", 5000);
+                           useBluetoothStore.getState().setProtocol(selectedProtocol ? selectedProtocol.trim() : 'UNKNOWN');
+                           break;
+                       } else {
+                           ProtocolCircuitBreaker.recordFailure(protocolCmd);
+                       }
+                   } catch (err) {
+                       OBDCommandQueue.setAtomicLock(false);
+                       ProtocolCircuitBreaker.recordFailure(protocolCmd);
+                   }
                }
 
-               if (!ecuConnected) {  
-                   const canProtocols = ["AT SP 6", "AT SP 7"];  
-                   for (const protocol of canProtocols) {  
-                       if (ProtocolCircuitBreaker.isBlacklisted(protocol)) continue;  
-                       try {  
-                           OBDCommandQueue.setAtomicLock(true);  
-                           OBDCommandQueue.clear(new Error('CAN_FALLBACK_RESET'));  
-                           await preciseSleep(250);
+               // 2. Try K-Line fallback (SP 5 -> SP 3)
+               if (!ecuConnected) {
+                   useBluetoothStore.getState().addLog('DIAG: CAN fallback failed or skipped. Executing K-Line fallback (SP 5 -> SP 3)...');
+                   const targetAddresses = VehicleProfileDB.getKLineAddressUnion();
+                   const klineProtocols = ["5", "3"];
 
-                           const atzResCan = await OBDCommandQueue.add("AT Z", 2000);  
-                           if ((atzResCan || '').toUpperCase().trim() === 'STOPPED') {  
-                               await waitForELMPrompt(1500); await preciseSleep(2000); BluetoothService.clearBuffer();  
-                           } else {  
-                               await waitForELMPrompt();  
-                           }  
-                           OBDCommandQueue.flushRxBuffer();  
-                           await OBDCommandQueue.add(ADAPTER_COMMANDS.ECHO_OFF, 1000);  
-                           await OBDCommandQueue.add("ATL0", 1000);  
-                           await OBDCommandQueue.add("ATS0", 1000);  
-                           await OBDCommandQueue.add(protocol, 2000);
+                   for (const address of targetAddresses) {
+                       if (ecuConnected) break;
+                       const addressHex = address.toString(16).toUpperCase().padStart(2, '0');
 
-                           const initRes = await OBDCommandQueue.add("01 0C", 8000);  
-                           OBDCommandQueue.setAtomicLock(false);  
-                           ecuConnected = verifyHandshakeResponse(initRes, "01 0C");
+                       for (const proto of klineProtocols) {
+                           const protoKey = `${proto}_0x${addressHex}`;
+                           if (ProtocolCircuitBreaker.isBlacklisted(protoKey)) continue;
+                           try {
+                               useBluetoothStore.getState().addLog(`DIAG: Scanning K-Line Address 0x${addressHex} Protocol ATSP${proto}...`);
+                               OBDCommandQueue.setAtomicLock(true);
+                               OBDCommandQueue.clear(new Error('KLINE_SCAN_RESET'));
+                               await preciseSleep(250);
 
-                           if (ecuConnected) {  
-                               const selectedProtocol = await OBDCommandQueue.add("AT DP", 5000);  
-                               useBluetoothStore.getState().setProtocol(selectedProtocol ? selectedProtocol.trim() : 'UNKNOWN');  
-                               break;  
-                           } else {  
-                               ProtocolCircuitBreaker.recordFailure(protocol);  
-                           }  
-                       } catch {  
-                           OBDCommandQueue.setAtomicLock(false);  
-                           ProtocolCircuitBreaker.recordFailure(protocol);  
-                       }  
-                   }  
+                               const atzResKLine = await OBDCommandQueue.add("AT Z", 2000);
+                               const atzCleanKLine = (atzResKLine || '').toUpperCase().trim();
+                               if (atzCleanKLine === 'STOPPED' || atzCleanKLine === '') {
+                                   await waitForELMPrompt(1500);
+                                   await preciseSleep(2000);
+                                   BluetoothService.clearBuffer();
+                               } else {
+                                   await waitForELMPrompt();
+                               }
+                               OBDCommandQueue.flushRxBuffer();
+
+                               await OBDCommandQueue.add("AT E0", 1000);
+                               await OBDCommandQueue.add("AT ST 96", 1000);
+                               await OBDCommandQueue.add(`AT SP ${proto}`, 1000);
+                               await preciseSleep(300);
+                               await OBDCommandQueue.add(`AT IIA ${addressHex}`, 1000);
+
+                               if (proto === '3') {
+                                   let swInterbyteActive = false;
+                                   try {
+                                       const atIbRes = await OBDCommandQueue.add("AT IB 10", 1000);
+                                       if ((atIbRes || '').toUpperCase().trim().includes('?')) swInterbyteActive = true;
+                                   } catch { swInterbyteActive = true; }
+                                   if (swInterbyteActive) await preciseSleep(10);
+                                   await OBDCommandQueue.add("AT SI", 4000);
+                                   await preciseSleep(300);
+                               } else {
+                                   await preciseSleep(150);
+                               }
+
+                               const klineHandshakeCmd = "01 00";
+                               const initRes = await OBDCommandQueue.add(klineHandshakeCmd, 8000);
+                               OBDCommandQueue.setAtomicLock(false);
+
+                               ecuConnected = verifyHandshakeResponse(initRes, klineHandshakeCmd);
+                               if (ecuConnected) {
+                                   useBluetoothStore.getState().setProtocol(`ISO 14230-4 (KWP, 0x${addressHex})`);
+                                   break;
+                               } else {
+                                   ProtocolCircuitBreaker.recordFailure(protoKey);
+                               }
+                           } catch (scanErr) {
+                               OBDCommandQueue.setAtomicLock(false);
+                               ProtocolCircuitBreaker.recordFailure(protoKey);
+                           }
+                       }
+                   }
                }
 
-               if (!ecuConnected) {  
-                   updateStep('protocol', 'failed', 35);  
-                   throw new Error("ALL_PROTOCOLS_FAILED");  
-               }  
+               if (!ecuConnected) {
+                   updateStep('protocol', 'failed', 35);
+                   throw new Error("ALL_PROTOCOLS_FAILED");
+               }
            }
 
            updateStep('protocol', 'success', 50);  
@@ -328,8 +343,25 @@ export const useBluetooth = () => {
            updateStep('stabilization', 'pending', 80);
 
            const connectedProtocol = useBluetoothStore.getState().protocol || '';  
-           const isCan = connectedProtocol.toUpperCase().includes('CAN') || connectedProtocol.includes('6') || connectedProtocol.includes('7');  
+           const pUpper = connectedProtocol.toUpperCase();
+           const isCan = pUpper.includes('CAN') || connectedProtocol.includes('6') || connectedProtocol.includes('7');  
            useBluetoothStore.getState().setSensorData({ guardTime: isCan ? 100 : 200 });
+
+           // Dynamically inject ATAT0 and ATST 96 for legacy ISO/KWP (3, 4, 5) protocols
+           const isLegacyIsoKwp = pUpper.includes('KWP') || pUpper.includes('ISO 14230') || pUpper.includes('ISO 9141') || pUpper.includes('3') || pUpper.includes('4') || pUpper.includes('5');
+           if (isLegacyIsoKwp) {
+               useBluetoothStore.getState().addLog('LEGACY_PROFILE_INJECTION: Injecting ATAT0 and ATST 96 for slow protocols.');
+               try {
+                   await OBDCommandQueue.add('AT AT0', 1500);
+                   await OBDCommandQueue.add('AT ST 96', 1500);
+               } catch (injErr) {
+                   useBluetoothStore.getState().addLog(`LEGACY_PROFILE_INJECTION_WARN: Injection failed: ${injErr}`);
+               }
+           } else {
+               try {
+                   await OBDCommandQueue.add('AT AT1', 1500);
+               } catch {}
+           }
 
            ConnectionStateMachine.transitionTo(ConnectionState.TELEMETRY_ACTIVE);  
            setEcuStatus('connected');  

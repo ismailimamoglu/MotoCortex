@@ -44,7 +44,7 @@ import { useDashboardStore, ALL_SENSORS } from './src/store/useDashboardStore';
 import AboutView from './src/components/AboutView';
 import ObdTerminalModal from './src/components/ObdTerminalModal';
 import LanguageSelectionView from './src/components/LanguageSelectionView';
-import SandboxDevGate from './src/screens/sandbox/SandboxDevGate';
+import DashboardSandbox from './src/screens/sandbox/DashboardSandbox';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -1609,6 +1609,7 @@ function MainApp() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard'); // Kept for legacy fallback views compatibility
   const [isCustomizeModalVisible, setIsCustomizeModalVisible] = useState(false);
   const [isObdTerminalVisible, setIsObdTerminalVisible] = useState(false);
+  const [isDiagVisible, setIsDiagVisible] = useState(false);
 
   // RevenueCat SDK Setup & Secure Offline Receipt Verification
   useEffect(() => {
@@ -3138,6 +3139,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                   }}
                   onGoToSensors={() => navigateToSensors()}
                   onGoToExpertise={() => setActiveHubView('expertise')}
+                  onOpenDiag={() => setIsDiagVisible(true)}
                   status={status}
                   connectionState={connectionState}
                   ecuStatus={ecuStatus}
@@ -3315,6 +3317,42 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
 
       {/* Contextual Paywall Modal */}
       <ContextualPaywallModal />
+
+      {/* DIAG Modal */}
+      <Modal
+        visible={isDiagVisible}
+        animationType="slide"
+        transparent={false}
+        onRequestClose={() => setIsDiagVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: colors.bg }}>
+          {/* Close button floating inside the modal */}
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: scaleHeight(12),
+              right: scaleWidth(16),
+              zIndex: 10000,
+              backgroundColor: `${colors.red}1a`,
+              borderWidth: 1.2,
+              borderColor: colors.red,
+              borderRadius: scaleMod(8),
+              paddingHorizontal: scaleWidth(12),
+              paddingVertical: scaleHeight(6),
+            }}
+            onPress={() => setIsDiagVisible(false)}
+          >
+            <Text style={{
+              color: colors.red,
+              fontSize: scaleFont(11),
+              fontWeight: '900',
+              fontFamily: MONO,
+            }}>{t('common.close', 'CLOSE').toUpperCase()}</Text>
+          </TouchableOpacity>
+
+          <DashboardSandbox />
+        </View>
+      </Modal>
       </View>
     </BluetoothBridgeInitializer>
   );
@@ -3346,7 +3384,6 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <MainApp />
-      <SandboxDevGate />
     </SafeAreaProvider>
   );
 }
