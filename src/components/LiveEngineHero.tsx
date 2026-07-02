@@ -862,9 +862,16 @@ export default function LiveEngineHero({
                                       {t('connection.progressFormat', '{{progress}}%').replace('{{progress}}', String(connectionProgress))}
                                     </Text>
                                   ) : (
-                                    <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold', flexShrink: 0 }}>
-                                      {t('connection.connectLabel', 'BAĞLAN')} ›
-                                    </Text>
+                                    <View style={{
+                                      backgroundColor: colors.cyan,
+                                      borderRadius: scaleMod(6),
+                                      paddingHorizontal: scaleWidth(10),
+                                      paddingVertical: scaleHeight(4),
+                                    }}>
+                                      <Text style={{ color: '#000000', fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO }}>
+                                        {t('connection.connectLabel', 'BAĞLAN').toUpperCase()}
+                                      </Text>
+                                    </View>
                                   )}
                                 </View>
                               </TouchableOpacity>

@@ -229,31 +229,31 @@ export class OBD2ProtocolEngine {
        return false;  
    }
 
-   add(command: string, timeoutMs?: number): Promise<string> {  
-       const cleanCmd = command.replace(/\s+/g, '').toUpperCase();  
-       if (this.blacklist.has(cleanCmd)) {  
-           return Promise.reject(wrapError(new Error('PID_BLACKLISTED_BY_UDS_GATE'), command));  
-       }
+   add(command: string, timeoutMs?: number, customPriority?: 'HIGH' | 'LOW' | 'HIGH_PRIORITY_AD_HOC'): Promise<string> {  
+        const cleanCmd = command.replace(/\s+/g, '').toUpperCase();  
+        if (this.blacklist.has(cleanCmd)) {  
+            return Promise.reject(wrapError(new Error('PID_BLACKLISTED_BY_UDS_GATE'), command));  
+        }
 
-       const isTelemetry = cleanCmd.startsWith('010C') || cleanCmd.startsWith('010D') || cleanCmd.startsWith('0105') || cleanCmd.startsWith('0111') || cleanCmd.startsWith('0104') || cleanCmd.startsWith('012F') || cleanCmd.startsWith('0100');  
-       const priority = isTelemetry ? 'HIGH' : 'LOW';  
-       const estimatedCost = isTelemetry ? 30 : 150;
+        const isTelemetry = cleanCmd.startsWith('010C') || cleanCmd.startsWith('010D') || cleanCmd.startsWith('0105') || cleanCmd.startsWith('0111') || cleanCmd.startsWith('0104') || cleanCmd.startsWith('012F') || cleanCmd.startsWith('0100');  
+        const priority = customPriority || (isTelemetry ? 'HIGH' : 'LOW');  
+        const estimatedCost = priority === 'HIGH_PRIORITY_AD_HOC' ? 10 : (isTelemetry ? 30 : 150);
 
-       const commandSessionId = this.currentSessionId;  
-       return new Promise<string>((resolve, reject) => {  
-           CommandScheduler.add(command, priority, estimatedCost, timeoutMs)  
-               .then((result) => {  
-                   if (commandSessionId !== this.currentSessionId) {  
-                       reject(wrapError(new Error('SESSION_CANCELLED'), command));  
-                   } else {  
-                       resolve(result);  
-                   }  
-               })  
-               .catch((err) => {  
-                   reject(wrapError(err, command));  
-               });  
-       });  
-   }
+        const commandSessionId = this.currentSessionId;  
+        return new Promise<string>((resolve, reject) => {  
+            CommandScheduler.add(command, priority, estimatedCost, timeoutMs)  
+                .then((result) => {  
+                    if (commandSessionId !== this.currentSessionId) {  
+                        reject(wrapError(new Error('SESSION_CANCELLED'), command));  
+                    } else {  
+                        resolve(result);  
+                    }  
+                })  
+                .catch((err) => {  
+                    reject(wrapError(err, command));  
+                });  
+        });  
+    }
 
     private async executeCommand(command: string, timeoutMs?: number): Promise<string> {  
         try {  

@@ -15,7 +15,7 @@ export interface QueueItem {
     command: string;
     resolve: (value: string) => void;
     reject: (reason: any) => void;
-    priority: 'HIGH' | 'LOW';
+    priority: 'HIGH' | 'LOW' | 'HIGH_PRIORITY_AD_HOC';
     deadline: number;
     estimatedCostMs: number;
     timeoutMs?: number;
@@ -56,14 +56,16 @@ export class CommandSchedulerClass {
         this.checkLockFn = fn;
     }
 
-    add(command: string, priority: 'HIGH' | 'LOW' = 'LOW', estimatedCostMs = 50, timeoutMs = 2000): Promise<string> {
+    add(command: string, priority: 'HIGH' | 'LOW' | 'HIGH_PRIORITY_AD_HOC' = 'LOW', estimatedCostMs = 50, timeoutMs = 2000): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const store = useBluetoothStore.getState();
             const safePollIntervalMs = store.guardTime || 100;
             
-            const deadline = priority === 'HIGH'
-                ? Date.now() + (safePollIntervalMs * 2)
-                : Date.now() + 2000;
+            const deadline = priority === 'HIGH_PRIORITY_AD_HOC'
+                ? Date.now() - 1000 // Force earliest deadline for ad-hoc
+                : priority === 'HIGH'
+                    ? Date.now() + (safePollIntervalMs * 2)
+                    : Date.now() + 2000;
 
             const item: QueueItem = { command, resolve, reject, priority, deadline, estimatedCostMs, timeoutMs };
             
@@ -91,24 +93,31 @@ export class CommandSchedulerClass {
                 continue;
             }
 
-            let selectedIndex = 0;
-            const hasHigh = this.queue.some(q => q.priority === 'HIGH');
-            const hasLow = this.queue.some(q => q.priority === 'LOW');
+            let selectedIndex = -1;
 
-            if (hasHigh && hasLow) {
-                if (this.highRunCount >= this.MAX_HIGH_CONSECUTIVE) {
-                    selectedIndex = this.queue.findIndex(q => q.priority === 'LOW');
-                    this.highRunCount = 0;
-                } else {
+            // 1. HIGH_PRIORITY_AD_HOC takes absolute precedence (first empty slot)
+            const adHocIndex = this.queue.findIndex(q => q.priority === 'HIGH_PRIORITY_AD_HOC');
+            if (adHocIndex !== -1) {
+                selectedIndex = adHocIndex;
+            } else {
+                const hasHigh = this.queue.some(q => q.priority === 'HIGH');
+                const hasLow = this.queue.some(q => q.priority === 'LOW');
+
+                if (hasHigh && hasLow) {
+                    if (this.highRunCount >= this.MAX_HIGH_CONSECUTIVE) {
+                        selectedIndex = this.queue.findIndex(q => q.priority === 'LOW');
+                        this.highRunCount = 0;
+                    } else {
+                        selectedIndex = this.queue.findIndex(q => q.priority === 'HIGH');
+                        this.highRunCount++;
+                    }
+                } else if (hasHigh) {
                     selectedIndex = this.queue.findIndex(q => q.priority === 'HIGH');
                     this.highRunCount++;
+                } else {
+                    selectedIndex = this.queue.findIndex(q => q.priority === 'LOW');
+                    this.highRunCount = 0;
                 }
-            } else if (hasHigh) {
-                selectedIndex = this.queue.findIndex(q => q.priority === 'HIGH');
-                this.highRunCount++;
-            } else {
-                selectedIndex = this.queue.findIndex(q => q.priority === 'LOW');
-                this.highRunCount = 0;
             }
 
             if (selectedIndex === -1) {

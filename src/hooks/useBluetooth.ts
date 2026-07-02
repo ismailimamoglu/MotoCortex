@@ -592,11 +592,20 @@ export const useBluetooth = () => {
        return () => subscription.remove();  
    }, [status, startPolling, stopPolling, disconnect]);
 
-   useEffect(() => {  
-       BluetoothService.getLastDevice().then(saved => {  
-           if (saved) setLastDevice(saved.name, saved.id);  
-       });  
-   }, [setLastDevice]);
+    useEffect(() => {  
+        BluetoothService.getLastDevice().then(saved => {  
+            if (saved) setLastDevice(saved.name, saved.id);  
+        });  
+    }, [setLastDevice]);
+
+    useEffect(() => {
+        OBDCommandQueue.onKLineFallback(() => {
+            useBluetoothStore.getState().addLog(`FALLBACK: OBD engine requested K-Line fallback. Blacklisting ATSP6/7 and re-initializing.`);
+            ProtocolCircuitBreaker.recordFailure("AT SP 6");
+            ProtocolCircuitBreaker.recordFailure("AT SP 7");
+            initializeAndCheckEcu();
+        });
+    }, []);
 
     return {  
         status, adapterStatus, ecuStatus, connectionState, deviceName, deviceId, error, enableBluetooth, scanDevices, connect, disconnect, sendCommand, retryEcu, logs, clearLogs, startPolling, stopPolling, runDiagnostics, clearDiagnostics, runAdaptationRoutine, proGuardAction,  

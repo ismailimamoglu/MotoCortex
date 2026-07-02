@@ -13,6 +13,15 @@ jest.mock('../../../store/useBluetoothStore', () => {
     };
 });
 
+jest.mock('../CommandRateLimiter', () => {
+    return {
+        __esModule: true,
+        default: {
+            pace: () => Promise.resolve(),
+        }
+    };
+});
+
 describe('CommandScheduler Unit Tests', () => {
     let scheduler: CommandSchedulerClass;
 
@@ -207,5 +216,30 @@ describe('CommandScheduler Unit Tests', () => {
 
         await expect(scheduler.add('CMD', 'HIGH')).rejects.toThrow('HARDWARE_ERROR');
         expect(scheduler.getMode()).toBe(SchedulerMode.NORMAL);
+    });
+
+    test('11. HIGH_PRIORITY_AD_HOC bypasses standard priority queues and executes immediately', async () => {
+        const executionTrace: string[] = [];
+        const mockExec = jest.fn(async (cmd: string) => {
+            executionTrace.push(cmd);
+            await new Promise(r => setTimeout(r, 10));
+            return `RESP_${cmd}`;
+        });
+        scheduler.setExecutionFunction(mockExec);
+
+        // 1. Add active command to start the loop
+        const pActive = scheduler.add('ACTIVE', 'LOW');
+
+        // 2. Queue standard and ad-hoc commands immediately
+        const pLow = scheduler.add('LOW_CMD', 'LOW');
+        const pHigh = scheduler.add('HIGH_CMD', 'HIGH');
+        const pAdHoc = scheduler.add('AD_HOC_CMD', 'HIGH_PRIORITY_AD_HOC');
+
+        // Wait for all to complete
+        await Promise.all([pActive, pLow, pHigh, pAdHoc]);
+
+        // ACTIVE starts first. After ACTIVE resolves, AD_HOC_CMD must execute next.
+        expect(executionTrace[0]).toBe('ACTIVE');
+        expect(executionTrace[1]).toBe('AD_HOC_CMD');
     });
 });

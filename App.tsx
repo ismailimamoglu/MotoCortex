@@ -42,7 +42,6 @@ import { State } from 'react-native-ble-plx';
 import CustomizeDashboardModal from './src/components/CustomizeDashboardModal';
 import { useDashboardStore, ALL_SENSORS } from './src/store/useDashboardStore';
 import AboutView from './src/components/AboutView';
-import ObdTerminalModal from './src/components/ObdTerminalModal';
 import LanguageSelectionView from './src/components/LanguageSelectionView';
 import DashboardSandbox from './src/screens/sandbox/DashboardSandbox';
 
@@ -1608,7 +1607,6 @@ function MainApp() {
   const [isSecretDebugVisible, setIsSecretDebugVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard'); // Kept for legacy fallback views compatibility
   const [isCustomizeModalVisible, setIsCustomizeModalVisible] = useState(false);
-  const [isObdTerminalVisible, setIsObdTerminalVisible] = useState(false);
   const [isDiagVisible, setIsDiagVisible] = useState(false);
 
   // RevenueCat SDK Setup & Secure Offline Receipt Verification
@@ -3114,7 +3112,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                   onGoToExpertise={() => setActiveHubView('expertise')}
                   onOpenHardwareHealth={() => setIsHardwareHealthVisible(true)}
                   onOpenCustomize={() => setIsCustomizeModalVisible(true)}
-                  onOpenObdTerminal={() => setIsObdTerminalVisible(true)}
+                  onOpenObdTerminal={() => setIsDiagVisible(true)}
                 />
               )}
               {activeHubView === 'expertise' && renderExpertise()}
@@ -3300,13 +3298,6 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       <CustomizeDashboardModal
         visible={isCustomizeModalVisible}
         onClose={() => setIsCustomizeModalVisible(false)}
-      />
-
-      {/* OBD Terminal & Health Stats Modal */}
-      <ObdTerminalModal
-        visible={isObdTerminalVisible}
-        onClose={() => setIsObdTerminalVisible(false)}
-        sendCommand={sendCommand}
       />
 
       {/* Paywall Modal Overlay */}

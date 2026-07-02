@@ -7,36 +7,46 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Platform,
+  TextInput,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../../theme';
 import { useResponsive } from '../../hooks/useResponsive';
-import { useDiagnosticEngine } from './useDiagnosticEngine';
+import { useBluetooth } from '../../hooks/useBluetooth';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
+import OBDCommandQueue from '../../api/OBDCommandQueue';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
+
+interface DiscoveredDevice {
+  id: string;
+  name: string;
+}
 
 export default function DashboardSandbox() {
   const { t } = useTranslation();
   const colors = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet } = useResponsive();
 
+  // ─── Single Connection Hook (Singleton Delegator) ────────────────────────
   const {
-    connectionStatus,
+    status: connectionStatus,
     ecuStatus,
-    discoveredDevices,
-    isScanning,
-    isStressActive,
-    startScanning,
-    connectDevice,
-    disconnectDevice,
-    startTelemetry,
-    stopTelemetry,
-    rpm,
-    speed,
-    coolant,
-    throttle,
-  } = useDiagnosticEngine();
+    connect,
+    disconnect,
+    scanDevices,
+    startPolling,
+    stopPolling,
+    isCloneDevice,
+    protocol,
+    adapterCapabilityScore,
+  } = useBluetooth();
+
+  const rpm = useBluetoothStore((s) => s.rpm);
+  const speed = useBluetoothStore((s) => s.speed);
+  const coolant = useBluetoothStore((s) => s.coolant);
+  const throttle = useBluetoothStore((s) => s.throttle);
+  const telemetryStats = useBluetoothStore((s) => s.telemetryStats);
 
   // FPS Tracker
   const [fps, setFps] = useState(0);
@@ -89,22 +99,15 @@ export default function DashboardSandbox() {
     }
   };
 
-  // ─── Transient subscription pattern ─────────────────────────────────────────
-  // PERF FIX: useBluetoothStore((s) => s.logs) doğrudan abone olma 20Hz'de
-  // saniyede 20 re-render tetikler ve ekranı dondurur.
-  // store.subscribe() ile transient modele geçiyoruz:
-  //   - isPausedRef her zaman güncel değeri tutar (stale closure problemi yok)
-  //   - Sadece setLogSnapshot çağrıldığında React yeniden render eder
+  // ─── Transient Subscription Pattern for Logs ─────────────────────────────
   const [isPaused, setIsPaused] = useState(false);
   const [logSnapshot, setLogSnapshot] = useState<string[]>([]);
   const isPausedRef = useRef(false);
 
-  // isPausedRef'i her isPaused değişiminde güncelle
   useEffect(() => {
     isPausedRef.current = isPaused;
   }, [isPaused]);
 
-  // Store'a transient subscriber bağla — component mount'ta bir kez çalışır
   useEffect(() => {
     const unsubscribe = useBluetoothStore.subscribe((state) => {
       if (!isPausedRef.current) {
@@ -114,8 +117,104 @@ export default function DashboardSandbox() {
     return () => unsubscribe();
   }, []);
 
+  // ─── Custom Scan & Telemetry States ──────────────────────────────────────
+  const [discoveredDevices, setDiscoveredDevices] = useState<DiscoveredDevice[]>([]);
+  const [isScanning, setIsScanning] = useState(false);
+  const [isStressActive, setIsStressActive] = useState(false);
+  const stressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Dynamic Styles
+  const startScanning = async () => {
+    setIsScanning(true);
+    try {
+      const devices = await scanDevices();
+      setDiscoveredDevices(
+        devices.map((d: any) => ({
+          id: d.id,
+          name: d.name || '',
+        }))
+      );
+    } catch (e) {
+      console.error('Scan failed:', e);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const startTelemetry = (pids: string[], intervalMs: number) => {
+    if (stressIntervalRef.current) {
+      clearInterval(stressIntervalRef.current);
+    }
+    stopPolling();
+    setIsStressActive(true);
+    let commandInProgress = false;
+
+    stressIntervalRef.current = setInterval(async () => {
+      if (commandInProgress) return;
+      commandInProgress = true;
+      for (const pid of pids) {
+        try {
+          await OBDCommandQueue.add(`01 ${pid}`, 200);
+        } catch (err) {
+          // Silent catch
+        }
+      }
+      commandInProgress = false;
+    }, intervalMs);
+  };
+
+  const stopTelemetry = () => {
+    if (stressIntervalRef.current) {
+      clearInterval(stressIntervalRef.current);
+      stressIntervalRef.current = null;
+    }
+    setIsStressActive(false);
+    if (connectionStatus === 'connected') {
+      startPolling();
+    }
+  };
+
+  const performTeardown = async () => {
+    stopTelemetry();
+    await disconnect();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (stressIntervalRef.current) {
+        clearInterval(stressIntervalRef.current);
+      }
+    };
+  }, []);
+
+  // ─── Ad-Hoc Command Transmission ─────────────────────────────────────────
+  const [inputCommand, setInputCommand] = useState('');
+  const [isSending, setIsSending] = useState(false);
+
+  const handleSendCommand = async () => {
+    if (!inputCommand.trim() || isSending) return;
+    const cmd = inputCommand.toUpperCase().trim();
+    setInputCommand('');
+    setIsSending(true);
+
+    useBluetoothStore.getState().addLog(`TX: ${cmd}`);
+
+    try {
+      const response = await OBDCommandQueue.add(cmd, 2000, 'HIGH_PRIORITY_AD_HOC');
+      const resText = response || 'NO RESPONSE';
+      useBluetoothStore.getState().addLog(`RX: ${resText}`);
+    } catch (err: any) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      if (errMsg.includes('BLOCK_COMMAND_VEHICLE_IN_MOTION') || errMsg.includes('HARDWARE_GATE_VIOLATION')) {
+        useBluetoothStore.getState().addLog(`[SECURITY BLOCK]: Command rejected. Vehicle is in motion!`);
+      } else {
+        useBluetoothStore.getState().addLog(`ERROR: ${errMsg}`);
+      }
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  // ─── Dynamic Styles ──────────────────────────────────────────────────────
   const sDyn = React.useMemo(() => {
     return {
       container: {
@@ -131,9 +230,10 @@ export default function DashboardSandbox() {
         borderBottomWidth: 1.5,
         borderBottomColor: colors.border,
         marginBottom: scaleHeight(12),
+        paddingRight: scaleWidth(80), // Reserved space for absolute modal Close button
       },
       headerTitle: {
-        fontSize: scaleFont(16),
+        fontSize: scaleFont(12.5), // Lowered from 16 to fit responsive boundaries
         fontWeight: '900' as const,
         color: colors.cyan,
         fontFamily: MONO,
@@ -323,6 +423,40 @@ export default function DashboardSandbox() {
         fontWeight: '900' as const,
         fontFamily: MONO,
       },
+      // ─── Input Dock Styles ───────────────────────────────────────────────
+      inputArea: {
+        flexDirection: 'row' as const,
+        gap: scaleMod(8),
+        marginTop: scaleHeight(8),
+        borderTopWidth: 1,
+        borderTopColor: `${colors.border}33`,
+        paddingTop: scaleHeight(8),
+      },
+      textInput: {
+        flex: 1,
+        borderWidth: 1.2,
+        borderColor: colors.border,
+        borderRadius: scaleMod(8),
+        paddingHorizontal: scaleWidth(12),
+        paddingVertical: scaleHeight(8),
+        color: colors.textPri,
+        backgroundColor: colors.bg,
+        fontFamily: MONO,
+        fontSize: scaleFont(11),
+      },
+      sendBtn: {
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
+        borderRadius: scaleMod(8),
+        backgroundColor: colors.cyan,
+        paddingHorizontal: scaleWidth(16),
+      },
+      sendBtnText: {
+        color: '#000000',
+        fontWeight: '900' as const,
+        fontFamily: MONO,
+        fontSize: scaleFont(11),
+      },
     };
   }, [colors, scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet]) as any;
 
@@ -339,7 +473,7 @@ export default function DashboardSandbox() {
 
         {/* Dynamic Connected vs Disconnected State */}
         {!isConnectedToEcu ? (
-          // DISCONNECTED STATE: Device setup and full-height raw terminal
+          // DISCONNECTED STATE: Device setup, OBD Health statistics, and full-height raw terminal
           <View style={{ flex: 1 }}>
             {/* Connection Status Card */}
             <View style={sDyn.statusCard}>
@@ -354,6 +488,35 @@ export default function DashboardSandbox() {
                 <Text style={[sDyn.statusValue, { color: getStatusColor(ecuStatus) }]}>
                   {getStatusText(ecuStatus).toUpperCase()}
                 </Text>
+              </View>
+            </View>
+
+            {/* OBD Health Statistics Card */}
+            <View style={sDyn.statusCard}>
+              <Text style={[sDyn.sectionTitle, { color: colors.amber }]}>📊 {t('obdTerminal.statsTitle', 'OBD SAĞLIK İSTATİSTİKLERİ')}</Text>
+              <View style={{ gap: scaleHeight(4) }}>
+                <View style={sDyn.statusRow}>
+                  <Text style={sDyn.statusLabel}>{t('obdTerminal.connectionProtocol', 'Bağlantı Protokolü:')}</Text>
+                  <Text style={[sDyn.statusValue, { color: colors.textPri }]}>{protocol || t('obdTerminal.none', 'Yok')}</Text>
+                </View>
+                <View style={sDyn.statusRow}>
+                  <Text style={sDyn.statusLabel}>{t('obdTerminal.hardwareQualityScore', 'Donanım Kalite Skoru:')}</Text>
+                  <Text style={[sDyn.statusValue, { color: adapterCapabilityScore > 70 ? colors.green : colors.red }]}>
+                    {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? t('obdTerminal.original', 'Orijinal') : t('obdTerminal.clone', 'Klon')})
+                  </Text>
+                </View>
+                <View style={sDyn.statusRow}>
+                  <Text style={sDyn.statusLabel}>{t('obdTerminal.requestResponseCount', 'İstek / Yanıt Sayısı:')}</Text>
+                  <Text style={[sDyn.statusValue, { color: colors.textPri }]}>{telemetryStats.requestsSent} / {telemetryStats.responsesReceived}</Text>
+                </View>
+                <View style={sDyn.statusRow}>
+                  <Text style={sDyn.statusLabel}>{t('obdTerminal.timeoutCount', 'Zaman Aşımı Adedi:')}</Text>
+                  <Text style={[sDyn.statusValue, { color: telemetryStats.timeoutCount > 0 ? colors.amber : colors.textPri }]}>{telemetryStats.timeoutCount}</Text>
+                </View>
+                <View style={sDyn.statusRow}>
+                  <Text style={sDyn.statusLabel}>{t('obdTerminal.recoveryCount', 'Hata Kurtarma (Recovery):')}</Text>
+                  <Text style={[sDyn.statusValue, { color: telemetryStats.recoveryCount > 0 ? colors.red : colors.textPri }]}>{telemetryStats.recoveryCount}</Text>
+                </View>
               </View>
             </View>
 
@@ -375,7 +538,7 @@ export default function DashboardSandbox() {
                       </Text>
                       <TouchableOpacity
                         style={sDyn.connectBtn}
-                        onPress={() => connectDevice(item.id, item.name)}
+                        onPress={() => connect(item.id, item.name)}
                       >
                         <Text style={sDyn.connectBtnText}>{t('sandbox.connect', 'CONNECT')}</Text>
                       </TouchableOpacity>
@@ -396,7 +559,7 @@ export default function DashboardSandbox() {
               </TouchableOpacity>
             </View>
 
-            {/* Full height raw terminal */}
+            {/* Full height raw terminal with docked custom command TextInput */}
             <View style={[sDyn.terminalCard, { flex: 1 }]}>
               <View style={sDyn.terminalHeader}>
                 <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
@@ -415,7 +578,8 @@ export default function DashboardSandbox() {
                 renderItem={({ item }) => {
                   const isTx = item.includes('TX:');
                   const isRx = item.includes('RX:');
-                  const itemColor = isTx ? colors.purple : isRx ? colors.green : colors.textPri;
+                  const isSecurity = item.includes('[SECURITY BLOCK]') || item.includes('SECURITY BLOCK') || item.includes('ERROR:');
+                  const itemColor = isSecurity ? colors.red : isTx ? colors.purple : isRx ? colors.green : colors.textPri;
                   return (
                     <Text style={{
                       color: itemColor,
@@ -432,7 +596,32 @@ export default function DashboardSandbox() {
                 initialNumToRender={20}
                 maxToRenderPerBatch={15}
                 windowSize={5}
+                style={{ flex: 1 }}
               />
+              <View style={sDyn.inputArea}>
+                <TextInput
+                  style={sDyn.textInput}
+                  placeholder={t('obdTerminal.inputPlaceholder', 'Komut girin...')}
+                  placeholderTextColor={colors.textSec}
+                  value={inputCommand}
+                  onChangeText={setInputCommand}
+                  autoCapitalize="characters"
+                  autoCorrect={false}
+                  onSubmitEditing={handleSendCommand}
+                  returnKeyType="send"
+                />
+                <TouchableOpacity 
+                  style={sDyn.sendBtn}
+                  onPress={handleSendCommand}
+                  disabled={isSending}
+                >
+                  {isSending ? (
+                    <ActivityIndicator size="small" color="#000000" />
+                  ) : (
+                    <Text style={sDyn.sendBtnText}>{t('obdTerminal.sendButton', 'GÖNDER')}</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         ) : (
@@ -514,7 +703,7 @@ export default function DashboardSandbox() {
 
               <TouchableOpacity
                 style={[sDyn.stressBtn, { backgroundColor: `${colors.red}20`, borderWidth: 1.2, borderColor: colors.red }]}
-                onPress={disconnectDevice}
+                onPress={performTeardown}
               >
                 <Text style={[sDyn.stressBtnText, { color: colors.red }]}>
                   🔌 {t('sandbox.stopDisconnect', 'Stop / Disconnect').toUpperCase()}
@@ -522,8 +711,8 @@ export default function DashboardSandbox() {
               </TouchableOpacity>
             </View>
 
-            {/* Shrunken terminal */}
-            <View style={[sDyn.terminalCard, { height: scaleHeight(185), flex: 0 }]}>
+            {/* Shrunken terminal with docked custom command TextInput */}
+            <View style={[sDyn.terminalCard, { height: scaleHeight(220), flex: 0 }]}>
               <View style={sDyn.terminalHeader}>
                 <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
                 <TouchableOpacity
@@ -541,7 +730,8 @@ export default function DashboardSandbox() {
                 renderItem={({ item }) => {
                   const isTx = item.includes('TX:');
                   const isRx = item.includes('RX:');
-                  const itemColor = isTx ? colors.purple : isRx ? colors.green : colors.textPri;
+                  const isSecurity = item.includes('[SECURITY BLOCK]') || item.includes('SECURITY BLOCK') || item.includes('ERROR:');
+                  const itemColor = isSecurity ? colors.red : isTx ? colors.purple : isRx ? colors.green : colors.textPri;
                   return (
                     <Text style={{
                       color: itemColor,
@@ -558,7 +748,32 @@ export default function DashboardSandbox() {
                 initialNumToRender={15}
                 maxToRenderPerBatch={10}
                 windowSize={3}
+                style={{ flex: 1 }}
               />
+              <View style={sDyn.inputArea}>
+                <TextInput
+                  style={sDyn.textInput}
+                  placeholder={t('obdTerminal.inputPlaceholder', 'Komut girin...')}
+                  placeholderTextColor={colors.textSec}
+                  value={inputCommand}
+                  onChangeText={setInputCommand}
+                  autoCapitalize="characters"
+                  autoCorrect={false}
+                  onSubmitEditing={handleSendCommand}
+                  returnKeyType="send"
+                />
+                <TouchableOpacity 
+                  style={sDyn.sendBtn}
+                  onPress={handleSendCommand}
+                  disabled={isSending}
+                >
+                  {isSending ? (
+                    <ActivityIndicator size="small" color="#000000" />
+                  ) : (
+                    <Text style={sDyn.sendBtnText}>{t('obdTerminal.sendButton', 'GÖNDER')}</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
