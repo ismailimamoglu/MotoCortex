@@ -2,7 +2,6 @@ import React, { useRef, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, Platform, ScrollView, Linking, Share, Alert } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import * as Clipboard from 'expo-clipboard';
 import { useAppStore, AppLanguage } from '../store/useAppStore';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
@@ -26,23 +25,11 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
   const colors = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet, width } = useResponsive();
   const insets = useSafeAreaInsets();
-  const appUserId = useAppStore((state) => state.appUserId);
 
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
 
-  const copyToClipboard = async () => {
-    if (appUserId) {
-      await Clipboard.setStringAsync(appUserId);
-      Alert.alert(
-        t('common.success', 'Success'),
-        t('bento.settings.idCopied', 'User ID copied to clipboard.'),
-        [{ text: t('common.ok', 'OK') }]
-      );
-    }
-  };
-
   const handleSupportEmail = () => {
-    const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserId || ''}&lang=${language}`;
+    const siteUrl = `https://motocortex-telemetry.vercel.app/?lang=${language}`;
     Linking.openURL(siteUrl).catch((e) => console.error('Error opening support website:', e));
   };
 
