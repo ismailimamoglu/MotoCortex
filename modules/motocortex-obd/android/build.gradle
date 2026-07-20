@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+group = 'com.motocortex.obd'
+version = '1.0.0'
+
+android {
+  namespace 'com.motocortex.obd'
+  compileSdkVersion project.properties['androidCompileSdkVersion']?.toInteger() ?: 35
+
+  defaultConfig {
+    minSdkVersion project.properties['androidMinSdkVersion']?.toInteger() ?: 24
+    targetSdkVersion project.properties['androidTargetSdkVersion']?.toInteger() ?: 35
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+
+  kotlinOptions {
+    jvmTarget = '17'
+  }
+}
+
+dependencies {
+  implementation project(':expo-modules-core')
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${project.properties['kotlinVersion'] ?: '1.9.23'}"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+}

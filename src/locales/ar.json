@@ -57,26 +57,28 @@
             "idCopied": "تم نسخ معرف المستخدم إلى الحافظة.",
             "hardwareHealthAndId": "صحة الأجهزة وهويتها",
             "hardwareModalDesc": "للحصول على الدعم أو إجراء تنشيط ترخيص PRO يدويًا، يرجى نسخ معرف المستخدم أعلاه والاتصال بنا.",
-            "supportEmailBody": "مرحبًا فريق دعم MotoCortex، --- معلومات التطبيق --- معرف المستخدم:{{userId}}حالة الترخيص:{{license}}الرابط:{{connection}}حالة الجهاز:{{deviceStatus}}--- رسالتك ---",
+            "supportEmailBody": "مرحبًا فريق دعم Cortex OBD2 Diagnosis Scanner، --- معلومات التطبيق --- معرف المستخدم:{{userId}}حالة الترخيص:{{license}}الرابط:{{connection}}حالة الجهاز:{{deviceStatus}}--- رسالتك ---",
             "deviceName": "اسم الجهاز:",
             "simulationObd": "محاكاة OBD",
-            "noLogsToShare": "There are no diagnostic logs to share.",
-            "obdHealthTitle": "",
-            "txRequests": "",
-            "rxResponses": "",
-            "timeouts": "",
-            "recoveries": "",
-            "avgLatency": "",
-            "lastErrorLabel": "",
-            "shareReport": "",
-            "diagnosticLog": "",
-            "noTraffic": "",
-            "shareError": ""
+            "obdHealthTitle": "OBD HEALTH STATISTICS",
+            "txRequests": "Requests Sent (TX):",
+            "rxResponses": "Responses Received (RX):",
+            "timeouts": "Timeouts:",
+            "recoveries": "Recovery Attempts:",
+            "avgLatency": "Avg. Latency:",
+            "lastErrorLabel": "Last Error:",
+            "shareReport": "SHARE DIAGNOSTICS REPORT",
+            "diagnosticLog": "DIAGNOSTIC LOG (LAST 500 ROWS)",
+            "noTraffic": "No streaming traffic yet...",
+            "shareError": "Sharing Error",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "معلومات التطبيق ودليل",
         "supportDesc": "الدعم والاتصال",
         "shareDesc": "مشاركة التطبيق",
-        "noDtc": "نظيف"
+        "noDtc": "نظيف",
+        "featureCoding": "فتح الميزات المخفية والترميز UDS",
+        "featureCodingSub": "VAG, BMW, Renault ISO 14229 Feature Unlocking"
     },
     "common": {
         "cancel": "إلغاء",
@@ -116,8 +118,13 @@
         "close": "إغلاق",
         "share": "SHARE",
         "info": "Info",
-        "enableDemoMode": "",
-        "exitDemoMode": "",
+        "enableDemoMode": "ENABLE DEMO MODE",
+        "exitDemoMode": "EXIT DEMO MODE",
+        "supported": "مدعوم",
+        "copied": "تم النسخ",
+        "cancelBtn": "إلغاء",
+        "retry": "إعادة محاولة الاتصال",
+        "changeType": "تغيير نوع الاتصال",
         "revocationTitle": "Subscription Cancelled",
         "revocationMsg": "Your access to PRO features has been terminated because your subscription was cancelled or refunded."
     },
@@ -154,7 +161,8 @@
         "errorTitle": "فشل تحميل المنتجات",
         "errorDesc": "حدث خطأ أثناء تحميل المنتجات، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
         "retryBtn": "حاول مرة أخرى",
-        "loadingPrices": "جاري تحميل الاسعار..."
+        "loadingPrices": "جاري تحميل الاسعار...",
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnosis Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -163,11 +171,11 @@
         "online": "عبر الإنترنت",
         "offline": "غير متصل",
         "connecting": "الاتصال",
-        "scanDevices": "جهاز المسح",
+        "scanDevices": "البحث عن أجهزة",
         "connectLast": "الاتصال بنهاية الجهاز",
         "enableBt": "قم بتشغيل البلوتوث",
         "scanning": "جارٍ المسح...",
-        "foundDevices": "تم العثور على الأجهزة",
+        "foundDevices": "أجهزة OBD2 المكتشفة",
         "unknownDevice": "جهاز غير معروف",
         "scanHint": "قم بالمسح للعثور على أجهزة obd المقترنة.",
         "ecuWait": "الاتصال بوحدة التحكم الإلكترونية...",
@@ -187,21 +195,59 @@
         "deviceNotPairedDesc": "قبل توصيل محولات Bluetooth Obd2 الكلاسيكية، تحتاج إلى إقرانها من إعدادات Bluetooth بهاتفك. يتم توجيهك إلى إعدادات النظام.",
         "unsupportedDeviceTitle": "الأجهزة غير المتوافقة",
         "unsupportedDeviceDesc": "الجهاز الذي تحاول توصيله ليس محولًا متوافقًا مع نظام التشغيل Obd2 أو لا يدعم الخدمات المطلوبة.",
+        "sendButton": "SEND",
+        "connectDevice": "الاتصال بجهاز OBD2",
+        "adapterApproved": "ADAPTER APPROVED. ANALYZING CAPABILITIES... [2/5]",
+        "protocolNegotiating": "SCANNING PROTOCOL & WAKING UP... [3/5]",
+        "ecuDetected": "ECU DETECTED, VERIFYING... [4/5]",
+        "ecuResponding": "ECU RESPONDED, COMPLETING CONNECTION... [5/5]",
+        "protocolScanningHint": "(Scanning standard SP5, SP3, SP6, SP7 protocols sequentially...)",
+        "protocolFailed": "⚠️ COMPATIBLE PROTOCOL NOT FOUND! (SP5, SP3, SP4, SP6, SP7 tried)",
+        "ecuNotFound": "⚠️ VEHICLE ECU NOT RESPONDING!",
+        "hardwareCapabilityScore": "Adapter Hardware Capability Score: {{score}}/100",
+        "hardwareFatal": "Critical Error: Your hardware is a fake clone that does not support older vehicle protocols. Cannot connect to vehicle ECU. Please obtain a quality adapter (v1.5 or original).",
+        "progressFormat": "{{progress}}%",
+        "btDisabled": "البلوتوث معطل",
+        "btDisabledDesc": "يرجى تمكين البلوتوث للبحث عن محولات OBD2.",
+        "btDescIos": "الاتصال باستخدام محولات BLE OBD2 (Veepeak ، vLinker).",
+        "btDescAndroid": "الاتصال عبر محولات البلوتوث الكلاسيكي أو BLE.",
+        "wifiDesc": "الاتصال بمحولات Wi-Fi (عادةً 192.168.0.10).",
+        "wifiGuide": "للاتصال بمحول Wi-Fi الخاص بك ، انتقل إلى إعدادات Wi-Fi بهاتفك واختر شبكة محول OBD (مثل OBDII ، V-LINK). ثم عد إلى هنا.",
+        "openWifiSettings": "افتح إعدادات WI-FI",
+        "connectWifi": "الاتصال عبر WI-FI",
+        "pairRequired": "اقتران جهاز OBD2",
+        "pairRequiredDesc": "قد يطلب نظام Android الاقتران لأنك تتصل للمرة الأولى. عادةً ما يكون رقم تعريف الاقتران (PIN) كما يلي:",
+        "pairNow": "اقتران واتصال",
+        "pairingFailed": "فشل الاقتران. يرجى الاقتران يدويًا في إعدادات Android.",
+        "successVin": "تم إنشاء الاتصال. تم تحديد ملف تعريف السيارة بنجاح.",
+        "cloneWarning": "تم اكتشاف محول غير متوافق. ميزات الترميز المتقدمة مغلقة لسلامتك.",
+        "viewHealth": "قائمة صحة وقدرات OBD2",
+        "statusPrompt": "حدد واجهة اتصال OBD2 المفضلة لديك أدناه.",
+        "scanHintIos": "تأكد من تشغيل محول BLE OBD2 الخاص بك وقربه من جهاز iOS الخاص بك.",
+        "scanHintAndroid": "تأكد من تنشيط البلوتوث وأن المحول جاهز للاقتران.",
+        "negotiating": "جاري بدء اتصال OBD2",
+        "failed": "فشلت محاولة الاتصال",
+        "errLayer1": "استكشاف الأخطاء: البلوتوث معطل. يرجى تشغيل البلوتوث في إعدادات جهازك.",
+        "errLayer2": "استكشاف الأخطاء: انتهت مهلة الاتصال. تأكد من إدخال المحول بإحكام في منفذ OBD2 وإضاءة مؤشر الطاقة.",
+        "errLayer5": "استكشاف الأخطاء: فشل بدء بروتوكول OBD2. تأكد من تشغيل مفتاح تشغيل سيارتك إلى وضع التشغيل ON (يوصى بتشغيل المحرك).",
+        "errLayer6": "استكشاف الأخطاء: تم توصيل المحول ، لكن وحدة التحكم الإلكترونية في السيارة (ECU) لا تستجيب. يرجى تشغيل وضع التشغيل ON أو إعادة تشغيل الاتصال.",
+        "errGeneric": "استكشاف الأخطاء: يرجى التأكد من وصول الطاقة إلى المحول ، وتشغيل وضع التشغيل ON ، وعدم فتح أي تطبيق OBD آخر.",
+        "stepAdapter": "اتصال المحول ودرجة القدرة",
+        "stepProtocol": "تفاوض بروتوكول OBD2",
+        "stepHandshake": "التحقق من اتصال وحدة التحكم الإلكترونية (ECU)",
+        "stepStabilization": "استقرار حلقة القياس عن بعد النشطة",
+        "cancel": "Cancel",
         "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
-        "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
         "adapterConnected": "ADAPTER CONNECTED (OK)",
-        "connectDevice": "",
-        "adapterApproved": "",
-        "protocolNegotiating": "",
-        "ecuDetected": "",
-        "ecuResponding": "",
-        "protocolScanningHint": "",
-        "protocolFailed": "",
-        "ecuNotFound": "",
-        "hardwareCapabilityScore": "",
-        "hardwareFatal": ""
+        "lowQualityAdapterWarning": "⚠️ Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols (like K-Line on Dacia, Renault, Fiat, Lada). We highly recommend upgrading to a high-quality OBD2 adapter (v1.5 or original OBDLink/vLinker) to connect successfully.",
+        "statusProfiling": "Analyzing OBD2 adapter capabilities...",
+        "statusScanningCan": "Scanning modern CAN-Bus protocols...",
+        "statusScanningKline": "Waking up K-Line protocols. Old vehicles (Dacia, Renault, Fiat) may take up to 15 seconds to respond...",
+        "statusHandshake": "Verifying ECU communication...",
+        "statusStabilization": "Stabilizing telemetry data stream...",
+        "changeType": "Change Connection Type"
     },
     "dashboard": {
         "selectDevice": "المس لتحديد الجهاز",
@@ -241,7 +287,18 @@
         "fuelLevel": "مستوى الوقود",
         "catalystTemp": "حرارة المحفز",
         "layoutGauge": "مقياس",
-        "obdTerminalTitle": ""
+        "obdTerminalTitle": "OBD HEALTH & TERMINAL",
+        "adapterClone": "CLONE ADAPTER",
+        "adapterOriginal": "ORIGINAL",
+        "adapterCloneShort": "CLONE",
+        "adapterOriginalShort": "ORIGINAL",
+        "pidLabel": "PID: {{pid}}",
+        "limitReached": "Selection Limit",
+        "limitReachedDesc": "You can select a maximum of {{limit}} sensors with this protocol.",
+        "customizeSubtitleKLine": "K-Line protocol connected. You can select a maximum of {{limit}} sensors.",
+        "customizeSubtitleCAN": "CAN-Bus protocol connected. You can select a maximum of {{limit}} sensors.",
+        "unit": "Unit",
+        "layoutChart": "مخطط"
     },
     "expertise": {
         "historyFound": "تم العثور على تاريخ السيارة!",
@@ -306,13 +363,13 @@
     },
     "info": {
         "desc": "تطبيق احترافي لتشخيص الدراجات النارية والمركبات. متوافق مع جميع المركبات.",
-        "upgrade": "👑 الترقية إلى MotoCortex PRO",
+        "upgrade": "👑 الترقية إلى Cortex OBD2 Diagnosis Scanner PRO",
         "upgradeAlert": "الوصول المبكر 🎉",
-        "upgradeAlertDesc": "MotoCortex قيد التطوير حاليًا. نظرًا لأنك مستخدمنا الأول، فإن جميع الميزات الاحترافية متاحة لك الآن. ملاحظاتك قيمة للغاية بالنسبة لنا!",
+        "upgradeAlertDesc": "Cortex OBD2 Diagnosis Scanner قيد التطوير حاليًا. نظرًا لأنك مستخدمنا الأول، فإن جميع الميزات الاحترافية متاحة لك الآن. ملاحظاتك قيمة للغاية بالنسبة لنا!",
         "helpGuide": "المساعدة والتوجيه",
         "language": "🌐 اللغة / اللغة / البهاسا",
-        "support": "📞 مركز الدعم",
-        "supportSubject": "دعم MotoCortex والتعليقات",
+        "support": "مركز الدعم",
+        "supportSubject": "دعم Cortex OBD2 Diagnosis Scanner والتعليقات",
         "thanks": "شكرا لك!",
         "thanksDesc": "شكرا لتعليقاتك. يمكنك ترك تعليق لنا على متجر Play.",
         "sections": {
@@ -353,7 +410,7 @@
         "dtcCount": "🔍 رموز الخطأ ({{count}}الكمية)",
         "sensorData": "📊 بيانات الاستشعار الحية",
         "noData": "فشل في قراءة البيانات",
-        "proApp": "تم فحصها باستخدام MotoCortex v7 PRO.",
+        "proApp": "تم فحصها باستخدام Cortex OBD2 Diagnosis Scanner v7 PRO.",
         "date": "تاريخ",
         "vinNotFound": "لم يتم الكشف عنها",
         "noDtcs": "لا توجد رموز خطأ - نظيفة",
@@ -404,7 +461,7 @@
         }
     },
     "freeze": {
-        "title": "تجميد الإطار",
+        "title": "FREEZE FRAME",
         "snapshot": "ذاكرة الفشل",
         "desc": "يقرأ معلمات المحرك عندما يضيء ضوء فحص المحرك. توفر هذه البيانات معلومات مهمة في تشخيص الأخطاء.",
         "noDtcs": "لا يوجد رمز خطأ مسجل. قد لا تكون هناك بيانات تجميد الإطار.",
@@ -529,7 +586,12 @@
             "fuelAdaptation": "إعادة ضبط تكييف الوقود",
             "ecuReset": "إعادة ضبط وحدة التحكم الإلكترونية"
         },
-        "searchLanguage": ""
+        "searchLanguage": "Search Language...",
+        "connectionSection": "OBD Device Connection",
+        "noVehicleTitle": "VEHICLE DETECTION REQUIRED",
+        "noVehicleDesc": "Vehicle identity will be automatically discovered via OBD-II connection. Please pair and connect to your device below.",
+        "registeredVehiclesButton": "مركباتي المسجلة",
+        "connectDevice": "الاتصال بجهاز OBD2"
     },
     "brands": {
         "alfa_romeo": "الفا روميو",
@@ -540,7 +602,6 @@
         "benelli": "بينيلي",
         "bmw_car": "بي ام دبليو (السيارات)",
         "bmw_moto": "بي ام دبليو (دراجة نارية)",
-        "cfmoto": "CFMoto",
         "chery": "شيري",
         "chevrolet": "شيفروليه",
         "citroen": "سيتروين",
@@ -593,7 +654,8 @@
         "volkswagen": "فولكس فاجن",
         "volvo": "فولفو",
         "yuki": "يوكي",
-        "other": "أخرى"
+        "other": "أخرى",
+        "cfmoto": "CFMoto"
     },
     "permissions": {
         "headerSubtitle": "لوحة الأذونات",
@@ -605,9 +667,11 @@
         "locSub": "من الضروري وفقًا لبنية نظام Android العثور على أجهزة Bluetooth منخفضة الطاقة القريبة. نحن لا نتتبع قيادتك.",
         "grantBtn": "السماح والمتابعة",
         "skipBtn": "تخطي الآن (الوضع التجريبي)",
-        "deniedDesc": "تم رفض بعض التصاريح. قد لا يتمكن MotoCortex من إجراء المسح الضوئي أو الاتصال بأجهزة obd2 بنجاح.",
+        "deniedDesc": "تم رفض بعض التصاريح. قد لا يتمكن Cortex OBD2 Diagnosis Scanner من إجراء المسح الضوئي أو الاتصال بأجهزة obd2 بنجاح.",
         "proceedAnyway": "الاستمرار على أي حال",
-        "openSettings": "افتح الإعدادات"
+        "openSettings": "افتح الإعدادات",
+        "langTitle": "Select Language",
+        "nextBtn": "CONTINUE"
     },
     "disclaimer": "جميع أسماء المنتجات والشعارات والعلامات التجارية هي ملك لأصحابها. جميع أسماء الشركات والمنتجات والخدمات المستخدمة في هذا التطبيق هي لأغراض التعريف فقط. استخدام هذه الأسماء والشعارات والعلامات التجارية لا يعني أي تأييد أو رعاية.",
     "hiddenFeatures": {
@@ -640,38 +704,263 @@
         "writeError": "خطأ في الكتابة. يرجى المحاولة مرة أخرى.",
         "simulationBanner": "وضع المحاكاة — الكتابة الفعلية في وحدة التحكم غير نشطة بعد",
         "closeBtn": "إغلاق",
+        "unsupportedOk": "OK",
         "disclaimerTitle": "LIABILITY DISCLAIMER",
         "disclaimerFeature": "Feature",
-        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• MotoCortex cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
+        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• Cortex OBD2 Diagnosis Scanner cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
         "checkboxTitle": "CONFIRMATION REQUIRED",
         "check1": "I have read this warning and understand that my vehicle warranty may be affected.",
-        "check2": "I acknowledge that MotoCortex is not responsible for any faults or damages resulting from this operation.",
+        "check2": "I acknowledge that Cortex OBD2 Diagnosis Scanner is not responsible for any faults or damages resulting from this operation.",
         "check3": "I wish to make this change knowingly and of my own free will, accepting all risks.",
         "disclaimerCancel": "CANCEL",
         "disclaimerContinue": "CONTINUE",
-        "unsupportedTitle": "Not Supported",
-        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands.",
-        "unsupportedOk": "OK"
+        "unsupportedTitle": "المركبة غير مدعومة",
+        "unsupportedMsg": "هذه الميزة غير مدعومة من قبل وحدة التحكم الإلكترونية للمركبة."
     },
     "disconnectShort": "قطع",
     "obdTerminal": {
-        "title": "",
-        "terminalTitle": "",
-        "terminalPlaceholder": "",
-        "inputPlaceholder": "",
-        "sendButton": "",
-        "statsTitle": "",
-        "connectionProtocol": "",
-        "none": "",
-        "hardwareQualityScore": "",
-        "original": "",
-        "clone": "",
-        "requestResponseCount": "",
-        "timeoutCount": "",
-        "recoveryCount": "",
-        "diagnosticLogTitle": "",
-        "clearButton": "",
-        "shareButton": "",
-        "noLogs": ""
+        "title": "فتح الميزات الخفية وتشفير UDS",
+        "terminalTitle": "OBD TERMINAL",
+        "terminalPlaceholder": "Type command below to send to ECU (e.g. 010C, ATRV)",
+        "inputPlaceholder": "Enter command...",
+        "sendButton": "SEND",
+        "statsTitle": "OBD HEALTH STATISTICS",
+        "connectionProtocol": "Connection Protocol:",
+        "none": "None",
+        "hardwareQualityScore": "Hardware Quality Score:",
+        "original": "Original",
+        "clone": "Clone",
+        "requestResponseCount": "Request / Response Count:",
+        "timeoutCount": "Timeout Count:",
+        "recoveryCount": "Recovery Count (Recovery):",
+        "diagnosticLogTitle": "DIAGNOSTIC LOG",
+        "clearButton": "CLEAR",
+        "shareButton": "SHARE",
+        "noLogs": "No diagnostic logs found."
+    },
+    "dtcContext": {
+        "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
+        "cooling": "Critical cooling hazard detected. View detailed repair steps →",
+        "ignition": "Ignition system issue detected. View detailed repair steps →",
+        "chassis": "Chassis safety system alert. Unlock PRO for full analysis →",
+        "body": "Body electronics fault found. Upgrade for complete diagnostics →",
+        "network": "Communication network error. PRO unlocks full troubleshooting →",
+        "fallback": "Unlock detailed fault analysis, repair costs & risk assessment →"
+    },
+    "perfTeaser": {
+        "limitTitle": "Daily Limit Reached",
+        "limitDesc": "You have reached the daily limit of 3 free 0-60 km/h tests. Upgrade to PRO for unlimited tests and 0-100 km/h measurements."
+    },
+    "sandbox": {
+        "title": "فتح الميزات الخفية وتشفير UDS",
+        "connectionStatus": "Connection Status:",
+        "ecuStatus": "ECU Status:",
+        "fps": "UI Performance: {{fps}} FPS",
+        "stressBtnStart": "Start 20Hz Stress",
+        "stressBtnStop": "Stop Telemetry Loop",
+        "stopDisconnect": "Stop / Disconnect",
+        "discoveredDevices": "DISCOVERED DEVICES",
+        "connect": "CONNECT",
+        "scanning": "Scanning...",
+        "scan": "Scan Devices",
+        "rpm": "Engine RPM",
+        "speed": "Vehicle Speed",
+        "coolant": "Coolant Temp",
+        "throttle": "Throttle Position",
+        "notConnected": "Not Connected",
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "error": "Error",
+        "openSandbox": "DIAG",
+        "advancedTerminal": "Advanced Connection Terminal (DIAG)",
+        "terminalTitle": "Live Terminal & Bus Monitor",
+        "pause": "PAUSE",
+        "resume": "RESUME",
+        "share": "SHARE",
+        "clear": "CLEAR"
+    },
+    "health": {
+        "titleMenu": "صحة وقدرات OBD2",
+        "adapterQuality": "جودة وأداء المحول",
+        "excellent": "ممتاز (أصلي)",
+        "good": "جيد (قياسي)",
+        "clone": "غير متوافق / مقلد",
+        "firmware": "إصدار البرنامج الثابت:",
+        "capScore": "درجة القدرة",
+        "latency": "زمن الانتقال (RTT)",
+        "protocol": "البروتوكول النشط",
+        "featureSupport": "مصفوفة ميزات التطبيق",
+        "matrixReadCodes": "قراءة ومسح رموز الأعطال",
+        "matrixLiveSensors": "مراقبة المستشعرات الحية (أساسي)",
+        "matrixBattery": "اختبار البطارية / الجهد",
+        "matrixHighSpeed": "القياس عن بعد عالي السرعة (20 هرتز)",
+        "matrixCoding": "ترميز وتكييف وحدة التحكم الإلكترونية (ECU)",
+        "active": "نشط",
+        "degraded": "محدود (RTT بطيء)",
+        "locked": "مغلق (الوضع الآمن)",
+        "warning": "قفل الأمان:",
+        "lockExplain": "تم وضع علامة على المحول الخاص بك كرقاقة مقلدة/مزيفة. نظرًا لأن المحولات المقلدة تفتقر إلى دقة التوقيت ويمكن أن تتلف السيارة أثناء عمليات الكتابة ، فإن ميزات الترميز والتكييف مغلقة. يرجى الحصول على جهاز ELM327 v2.1 أو vLinker أصلي للترميز الآمن.",
+        "vehiclePids": "قائمة فحص مستشعرات السيارة",
+        "checklistPrompt": "معلمات المستشعر القياسية (PIDs) التي تدعمها وحدة التحكم الإلكترونية في سيارتك مدرجة أدناه. المستشعرات التي لا تحتوي على علامة اختيار لا تبلغ عنها سيارتك.",
+        "supportedBadge": "✓ مدعوم",
+        "unsupportedBadge": "❌ غير مدعوم"
+    },
+    "sensor": {
+        "rpm": "دوران المحرك (RPM)",
+        "speed": "سرعة السيارة (Speed)",
+        "coolant": "حرارة مبرد المحرك",
+        "throttle": "موضع الصمام الخانق",
+        "voltage": "جهد وحدة التحكم",
+        "maf": "معدل تدفق الهواء MAF",
+        "iat": "درجة حرارة هواء السحب",
+        "load": "حمولة المحرك المحسوبة",
+        "fuel": "مستوى الوقود",
+        "oilTemp": "درجة حرارة زيت المحرك"
+    },
+    "secretDebug": {
+        "title": "فتح الميزات الخفية وتشفير UDS",
+        "logFileSize": "Black Box / File Size:",
+        "dtcCloudSync": "🛰️ DTC CLOUD SYNCHRONIZATION",
+        "lastSync": "Last Sync",
+        "syncNow": "Sync Now",
+        "developerTools": "DEVELOPER TOOLS",
+        "trialResetSuccess": "Free Trial counter reset successfully!",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "The application will now crash intentionally. Confirm to verify Crashlytics integration.",
+        "crashButton": "Crash",
+        "crashTest": "Crash Test"
+    },
+    "features": {
+        "title": "فتح الميزات الخفية وتشفير UDS",
+        "subTitle": "محرك التكيف والترميز الطويل ISO 14229 UDS",
+        "batteryVoltage": "جهد البطارية",
+        "voltageReady": "✓ آمن (جاهز لكتابة التشفير)",
+        "voltageLocked": "⚠️ جهد منخفض (الكتابة مقفلة)",
+        "locked": "مقفل",
+        "ready": "جاهز",
+        "allMarks": "جميع العلامات",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "⚠️ Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
+        "items": {
+            "vag_staging_needle_sweep": {
+                "name": "مسح المؤشرات عند التشغيل (Needle Sweep)",
+                "desc": "يقوم بدوران مؤشرات العدادات إلى النهاية والعودة عند تشغيل محرك السيارة."
+            },
+            "vag_acoustic_lock_confirmation": {
+                "name": "تأكيد القفل الصوتي بآلة التنبيه",
+                "desc": "يصدر صوت تنبيه قصير من البوق عند قفل السيارة بواسطة مفتاح التحكم."
+            },
+            "vag_american_parking_lights": {
+                "name": "إشارات الإضاءة على النمط الأمريكي",
+                "desc": "يضيء إشارات الانعطاف الأمامية بنسبة 20% بشكل مستمر مع مصابيح الوقوف."
+            },
+            "vag_drl_menu_toggle": {
+                "name": "قائمة الإضاءة النهارية (DRL Toggle)",
+                "desc": "يضيف خيار تشغيل وإيقاف الإضاءة النهارية في شاشة الشاشات الترفيهية."
+            },
+            "vag_tear_wiping": {
+                "name": "مسح قطرات الزجاج المتبقية (Tear Wiping)",
+                "desc": "يقوم بمسحة إضافية للزجاج بعد 5 ثوانٍ من استخدام غسيل الزجاج الأمامي."
+            },
+            "vag_emergency_brake_flashing": {
+                "name": "وميض الطوارئ عند الفرملة المفاجئة",
+                "desc": "يجعل مصابيح الفرامل والتحذير ترمش بسرعة عند الضغط القوي على الفرامل."
+            },
+            "vag_cornering_lights": {
+                "name": "مصابيح الانعطاف عبر مصابيح الضباب",
+                "desc": "يضيء مصباح الضباب في الاتجاه الذي يتم توجيه عجلة القيادة نحوه."
+            },
+            "vag_comfort_mirror_folding": {
+                "name": "طيات المرايا المريحة عبر المفتاح",
+                "desc": "يطوي المرايا الجانبية تلقائياً عند الضغط المطول على زر القفل."
+            },
+            "vag_lap_timer": {
+                "name": "مؤقت دورات الحلبة (Lap Timer)",
+                "desc": "يفعل شاشة قياس أوقات الدورات في شاشة العدادات."
+            },
+            "vag_refuel_quantity": {
+                "name": "عرض لترات التزويد بالوقود",
+                "desc": "يعرض عدد اللترات الدقيق المطلوب لإعادة تعبئة خزان الوقود بالكامل."
+            },
+            "bmw_start_stop_memory": {
+                "name": "ذاكرة التوقف والبدء التلقائي",
+                "desc": "يحفظ آخر حالة لنظام التوقف والبدء التلقائي عند إعادة تشغيل المحرك."
+            },
+            "bmw_digital_speedometer": {
+                "name": "عداد السرعة الرقمي",
+                "desc": "يضيف خيار عرض السرعة الرقمية اللحظية في شاشة شاشة العدادات."
+            },
+            "bmw_sport_displays": {
+                "name": "الشاشات الرياضية (حصان ونيوتن متر)",
+                "desc": "يعرض عدادات القوة والعزم الديناميكية في شاشة iDrive."
+            },
+            "bmw_acoustic_lock_sound": {
+                "name": "صوت تأكيد القفل والفتح",
+                "desc": "يصدر نغمات تأكيد قصيرة من إنذار السيارة عند القفل أو الفتح."
+            },
+            "bmw_mirror_fold_delay_zero": {
+                "name": "طي المرايا الفوري بدون تأخير",
+                "desc": "يطوي المرايا الجانبية فوراً عند الضغط على زر القفل بدون انتظار."
+            },
+            "bmw_tpms_tire_temperature": {
+                "name": "عرض درجة حرارة الإطارات",
+                "desc": "يعرض درجة حرارة الإطارات اللحظية جنبًا إلى جنب مع الضغط في شاشة TPMS."
+            },
+            "renault_trip_computer_enable": {
+                "name": "تفعيل كمبيوتر الرحلات",
+                "desc": "يفعل شاشات معدل استهلاك الوقود والمدى المتبقي في العدادات."
+            },
+            "renault_external_temp_display": {
+                "name": "عرض درجة الحرارة الخارجية",
+                "desc": "يفعل قراءة درجة الحرارة المحيطة الخارجية في شاشة العدادات."
+            },
+            "renault_automatic_tailgate": {
+                "name": "فتح صندوق الأمتعة بالمفتاح",
+                "desc": "يفتح قفل باب الصندوق الخفي بالكامل عند الضغط المطول على زر البطاقة."
+            },
+            "renault_alarm_chirp": {
+                "name": "تأكيد صوتي عند القفل",
+                "desc": "يصدر صوت تأكيد قصير من البوق عند قفل أبواب السيارة."
+            },
+            "renault_shift_indicator": {
+                "name": "مؤشر تغيير التروس",
+                "desc": "يفعل أسهم التبديل للأعلى والأسفل لقيادة اقتصادية في استهلاك الوقود."
+            },
+            "ford_double_horn_honk_disable": {
+                "name": "إلغاء التنبيه المزدوج والمحرك يعمل",
+                "desc": "يلغي صوت البوق المزدوج المزعج عند الخروج بالمفتاح والمحرك يعمل."
+            },
+            "ford_auto_door_locking": {
+                "name": "قفل الأبواب التلقائي عند 20 كم/س",
+                "desc": "يقفل جميع الأبواب تلقائياً بمجرد تجاوز سرعة السيارة 20 كم/س."
+            },
+            "ford_tpms_psi_display": {
+                "name": "عرض ضغط الإطارات الأرقامي",
+                "desc": "يعرض قيمة الضغط الدقيقة بالأرقام لكل إطار في شاشة العدادات."
+            },
+            "ford_sync_climate_screen": {
+                "name": "التحكم بالتكييف في شاشة SYNC",
+                "desc": "يضيف قائمة التحكم بالتكييف وتدفئة المقاعد في شاشة SYNC باللمس."
+            },
+            "stellantis_power_windows_remote": {
+                "name": "رفع وخفض النوافذ بالمفتاح",
+                "desc": "يرفع أو يخفض جميع النوافذ الكهربائية عند الضغط المطول على المفتاح."
+            },
+            "stellantis_cornering_fogs": {
+                "name": "مصابيح الضباب للانعطاف",
+                "desc": "يضيء مصباح الضباب عند الانعطاف في السرعات المنخفضة."
+            }
+        },
+        "codeBtn": "تشفير",
+        "removeBtn": "إزالة",
+        "unsupportedTitle": "المركبة غير مدعومة",
+        "unsupportedMsg": "هذه الميزة غير مدعومة من قبل وحدة التحكم الإلكترونية للمركبة.",
+        "layoutChart": "مخطط"
     }
 }

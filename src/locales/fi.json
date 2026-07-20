@@ -57,26 +57,28 @@
             "idCopied": "Käyttäjätunnus kopioitu leikepöydälle.",
             "hardwareHealthAndId": "LAITTEISTON TERVEYS JA IDENTITY",
             "hardwareModalDesc": "Saadaksesi tukea tai suorittaaksesi manuaalisen PRO-lisenssin aktivoinnin, kopioi yllä oleva käyttäjätunnus ja ota meihin yhteyttä.",
-            "supportEmailBody": "Hei MotoCortex-tukitiimi, --- Hakemuksen tiedot --- Käyttäjätunnus:{{userId}}Lisenssin tila:{{license}}Linkki:{{connection}}Laitteen tila:{{deviceStatus}}--- Viestisi ---",
+            "supportEmailBody": "Hei Cortex OBD2 Diagnosis Scanner-tukitiimi, --- Hakemuksen tiedot --- Käyttäjätunnus:{{userId}}Lisenssin tila:{{license}}Linkki:{{connection}}Laitteen tila:{{deviceStatus}}--- Viestisi ---",
             "deviceName": "Laitteen nimi:",
             "simulationObd": "Simulaatio OBD",
-            "noLogsToShare": "There are no diagnostic logs to share.",
-            "obdHealthTitle": "",
-            "txRequests": "",
-            "rxResponses": "",
-            "timeouts": "",
-            "recoveries": "",
-            "avgLatency": "",
-            "lastErrorLabel": "",
-            "shareReport": "",
-            "diagnosticLog": "",
-            "noTraffic": "",
-            "shareError": ""
+            "obdHealthTitle": "OBD HEALTH STATISTICS",
+            "txRequests": "Requests Sent (TX):",
+            "rxResponses": "Responses Received (RX):",
+            "timeouts": "Timeouts:",
+            "recoveries": "Recovery Attempts:",
+            "avgLatency": "Avg. Latency:",
+            "lastErrorLabel": "Last Error:",
+            "shareReport": "SHARE DIAGNOSTICS REPORT",
+            "diagnosticLog": "DIAGNOSTIC LOG (LAST 500 ROWS)",
+            "noTraffic": "No streaming traffic yet...",
+            "shareError": "Sharing Error",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Sovelluksen tiedot ja opas",
         "supportDesc": "Tuki ja Yhteystiedot",
         "shareDesc": "Jaa sovellus",
-        "noDtc": "PUHDAS"
+        "noDtc": "PUHDAS",
+        "featureCoding": "AVAA PIILOTETUT OMINAISUUDET JA UDS-KOODAUS",
+        "featureCodingSub": "VAG, BMW, Renault ISO 14229 Feature Unlocking"
     },
     "common": {
         "cancel": "Peruuta",
@@ -116,13 +118,17 @@
         "close": "SULJE",
         "share": "SHARE",
         "info": "Info",
-        "enableDemoMode": "",
-        "exitDemoMode": "",
+        "enableDemoMode": "ENABLE DEMO MODE",
+        "exitDemoMode": "EXIT DEMO MODE",
+        "supported": "Tuettu",
+        "copied": "Kopioitu",
+        "cancelBtn": "Peruuta",
+        "retry": "YRITÄ YHTEYTTÄ UUDELLEEN",
+        "changeType": "Muuta yhteystyyppiä",
         "revocationTitle": "Subscription Cancelled",
         "revocationMsg": "Your access to PRO features has been terminated because your subscription was cancelled or refunded."
     },
     "paywall": {
-        "crownBadge": "MOTO CORTEX PRO",
         "subtitle": "Avaa syvimmät diagnostiikkaominaisuudet ja kaikki parametrit.",
         "feat1Title": "Edistynyt live-data",
         "feat1Desc": "Reaaliaikainen ajopiirturi, erikoiset analogiset mittarit ja grafiikka.",
@@ -154,20 +160,21 @@
         "errorTitle": "Tuotteiden lataus epäonnistui",
         "errorDesc": "Tuotteita ladattaessa tapahtui virhe, tarkista internetyhteytesi ja yritä uudelleen.",
         "retryBtn": "Yritä uudelleen",
-        "loadingPrices": "Hinnat latautuvat..."
+        "loadingPrices": "Hinnat latautuvat...",
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnosis Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code.",
+        "crownBadge": "MOTO CORTEX PRO"
     },
     "connection": {
         "logoSub": "v7PRO",
         "adapter": "SOVITIN",
         "ecu": "ECU",
         "online": "VERKOSSA",
-        "offline": "OFFLINE",
         "connecting": "YHTEYTTÄ",
-        "scanDevices": "SKANNAUSLAITE",
+        "scanDevices": "ETSI LAITTEITA",
         "connectLast": "Yhdistä LAITTEEN LOPETAAN",
         "enableBt": "KÄYTÄ BLUETOOTH",
         "scanning": "Skannataan...",
-        "foundDevices": "LAITTEITA LÖYDYT",
+        "foundDevices": "LÖYDETYT OBD2-LAITTEET",
         "unknownDevice": "Tuntematon laite",
         "scanHint": "Skannaa löytääksesi pariksi liitetyt OBD-laitteet.",
         "ecuWait": "Yhdistetään ECU:hun...",
@@ -187,21 +194,60 @@
         "deviceNotPairedDesc": "Ennen kuin yhdistät klassiset Bluetooth OBD2 -sovittimet, sinun on muodostettava pariliitos puhelimen Bluetooth-asetuksista. Sinut ohjataan järjestelmäasetuksiin.",
         "unsupportedDeviceTitle": "Yhteensopimaton laitteisto",
         "unsupportedDeviceDesc": "Laite, jota yrität yhdistää, ei ole yhteensopiva OBD2-sovitin tai se ei tue vaadittuja palveluita.",
+        "sendButton": "SEND",
+        "connectDevice": "YHDISTÄ OBD2-LAITTEESEEN",
+        "adapterApproved": "ADAPTER APPROVED. ANALYZING CAPABILITIES... [2/5]",
+        "protocolNegotiating": "SCANNING PROTOCOL & WAKING UP... [3/5]",
+        "ecuDetected": "ECU DETECTED, VERIFYING... [4/5]",
+        "ecuResponding": "ECU RESPONDED, COMPLETING CONNECTION... [5/5]",
+        "protocolScanningHint": "(Scanning standard SP5, SP3, SP6, SP7 protocols sequentially...)",
+        "protocolFailed": "⚠️ COMPATIBLE PROTOCOL NOT FOUND! (SP5, SP3, SP4, SP6, SP7 tried)",
+        "ecuNotFound": "⚠️ VEHICLE ECU NOT RESPONDING!",
+        "hardwareCapabilityScore": "Adapter Hardware Capability Score: {{score}}/100",
+        "hardwareFatal": "Critical Error: Your hardware is a fake clone that does not support older vehicle protocols. Cannot connect to vehicle ECU. Please obtain a quality adapter (v1.5 or original).",
+        "progressFormat": "{{progress}}%",
+        "btDisabled": "Bluetooth pois käytöstä",
+        "btDisabledDesc": "Ota Bluetooth käyttöön etsiäksesi OBD2-sovittimia.",
+        "btDescIos": "Yhdistä BLE OBD2 -sovittimien kautta (Veepeak, vLinker).",
+        "btDescAndroid": "Yhdistä Classic Bluetooth- tai BLE-sovittimien kautta.",
+        "wifiDesc": "Yhdistä Wi-Fi-sovittimiin (yleensä 192.168.0.10).",
+        "wifiGuide": "Yhdistääksesi Wi-Fi-sovittimeen, siirry puhelimen Wi-Fi-asetuksiin ja valitse OBD-sovittimen verkko (esim. OBDII, V-LINK). Palaa sitten tähän.",
+        "openWifiSettings": "AVAA WI-FI-ASETUKSET",
+        "connectWifi": "YHDISTÄ WI-FIN KAUTTA",
+        "pairRequired": "Paritetaan OBD2-laite",
+        "pairRequiredDesc": "Android saattaa pyytää parittamista, koska yhdistät ensimmäistä kertaa. Parituksen PIN on yleensä:",
+        "pairNow": "PARITA JA YHDISTÄ",
+        "pairingFailed": "Paritusyritys epäonnistui. Parita manuaalisesti Android-asetuksissa.",
+        "successVin": "Yhteys muodostettu. Ajoneuvoprofiili tunnistettu onnistuneesti.",
+        "cloneWarning": "Yhteensopimaton kloonisovittein havaittu. Kehittyneet koodausominaisuudet on lukittu turvallisuutesi vuoksi.",
+        "viewHealth": "OBD2 TERVEYS- JA KYKYVALIKKO",
+        "statusPrompt": "Valitse haluamasi OBD2-yhteyskäyttöliittymä alta.",
+        "scanHintIos": "Varmista, että BLE OBD2 -sovitin on päällä ja lähellä iOS-laitettasi.",
+        "scanHintAndroid": "Varmista, että Bluetooth on aktiivinen ja sovitin on valmis parittamaan.",
+        "negotiating": "NEUVOTELLAAN OBD2-KÄTTELYSTÄ",
+        "failed": "YHTEYSYRITYS EPÄONNISTUI",
+        "errLayer1": "Vianmääritys: Bluetooth on pois käytöstä. Ota se käyttöön laiteasetuksissa.",
+        "errLayer2": "Vianmääritys: Yhteys aikakatkaistiin. Varmista, että sovitin on tiukasti OBD2-portissa ja virran merkkivalo palaa.",
+        "errLayer5": "Vianmääritys: OBD2-protokollaneuvottelu epäonnistui. Varmista, että ajoneuvon virta-avain on ON-asennossa (moottorin käynti suositellaan).",
+        "errLayer6": "Vianmääritys: Sovitin yhdistetty, mutta ajoneuvon ECU ei vastaa. Käynnistä virta tai käynnistä yhteys uudelleen.",
+        "errGeneric": "Vianmääritys: Varmista, että sovittimessa on virta, virta on päällä ja muita OBD-sovelluksia ei ole auki.",
+        "stepAdapter": "Sovittimen yhteys ja kykypistemäärä",
+        "stepProtocol": "OBD2-protokollaneuvottelu",
+        "stepHandshake": "ECU-viestinnän varmistus",
+        "stepStabilization": "Aktiivisen telemetriasilmukan vakautus",
+        "cancel": "Cancel",
+        "offline": "OFFLINE",
         "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
-        "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
         "adapterConnected": "ADAPTER CONNECTED (OK)",
-        "connectDevice": "",
-        "adapterApproved": "",
-        "protocolNegotiating": "",
-        "ecuDetected": "",
-        "ecuResponding": "",
-        "protocolScanningHint": "",
-        "protocolFailed": "",
-        "ecuNotFound": "",
-        "hardwareCapabilityScore": "",
-        "hardwareFatal": ""
+        "lowQualityAdapterWarning": "⚠️ Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols (like K-Line on Dacia, Renault, Fiat, Lada). We highly recommend upgrading to a high-quality OBD2 adapter (v1.5 or original OBDLink/vLinker) to connect successfully.",
+        "statusProfiling": "Analyzing OBD2 adapter capabilities...",
+        "statusScanningCan": "Scanning modern CAN-Bus protocols...",
+        "statusScanningKline": "Waking up K-Line protocols. Old vehicles (Dacia, Renault, Fiat) may take up to 15 seconds to respond...",
+        "statusHandshake": "Verifying ECU communication...",
+        "statusStabilization": "Stabilizing telemetry data stream...",
+        "changeType": "Change Connection Type"
     },
     "dashboard": {
         "selectDevice": "VALITSE LAITE KOSKETAAN",
@@ -222,7 +268,6 @@
         "battery": "AKKU",
         "load": "LATAA",
         "intake": "IMMOITUSILMA",
-        "manifold": "MANIFOLD kPa",
         "customizeTitle": "KONEHUONE ASETUKSET",
         "customizeSubtitle": "Valitse näytössä näkyvät anturit (Enintään 8).",
         "layoutType": "Asettelutyyli",
@@ -241,7 +286,19 @@
         "fuelLevel": "Polttoainetaso",
         "catalystTemp": "Katalysaattorin Lämpö",
         "layoutGauge": "MITTARI",
-        "obdTerminalTitle": ""
+        "obdTerminalTitle": "OBD HEALTH & TERMINAL",
+        "adapterClone": "CLONE ADAPTER",
+        "adapterOriginal": "ORIGINAL",
+        "adapterCloneShort": "CLONE",
+        "adapterOriginalShort": "ORIGINAL",
+        "pidLabel": "PID: {{pid}}",
+        "limitReached": "Selection Limit",
+        "limitReachedDesc": "You can select a maximum of {{limit}} sensors with this protocol.",
+        "customizeSubtitleKLine": "K-Line protocol connected. You can select a maximum of {{limit}} sensors.",
+        "customizeSubtitleCAN": "CAN-Bus protocol connected. You can select a maximum of {{limit}} sensors.",
+        "unit": "Unit",
+        "manifold": "MANIFOLD kPa",
+        "layoutChart": "CHART"
     },
     "expertise": {
         "historyFound": "AJONEUVON HISTORIA LÖYTYNYT!",
@@ -306,13 +363,12 @@
     },
     "info": {
         "desc": "Ammattimainen moottoripyörien ja ajoneuvojen diagnostiikkasovellus. Yhteensopiva kaikkien ajoneuvojen kanssa.",
-        "upgrade": "👑 Päivitä MotoCortex PRO:hon",
-        "upgradeAlert": "Early Access 🎉",
-        "upgradeAlertDesc": "MotoCortex on parhaillaan kehitteillä. Koska olet varhainen käyttäjämme, kaikki pro-ominaisuudet ovat käytettävissäsi nyt. Palautteesi on meille erittäin arvokasta!",
+        "upgrade": "👑 Päivitä Cortex OBD2 Diagnosis Scanner PRO:hon",
+        "upgradeAlertDesc": "Cortex OBD2 Diagnosis Scanner on parhaillaan kehitteillä. Koska olet varhainen käyttäjämme, kaikki pro-ominaisuudet ovat käytettävissäsi nyt. Palautteesi on meille erittäin arvokasta!",
         "helpGuide": "APUA JA OPAS",
         "language": "🌐 Kieli / Kieli / Bahasa",
-        "support": "📞 TUKIKESKUS",
-        "supportSubject": "MotoCortex-tuki ja palaute",
+        "support": "TUKIKESKUS",
+        "supportSubject": "Cortex OBD2 Diagnosis Scanner-tuki ja palaute",
         "thanks": "Kiitos!",
         "thanksDesc": "Kiitos palautteestasi. Voit jättää meille kommentin Play Kauppaan.",
         "sections": {
@@ -341,10 +397,11 @@
                 "content": "Sovelluksen laadun ja ajoneuvojen yhteensopivuuden parantamiseksi; Täysin anonymisoidut moottoriparametrit ja vikadiagnoosin aikana generoidut vikakoodit (ilman henkilötietoja ja alustanumeroa) voidaan analysoida suojatuilla palvelimillamme. Jatkamalla hyväksyt nämä anonyymit telemetriaehdot. Bluetooth- ja sijaintiluvat vaaditaan kommunikoidaksesi moottoripyöräsi ECU:n kanssa."
             }
         },
-        "reconfigurePermissions": "Uudelleennäytön käyttöoikeudet ja lailliset ehdot"
+        "reconfigurePermissions": "Uudelleennäytön käyttöoikeudet ja lailliset ehdot",
+        "upgradeAlert": "Early Access 🎉"
     },
     "report": {
-        "title": "🏍️ ═══ MOTOCORTEX DIAGNOSTIIKKARAPORTTI ═══ 🏍️",
+        "title": "🏍️ ═══ CORTEX OBD2 DIAGNOSTIIKKARAPORTTI ═══ 🏍️",
         "vehicleIdentity": "📋 AJONEUVON TUNNUS",
         "vin": "Alustan numero (VIN)",
         "odometer": "Etäisyys (KM)",
@@ -353,7 +410,7 @@
         "dtcCount": "🔍 VIRHEKOODIT ({{count}}määrä)",
         "sensorData": "📊 SUORAT ANTURIT",
         "noData": "Tietojen lukeminen epäonnistui",
-        "proApp": "Skannattu MotoCortex v7 PRO:lla.",
+        "proApp": "Skannattu Cortex OBD2 Diagnosis Scanner v7 PRO:lla.",
         "date": "päivämäärä",
         "vinNotFound": "Ei havaittu",
         "noDtcs": "EI VIRHEKODEJA - PUHDISTA",
@@ -364,7 +421,7 @@
         "intakeAir": "Imuilma",
         "manifold": "Jakotukki",
         "voltage": "Akun jännite",
-        "shareMessage": "Seuraa moottoripyöräsi tilaa taskustasi Motocortex OBD2 -diagnostiikkasovelluksella! 🏍️📲 Lataa: https://motocortex.app"
+        "shareMessage": "Seuraa moottoripyöräsi tilaa taskustasi Motocortex OBD2 -diagnostiikkasovelluksella! 🏍️📲 Lataa: https://cortexobd2.app"
     },
     "battery": {
         "title": "AKKU JA KÄYNNISTYSTESTI",
@@ -404,7 +461,7 @@
         }
     },
     "freeze": {
-        "title": "PAKKAUSkehys",
+        "title": "FREEZE FRAME",
         "snapshot": "VIKAMUISTI",
         "desc": "Se lukee moottorin parametrit, kun Check Engine -valo syttyy. Nämä tiedot tarjoavat kriittistä tietoa vian diagnosoinnissa.",
         "noDtcs": "Vikakoodia ei ole tallennettu. Pysäytyskehystietoja ei ehkä ole.",
@@ -529,31 +586,27 @@
             "fuelAdaptation": "Polttoaineen sopeutuksen nollaus",
             "ecuReset": "ECU:n nollaus"
         },
-        "searchLanguage": ""
+        "searchLanguage": "Search Language...",
+        "connectionSection": "OBD Device Connection",
+        "noVehicleTitle": "VEHICLE DETECTION REQUIRED",
+        "noVehicleDesc": "Vehicle identity will be automatically discovered via OBD-II connection. Please pair and connect to your device below.",
+        "registeredVehiclesButton": "REKISTERÖIDYT AJONEUVONI",
+        "connectDevice": "YHDISTÄ OBD2-LAITTEESEEN"
     },
     "brands": {
-        "alfa_romeo": "Alfa Romeo",
-        "aprilia": "Aprilia",
-        "aston_martin": "Aston Martin",
         "audi": "Audi",
         "bajaj": "bajaj",
         "benelli": "benelli",
         "bmw_car": "BMW (auto)",
         "bmw_moto": "BMW (moottoripyörä)",
-        "cfmoto": "CFMoto",
         "chery": "Chery",
-        "chevrolet": "Chevrolet",
-        "citroen": "Citroën",
         "cupra": "Cupra",
         "dacia": "Dacia",
-        "ducati": "Ducati",
         "fiat": "fiat",
         "ford": "ford",
-        "harley": "Harley-Davidson",
         "hero": "sankari",
         "honda_car": "Honda (auto)",
         "honda_moto": "Honda (moottoripyörä)",
-        "husqvarna": "Husqvarna",
         "hyundai": "hyundai",
         "indian": "Intiaani",
         "jeep": "jeeppi",
@@ -565,49 +618,60 @@
         "land_rover": "land rover",
         "lexus": "Lexus",
         "mazda": "Mazda",
-        "mercedes": "Mercedes-Benz",
         "mg": "MG",
-        "mitsubishi": "Mitsubishi",
         "mondial": "mondial",
         "mv_agusta": "MV Augusta",
-        "nissan": "Nissan",
         "opel": "opel",
-        "peugeot": "Peugeot",
         "peugeot_car": "Peugeot (auto)",
         "peugeot_moto": "Peugeot (moottoripyörä)",
         "porsche": "porsche",
-        "renault": "Renault",
         "rks": "RKS",
         "seat": "Istuin",
         "skoda": "Skoda",
-        "subaru": "Subaru",
         "suzuki_car": "Suzuki (auto)",
         "suzuki_moto": "Suzuki (moottoripyörä)",
         "sym": "sym",
         "tesla": "Tesla",
         "togg": "togg",
-        "toyota": "Toyota",
-        "triumph": "Triumph",
         "tvs": "TVS",
         "vespa": "vespa",
-        "volkswagen": "Volkswagen",
         "volvo": "volvo",
         "yuki": "yuki",
-        "other": "Muut"
+        "other": "Muut",
+        "alfa_romeo": "Alfa Romeo",
+        "aprilia": "Aprilia",
+        "aston_martin": "Aston Martin",
+        "cfmoto": "CFMoto",
+        "chevrolet": "Chevrolet",
+        "citroen": "Citroën",
+        "ducati": "Ducati",
+        "harley": "Harley-Davidson",
+        "husqvarna": "Husqvarna",
+        "mercedes": "Mercedes-Benz",
+        "mitsubishi": "Mitsubishi",
+        "nissan": "Nissan",
+        "peugeot": "Peugeot",
+        "renault": "Renault",
+        "subaru": "Subaru",
+        "toyota": "Toyota",
+        "triumph": "Triumph",
+        "volkswagen": "Volkswagen"
     },
     "permissions": {
         "headerSubtitle": "LUPAPANEELI",
         "cardTitle": "Laitteiston käyttöoikeus vaaditaan",
         "cardDesc": "Sovelluksen laadun ja ajoneuvojen yhteensopivuuden parantamiseksi; Täysin anonymisoidut moottoriparametrit ja vikadiagnoosin aikana generoidut vikakoodit (ilman henkilötietoja ja alustanumeroa) voidaan analysoida suojatuilla palvelimillamme. Jatkamalla hyväksyt nämä anonyymit telemetriaehdot.",
-        "btLabel": "Bluetooth (BLE)",
         "btSub": "Sitä käytetään vain muodostamaan laitepari ELM327/OBD2-sovittimesi kanssa ja suoratoistamaan suoraa CAN-bus/K-Line-dataa.",
         "locLabel": "Sijainnin lupa",
         "locSub": "Android-järjestelmäarkkitehtuuri on pakollista löytää lähellä olevat vähän energiaa kuluttavat Bluetooth-laitteet. Emme seuraa ajamistasi.",
         "grantBtn": "SALLI JA JATKA",
         "skipBtn": "Ohita toistaiseksi (demotila)",
-        "deniedDesc": "Jotkut luvat evättiin. MotoCortex ei välttämättä skannaa tai muodosta yhteyttä OBD2-laitteisiin onnistuneesti.",
+        "deniedDesc": "Jotkut luvat evättiin. Cortex OBD2 Diagnosis Scanner ei välttämättä skannaa tai muodosta yhteyttä OBD2-laitteisiin onnistuneesti.",
         "proceedAnyway": "Jatka joka tapauksessa",
-        "openSettings": "Avaa Asetukset"
+        "openSettings": "Avaa Asetukset",
+        "btLabel": "Bluetooth (BLE)",
+        "langTitle": "Select Language",
+        "nextBtn": "CONTINUE"
     },
     "disclaimer": "Kaikki tuotenimet, logot ja tuotemerkit ovat omistajiensa omaisuutta. Kaikki tässä sovelluksessa käytetyt yritysten, tuotteiden ja palveluiden nimet ovat vain tunnistamistarkoituksiin. Näiden nimien, logojen ja tuotemerkkien käyttö ei tarkoita minkäänlaista tukea tai sponsorointia.",
     "hiddenFeatures": {
@@ -640,38 +704,262 @@
         "writeError": "Kirjoitusvirhe. Yritä uudelleen.",
         "simulationBanner": "SIMULAATIOTILA — Todellinen ECU-kirjoitus ei ole vielä aktiivinen",
         "closeBtn": "SULJE",
+        "unsupportedOk": "OK",
         "disclaimerTitle": "LIABILITY DISCLAIMER",
         "disclaimerFeature": "Feature",
-        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• MotoCortex cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
+        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• Cortex OBD2 Diagnosis Scanner cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
         "checkboxTitle": "CONFIRMATION REQUIRED",
         "check1": "I have read this warning and understand that my vehicle warranty may be affected.",
-        "check2": "I acknowledge that MotoCortex is not responsible for any faults or damages resulting from this operation.",
+        "check2": "I acknowledge that Cortex OBD2 Diagnosis Scanner is not responsible for any faults or damages resulting from this operation.",
         "check3": "I wish to make this change knowingly and of my own free will, accepting all risks.",
         "disclaimerCancel": "CANCEL",
         "disclaimerContinue": "CONTINUE",
         "unsupportedTitle": "Not Supported",
-        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands.",
-        "unsupportedOk": "OK"
+        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands."
     },
     "disconnectShort": "KATK.",
     "obdTerminal": {
-        "title": "",
-        "terminalTitle": "",
-        "terminalPlaceholder": "",
-        "inputPlaceholder": "",
-        "sendButton": "",
-        "statsTitle": "",
-        "connectionProtocol": "",
-        "none": "",
-        "hardwareQualityScore": "",
-        "original": "",
-        "clone": "",
-        "requestResponseCount": "",
-        "timeoutCount": "",
-        "recoveryCount": "",
-        "diagnosticLogTitle": "",
-        "clearButton": "",
-        "shareButton": "",
-        "noLogs": ""
+        "title": "OBD HEALTH & TERMINAL",
+        "terminalTitle": "OBD TERMINAL",
+        "terminalPlaceholder": "Type command below to send to ECU (e.g. 010C, ATRV)",
+        "inputPlaceholder": "Enter command...",
+        "sendButton": "SEND",
+        "statsTitle": "OBD HEALTH STATISTICS",
+        "connectionProtocol": "Connection Protocol:",
+        "none": "None",
+        "hardwareQualityScore": "Hardware Quality Score:",
+        "original": "Original",
+        "clone": "Clone",
+        "requestResponseCount": "Request / Response Count:",
+        "timeoutCount": "Timeout Count:",
+        "recoveryCount": "Recovery Count (Recovery):",
+        "diagnosticLogTitle": "DIAGNOSTIC LOG",
+        "clearButton": "CLEAR",
+        "shareButton": "SHARE",
+        "noLogs": "No diagnostic logs found."
+    },
+    "dtcContext": {
+        "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
+        "cooling": "Critical cooling hazard detected. View detailed repair steps →",
+        "ignition": "Ignition system issue detected. View detailed repair steps →",
+        "chassis": "Chassis safety system alert. Unlock PRO for full analysis →",
+        "body": "Body electronics fault found. Upgrade for complete diagnostics →",
+        "network": "Communication network error. PRO unlocks full troubleshooting →",
+        "fallback": "Unlock detailed fault analysis, repair costs & risk assessment →"
+    },
+    "perfTeaser": {
+        "limitTitle": "Daily Limit Reached",
+        "limitDesc": "You have reached the daily limit of 3 free 0-60 km/h tests. Upgrade to PRO for unlimited tests and 0-100 km/h measurements."
+    },
+    "sandbox": {
+        "title": "Sandbox Telemetry Control",
+        "connectionStatus": "Connection Status:",
+        "ecuStatus": "ECU Status:",
+        "fps": "UI Performance: {{fps}} FPS",
+        "stressBtnStart": "Start 20Hz Stress",
+        "stressBtnStop": "Stop Telemetry Loop",
+        "stopDisconnect": "Stop / Disconnect",
+        "discoveredDevices": "DISCOVERED DEVICES",
+        "connect": "CONNECT",
+        "scanning": "Scanning...",
+        "scan": "Scan Devices",
+        "rpm": "Engine RPM",
+        "speed": "Vehicle Speed",
+        "coolant": "Coolant Temp",
+        "throttle": "Throttle Position",
+        "notConnected": "Not Connected",
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "error": "Error",
+        "openSandbox": "DIAG",
+        "advancedTerminal": "Advanced Connection Terminal (DIAG)",
+        "terminalTitle": "Live Terminal & Bus Monitor",
+        "pause": "PAUSE",
+        "resume": "RESUME",
+        "share": "SHARE",
+        "clear": "CLEAR"
+    },
+    "health": {
+        "titleMenu": "OBD2 TERVEYS JA KYVYT",
+        "adapterQuality": "SOVITTIMEN LAATU JA SUORITUSKYKY",
+        "excellent": "ERINOMAINEN (ALKUPERÄINEN)",
+        "good": "HYVÄ (VAKIO)",
+        "clone": "YHTEENSOPIMATON / KLOONI",
+        "firmware": "Laiteohjelmistoversio:",
+        "capScore": "Kykypistemäärä",
+        "latency": "Viive (RTT)",
+        "protocol": "Aktiivinen protokolla",
+        "featureSupport": "SOVELLUKSEN OMINAISUUSMATRIISI",
+        "matrixReadCodes": "Vikakoodien lukeminen ja tyhjentäminen",
+        "matrixLiveSensors": "Reaaliaikainen anturiseuranta (Perus)",
+        "matrixBattery": "Akku- / jännitystesti",
+        "matrixHighSpeed": "Suurnopeus-telemetria (20Hz)",
+        "matrixCoding": "ECU-koodaus ja mukautukset",
+        "active": "Aktiivinen",
+        "degraded": "Heikentynyt (Hidas RTT)",
+        "locked": "Lukittu (Turvallinen tila)",
+        "warning": "TURVALUKKO:",
+        "lockExplain": "Sovittimesi on merkitty klooni-/vääräksi siruksi. Koska kloonisoittimet eivät ole tarkkoja ajoituksessa ja voivat vaurioittaa ajoneuvoa kirjoitusoperaatioissa, koodaus- ja mukautusominaisuudet on lukittu. Hanki alkuperäinen ELM327 v2.1 tai vLinker-laite turvalliseen koodaukseen.",
+        "vehiclePids": "AJONEUVOANTURIN TARKISTUSLISTA",
+        "checklistPrompt": "Ajoneuvon ECU:n tukemat vakioanturityypit (PID) on lueteltu alla. Anturit ilman rastia eivät ole ajoneuvosi raportoimia.",
+        "supportedBadge": "✓ TUETTU",
+        "unsupportedBadge": "❌ EI TUETTU"
+    },
+    "sensor": {
+        "rpm": "Moottorin kierrosluku (RPM)",
+        "speed": "Ajoneuvon nopeus",
+        "coolant": "Jäähdytysnesteen lämpötila",
+        "throttle": "Kaasupoljin-asento",
+        "voltage": "Ohjausmoduulin jännite",
+        "maf": "MAF-ilmavirta",
+        "iat": "Imusahko-lämpötila",
+        "load": "Laskettu moottorikuorma",
+        "fuel": "Polttoainetaso",
+        "oilTemp": "Moottoriöljyn lämpötila"
+    },
+    "secretDebug": {
+        "title": "⚡ MOTO CORTEX DEV PANEL",
+        "logFileSize": "Black Box / File Size:",
+        "dtcCloudSync": "🛰️ DTC CLOUD SYNCHRONIZATION",
+        "lastSync": "Last Sync",
+        "syncNow": "Sync Now",
+        "developerTools": "DEVELOPER TOOLS",
+        "trialResetSuccess": "Free Trial counter reset successfully!",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "The application will now crash intentionally. Confirm to verify Crashlytics integration.",
+        "crashButton": "Crash",
+        "crashTest": "Crash Test"
+    },
+    "features": {
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
+        "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "✓ Safe (Ready for ECU Coding Write)",
+        "voltageLocked": "⚠️ Low Voltage (Coding Locked, Read Active)",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "⚠️ Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
+        "items": {
+            "vag_staging_needle_sweep": {
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
+            },
+            "vag_acoustic_lock_confirmation": {
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
+            },
+            "vag_american_parking_lights": {
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
+            },
+            "vag_drl_menu_toggle": {
+                "name": "Daytime Running Lights (DRL) Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
+            },
+            "vag_tear_wiping": {
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
+            },
+            "vag_emergency_brake_flashing": {
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
+            },
+            "vag_cornering_lights": {
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
+            },
+            "vag_comfort_mirror_folding": {
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
+            },
+            "vag_lap_timer": {
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
+            },
+            "vag_refuel_quantity": {
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
+            },
+            "bmw_start_stop_memory": {
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state (OFF/ON) across vehicle restarts."
+            },
+            "bmw_digital_speedometer": {
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
+            },
+            "bmw_sport_displays": {
+                "name": "Sport Displays (HP & Nm Gauges)",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
+            },
+            "bmw_acoustic_lock_sound": {
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
+            },
+            "bmw_mirror_fold_delay_zero": {
+                "name": "Instant Mirror Folding (0.0s Delay)",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
+            },
+            "bmw_tpms_tire_temperature": {
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
+            },
+            "renault_trip_computer_enable": {
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
+            },
+            "renault_external_temp_display": {
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
+            },
+            "renault_automatic_tailgate": {
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
+            },
+            "renault_alarm_chirp": {
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
+            },
+            "renault_shift_indicator": {
+                "name": "Gear Shift Indicator (GSI)",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
+            },
+            "ford_double_horn_honk_disable": {
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
+            },
+            "ford_auto_door_locking": {
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
+            },
+            "ford_tpms_psi_display": {
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
+            },
+            "ford_sync_climate_screen": {
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
+            },
+            "stellantis_power_windows_remote": {
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
+            },
+            "stellantis_cornering_fogs": {
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
+            }
+        },
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version."
     }
 }

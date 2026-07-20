@@ -1,6 +1,7 @@
 import OBDCommandQueue, { preciseSleep } from '../../api/OBDCommandQueue';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 import { AdapterProfileRegistry } from '../profile/AdapterProfileRegistry';
+import BluetoothService from '../../api/BluetoothService';
 
 export class ProtocolNegotiator {
     /**
@@ -9,10 +10,10 @@ export class ProtocolNegotiator {
      */
     public static async runBenchmark(): Promise<number> {
         const store = useBluetoothStore.getState();
-        const benchmarkCommands = ['ATI', 'AT@1', '0100', '010C', '0902'];
+        const benchmarkCommands = ['ATI', '0100', '010C', '0902'];
         let successCount = 0;
         let totalRtt = 0;
-        let atAt1Failed = false;
+        let isV15Clone = false;
 
         store.addLog('BENCHMARK_START: Commencing behavior-based fingerprinting.');
 
@@ -28,9 +29,15 @@ export class ProtocolNegotiator {
         } catch {
             store.addLog('PRE_FLIGHT_DRAIN: AT Z command failed or timed out — proceeding with buffer flush.');
         }
+        // Rule mandate: Enforce asynchronous drain/flush of serial buffer
+        try {
+            await BluetoothService.clearBuffer();
+        } catch (e) {
+            store.addLog(`PRE_FLIGHT_DRAIN: clearBuffer failed: ${e}`);
+        }
         OBDCommandQueue.flushRxBuffer(); // Hard-destroy boot banner bytes + prior session garbage
-        store.addLog('PRE_FLIGHT_DRAIN: RX buffer flushed. Applying 1200ms hardware cooldown...');
-        await preciseSleep(1200); // Hardware settle: ELM boot + BLE drain + clone adapter margin
+        store.addLog('PRE_FLIGHT_DRAIN: RX buffer flushed. Applying 2000ms hardware cooldown...');
+        await preciseSleep(2000); // Hardware settle: ELM boot + BLE drain + clone adapter margin
 
         for (const cmd of benchmarkCommands) {
             const start = Date.now();
@@ -39,21 +46,25 @@ export class ProtocolNegotiator {
                 const elapsed = Date.now() - start;
 
                 if (res.includes('?') || res.toLowerCase().includes('error')) {
-                    if (cmd === 'AT@1') {
-                        atAt1Failed = true;
-                    }
                     store.addLog(`BENCHMARK_CMD_DEGRADED: ${cmd} returned invalid response [${res}] in ${elapsed}ms`);
                 } else {
                     successCount++;
                     totalRtt += elapsed;
                     store.addLog(`BENCHMARK_CMD_SUCCESS: ${cmd} RTT: ${elapsed}ms`);
+                    
+                    if (cmd === 'ATI') {
+                        const cleanFirmware = res.replace(/[\r\n>]/g, '').trim();
+                        store.setSensorData({ adapterFirmware: cleanFirmware });
+                        if (cleanFirmware.includes('1.5')) {
+                            isV15Clone = true;
+                        }
+                    }
                 }
             } catch (err) {
-                if (cmd === 'AT@1') {
-                    atAt1Failed = true;
-                }
                 store.addLog(`BENCHMARK_CMD_FAIL: ${cmd} failed: ${err}`);
             }
+            // Pacing delay to avoid saturating UART line of low-quality clone adapters
+            await preciseSleep(200);
         }
 
         const avgRtt = successCount > 0 ? (totalRtt / successCount) : 1000;
@@ -61,17 +72,17 @@ export class ProtocolNegotiator {
         // Behavioral capability scoring algorithm
         let score = 100;
         
-        // Deduct for failure rate
-        score -= (benchmarkCommands.length - successCount) * 20;
+        // Deduct for failure rate (4 commands, 25 points each)
+        score -= (benchmarkCommands.length - successCount) * 25;
 
         // Deduct for high latency RTT
         if (avgRtt > 150) {
             score -= Math.min(30, (avgRtt - 150) * 0.1);
         }
 
-        // Deduct if AT@1 is unsupported (strong indicator of clone hardware firmware limitations)
-        if (atAt1Failed) {
-            score -= 15;
+        // Deduct if ATI indicates fake v1.5 firmware
+        if (isV15Clone) {
+            score -= 30;
         }
 
         const finalScore = Math.max(10, Math.min(100, Math.round(score)));
@@ -79,7 +90,8 @@ export class ProtocolNegotiator {
 
         store.setSensorData({ 
             adapterCapabilityScore: finalScore,
-            isCloneDevice: isClone
+            isCloneDevice: isClone,
+            avgRtt: Math.round(avgRtt)
         });
 
         store.addLog(`BENCHMARK_COMPLETE: Calculated score=${finalScore}, isCloneDevice=${isClone}`);
@@ -107,6 +119,9 @@ export class ProtocolNegotiator {
         for (const cmd of commands) {
             try {
                 await OBDCommandQueue.add(cmd, 1500);
+                if (isClone) {
+                    await preciseSleep(250);
+                }
             } catch (err) {
                 store.addLog(`WARN: Profile command [${cmd}] failed: ${err}`);
             }

@@ -1,6 +1,15 @@
 import { create } from 'zustand';
 import { VehicleMake } from '../utils/vinDecoder';
 
+export interface SuggestedVehicleProfile {
+    make: string;
+    model: string;
+    year: number;
+    fuelType: string | null;
+    transmission: string | null;
+    confidence: number;
+}
+
 type ConnectionStatus = 'disconnected' | 'scanning' | 'connecting' | 'connected' | 'error';
 
 export interface TelemetryStats {
@@ -60,6 +69,9 @@ interface BluetoothState {
     lastDeviceId: string | null;
     lastDeviceName: string | null;
     isCloneDevice: boolean;
+    isCodingAllowed: boolean;
+    connectionType: 'BLUETOOTH' | 'WIFI' | 'WIFI_CUSTOM' | null;
+    elmVersionTested: string | null;
     isSgwActive: boolean;
     vehicleMake: VehicleMake | null;
     dtcSyncStatus: 'idle' | 'syncing' | 'success' | 'error';
@@ -67,6 +79,7 @@ interface BluetoothState {
     isAtomicOperationRunning: boolean;
     pendingProRevocation: boolean;
     suggestedBrandFromVin: string | null;
+    suggestedVehicleProfile: SuggestedVehicleProfile | null;
     protocol: string | null;
  
     supportedPids: string[];
@@ -86,7 +99,11 @@ interface BluetoothState {
     structuredLogs: string[];
     connectingDeviceId: string | null;
     paywallContext: string | null;
-
+    connectionStatusTextKey: string | null;
+    connectionStatusTextParams: any | null;
+    adapterFirmware: string | null;
+    avgRtt: number;
+ 
     // Actions
     setStatus: (status: ConnectionStatus) => void;
     setConnectingDeviceId: (id: string | null) => void;
@@ -104,10 +121,13 @@ interface BluetoothState {
     setAdaptationRunning: (active: boolean) => void;
     setPollingActive: (active: boolean) => void;
     setIsCloneDevice: (value: boolean) => void;
+    setIsCodingAllowed: (value: boolean) => void;
     setIsSgwActive: (value: boolean) => void;
     setIsAtomicOperationRunning: (value: boolean) => void;
     setPendingProRevocation: (value: boolean) => void;
     setSuggestedBrandFromVin: (brand: string | null) => void;
+    setSuggestedVehicleProfile: (profile: SuggestedVehicleProfile | null) => void;
+    setConnectionStatusText: (key: string | null, params?: any) => void;
     flushPendingRevocation: () => void;
     triggerPendingRevocation: () => void;
     addLog: (entry: string) => void;
@@ -165,6 +185,9 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     lastDeviceId: null,
     lastDeviceName: null,
     isCloneDevice: false,
+    isCodingAllowed: true,
+    connectionType: null,
+    elmVersionTested: null,
     isSgwActive: false,
     vehicleMake: null,
     dtcSyncStatus: 'idle',
@@ -172,7 +195,10 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     isAtomicOperationRunning: false,
     pendingProRevocation: false,
     suggestedBrandFromVin: null,
+    suggestedVehicleProfile: null,
     protocol: null,
+    adapterFirmware: null,
+    avgRtt: 0,
 
     supportedPids: [],
     guardTime: 100,
@@ -203,6 +229,8 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     structuredLogs: [],
     connectingDeviceId: null,
     paywallContext: null,
+    connectionStatusTextKey: null,
+    connectionStatusTextParams: null,
  
     setStatus: (status) => set({ status }),
     setConnectingDeviceId: (connectingDeviceId) => set({ connectingDeviceId }),
@@ -214,6 +242,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setLastDevice: (lastDeviceName, lastDeviceId) => set({ lastDeviceName, lastDeviceId }),
     setLastResponse: (lastResponse) => set({ lastResponse }),
     setError: (error) => set({ error }),
+    setConnectionStatusText: (key, params = null) => set({ connectionStatusTextKey: key, connectionStatusTextParams: params }),
     setRpm: (rpm) => set({ rpm }),
     setSensorData: (data) => set((state) => {
         const nextData = { ...data };
@@ -271,10 +300,12 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         };
     }),
     setIsCloneDevice: (isCloneDevice) => set({ isCloneDevice }),
+    setIsCodingAllowed: (isCodingAllowed) => set({ isCodingAllowed }),
     setIsSgwActive: (isSgwActive) => set({ isSgwActive }),
     setIsAtomicOperationRunning: (isAtomicOperationRunning) => set({ isAtomicOperationRunning }),
     setPendingProRevocation: (pendingProRevocation) => set({ pendingProRevocation }),
     setSuggestedBrandFromVin: (suggestedBrandFromVin) => set({ suggestedBrandFromVin }),
+    setSuggestedVehicleProfile: (suggestedVehicleProfile) => set({ suggestedVehicleProfile }),
     flushPendingRevocation: () => set({ pendingProRevocation: false }),
     triggerPendingRevocation: () => set({ pendingProRevocation: true }),
     addLog: (entry) => set((state) => {
@@ -337,6 +368,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         catalystTemp: null,
         dtcs: createInitialDtcs(),
         vin: null,
+        suggestedVehicleProfile: null,
         ecuId: null,
         odometer: null,
         distanceSinceCleared: null,
@@ -345,6 +377,9 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         isAdaptationRunning: false,
         isPollingActive: false,
         isCloneDevice: false,
+        isCodingAllowed: true,
+        connectionType: null,
+        elmVersionTested: null,
         isSgwActive: false,
         vehicleMake: null,
         dtcSyncStatus: 'idle',
@@ -353,6 +388,8 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         pendingProRevocation: false,
         suggestedBrandFromVin: null,
         protocol: null,
+        adapterFirmware: null,
+        avgRtt: 0,
 
         supportedPids: [],
         guardTime: 100,

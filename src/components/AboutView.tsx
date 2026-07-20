@@ -288,32 +288,7 @@ export default function AboutView({
   const isPro = usePurchaseStore((state) => state.isPro);
   const language = useAppStore((state) => state.language);
 
-  // Hidden testing backdoor (to be removed on release)
-  const [logoTapCount, setLogoTapCount] = useState(0);
-  const logoTapTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleLogoTap = () => {
-    setLogoTapCount((prev) => {
-      const nextCount = prev + 1;
-      if (nextCount >= 7) {
-        const nextPro = !isPro;
-        useAppStore.getState().setIsBackdoorPro(nextPro);
-        Alert.alert(
-          "MotoCortex Dev Mode", 
-          `PRO Status: ${nextPro ? 'ACTIVE' : 'INACTIVE'}`
-        );
-        return 0;
-      }
-      return nextCount;
-    });
-
-    if (logoTapTimerRef.current) {
-      clearTimeout(logoTapTimerRef.current);
-    }
-    logoTapTimerRef.current = setTimeout(() => {
-      setLogoTapCount(0);
-    }, 2000);
-  };
 
   const toggleInfoAcc = (section: string) => {
     const nextSection = expandedInfoSection === section ? null : section;
@@ -563,7 +538,7 @@ export default function AboutView({
           fontWeight: '900',
           fontFamily: tc.mono,
           letterSpacing: 1,
-          marginLeft: 4,
+          marginStart: 4,
           marginBottom: scaleHeight(2),
         }}>
           {t('info.helpGuide').toUpperCase()}

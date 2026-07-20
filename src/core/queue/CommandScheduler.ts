@@ -61,13 +61,21 @@ export class CommandSchedulerClass {
             const store = useBluetoothStore.getState();
             const safePollIntervalMs = store.guardTime || 100;
             
+            const connectionType = store.connectionType;
+            let actualTimeoutMs = timeoutMs;
+            if (connectionType === 'WIFI' || connectionType === 'WIFI_CUSTOM') {
+                if (actualTimeoutMs > 200) {
+                    actualTimeoutMs = 200;
+                }
+            }
+
             const deadline = priority === 'HIGH_PRIORITY_AD_HOC'
                 ? Date.now() - 1000 // Force earliest deadline for ad-hoc
                 : priority === 'HIGH'
                     ? Date.now() + (safePollIntervalMs * 2)
                     : Date.now() + 2000;
 
-            const item: QueueItem = { command, resolve, reject, priority, deadline, estimatedCostMs, timeoutMs };
+            const item: QueueItem = { command, resolve, reject, priority, deadline, estimatedCostMs, timeoutMs: actualTimeoutMs };
             
             if (this.mode === SchedulerMode.DEGRADED && priority === 'LOW') {
                 reject(new Error('CIRCUIT_BREAKER_ACTIVE: DEGRADED_MODE_BLOCK'));
@@ -185,6 +193,19 @@ export class CommandSchedulerClass {
     public getMode(): SchedulerMode { return this.mode; }
     public getQueueLength(): number { return this.queue.length; }
 
+    public reset() {
+        this.mode = SchedulerMode.NORMAL;
+        this.timeoutCount = 0;
+        this.consecutiveSuccessCount = 0;
+        this.queue = [];
+        this.highRunCount = 0;
+        if (this.activeItem) {
+            try { this.activeItem.reject(new Error('SCHEDULER_RESET')); } catch {}
+            this.activeItem = null;
+        }
+        useBluetoothStore.getState().addLog('CIRCUIT_BREAKER: Scheduler reset to NORMAL mode.');
+    }
+
     public clear(activeError: Error, queueError: Error) {
         const remaining = [...this.queue];
         this.queue = [];
@@ -195,6 +216,9 @@ export class CommandSchedulerClass {
             try { this.activeItem.reject(activeError); } catch {}
             this.activeItem = null;
         }
+        this.mode = SchedulerMode.NORMAL;
+        this.timeoutCount = 0;
+        this.consecutiveSuccessCount = 0;
     }
 }
 

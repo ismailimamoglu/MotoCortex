@@ -8,13 +8,17 @@ import {
   ActivityIndicator,
   Platform,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../../theme';
 import { useResponsive } from '../../hooks/useResponsive';
 import { useBluetooth } from '../../hooks/useBluetooth';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
+import { useTelemetryStore } from '../../store/useTelemetryStore';
 import OBDCommandQueue from '../../api/OBDCommandQueue';
+import VehicleConfirmationModal from './VehicleConfirmationModal';
+import FeatureActivationModal from '../../components/FeatureActivationModal';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -44,6 +48,8 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
     isCloneDevice,
     protocol,
     adapterCapabilityScore,
+    runDiagnostics,
+    clearDiagnostics,
   } = useBluetooth();
 
   const rpm = useBluetoothStore((s) => s.rpm);
@@ -51,6 +57,14 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
   const coolant = useBluetoothStore((s) => s.coolant);
   const throttle = useBluetoothStore((s) => s.throttle);
   const telemetryStats = useBluetoothStore((s) => s.telemetryStats);
+  const dtcs = useBluetoothStore((s) => s.dtcs);
+  
+  // Suggested Profile from VIE
+  const suggestedVehicleProfile = useBluetoothStore((s) => s.suggestedVehicleProfile);
+  const setSuggestedVehicleProfile = useBluetoothStore((s) => s.setSuggestedVehicleProfile);
+
+  // OEM Feature Activation Modal State
+  const [isFeatureModalVisible, setIsFeatureModalVisible] = useState(false);
 
   // FPS Tracker
   const [fps, setFps] = useState(0);
@@ -105,7 +119,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
 
   // ─── Transient Subscription Pattern for Logs ─────────────────────────────
   const [isPaused, setIsPaused] = useState(false);
-  const [logSnapshot, setLogSnapshot] = useState<string[]>(() => useBluetoothStore.getState().logs);
+  const [logSnapshot, setLogSnapshot] = useState<string[]>(() => useBluetoothStore.getState().logs.slice(-50));
   const isPausedRef = useRef(false);
 
   useEffect(() => {
@@ -113,9 +127,11 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
   }, [isPaused]);
 
   useEffect(() => {
+    let lastLen = 0;
     const unsubscribe = useBluetoothStore.subscribe((state) => {
-      if (!isPausedRef.current) {
-        setLogSnapshot(state.logs.slice(0));
+      if (!isPausedRef.current && state.logs.length !== lastLen) {
+        lastLen = state.logs.length;
+        setLogSnapshot(state.logs.slice(-50));
       }
     });
     return () => unsubscribe();
@@ -208,7 +224,9 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
       useBluetoothStore.getState().addLog(`RX: ${resText}`);
     } catch (err: any) {
       const errMsg = err instanceof Error ? err.message : String(err);
-      if (errMsg.includes('BLOCK_COMMAND_VEHICLE_IN_MOTION') || errMsg.includes('HARDWARE_GATE_VIOLATION')) {
+      if (errMsg.includes('DEVICE_NOT_CONNECTED')) {
+        useBluetoothStore.getState().addLog(`ERROR: [NOT CONNECTED] Please connect to OBD adapter first!`);
+      } else if (errMsg.includes('BLOCK_COMMAND_VEHICLE_IN_MOTION') || errMsg.includes('HARDWARE_GATE_VIOLATION')) {
         useBluetoothStore.getState().addLog(`[SECURITY BLOCK]: Command rejected. Vehicle is in motion!`);
       } else {
         useBluetoothStore.getState().addLog(`ERROR: ${errMsg}`);
@@ -216,6 +234,48 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
     } finally {
       setIsSending(false);
     }
+  };
+
+  const handleConfirmProfile = (finalProfile: any) => {
+    const vin = useBluetoothStore.getState().vin || 'UNKNOWN_VIN';
+    
+    // Write confirmed vehicle profile to TelemetryStore active session
+    useTelemetryStore.getState().setActiveSessionVehicle({
+      brand: finalProfile.make,
+      model: finalProfile.model,
+      year: finalProfile.year,
+      vin
+    });
+    
+    useBluetoothStore.getState().addLog(`VIE: User confirmed profile -> ${finalProfile.make} ${finalProfile.model} (${finalProfile.year})`);
+    
+    // Close modal
+    setSuggestedVehicleProfile(null);
+  };
+
+  const handleSendDtcsToCloud = async () => {
+    const telemetryState = useTelemetryStore.getState();
+    const btState = useBluetoothStore.getState();
+    const brand = btState.vehicleMake || 'GENERIC';
+    const model = telemetryState.activeSessionVehicle?.model || 'GENERIC';
+    const year = telemetryState.activeSessionVehicle?.year || new Date().getFullYear();
+    const vin = btState.vin || 'UNKNOWN_VIN';
+
+    telemetryState.enqueueTelemetry({
+      brand,
+      model,
+      year,
+      protocol: btState.protocol || 'ISO',
+      ecu_id: btState.ecuId || 'UNKNOWN_ECU',
+      dtc_codes: btState.dtcs || [],
+      session_hash: 'SANDBOX_SESSION',
+      engine_rpm: btState.rpm !== null ? Math.round(btState.rpm) : 0,
+      coolant_temp: btState.coolant !== null ? btState.coolant : 0.0,
+      throttle_pos: btState.throttle !== null ? btState.throttle : 0.0,
+      is_simulated: false
+    });
+    
+    useBluetoothStore.getState().addLog(`VIE: Manual DTC packet enqueued to local database cache for transmission.`);
   };
 
   // ─── Dynamic Styles ──────────────────────────────────────────────────────
@@ -265,7 +325,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
         fontFamily: MONO,
       },
       headerTitle: {
-        fontSize: scaleFont(12.5), // Lowered from 16 to fit responsive boundaries
+        fontSize: scaleFont(12.5),
         fontWeight: '900' as const,
         color: colors.cyan,
         fontFamily: MONO,
@@ -496,7 +556,11 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
-      <View style={sDyn.container}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined} 
+        style={{ flex: 1 }}
+      >
+        <View style={sDyn.container}>
         {/* Header */}
         <View style={sDyn.header}>
           <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.headerTitle, { flex: 1 }]}>
@@ -511,303 +575,245 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
             )}
           </View>
         </View>
- 
-        {/* Dynamic Connected vs Disconnected State */}
-        {!isConnectedToEcu ? (
-          // DISCONNECTED STATE: Device setup, OBD Health statistics, and full-height raw terminal
-          <View style={{ flex: 1 }}>
-            {/* Connection Status Card */}
-            <View style={sDyn.statusCard}>
-              <View style={sDyn.statusRow}>
-                <Text style={sDyn.statusLabel}>{t('sandbox.connectionStatus', 'Connection Status:')}</Text>
-                <Text style={[sDyn.statusValue, { color: getStatusColor(connectionStatus) }]}>
-                  {getStatusText(connectionStatus).toUpperCase()}
-                </Text>
-              </View>
-              <View style={sDyn.statusRow}>
-                <Text style={sDyn.statusLabel}>{t('sandbox.ecuStatus', 'ECU Status:')}</Text>
-                <Text style={[sDyn.statusValue, { color: getStatusColor(ecuStatus) }]}>
-                  {getStatusText(ecuStatus).toUpperCase()}
-                </Text>
-              </View>
-              {connectionStatus === 'connecting' && (
-                <TouchableOpacity
-                  style={sDyn.cancelConnectBtn}
-                  onPress={disconnect}
-                >
-                  <Text style={sDyn.cancelConnectBtnText}>
-                    {t('connection.cancel', 'İPTAL ET').toUpperCase()}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
- 
-            {/* OBD Health Statistics Card */}
-            <View style={sDyn.statusCard}>
-              <Text style={[sDyn.sectionTitle, { color: colors.amber }]}>📊 {t('obdTerminal.statsTitle', 'OBD SAĞLIK İSTATİSTİKLERİ')}</Text>
-              <View style={{ gap: scaleHeight(4) }}>
-                <View style={sDyn.statusRow}>
-                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                    {t('obdTerminal.connectionProtocol', 'Bağlantı Protokolü:')}
-                  </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
-                    {protocol || t('obdTerminal.none', 'Yok')}
-                  </Text>
-                </View>
-                <View style={sDyn.statusRow}>
-                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                    {t('obdTerminal.hardwareQualityScore', 'Donanım Kalite Skoru:')}
-                  </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: adapterCapabilityScore > 70 ? colors.green : colors.red }]}>
-                    {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? t('obdTerminal.original', 'Orijinal') : t('obdTerminal.clone', 'Klon')})
-                  </Text>
-                </View>
-                <View style={sDyn.statusRow}>
-                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                    {t('obdTerminal.requestResponseCount', 'İstek / Yanıt Sayısı:')}
-                  </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
-                    {telemetryStats.requestsSent} / {telemetryStats.responsesReceived}
-                  </Text>
-                </View>
-                <View style={sDyn.statusRow}>
-                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                    {t('obdTerminal.timeoutCount', 'Zaman Aşımı Adedi:')}
-                  </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.timeoutCount > 0 ? colors.amber : colors.textPri }]}>
-                    {telemetryStats.timeoutCount}
-                  </Text>
-                </View>
-                <View style={sDyn.statusRow}>
-                  <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                    {t('obdTerminal.recoveryCount', 'Hata Kurtarma (Recovery):')}
-                  </Text>
-                  <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.recoveryCount > 0 ? colors.red : colors.textPri }]}>
-                    {telemetryStats.recoveryCount}
-                  </Text>
-                </View>
-              </View>
-            </View>
- 
-            {/* Full height raw terminal with docked custom command TextInput */}
-            <View style={[sDyn.terminalCard, { flex: 1 }]}>
-              <View style={sDyn.terminalHeader}>
-                <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
-                <TouchableOpacity
-                  style={sDyn.pauseBtn}
-                  onPress={() => setIsPaused(!isPaused)}
-                >
-                  <Text style={sDyn.pauseBtnText}>
-                    {isPaused ? t('sandbox.resume', 'RESUME') : t('sandbox.pause', 'PAUSE')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <FlatList
-                data={logSnapshot}
-                keyExtractor={(item, index) => `${index}-${item}`}
-                renderItem={({ item }) => {
-                  const isTx = item.includes('TX:');
-                  const isRx = item.includes('RX:');
-                  const isSecurity = item.includes('[SECURITY BLOCK]') || item.includes('SECURITY BLOCK') || item.includes('ERROR:');
-                  const itemColor = isSecurity ? colors.red : isTx ? colors.purple : isRx ? colors.green : colors.textPri;
-                  return (
-                    <Text style={{
-                      color: itemColor,
-                      fontFamily: MONO,
-                      fontSize: scaleFont(9),
-                      lineHeight: scaleHeight(13),
-                      marginBottom: 2
-                    }}>
-                      {item}
-                    </Text>
-                  );
-                }}
-                inverted={!isPaused}
-                initialNumToRender={20}
-                maxToRenderPerBatch={15}
-                windowSize={5}
-                style={{ flex: 1 }}
-              />
-              <View style={sDyn.inputArea}>
-                <TextInput
-                  style={sDyn.textInput}
-                  placeholder={t('obdTerminal.inputPlaceholder', 'Komut girin...')}
-                  placeholderTextColor={colors.textSec}
-                  value={inputCommand}
-                  onChangeText={setInputCommand}
-                  autoCapitalize="characters"
-                  autoCorrect={false}
-                  onSubmitEditing={handleSendCommand}
-                  returnKeyType="send"
-                />
-                <TouchableOpacity 
-                  style={sDyn.sendBtn}
-                  onPress={handleSendCommand}
-                  disabled={isSending}
-                >
-                  {isSending ? (
-                    <ActivityIndicator size="small" color="#000000" />
-                  ) : (
-                    <Text style={sDyn.sendBtnText}>{t('obdTerminal.sendButton', 'GÖNDER')}</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ) : (
-          // CONNECTED STATE: Telemetry gauges, 20Hz Controls & shrunken raw terminal
-          <View style={{ flex: 1 }}>
-            {/* 4 Telemetry Grids/Tiles */}
-            <View style={sDyn.telemetryGrid}>
-              <View style={[sDyn.tile, { backgroundColor: `${colors.cyan}0f`, borderLeftWidth: 4, borderLeftColor: colors.cyan }]}>
-                <Text style={sDyn.tileHeader}>⚙️ {t('sandbox.rpm', 'Engine RPM').toUpperCase()}</Text>
-                <View style={sDyn.tileValueRow}>
-                  <Text style={[sDyn.tileValue, { color: colors.cyan }]}>
-                    {rpm !== null ? Math.round(rpm) : '--'}
-                  </Text>
-                  {rpm !== null && <Text style={sDyn.tileUnit}>rpm</Text>}
-                </View>
-              </View>
 
-              <View style={[sDyn.tile, { backgroundColor: `${colors.purple}0f`, borderLeftWidth: 4, borderLeftColor: colors.purple }]}>
-                <Text style={sDyn.tileHeader}>🏎️ {t('sandbox.speed', 'Vehicle Speed').toUpperCase()}</Text>
-                <View style={sDyn.tileValueRow}>
-                  <Text style={[sDyn.tileValue, { color: colors.purple }]}>
-                    {speed !== null ? speed : '--'}
-                  </Text>
-                  {speed !== null && <Text style={sDyn.tileUnit}>km/h</Text>}
-                </View>
-              </View>
-
-              <View style={[sDyn.tile, { backgroundColor: `${colors.red}0f`, borderLeftWidth: 4, borderLeftColor: colors.red }]}>
-                <Text style={sDyn.tileHeader}>🌡️ {t('sandbox.coolant', 'Coolant Temp').toUpperCase()}</Text>
-                <View style={sDyn.tileValueRow}>
-                  <Text style={[sDyn.tileValue, { color: colors.red }]}>
-                    {coolant !== null ? coolant : '--'}
-                  </Text>
-                  {coolant !== null && <Text style={sDyn.tileUnit}>°C</Text>}
-                </View>
-              </View>
-
-              <View style={[sDyn.tile, { backgroundColor: `${colors.amber}0f`, borderLeftWidth: 4, borderLeftColor: colors.amber }]}>
-                <Text style={sDyn.tileHeader}>🔌 {t('sandbox.throttle', 'Throttle Position').toUpperCase()}</Text>
-                <View style={sDyn.tileValueRow}>
-                  <Text style={[sDyn.tileValue, { color: colors.amber }]}>
-                    {throttle !== null ? throttle : '--'}
-                  </Text>
-                  {throttle !== null && <Text style={sDyn.tileUnit}>%</Text>}
-                </View>
-              </View>
+        {/* Unified Layout: Connection Status, OBD Health, and Full-Height Terminal */}
+        <View style={{ flex: 1 }}>
+          {/* Connection Status Card */}
+          <View style={sDyn.statusCard}>
+            <View style={sDyn.statusRow}>
+              <Text style={sDyn.statusLabel}>{t('sandbox.connectionStatus', 'Connection Status:')}</Text>
+              <Text style={[sDyn.statusValue, { color: getStatusColor(connectionStatus) }]}>
+                {getStatusText(connectionStatus).toUpperCase()}
+              </Text>
             </View>
-
-            {/* Action Controls */}
-            <View style={sDyn.actionContainer}>
+            <View style={sDyn.statusRow}>
+              <Text style={sDyn.statusLabel}>{t('sandbox.ecuStatus', 'ECU Status:')}</Text>
+              <Text style={[sDyn.statusValue, { color: getStatusColor(ecuStatus) }]}>
+                {getStatusText(ecuStatus).toUpperCase()}
+              </Text>
+            </View>
+            {connectionStatus === 'connecting' && (
               <TouchableOpacity
-                style={[
-                  sDyn.stressBtn,
-                  {
-                    backgroundColor: isStressActive ? `${colors.red}1a` : colors.cyan,
-                    borderWidth: isStressActive ? 1.2 : 0,
-                    borderColor: isStressActive ? colors.red : 'transparent',
-                  },
-                ]}
-                onPress={() => {
-                  if (isStressActive) {
-                    stopTelemetry();
-                  } else {
-                    startTelemetry(['0C', '0D', '05', '11'], 50);
-                  }
-                }}
+                style={sDyn.cancelConnectBtn}
+                onPress={disconnect}
               >
-                <Text
-                  style={[
-                    sDyn.stressBtnText,
-                    { color: isStressActive ? colors.red : '#000000' },
-                  ]}
-                >
-                  {isStressActive
-                    ? t('sandbox.stressBtnStop', 'Stop Telemetry Loop').toUpperCase()
-                    : t('sandbox.stressBtnStart', 'Start 20Hz Stress').toUpperCase()}
+                <Text style={sDyn.cancelConnectBtnText}>
+                  {t('connection.cancel', 'CANCEL').toUpperCase()}
                 </Text>
               </TouchableOpacity>
-
+            )}
+            {isConnectedToEcu && (
               <TouchableOpacity
-                style={[sDyn.stressBtn, { backgroundColor: `${colors.red}20`, borderWidth: 1.2, borderColor: colors.red }]}
+                style={[sDyn.cancelConnectBtn, { backgroundColor: `${colors.red}20`, borderColor: colors.red, marginTop: scaleHeight(8) }]}
                 onPress={performTeardown}
               >
-                <Text style={[sDyn.stressBtnText, { color: colors.red }]}>
+                <Text style={[sDyn.cancelConnectBtnText, { color: colors.red }]}>
                   🔌 {t('sandbox.stopDisconnect', 'Stop / Disconnect').toUpperCase()}
                 </Text>
               </TouchableOpacity>
-            </View>
+            )}
+          </View>
 
-            {/* Shrunken terminal with docked custom command TextInput */}
-            <View style={[sDyn.terminalCard, { height: scaleHeight(220), flex: 0 }]}>
-              <View style={sDyn.terminalHeader}>
-                <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
-                <TouchableOpacity
-                  style={sDyn.pauseBtn}
-                  onPress={() => setIsPaused(!isPaused)}
-                >
-                  <Text style={sDyn.pauseBtnText}>
-                    {isPaused ? t('sandbox.resume', 'RESUME') : t('sandbox.pause', 'PAUSE')}
-                  </Text>
-                </TouchableOpacity>
+          {/* OBD Health Statistics Card */}
+          <View style={sDyn.statusCard}>
+            <Text style={[sDyn.sectionTitle, { color: colors.amber }]}>📊 {t('obdTerminal.statsTitle', 'OBD HEALTH STATISTICS')}</Text>
+            <View style={{ gap: scaleHeight(4) }}>
+              <View style={sDyn.statusRow}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                  {t('obdTerminal.connectionProtocol', 'Connection Protocol:')}
+                </Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
+                  {protocol || t('obdTerminal.none', 'None')}
+                </Text>
               </View>
-              <FlatList
-                data={logSnapshot}
-                keyExtractor={(item, index) => `${index}-${item}`}
-                renderItem={({ item }) => {
-                  const isTx = item.includes('TX:');
-                  const isRx = item.includes('RX:');
-                  const isSecurity = item.includes('[SECURITY BLOCK]') || item.includes('SECURITY BLOCK') || item.includes('ERROR:');
-                  const itemColor = isSecurity ? colors.red : isTx ? colors.purple : isRx ? colors.green : colors.textPri;
-                  return (
-                    <Text style={{
-                      color: itemColor,
-                      fontFamily: MONO,
-                      fontSize: scaleFont(9),
-                      lineHeight: scaleHeight(13),
-                      marginBottom: 2
-                    }}>
-                      {item}
-                    </Text>
-                  );
-                }}
-                inverted={!isPaused}
-                initialNumToRender={15}
-                maxToRenderPerBatch={10}
-                windowSize={3}
-                style={{ flex: 1 }}
-              />
-              <View style={sDyn.inputArea}>
-                <TextInput
-                  style={sDyn.textInput}
-                  placeholder={t('obdTerminal.inputPlaceholder', 'Komut girin...')}
-                  placeholderTextColor={colors.textSec}
-                  value={inputCommand}
-                  onChangeText={setInputCommand}
-                  autoCapitalize="characters"
-                  autoCorrect={false}
-                  onSubmitEditing={handleSendCommand}
-                  returnKeyType="send"
-                />
-                <TouchableOpacity 
-                  style={sDyn.sendBtn}
-                  onPress={handleSendCommand}
-                  disabled={isSending}
-                >
-                  {isSending ? (
-                    <ActivityIndicator size="small" color="#000000" />
-                  ) : (
-                    <Text style={sDyn.sendBtnText}>{t('obdTerminal.sendButton', 'GÖNDER')}</Text>
-                  )}
-                </TouchableOpacity>
+              <View style={sDyn.statusRow}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                  {t('obdTerminal.hardwareQualityScore', 'Hardware Quality Score:')}
+                </Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: adapterCapabilityScore > 70 ? colors.green : colors.red }]}>
+                  {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? t('obdTerminal.original', 'Original') : t('obdTerminal.clone', 'Clone')})
+                </Text>
+              </View>
+              <View style={sDyn.statusRow}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                  {t('obdTerminal.requestResponseCount', 'Request / Response Count:')}
+                </Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
+                  {telemetryStats.requestsSent} / {telemetryStats.responsesReceived}
+                </Text>
+              </View>
+              <View style={sDyn.statusRow}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                  {t('obdTerminal.timeoutCount', 'Timeout Count:')}
+                </Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.timeoutCount > 0 ? colors.amber : colors.textPri }]}>
+                  {telemetryStats.timeoutCount}
+                </Text>
+              </View>
+              <View style={sDyn.statusRow}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
+                  {t('obdTerminal.recoveryCount', 'Error Recovery (Recovery):')}
+                </Text>
+                <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.recoveryCount > 0 ? colors.red : colors.textPri }]}>
+                  {telemetryStats.recoveryCount}
+                </Text>
               </View>
             </View>
           </View>
-        )}
+
+          {/* DTC (Diagnostic Trouble Codes) Card */}
+          <View style={sDyn.statusCard}>
+            <Text style={[sDyn.sectionTitle, { color: colors.red }]}>⚠️ {t('sandbox.dtcTitle', 'DTC DIAGNOSTICS & FAULT CODES')}</Text>
+            
+            <View style={{ marginBottom: scaleHeight(12) }}>
+              {dtcs.length === 0 ? (
+                <Text style={{ color: colors.green, fontSize: scaleFont(11), fontWeight: '700', fontFamily: MONO }}>
+                  ✅ {t('sandbox.noDtcs', 'NO DTC CODES FOUND IN ECU')}
+                </Text>
+              ) : (
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleWidth(6), marginVertical: scaleHeight(6) }}>
+                  {dtcs.map((code) => (
+                    <View key={code} style={{ backgroundColor: `${colors.red}18`, borderWidth: 1, borderColor: colors.red, borderRadius: scaleMod(6), paddingHorizontal: scaleWidth(8), paddingVertical: scaleHeight(4) }}>
+                      <Text style={{ color: colors.red, fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO }}>{code}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+
+            <View style={{ flexDirection: 'row', gap: scaleWidth(8) }}>
+              <TouchableOpacity
+                style={{ flex: 1, backgroundColor: `${colors.cyan}15`, borderWidth: 1.2, borderColor: colors.cyan, borderRadius: scaleMod(8), paddingVertical: scaleHeight(8), alignItems: 'center' }}
+                onPress={runDiagnostics}
+              >
+                <Text style={{ color: colors.cyan, fontWeight: '800', fontSize: scaleFont(10.5), fontFamily: MONO }}>
+                  {t('sandbox.readDtcs', 'READ DTC')}
+                </Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={{ flex: 1, backgroundColor: `${colors.red}15`, borderWidth: 1.2, borderColor: colors.red, borderRadius: scaleMod(8), paddingVertical: scaleHeight(8), alignItems: 'center' }}
+                onPress={clearDiagnostics}
+              >
+                <Text style={{ color: colors.red, fontWeight: '800', fontSize: scaleFont(10.5), fontFamily: MONO }}>
+                  {t('sandbox.clearDtcs', 'CLEAR DTC')}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  { flex: 1.2, borderRadius: scaleMod(8), paddingVertical: scaleHeight(8), alignItems: 'center', justifyContent: 'center' },
+                  dtcs.length === 0 ? { backgroundColor: `${colors.cyan}44` } : { backgroundColor: colors.cyan }
+                ]}
+                onPress={handleSendDtcsToCloud}
+                disabled={dtcs.length === 0}
+              >
+                <Text style={{ color: dtcs.length === 0 ? colors.textSec : '#000000', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: MONO }}>
+                  🚀 {t('sandbox.sendDtcs', 'SEND')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* OEM Gizli Özellik Açma & UDS Coding Button */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: `${colors.cyan}20`,
+              borderColor: colors.cyan,
+              borderWidth: 1.5,
+              borderRadius: scaleMod(10),
+              paddingVertical: scaleHeight(12),
+              alignItems: 'center',
+              marginBottom: scaleHeight(12)
+            }}
+            onPress={() => setIsFeatureModalVisible(true)}
+          >
+            <Text style={{ color: colors.cyan, fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO, letterSpacing: 0.5 }}>
+              ⚡ {t('bento.featureCoding', 'UNLOCK HIDDEN FEATURES & UDS CODING').toUpperCase()}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Full height raw terminal with docked custom command TextInput */}
+          <View style={[sDyn.terminalCard, { flex: 1 }]}>
+            <View style={sDyn.terminalHeader}>
+              <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
+              <TouchableOpacity
+                style={sDyn.pauseBtn}
+                onPress={() => setIsPaused(!isPaused)}
+              >
+                <Text style={sDyn.pauseBtnText}>
+                  {isPaused ? t('sandbox.resume', 'RESUME') : t('sandbox.pause', 'PAUSE')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={logSnapshot}
+              keyExtractor={(item, index) => `${index}-${item}`}
+              renderItem={({ item }) => {
+                const isTx = item.includes('TX:');
+                const isRx = item.includes('RX:');
+                const isSecurity = item.includes('[SECURITY BLOCK]') || item.includes('SECURITY BLOCK') || item.includes('ERROR:');
+                const itemColor = isSecurity ? '#f87171' : isTx ? '#d8b4fe' : isRx ? '#4ade80' : '#f1f5f9';
+                return (
+                  <Text style={{
+                    color: itemColor,
+                    fontFamily: MONO,
+                    fontSize: scaleFont(9),
+                    lineHeight: scaleHeight(13),
+                    marginBottom: 2
+                  }}>
+                    {item}
+                  </Text>
+                );
+              }}
+              inverted={!isPaused}
+              initialNumToRender={20}
+              maxToRenderPerBatch={15}
+              windowSize={5}
+              style={{ flex: 1 }}
+            />
+            <View style={sDyn.inputArea}>
+              <TextInput
+                style={sDyn.textInput}
+                placeholder={t('obdTerminal.inputPlaceholder', 'Enter command...')}
+                placeholderTextColor={colors.textSec}
+                value={inputCommand}
+                onChangeText={setInputCommand}
+                autoCapitalize="characters"
+                autoCorrect={false}
+                onSubmitEditing={handleSendCommand}
+                returnKeyType="send"
+              />
+              <TouchableOpacity 
+                style={sDyn.sendBtn}
+                onPress={handleSendCommand}
+                disabled={isSending}
+              >
+                {isSending ? (
+                  <ActivityIndicator size="small" color="#000000" />
+                ) : (
+                  <Text style={sDyn.sendBtnText}>{t('obdTerminal.sendButton', 'SEND')}</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </View>
+
+      {/* Vehicle Confirmation Modal with Language Selector */}
+      <VehicleConfirmationModal
+        visible={!!suggestedVehicleProfile}
+        profile={suggestedVehicleProfile}
+        onConfirm={handleConfirmProfile}
+        onCancel={() => setSuggestedVehicleProfile(null)}
+      />
+
+      {/* OEM Feature Activation & Long Coding Modal */}
+      <FeatureActivationModal
+        visible={isFeatureModalVisible}
+        onClose={() => setIsFeatureModalVisible(false)}
+      />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

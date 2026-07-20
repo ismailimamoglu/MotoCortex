@@ -102,3 +102,12 @@ jest.mock('expo-sqlite', () => {
     openDatabaseSync: jest.fn(() => mockDb),
   };
 });
+
+jest.mock('react-native-fs', () => ({
+  CachesDirectoryPath: '/mock/caches',
+  DocumentDirectoryPath: '/mock/documents',
+  exists: jest.fn().mockResolvedValue(true),
+  readFile: jest.fn().mockResolvedValue('{}'),
+  writeFile: jest.fn().mockResolvedValue(true),
+  unlink: jest.fn().mockResolvedValue(true),
+}));

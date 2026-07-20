@@ -12,10 +12,16 @@ export async function sha256(ascii: string): Promise<string> {
 }
 
 /**
- * Pure JavaScript UUID v4 generator.
- * Standard RFC4122 compliance.
+ * Cryptographically secure UUID v4 generator leveraging expo-crypto.
  */
 export function generateUuid(): string {
+  try {
+    if (typeof Crypto.randomUUID === 'function') {
+      return Crypto.randomUUID();
+    }
+  } catch (e) {
+    // Fallback if native CSPRNG is unavailable
+  }
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;

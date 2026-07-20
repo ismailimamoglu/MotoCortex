@@ -221,7 +221,7 @@ export default function ContextualPaywallModal() {
                     <View style={sDyn.handle} />
                     <Text style={sDyn.title}>👑 {t('paywall.crownBadge')}</Text>
                     <Text style={sDyn.desc}>
-                        {t('paywall.contextualDesc', 'Bu arıza kodunun motor üzerindeki kritik risklerini, olası tamir maliyetlerini ve ayrıntılı çözüm yönergelerini görmek için PRO paketine yükseltin.')}
+                        {t('paywall.contextualDesc', 'Upgrade to PRO to see critical risks of this trouble code on the engine, potential repair costs, and detailed solution guidelines.')}
                     </Text>
                     
                     <View style={sDyn.codeBox}>
@@ -229,24 +229,24 @@ export default function ContextualPaywallModal() {
                     </View>
 
                     <TouchableOpacity style={sDyn.option} onPress={() => handlePurchase('weekly')} disabled={isLoading}>
-                        <Text style={sDyn.optionTitle}>{t('paywall.weekly', 'Haftalık Üyelik')}</Text>
+                        <Text style={sDyn.optionTitle}>{t('paywall.weekly', 'Weekly Subscription')}</Text>
                         <Text style={sDyn.optionPrice}>{prices.weekly}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={sDyn.option} onPress={() => handlePurchase('monthly')} disabled={isLoading}>
-                        <Text style={sDyn.optionTitle}>{t('paywall.monthly', 'Aylık Üyelik')}</Text>
+                        <Text style={sDyn.optionTitle}>{t('paywall.monthly', 'Monthly Subscription')}</Text>
                         <Text style={sDyn.optionPrice}>{prices.monthly}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={sDyn.option} onPress={() => handlePurchase('yearly')} disabled={isLoading}>
-                        <Text style={sDyn.optionTitle}>{t('paywall.yearly', 'Yıllık Üyelik')}</Text>
+                        <Text style={sDyn.optionTitle}>{t('paywall.yearly', 'Yearly Subscription')}</Text>
                         <Text style={sDyn.optionPrice}>{prices.yearly}</Text>
                     </TouchableOpacity>
 
                     {isLoading && <ActivityIndicator color={colors.purple} style={{ marginTop: 10 }} />}
 
                     <TouchableOpacity style={sDyn.closeBtn} onPress={clearPaywallContext}>
-                        <Text style={sDyn.closeBtnText}>{t('common.cancel', 'İptal')}</Text>
+                        <Text style={sDyn.closeBtnText}>{t('common.cancel', 'Cancel')}</Text>
                     </TouchableOpacity>
                 </TouchableOpacity>
             </TouchableOpacity>

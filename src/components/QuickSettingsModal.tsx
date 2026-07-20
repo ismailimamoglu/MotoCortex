@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Modal, TouchableOpacity, Platform, ScrollView, 
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import * as Clipboard from 'expo-clipboard';
-import { useAppStore, ThemeMode, AppLanguage } from '../store/useAppStore';
+import { useAppStore, AppLanguage } from '../store/useAppStore';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { useBluetoothStore } from '../store/useBluetoothStore';
@@ -18,8 +18,6 @@ interface QuickSettingsModalProps {
 
 function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconnect }: QuickSettingsModalProps) {
   const { t } = useTranslation();
-  const theme = useAppStore((state) => state.theme);
-  const setTheme = useAppStore((state) => state.setTheme);
   const language = useAppStore((state) => state.language);
   const setLanguage = useAppStore((state) => state.setLanguage);
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
@@ -67,10 +65,7 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
     }
   };
 
-  const themes: { label: string; value: ThemeMode; icon: string }[] = [
-    { label: t('bento.settings.darkMode', 'Dark Mode'), value: 'dark', icon: '🌙' },
-    { label: t('bento.settings.lightMode', 'Light Mode'), value: 'light', icon: '☀️' },
-  ];
+
 
   const languagesList = [
     { label: 'English', value: 'en', flag: '🇬🇧' },
@@ -230,41 +225,9 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
           showsVerticalScrollIndicator={false} 
           contentContainerStyle={{ paddingBottom: isTablet ? scaleHeight(24) : (Platform.OS === 'ios' ? insets.bottom + scaleHeight(24) : scaleHeight(24)) }}
         >
-          {/* Section 1: Theme Selection */}
-          <Text allowFontScaling={false} style={[sDyn.sectionTitle, { color: colors.textSec }]}>{t('bento.settings.themeAppearance', 'THEME APPEARANCE')}</Text>
-          <View style={sDyn.btnGrid}>
-            {themes.map((item) => {
-              const isActive = theme === item.value;
-              return (
-                <TouchableOpacity
-                  key={item.value}
-                  style={[
-                    sDyn.optionBtn,
-                    { backgroundColor: `${colors.textPri}05`, borderColor: `${colors.textPri}0D` },
-                    isActive && { backgroundColor: `${colors.cyan}14`, borderColor: colors.cyan },
-                  ]}
-                  onPress={() => setTheme(item.value)}
-                  activeOpacity={0.4}
-                >
-                  <Text allowFontScaling={false} style={sDyn.optionIcon}>{item.icon}</Text>
-                  <Text
-                    allowFontScaling={false}
-                    style={[
-                      sDyn.optionLabel,
-                      { color: colors.textPri },
-                      isActive && { color: colors.cyan },
-                    ]}
-                  >
-                    {item.label}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
           {/* Section 2: Language Selection */}
           <Text allowFontScaling={false} style={[sDyn.sectionTitle, { color: colors.textSec, marginTop: scaleHeight(18) }]}>
-            {t('bento.settings.language', 'LANGUAGE / DİL / SPRACHE')}
+            {t('bento.settings.language', 'Language')}
           </Text>
           <TouchableOpacity
             style={{
@@ -293,7 +256,7 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
 
           {/* Section 3: Hardware Health Info */}
           <Text allowFontScaling={false} style={[sDyn.sectionTitle, { color: colors.textSec, marginTop: scaleHeight(18) }]}>
-            {t('bento.settings.hardwareHealth', 'DONANIM SAĞLIK BİLGİSİ')}
+            {t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO')}
           </Text>
           <View style={{
             backgroundColor: `${colors.textPri}05`,
@@ -304,9 +267,9 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
             gap: scaleMod(8)
           }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.connectionType', 'Bağlantı Tipi:')}</Text>
+               <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.connectionType', 'Connection Type:')}</Text>
               <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textPri, fontFamily: MONO, fontWeight: '700' }}>
-                {connectionStatus === 'connected' ? 'BLE' : t('bento.settings.noConnection', 'Bağlantı Yok')}
+                {connectionStatus === 'connected' ? 'BLE' : t('bento.settings.noConnection', 'No Connection')}
               </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -324,36 +287,18 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
                 fontWeight: '700' 
               }}>
                 {connectionStatus === 'connected' 
-                  ? (isCloneDevice ? t('bento.settings.safeMode', 'Güvenli Mod / Clone Adaptör') : t('bento.settings.original', 'Orijinal')) 
-                  : t('bento.settings.deviceNotConnected', 'Cihaz Bağlı Değil')}
+                  ? (isCloneDevice ? t('bento.settings.safeMode', 'Safe Mode / Clone Adapter') : t('bento.settings.original', 'Original')) 
+                  : t('bento.settings.deviceNotConnected', 'Device Not Connected')}
               </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.pollingRate', 'Sorgu Hızı:')}</Text>
+              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.pollingRate', 'Polling Rate:')}</Text>
               <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textPri, fontFamily: MONO, fontWeight: '700' }}>
                 {connectionStatus === 'connected' 
-                  ? (isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Düşük)') : t('bento.settings.pollingHigh', '4 Hz (Yüksek)')) 
+                  ? (isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Low)') : t('bento.settings.pollingHigh', '4 Hz (High)')) 
                   : t('bento.settings.pollingZero', '0 Hz')}
               </Text>
             </View>
-
-            {/* Separator line */}
-            <View style={{ height: 1, backgroundColor: colors.border, marginVertical: scaleHeight(4) }} />
-
-            {/* User ID Row */}
-            <TouchableOpacity 
-              style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: scaleHeight(2) }}
-              onPress={copyToClipboard}
-              activeOpacity={0.4}
-            >
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO, flexShrink: 0 }}>{t('bento.settings.userIdLabel', 'User ID:')}</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(4), flex: 1, justifyContent: 'flex-end', marginLeft: scaleWidth(12) }}>
-                <Text allowFontScaling={false} style={{ fontSize: scaleFont(9.5), color: colors.cyan, fontFamily: MONO, fontWeight: '700', flexShrink: 1 }} numberOfLines={1} ellipsizeMode="tail">
-                  {appUserId || t('bento.settings.none', 'None')}
-                </Text>
-                {!!appUserId && <Text allowFontScaling={false} style={{ fontSize: scaleFont(11), color: colors.cyan }}>📋</Text>}
-              </View>
-            </TouchableOpacity>
           </View>
 
           {/* Section 4: Community & Support */}
@@ -405,7 +350,7 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
                 activeOpacity={0.4}
               >
                 <Text allowFontScaling={false} style={sDyn.optionIcon}>🔌</Text>
-                <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.red }]}>{t('connection.disconnect', 'BAĞLANTIYI KES')}</Text>
+                <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.red }]}>{t('connection.disconnect', 'DISCONNECT')}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -437,7 +382,7 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
           <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
             <TouchableOpacity onPress={() => setIsLangModalOpen(false)} style={sDyn.cancelBtn}>
               <Text allowFontScaling={false} style={[sDyn.cancelText, { color: colors.cyan }]}>
-                {`← ${t('common.back', 'GERİ').toUpperCase()}`}
+                {`← ${t('common.back', 'BACK').toUpperCase()}`}
               </Text>
             </TouchableOpacity>
             <Text allowFontScaling={false} style={[sDyn.headerTitle, { color: colors.textPri }]}>

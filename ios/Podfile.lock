@@ -259,6 +259,10 @@ PODS:
     - ExpoModulesCore
   - ExpoSharing (13.0.1):
     - ExpoModulesCore
+  - ExpoSplashScreen (0.29.24):
+    - ExpoModulesCore
+  - ExpoSQLite (15.1.4):
+    - ExpoModulesCore
   - EXStructuredHeaders (4.0.0)
   - EXUpdates (0.27.5):
     - DoubleConversion
@@ -394,6 +398,8 @@ PODS:
   - hermes-engine (0.76.9):
     - hermes-engine/Pre-built (= 0.76.9)
   - hermes-engine/Pre-built (0.76.9)
+  - MotoCortexOBDModule (1.0.0):
+    - ExpoModulesCore
   - MultiplatformBleAdapter (0.2.0)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
@@ -2193,6 +2199,8 @@ DEPENDENCIES:
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSecureStore (from `../node_modules/expo-secure-store/ios`)
   - ExpoSharing (from `../node_modules/expo-sharing/ios`)
+  - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
+  - ExpoSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXStructuredHeaders (from `../node_modules/expo-structured-headers/ios`)
   - EXUpdates (from `../node_modules/expo-updates/ios`)
   - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
@@ -2201,6 +2209,7 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - MotoCortexOBDModule (from `../modules/motocortex-obd/ios`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2338,6 +2347,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-secure-store/ios"
   ExpoSharing:
     :path: "../node_modules/expo-sharing/ios"
+  ExpoSplashScreen:
+    :path: "../node_modules/expo-splash-screen/ios"
+  ExpoSQLite:
+    :path: "../node_modules/expo-sqlite/ios"
   EXStructuredHeaders:
     :path: "../node_modules/expo-structured-headers/ios"
   EXUpdates:
@@ -2355,6 +2368,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2024-11-12-RNv0.76.2-5b4aa20c719830dcf5684832b89a6edb95ac3d64
+  MotoCortexOBDModule:
+    :path: "../modules/motocortex-obd/ios"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -2514,6 +2529,8 @@ SPEC CHECKSUMS:
   ExpoModulesCore: 2d8d1c8e238bd5e1448b06c284ac896b162fb856
   ExpoSecureStore: 9a3665d7161dd1031be386e278bffd623658f316
   ExpoSharing: 849a5ce9985c22598c16ec027e32969be8062e8e
+  ExpoSplashScreen: 399ee9f85b6c8a61b965e13a1ecff8384db591c2
+  ExpoSQLite: 10fceac6748e9e8f010c70733e0e704fa67399ab
   EXStructuredHeaders: 09c70347b282e3d2507e25fb4c747b1b885f87f6
   EXUpdates: 7f02216fdfb15bb4369c2b4e386799b6f6c2c045
   EXUpdatesInterface: 7c977640bdd8b85833c19e3959ba46145c5719db
@@ -2534,6 +2551,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   hermes-engine: 9e868dc7be781364296d6ee2f56d0c1a9ef0bb11
+  MotoCortexOBDModule: 761784817feb5076173f09d8e79435cd797f5b39
   MultiplatformBleAdapter: b1fddd0d499b96b607e00f0faa8e60648343dc1d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47

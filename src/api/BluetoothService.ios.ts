@@ -81,6 +81,8 @@ class BluetoothServiceIOS implements IBluetoothService {
     private bleSubscription: any | null = null;
     private bleDataBuffer: string = '';
     private iosBleBuffer: string = '';
+    private isDraining: boolean = false;
+    private drainTimeout: any = null;
 
     private dataListener: DataListener | null = null;
     private disconnectCallback: DisconnectCallback | null = null;
@@ -350,6 +352,7 @@ class BluetoothServiceIOS implements IBluetoothService {
     }
 
     private processBleChunk(chunk: string) {
+        if (this.isDraining) return;
         Logger.log('BLE_READ_CHUNK_RAW', chunk);
         this.iosBleBuffer += chunk;
         while (this.iosBleBuffer.includes('>')) {
@@ -405,6 +408,11 @@ class BluetoothServiceIOS implements IBluetoothService {
     clearBuffer() {
         this.bleDataBuffer = '';
         this.iosBleBuffer = '';
+        this.isDraining = true;
+        if (this.drainTimeout) clearTimeout(this.drainTimeout);
+        this.drainTimeout = setTimeout(() => {
+            this.isDraining = false;
+        }, 2000);
     }
 
     private startConnectionMonitor() {

@@ -33,7 +33,7 @@ export const darkTheme: ThemeColors = {
   green: '#00ff88',
   red: '#ff3b3b',
   amber: '#ffb800',
-  purple: '#8b5cf6',
+  purple: '#00d2c4',
   textPri: '#e8eaed',
   textSec: '#a0a0a0',
   textTertiary: '#9ca3af',
@@ -55,7 +55,7 @@ export const lightTheme: ThemeColors = {
   green: '#059669',
   red: '#dc2626',
   amber: '#d97706',
-  purple: '#7c3aed',
+  purple: '#0d9488',
   textPri: '#111827',
   textSec: '#4b5563',
   textTertiary: '#9ca3af',
@@ -69,7 +69,7 @@ export const lightTheme: ThemeColors = {
 };
 
 export function getTheme(mode: 'dark' | 'light'): ThemeColors {
-  return mode === 'light' ? lightTheme : darkTheme;
+  return lightTheme;
 }
 
 /**
@@ -77,6 +77,5 @@ export function getTheme(mode: 'dark' | 'light'): ThemeColors {
  * Every component should use this as the single source of truth for colors.
  */
 export function useThemeColors(): ThemeColors {
-  const theme = useAppStore((state) => state.theme);
-  return getTheme(theme);
+  return lightTheme;
 }

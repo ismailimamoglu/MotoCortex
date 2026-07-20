@@ -83,6 +83,8 @@ class BluetoothServiceAndroid implements IBluetoothService {
     private bleWriteCharacteristic: Characteristic | null = null;
     private bleSubscription: any | null = null;
     private bleDataBuffer: string = '';
+    private isDraining: boolean = false;
+    private drainTimeout: any = null;
 
     private dataSubscription: any | null = null;
     private dataListener: DataListener | null = null;
@@ -215,7 +217,11 @@ class BluetoothServiceAndroid implements IBluetoothService {
 
     async connect(deviceId: string): Promise<boolean> {
         this.isManualDisconnect = false;
-        
+        try {
+            await RNBluetoothClassic.cancelDiscovery();
+        } catch (e) {
+            console.log('[BluetoothService] cancelDiscovery failed/ignored:', e);
+        }
         const isBleOrSim = deviceId.includes('BLE') || deviceId.includes('SIM');
 
         const connectionPromise = (async () => {
@@ -358,6 +364,7 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     private processBleChunk(chunk: string) {
+        if (this.isDraining) return;
         Logger.log('BLE_READ_CHUNK_RAW', chunk);
         this.bleDataBuffer += chunk;
         while (this.bleDataBuffer.includes('>')) {
@@ -417,11 +424,17 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
     clearBuffer() {
         this.bleDataBuffer = '';
+        this.isDraining = true;
+        if (this.drainTimeout) clearTimeout(this.drainTimeout);
+        this.drainTimeout = setTimeout(() => {
+            this.isDraining = false;
+        }, 2000);
     }
 
     private startListening() {
         if (!this.connectedDevice) return;
         this.dataSubscription = this.connectedDevice.onDataReceived((event) => {
+            if (this.isDraining) return;
             Logger.log('BT_READ_CHUNK', event.data);
             if (this.dataListener) {
                 this.dataListener(event.data);

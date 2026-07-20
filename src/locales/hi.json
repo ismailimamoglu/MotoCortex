@@ -60,23 +60,25 @@
             "supportEmailBody": "हेलो मोटोकॉर्टेक्स सपोर्ट टीम, --- आवेदन सूचना --- उपयोगकर्ता आईडी:{{userId}}लाइसेंस स्थिति:{{license}}लिंक:{{connection}}डिवाइस स्थिति:{{deviceStatus}}--- आपका संदेश ---",
             "deviceName": "डिवाइस का नाम:",
             "simulationObd": "सिमुलेशन OBD",
-            "noLogsToShare": "There are no diagnostic logs to share.",
-            "obdHealthTitle": "",
-            "txRequests": "",
-            "rxResponses": "",
-            "timeouts": "",
-            "recoveries": "",
-            "avgLatency": "",
-            "lastErrorLabel": "",
-            "shareReport": "",
-            "diagnosticLog": "",
-            "noTraffic": "",
-            "shareError": ""
+            "obdHealthTitle": "OBD HEALTH STATISTICS",
+            "txRequests": "Requests Sent (TX):",
+            "rxResponses": "Responses Received (RX):",
+            "timeouts": "Timeouts:",
+            "recoveries": "Recovery Attempts:",
+            "avgLatency": "Avg. Latency:",
+            "lastErrorLabel": "Last Error:",
+            "shareReport": "SHARE DIAGNOSTICS REPORT",
+            "diagnosticLog": "DIAGNOSTIC LOG (LAST 500 ROWS)",
+            "noTraffic": "No streaming traffic yet...",
+            "shareError": "Sharing Error",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "आवेदन सूचना एवं मार्गदर्शिका",
         "supportDesc": "सहायता और संपर्क",
         "shareDesc": "ऐप साझा करें",
-        "noDtc": "साफ़"
+        "noDtc": "साफ़",
+        "featureCoding": "छिपी हुई सुविधाओं को अनलॉक करें और UDS कोडिंग",
+        "featureCodingSub": "VAG, BMW, Renault ISO 14229 Feature Unlocking"
     },
     "common": {
         "cancel": "रद्द करें",
@@ -116,8 +118,13 @@
         "close": "बंद करें",
         "share": "SHARE",
         "info": "Info",
-        "enableDemoMode": "",
-        "exitDemoMode": "",
+        "enableDemoMode": "ENABLE DEMO MODE",
+        "exitDemoMode": "EXIT DEMO MODE",
+        "supported": "समर्थित",
+        "copied": "कॉपी किया गया",
+        "cancelBtn": "रद्द करें",
+        "retry": "कनेक्शन पुनः प्रयास करें",
+        "changeType": "कनेक्शन प्रकार बदलें",
         "revocationTitle": "Subscription Cancelled",
         "revocationMsg": "Your access to PRO features has been terminated because your subscription was cancelled or refunded."
     },
@@ -154,7 +161,8 @@
         "errorTitle": "उत्पाद लोड होने में विफल",
         "errorDesc": "उत्पादों को लोड करते समय एक त्रुटि हुई, कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।",
         "retryBtn": "पुनः प्रयास करें",
-        "loadingPrices": "कीमतें लोड हो रही हैं..."
+        "loadingPrices": "कीमतें लोड हो रही हैं...",
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnosis Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
     },
     "connection": {
         "logoSub": "v7प्रो",
@@ -163,11 +171,11 @@
         "online": "ऑनलाइन",
         "offline": "ऑफ़लाइन",
         "connecting": "जुड़ना",
-        "scanDevices": "डिवाइस स्कैन करें",
+        "scanDevices": "डिवाइस खोजें",
         "connectLast": "अंतिम डिवाइस से कनेक्ट करें",
         "enableBt": "ब्लूटूथ चालू करें",
         "scanning": "स्कैन किया जा रहा है...",
-        "foundDevices": "उपकरण मिले",
+        "foundDevices": "मिले OBD2 डिवाइस",
         "unknownDevice": "अज्ञात उपकरण",
         "scanHint": "युग्मित OBD डिवाइस ढूंढने के लिए स्कैन करें।",
         "ecuWait": "ईसीयू से कनेक्ट हो रहा है...",
@@ -187,21 +195,59 @@
         "deviceNotPairedDesc": "क्लासिक ब्लूटूथ OBD2 एडेप्टर कनेक्ट करने से पहले, आपको उन्हें अपने फ़ोन की ब्लूटूथ सेटिंग्स से पेयर करना होगा। आपको सिस्टम सेटिंग्स पर निर्देशित किया जाता है।",
         "unsupportedDeviceTitle": "असंगत हार्डवेयर",
         "unsupportedDeviceDesc": "जिस डिवाइस को आप कनेक्ट करने का प्रयास कर रहे हैं वह संगत OBD2 एडाप्टर नहीं है या आवश्यक सेवाओं का समर्थन नहीं करता है।",
+        "sendButton": "SEND",
+        "connectDevice": "OBD2 डिवाइस से कनेक्ट करें",
+        "adapterApproved": "ADAPTER APPROVED. ANALYZING CAPABILITIES... [2/5]",
+        "protocolNegotiating": "SCANNING PROTOCOL & WAKING UP... [3/5]",
+        "ecuDetected": "ECU DETECTED, VERIFYING... [4/5]",
+        "ecuResponding": "ECU RESPONDED, COMPLETING CONNECTION... [5/5]",
+        "protocolScanningHint": "(Scanning standard SP5, SP3, SP6, SP7 protocols sequentially...)",
+        "protocolFailed": "⚠️ COMPATIBLE PROTOCOL NOT FOUND! (SP5, SP3, SP4, SP6, SP7 tried)",
+        "ecuNotFound": "⚠️ VEHICLE ECU NOT RESPONDING!",
+        "hardwareCapabilityScore": "Adapter Hardware Capability Score: {{score}}/100",
+        "hardwareFatal": "Critical Error: Your hardware is a fake clone that does not support older vehicle protocols. Cannot connect to vehicle ECU. Please obtain a quality adapter (v1.5 or original).",
+        "progressFormat": "{{progress}}%",
+        "btDisabled": "ब्लूटूथ अक्षम है",
+        "btDisabledDesc": "OBD2 एडाप्टर खोजने के लिए कृपया ब्लूटूथ सक्षम करें।",
+        "btDescIos": "BLE OBD2 एडाप्टर (Veepeak, vLinker) का उपयोग करके कनेक्ट करें।",
+        "btDescAndroid": "Classic Bluetooth या BLE एडाप्टर के माध्यम से कनेक्ट करें।",
+        "wifiDesc": "Wi-Fi एडाप्टर से कनेक्ट करें (आमतौर पर 192.168.0.10)।",
+        "wifiGuide": "Wi-Fi एडाप्टर से कनेक्ट करने के लिए, अपने फोन की Wi-Fi सेटिंग पर जाएं और OBD एडाप्टर नेटवर्क चुनें (जैसे OBDII, V-LINK)। फिर यहां वापस आएं।",
+        "openWifiSettings": "WI-FI सेटिंग खोलें",
+        "connectWifi": "WI-FI के माध्यम से कनेक्ट करें",
+        "pairRequired": "OBD2 डिवाइस पेयरिंग",
+        "pairRequiredDesc": "Android पेयरिंग का अनुरोध कर सकता है क्योंकि आप पहली बार कनेक्ट कर रहे हैं। पेयरिंग PIN आमतौर पर इस प्रकार है:",
+        "pairNow": "पेयर करें और कनेक्ट करें",
+        "pairingFailed": "पेयरिंग विफल हुई। Android सेटिंग में मैन्युअल रूप से पेयर करें।",
+        "successVin": "कनेक्शन स्थापित हुआ। वाहन प्रोफ़ाइल सफलतापूर्वक पहचाना गया।",
+        "cloneWarning": "असंगत क्लोन एडाप्टर मिला। आपकी सुरक्षा के लिए उन्नत कोडिंग सुविधाएं लॉक हैं।",
+        "viewHealth": "OBD2 स्वास्थ्य और क्षमता मेनू",
+        "statusPrompt": "नीचे अपना पसंदीदा OBD2 कनेक्शन इंटरफ़ेस चुनें।",
+        "scanHintIos": "सुनिश्चित करें कि BLE OBD2 एडाप्टर चालू है और आपके iOS डिवाइस के पास है।",
+        "scanHintAndroid": "सुनिश्चित करें कि ब्लूटूथ सक्रिय है और एडाप्टर पेयरिंग के लिए तैयार है।",
+        "negotiating": "OBD2 हैंडशेक बातचीत जारी है",
+        "failed": "कनेक्शन का प्रयास विफल हुआ",
+        "errLayer1": "समस्या निवारण: ब्लूटूथ अक्षम है। डिवाइस सेटिंग में ब्लूटूथ सक्षम करें।",
+        "errLayer2": "समस्या निवारण: कनेक्शन टाइमआउट। सुनिश्चित करें कि एडाप्टर OBD2 पोर्ट में मजबूती से लगा हो और पावर इंडिकेटर जल रहा हो।",
+        "errLayer5": "समस्या निवारण: OBD2 प्रोटोकॉल बातचीत विफल। सुनिश्चित करें कि वाहन की इग्निशन ON स्थिति में हो (इंजन चालू रहना अनुशंसित है)।",
+        "errLayer6": "समस्या निवारण: एडाप्टर कनेक्ट है, लेकिन वाहन ECU प्रतिक्रिया नहीं दे रहा। इग्निशन चालू करें या कनेक्शन पुनः आरंभ करें।",
+        "errGeneric": "समस्या निवारण: सुनिश्चित करें कि एडाप्टर में बिजली है, इग्निशन ON है और कोई अन्य OBD ऐप खुला नहीं है।",
+        "stepAdapter": "एडाप्टर कनेक्शन और क्षमता स्कोर",
+        "stepProtocol": "OBD2 प्रोटोकॉल बातचीत",
+        "stepHandshake": "ECU संचार सत्यापन",
+        "stepStabilization": "सक्रिय टेलीमेट्री लूप स्थिरीकरण",
+        "cancel": "Cancel",
         "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
-        "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
         "adapterConnected": "ADAPTER CONNECTED (OK)",
-        "connectDevice": "",
-        "adapterApproved": "",
-        "protocolNegotiating": "",
-        "ecuDetected": "",
-        "ecuResponding": "",
-        "protocolScanningHint": "",
-        "protocolFailed": "",
-        "ecuNotFound": "",
-        "hardwareCapabilityScore": "",
-        "hardwareFatal": ""
+        "lowQualityAdapterWarning": "⚠️ Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols (like K-Line on Dacia, Renault, Fiat, Lada). We highly recommend upgrading to a high-quality OBD2 adapter (v1.5 or original OBDLink/vLinker) to connect successfully.",
+        "statusProfiling": "Analyzing OBD2 adapter capabilities...",
+        "statusScanningCan": "Scanning modern CAN-Bus protocols...",
+        "statusScanningKline": "Waking up K-Line protocols. Old vehicles (Dacia, Renault, Fiat) may take up to 15 seconds to respond...",
+        "statusHandshake": "Verifying ECU communication...",
+        "statusStabilization": "Stabilizing telemetry data stream...",
+        "changeType": "Change Connection Type"
     },
     "dashboard": {
         "selectDevice": "डिवाइस का चयन करने के लिए स्पर्श करें",
@@ -241,7 +287,18 @@
         "fuelLevel": "ईंधन स्तर",
         "catalystTemp": "उत्प्रेरक तापमान",
         "layoutGauge": "गेज",
-        "obdTerminalTitle": ""
+        "obdTerminalTitle": "OBD HEALTH & TERMINAL",
+        "adapterClone": "CLONE ADAPTER",
+        "adapterOriginal": "ORIGINAL",
+        "adapterCloneShort": "CLONE",
+        "adapterOriginalShort": "ORIGINAL",
+        "pidLabel": "PID: {{pid}}",
+        "limitReached": "Selection Limit",
+        "limitReachedDesc": "You can select a maximum of {{limit}} sensors with this protocol.",
+        "customizeSubtitleKLine": "K-Line protocol connected. You can select a maximum of {{limit}} sensors.",
+        "customizeSubtitleCAN": "CAN-Bus protocol connected. You can select a maximum of {{limit}} sensors.",
+        "unit": "Unit",
+        "layoutChart": "ग्राफ़"
     },
     "expertise": {
         "historyFound": "वाहन का इतिहास मिला!",
@@ -311,7 +368,7 @@
         "upgradeAlertDesc": "मोटोकॉर्टेक्स वर्तमान में विकास में है। चूँकि आप हमारे शुरुआती उपयोगकर्ता हैं, सभी प्रो सुविधाएँ अब आपके लिए उपलब्ध हैं। आपकी प्रतिक्रिया हमारे लिए बहुत मूल्यवान है!",
         "helpGuide": "सहायता एवं मार्गदर्शन",
         "language": "🌐 भाषा/भाषा/बहासा",
-        "support": "📞 सहायता केंद्र",
+        "support": "सहायता केंद्र",
         "supportSubject": "मोटोकॉर्टेक्स समर्थन और प्रतिक्रिया",
         "thanks": "धन्यवाद!",
         "thanksDesc": "आपकी प्रतिक्रिया के लिए आपका धन्यवाद। आप हमें प्ले स्टोर पर एक टिप्पणी छोड़ सकते हैं।",
@@ -353,7 +410,7 @@
         "dtcCount": "🔍 त्रुटि कोड ({{count}}मात्रा)",
         "sensorData": "📊 लाइव सेंसर डेटा",
         "noData": "डेटा पढ़ने में विफल",
-        "proApp": "MotoCortex v7 PRO के साथ स्कैन किया गया।",
+        "proApp": "Cortex OBD2 Diagnosis Scanner v7 PRO के साथ स्कैन किया गया।",
         "date": "दिनांक",
         "vinNotFound": "पता नहीं चला",
         "noDtcs": "कोई त्रुटि कोड नहीं - साफ़",
@@ -364,7 +421,7 @@
         "intakeAir": "हवा का सेवन",
         "manifold": "अनेक गुना",
         "voltage": "बैटरी वोल्टेज",
-        "shareMessage": "मोटोकॉर्टेक्स OBD2 डायग्नोस्टिक एप्लिकेशन के साथ अपनी जेब से अपनी मोटरसाइकिल की स्थिति का पता लगाएं! 🏍️📲 डाउनलोड करें: https://motocortex.app"
+        "shareMessage": "मोटोकॉर्टेक्स OBD2 डायग्नोस्टिक एप्लिकेशन के साथ अपनी जेब से अपनी मोटरसाइकिल की स्थिति का पता लगाएं! 🏍️📲 डाउनलोड करें: https://cortexobd2.app"
     },
     "battery": {
         "title": "बैटरी एवं स्टार्टिंग परीक्षण",
@@ -404,7 +461,7 @@
         }
     },
     "freeze": {
-        "title": "फ़्रीज़ फ़्रेम",
+        "title": "FREEZE FRAME",
         "snapshot": "विफलता स्मृति",
         "desc": "जब चेक इंजन की लाइट जलती है तो यह इंजन मापदंडों को पढ़ता है। यह डेटा दोष निदान में महत्वपूर्ण जानकारी प्रदान करता है।",
         "noDtcs": "कोई गलती कोड दर्ज नहीं किया गया है. हो सकता है कि कोई फ़्रीज़ फ़्रेम डेटा न हो.",
@@ -529,7 +586,12 @@
             "fuelAdaptation": "ईंधन अनुकूलन रीसेट",
             "ecuReset": "ईसीयू रीसेट"
         },
-        "searchLanguage": ""
+        "searchLanguage": "Search Language...",
+        "connectionSection": "OBD Device Connection",
+        "noVehicleTitle": "VEHICLE DETECTION REQUIRED",
+        "noVehicleDesc": "Vehicle identity will be automatically discovered via OBD-II connection. Please pair and connect to your device below.",
+        "registeredVehiclesButton": "मेरे पंजीकृत वाहन",
+        "connectDevice": "OBD2 डिवाइस से कनेक्ट करें"
     },
     "brands": {
         "alfa_romeo": "अल्फ़ा रोमियो",
@@ -605,9 +667,11 @@
         "locSub": "एंड्रॉइड सिस्टम आर्किटेक्चर द्वारा आस-पास के कम-ऊर्जा वाले ब्लूटूथ डिवाइस को ढूंढना अनिवार्य है। हम आपकी ड्राइविंग को ट्रैक नहीं करते.",
         "grantBtn": "अनुमति दें और जारी रखें",
         "skipBtn": "अभी के लिए छोड़ें (डेमो मोड)",
-        "deniedDesc": "कुछ परमिटों को अस्वीकार कर दिया गया। MotoCortex OBD2 डिवाइस को सफलतापूर्वक स्कैन या कनेक्ट नहीं कर सकता है।",
+        "deniedDesc": "कुछ परमिटों को अस्वीकार कर दिया गया। Cortex OBD2 Diagnosis Scanner डिवाइस को सफलतापूर्वक स्कैन या कनेक्ट नहीं कर सकता है।",
         "proceedAnyway": "वैसे भी जारी रखें",
-        "openSettings": "सेटिंग्स खोलें"
+        "openSettings": "सेटिंग्स खोलें",
+        "langTitle": "Select Language",
+        "nextBtn": "CONTINUE"
     },
     "disclaimer": "सभी उत्पाद नाम, लोगो और ब्रांड उनके संबंधित स्वामियों की संपत्ति हैं। इस एप्लिकेशन में उपयोग किए गए सभी कंपनी, उत्पाद और सेवा नाम केवल पहचान उद्देश्यों के लिए हैं। इन नामों, लोगो और ब्रांडों का उपयोग कोई समर्थन या प्रायोजन नहीं दर्शाता है।",
     "hiddenFeatures": {
@@ -640,38 +704,263 @@
         "writeError": "लिखने में त्रुटि। कृपया पुनः प्रयास करें।",
         "simulationBanner": "सिमुलेशन मोड — वास्तविक ECU राइटिंग अभी सक्रिय नहीं है",
         "closeBtn": "बंद करें",
+        "unsupportedOk": "OK",
         "disclaimerTitle": "LIABILITY DISCLAIMER",
         "disclaimerFeature": "Feature",
-        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• MotoCortex cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
+        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• Cortex OBD2 Diagnosis Scanner cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
         "checkboxTitle": "CONFIRMATION REQUIRED",
         "check1": "I have read this warning and understand that my vehicle warranty may be affected.",
-        "check2": "I acknowledge that MotoCortex is not responsible for any faults or damages resulting from this operation.",
+        "check2": "I acknowledge that Cortex OBD2 Diagnosis Scanner is not responsible for any faults or damages resulting from this operation.",
         "check3": "I wish to make this change knowingly and of my own free will, accepting all risks.",
         "disclaimerCancel": "CANCEL",
         "disclaimerContinue": "CONTINUE",
-        "unsupportedTitle": "Not Supported",
-        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands.",
-        "unsupportedOk": "OK"
+        "unsupportedTitle": "वाहन समर्थित नहीं है",
+        "unsupportedMsg": "यह सुविधा आपके वाहन के ईसीयू द्वारा समर्थित नहीं है।"
     },
     "disconnectShort": "डिस्क.",
     "obdTerminal": {
-        "title": "",
-        "terminalTitle": "",
-        "terminalPlaceholder": "",
-        "inputPlaceholder": "",
-        "sendButton": "",
-        "statsTitle": "",
-        "connectionProtocol": "",
-        "none": "",
-        "hardwareQualityScore": "",
-        "original": "",
-        "clone": "",
-        "requestResponseCount": "",
-        "timeoutCount": "",
-        "recoveryCount": "",
-        "diagnosticLogTitle": "",
-        "clearButton": "",
-        "shareButton": "",
-        "noLogs": ""
+        "title": "हिडन फीचर्स अनलॉक और यूडीएस कोडिंग",
+        "terminalTitle": "OBD TERMINAL",
+        "terminalPlaceholder": "Type command below to send to ECU (e.g. 010C, ATRV)",
+        "inputPlaceholder": "Enter command...",
+        "sendButton": "SEND",
+        "statsTitle": "OBD HEALTH STATISTICS",
+        "connectionProtocol": "Connection Protocol:",
+        "none": "None",
+        "hardwareQualityScore": "Hardware Quality Score:",
+        "original": "Original",
+        "clone": "Clone",
+        "requestResponseCount": "Request / Response Count:",
+        "timeoutCount": "Timeout Count:",
+        "recoveryCount": "Recovery Count (Recovery):",
+        "diagnosticLogTitle": "DIAGNOSTIC LOG",
+        "clearButton": "CLEAR",
+        "shareButton": "SHARE",
+        "noLogs": "No diagnostic logs found."
+    },
+    "dtcContext": {
+        "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
+        "cooling": "Critical cooling hazard detected. View detailed repair steps →",
+        "ignition": "Ignition system issue detected. View detailed repair steps →",
+        "chassis": "Chassis safety system alert. Unlock PRO for full analysis →",
+        "body": "Body electronics fault found. Upgrade for complete diagnostics →",
+        "network": "Communication network error. PRO unlocks full troubleshooting →",
+        "fallback": "Unlock detailed fault analysis, repair costs & risk assessment →"
+    },
+    "perfTeaser": {
+        "limitTitle": "Daily Limit Reached",
+        "limitDesc": "You have reached the daily limit of 3 free 0-60 km/h tests. Upgrade to PRO for unlimited tests and 0-100 km/h measurements."
+    },
+    "sandbox": {
+        "title": "हिडन फीचर्स अनलॉक और यूडीएस कोडिंग",
+        "connectionStatus": "Connection Status:",
+        "ecuStatus": "ECU Status:",
+        "fps": "UI Performance: {{fps}} FPS",
+        "stressBtnStart": "Start 20Hz Stress",
+        "stressBtnStop": "Stop Telemetry Loop",
+        "stopDisconnect": "Stop / Disconnect",
+        "discoveredDevices": "DISCOVERED DEVICES",
+        "connect": "CONNECT",
+        "scanning": "Scanning...",
+        "scan": "Scan Devices",
+        "rpm": "Engine RPM",
+        "speed": "Vehicle Speed",
+        "coolant": "Coolant Temp",
+        "throttle": "Throttle Position",
+        "notConnected": "Not Connected",
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "error": "Error",
+        "openSandbox": "DIAG",
+        "advancedTerminal": "Advanced Connection Terminal (DIAG)",
+        "terminalTitle": "Live Terminal & Bus Monitor",
+        "pause": "PAUSE",
+        "resume": "RESUME",
+        "share": "SHARE",
+        "clear": "CLEAR"
+    },
+    "health": {
+        "titleMenu": "OBD2 स्वास्थ्य और क्षमता",
+        "adapterQuality": "एडाप्टर गुणवत्ता और प्रदर्शन",
+        "excellent": "उत्कृष्ट (मूल)",
+        "good": "अच्छा (मानक)",
+        "clone": "असंगत / क्लोन",
+        "firmware": "फर्मवेयर संस्करण:",
+        "capScore": "क्षमता स्कोर",
+        "latency": "विलंबता (RTT)",
+        "protocol": "सक्रिय प्रोटोकॉल",
+        "featureSupport": "एप्लिकेशन सुविधा मैट्रिक्स",
+        "matrixReadCodes": "दोष कोड पढ़ें और साफ़ करें",
+        "matrixLiveSensors": "लाइव सेंसर निगरानी (बेसिक)",
+        "matrixBattery": "बैटरी / वोल्टेज परीक्षण",
+        "matrixHighSpeed": "उच्च गति टेलीमेट्री (20Hz)",
+        "matrixCoding": "ECU कोडिंग और अनुकूलन",
+        "active": "सक्रिय",
+        "degraded": "क्षतिग्रस्त (धीमा RTT)",
+        "locked": "लॉक (सुरक्षित मोड)",
+        "warning": "सुरक्षा लॉक:",
+        "lockExplain": "आपके एडाप्टर को क्लोन/नकली चिप के रूप में चिह्नित किया गया है। चूंकि क्लोन एडाप्टर में टाइमिंग सटीकता की कमी होती है और लिखने के ऑपरेशन के दौरान वाहन को नुकसान पहुंचा सकते हैं, कोडिंग और अनुकूलन सुविधाएं लॉक हैं। सुरक्षित कोडिंग के लिए मूल ELM327 v2.1 या vLinker डिवाइस प्राप्त करें।",
+        "vehiclePids": "वाहन सेंसर चेकलिस्ट",
+        "checklistPrompt": "आपके वाहन के ECU द्वारा समर्थित मानक सेंसर पैरामीटर (PID) नीचे सूचीबद्ध हैं। बिना चेकमार्क के सेंसर आपके वाहन द्वारा रिपोर्ट नहीं किए जाते।",
+        "supportedBadge": "✓ समर्थित",
+        "unsupportedBadge": "❌ असमर्थित"
+    },
+    "sensor": {
+        "rpm": "इंजन RPM",
+        "speed": "वाहन गति",
+        "coolant": "इंजन शीतलक तापमान",
+        "throttle": "थ्रॉटल स्थिति",
+        "voltage": "नियंत्रण मॉड्यूल वोल्टेज",
+        "maf": "MAF वायु प्रवाह दर",
+        "iat": "इनटेक वायु तापमान",
+        "load": "गणना किया इंजन लोड",
+        "fuel": "ईंधन स्तर",
+        "oilTemp": "इंजन तेल तापमान"
+    },
+    "secretDebug": {
+        "title": "हिडन फीचर्स अनलॉक और यूडीएस कोडिंग",
+        "logFileSize": "Black Box / File Size:",
+        "dtcCloudSync": "🛰️ DTC CLOUD SYNCHRONIZATION",
+        "lastSync": "Last Sync",
+        "syncNow": "Sync Now",
+        "developerTools": "DEVELOPER TOOLS",
+        "trialResetSuccess": "Free Trial counter reset successfully!",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "The application will now crash intentionally. Confirm to verify Crashlytics integration.",
+        "crashButton": "Crash",
+        "crashTest": "Crash Test"
+    },
+    "features": {
+        "title": "हिडن फीचर्स अनलॉक और यूडीएस कोडिंग",
+        "subTitle": "आईएसओ 14229 यूडीएस एडैप्टेशन इंजन",
+        "batteryVoltage": "बैचरी वोल्टेज",
+        "voltageReady": "✓ सुरक्षित (ईसीयू कोडिंग के लिए तैयार)",
+        "voltageLocked": "⚠️ कम वोल्टेज (राइट लॉक है)",
+        "locked": "लॉक है",
+        "ready": "तैयार",
+        "allMarks": "सभी ब्रांड",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "⚠️ Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
+        "items": {
+            "vag_staging_needle_sweep": {
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
+            },
+            "vag_acoustic_lock_confirmation": {
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
+            },
+            "vag_american_parking_lights": {
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
+            },
+            "vag_drl_menu_toggle": {
+                "name": "Daytime Running Lights (DRL) Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
+            },
+            "vag_tear_wiping": {
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
+            },
+            "vag_emergency_brake_flashing": {
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
+            },
+            "vag_cornering_lights": {
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
+            },
+            "vag_comfort_mirror_folding": {
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
+            },
+            "vag_lap_timer": {
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
+            },
+            "vag_refuel_quantity": {
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
+            },
+            "bmw_start_stop_memory": {
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state (OFF/ON) across vehicle restarts."
+            },
+            "bmw_digital_speedometer": {
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
+            },
+            "bmw_sport_displays": {
+                "name": "Sport Displays (HP & Nm Gauges)",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
+            },
+            "bmw_acoustic_lock_sound": {
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
+            },
+            "bmw_mirror_fold_delay_zero": {
+                "name": "Instant Mirror Folding (0.0s Delay)",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
+            },
+            "bmw_tpms_tire_temperature": {
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
+            },
+            "renault_trip_computer_enable": {
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
+            },
+            "renault_external_temp_display": {
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
+            },
+            "renault_automatic_tailgate": {
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
+            },
+            "renault_alarm_chirp": {
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
+            },
+            "renault_shift_indicator": {
+                "name": "Gear Shift Indicator (GSI)",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
+            },
+            "ford_double_horn_honk_disable": {
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
+            },
+            "ford_auto_door_locking": {
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
+            },
+            "ford_tpms_psi_display": {
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
+            },
+            "ford_sync_climate_screen": {
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
+            },
+            "stellantis_power_windows_remote": {
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
+            },
+            "stellantis_cornering_fogs": {
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
+            }
+        },
+        "codeBtn": "कोड करें",
+        "removeBtn": "हटाएं",
+        "unsupportedTitle": "वाहन समर्थित नहीं है",
+        "unsupportedMsg": "यह सुविधा आपके वाहन के ईसीयू द्वारा समर्थित नहीं है।",
+        "layoutChart": "ग्राफ़"
     }
 }

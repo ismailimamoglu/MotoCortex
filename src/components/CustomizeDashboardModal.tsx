@@ -38,7 +38,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
   const maxLimit = isKLineProtocol ? 4 : 8;
 
   const [draftSensors, setDraftSensors] = React.useState<string[]>(activeSensors);
-  const [draftLayout, setDraftLayout] = React.useState<'grid' | 'list' | 'gauge'>(layoutType);
+  const [draftLayout, setDraftLayout] = React.useState<'grid' | 'list' | 'gauge' | 'chart'>(layoutType);
 
   // Sync draft with store state when modal becomes visible
   React.useEffect(() => {
@@ -60,9 +60,9 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
     } else {
       if (draftSensors.length >= maxLimit) {
         Alert.alert(
-          t('dashboard.limitReached', 'Seçim Sınırı'),
-          t('dashboard.limitReachedDesc', { defaultValue: `Bu protokol ile en fazla ${maxLimit} sensör seçebilirsiniz.`, limit: maxLimit }),
-          [{ text: t('common.ok', 'TAMAM') }]
+          t('dashboard.limitReached', 'Selection Limit'),
+          t('dashboard.limitReachedDesc', { defaultValue: `You can select a maximum of ${maxLimit} sensors with this protocol.`, limit: maxLimit }),
+          [{ text: t('common.ok', 'OK') }]
         );
         return;
       }
@@ -148,26 +148,32 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
         justifyContent: 'space-between' as const,
         alignItems: 'center' as const,
         borderRadius: scaleMod(10),
-        padding: scaleMod(10),
+        padding: scaleMod(6),
         marginBottom: scaleHeight(12),
         borderWidth: 1,
       },
       layoutLabel: {
-        fontSize: scaleFont(10.5),
+        fontSize: scaleFont(9.5),
         fontWeight: 'bold' as const,
+        marginRight: scaleWidth(4),
       },
       layoutButtons: {
         flexDirection: 'row' as const,
-        gap: scaleMod(6),
+        flex: 1,
+        justifyContent: 'flex-end' as const,
+        gap: scaleMod(4),
       },
       layoutBtn: {
-        paddingHorizontal: scaleWidth(10),
-        paddingVertical: scaleHeight(4),
+        flex: 1,
+        paddingHorizontal: scaleWidth(2),
+        paddingVertical: scaleHeight(5),
         borderRadius: scaleMod(6),
         borderWidth: 1,
+        alignItems: 'center' as const,
+        justifyContent: 'center' as const,
       },
       layoutBtnText: {
-        fontSize: scaleFont(10),
+        fontSize: scaleFont(8.5),
         fontWeight: '800' as const,
       },
       scrollView: {
@@ -244,24 +250,24 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
           {/* Header */}
           <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
             <View style={{ flex: 1, paddingRight: scaleWidth(8) }}>
-              <Text style={[sDyn.title, { color: colors.purple }]}>⚡ {t('dashboard.customizeTitle', 'GÖSTERGE PANELİ')}</Text>
+              <Text style={[sDyn.title, { color: colors.purple }]}>⚡ {t('dashboard.customizeTitle', 'Dashboard Settings')}</Text>
               <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
                 {isKLineProtocol 
-                  ? t('dashboard.customizeSubtitleKLine', { defaultValue: `K-Line protokolü bağlı. En fazla ${maxLimit} sensör seçebilirsiniz.`, limit: maxLimit })
-                  : t('dashboard.customizeSubtitleCAN', { defaultValue: `CAN-Bus protokolü bağlı. En fazla ${maxLimit} sensör seçebilirsiniz.`, limit: maxLimit })}
+                  ? t('dashboard.customizeSubtitleKLine', { defaultValue: `K-Line protocol connected. You can select a maximum of ${maxLimit} sensors.`, limit: maxLimit })
+                  : t('dashboard.customizeSubtitleCAN', { defaultValue: `CAN-Bus protocol connected. You can select a maximum of ${maxLimit} sensors.`, limit: maxLimit })}
               </Text>
             </View>
             <TouchableOpacity 
               onPress={onClose} 
               style={[sDyn.closeBtn, { backgroundColor: `${colors.purple}18` }]}
             >
-              <Text style={[sDyn.closeBtnText, { color: colors.purple }]}>{t('common.close', 'KAPAT')}</Text>
+              <Text style={[sDyn.closeBtnText, { color: colors.purple }]}>{t('common.close', 'Close')}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Layout Type Selection */}
           <View style={[sDyn.layoutRow, { backgroundColor: `${colors.purple}05`, borderColor: colors.border }]}>
-            <Text style={[sDyn.layoutLabel, { color: colors.textPri }]}>{t('dashboard.layoutType', 'Şablon Tipi')}</Text>
+            <Text style={[sDyn.layoutLabel, { color: colors.textPri }]}>{t('dashboard.layoutType', 'Layout Style')}</Text>
             <View style={sDyn.layoutButtons}>
               <TouchableOpacity
                 style={[
@@ -288,7 +294,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                 onPress={() => setDraftLayout('list')}
               >
                 <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'list' ? '#ffffff' : colors.textPri }]}>
-                  {t('dashboard.layoutList', 'LİSTE')}
+                  {t('dashboard.layoutList', 'LIST')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -302,7 +308,21 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                 onPress={() => setDraftLayout('gauge')}
               >
                 <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'gauge' ? '#ffffff' : colors.textPri }]}>
-                  {t('dashboard.layoutGauge', 'GÖSTERGE')}
+                  {t('dashboard.layoutGauge', 'GAUGE')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  sDyn.layoutBtn,
+                  {
+                    backgroundColor: draftLayout === 'chart' ? colors.purple : 'transparent',
+                    borderColor: draftLayout === 'chart' ? colors.purple : colors.border
+                  }
+                ]}
+                onPress={() => setDraftLayout('chart')}
+              >
+                <Text style={[sDyn.layoutBtnText, { color: draftLayout === 'chart' ? '#ffffff' : colors.textPri }]}>
+                  {t('dashboard.layoutChart', 'CHART')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -335,7 +355,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                         {t(sensor.nameKey, sensor.defaultName)}
                       </Text>
                       <Text style={[sDyn.sensorDetail, { color: colors.textSec, fontFamily: MONO }]}>
-                        PID: {sensor.pid} • {t('dashboard.unit', 'Birim')}: {sensor.unit}
+                        PID: {sensor.pid} • {t('dashboard.unit', 'Unit')}: {sensor.unit}
                       </Text>
                     </View>
                   </View>
@@ -359,7 +379,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
               onPress={handleReset}
             >
               <Text style={[sDyn.footerBtnText, { color: colors.textPri }]}>
-                {t('common.reset', 'VARSAYILAN')}
+                {t('common.reset', 'DEFAULT')}
               </Text>
             </TouchableOpacity>
 
@@ -368,7 +388,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
               onPress={handleApply}
             >
               <Text style={[sDyn.footerBtnText, { color: '#ffffff', fontWeight: '900' }]}>
-                {t('common.apply', 'UYGULA')}
+                {t('common.apply', 'APPLY')}
               </Text>
             </TouchableOpacity>
           </View>

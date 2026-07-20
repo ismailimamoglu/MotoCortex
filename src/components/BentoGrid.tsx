@@ -38,6 +38,7 @@ interface BentoGridProps {
   onOpenSupport: () => void;
   onShareApp: () => void;
   onDisconnect: () => void;
+  onOpenFeatureCoding?: () => void;
 }
 
 export default function BentoGrid({
@@ -49,6 +50,7 @@ export default function BentoGrid({
   onOpenSupport,
   onShareApp,
   onDisconnect,
+  onOpenFeatureCoding,
 }: BentoGridProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
@@ -57,7 +59,6 @@ export default function BentoGrid({
 
   const language = useAppStore((state) => state.language);
   const isPro = useAppStore((state) => state.isPro);
-  const theme = useAppStore((state) => state.theme);
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
   const toggleSimulationMode = useAppStore((state) => state.toggleSimulationMode);
 
@@ -93,7 +94,8 @@ export default function BentoGrid({
         borderRadius: scaleMod(16),
         padding: scaleMod(12),
         minHeight: scaleMod(114),
-        justifyContent: 'space-between' as const,
+        justifyContent: 'center' as const,
+        alignItems: 'center' as const,
       },
       cardSecondary: {
         flex: 1,
@@ -101,13 +103,10 @@ export default function BentoGrid({
         borderRadius: scaleMod(12),
         padding: scaleMod(8),
         minHeight: scaleMod(60),
-        justifyContent: 'space-between' as const,
-      },
-      cardHeader: {
-        flexDirection: 'row' as const,
-        justifyContent: 'space-between' as const,
+        justifyContent: 'center' as const,
         alignItems: 'center' as const,
       },
+
       iconWrapper: {
         width: scaleMod(36),
         height: scaleMod(36),
@@ -119,19 +118,18 @@ export default function BentoGrid({
         fontSize: scaleFont(16),
         fontWeight: '900' as const,
       },
-      arrow: {
-        fontSize: scaleFont(18),
-        fontWeight: '700' as const,
-      },
+
       cardTitle: {
         fontSize: scaleFont(12.5),
         fontWeight: '900' as const,
+        textAlign: 'center' as const,
         marginTop: scaleHeight(4),
         fontFamily: MONO,
       },
       cardSubtitle: {
         fontSize: scaleFont(9),
         fontWeight: '800' as const,
+        textAlign: 'center' as const,
         marginTop: scaleHeight(2),
         fontFamily: MONO,
       },
@@ -147,13 +145,11 @@ export default function BentoGrid({
       iconSmall: {
         fontSize: scaleFont(10.5),
       },
-      arrowSmall: {
-        fontSize: scaleFont(11),
-        fontWeight: 'bold' as const,
-      },
+
       cardTitleSecondary: {
         fontSize: scaleFont(7.8),
         fontWeight: '900' as const,
+        textAlign: 'center' as const,
         fontFamily: MONO,
         marginTop: scaleHeight(2),
       },
@@ -199,22 +195,15 @@ export default function BentoGrid({
             onPress={onOpenDiagnostics}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? (isClean ? `${colors.green}1A` : `${colors.red}1A`) : `${colors.textSec}0D` }]}>
-                <Text style={[sDyn.icon, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
-                  {isConnected ? (isClean ? '✓' : '⚠') : '🔍'}
-                </Text>
-              </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
-            </View>
-            <View style={{ marginTop: scaleHeight(8) }}>
+
+            <View>
               <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
                 {t('bento.diagnostics').toUpperCase()}
               </Text>
               <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
                 {isConnected 
                   ? (isClean ? t('bento.cleanFaults') : t('bento.dtcDetected', { count: dtcCount }))
-                  : t('bento.settings.noConnection', 'Bağlantı Yok')}
+                  : t('bento.settings.noConnection', 'No Connection')}
               </Text>
             </View>
           </BentoButton>
@@ -225,20 +214,15 @@ export default function BentoGrid({
             onPress={onOpenSensors}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? `${colors.cyan}1A` : `${colors.textSec}0D` }]}>
-                <Text style={[sDyn.icon, { color: isConnected ? colors.cyan : colors.textSec }]}>📊</Text>
-              </View>
-              <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
-            </View>
-            <View style={{ marginTop: scaleHeight(8) }}>
+
+            <View>
               <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
                 {t('bento.liveSensors').toUpperCase()}
               </Text>
               <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? colors.cyan : colors.textSec }]}>
                 {isConnected 
                   ? t('bento.realtimeData')
-                  : t('bento.settings.noConnection', 'Bağlantı Yok')}
+                  : t('bento.settings.noConnection', 'No Connection')}
               </Text>
             </View>
           </BentoButton>
@@ -252,12 +236,7 @@ export default function BentoGrid({
             onPress={onOpenProfile}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapperSmall, { backgroundColor: 'transparent' }]}>
-                <Image source={require('../../assets/icon.png')} style={{ width: '100%', height: '100%', borderRadius: scaleMod(4) }} />
-              </View>
-              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-            </View>
+
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
               {t('bento.vehicleProfile').toUpperCase()}
             </Text>
@@ -269,17 +248,12 @@ export default function BentoGrid({
             onPress={onOpenSettings}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.amber}1A` }]}>
-                <Text style={sDyn.iconSmall}>⚙️</Text>
-              </View>
-              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(4) }}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(4) }}>
               <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
                 {t('bento.quickSettings').toUpperCase()}
               </Text>
-              <Text style={{ fontSize: scaleFont(9.5), marginLeft: 4 }}>{langFlag}</Text>
+              <Text style={{ fontSize: scaleFont(9.5), marginStart: 4 }}>{langFlag}</Text>
             </View>
           </BentoButton>
 
@@ -289,12 +263,7 @@ export default function BentoGrid({
             onPress={onOpenSupport}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.cyan}1A` }]}>
-                <Text style={sDyn.iconSmall}>📍</Text>
-              </View>
-              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-            </View>
+
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
               {t('info.support').toUpperCase()}
             </Text>
@@ -306,12 +275,7 @@ export default function BentoGrid({
             onPress={onShareApp}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}1A` }]}>
-                <Text style={sDyn.iconSmall}>✨</Text>
-              </View>
-              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-            </View>
+
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
               {t('expertise.share').toUpperCase()}
             </Text>
@@ -329,17 +293,12 @@ export default function BentoGrid({
             onPress={handleDemoPress}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapperSmall, { backgroundColor: isSimulationMode ? `${colors.green}26` : `${colors.cyan}1A` }]}>
-                <Text style={[sDyn.iconSmall, { color: isSimulationMode ? colors.green : colors.cyan }]}>🎮</Text>
-              </View>
-              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(4) }}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(4) }}>
               <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
                 {t('common.demoMode').toUpperCase()}
               </Text>
-              <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSimulationMode ? colors.green : colors.textSec, marginLeft: 4 }} />
+              <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSimulationMode ? colors.green : colors.textSec, marginStart: 4 }} />
             </View>
           </BentoButton>
 
@@ -355,17 +314,12 @@ export default function BentoGrid({
             onPress={handleProPress}
             activeOpacity={0.4}
           >
-            <View style={sDyn.cardHeader}>
-              <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}26` }]}>
-                <Text style={sDyn.iconSmall}>👑</Text>
-              </View>
-              <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(4) }}>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(4) }}>
               <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
                 {(isPro || isSimulationMode) ? t('common.proActive').toUpperCase() : t('common.freeAccount').toUpperCase()}
               </Text>
-              <Text style={[sDyn.badgeText, { color: '#FFF', backgroundColor: colors.purple, marginLeft: 4 }]}>
+              <Text style={[sDyn.badgeText, { color: '#FFF', backgroundColor: colors.purple, marginStart: 4 }]}>
                 {(isPro || isSimulationMode) ? 'PRO' : 'FREE'}
               </Text>
             </View>
@@ -386,22 +340,15 @@ export default function BentoGrid({
           onPress={onOpenDiagnostics}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? (isClean ? `${colors.green}1A` : `${colors.red}1A`) : `${colors.textSec}0D` }]}>
-              <Text style={[sDyn.icon, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
-                {isConnected ? (isClean ? '✓' : '⚠') : '🔍'}
-              </Text>
-            </View>
-            <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
-          </View>
-          <View style={{ marginTop: scaleHeight(8) }}>
+
+          <View>
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
               {t('bento.diagnostics').toUpperCase()}
             </Text>
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? (isClean ? colors.green : colors.red) : colors.textSec }]}>
               {isConnected 
                 ? (isClean ? t('bento.cleanFaults') : t('bento.dtcDetected', { count: dtcCount }))
-                : t('bento.settings.noConnection', 'Bağlantı Yok')}
+                : t('bento.settings.noConnection', 'No Connection')}
             </Text>
           </View>
         </BentoButton>
@@ -412,24 +359,49 @@ export default function BentoGrid({
           onPress={onOpenSensors}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapper, { backgroundColor: isConnected ? `${colors.cyan}1A` : `${colors.textSec}0D` }]}>
-              <Text style={[sDyn.icon, { color: isConnected ? colors.cyan : colors.textSec }]}>📊</Text>
-            </View>
-            <Text style={[sDyn.arrow, { color: colors.textSec }]}>›</Text>
-          </View>
-          <View style={{ marginTop: scaleHeight(8) }}>
+
+          <View>
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitle, { color: colors.textPri }]}>
               {t('bento.liveSensors').toUpperCase()}
             </Text>
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardSubtitle, { color: isConnected ? colors.cyan : colors.textSec }]}>
               {isConnected 
                 ? t('bento.realtimeData')
-                : t('bento.settings.noConnection', 'Bağlantı Yok')}
+                : t('bento.settings.noConnection', 'No Connection')}
             </Text>
           </View>
         </BentoButton>
       </View>
+
+      {/* OEM Feature Activation & UDS Coding Banner Button */}
+      {onOpenFeatureCoding && (
+        <BentoButton
+          style={{
+            backgroundColor: `${colors.cyan}1A`,
+            borderColor: colors.cyan,
+            borderWidth: 1.5,
+            borderRadius: scaleMod(12),
+            paddingVertical: scaleHeight(10),
+            paddingHorizontal: scaleWidth(14),
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          onPress={onOpenFeatureCoding}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
+            <View>
+              <Text style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
+                {t('bento.featureCoding', 'UNLOCK HIDDEN FEATURES & UDS CODING')}
+              </Text>
+              <Text style={{ color: colors.textSec, fontSize: scaleFont(8.5), fontFamily: MONO }}>
+                {t('bento.featureCodingSub', 'VAG, BMW, Renault ISO 14229 Feature Unlocking')}
+              </Text>
+            </View>
+          </View>
+
+        </BentoButton>
+      )}
 
       {/* Row 2: Secondary Menus Row 1 (3 Columns) */}
       <View style={sDyn.row}>
@@ -439,12 +411,7 @@ export default function BentoGrid({
           onPress={onOpenProfile}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapperSmall, { backgroundColor: 'transparent' }]}>
-              <Image source={require('../../assets/icon.png')} style={{ width: '100%', height: '100%', borderRadius: scaleMod(4) }} />
-            </View>
-            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-          </View>
+
           <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
             {t('bento.vehicleProfile').toUpperCase()}
           </Text>
@@ -456,17 +423,12 @@ export default function BentoGrid({
           onPress={onOpenSettings}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.amber}1A` }]}>
-              <Text style={sDyn.iconSmall}>⚙️</Text>
-            </View>
-            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(2) }}>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(2) }}>
             <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
               {t('bento.quickSettings').toUpperCase()}
             </Text>
-            <Text style={{ fontSize: scaleFont(9), marginLeft: 2 }}>{langFlag}</Text>
+            <Text style={{ fontSize: scaleFont(9), marginStart: 2 }}>{langFlag}</Text>
           </View>
         </BentoButton>
 
@@ -476,12 +438,7 @@ export default function BentoGrid({
           onPress={onOpenSupport}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.cyan}1A` }]}>
-              <Text style={sDyn.iconSmall}>📍</Text>
-            </View>
-            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-          </View>
+
           <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
             {t('info.support').toUpperCase()}
           </Text>
@@ -496,12 +453,7 @@ export default function BentoGrid({
           onPress={onShareApp}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}1A` }]}>
-              <Text style={sDyn.iconSmall}>✨</Text>
-            </View>
-            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-          </View>
+
           <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
             {t('expertise.share').toUpperCase()}
           </Text>
@@ -519,17 +471,12 @@ export default function BentoGrid({
           onPress={handleDemoPress}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapperSmall, { backgroundColor: isSimulationMode ? `${colors.green}26` : `${colors.cyan}1A` }]}>
-              <Text style={[sDyn.iconSmall, { color: isSimulationMode ? colors.green : colors.cyan }]}>🎮</Text>
-            </View>
-            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(2) }}>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(2) }}>
             <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
               {t('common.demoMode').toUpperCase()}
             </Text>
-            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSimulationMode ? colors.green : colors.textSec, marginLeft: 4 }} />
+            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSimulationMode ? colors.green : colors.textSec, marginStart: 4 }} />
           </View>
         </BentoButton>
 
@@ -545,17 +492,12 @@ export default function BentoGrid({
           onPress={handleProPress}
           activeOpacity={0.4}
         >
-          <View style={sDyn.cardHeader}>
-            <View style={[sDyn.iconWrapperSmall, { backgroundColor: `${colors.purple}26` }]}>
-              <Text style={sDyn.iconSmall}>👑</Text>
-            </View>
-            <Text style={[sDyn.arrowSmall, { color: colors.textSec }]}>›</Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: scaleHeight(2) }}>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(2) }}>
             <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
               {(isPro || isSimulationMode) ? t('common.proActive').toUpperCase() : t('common.freeAccount').toUpperCase()}
             </Text>
-            <Text style={[sDyn.badgeText, { color: '#FFF', backgroundColor: colors.purple, paddingHorizontal: 3, paddingVertical: 1, borderRadius: 3, marginLeft: 2 }]}>
+            <Text style={[sDyn.badgeText, { color: '#FFF', backgroundColor: colors.purple, paddingHorizontal: 3, paddingVertical: 1, borderRadius: 3, marginStart: 2 }]}>
               {(isPro || isSimulationMode) ? 'PRO' : 'FREE'}
             </Text>
           </View>

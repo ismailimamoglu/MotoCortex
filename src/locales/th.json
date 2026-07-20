@@ -57,26 +57,28 @@
             "idCopied": "คัดลอกรหัสผู้ใช้ไปยังคลิปบอร์ดแล้ว",
             "hardwareHealthAndId": "สุขภาพของฮาร์ดแวร์และการระบุตัวตน",
             "hardwareModalDesc": "หากต้องการรับการสนับสนุนหรือดำเนินการเปิดใช้งานใบอนุญาต PRO ด้วยตนเอง โปรดคัดลอก ID ผู้ใช้ด้านบนและติดต่อเรา",
-            "supportEmailBody": "สวัสดีทีมสนับสนุน MotoCortex --- ข้อมูลการสมัคร --- รหัสผู้ใช้:{{userId}}สถานะใบอนุญาต:{{license}}ลิงค์:{{connection}}สถานะอุปกรณ์:{{deviceStatus}}--- ข้อความของคุณ ---",
+            "supportEmailBody": "สวัสดีทีมสนับสนุน Cortex OBD2 Diagnosis Scanner --- ข้อมูลการสมัคร --- รหัสผู้ใช้:{{userId}}สถานะใบอนุญาต:{{license}}ลิงค์:{{connection}}สถานะอุปกรณ์:{{deviceStatus}}--- ข้อความของคุณ ---",
             "deviceName": "ชื่ออุปกรณ์:",
             "simulationObd": "การจำลอง OBD",
-            "noLogsToShare": "There are no diagnostic logs to share.",
-            "obdHealthTitle": "",
-            "txRequests": "",
-            "rxResponses": "",
-            "timeouts": "",
-            "recoveries": "",
-            "avgLatency": "",
-            "lastErrorLabel": "",
-            "shareReport": "",
-            "diagnosticLog": "",
-            "noTraffic": "",
-            "shareError": ""
+            "obdHealthTitle": "OBD HEALTH STATISTICS",
+            "txRequests": "Requests Sent (TX):",
+            "rxResponses": "Responses Received (RX):",
+            "timeouts": "Timeouts:",
+            "recoveries": "Recovery Attempts:",
+            "avgLatency": "Avg. Latency:",
+            "lastErrorLabel": "Last Error:",
+            "shareReport": "SHARE DIAGNOSTICS REPORT",
+            "diagnosticLog": "DIAGNOSTIC LOG (LAST 500 ROWS)",
+            "noTraffic": "No streaming traffic yet...",
+            "shareError": "Sharing Error",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "ข้อมูลการสมัครและคำแนะนำ",
         "supportDesc": "สนับสนุนและติดต่อ",
         "shareDesc": "แชร์แอป",
-        "noDtc": "สะอาด"
+        "noDtc": "สะอาด",
+        "featureCoding": "ปลดล็อกฟีเจอร์ซ่อนและการเข้ารหัส UDS",
+        "featureCodingSub": "VAG, BMW, Renault ISO 14229 Feature Unlocking"
     },
     "common": {
         "cancel": "ยกเลิก",
@@ -116,8 +118,13 @@
         "close": "ปิด",
         "share": "SHARE",
         "info": "Info",
-        "enableDemoMode": "",
-        "exitDemoMode": "",
+        "enableDemoMode": "ENABLE DEMO MODE",
+        "exitDemoMode": "EXIT DEMO MODE",
+        "supported": "รองรับ",
+        "copied": "คัดลอกแล้ว",
+        "cancelBtn": "ยกเลิก",
+        "retry": "ลองเชื่อมต่อใหม่",
+        "changeType": "เปลี่ยนประเภทการเชื่อมต่อ",
         "revocationTitle": "Subscription Cancelled",
         "revocationMsg": "Your access to PRO features has been terminated because your subscription was cancelled or refunded."
     },
@@ -154,7 +161,8 @@
         "errorTitle": "สินค้าไม่สามารถโหลดได้",
         "errorDesc": "เกิดข้อผิดพลาดขณะโหลดผลิตภัณฑ์ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองอีกครั้ง",
         "retryBtn": "ลองอีกครั้ง",
-        "loadingPrices": "กำลังโหลดราคา..."
+        "loadingPrices": "กำลังโหลดราคา...",
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnosis Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -163,11 +171,11 @@
         "online": "ออนไลน์",
         "offline": "ออฟไลน์",
         "connecting": "กำลังเชื่อมต่อ",
-        "scanDevices": "อุปกรณ์สแกน",
+        "scanDevices": "ค้นหาอุปกรณ์",
         "connectLast": "เชื่อมต่อกับอุปกรณ์ปลายทาง",
         "enableBt": "เปิดบลูทูธ",
         "scanning": "กำลังสแกน...",
-        "foundDevices": "พบอุปกรณ์",
+        "foundDevices": "อุปกรณ์ OBD2 ที่พบ",
         "unknownDevice": "อุปกรณ์ที่ไม่รู้จัก",
         "scanHint": "สแกนเพื่อค้นหาอุปกรณ์ OBD ที่จับคู่",
         "ecuWait": "กำลังเชื่อมต่อกับ ECU...",
@@ -187,21 +195,59 @@
         "deviceNotPairedDesc": "ก่อนที่จะเชื่อมต่ออะแดปเตอร์ Bluetooth OBD2 แบบคลาสสิก คุณต้องจับคู่อะแดปเตอร์เหล่านั้นจากการตั้งค่า Bluetooth ในโทรศัพท์ของคุณ คุณจะถูกนำไปที่การตั้งค่าระบบ",
         "unsupportedDeviceTitle": "ฮาร์ดแวร์ที่เข้ากันไม่ได้",
         "unsupportedDeviceDesc": "อุปกรณ์ที่คุณกำลังพยายามเชื่อมต่อไม่ใช่อะแดปเตอร์ OBD2 ที่เข้ากันได้ หรือไม่รองรับบริการที่จำเป็น",
+        "sendButton": "SEND",
+        "connectDevice": "เชื่อมต่อกับอุปกรณ์ OBD2",
+        "adapterApproved": "ADAPTER APPROVED. ANALYZING CAPABILITIES... [2/5]",
+        "protocolNegotiating": "SCANNING PROTOCOL & WAKING UP... [3/5]",
+        "ecuDetected": "ECU DETECTED, VERIFYING... [4/5]",
+        "ecuResponding": "ECU RESPONDED, COMPLETING CONNECTION... [5/5]",
+        "protocolScanningHint": "(Scanning standard SP5, SP3, SP6, SP7 protocols sequentially...)",
+        "protocolFailed": "⚠️ COMPATIBLE PROTOCOL NOT FOUND! (SP5, SP3, SP4, SP6, SP7 tried)",
+        "ecuNotFound": "⚠️ VEHICLE ECU NOT RESPONDING!",
+        "hardwareCapabilityScore": "Adapter Hardware Capability Score: {{score}}/100",
+        "hardwareFatal": "Critical Error: Your hardware is a fake clone that does not support older vehicle protocols. Cannot connect to vehicle ECU. Please obtain a quality adapter (v1.5 or original).",
+        "progressFormat": "{{progress}}%",
+        "btDisabled": "บลูทูธปิดอยู่",
+        "btDisabledDesc": "กรุณาเปิดใช้งานบลูทูธเพื่อค้นหาอะแดปเตอร์ OBD2",
+        "btDescIos": "เชื่อมต่อโดยใช้อะแดปเตอร์ BLE OBD2 (Veepeak, vLinker)",
+        "btDescAndroid": "เชื่อมต่อผ่านอะแดปเตอร์ Classic Bluetooth หรือ BLE",
+        "wifiDesc": "เชื่อมต่อกับอะแดปเตอร์ Wi-Fi (โดยทั่วไปคือ 192.168.0.10)",
+        "wifiGuide": "เมื่อต้องการเชื่อมต่อกับอะแดปเตอร์ Wi-Fi ให้ไปที่การตั้งค่า Wi-Fi ของโทรศัพท์แล้วเลือกเครือข่ายอะแดปเตอร์ OBD (เช่น OBDII, V-LINK) จากนั้นกลับมาที่นี่",
+        "openWifiSettings": "เปิดการตั้งค่า WI-FI",
+        "connectWifi": "เชื่อมต่อผ่าน WI-FI",
+        "pairRequired": "จับคู่อุปกรณ์ OBD2",
+        "pairRequiredDesc": "Android อาจขอการจับคู่เนื่องจากคุณเชื่อมต่อเป็นครั้งแรก PIN การจับคู่โดยทั่วไปคือ:",
+        "pairNow": "จับคู่และเชื่อมต่อ",
+        "pairingFailed": "การจับคู่ล้มเหลว กรุณาจับคู่ด้วยตนเองในการตั้งค่า Android",
+        "successVin": "สร้างการเชื่อมต่อแล้ว ระบุโปรไฟล์ยานพาหนะสำเร็จ",
+        "cloneWarning": "ตรวจพบอะแดปเตอร์โคลนที่ไม่เข้ากัน ฟีเจอร์การเข้ารหัสขั้นสูงถูกล็อคเพื่อความปลอดภัยของคุณ",
+        "viewHealth": "เมนูสุขภาพและความสามารถ OBD2",
+        "statusPrompt": "เลือกอินเทอร์เฟซการเชื่อมต่อ OBD2 ที่คุณต้องการด้านล่าง",
+        "scanHintIos": "ตรวจสอบให้แน่ใจว่าอะแดปเตอร์ BLE OBD2 เปิดอยู่และอยู่ใกล้กับอุปกรณ์ iOS ของคุณ",
+        "scanHintAndroid": "ตรวจสอบให้แน่ใจว่าบลูทูธทำงานอยู่และอะแดปเตอร์พร้อมสำหรับการจับคู่",
+        "negotiating": "กำลังเจรจา OBD2 Handshake",
+        "failed": "การพยายามเชื่อมต่อล้มเหลว",
+        "errLayer1": "การแก้ไขปัญหา: บลูทูธปิดอยู่ กรุณาเปิดใช้งานบลูทูธในการตั้งค่าอุปกรณ์",
+        "errLayer2": "การแก้ไขปัญหา: หมดเวลาการเชื่อมต่อ ตรวจสอบให้แน่ใจว่าอะแดปเตอร์เสียบแน่นในพอร์ต OBD2 และไฟแสดงสถานะพลังงานสว่างอยู่",
+        "errLayer5": "การแก้ไขปัญหา: การเจรจาโปรโตคอล OBD2 ล้มเหลว ตรวจสอบให้แน่ใจว่ากุญแจสตาร์ทรถอยู่ในตำแหน่ง ON (แนะนำให้เครื่องยนต์ทำงาน)",
+        "errLayer6": "การแก้ไขปัญหา: อะแดปเตอร์เชื่อมต่อแล้ว แต่ ECU ของรถไม่ตอบสนอง กรุณาเปิดสวิตช์กุญแจหรือรีสตาร์ทการเชื่อมต่อ",
+        "errGeneric": "การแก้ไขปัญหา: ตรวจสอบให้แน่ใจว่าอะแดปเตอร์มีไฟ กุญแจสตาร์ทอยู่ในตำแหน่ง ON และไม่มีแอป OBD อื่นเปิดอยู่",
+        "stepAdapter": "การเชื่อมต่ออะแดปเตอร์และคะแนนความสามารถ",
+        "stepProtocol": "การเจรจาโปรโตคอล OBD2",
+        "stepHandshake": "การตรวจสอบการสื่อสาร ECU",
+        "stepStabilization": "การทำให้ลูปเทเลเมทรีที่ใช้งานอยู่เสถียร",
+        "cancel": "Cancel",
         "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
-        "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
         "adapterConnected": "ADAPTER CONNECTED (OK)",
-        "connectDevice": "",
-        "adapterApproved": "",
-        "protocolNegotiating": "",
-        "ecuDetected": "",
-        "ecuResponding": "",
-        "protocolScanningHint": "",
-        "protocolFailed": "",
-        "ecuNotFound": "",
-        "hardwareCapabilityScore": "",
-        "hardwareFatal": ""
+        "lowQualityAdapterWarning": "⚠️ Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols (like K-Line on Dacia, Renault, Fiat, Lada). We highly recommend upgrading to a high-quality OBD2 adapter (v1.5 or original OBDLink/vLinker) to connect successfully.",
+        "statusProfiling": "Analyzing OBD2 adapter capabilities...",
+        "statusScanningCan": "Scanning modern CAN-Bus protocols...",
+        "statusScanningKline": "Waking up K-Line protocols. Old vehicles (Dacia, Renault, Fiat) may take up to 15 seconds to respond...",
+        "statusHandshake": "Verifying ECU communication...",
+        "statusStabilization": "Stabilizing telemetry data stream...",
+        "changeType": "Change Connection Type"
     },
     "dashboard": {
         "selectDevice": "แตะเพื่อเลือกอุปกรณ์",
@@ -241,7 +287,18 @@
         "fuelLevel": "ระดับน้ำมันเชื้อเพลิง",
         "catalystTemp": "ความร้อนแคทตาไลติก",
         "layoutGauge": "เกจ",
-        "obdTerminalTitle": ""
+        "obdTerminalTitle": "OBD HEALTH & TERMINAL",
+        "adapterClone": "CLONE ADAPTER",
+        "adapterOriginal": "ORIGINAL",
+        "adapterCloneShort": "CLONE",
+        "adapterOriginalShort": "ORIGINAL",
+        "pidLabel": "PID: {{pid}}",
+        "limitReached": "Selection Limit",
+        "limitReachedDesc": "You can select a maximum of {{limit}} sensors with this protocol.",
+        "customizeSubtitleKLine": "K-Line protocol connected. You can select a maximum of {{limit}} sensors.",
+        "customizeSubtitleCAN": "CAN-Bus protocol connected. You can select a maximum of {{limit}} sensors.",
+        "unit": "Unit",
+        "layoutChart": "CHART"
     },
     "expertise": {
         "historyFound": "พบประวัติยานพาหนะ!",
@@ -306,13 +363,13 @@
     },
     "info": {
         "desc": "แอปพลิเคชั่นวินิจฉัยรถจักรยานยนต์และยานพาหนะระดับมืออาชีพ เข้ากันได้กับยานพาหนะทุกคัน",
-        "upgrade": "👑 อัปเกรดเป็น MotoCortex PRO",
+        "upgrade": "👑 อัปเกรดเป็น Cortex OBD2 Diagnosis Scanner PRO",
         "upgradeAlert": "การเข้าถึงก่อน 🎉",
-        "upgradeAlertDesc": "MotoCortex กำลังอยู่ในการพัฒนา เนื่องจากคุณเป็นผู้ใช้งานในช่วงแรกๆ ของเรา ฟีเจอร์ระดับโปรทั้งหมดจึงพร้อมให้คุณใช้งานแล้ว ความคิดเห็นของคุณมีค่ามากสำหรับเรา!",
+        "upgradeAlertDesc": "Cortex OBD2 Diagnosis Scanner กำลังอยู่ในการพัฒนา เนื่องจากคุณเป็นผู้ใช้งานในช่วงแรกๆ ของเรา ฟีเจอร์ระดับโปรทั้งหมดจึงพร้อมให้คุณใช้งานแล้ว ความคิดเห็นของคุณมีค่ามากสำหรับเรา!",
         "helpGuide": "ช่วยเหลือและคำแนะนำ",
         "language": "🌐 ภาษา / ภาษา / บาฮาซา",
-        "support": "📞 ศูนย์สนับสนุน",
-        "supportSubject": "การสนับสนุนและข้อเสนอแนะ MotoCortex",
+        "support": "ศูนย์สนับสนุน",
+        "supportSubject": "การสนับสนุนและข้อเสนอแนะ Cortex OBD2 Diagnosis Scanner",
         "thanks": "ขอบคุณ!",
         "thanksDesc": "ขอบคุณสำหรับคำติชมของคุณ คุณสามารถแสดงความคิดเห็นถึงเราได้ที่ Play Store",
         "sections": {
@@ -353,7 +410,7 @@
         "dtcCount": "🔍 รหัสข้อผิดพลาด ( ปริมาณ{{count}})",
         "sensorData": "📊 ข้อมูลเซ็นเซอร์สด",
         "noData": "ไม่สามารถอ่านข้อมูลได้",
-        "proApp": "สแกนด้วย MotoCortex v7 PRO",
+        "proApp": "สแกนด้วย Cortex OBD2 Diagnosis Scanner v7 PRO",
         "date": "วันที่",
         "vinNotFound": "ตรวจไม่พบ",
         "noDtcs": "ไม่มีรหัสข้อผิดพลาด - สะอาด",
@@ -364,7 +421,7 @@
         "intakeAir": "อากาศเข้า",
         "manifold": "นานา",
         "voltage": "แรงดันแบตเตอรี่",
-        "shareMessage": "ติดตามสถานะของรถจักรยานยนต์ของคุณจากกระเป๋าของคุณด้วยแอปพลิเคชั่นวินิจฉัย Motocortex OBD2! 🏍️📲 ดาวน์โหลด: https://motocortex.app"
+        "shareMessage": "ติดตามสถานะของรถจักรยานยนต์ของคุณจากกระเป๋าของคุณด้วยแอปพลิเคชั่นวินิจฉัย Motocortex OBD2! 🏍️📲 ดาวน์โหลด: https://cortexobd2.app"
     },
     "battery": {
         "title": "การทดสอบแบตเตอรี่และการสตาร์ท",
@@ -404,7 +461,7 @@
         }
     },
     "freeze": {
-        "title": "ตรึงเฟรม",
+        "title": "FREEZE FRAME",
         "snapshot": "หน่วยความจำล้มเหลว",
         "desc": "โดยจะอ่านพารามิเตอร์ของเครื่องยนต์เมื่อไฟ Check Engine สว่างขึ้น ข้อมูลนี้ให้ข้อมูลที่สำคัญในการวินิจฉัยข้อผิดพลาด",
         "noDtcs": "ไม่มีการบันทึกรหัสข้อผิดพลาด อาจไม่มีข้อมูล Freeze Frame",
@@ -529,7 +586,12 @@
             "fuelAdaptation": "รีเซ็ตการปรับสภาพน้ำมันเชื้อเพลิง",
             "ecuReset": "รีเซ็ต ECU"
         },
-        "searchLanguage": ""
+        "searchLanguage": "Search Language...",
+        "connectionSection": "OBD Device Connection",
+        "noVehicleTitle": "VEHICLE DETECTION REQUIRED",
+        "noVehicleDesc": "Vehicle identity will be automatically discovered via OBD-II connection. Please pair and connect to your device below.",
+        "registeredVehiclesButton": "ยานพาหนะที่ลงทะเบียนของฉัน",
+        "connectDevice": "เชื่อมต่อกับอุปกรณ์ OBD2"
     },
     "brands": {
         "alfa_romeo": "อัลฟา โรมิโอ",
@@ -605,9 +667,11 @@
         "locSub": "สถาปัตยกรรมระบบ Android บังคับให้ค้นหาอุปกรณ์บลูทูธพลังงานต่ำในบริเวณใกล้เคียง เราไม่ติดตามการขับขี่ของคุณ",
         "grantBtn": "อนุญาตและดำเนินการต่อ",
         "skipBtn": "ข้ามไปก่อน (โหมดสาธิต)",
-        "deniedDesc": "ใบอนุญาตบางส่วนถูกปฏิเสธ MotoCortex อาจไม่สแกนหรือเชื่อมต่อกับอุปกรณ์ OBD2 ได้สำเร็จ",
+        "deniedDesc": "ใบอนุญาตบางส่วนถูกปฏิเสธ Cortex OBD2 Diagnosis Scanner อาจไม่สแกนหรือเชื่อมต่อกับอุปกรณ์ OBD2 ได้สำเร็จ",
         "proceedAnyway": "ดำเนินการต่อต่อไป",
-        "openSettings": "เปิดการตั้งค่า"
+        "openSettings": "เปิดการตั้งค่า",
+        "langTitle": "Select Language",
+        "nextBtn": "CONTINUE"
     },
     "disclaimer": "ชื่อผลิตภัณฑ์ โลโก้ และแบรนด์ทั้งหมดเป็นทรัพย์สินของเจ้าของที่เกี่ยวข้อง ชื่อบริษัท ผลิตภัณฑ์ และบริการทั้งหมดที่ใช้ในแอปพลิเคชันนี้มีวัตถุประสงค์เพื่อการระบุตัวตนเท่านั้น การใช้ชื่อ โลโก้ และแบรนด์เหล่านี้ไม่ได้หมายความถึงการรับรองหรือการสนับสนุนใดๆ",
     "hiddenFeatures": {
@@ -640,38 +704,262 @@
         "writeError": "เกิดข้อผิดพลาดในการเขียน โปรดลองอีกครั้ง",
         "simulationBanner": "โหมดจำลอง — การเขียน ECU จริงยังไม่ได้เปิดใช้งาน",
         "closeBtn": "ปิด",
+        "unsupportedOk": "OK",
         "disclaimerTitle": "LIABILITY DISCLAIMER",
         "disclaimerFeature": "Feature",
-        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• MotoCortex cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
+        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• Cortex OBD2 Diagnosis Scanner cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
         "checkboxTitle": "CONFIRMATION REQUIRED",
         "check1": "I have read this warning and understand that my vehicle warranty may be affected.",
-        "check2": "I acknowledge that MotoCortex is not responsible for any faults or damages resulting from this operation.",
+        "check2": "I acknowledge that Cortex OBD2 Diagnosis Scanner is not responsible for any faults or damages resulting from this operation.",
         "check3": "I wish to make this change knowingly and of my own free will, accepting all risks.",
         "disclaimerCancel": "CANCEL",
         "disclaimerContinue": "CONTINUE",
         "unsupportedTitle": "Not Supported",
-        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands.",
-        "unsupportedOk": "OK"
+        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands."
     },
     "disconnectShort": "เลิกเชื่อมต่อ",
     "obdTerminal": {
-        "title": "",
-        "terminalTitle": "",
-        "terminalPlaceholder": "",
-        "inputPlaceholder": "",
-        "sendButton": "",
-        "statsTitle": "",
-        "connectionProtocol": "",
-        "none": "",
-        "hardwareQualityScore": "",
-        "original": "",
-        "clone": "",
-        "requestResponseCount": "",
-        "timeoutCount": "",
-        "recoveryCount": "",
-        "diagnosticLogTitle": "",
-        "clearButton": "",
-        "shareButton": "",
-        "noLogs": ""
+        "title": "OBD HEALTH & TERMINAL",
+        "terminalTitle": "OBD TERMINAL",
+        "terminalPlaceholder": "Type command below to send to ECU (e.g. 010C, ATRV)",
+        "inputPlaceholder": "Enter command...",
+        "sendButton": "SEND",
+        "statsTitle": "OBD HEALTH STATISTICS",
+        "connectionProtocol": "Connection Protocol:",
+        "none": "None",
+        "hardwareQualityScore": "Hardware Quality Score:",
+        "original": "Original",
+        "clone": "Clone",
+        "requestResponseCount": "Request / Response Count:",
+        "timeoutCount": "Timeout Count:",
+        "recoveryCount": "Recovery Count (Recovery):",
+        "diagnosticLogTitle": "DIAGNOSTIC LOG",
+        "clearButton": "CLEAR",
+        "shareButton": "SHARE",
+        "noLogs": "No diagnostic logs found."
+    },
+    "dtcContext": {
+        "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
+        "cooling": "Critical cooling hazard detected. View detailed repair steps →",
+        "ignition": "Ignition system issue detected. View detailed repair steps →",
+        "chassis": "Chassis safety system alert. Unlock PRO for full analysis →",
+        "body": "Body electronics fault found. Upgrade for complete diagnostics →",
+        "network": "Communication network error. PRO unlocks full troubleshooting →",
+        "fallback": "Unlock detailed fault analysis, repair costs & risk assessment →"
+    },
+    "perfTeaser": {
+        "limitTitle": "Daily Limit Reached",
+        "limitDesc": "You have reached the daily limit of 3 free 0-60 km/h tests. Upgrade to PRO for unlimited tests and 0-100 km/h measurements."
+    },
+    "sandbox": {
+        "title": "Sandbox Telemetry Control",
+        "connectionStatus": "Connection Status:",
+        "ecuStatus": "ECU Status:",
+        "fps": "UI Performance: {{fps}} FPS",
+        "stressBtnStart": "Start 20Hz Stress",
+        "stressBtnStop": "Stop Telemetry Loop",
+        "stopDisconnect": "Stop / Disconnect",
+        "discoveredDevices": "DISCOVERED DEVICES",
+        "connect": "CONNECT",
+        "scanning": "Scanning...",
+        "scan": "Scan Devices",
+        "rpm": "Engine RPM",
+        "speed": "Vehicle Speed",
+        "coolant": "Coolant Temp",
+        "throttle": "Throttle Position",
+        "notConnected": "Not Connected",
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "error": "Error",
+        "openSandbox": "DIAG",
+        "advancedTerminal": "Advanced Connection Terminal (DIAG)",
+        "terminalTitle": "Live Terminal & Bus Monitor",
+        "pause": "PAUSE",
+        "resume": "RESUME",
+        "share": "SHARE",
+        "clear": "CLEAR"
+    },
+    "health": {
+        "titleMenu": "สุขภาพและความสามารถ OBD2",
+        "adapterQuality": "คุณภาพและประสิทธิภาพอะแดปเตอร์",
+        "excellent": "ยอดเยี่ยม (ของแท้)",
+        "good": "ดี (มาตรฐาน)",
+        "clone": "ไม่เข้ากัน / โคลน",
+        "firmware": "เวอร์ชันเฟิร์มแวร์:",
+        "capScore": "คะแนนความสามารถ",
+        "latency": "เวลาแฝง (RTT)",
+        "protocol": "โปรโตคอลที่ใช้งาน",
+        "featureSupport": "เมทริกซ์ฟีเจอร์แอปพลิเคชัน",
+        "matrixReadCodes": "อ่านและลบรหัสข้อผิดพลาด",
+        "matrixLiveSensors": "การตรวจสอบเซ็นเซอร์สด (พื้นฐาน)",
+        "matrixBattery": "ทดสอบแบตเตอรี่ / แรงดัน",
+        "matrixHighSpeed": "เทเลเมทรีความเร็วสูง (20Hz)",
+        "matrixCoding": "การเข้ารหัสและการปรับตัว ECU",
+        "active": "ใช้งานอยู่",
+        "degraded": "ลดลง (RTT ช้า)",
+        "locked": "ล็อค (โหมดปลอดภัย)",
+        "warning": "การล็อคความปลอดภัย:",
+        "lockExplain": "อะแดปเตอร์ของคุณถูกระบุว่าเป็นชิปโคลน/ปลอม เนื่องจากอะแดปเตอร์โคลนขาดความแม่นยำในการจับเวลาและอาจทำให้รถเสียหายระหว่างการดำเนินการเขียน ฟีเจอร์การเข้ารหัสและการปรับตัวจึงถูกล็อค กรุณาซื้ออุปกรณ์ ELM327 v2.1 หรือ vLinker ของแท้สำหรับการเข้ารหัสที่ปลอดภัย",
+        "vehiclePids": "รายการตรวจสอบเซ็นเซอร์ยานพาหนะ",
+        "checklistPrompt": "พารามิเตอร์เซ็นเซอร์มาตรฐาน (PID) ที่รองรับโดย ECU ของยานพาหนะของคุณแสดงอยู่ด้านล่าง เซ็นเซอร์ที่ไม่มีเครื่องหมายถูกจะไม่ได้รับรายงานจากยานพาหนะของคุณ",
+        "supportedBadge": "✓ รองรับ",
+        "unsupportedBadge": "❌ ไม่รองรับ"
+    },
+    "sensor": {
+        "rpm": "รอบต่อนาทีของเครื่องยนต์ (RPM)",
+        "speed": "ความเร็วยานพาหนะ",
+        "coolant": "อุณหภูมิน้ำหล่อเย็น",
+        "throttle": "ตำแหน่งคันเร่ง",
+        "voltage": "แรงดันโมดูลควบคุม",
+        "maf": "อัตราการไหลของอากาศ MAF",
+        "iat": "อุณหภูมิอากาศเข้า",
+        "load": "ภาระเครื่องยนต์ที่คำนวณแล้ว",
+        "fuel": "ระดับน้ำมันเชื้อเพลิง",
+        "oilTemp": "อุณหภูมิน้ำมันเครื่อง"
+    },
+    "secretDebug": {
+        "title": "⚡ MOTO CORTEX DEV PANEL",
+        "logFileSize": "Black Box / File Size:",
+        "dtcCloudSync": "🛰️ DTC CLOUD SYNCHRONIZATION",
+        "lastSync": "Last Sync",
+        "syncNow": "Sync Now",
+        "developerTools": "DEVELOPER TOOLS",
+        "trialResetSuccess": "Free Trial counter reset successfully!",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "The application will now crash intentionally. Confirm to verify Crashlytics integration.",
+        "crashButton": "Crash",
+        "crashTest": "Crash Test"
+    },
+    "features": {
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
+        "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "✓ Safe (Ready for ECU Coding Write)",
+        "voltageLocked": "⚠️ Low Voltage (Coding Locked, Read Active)",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "⚠️ Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
+        "items": {
+            "vag_staging_needle_sweep": {
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
+            },
+            "vag_acoustic_lock_confirmation": {
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
+            },
+            "vag_american_parking_lights": {
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
+            },
+            "vag_drl_menu_toggle": {
+                "name": "Daytime Running Lights (DRL) Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
+            },
+            "vag_tear_wiping": {
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
+            },
+            "vag_emergency_brake_flashing": {
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
+            },
+            "vag_cornering_lights": {
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
+            },
+            "vag_comfort_mirror_folding": {
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
+            },
+            "vag_lap_timer": {
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
+            },
+            "vag_refuel_quantity": {
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
+            },
+            "bmw_start_stop_memory": {
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state (OFF/ON) across vehicle restarts."
+            },
+            "bmw_digital_speedometer": {
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
+            },
+            "bmw_sport_displays": {
+                "name": "Sport Displays (HP & Nm Gauges)",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
+            },
+            "bmw_acoustic_lock_sound": {
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
+            },
+            "bmw_mirror_fold_delay_zero": {
+                "name": "Instant Mirror Folding (0.0s Delay)",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
+            },
+            "bmw_tpms_tire_temperature": {
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
+            },
+            "renault_trip_computer_enable": {
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
+            },
+            "renault_external_temp_display": {
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
+            },
+            "renault_automatic_tailgate": {
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
+            },
+            "renault_alarm_chirp": {
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
+            },
+            "renault_shift_indicator": {
+                "name": "Gear Shift Indicator (GSI)",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
+            },
+            "ford_double_horn_honk_disable": {
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
+            },
+            "ford_auto_door_locking": {
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
+            },
+            "ford_tpms_psi_display": {
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
+            },
+            "ford_sync_climate_screen": {
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
+            },
+            "stellantis_power_windows_remote": {
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
+            },
+            "stellantis_cornering_fogs": {
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
+            }
+        },
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version."
     }
 }

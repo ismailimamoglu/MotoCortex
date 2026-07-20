@@ -41,30 +41,3 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
-
-// MotoCortex V2 - Expo-Compatible 16 KB Page Alignment Layer
-subprojects { subProject ->
-    // Modül konfigürasyonunu güvenli şekilde enjekte eden closure
-    def configure16KbAlignment = { targetProject ->
-        if (targetProject.hasProperty("android")) {
-            targetProject.android {
-                defaultConfig {
-                    externalNativeBuild {
-                        cmake {
-                            arguments "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=16384"
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Expo kilitlenmesini çözen kritik guard: Proje çoktan evaluate edildiyse doğrudan çalıştır, edilmediyse sıraya al.
-    if (subProject.state.executed) {
-        configure16KbAlignment(subProject)
-    } else {
-        subProject.afterEvaluate {
-            configure16KbAlignment(subProject)
-        }
-    }
-}

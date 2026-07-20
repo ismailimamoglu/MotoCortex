@@ -19,6 +19,7 @@ import { syncManufacturerDtc } from '../services/DtcSyncService';
 import { useResponsive } from '../hooks/useResponsive';
 import { useAppStore } from '../store/useAppStore';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useTranslation } from 'react-i18next';
 
 interface SecretDebugModalProps {
   visible: boolean;
@@ -26,12 +27,12 @@ interface SecretDebugModalProps {
 }
 
 export default function SecretDebugModal({ visible, onClose }: SecretDebugModalProps) {
+  const { t } = useTranslation();
   const colors = useThemeColors();
   const vehicleMake = useBluetoothStore(s => s.vehicleMake);
   const dtcSyncStatus = useBluetoothStore(s => s.dtcSyncStatus);
   const lastDtcSyncTime = useBluetoothStore(s => s.lastDtcSyncTime);
-  const isSimulationMode = useAppStore(s => s.isSimulationMode);
-  const toggleSimulationMode = useAppStore(s => s.toggleSimulationMode);
+
   const freeUsageCount = useAppStore(s => s.freeUsageCount);
   const resetFreeUsage = useAppStore(s => s.resetFreeUsage);
   const [logs, setLogs] = useState<string>('Yükleniyor...');
@@ -74,7 +75,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
     try {
       const isAvailable = await Sharing.isAvailableAsync();
       if (!isAvailable) {
-        Alert.alert('Desteklenmiyor', 'Paylaşım özelliği bu cihazda kullanılamıyor.');
+        Alert.alert(t('common.unsupported', 'Unsupported'), t('obdTerminal.noShareSupport', 'Sharing features are not available on this device.'));
         return;
       }
       
@@ -83,11 +84,11 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
       
       await Sharing.shareAsync(fileUri, {
         mimeType: 'text/plain',
-        dialogTitle: 'MotoCortex Kara Kutu Log Dosyası',
+        dialogTitle: t('obdTerminal.diagnosticLogTitle', 'DIAGNOSTIC LOG'),
         UTI: 'public.plain-text',
       });
     } catch (e: any) {
-      Alert.alert('Paylaşım Hatası', e.message || 'Dosya paylaşılamadı.');
+      Alert.alert(t('bento.settings.shareError', 'Sharing Error'), e.message || t('bento.settings.noLogsToShare', 'There are no diagnostic logs to share.'));
     }
   };
 
@@ -269,40 +270,40 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
             {/* Glow Accent Header */}
             <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
               <View>
-                <Text style={[sDyn.title, { color: colors.cyan }]}>⚡ MOTO CORTEX DEV PANEL</Text>
-                <Text style={[sDyn.subtitle, { color: colors.textSec }]}>Kara Kutu / Dosya Boyutu: {fileSize}</Text>
+                <Text style={[sDyn.title, { color: colors.cyan }]}>{t('secretDebug.title', '⚡ CORTEX OBD2 DEV PANEL')}</Text>
+                <Text style={[sDyn.subtitle, { color: colors.textSec }]}>{t('secretDebug.logFileSize', 'Black Box / File Size:')} {fileSize}</Text>
               </View>
               <TouchableOpacity 
                 onPress={onClose} 
                 style={[sDyn.closeBtn, { backgroundColor: `${colors.cyan}18` }]}
               >
-                <Text style={[sDyn.closeBtnText, { color: colors.cyan }]}>KAPAT</Text>
+                <Text style={[sDyn.closeBtnText, { color: colors.cyan }]}>{t('common.close', 'Close').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
 
             {/* DTC Sync Card */}
             <View style={[sDyn.syncCard, { backgroundColor: `${colors.cyan}0b`, borderColor: colors.border }]}>
-              <Text style={[sDyn.sectionTitle, { color: colors.cyan, fontFamily: colors.mono }]}>🛰️ DTC BULUT SENKRONİZASYONU</Text>
+              <Text style={[sDyn.sectionTitle, { color: colors.cyan, fontFamily: colors.mono }]}>{t('secretDebug.dtcCloudSync', '🛰️ DTC CLOUD SYNCHRONIZATION')}</Text>
               
               <View style={sDyn.syncRow}>
                 <View style={sDyn.syncCol}>
-                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>Marka</Text>
-                  <Text style={[sDyn.syncValue, { color: colors.textPri, fontWeight: 'bold' }]}>{vehicleMake || 'BİLİNMİYOR'}</Text>
+                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('common.brand', 'Brand')}</Text>
+                  <Text style={[sDyn.syncValue, { color: colors.textPri, fontWeight: 'bold' }]}>{vehicleMake || t('common.unknown', 'Unknown').toUpperCase()}</Text>
                 </View>
                 
                 <View style={sDyn.syncCol}>
-                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>Durum</Text>
+                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('common.status', 'Status')}</Text>
                   <Text style={[sDyn.syncValue, { 
                     color: dtcSyncStatus === 'success' ? colors.green : dtcSyncStatus === 'error' ? colors.red : colors.cyan,
                     fontWeight: 'bold'
                   }]}>
-                    {dtcSyncStatus === 'syncing' ? 'Eşitleniyor...' : dtcSyncStatus === 'success' ? 'Başarılı' : dtcSyncStatus === 'error' ? 'Hata' : 'Beklemede'}
+                    {dtcSyncStatus === 'syncing' ? t('common.syncing', 'Syncing...') : dtcSyncStatus === 'success' ? t('common.success', 'Success') : dtcSyncStatus === 'error' ? t('common.error', 'Error') : t('common.pending', 'Pending')}
                   </Text>
                 </View>
 
                 {lastDtcSyncTime && (
                   <View style={sDyn.syncCol}>
-                    <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>Son Eşitleme</Text>
+                    <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('secretDebug.lastSync', 'Last Sync')}</Text>
                     <Text style={[sDyn.syncValue, { color: colors.textPri }]}>{lastDtcSyncTime}</Text>
                   </View>
                 )}
@@ -318,34 +319,16 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 }}
               >
                 <Text style={[sDyn.syncBtnText, { fontFamily: colors.mono }]}>
-                  {dtcSyncStatus === 'syncing' ? 'EŞİTLENİYOR...' : 'ŞİMDİ EŞİTLE'}
+                  {dtcSyncStatus === 'syncing' ? t('common.syncing', 'Syncing...').toUpperCase() : t('secretDebug.syncNow', 'Sync Now').toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>
 
             {/* Developer Settings Card */}
             <View style={[sDyn.syncCard, { backgroundColor: `${colors.purple}0b`, borderColor: colors.border, marginBottom: scaleHeight(12) }]}>
-              <Text style={[sDyn.sectionTitle, { color: colors.purple, fontFamily: colors.mono }]}>🛠️ GELİŞTİRİCİ ARAÇLARI</Text>
+              <Text style={[sDyn.sectionTitle, { color: colors.purple, fontFamily: colors.mono }]}>{t('secretDebug.developerTools', 'DEVELOPER TOOLS')}</Text>
               
               <View style={{ flexDirection: 'row', gap: scaleMod(8), marginBottom: scaleHeight(8) }}>
-                {/* Simulator Mode Toggle */}
-                <TouchableOpacity
-                  style={[
-                    sDyn.actionBtn,
-                    { 
-                      borderColor: isSimulationMode ? colors.green : colors.border, 
-                      backgroundColor: isSimulationMode ? `${colors.green}14` : 'transparent',
-                      flex: 1
-                    }
-                  ]}
-                  onPress={toggleSimulationMode}
-                  activeOpacity={0.4}
-                >
-                  <Text style={[sDyn.actionBtnText, { color: isSimulationMode ? colors.green : colors.textPri, fontFamily: colors.mono }]}>
-                    {isSimulationMode ? '🟢 SİMÜLATÖR AÇIK' : '⚫ SİMÜLATÖR KAPALI'}
-                  </Text>
-                </TouchableOpacity>
-
                 {/* Reset Trial */}
                 <TouchableOpacity
                   style={[
@@ -358,12 +341,12 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                   ]}
                   onPress={() => {
                     resetFreeUsage();
-                    Alert.alert("BAŞARILI", "Free Trial sayacı sıfırlandı!");
+                    Alert.alert(t('common.success', 'Success'), t('secretDebug.trialResetSuccess', 'Free Trial counter reset successfully!'));
                   }}
                   activeOpacity={0.4}
                 >
                   <Text style={[sDyn.actionBtnText, { color: colors.amber, fontFamily: colors.mono }]}>
-                    🔄 SIFIRLA ({freeUsageCount}/3)
+                    🔄 {t('common.reset', 'Reset').toUpperCase()} ({freeUsageCount}/3)
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -381,12 +364,12 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                   ]}
                   onPress={() => {
                     Alert.alert(
-                      "Crash Test",
-                      "Uygulama şimdi kasten çökecektir. Crashlytics entegrasyonunu doğrulamak için bunu onaylayın.",
+                      t('secretDebug.crashTestTitle', 'Crash Test'),
+                      t('secretDebug.crashTestDesc', 'The application will now crash intentionally. Confirm to verify Crashlytics integration.'),
                       [
-                        { text: "İptal", style: "cancel" },
+                        { text: t('common.cancel', 'Cancel'), style: "cancel" },
                         {
-                          text: "Çökert",
+                          text: t('secretDebug.crashButton', 'Crash'),
                           style: "destructive",
                           onPress: () => {
                             crashlytics().log("Test crash triggered by developer");
@@ -399,14 +382,14 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                   activeOpacity={0.4}
                 >
                   <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>
-                    💥 CRASH TEST (CRASHLYTICS)
+                    💥 {t('secretDebug.crashTest', 'Crash Test').toUpperCase()} (CRASHLYTICS)
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
  
             {/* Console Log Area */}
-            <View style={[sDyn.consoleContainer, { backgroundColor: '#05070a', borderColor: colors.border }]}>
+            <View style={[sDyn.consoleContainer, { backgroundColor: '#090d16', borderColor: colors.border }]}>
               <ScrollView 
                 style={sDyn.scrollView} 
                 contentContainerStyle={sDyn.scrollContent}
@@ -414,7 +397,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                   if (ref) setTimeout(() => ref.scrollToEnd({ animated: true }), 100);
                 }}
               >
-                <Text style={[sDyn.consoleText, { color: colors.textPri, fontFamily: colors.mono }]}>
+                <Text style={[sDyn.consoleText, { color: '#00ff88', fontFamily: colors.mono }]}>
                   {logs}
                 </Text>
               </ScrollView>
@@ -427,7 +410,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 onPress={handleClear}
                 activeOpacity={0.4}
               >
-                <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>TEMİZLE</Text>
+                <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>{t('common.clear', 'Clear').toUpperCase()}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
@@ -435,7 +418,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 onPress={loadLogsAndInfo}
                 activeOpacity={0.4}
               >
-                <Text style={[sDyn.actionBtnText, { color: colors.cyan, fontFamily: colors.mono }]}>YENİLE</Text>
+                <Text style={[sDyn.actionBtnText, { color: colors.cyan, fontFamily: colors.mono }]}>{t('common.refresh', 'Refresh').toUpperCase()}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
@@ -443,7 +426,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 onPress={handleShare}
                 activeOpacity={0.4}
               >
-                <Text style={[sDyn.actionBtnText, { color: '#000000', fontWeight: '900', fontFamily: colors.mono }]}>PAYLAŞ</Text>
+                <Text style={[sDyn.actionBtnText, { color: '#000000', fontWeight: '900', fontFamily: colors.mono }]}>{t('common.share', 'Share').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>

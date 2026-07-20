@@ -27,6 +27,7 @@ import { ConnectionStateMachine, ConnectionState } from '../core/connection/Conn
 import { ProtocolNegotiator } from '../core/connection/ProtocolNegotiator';  
 import { PollingOrchestrator } from '../core/connection/PollingOrchestrator';  
 import { ProtocolEngine } from '../core/connection/ProtocolEngine';
+import CommandScheduler from '../core/queue/CommandScheduler';
 
 export const useBluetooth = () => {  
    const { i18n: reactI18n } = useTranslation();  
@@ -132,17 +133,22 @@ export const useBluetooth = () => {
        });  
    }, []);
 
-   const handleVinReceived = useCallback(async (vin: string) => {  
-       if (!vin) return;  
-       const make = getMakeFromVin(vin);  
-       useBluetoothStore.getState().setSensorData({ vehicleMake: make });  
-       const telemetryState = useTelemetryStore.getState();  
-       if (telemetryState.activeSessionVehicle) {  
-           telemetryState.setActiveSessionVehicle({ ...telemetryState.activeSessionVehicle, vin });  
-           await bindVinToRegisteredVehicle(telemetryState.activeSessionVehicle.brand, telemetryState.activeSessionVehicle.model, telemetryState.activeSessionVehicle.year, vin);  
-       }  
-       await preloadDynamicDtc(make);  
-   }, []);
+    const handleVinReceived = useCallback(async (vin: string) => {  
+        if (!vin) return;  
+        const { VehicleIdentityService } = require('../services/VehicleIdentityService');
+        const profile = await VehicleIdentityService.decodeVehicleFromVin(vin);
+        
+        const btStore = useBluetoothStore.getState();
+        btStore.setSuggestedVehicleProfile(profile);
+        btStore.setSensorData({ vehicleMake: profile.make });  
+
+        const telemetryState = useTelemetryStore.getState();  
+        if (telemetryState.activeSessionVehicle) {  
+            telemetryState.setActiveSessionVehicle({ ...telemetryState.activeSessionVehicle, vin });  
+            await bindVinToRegisteredVehicle(telemetryState.activeSessionVehicle.brand, telemetryState.activeSessionVehicle.model, telemetryState.activeSessionVehicle.year, vin);  
+        }  
+        await preloadDynamicDtc(profile.make);  
+    }, []);
 
    const initializeAndCheckEcu = async () => {  
        if (isInitializationMutexLocked.current) return;  
@@ -155,6 +161,7 @@ export const useBluetooth = () => {
            setEcuStatus('connected'); isInitializationMutexLocked.current = false; return;  
        }
 
+       clearLogs();
        ProtocolEngine.resetSession();  
        useBluetoothStore.getState().addLog(`HANDSHAKE_START: timestamp=${Date.now()}`);  
        setEcuStatus('connecting'); setError(null);  
@@ -168,20 +175,21 @@ export const useBluetooth = () => {
            { id: 'protocol', labelKey: 'connection.stepProtocol', defaultLabel: 'OBD2 Protocol Negotiation', status: 'idle' },  
            { id: 'handshake', labelKey: 'connection.stepHandshake', defaultLabel: 'ECU Communication Verification', status: 'idle' },  
            { id: 'stabilization', labelKey: 'connection.stepStabilization', defaultLabel: 'Active Telemetry Loop Stabilization', status: 'idle' }  
-       ];  
-       useBluetoothStore.getState().setSensorData({ connectionSteps: initialSteps, connectionProgress: 10 });
+       ];         useBluetoothStore.getState().setSensorData({ connectionSteps: initialSteps, connectionProgress: 10 });
 
-       try {  
-           OBDCommandQueue.clear(new Error('RETRY_INIT_FLUSH'));  
-           await preciseSleep(550); 
+        try {  
+            useBluetoothStore.getState().setConnectionStatusText('connection.statusProfiling');
+            OBDCommandQueue.clear(new Error('RETRY_INIT_FLUSH'));  
+            await preciseSleep(550); 
 
-           await ProtocolNegotiator.runBenchmark();  
-           await ProtocolNegotiator.applyPostResetConfig();  
-           TransportRateLimiter.initialize();
+            await ProtocolNegotiator.runBenchmark();  
+            await ProtocolNegotiator.applyPostResetConfig();  
+            TransportRateLimiter.initialize();
 
-           updateStep('adapter', 'success', 25);  
-           updateStep('protocol', 'pending', 35);  
-           ConnectionStateMachine.transitionTo(ConnectionState.PROTOCOL_SCANNING);            
+            updateStep('adapter', 'success', 25);  
+            updateStep('protocol', 'pending', 35);  
+            useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningCan');
+            ConnectionStateMachine.transitionTo(ConnectionState.PROTOCOL_SCANNING);            
            let ecuConnected = false;  
            let rpmRes = '';
 
@@ -203,7 +211,7 @@ export const useBluetooth = () => {
                useBluetoothStore.getState().setProtocol(selectedProtocol ? selectedProtocol.trim() : 'UNKNOWN');  
            } catch (e) {  
                ProtocolCircuitBreaker.recordFailure("0");  
-               useBluetoothStore.getState().addLog('DIAG: AT SP 0 failed or invalid, executing CAN-first fallback ring (SP 6 -> SP 7 -> SP 5 -> SP 3)...');
+               useBluetoothStore.getState().addLog('DIAG: AT SP 0 failed or invalid, executing CAN-first fallback ring (SP 6 -> SP 7 -> SP 5 -> SP 4 -> SP 3)...');
 
                // 1. Try CAN-Bus fallback first (SP 6 -> SP 7)
                const canProtocols = ["6", "7"];
@@ -217,7 +225,11 @@ export const useBluetooth = () => {
                        OBDCommandQueue.clear(new Error('CAN_FALLBACK_RESET'));
                        await preciseSleep(250);
 
-                       const atzRes = await OBDCommandQueue.add("AT Z", 2000);
+                       const atzRes = await OBDCommandQueue.add("AT WS", 2000);
+                       // Rule mandate: Enforce asynchronous drain/flush of serial buffer + 500ms cooldown
+                       BluetoothService.clearBuffer();
+                       await preciseSleep(500);
+
                        if ((atzRes || '').toUpperCase().trim() === 'STOPPED') {
                            await waitForELMPrompt(1500); await preciseSleep(2000); BluetoothService.clearBuffer();
                        } else {
@@ -250,17 +262,19 @@ export const useBluetooth = () => {
                        } else {
                            ProtocolCircuitBreaker.recordFailure(protocolCmd);
                        }
-                   } catch (err) {
+                   } catch (err: any) {
+                       useBluetoothStore.getState().addLog(`DIAG_ERROR: CAN fallback failed for proto ${proto}: ${err?.message || err}`);
                        OBDCommandQueue.setAtomicLock(false);
                        ProtocolCircuitBreaker.recordFailure(protocolCmd);
                    }
                }
 
-               // 2. Try K-Line fallback (SP 5 -> SP 3)
+               // 2. Try K-Line fallback (SP 5 -> SP 4 -> SP 3)
                if (!ecuConnected) {
-                   useBluetoothStore.getState().addLog('DIAG: CAN fallback failed or skipped. Executing K-Line fallback (SP 5 -> SP 3)...');
+                   useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningKline');
+                   useBluetoothStore.getState().addLog('DIAG: CAN fallback failed or skipped. Executing K-Line fallback (SP 5 -> SP 4 -> SP 3)...');
                    const targetAddresses = VehicleProfileDB.getKLineAddressUnion();
-                   const klineProtocols = ["5", "3"];
+                   const klineProtocols = ["5", "4", "3"];
 
                    for (const address of targetAddresses) {
                        if (ecuConnected) break;
@@ -275,7 +289,11 @@ export const useBluetooth = () => {
                                OBDCommandQueue.clear(new Error('KLINE_SCAN_RESET'));
                                await preciseSleep(250);
 
-                               const atzResKLine = await OBDCommandQueue.add("AT Z", 2000);
+                               const atzResKLine = await OBDCommandQueue.add("AT WS", 2000);
+                               // Rule mandate: Enforce asynchronous drain/flush of serial buffer + 500ms cooldown
+                               BluetoothService.clearBuffer();
+                               await preciseSleep(500);
+
                                const atzCleanKLine = (atzResKLine || '').toUpperCase().trim();
                                if (atzCleanKLine === 'STOPPED' || atzCleanKLine === '') {
                                    await waitForELMPrompt(1500);
@@ -316,7 +334,8 @@ export const useBluetooth = () => {
                                } else {
                                    ProtocolCircuitBreaker.recordFailure(protoKey);
                                }
-                           } catch (scanErr) {
+                           } catch (scanErr: any) {
+                               useBluetoothStore.getState().addLog(`DIAG_ERROR: K-Line fallback failed for address ${addressHex} proto ${proto}: ${scanErr?.message || scanErr}`);
                                OBDCommandQueue.setAtomicLock(false);
                                ProtocolCircuitBreaker.recordFailure(protoKey);
                            }
@@ -332,6 +351,7 @@ export const useBluetooth = () => {
 
            updateStep('protocol', 'success', 50);  
            updateStep('handshake', 'pending', 60);  
+           useBluetoothStore.getState().setConnectionStatusText('connection.statusHandshake');
            ConnectionStateMachine.transitionTo(ConnectionState.ECU_HANDSHAKE);  
            await preciseSleep(250);
 
@@ -341,14 +361,15 @@ export const useBluetooth = () => {
 
            updateStep('handshake', 'success', 75);  
            updateStep('stabilization', 'pending', 80);
+           useBluetoothStore.getState().setConnectionStatusText('connection.statusStabilization');
 
            const connectedProtocol = useBluetoothStore.getState().protocol || '';  
            const pUpper = connectedProtocol.toUpperCase();
            const isCan = pUpper.includes('CAN') || connectedProtocol.includes('6') || connectedProtocol.includes('7');  
            useBluetoothStore.getState().setSensorData({ guardTime: isCan ? 100 : 200 });
 
-           // Dynamically inject ATAT0 and ATST 96 for legacy ISO/KWP (3, 4, 5) protocols
-           const isLegacyIsoKwp = pUpper.includes('KWP') || pUpper.includes('ISO 14230') || pUpper.includes('ISO 9141') || pUpper.includes('3') || pUpper.includes('4') || pUpper.includes('5');
+           // Dynamically inject ATAT0 and ATST 96 for legacy ISO/KWP (3, 4, 5) protocols (Ensure CAN protocols are excluded)
+           const isLegacyIsoKwp = !isCan && (pUpper.includes('KWP') || pUpper.includes('ISO 14230') || pUpper.includes('ISO 9141') || pUpper.includes('3') || pUpper.includes('4') || pUpper.includes('5'));
            if (isLegacyIsoKwp) {
                useBluetoothStore.getState().addLog('LEGACY_PROFILE_INJECTION: Injecting ATAT0 and ATST 96 for slow protocols.');
                try {
@@ -364,7 +385,6 @@ export const useBluetooth = () => {
            }
 
            ConnectionStateMachine.transitionTo(ConnectionState.TELEMETRY_ACTIVE);  
-           setEcuStatus('connected');  
            useTelemetryStore.getState().setSessionDynamicKey(ProtocolEngine.getRelativeLogicalTimestamp().toString());  
            setLastResponse(rpmRes);  
            setError(null);
@@ -380,10 +400,17 @@ export const useBluetooth = () => {
                useBluetoothStore.getState().addLog(`DIAG_WARN: PID Discovery stalled or timed out: ${err.message}`);
            });
 
-           updateStep('stabilization', 'success', 100);  
-           startPolling();  
-           initSuccess = true;  
-       } catch (e) {  
+            setEcuStatus('connected');
+            updateStep('stabilization', 'success', 100);  
+            useBluetoothStore.getState().setConnectionStatusText(null);
+            startPolling();  
+            initSuccess = true;  
+            setTimeout(() => {
+                runDiagnostics().catch(err => {
+                    useBluetoothStore.getState().addLog(`DIAG_WARN: Auto diagnostics failed: ${err?.message || err}`);
+                });
+            }, 1000);
+        } catch (e) {  
            updateStep('stabilization', 'failed', useBluetoothStore.getState().connectionProgress);  
            useBluetoothStore.getState().addLog(`HANDSHAKE_END: Failed. error=${e instanceof Error ? e.message : String(e)}`);  
            setEcuStatus('error');  
@@ -397,46 +424,62 @@ export const useBluetooth = () => {
                ]);  
            }  
            useBluetoothStore.getState().setConnectingDeviceId(null);  
+           useBluetoothStore.getState().setConnectionStatusText(null);
            isInitializationMutexLocked.current = false;  
        }  
    };
 
    const connect = useCallback(async (selectedId: string, selectedName: string = 'Device') => {  
-       const currentStatus = useBluetoothStore.getState().status;  
-       if (currentStatus === 'connecting' || currentStatus === 'connected') return;
+        const currentStatus = useBluetoothStore.getState().status;  
+        if (currentStatus === 'connecting' || currentStatus === 'connected') return;
 
-       BluetoothService.onDisconnect(() => { });  
-       useBluetoothStore.getState().setConnectingDeviceId(selectedId);  
-       setStatus('connecting'); setAdapterStatus('connecting'); setEcuStatus('disconnected');
+        // Reset the CommandScheduler mode and queues to start the new connection fresh
+        CommandScheduler.reset();
 
-       const connected = await BluetoothService.connect(selectedId);  
-       if (connected) {  
-           setDevice(selectedName, selectedId); setLastDevice(selectedName, selectedId);  
-           ConnectionStateMachine.transitionTo(ConnectionState.ADAPTER_CONNECTING);
+        BluetoothService.onDisconnect(() => { });  
+        useBluetoothStore.getState().setConnectingDeviceId(selectedId);  
+        setStatus('connecting'); setAdapterStatus('connecting'); setEcuStatus('disconnected');
 
-           BluetoothService.onDisconnect(async () => {  
-               OBDCommandQueue.clear(new Error('CONNECTION_LOST'));  
-               stopPolling();  
-               reset();
+        const connected = await BluetoothService.connect(selectedId);  
+        if (connected) {  
+            setDevice(selectedName, selectedId); setLastDevice(selectedName, selectedId);  
+            ConnectionStateMachine.transitionTo(ConnectionState.ADAPTER_CONNECTING);
 
-               let reconnected = false;  
-               for (let attempt = 1; attempt <= 3; attempt++) {  
-                   await preciseSleep(1000 * attempt);  
-                   if (await BluetoothService.connect(selectedId)) { reconnected = true; break; }  
-               }
+            // Send ATZ and AT0 reset sequence to guarantee adapter start state
+            try {
+                await OBDCommandQueue.add('ATZ', 1500, 'HIGH_PRIORITY_AD_HOC');
+                await OBDCommandQueue.add('AT0', 500, 'HIGH_PRIORITY_AD_HOC');
+            } catch (e) {
+                useBluetoothStore.getState().addLog(`CONNECT_RESET: Initial reset commands timed out/failed. Proceeding anyway: ${e}`);
+            }
 
-               if (reconnected) {  
-                   useBluetoothStore.getState().setSensorData({ status: 'connected', adapterStatus: 'connected' });  
-                   initializeAndCheckEcu();  
-               } else {  
-                   ConnectionStateMachine.transitionTo(ConnectionState.DISCONNECTED);  
-               }  
-           });
+            BluetoothService.onDisconnect(async () => {  
+                try {
+                    await OBDCommandQueue.add('ATZ', 500, 'HIGH_PRIORITY_AD_HOC');
+                } catch (e) {}
 
-           setStatus('connected'); setAdapterStatus('connected');  
-           preciseSleep(1000).then(() => initializeAndCheckEcu());  
-       }  
-   }, []);
+                OBDCommandQueue.clear(new Error('CONNECTION_LOST'));  
+                stopPolling();  
+                reset();
+
+                let reconnected = false;  
+                for (let attempt = 1; attempt <= 3; attempt++) {  
+                    await preciseSleep(1000 * attempt);  
+                    if (await BluetoothService.connect(selectedId)) { reconnected = true; break; }  
+                }
+
+                if (reconnected) {  
+                    useBluetoothStore.getState().setSensorData({ status: 'connected', adapterStatus: 'connected' });  
+                    initializeAndCheckEcu();  
+                } else {  
+                    ConnectionStateMachine.transitionTo(ConnectionState.DISCONNECTED);  
+                }  
+            });
+
+            setStatus('connected'); setAdapterStatus('connected');  
+            preciseSleep(1000).then(() => initializeAndCheckEcu());  
+        }  
+    }, []);
 
    const runDiagnostics = useCallback(async () => {  
        if (status !== 'connected') return;  
@@ -534,20 +577,30 @@ export const useBluetooth = () => {
 
     const scanDevices = useCallback(async () => {
         try {
-            return await BluetoothService.scanDevices();
+            setStatus('scanning');
+            const devices = await BluetoothService.scanDevices();
+            setStatus('disconnected');
+            return devices;
         } catch (e) {
+            setStatus('error');
             setError(e instanceof Error ? e.message : String(e));
             return [];
         }
-    }, [setError]);  
+    }, [setError, setStatus]);  
 
-   const disconnect = useCallback(async () => {  
-       stopPolling();  
-       OBDCommandQueue.clear(new Error('MANUAL_DISCONNECT'));  
-       await BluetoothService.disconnect();  
-       reset();  
-   }, [reset, stopPolling]);  
-   const retryEcu = useCallback(() => { if (adapterStatus === 'connected') initializeAndCheckEcu(); }, [adapterStatus]);
+    const disconnect = useCallback(async () => {  
+        stopPolling();  
+        try {
+            await OBDCommandQueue.add('ATZ', 500, 'HIGH_PRIORITY_AD_HOC');
+        } catch (e) {}
+        OBDCommandQueue.clear(new Error('MANUAL_DISCONNECT'));  
+        await BluetoothService.disconnect();  
+        reset();  
+        if (useAppStore.getState().isSimulationMode) {
+            useAppStore.getState().toggleSimulationMode();
+        }
+    }, [reset, stopPolling]);  
+    const retryEcu = useCallback(() => { if (adapterStatus === 'connected') initializeAndCheckEcu(); }, [adapterStatus]);
 
    useEffect(() => {  
        let intervalId: any = null;  
@@ -575,22 +628,60 @@ export const useBluetooth = () => {
        return () => { if (intervalId) clearInterval(intervalId); };  
    }, [connectionState, isPollingActive, isRecoveryActive]);
 
+   const bgKeepAliveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
    useEffect(() => {  
        const subscription = AppState.addEventListener('change', async (nextAppState) => {  
            if (nextAppState.match(/inactive|background/)) {  
-               OBDCommandQueue.clear(new Error('APP_BACKGROUNDED'));  
                stopPolling();  
-           } else if (nextAppState === 'active' && status === 'connected') {  
-               try {  
-                   await OBDCommandQueue.add('\r', 2500);   
-                   startPolling();  
-               } catch (e) {  
-                   disconnect();  
-               }  
+               // Start Background Keep-Alive Heartbeat if connected so BLE socket isn't closed by OS/ELM327
+               const currentStatus = useBluetoothStore.getState().status;
+               if (currentStatus === 'connected') {
+                   if (bgKeepAliveTimerRef.current) clearInterval(bgKeepAliveTimerRef.current);
+                   bgKeepAliveTimerRef.current = setInterval(async () => {
+                       try {
+                           await OBDCommandQueue.add('AT\r', 1500);
+                       } catch (e) {
+                           // Silence background ping errors
+                       }
+                   }, 4000);
+               }
+           } else if (nextAppState === 'active') {  
+               if (bgKeepAliveTimerRef.current) {
+                   clearInterval(bgKeepAliveTimerRef.current);
+                   bgKeepAliveTimerRef.current = null;
+               }
+
+               const currentStatus = useBluetoothStore.getState().status;
+               if (currentStatus === 'connected') {  
+                   try {  
+                       await OBDCommandQueue.add('\r', 2500);   
+                       startPolling();  
+                   } catch (e) {  
+                       // Active ping failed — disconnect & auto-reconnect
+                       disconnect();  
+                       const savedDevice = await BluetoothService.getLastDevice();
+                       if (savedDevice?.id) {
+                           useBluetoothStore.getState().addLog(`BACKGROUND RECOVERY: Reconnecting to ${savedDevice.name || savedDevice.id}`);
+                           connect(savedDevice.id, savedDevice.name);
+                       }
+                   }  
+               } else {
+                   // Auto-reconnect automatically when returning to foreground if disconnected
+                   const savedDevice = await BluetoothService.getLastDevice();
+                   if (savedDevice?.id && currentStatus !== 'connecting') {
+                       useBluetoothStore.getState().addLog(`BACKGROUND RECOVERY: Auto-reconnecting to ${savedDevice.name || savedDevice.id}`);
+                       connect(savedDevice.id, savedDevice.name);
+                   }
+               }
            }  
        });  
-       return () => subscription.remove();  
-   }, [status, startPolling, stopPolling, disconnect]);
+
+       return () => {
+           subscription.remove();
+           if (bgKeepAliveTimerRef.current) clearInterval(bgKeepAliveTimerRef.current);
+       };  
+   }, [status, startPolling, stopPolling, disconnect, connect]);
 
     useEffect(() => {  
         BluetoothService.getLastDevice().then(saved => {  
@@ -604,6 +695,9 @@ export const useBluetooth = () => {
             ProtocolCircuitBreaker.recordFailure("AT SP 6");
             ProtocolCircuitBreaker.recordFailure("AT SP 7");
             initializeAndCheckEcu();
+        });
+        OBDCommandQueue.onVoltageReceived((voltage) => {
+            useBluetoothStore.getState().setSensorData({ voltage });
         });
     }, []);
 

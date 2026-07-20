@@ -87,11 +87,16 @@ i18n
          *
          * saveMissing must be true for this handler to fire.
          */
-        saveMissing: true,
+        saveMissing: !__DEV__,
         missingKeyHandler: (lngs, namespace, key, fallbackValue) => {
             const keyIdentifier = `${namespace}:${key}`;
             if (reportedMissingKeys.has(keyIdentifier)) return;
             reportedMissingKeys.add(keyIdentifier);
+
+            if (__DEV__) {
+                console.log(`[i18n] Missing translation key: [${keyIdentifier}]`);
+                return;
+            }
 
             try {
                 // Lazy-load crashlytics to avoid native module resolution

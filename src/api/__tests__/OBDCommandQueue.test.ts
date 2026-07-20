@@ -235,4 +235,9 @@ describe('OBDCommandQueue Mutex and Session Management Tests', () => {
         const pNew = await OBDCommandQueue.add('01 0F');
         expect(pNew).toBe('41 0F RESP_01 0F');
     });
+
+    afterAll(() => {
+        jest.useRealTimers();
+        jest.clearAllTimers();
+    });
 });

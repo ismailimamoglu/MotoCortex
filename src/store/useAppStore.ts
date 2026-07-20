@@ -121,11 +121,115 @@ interface AppState {
   initializeDeviceUuid: () => Promise<void>;
   activateLocalGracePeriod: (txId: string) => Promise<void>;
 }
+let simulationInterval: any = null;
+let simulationOdometer = 124530;
+
+export function stopSimulation() {
+  if (simulationInterval) {
+    clearInterval(simulationInterval);
+    simulationInterval = null;
+  }
+}
+
+export function startSimulation() {
+  stopSimulation();
+
+  const { useBluetoothStore } = require('./useBluetoothStore');
+  const mockDtcs: any = ['P0113', 'P0102'];
+  mockDtcs.isNotScanned = false;
+  mockDtcs.errorState = null;
+
+  const btStore = useBluetoothStore.getState();
+  btStore.setLastDevice('SIM-OBDII', 'SIM-DEVICE-ID');
+  btStore.setSensorData({
+    connectionState: 'TELEMETRY_ACTIVE' as any,
+    deviceName: 'SIM-OBDII',
+    deviceId: 'SIM-DEVICE-ID',
+    protocol: 'SIMULATED_OBD',
+    ecuId: 'SIM-ECU-001',
+    vin: '1M8GDM9A_SIMULATED',
+    odometer: simulationOdometer,
+    dtcs: mockDtcs,
+    adapterCapabilityScore: 100,
+    isCloneDevice: false,
+    supportedPids: ['0C', '0D', '05', '11', '42', '10', '0F', '04', '2F', '5C'],
+    rpm: 800,
+    speed: 0,
+    coolant: 85,
+    throttle: 18,
+    voltage: '14.1V',
+  });
+
+  // Add initial logs
+  btStore.addLog('DIAG: Simulation mode bypass in initializeAndCheckEcu');
+  btStore.addLog('FSM_TRANSITION: DISCONNECTED ---> TELEMETRY_ACTIVE (Reason: SIMULATION)');
+  btStore.addLog('POLLING_ORCHESTRATOR: Commencing Simulated Telemetry Pipeline.');
+
+  let step = 0;
+  simulationInterval = setInterval(() => {
+    const currentStore = useBluetoothStore.getState();
+    if (currentStore.status !== 'connected') {
+      stopSimulation();
+      return;
+    }
+
+    // Simulate sensor fluctuations
+    const time = Date.now() / 1000;
+    const rpm = Math.round(800 + Math.sin(time / 5) * 400 + Math.random() * 50);
+    const speed = Math.round(50 + Math.sin(time / 10) * 20 + Math.random() * 2);
+    const coolant = Math.round(85 + Math.sin(time / 20) * 2);
+    const throttle = Math.round(18 + Math.sin(time / 5) * 5);
+    const voltage = (14.0 + Math.sin(time / 15) * 0.2 + Math.random() * 0.05).toFixed(2) + 'V';
+    const engineLoad = Math.round(30 + Math.sin(time / 8) * 10);
+    const fuelLevel = 65;
+    const intakeAirTemp = 35;
+
+    // Increment odometer slowly
+    simulationOdometer += 0.01;
+    const odometerRounded = Math.round(simulationOdometer * 100) / 100;
+
+    currentStore.setSensorData({
+      rpm,
+      speed,
+      coolant,
+      throttle,
+      voltage,
+      engineLoad,
+      fuelLevel,
+      intakeAirTemp,
+      odometer: odometerRounded,
+    });
+
+    // Add simulated OBD traffic logs
+    const timestamp = new Date().toLocaleTimeString();
+    if (step % 4 === 0) {
+      const rpmA = Math.floor((rpm * 4) / 256);
+      const rpmB = Math.floor((rpm * 4) % 256);
+      const rpmHexA = rpmA.toString(16).toUpperCase().padStart(2, '0');
+      const rpmHexB = rpmB.toString(16).toUpperCase().padStart(2, '0');
+      currentStore.addLog(`[${timestamp}] TX: 01 0C`);
+      currentStore.addLog(`[${timestamp}] RX: 7E8 04 41 0C ${rpmHexA} ${rpmHexB}`);
+    } else if (step % 4 === 1) {
+      const speedHex = speed.toString(16).toUpperCase().padStart(2, '0');
+      currentStore.addLog(`[${timestamp}] TX: 01 0D`);
+      currentStore.addLog(`[${timestamp}] RX: 7E8 03 41 0D ${speedHex}`);
+    } else if (step % 4 === 2) {
+      const coolantHex = (coolant + 40).toString(16).toUpperCase().padStart(2, '0');
+      currentStore.addLog(`[${timestamp}] TX: 01 05`);
+      currentStore.addLog(`[${timestamp}] RX: 7E8 03 41 05 ${coolantHex}`);
+    } else {
+      const throttleHex = Math.round((throttle * 255) / 100).toString(16).toUpperCase().padStart(2, '0');
+      currentStore.addLog(`[${timestamp}] TX: 01 11`);
+      currentStore.addLog(`[${timestamp}] RX: 7E8 03 41 11 ${throttleHex}`);
+    }
+    step++;
+  }, 1000);
+}
 
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
-      theme: 'dark',
+      theme: 'light',
       language: 'en',
       isPro: false,
       isBackdoorPro: false,
@@ -185,6 +289,11 @@ export const useAppStore = create<AppState>()(
         console.log(
           `[AppStore] Simulation mode toggled to ${nextSimMode ? 'ON' : 'OFF'}: cleared Bluetooth store state and evicted ${simItems.length} simulated item(s). ${realCount} real protocol item(s) preserved.`
         );
+
+        stopSimulation();
+        if (nextSimMode) {
+          startSimulation();
+        }
 
         return { 
           isSimulationMode: nextSimMode,
@@ -366,6 +475,13 @@ export const useAppStore = create<AppState>()(
         // Deterministic cold restart cleanup: destroy stale session lock
         if (state) {
           state.isSessionProMemoryLock = false;
+        }
+        if (state?.isSimulationMode) {
+          setTimeout(() => {
+            startSimulation();
+          }, 500);
+        } else {
+          stopSimulation();
         }
       },
     }

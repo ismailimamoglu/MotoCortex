@@ -18,11 +18,10 @@ export const ALL_SENSORS: SensorConfig[] = [
   { key: 'speed', nameKey: 'dashboard.speed', defaultName: 'Hız', unit: 'km/h', pid: '01 0D', icon: '⚡', color: '#4facfe', isHighPriority: true },
   { key: 'coolant', nameKey: 'dashboard.coolant', defaultName: 'Motor Sıcaklığı', unit: '°C', pid: '01 05', icon: '🌡️', color: '#ff0844', isHighPriority: false },
   { key: 'throttle', nameKey: 'dashboard.throttle', defaultName: 'Gaz Kelebeği', unit: '%', pid: '01 11', icon: '🚀', color: '#f9d423', isHighPriority: false },
-  { key: 'voltage', nameKey: 'dashboard.voltage', defaultName: 'Akü Voltajı', unit: 'V', pid: '01 42', icon: '🔋', color: '#2af598', isHighPriority: false }, // Standart voltaj PID 01 42 (Control Module Voltage) veya batarya testi için kullandığımız voltaj
+  { key: 'voltage', nameKey: 'dashboard.voltage', defaultName: 'Akü Voltajı', unit: 'V', pid: '01 42', icon: '🔋', color: '#2af598', isHighPriority: false },
   { key: 'engineLoad', nameKey: 'dashboard.engineLoad', defaultName: 'Motor Yükü', unit: '%', pid: '01 04', icon: '🏋️', color: '#b19ffb', isHighPriority: false },
   { key: 'intakeAirTemp', nameKey: 'dashboard.intakeAirTemp', defaultName: 'Emme Havası', unit: '°C', pid: '01 0F', icon: '💨', color: '#e2d1c3', isHighPriority: false },
   { key: 'manifoldPressure', nameKey: 'dashboard.manifoldPressure', defaultName: 'Manifold Basıncı', unit: 'kPa', pid: '01 0B', icon: '🌀', color: '#2979ff', isHighPriority: false },
-  // Yeni Çeşitlendirilen Sensörler:
   { key: 'ambientTemp', nameKey: 'dashboard.ambientTemp', defaultName: 'Dış Sıcaklık', unit: '°C', pid: '01 46', icon: '🌤️', color: '#a1c4fd', isHighPriority: false },
   { key: 'oilTemp', nameKey: 'dashboard.oilTemp', defaultName: 'Yağ Sıcaklığı', unit: '°C', pid: '01 5C', icon: '🛢️', color: '#f093fb', isHighPriority: false },
   { key: 'mafFlow', nameKey: 'dashboard.mafFlow', defaultName: 'MAF Hava Akışı', unit: 'g/s', pid: '01 10', icon: '🌪️', color: '#40c4ff', isHighPriority: false },
@@ -33,9 +32,9 @@ export const ALL_SENSORS: SensorConfig[] = [
 
 interface DashboardState {
   activeSensors: string[]; // Sensor keys
-  layoutType: 'grid' | 'list' | 'gauge';
+  layoutType: 'grid' | 'list' | 'gauge' | 'chart';
   toggleSensor: (key: string) => void;
-  setLayoutType: (layoutType: 'grid' | 'list' | 'gauge') => void;
+  setLayoutType: (layoutType: 'grid' | 'list' | 'gauge' | 'chart') => void;
   resetToDefault: () => void;
 }
 
@@ -49,11 +48,9 @@ export const useDashboardStore = create<DashboardState>()(
       toggleSensor: (key) => set((state) => {
         const isExists = state.activeSensors.includes(key);
         if (isExists) {
-          // En az 1 sensör seçili kalmalı
           if (state.activeSensors.length <= 1) return state;
           return { activeSensors: state.activeSensors.filter((k) => k !== key) };
         } else {
-          // Maksimum 6 sensör sınırı koyabiliriz (ekran tasarımı karmaşıklaşmasın diye)
           if (state.activeSensors.length >= 8) return state;
           return { activeSensors: [...state.activeSensors, key] };
         }
@@ -62,7 +59,7 @@ export const useDashboardStore = create<DashboardState>()(
       resetToDefault: () => set({ activeSensors: DEFAULT_SENSORS, layoutType: 'grid' }),
     }),
     {
-      name: 'motocortex-dashboard-settings',
+      name: 'motocortex-dashboard-storage',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

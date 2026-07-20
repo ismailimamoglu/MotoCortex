@@ -57,26 +57,28 @@
             "idCopied": "用户 ID 已复制到剪贴板。",
             "hardwareHealthAndId": "硬件健康与身份",
             "hardwareModalDesc": "要获得支持或执行手动 PRO 许可证激活，请复制上面的用户 ID 并联系我们。",
-            "supportEmailBody": "您好 MotoCortex 支持团队， --- 应用信息 --- 用户 ID：{{userId}}许可证状态：{{license}}链接：{{connection}}设备状态：{{deviceStatus}}--- 您的留言 ---",
+            "supportEmailBody": "您好 Cortex OBD2 Diagnosis Scanner 支持团队， --- 应用信息 --- 用户 ID：{{userId}}许可证状态：{{license}}链接：{{connection}}设备状态：{{deviceStatus}}--- 您的留言 ---",
             "deviceName": "设备名称:",
             "simulationObd": "模拟 OBD",
-            "noLogsToShare": "There are no diagnostic logs to share.",
-            "obdHealthTitle": "",
-            "txRequests": "",
-            "rxResponses": "",
-            "timeouts": "",
-            "recoveries": "",
-            "avgLatency": "",
-            "lastErrorLabel": "",
-            "shareReport": "",
-            "diagnosticLog": "",
-            "noTraffic": "",
-            "shareError": ""
+            "obdHealthTitle": "OBD HEALTH STATISTICS",
+            "txRequests": "Requests Sent (TX):",
+            "rxResponses": "Responses Received (RX):",
+            "timeouts": "Timeouts:",
+            "recoveries": "Recovery Attempts:",
+            "avgLatency": "Avg. Latency:",
+            "lastErrorLabel": "Last Error:",
+            "shareReport": "SHARE DIAGNOSTICS REPORT",
+            "diagnosticLog": "DIAGNOSTIC LOG (LAST 500 ROWS)",
+            "noTraffic": "No streaming traffic yet...",
+            "shareError": "Sharing Error",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "申请信息和指南",
         "supportDesc": "支持与联系",
         "shareDesc": "分享应用",
-        "noDtc": "正常"
+        "noDtc": "正常",
+        "featureCoding": "解锁隐藏功能与 UDS 编码",
+        "featureCodingSub": "VAG, BMW, Renault ISO 14229 Feature Unlocking"
     },
     "common": {
         "cancel": "取消",
@@ -116,10 +118,15 @@
         "close": "关闭",
         "share": "SHARE",
         "info": "Info",
-        "enableDemoMode": "",
-        "exitDemoMode": "",
+        "enableDemoMode": "ENABLE DEMO MODE",
+        "exitDemoMode": "EXIT DEMO MODE",
         "revocationTitle": "订阅已取消",
-        "revocationMsg": "您的 PRO 功能使用权已终止，因为您的订阅已被取消或退款。"
+        "revocationMsg": "您的 PRO 功能使用权已终止，因为您的订阅已被取消或退款。",
+        "supported": "已支持",
+        "copied": "已复制",
+        "cancelBtn": "取消",
+        "retry": "重试连接",
+        "changeType": "更改连接类型"
     },
     "paywall": {
         "crownBadge": "摩托皮质专业版",
@@ -154,7 +161,8 @@
         "errorTitle": "产品加载失败",
         "errorDesc": "加载产品时出错，请检查您的互联网连接并重试。",
         "retryBtn": "再试一次",
-        "loadingPrices": "价格正在加载中..."
+        "loadingPrices": "价格正在加载中...",
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnosis Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -163,11 +171,11 @@
         "online": "在线",
         "offline": "离线",
         "connecting": "连接",
-        "scanDevices": "扫描设备",
+        "scanDevices": "搜索设备",
         "connectLast": "连接到终端设备",
         "enableBt": "打开蓝牙",
         "scanning": "正在扫描...",
-        "foundDevices": "找到的设备",
+        "foundDevices": "发现的OBD2设备",
         "unknownDevice": "未知设备",
         "scanHint": "扫描查找配对的 OBD 设备。",
         "ecuWait": "正在连接 ECU...",
@@ -187,21 +195,59 @@
         "deviceNotPairedDesc": "在连接经典蓝牙 OBD2 适配器之前，您需要通过手机的蓝牙设置将它们配对。您将被引导至系统设置。",
         "unsupportedDeviceTitle": "不兼容的硬件",
         "unsupportedDeviceDesc": "您尝试连接的设备不是兼容的 OBD2 适配器或不支持所需的服务。",
+        "sendButton": "SEND",
+        "connectDevice": "连接到 OBD2 设备",
+        "adapterApproved": "ADAPTER APPROVED. ANALYZING CAPABILITIES... [2/5]",
+        "protocolNegotiating": "SCANNING PROTOCOL & WAKING UP... [3/5]",
+        "ecuDetected": "ECU DETECTED, VERIFYING... [4/5]",
+        "ecuResponding": "ECU RESPONDED, COMPLETING CONNECTION... [5/5]",
+        "protocolScanningHint": "(Scanning standard SP5, SP3, SP6, SP7 protocols sequentially...)",
+        "protocolFailed": "⚠️ COMPATIBLE PROTOCOL NOT FOUND! (SP5, SP3, SP4, SP6, SP7 tried)",
+        "ecuNotFound": "⚠️ VEHICLE ECU NOT RESPONDING!",
+        "hardwareCapabilityScore": "Adapter Hardware Capability Score: {{score}}/100",
+        "hardwareFatal": "Critical Error: Your hardware is a fake clone that does not support older vehicle protocols. Cannot connect to vehicle ECU. Please obtain a quality adapter (v1.5 or original).",
+        "progressFormat": "{{progress}}%",
+        "btDisabled": "蓝牙已禁用",
+        "btDisabledDesc": "请开启蓝牙以搜索OBD2适配器。",
+        "btDescIos": "通过BLE OBD2适配器连接（Veepeak、vLinker）。",
+        "btDescAndroid": "通过经典蓝牙或BLE适配器连接。",
+        "wifiDesc": "连接到Wi-Fi适配器（通常为192.168.0.10）。",
+        "wifiGuide": "要连接Wi-Fi适配器，请进入手机Wi-Fi设置，选择OBD适配器网络（如OBDII、V-LINK），然后返回此处。",
+        "openWifiSettings": "打开WI-FI设置",
+        "connectWifi": "通过WI-FI连接",
+        "pairRequired": "配对OBD2设备",
+        "pairRequiredDesc": "由于您是首次连接，Android可能会请求配对。配对PIN通常如下：",
+        "pairNow": "配对并连接",
+        "pairingFailed": "配对失败。请在Android设置中手动配对。",
+        "successVin": "连接成功。车辆配置文件已成功识别。",
+        "cloneWarning": "检测到不兼容的克隆适配器。高级编码功能已锁定以确保安全。",
+        "viewHealth": "OBD2健康与能力菜单",
+        "statusPrompt": "请在下方选择您的首选OBD2连接接口。",
+        "scanHintIos": "确保BLE OBD2适配器已开启且靠近您的iOS设备。",
+        "scanHintAndroid": "确保蓝牙已激活，且适配器已准备好配对。",
+        "negotiating": "正在协商OBD2握手",
+        "failed": "连接尝试失败",
+        "errLayer1": "排查：蓝牙已禁用。请在设备设置中开启蓝牙。",
+        "errLayer2": "排查：连接超时。确保适配器已牢固插入OBD2端口，且电源指示灯已亮起。",
+        "errLayer5": "排查：OBD2协议协商失败。确保车辆点火开关处于ON位置（建议发动机运行）。",
+        "errLayer6": "排查：适配器已连接，但车辆ECU未响应。请开启点火开关或重启连接。",
+        "errGeneric": "排查：确保适配器有电源、点火开关已开启，且没有其他OBD应用程序在运行。",
+        "stepAdapter": "适配器连接与能力评分",
+        "stepProtocol": "OBD2协议协商",
+        "stepHandshake": "ECU通信验证",
+        "stepStabilization": "主动遥测循环稳定",
+        "cancel": "Cancel",
         "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
-        "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
         "adapterConnected": "ADAPTER CONNECTED (OK)",
-        "connectDevice": "",
-        "adapterApproved": "",
-        "protocolNegotiating": "",
-        "ecuDetected": "",
-        "ecuResponding": "",
-        "protocolScanningHint": "",
-        "protocolFailed": "",
-        "ecuNotFound": "",
-        "hardwareCapabilityScore": "",
-        "hardwareFatal": ""
+        "lowQualityAdapterWarning": "⚠️ Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols (like K-Line on Dacia, Renault, Fiat, Lada). We highly recommend upgrading to a high-quality OBD2 adapter (v1.5 or original OBDLink/vLinker) to connect successfully.",
+        "statusProfiling": "Analyzing OBD2 adapter capabilities...",
+        "statusScanningCan": "Scanning modern CAN-Bus protocols...",
+        "statusScanningKline": "Waking up K-Line protocols. Old vehicles (Dacia, Renault, Fiat) may take up to 15 seconds to respond...",
+        "statusHandshake": "Verifying ECU communication...",
+        "statusStabilization": "Stabilizing telemetry data stream...",
+        "changeType": "Change Connection Type"
     },
     "dashboard": {
         "selectDevice": "触摸选择设备",
@@ -241,7 +287,18 @@
         "fuelLevel": "燃料油位",
         "catalystTemp": "催化器温度",
         "layoutGauge": "表盘",
-        "obdTerminalTitle": ""
+        "obdTerminalTitle": "OBD HEALTH & TERMINAL",
+        "adapterClone": "CLONE ADAPTER",
+        "adapterOriginal": "ORIGINAL",
+        "adapterCloneShort": "CLONE",
+        "adapterOriginalShort": "ORIGINAL",
+        "pidLabel": "PID: {{pid}}",
+        "limitReached": "Selection Limit",
+        "limitReachedDesc": "You can select a maximum of {{limit}} sensors with this protocol.",
+        "customizeSubtitleKLine": "K-Line protocol connected. You can select a maximum of {{limit}} sensors.",
+        "customizeSubtitleCAN": "CAN-Bus protocol connected. You can select a maximum of {{limit}} sensors.",
+        "unit": "Unit",
+        "layoutChart": "图表"
     },
     "expertise": {
         "historyFound": "找到车辆历史记录！",
@@ -306,13 +363,13 @@
     },
     "info": {
         "desc": "专业摩托车和车辆诊断应用程序。 与所有车辆兼容。",
-        "upgrade": "👑 升级到 MotoCortex PRO",
+        "upgrade": "👑 升级到 Cortex OBD2 Diagnosis Scanner PRO",
         "upgradeAlert": "抢先体验🎉",
-        "upgradeAlertDesc": "MotoCortex 目前正在开发中。由于您是我们的早期用户，所有专业功能现在都可供您使用。您的反馈对我们非常有价值！",
+        "upgradeAlertDesc": "Cortex OBD2 Diagnosis Scanner 目前正在开发中。由于您是我们的早期用户，所有专业功能现在都可供您使用。您的反馈对我们非常有价值！",
         "helpGuide": "帮助和指导",
         "language": "🌐 语言 / 语言 / 马来语",
-        "support": "📞 支持中心",
-        "supportSubject": "MotoCortex 支持和反馈",
+        "support": "支持中心",
+        "supportSubject": "Cortex OBD2 Diagnosis Scanner 支持和反馈",
         "thanks": "谢谢！",
         "thanksDesc": "感谢您的反馈。您可以在 Play 商店给我们留言。",
         "sections": {
@@ -353,7 +410,7 @@
         "dtcCount": "🔍 错误代码（{{count}}数量）",
         "sensorData": "📊 实时传感器数据",
         "noData": "读取数据失败",
-        "proApp": "使用 MotoCortex v7 PRO 扫描。",
+        "proApp": "使用 Cortex OBD2 Diagnosis Scanner v7 PRO 扫描。",
         "date": "日期",
         "vinNotFound": "未检测到",
         "noDtcs": "无错误代码 - 干净",
@@ -364,7 +421,7 @@
         "intakeAir": "进气",
         "manifold": "歧管",
         "voltage": "电池电压",
-        "shareMessage": "使用 Motocortex OBD2 诊断应用程序从口袋里跟踪摩托车的状态！ 🏍️📲 下载：https://motocortex.app"
+        "shareMessage": "使用 Motocortex OBD2 诊断应用程序从口袋里跟踪摩托车的状态！ 🏍️📲 下载：https://cortexobd2.app"
     },
     "battery": {
         "title": "电池及启动测试",
@@ -404,7 +461,7 @@
         }
     },
     "freeze": {
-        "title": "定格",
+        "title": "FREEZE FRAME",
         "snapshot": "故障记忆",
         "desc": "当“检查发动机”灯亮起时，它会读取发动机参数。该数据为故障诊断提供了关键信息。",
         "noDtcs": "没有记录故障码。可能没有冻结帧数据。",
@@ -529,7 +586,12 @@
             "fuelAdaptation": "燃油自适应重置",
             "ecuReset": "ECU重置"
         },
-        "searchLanguage": ""
+        "searchLanguage": "Search Language...",
+        "connectionSection": "OBD Device Connection",
+        "noVehicleTitle": "VEHICLE DETECTION REQUIRED",
+        "noVehicleDesc": "Vehicle identity will be automatically discovered via OBD-II connection. Please pair and connect to your device below.",
+        "registeredVehiclesButton": "我的已注册车辆",
+        "connectDevice": "连接到 OBD2 设备"
     },
     "brands": {
         "alfa_romeo": "阿尔法·罗密欧",
@@ -605,9 +667,11 @@
         "locSub": "Android系统架构强制要求寻找附近的低功耗蓝牙设备。我们不会追踪您的驾驶情况。",
         "grantBtn": "允许并继续",
         "skipBtn": "暂时跳过（演示模式）",
-        "deniedDesc": "一些许可证被拒绝。 MotoCortex 可能无法成功扫描或连接到 OBD2 设备。",
+        "deniedDesc": "一些许可证被拒绝。 Cortex OBD2 Diagnosis Scanner 可能无法成功扫描或连接到 OBD2 设备。",
         "proceedAnyway": "无论如何继续",
-        "openSettings": "打开设置"
+        "openSettings": "打开设置",
+        "langTitle": "Select Language",
+        "nextBtn": "CONTINUE"
     },
     "disclaimer": "所有产品名称、徽标和品牌均为其各自所有者的财产。本应用程序中使用的所有公司、产品和服务名称仅用于识别目的。使用这些名称、徽标和品牌并不意味着任何认可或赞助。",
     "hiddenFeatures": {
@@ -640,38 +704,263 @@
         "writeError": "写入错误，请重试。",
         "simulationBanner": "模拟模式 — 真实ECU写入尚未激活",
         "closeBtn": "关闭",
+        "unsupportedOk": "OK",
         "disclaimerTitle": "LIABILITY DISCLAIMER",
         "disclaimerFeature": "Feature",
-        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• MotoCortex cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
+        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• Cortex OBD2 Diagnosis Scanner cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
         "checkboxTitle": "CONFIRMATION REQUIRED",
         "check1": "I have read this warning and understand that my vehicle warranty may be affected.",
-        "check2": "I acknowledge that MotoCortex is not responsible for any faults or damages resulting from this operation.",
+        "check2": "I acknowledge that Cortex OBD2 Diagnosis Scanner is not responsible for any faults or damages resulting from this operation.",
         "check3": "I wish to make this change knowingly and of my own free will, accepting all risks.",
         "disclaimerCancel": "CANCEL",
         "disclaimerContinue": "CONTINUE",
-        "unsupportedTitle": "Not Supported",
-        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands.",
-        "unsupportedOk": "OK"
+        "unsupportedTitle": "车辆不支持",
+        "unsupportedMsg": "您的车辆ECU硬件或软件版本不支持此功能。"
     },
     "disconnectShort": "断开",
     "obdTerminal": {
-        "title": "",
-        "terminalTitle": "",
-        "terminalPlaceholder": "",
-        "inputPlaceholder": "",
-        "sendButton": "",
-        "statsTitle": "",
-        "connectionProtocol": "",
-        "none": "",
-        "hardwareQualityScore": "",
-        "original": "",
-        "clone": "",
-        "requestResponseCount": "",
-        "timeoutCount": "",
-        "recoveryCount": "",
-        "diagnosticLogTitle": "",
-        "clearButton": "",
-        "shareButton": "",
-        "noLogs": ""
+        "title": "解锁隐藏功能与UDS编码",
+        "terminalTitle": "OBD TERMINAL",
+        "terminalPlaceholder": "Type command below to send to ECU (e.g. 010C, ATRV)",
+        "inputPlaceholder": "Enter command...",
+        "sendButton": "SEND",
+        "statsTitle": "OBD HEALTH STATISTICS",
+        "connectionProtocol": "Connection Protocol:",
+        "none": "None",
+        "hardwareQualityScore": "Hardware Quality Score:",
+        "original": "Original",
+        "clone": "Clone",
+        "requestResponseCount": "Request / Response Count:",
+        "timeoutCount": "Timeout Count:",
+        "recoveryCount": "Recovery Count (Recovery):",
+        "diagnosticLogTitle": "DIAGNOSTIC LOG",
+        "clearButton": "CLEAR",
+        "shareButton": "SHARE",
+        "noLogs": "No diagnostic logs found."
+    },
+    "dtcContext": {
+        "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
+        "cooling": "Critical cooling hazard detected. View detailed repair steps →",
+        "ignition": "Ignition system issue detected. View detailed repair steps →",
+        "chassis": "Chassis safety system alert. Unlock PRO for full analysis →",
+        "body": "Body electronics fault found. Upgrade for complete diagnostics →",
+        "network": "Communication network error. PRO unlocks full troubleshooting →",
+        "fallback": "Unlock detailed fault analysis, repair costs & risk assessment →"
+    },
+    "perfTeaser": {
+        "limitTitle": "Daily Limit Reached",
+        "limitDesc": "You have reached the daily limit of 3 free 0-60 km/h tests. Upgrade to PRO for unlimited tests and 0-100 km/h measurements."
+    },
+    "sandbox": {
+        "title": "解锁隐藏功能与UDS编码",
+        "connectionStatus": "Connection Status:",
+        "ecuStatus": "ECU Status:",
+        "fps": "UI Performance: {{fps}} FPS",
+        "stressBtnStart": "Start 20Hz Stress",
+        "stressBtnStop": "Stop Telemetry Loop",
+        "stopDisconnect": "Stop / Disconnect",
+        "discoveredDevices": "DISCOVERED DEVICES",
+        "connect": "CONNECT",
+        "scanning": "Scanning...",
+        "scan": "Scan Devices",
+        "rpm": "Engine RPM",
+        "speed": "Vehicle Speed",
+        "coolant": "Coolant Temp",
+        "throttle": "Throttle Position",
+        "notConnected": "Not Connected",
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "error": "Error",
+        "openSandbox": "DIAG",
+        "advancedTerminal": "Advanced Connection Terminal (DIAG)",
+        "terminalTitle": "Live Terminal & Bus Monitor",
+        "pause": "PAUSE",
+        "resume": "RESUME",
+        "share": "SHARE",
+        "clear": "CLEAR"
+    },
+    "health": {
+        "titleMenu": "OBD2健康与能力",
+        "adapterQuality": "适配器质量与性能",
+        "excellent": "优秀（原装）",
+        "good": "良好（标准）",
+        "clone": "不兼容 / 克隆",
+        "firmware": "固件版本：",
+        "capScore": "能力评分",
+        "latency": "延迟（RTT）",
+        "protocol": "活动协议",
+        "featureSupport": "应用功能矩阵",
+        "matrixReadCodes": "读取和清除故障码",
+        "matrixLiveSensors": "实时传感器监控（基础）",
+        "matrixBattery": "电池 / 电压测试",
+        "matrixHighSpeed": "高速遥测（20Hz）",
+        "matrixCoding": "ECU编码与适配",
+        "active": "活动",
+        "degraded": "降级（慢RTT）",
+        "locked": "已锁定（安全模式）",
+        "warning": "安全锁定：",
+        "lockExplain": "您的适配器被标记为克隆/假冒芯片。由于克隆适配器缺乏时序精度，在写入操作期间可能损坏车辆，因此编码和适配功能已被锁定。请购买正品ELM327 v2.1或vLinker设备以进行安全编码。",
+        "vehiclePids": "车辆传感器检查清单",
+        "checklistPrompt": "您的车辆ECU支持的标准传感器参数（PID）如下所列。没有复选标记的传感器不由您的车辆报告。",
+        "supportedBadge": "✓ 已支持",
+        "unsupportedBadge": "❌ 不支持"
+    },
+    "sensor": {
+        "rpm": "发动机转速（RPM）",
+        "speed": "车辆速度",
+        "coolant": "发动机冷却液温度",
+        "throttle": "节气门位置",
+        "voltage": "控制模块电压",
+        "maf": "MAF空气流量",
+        "iat": "进气温度",
+        "load": "计算的发动机负荷",
+        "fuel": "燃油液位",
+        "oilTemp": "发动机油温"
+    },
+    "secretDebug": {
+        "title": "解锁隐藏功能与UDS编码",
+        "logFileSize": "Black Box / File Size:",
+        "dtcCloudSync": "🛰️ DTC CLOUD SYNCHRONIZATION",
+        "lastSync": "Last Sync",
+        "syncNow": "Sync Now",
+        "developerTools": "DEVELOPER TOOLS",
+        "trialResetSuccess": "Free Trial counter reset successfully!",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "The application will now crash intentionally. Confirm to verify Crashlytics integration.",
+        "crashButton": "Crash",
+        "crashTest": "Crash Test"
+    },
+    "features": {
+        "title": "解锁隐藏功能与UDS编码",
+        "subTitle": "ISO 14229 UDS长编码与适配引擎",
+        "batteryVoltage": "电池电压",
+        "voltageReady": "✓ 安全 (准备好进行ECU编码写入)",
+        "voltageLocked": "⚠️ 低电压 (写入已锁定)",
+        "locked": "已锁定",
+        "ready": "准备就绪",
+        "allMarks": "所有品牌",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "⚠️ Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
+        "items": {
+            "vag_staging_needle_sweep": {
+                "name": "仪表扫针 (Staging / Needle Sweep)",
+                "desc": "点火启动时仪表盘指针自动扫至最大值并返回。"
+            },
+            "vag_acoustic_lock_confirmation": {
+                "name": "锁车喇叭鸣笛确认",
+                "desc": "用遥控钥匙锁车时发出一声短暂的喇叭鸣笛确认音。"
+            },
+            "vag_american_parking_lights": {
+                "name": "美规示宽转向灯",
+                "desc": "开启示宽灯时前转向灯保持20%微亮常亮。"
+            },
+            "vag_drl_menu_toggle": {
+                "name": "日间行车灯开关菜单",
+                "desc": "在中控屏车辆设置中添加日间行车灯(DRL)开启/关闭选项。"
+            },
+            "vag_tear_wiping": {
+                "name": "雨刮器补刮 (Tear Wiping)",
+                "desc": "使用喷水清洗挡风玻璃5秒后，雨刮自动补刮一次残留雨滴。"
+            },
+            "vag_emergency_brake_flashing": {
+                "name": "紧急制动刹车灯爆闪",
+                "desc": "紧急爆闪制动时刹车灯与双闪灯快速闪烁警示后车。"
+            },
+            "vag_cornering_lights": {
+                "name": "雾灯转向辅助照明",
+                "desc": "打方向盘时自动点亮对应侧的雾灯进行转向辅助照明。"
+            },
+            "vag_comfort_mirror_folding": {
+                "name": "钥匙长按舒适折叠后视镜",
+                "desc": "长按遥控钥匙锁车键自动折叠两侧外后视镜。"
+            },
+            "vag_lap_timer": {
+                "name": "仪表盘赛道圈速计时器",
+                "desc": "在仪表盘多功能显示屏中解锁赛道圈速计时器选项卡。"
+            },
+            "vag_refuel_quantity": {
+                "name": "加满加油量加注提示",
+                "desc": "在仪表盘中显示加满油箱所需的精确加注升数。"
+            },
+            "bmw_start_stop_memory": {
+                "name": "自动启停记忆模式",
+                "desc": "自动记忆上一次发动机启停系统的开关状态（无需每次手动关闭）。"
+            },
+            "bmw_digital_speedometer": {
+                "name": "数字车速显示",
+                "desc": "在仪表盘中央显示屏中添加实时数字车速显示选项。"
+            },
+            "bmw_sport_displays": {
+                "name": "运动组合仪表 (马力与扭矩表)",
+                "desc": "在iDrive中控屏中开启实时马力(HP)与扭矩(Nm)动态仪表。"
+            },
+            "bmw_acoustic_lock_sound": {
+                "name": "锁车/解锁声音确认",
+                "desc": "锁车或解锁车辆时通过原厂防盗喇叭发出确认提示音。"
+            },
+            "bmw_mirror_fold_delay_zero": {
+                "name": "无延迟即时折叠后视镜",
+                "desc": "按下锁车键后无需等待延迟立即折叠两侧后视镜。"
+            },
+            "bmw_tpms_tire_temperature": {
+                "name": "胎压与胎温实时显示",
+                "desc": "在胎压监测(TPMS)界面中同时实时显示轮胎温度数值。"
+            },
+            "renault_trip_computer_enable": {
+                "name": "行车电脑功能开启",
+                "desc": "解锁仪表盘平均油耗、续航里程等行车电脑信息界面。"
+            },
+            "renault_external_temp_display": {
+                "name": "室外温度数值显示",
+                "desc": "在仪表盘显示屏中开启室外环境温度测量显示。"
+            },
+            "renault_automatic_tailgate": {
+                "name": "钥匙遥控开启后备箱锁",
+                "desc": "长按遥控钥匙卡上的后备箱按键完全解锁释放后备箱门锁。"
+            },
+            "renault_alarm_chirp": {
+                "name": "锁车喇叭提示音",
+                "desc": "车辆锁定成功时通过喇叭发出提示音。"
+            },
+            "renault_shift_indicator": {
+                "name": "换挡提醒指示灯 (GSI)",
+                "desc": "开启仪表盘升挡/降挡箭头提示以实现节能驾驶。"
+            },
+            "ford_double_horn_honk_disable": {
+                "name": "取消发动机未熄火下车双鸣笛",
+                "desc": "取消发动机运转时带钥匙下车关门发出的二次鸣笛声。"
+            },
+            "ford_auto_door_locking": {
+                "name": "行车20km/h自动落锁",
+                "desc": "当车速超过20 km/h时自动锁定所有车门。"
+            },
+            "ford_tpms_psi_display": {
+                "name": "轮胎数值胎压显示",
+                "desc": "在仪表盘中精确数字显示每个轮胎的 Bar/PSI 压力。"
+            },
+            "ford_sync_climate_screen": {
+                "name": "SYNC中控屏空调控制",
+                "desc": "在SYNC触摸屏中添加空调与座椅加热触摸控制菜单。"
+            },
+            "stellantis_power_windows_remote": {
+                "name": "钥匙遥控升降车窗",
+                "desc": "长按钥匙锁车/解锁键遥控一键升降所有车窗。"
+            },
+            "stellantis_cornering_fogs": {
+                "name": "低速转向辅助雾灯",
+                "desc": "低速转弯时自动点亮转弯侧雾灯。"
+            }
+        },
+        "codeBtn": "编码",
+        "removeBtn": "移除",
+        "unsupportedTitle": "车辆不支持",
+        "unsupportedMsg": "您的车辆ECU硬件或软件版本不支持此功能。",
+        "layoutChart": "图表"
     }
 }

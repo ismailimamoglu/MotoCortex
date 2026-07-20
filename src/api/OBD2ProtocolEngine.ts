@@ -168,11 +168,17 @@ export class OBD2ProtocolEngine {
     * Optional callback injected by useBluetooth.ts to trigger K-Line fallback
     * when the OBD engine detects a '?' response on ATSP6/ATSP7 mid-session.
     */
-   private kLineFallbackCallback: (() => void) | null = null;
+    private kLineFallbackCallback: (() => void) | null = null;
+ 
+    public onKLineFallback(cb: () => void): void {
+        this.kLineFallbackCallback = cb;
+    }
 
-   public onKLineFallback(cb: () => void): void {
-       this.kLineFallbackCallback = cb;
-   }
+    private voltageCallback: ((voltage: string) => void) | null = null;
+
+    public onVoltageReceived(cb: (voltage: string) => void): void {
+        this.voltageCallback = cb;
+    }
 
    constructor() {  
        this.elmParser = new ELMParser();  
@@ -671,14 +677,23 @@ export class OBD2ProtocolEngine {
    }
 
    private parseResponse(rawCommand: string, response: string) {  
-       const command = rawCommand.replace(/\s+/g, '');  
+       const command = rawCommand.replace(/\s+/g, '').toUpperCase();  
         
        if (command === 'ATI') {  
            if (response.toLowerCase().includes('v1.5') || response.includes('?')) {  
                useBluetoothStore.getState().setIsCloneDevice(true);  
            }  
            return;  
-       }  
+       }         if (command === 'ATRV') {
+            const clean = response.replace(/[^\d.]/g, '');
+            if (clean) {
+                const voltage = clean + 'V';
+                if (this.voltageCallback) {
+                    this.voltageCallback(voltage);
+                }
+            }
+            return;
+        }
        if (this.isErrorPayload(response)) return;
 
        if (command.startsWith('01')) this.parseMode01Response(response);  
@@ -722,11 +737,10 @@ export class OBD2ProtocolEngine {
            }
        } else {
            // ── Garbage / anlamsız hex tespiti ───────────────────────────────
-           // FIX: '|' karakteri karakter sınıfı ([]) içinde alternation DEĞİL, literal boru karakteridir.
-           // Düzeltilmiş yapı: iki ayrı alternatif dalı olan doğru regex.
            const isTest = process.env.NODE_ENV === 'test';
-           const SAFE_RESPONSE_RE = /^[0-9A-Fa-f\s>?:.]+$|^(?:OK|SEARCHING|UNABLE TO CONNECT|ERROR|STOPPED|BUS INIT|BUS BUSY|NO DATA|BUFFER FULL|FB ERROR|RX ERROR)$/i;
-           const isGarbage = !isTest && trimmedResult.length > 0 && !SAFE_RESPONSE_RE.test(trimmedResult);
+           const SAFE_RESPONSE_RE = /^[0-9A-Fa-f\s>?:.]+$|^(?:OK|SEARCHING|UNABLE TO CONNECT|ERROR|STOPPED|BUS INIT|BUS BUSY|NO DATA|BUFFER FULL|FB ERROR|RX ERROR|ELM327.*|OBDII.*|Interpreter.*)$/i;
+           const isStartupBanner = /ELM327|OBDII|RS232|Interpreter|^\s*[\uFFFD\s]*\s*$/i.test(trimmedResult);
+           const isGarbage = !isTest && trimmedResult.length > 0 && !isStartupBanner && !SAFE_RESPONSE_RE.test(trimmedResult);
            if (isGarbage) {
                this.stallCounter++;
                useBluetoothStore.getState().addLog(`[ResponseInterceptor] Garbage response detected: "${trimmedResult}"`);

@@ -1,12 +1,13 @@
 // src/core/connection/PollingOrchestrator.ts
 // MotoCortex v7.9.9 - Hardened Multiplexed Node-Batched Telemetry Orchestrator
 
-import OBDCommandQueue from '../../api/OBDCommandQueue';
+import OBDCommandQueue, { preciseSleep } from '../../api/OBDCommandQueue';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 
 export class PollingOrchestrator {
     private static isPollingActive = false;
     private static currentActiveHeader = '7E8';
+    private static blacklistedPids = new Set<string>();
 
     /**
      * Start high-frequency multiplexed node-batched telemetry loop with Routing-Drift Guards.
@@ -21,6 +22,7 @@ export class PollingOrchestrator {
         }
 
         this.isPollingActive = true;
+        this.blacklistedPids.clear();
         OBDCommandQueue.setPollingActive(true);
         store.addLog('POLLING_ORCHESTRATOR: Commencing Hardened Multiplexed Telemetry Pipeline.');
 
@@ -37,15 +39,48 @@ export class PollingOrchestrator {
             batchedQueue.get(ecuHeader)!.push(pid);
         }
 
-        // 2. ADIM: Deterministik Güvenli Canlı Döngü
+        // 2. ADIM: Donanım Kalitesine Göre Adaptif Limitlerin Hesaplanması
+        const score = store.adapterCapabilityScore || 100;
+        
+        let interLoopDelay = 15;
+        let cmdTimeoutBase = 400;
+        let cmdPacingDelay = 5;
+
+        if (score >= 75) {
+            // Yüksek kaliteli / orijinal adaptörler: Maksimum hız, minimum bekleme
+            interLoopDelay = 2; 
+            cmdTimeoutBase = 150;
+            cmdPacingDelay = 0;
+        } else if (score < 60) {
+            // Düşük kaliteli / klon adaptörler: Güvenli yavaş akış, tampon taşmasını engeller
+            interLoopDelay = 50;
+            cmdTimeoutBase = 500;
+            cmdPacingDelay = 15;
+        }
+
+        store.addLog(`POLLING_ORCHESTRATOR: Target pacing parameters computed. Score=${score}, interLoopDelay=${interLoopDelay}ms, cmdTimeoutBase=${cmdTimeoutBase}ms, cmdPacingDelay=${cmdPacingDelay}ms`);
+
+        let lastVoltageReadTime = 0;
+
         while (this.isPollingActive) {
             try {
+                // Periodically query battery voltage via ATRV (every 5 seconds)
+                const now = Date.now();
+                if (now - lastVoltageReadTime > 5000) {
+                    try {
+                        await OBDCommandQueue.add('ATRV', cmdTimeoutBase);
+                        lastVoltageReadTime = now;
+                    } catch (e) {
+                        store.addLog(`POLLING_ORCHESTRATOR: ATRV query failed: ${e}`);
+                    }
+                }
+
                 for (const [ecuHeader, pids] of batchedQueue.entries()) {
                     if (!this.isPollingActive) break;
 
                     // --- KADEMELİ FİLTRE 1: DONANIM SEVİYESİ ACK-CHECK ---
                     if (this.currentActiveHeader !== ecuHeader) {
-                        const ack = await OBDCommandQueue.add(`AT SH ${ecuHeader}`, 500);
+                        const ack = await OBDCommandQueue.add(`AT SH ${ecuHeader}`, cmdTimeoutBase);
                         const cleanAck = ack.toUpperCase().replace(/\s+/g, '');
 
                         // Eğer klon cihaz komutu yuttuysa veya '?' fırlattıysa acil kurtarma tetikle
@@ -61,38 +96,52 @@ export class PollingOrchestrator {
 
                     // Bu düğüme ait tüm PID'leri ardışık olarak patlat
                     for (const pid of pids) {
+                        if (this.blacklistedPids.has(pid)) continue;
+
                         const cmd = `01 ${pid}`;
-                        const timeout = ecuHeader === '7E8' ? 400 : 800; // Şanzıman/Batarya için hantal toleransı
+                        const timeout = ecuHeader === '7E8' ? cmdTimeoutBase : (cmdTimeoutBase * 2); // Şanzıman/Batarya için hantal toleransı
 
-                        const rawResponse = await OBDCommandQueue.add(cmd, timeout);
-                        const cleanResponse = rawResponse.toUpperCase().replace(/\s+/g, '');
+                        try {
+                            const rawResponse = await OBDCommandQueue.add(cmd, timeout);
+                            const cleanResponse = rawResponse.toUpperCase().replace(/\s+/g, '');
 
-                        // Sinyal yoksa veya donanım kilitlendiyse doğrudan devam et
-                        if (cleanResponse.includes("NODATA") || cleanResponse.includes("CANERROR")) {
+                            // Sinyal yoksa veya donanım kilitlendiyse doğrudan devam et
+                            if (cleanResponse.includes("NODATA") || cleanResponse.includes("CANERROR") || cleanResponse === '?') {
+                                store.addLog(`POLLING_ORCHESTRATOR: PID ${pid} returned NODATA/Error. Blacklisting.`);
+                                this.blacklistedPids.add(pid);
+                                continue;
+                            }
+
+                            // --- KADEMELİ FİLTRE 2: ELEKTRİKSEL HEADER DRIFT VERIFICATION ---
+                            // Şanzıman (7E9) beklerken satır başından Motor (7E8) verisi sızdıysa anomalidir!
+                            if (ecuHeader === '7E9' && cleanResponse.includes('7E841')) {
+                                store.addLog(`CRITICAL ANOMALY: Routing Drift caught! Expected Node 7E9, but Node 7E8 hijacked the line. Payload: [${rawResponse}]`);
+                                this.currentActiveHeader = 'UNKNOWN'; // Klon cihazın sahte state'ini düşür
+                                break; // Döngüyü kır, bir sonraki turda AT SH'ı yeniden göndermeye zorla
+                            }
+
+                            if (ecuHeader === '7E8' && cleanResponse.includes('7E941')) {
+                                store.addLog(`CRITICAL ANOMALY: Reverse Routing Drift caught! Expected Node 7E8, but Node 7E9 hijacked the line.`);
+                                this.currentActiveHeader = 'UNKNOWN';
+                                break;
+                            }
+                        } catch (err: any) {
+                            if (err?.message?.includes('Timeout')) {
+                                store.addLog(`POLLING_ORCHESTRATOR: PID ${pid} timed out. Blacklisting.`);
+                                this.blacklistedPids.add(pid);
+                            }
                             continue;
                         }
 
-                        // --- KADEMELİ FİLTRE 2: ELEKTRİKSEL HEADER DRIFT VERIFICATION ---
-                        // Şanzıman (7E9) beklerken satır başından Motor (7E8) verisi sızdıysa anomalidir!
-                        if (ecuHeader === '7E9' && cleanResponse.includes('7E841')) {
-                            store.addLog(`CRITICAL ANOMALY: Routing Drift caught! Expected Node 7E9, but Node 7E8 hijacked the line. Payload: [${rawResponse}]`);
-                            this.currentActiveHeader = 'UNKNOWN'; // Klon cihazın sahte state'ini düşür
-                            break; // Döngüyü kır, bir sonraki turda AT SH'ı yeniden göndermeye zorla
+                        // Komutlar arası dinlenme payı (Adaptive Pacing)
+                        if (cmdPacingDelay > 0) {
+                            await preciseSleep(cmdPacingDelay);
                         }
-
-                        if (ecuHeader === '7E8' && cleanResponse.includes('7E941')) {
-                            store.addLog(`CRITICAL ANOMALY: Reverse Routing Drift caught! Expected Node 7E8, but Node 7E9 hijacked the line.`);
-                            this.currentActiveHeader = 'UNKNOWN';
-                            break;
-                        }
-                        // ----------------------------------------------------------------
-
-                        // Veri jilet gibi temiz; parser katmanına güvenle fırlatılabilir
                     }
                 }
 
-                // BLE veri hattı ve UART buffer sönümlenme payı
-                await new Promise(resolve => setTimeout(resolve, 15));
+                // BLE veri hattı ve UART buffer sönümlenme payı (Adaptive Loop Delay)
+                await preciseSleep(interLoopDelay);
 
             } catch (error) {
                 store.addLog(`POLLING_ORCHESTRATOR: Fatal Exception inside loop: ${error}`);

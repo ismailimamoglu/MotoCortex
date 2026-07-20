@@ -197,7 +197,7 @@ function SelectionModalContent({
           <View style={sDyn.header}>
             <TouchableOpacity onPress={onClose} style={sDyn.backBtn} activeOpacity={0.4}>
               <Text allowFontScaling={false} style={sDyn.backBtnText}>
-                {`← ${t('common.back', 'GERİ').toUpperCase()}`}
+                {`← ${t('common.back', 'BACK').toUpperCase()}`}
               </Text>
             </TouchableOpacity>
             <Text allowFontScaling={false} style={sDyn.headerTitle}>{title.toUpperCase()}</Text>

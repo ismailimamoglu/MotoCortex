@@ -145,57 +145,40 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
             showsVerticalScrollIndicator={false} 
             contentContainerStyle={{ paddingBottom: isTablet ? scaleHeight(24) : (Platform.OS === 'ios' ? insets.bottom + scaleHeight(24) : scaleHeight(24)) }}
           >
-            <Text style={[sDyn.sectionTitle, { color: colors.textSec }]}>{t('bento.settings.hardwareHealth', 'DONANIM SAĞLIK BİLGİSİ')}</Text>
+            <Text style={[sDyn.sectionTitle, { color: colors.textSec }]}>{t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO')}</Text>
             
             <View style={sDyn.card}>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.connectionType', 'Bağlantı Tipi:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.connectionType', 'Connection Type:')}</Text>
                 <Text style={sDyn.rowValue}>
-                  {isConnected ? 'BLE' : t('bento.settings.noConnection', 'Bağlantı Yok')}
+                  {isConnected ? 'BLE' : t('bento.settings.noConnection', 'No Connection')}
                 </Text>
               </View>
               <View style={sDyn.row}>
                 <Text style={sDyn.rowLabel}>{t('bento.settings.protocol', 'Protokol:')}</Text>
                 <Text style={sDyn.rowValue}>
-                  {isConnected ? 'CAN Bus (ISO-15765)' : t('bento.settings.none', 'Yok')}
+                  {isConnected ? 'CAN Bus (ISO-15765)' : t('bento.settings.none', 'None')}
                 </Text>
               </View>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.deviceStatus', 'Cihaz Durumu:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.deviceStatus', 'Device Status:')}</Text>
                 <Text style={[sDyn.rowValue, { 
                   color: isConnected ? (isCloneDevice ? colors.red : colors.green) : colors.textSec, 
                 }]}>
                   {isConnected 
-                    ? (isCloneDevice ? t('bento.settings.safeMode', 'Güvenli Mod / Clone Adaptör') : t('bento.settings.original', 'Orijinal')) 
-                    : t('bento.settings.deviceNotConnected', 'Cihaz Bağlı Değil')}
+                    ? (isCloneDevice ? t('bento.settings.safeMode', 'Safe Mode / Clone Adapter') : t('bento.settings.original', 'Original')) 
+                    : t('bento.settings.deviceNotConnected', 'Device Not Connected')}
                 </Text>
               </View>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.pollingRate', 'Sorgu Hızı:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.pollingRate', 'Polling Rate:')}</Text>
                 <Text style={sDyn.rowValue}>
                   {isConnected 
-                    ? (isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Düşük)') : t('bento.settings.pollingHigh', '4 Hz (Yüksek)')) 
+                    ? (isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Low)') : t('bento.settings.pollingHigh', '4 Hz (High)')) 
                     : t('bento.settings.pollingZero', '0 Hz')}
                 </Text>
               </View>
 
-              {/* Separator line */}
-              <View style={{ height: 1, backgroundColor: colors.border, marginVertical: scaleHeight(4) }} />
-
-              {/* User ID Row */}
-              <TouchableOpacity 
-                style={sDyn.row}
-                onPress={copyToClipboard}
-                activeOpacity={0.4}
-              >
-                <Text style={[sDyn.rowLabel, { flexShrink: 0 }]}>{t('bento.settings.userIdLabel', 'User ID:')}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(4), flex: 1, justifyContent: 'flex-end', marginLeft: scaleWidth(12) }}>
-                  <Text style={[sDyn.rowValue, { color: colors.cyan, fontSize: scaleFont(9.5), flexShrink: 1 }]} numberOfLines={1} ellipsizeMode="tail">
-                    {appUserId || t('bento.settings.none', 'None')}
-                  </Text>
-                  {!!appUserId && <Text style={{ fontSize: scaleFont(11), color: colors.cyan }}>📋</Text>}
-                </View>
-              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>

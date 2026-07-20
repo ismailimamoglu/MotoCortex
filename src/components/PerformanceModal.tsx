@@ -79,8 +79,8 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 }
                 if (counter.count >= 3) {
                     Alert.alert(
-                        t('perfTeaser.limitTitle', 'Günlük Sınır Aşıldı'),
-                        t('perfTeaser.limitDesc', 'Günlük 3 ücretsiz 0-60 km/h test sınırına ulaştınız. Sınırsız test ve 0-100 km/h ölçümleri için PRO paketine yükseltin.'),
+                        t('perfTeaser.limitTitle', 'Daily Limit Reached'),
+                        t('perfTeaser.limitDesc', 'You have reached your daily 3 free 0-60 km/h test limit. Upgrade to PRO for unlimited tests and 0-100 km/h measurements.'),
                         [
                             { text: t('common.cancel'), style: 'cancel' },
                             { text: t('common.upgrade'), onPress: () => {

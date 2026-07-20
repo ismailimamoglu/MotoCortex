@@ -1,14 +1,14 @@
 {
     "tabs": {
         "dashboard": "İZLEME",
-        "expertise": "EKSPERTİZ",
+        "expertise": "EKSPERTİZ & ARIZA TEŞHİSİ",
         "info": "BİLGİ"
     },
     "hub": {
         "controlHub": "KONTROL MERKEZİ",
         "backToHub": "ANA MENÜYE DÖN",
         "liveSensorsView": "Canlı Sensörler",
-        "diagnosticsView": "Ekspertiz",
+        "diagnosticsView": "Ekspertiz & Arıza Teşhisi",
         "vehicleProfileView": "Uygulama Hakkında",
         "goToExpertise": "EKSPERTİZ'E GİT",
         "goToSensors": "CANLI VERİLERE GİT",
@@ -25,11 +25,13 @@
         "skipBtn": "Atla (Bitir)"
     },
     "bento": {
-        "diagnostics": "Ekspertiz",
+        "diagnostics": "Ekspertiz & Arıza Teşhisi",
         "cleanFaults": "0 ARIZA (TEMİZ)",
         "dtcDetected": "{{count}} ARIZA TESPİT EDİLDİ",
         "liveSensors": "Canlı Sensörler",
         "realtimeData": "CANLI VERİ AKIŞI",
+        "featureCoding": "GİZLİ ÖZELLİK AÇ & UDS KODLAMA",
+        "featureCodingSub": "VAG, BMW, Renault ISO 14229 Özellik Açma",
         "vehicleProfile": "Uygulama Hakkında",
         "quickSettings": "Hızlı Ayarlar",
         "settings": {
@@ -57,7 +59,7 @@
             "idCopied": "Kullanıcı kimliği panoya kopyalandı.",
             "hardwareHealthAndId": "DONANIM SAĞLIĞI & KİMLİK",
             "hardwareModalDesc": "Destek almak veya manuel PRO lisans aktivasyonu yapmak için lütfen yukarıdaki Kullanıcı Kimliğini kopyalayıp bizimle iletişime geçin.",
-            "supportEmailBody": "Merhaba MotoCortex Destek Ekibi,\n\n--- Uygulama Bilgisi ---\nKullanıcı Kimliği: {{userId}}\nLisans Durumu: {{license}}\nBağlantı: {{connection}}\nCihaz Durumu: {{deviceStatus}}\n\n--- Mesajınız ---\n",
+            "supportEmailBody": "Merhaba Cortex OBD2 Diagnosis Scanner Destek Ekibi,\n\n--- Uygulama Bilgisi ---\nKullanıcı Kimliği: {{userId}}\nLisans Durumu: {{license}}\nBağlantı: {{connection}}\nCihaz Durumu: {{deviceStatus}}\n\n--- Mesajınız ---\n",
             "deviceName": "Cihaz Adı:",
             "simulationObd": "Simülasyon OBD",
             "obdHealthTitle": "OBD SAĞLIK İSTATİSTİKLERİ",
@@ -101,7 +103,7 @@
         "exitDemoMode": "DEMO MODUNDAN ÇIK",
         "proActive": "PRO Aktif",
         "proActiveDesc": "Zaten bir MOTO CORTEX PRO üyesisiniz. Teşekkürler!",
-        "freeAccount": "MOTO CORTEX FREE",
+        "freeAccount": "MOTO CORTEX ÜCRETSİZ",
         "freeAccountDesc": "TÜM ÖZELLİKLERİ AÇMAK İÇİN YÜKSELTİN",
         "proAccountDesc": "PREMİUM ÜYELİK AKTİF",
         "upgrade": "YÜKSELT",
@@ -119,10 +121,14 @@
         "operations": "İşlemler",
         "close": "KAPAT",
         "revocationTitle": "Abonelik Sonlandırıldı",
-        "revocationMsg": "Aboneliğiniz iptal edildiği veya iade edildiği için PRO özelliklerine erişiminiz sonlandırılmıştır."
+        "revocationMsg": "Aboneliğiniz iptal edildiği veya iade edildiği için PRO özelliklerine erişiminiz sonlandırılmıştır.",
+        "supported": "Destekleniyor",
+        "copied": "Kopyalandı",
+        "cancelBtn": "Vazgeç",
+        "retry": "BAĞLANTIYI YENİDEN DENE",
+        "changeType": "Bağlantı Türünü Değiştir"
     },
     "paywall": {
-        "crownBadge": "MOTO CORTEX PRO",
         "subtitle": "En derin diyagnostik özelliklerin ve tüm parametrelerin kilidini açın.",
         "feat1Title": "Gelişmiş Canlı Veriler",
         "feat1Desc": "Gerçek zamanlı takograf, özel analog göstergeler ve grafikler.",
@@ -155,20 +161,19 @@
         "errorTitle": "Ürünler Yüklenemedi",
         "errorDesc": "Ürünler yüklenirken bir hata oluştu, lütfen internet bağlantınızı kontrol edip tekrar deneyin.",
         "retryBtn": "Tekrar Dene",
-        "loadingPrices": "Fiyatlar yükleniyor..."
+        "loadingPrices": "Fiyatlar yükleniyor...",
+        "crownBadge": "MOTO CORTEX PRO"
     },
     "connection": {
-        "logoSub": "v7 PRO",
+        "cancel": "İptal",
         "adapter": "ADAPTÖR",
         "ecu": "ECU",
-        "online": "ONLINE",
-        "offline": "OFFLINE",
         "connecting": "BAĞLANIYOR",
         "scanDevices": "CİHAZ TARA",
         "connectLast": "SON CİHAZA BAĞLAN",
         "enableBt": "BLUETOOTH'U AÇ",
         "scanning": "Taranıyor...",
-        "foundDevices": "BULUNAN CİHAZLAR",
+        "foundDevices": "BULUNAN OBD2 CİHAZLARI",
         "unknownDevice": "Bilinmeyen Cihaz",
         "scanHint": "Eşleştirilmiş OBD cihazlarını bulmak için tarayın.",
         "ecuWait": "ECU'ya bağlanılıyor...",
@@ -194,7 +199,7 @@
         "sendButton": "GÖNDER",
         "ecuResponseLabel": "ECU YANITI:",
         "adapterConnected": "ADAPTÖRE BAĞLANDI (OK)",
-        "connectDevice": "CİHAZA BAĞLAN",
+        "connectDevice": "OBD2 CİHAZINA BAĞLAN",
         "adapterApproved": "ADAPTÖR ONAYLANDI. YETENEKLER ANALİZ EDİLİYOR... [2/5]",
         "protocolNegotiating": "PROTOKOL TARANIYOR & UYANDIRMA... [3/5]",
         "ecuDetected": "ECU ALGILANDI, DOĞRULANIYOR... [4/5]",
@@ -203,9 +208,91 @@
         "protocolFailed": "⚠️ UYUMLU PROTOKOL BULUNAMADI! (SP5, SP3, SP4, SP6, SP7 denendi)",
         "ecuNotFound": "⚠️ ARAÇ BEYNİ (ECU) YANIT VERMİYOR!",
         "hardwareCapabilityScore": "Adaptör Donanım Yetenek Skoru: {{score}}/100",
-        "hardwareFatal": "Kritik Hata: Donanımınız eski araç protokollerini desteklemeyen sahte bir klondur. Araç ECU'suna bağlanılamaz. Lütfen kaliteli bir adaptör (v1.5 veya orijinal) edinin."
+        "hardwareFatal": "Kritik Hata: Donanımınız eski araç protokollerini desteklemeyen sahte bir klondur. Araç ECU'suna bağlanılamaz. Lütfen kaliteli bir adaptör (v1.5 veya orijinal) edinin.",
+        "lowQualityAdapterWarning": "⚠️ Düşük Kaliteli Adaptör (Skor: {{score}}/100): Kullandığınız cihaz düşük kaliteli bir klondur. Eski nesil araç protokollerinin (Dacia, Renault, Fiat, Lada vb. K-Line hatları) gerektirdiği hassas zamanlama kararlılığına sahip değildir. Sorunsuz bağlantı için kaliteli bir OBD2 adaptörü (v1.5 veya orijinal OBDLink/vLinker) kullanmanızı öneririz.",
+        "statusProfiling": "OBD2 adaptör yetenekleri analiz ediliyor...",
+        "statusScanningCan": "Modern CAN-Bus protokolleri taranıyor...",
+        "statusScanningKline": "K-Line protokolleri uyandırılıyor. Eski nesil araçların (Dacia, Renault, Fiat) yanıt vermesi 15 saniye kadar sürebilir...",
+        "statusHandshake": "Araç beyni (ECU) iletişimi doğrulanıyor...",
+        "statusStabilization": "Telemetri veri akışı kararlı hale getiriliyor...",
+        "btDisabled": "Bluetooth Kapalı",
+        "btDisabledDesc": "OBD2 adaptörlerini taramak için lütfen Bluetooth'u açın.",
+        "btDescIos": "BLE OBD2 adaptörlerini kullanarak bağlanın (Veepeak, vLinker).",
+        "btDescAndroid": "Klasik Bluetooth veya BLE adaptörleri üzerinden bağlanın.",
+        "wifiDesc": "Wi-Fi adaptörlerine bağlanın (genellikle 192.168.0.10).",
+        "wifiGuide": "Wi-Fi adaptörünüze bağlanmak için telefonunuzun Wi-Fi ayarlarına gidin ve OBD adaptör ağını (örn. OBDII, V-LINK) seçin. Ardından buraya dönün.",
+        "openWifiSettings": "WI-FI AYARLARINI AÇ",
+        "connectWifi": "WI-FI İLE BAĞLAN",
+        "pairRequired": "OBD2 Cihazı Eşleştiriliyor",
+        "pairRequiredDesc": "Android işletim sistemi bu cihazla ilk defa bağlandığınız için eşleştirme talep edebilir. Eşleştirme şifresi genellikle aşağıdaki gibidir:",
+        "pairNow": "EŞLEŞTİR VE BAĞLAN",
+        "pairingFailed": "Eşleştirme başarısız oldu. Lütfen Android ayarlarından manuel olarak eşleştirin.",
+        "successVin": "Bağlantı sağlandı. Araç profili başarıyla tanımlandı.",
+        "cloneWarning": "Uyumsuz Klon Adaptör Algılandı. Gelişmiş kodlama işlemleri güvenliğiniz için kilitlenmiştir.",
+        "viewHealth": "OBD2 SAĞLIK & YETENEK MENÜSÜ",
+        "statusPrompt": "Tercih ettiğiniz OBD2 bağlantı arayüzünü aşağıdan seçin.",
+        "changeType": "Bağlantı Türünü Değiştir",
+        "scanHintIos": "BLE OBD2 adaptörünüzün açık ve iOS cihazınızın yakınında olduğundan emin olun.",
+        "scanHintAndroid": "Bluetooth'un aktif olduğundan ve adaptörün eşleşmeye hazır olduğundan emin olun.",
+        "negotiating": "OBD2 BAĞLANTI DÖNGÜSÜ YAPILANDIRILIYOR",
+        "failed": "BAĞLANTI GİRİŞİMİ BAŞARISIZ",
+        "errLayer1": "Çözüm: Bluetooth kapalı. Lütfen cihaz ayarlarınızdan Bluetooth'u açın.",
+        "errLayer2": "Çözüm: Bağlantı zaman aşımına uğradı. Adaptörün OBD2 portuna tam oturduğundan ve güç ışığının yandığından emin olun.",
+        "errLayer5": "Çözüm: OBD2 Protokolü çözümlenemedi. Aracınızın kontağının açık (ON) konumda olduğundan emin olun (motorun çalışır durumda olması önerilir).",
+        "errLayer6": "Çözüm: Adaptöre bağlandık ancak araç beyni (ECU) yanıt vermiyor. Lütfen kontağı açın veya bağlantıyı yeniden başlatın.",
+        "errGeneric": "Çözüm: Lütfen adaptörde güç olduğundan, kontağın açık olduğundan ve başka hiçbir OBD uygulamasının açık olmadığından emin olun.",
+        "stepAdapter": "Adaptör Bağlantısı ve Yetenek Skoru",
+        "stepProtocol": "OBD2 Protokol Anlaşması",
+        "stepHandshake": "ECU İletişim Doğrulaması",
+        "stepStabilization": "Aktif Telemetri Döngüsü Sabitlemesi",
+        "logoSub": "v7 PRO",
+        "online": "ONLINE",
+        "offline": "OFFLINE"
+    },
+    "health": {
+        "titleMenu": "OBD2 SAĞLIK & YETENEK",
+        "adapterQuality": "ADAPTÖR KALİTESİ & PERFORMANSI",
+        "excellent": "MÜKEMMEL (ORİJİNAL)",
+        "good": "İYİ (STANDART)",
+        "clone": "UYUMSUZ / KLON",
+        "firmware": "Yazılım Sürümü:",
+        "capScore": "Yetenek Skoru",
+        "latency": "Gecikme Süresi",
+        "protocol": "Aktif Protokol",
+        "featureSupport": "UYGULAMA ÖZELLİK MATRİSİ",
+        "matrixReadCodes": "Hata Kodu Okuma & Silme",
+        "matrixLiveSensors": "Canlı Sensör İzleme (Temel)",
+        "matrixBattery": "Akü / Voltaj Testi",
+        "matrixHighSpeed": "Yüksek Hızlı Telemetri (20Hz)",
+        "matrixCoding": "ECU Kodlama & Adaptasyon",
+        "active": "Aktif",
+        "degraded": "Sınırlı (Yavaş RTT)",
+        "locked": "Kilitli (Güvenli Mod)",
+        "warning": "GÜVENLİK KİLİDİ:",
+        "lockExplain": "Adaptörünüz klon/taklit çip olarak tespit edilmiştir. Klon adaptörlerdeki voltaj kararsızlığı araç beynini kilitleyebileceğinden (bricking), kodlama/adaptasyon özellikleri kilitlenmiştir. Güvenli kodlama için orijinal ELM327 v2.1 veya vLinker cihazı kullanmalısınız.",
+        "vehiclePids": "ARAÇ SENSÖR DESTEK LİSTESİ",
+        "checklistPrompt": "Aracınızın motor beyninin desteklediği standart parametreler (PID) aşağıda listelenmiştir. İşaretli olmayan sensör verileri aracınız tarafından raporlanmamaktadır.",
+        "supportedBadge": "✓ DESTEKLENİYOR",
+        "unsupportedBadge": "❌ DESTEKLENMİYOR"
+    },
+    "sensor": {
+        "rpm": "Motor Devri (RPM)",
+        "speed": "Araç Hızı (Hız)",
+        "coolant": "Motor Sıcaklığı (Soğutma Suyu)",
+        "throttle": "Gaz Kelebeği Konumu",
+        "voltage": "Akü / Modül Voltajı",
+        "maf": "Hava Akış Hızı (MAF)",
+        "iat": "Emme Havası Sıcaklığı",
+        "load": "Hesaplanan Motor Yükü",
+        "fuel": "Yakıt Seviyesi",
+        "oilTemp": "Motor Yağ Sıcaklığı"
     },
     "dashboard": {
+        "limitReached": "Seçim Sınırı",
+        "limitReachedDesc": "Bu protokol ile en fazla {{limit}} sensör seçebilirsiniz.",
+        "customizeSubtitleKLine": "K-Line protokolü bağlı. En fazla {{limit}} sensör seçebilirsiniz.",
+        "customizeSubtitleCAN": "CAN-Bus protokolü bağlı. En fazla {{limit}} sensör seçebilirsiniz.",
+        "unit": "Birim",
         "selectDevice": "CİHAZ SEÇMEK İÇİN DOKUN",
         "connectedDevice": "BAĞLI CİHAZ",
         "noConnection": "Henüz bağlantı yok",
@@ -219,7 +306,6 @@
         "throttle": "GAZ",
         "status": "DEVİR DURUMU",
         "statusHigh": "YÜKSEK",
-        "statusNormal": "NORMAL",
         "statusLow": "DÜŞÜK",
         "battery": "AKÜ",
         "load": "YÜK",
@@ -248,7 +334,9 @@
         "adapterOriginal": "ORİJİNAL",
         "adapterCloneShort": "KLON",
         "adapterOriginalShort": "ORİJİNAL",
-        "pidLabel": "PID: {{pid}}"
+        "statusNormal": "NORMAL",
+        "pidLabel": "PID: {{pid}}",
+        "layoutChart": "GRAFİK"
     },
     "expertise": {
         "historyFound": "ARAÇ GEÇMİŞİ BULUNDU!",
@@ -313,13 +401,12 @@
     },
     "info": {
         "desc": "Profesyonel motosiklet ve araç teşhis uygulaması.\nTüm araçlarla uyumludur.",
-        "upgrade": "👑 MotoCortex PRO'ya Yükselt",
+        "upgrade": "👑 Cortex OBD2 Diagnosis Scanner PRO'ya Yükselt",
         "upgradeAlert": "Erken Erişim 🎉",
-        "upgradeAlertDesc": "MotoCortex şu an geliştirme aşamasındadır. Siz erken dönem kullanıcımız olduğunuz için tüm profesyonel özellikler şu an size açıktır. Geri bildirimleriniz bizim için çok değerli!",
+        "upgradeAlertDesc": "Cortex OBD2 Diagnosis Scanner şu an geliştirme aşamasındadır. Siz erken dönem kullanıcımız olduğunuz için tüm profesyonel özellikler şu an size açıktır. Geri bildirimleriniz bizim için çok değerli!",
         "helpGuide": "YARDIM VE REHBER",
-        "language": "🌐 Dil / Language / Bahasa",
-        "support": "📞 DESTEK MERKEZİ",
-        "supportSubject": "MotoCortex Destek ve Geri Bildirim",
+        "support": "DESTEK MERKEZİ",
+        "supportSubject": "Cortex OBD2 Diagnosis Scanner Destek ve Geri Bildirim",
         "thanks": "Teşekkürler!",
         "thanksDesc": "Görüşleriniz için teşekkür ederiz. Play Store üzerinden bize yorum bırakabilirsiniz.",
         "sections": {
@@ -348,10 +435,11 @@
                 "content": "Uygulama kalitesini ve araç uyumluluğunu artırmak amacıyla; arıza teşhisi sırasında oluşan tamamen anonimleştirilmiş motor parametreleri ve arıza kodları (kişisel veri ve şasi numarası barındırmaksızın) güvenli sunucularımızda analiz edilebilir. Devam ederek bu anonim telemetri koşullarını kabul etmiş sayılırsınız.\n\nBluetooth ve Konum izinleri, motosikletinizin ECU beyniyle iletişim kurmak için gereklidir."
             }
         },
-        "reconfigurePermissions": "İzinleri & Yasal Şartları Yeniden Göster"
+        "reconfigurePermissions": "İzinleri & Yasal Şartları Yeniden Göster",
+        "language": "🌐 Dil / Language / Bahasa"
     },
     "report": {
-        "title": "🏍️ ═══ MOTOCORTEX TEŞHİS RAPORU ═══ 🏍️",
+        "title": "🏍️ ═══ CORTEX OBD2 TEŞHİS RAPORU ═══ 🏍️",
         "vehicleIdentity": "📋 ARAÇ KİMLİĞİ",
         "vin": "Şasi No (VIN)",
         "odometer": "Mesafe (KM)",
@@ -360,7 +448,7 @@
         "dtcCount": "🔍 ARIZA KODLARI ({{count}} adet)",
         "sensorData": "📊 CANLI SENSÖR VERİLERİ",
         "noData": "Veri okunamadı",
-        "proApp": "MotoCortex v7 PRO ile taranmıştır.",
+        "proApp": "Cortex OBD2 Diagnosis Scanner v7 PRO ile taranmıştır.",
         "date": "Tarih",
         "vinNotFound": "Tespit Edilemedi",
         "noDtcs": "HATA KODU YOK — TEMİZ",
@@ -369,9 +457,9 @@
         "throttle": "Gaz",
         "engineLoad": "Motor Yükü",
         "intakeAir": "Emme Hava",
-        "manifold": "Manifold",
         "voltage": "Akü Voltajı",
-        "shareMessage": "Motocortex OBD2 Arıza Tespit Uygulaması ile motosikletinizin durumunu cebinizden takip edin! 🏍️📲\n\nİndir: https://motocortex.app"
+        "shareMessage": "Motocortex OBD2 Arıza Tespit Uygulaması ile motosikletinizin durumunu cebinizden takip edin! 🏍️📲\n\nİndir: https://cortexobd2.app",
+        "manifold": "Manifold"
     },
     "battery": {
         "title": "AKÜ & MARŞ TESTİ",
@@ -411,7 +499,6 @@
         }
     },
     "freeze": {
-        "title": "FREEZE FRAME",
         "snapshot": "ARIZA ANI HAFIZASI",
         "desc": "Check Engine ışığı yandığı andaki motor parametrelerini okur. Bu veriler arıza teşhisinde kritik bilgi sağlar.",
         "noDtcs": "Kayıtlı arıza kodu yok. Freeze Frame verisi olmayabilir.",
@@ -422,7 +509,8 @@
         "values": "📸 ARIZA ANINDA KAYDEDILEN DEĞERLER",
         "retry": "TEKRAR OKU",
         "techInfo": "TEKNİK BİLGİ",
-        "techDesc": "• OBD-II Mode 02: Freeze Frame Data\n• PID 020C00: Arıza anı RPM\n• PID 020D00: Arıza anı hız\n• PID 020500: Arıza anı soğutma suyu sıcaklığı\n\nBu veriler son arıza koduna aittir. Arıza kodları silinince freeze frame verileri de temizlenir."
+        "techDesc": "• OBD-II Mode 02: Freeze Frame Data\n• PID 020C00: Arıza anı RPM\n• PID 020D00: Arıza anı hız\n• PID 020500: Arıza anı soğutma suyu sıcaklığı\n\nBu veriler son arıza koduna aittir. Arıza kodları silinince freeze frame verileri de temizlenir.",
+        "title": "FREEZE FRAME"
     },
     "perf": {
         "title": "PERFORMANS TESTİ",
@@ -499,6 +587,7 @@
         "P0563": "Sistem Voltajı - Yüksek"
     },
     "vehicleSelect": {
+        "connectionSection": "OBD Cihaz Bağlantısı",
         "title": "TEŞHİS DOĞRULUĞUNU ARTIRMAK İÇİN ARACINIZI SEÇİN",
         "subtitle": "Doğru arıza tespiti ve protokol eşleşmesi için lütfen araç detaylarını belirtin.",
         "brand": "MARKA",
@@ -523,10 +612,14 @@
         "selectedVehicle": "SEÇİLİ ARAÇ",
         "changeVehicle": "DEĞİŞTİR",
         "newVehicle": "Yeni Araç Ekle",
+        "noVehicleTitle": "ARAÇ OTOMATİK TESPİTİ GEREKLİ",
+        "noVehicleDesc": "Araç kimliği OBD-II bağlantısı kurulduğunda otomatik olarak tespit edilecektir. Lütfen aşağıdaki alandan cihazınızı eşleştirip bağlanın.",
         "titleMenu": "Araç & Bağlantı",
         "registeredVehiclesLabel": "KAYITLI ARAÇLAR",
         "viewRegisteredList": "Kayıtlı Araçları Gör",
         "registeredVehicles": "KAYITLI ARAÇLARIM",
+        "registeredVehiclesButton": "KAYITLI ARAÇLARIM",
+        "connectDevice": "OBD2 CİHAZINA BAĞLAN",
         "deleteConfirm": "Bu aracı kayıtlı araçlardan silmek istediğinize emin misiniz?",
         "noRegisteredVehicles": "Kayıtlı araç bulunamadı.",
         "selectVehicle": "ARAÇ SEÇ",
@@ -539,68 +632,68 @@
         }
     },
     "brands": {
-        "alfa_romeo": "Alfa Romeo",
-        "aprilia": "Aprilia",
-        "aston_martin": "Aston Martin",
+        "other": "Diğer",
         "audi": "Audi",
         "bajaj": "Bajaj",
-        "benelli": "Benelli",
         "bmw_car": "BMW (Otomobil)",
         "bmw_moto": "BMW (Motosiklet)",
-        "cfmoto": "CFMoto",
         "chery": "Chery",
-        "chevrolet": "Chevrolet",
-        "citroen": "Citroën",
         "cupra": "Cupra",
         "dacia": "Dacia",
-        "ducati": "Ducati",
         "fiat": "Fiat",
         "ford": "Ford",
-        "harley": "Harley-Davidson",
         "hero": "Hero",
         "honda_car": "Honda (Otomobil)",
         "honda_moto": "Honda (Motosiklet)",
-        "husqvarna": "Husqvarna",
-        "hyundai": "Hyundai",
-        "indian": "Indian",
         "jeep": "Jeep",
-        "kawasaki": "Kawasaki",
         "kia": "Kia",
         "ktm": "KTM",
         "kuba": "Kuba",
         "kymco": "Kymco",
-        "land_rover": "Land Rover",
         "lexus": "Lexus",
         "mazda": "Mazda",
-        "mercedes": "Mercedes-Benz",
         "mg": "MG",
-        "mitsubishi": "Mitsubishi",
-        "mondial": "Mondial",
-        "mv_agusta": "MV Agusta",
-        "nissan": "Nissan",
         "opel": "Opel",
-        "peugeot": "Peugeot",
         "peugeot_car": "Peugeot (Otomobil)",
         "peugeot_moto": "Peugeot (Motosiklet)",
-        "porsche": "Porsche",
-        "renault": "Renault",
         "rks": "RKS",
         "seat": "Seat",
         "skoda": "Skoda",
-        "subaru": "Subaru",
         "suzuki_car": "Suzuki (Otomobil)",
         "suzuki_moto": "Suzuki (Motosiklet)",
         "sym": "Sym",
         "tesla": "Tesla",
         "togg": "Togg",
-        "toyota": "Toyota",
-        "triumph": "Triumph",
         "tvs": "TVS",
         "vespa": "Vespa",
-        "volkswagen": "Volkswagen",
         "volvo": "Volvo",
         "yuki": "Yuki",
-        "other": "Diğer"
+        "alfa_romeo": "Alfa Romeo",
+        "aprilia": "Aprilia",
+        "aston_martin": "Aston Martin",
+        "benelli": "Benelli",
+        "cfmoto": "CFMoto",
+        "chevrolet": "Chevrolet",
+        "citroen": "Citroën",
+        "ducati": "Ducati",
+        "harley": "Harley-Davidson",
+        "husqvarna": "Husqvarna",
+        "hyundai": "Hyundai",
+        "indian": "Indian",
+        "kawasaki": "Kawasaki",
+        "land_rover": "Land Rover",
+        "mercedes": "Mercedes-Benz",
+        "mitsubishi": "Mitsubishi",
+        "mondial": "Mondial",
+        "mv_agusta": "MV Agusta",
+        "nissan": "Nissan",
+        "peugeot": "Peugeot",
+        "porsche": "Porsche",
+        "renault": "Renault",
+        "subaru": "Subaru",
+        "toyota": "Toyota",
+        "triumph": "Triumph",
+        "volkswagen": "Volkswagen"
     },
     "permissions": {
         "headerSubtitle": "İZİN PANELİ",
@@ -612,9 +705,11 @@
         "locSub": "Yakındaki düşük enerjili Bluetooth cihazlarını bulmak için Android sistem mimarisi gereği zorunludur. Sürüşlerinizi takip etmiyoruz.",
         "grantBtn": "İZİN VER VE DEVAM ET",
         "skipBtn": "Şimdilik geç (Demo Modu)",
-        "deniedDesc": "Bazı izinler reddedildi. MotoCortex, OBD2 cihazlarını başarıyla tarayamayabilir veya bağlanamayabilir.",
+        "deniedDesc": "Bazı izinler reddedildi. Cortex OBD2 Diagnosis Scanner, OBD2 cihazlarını başarıyla tarayamayabilir veya bağlanamayabilir.",
         "proceedAnyway": "Yine de Devam Et",
-        "openSettings": "Ayarları Aç"
+        "openSettings": "Ayarları Aç",
+        "langTitle": "Dil Seçin",
+        "nextBtn": "DEVAM ET"
     },
     "disclaimer": "Tüm ürün adları, logolar ve markalar ilgili sahiplerinin mülkiyetindedir. Bu uygulamada kullanılan tüm şirket, ürün ve hizmet adları yalnızca tanımlama amaçlıdır. Bu isimlerin, logoların ve markaların kullanılması, herhangi bir onay veya sponsorluk anlamına gelmez.",
     "obdTerminal": {
@@ -675,6 +770,197 @@
         "advancedTerminal": "Gelişmiş Bağlantı Terminali (DIAG)",
         "terminalTitle": "Canlı Terminal & Veri Yolu İzleyici",
         "pause": "DURAKLAT",
-        "resume": "DEVAM ET"
+        "resume": "DEVAM ET",
+        "share": "PAYLAŞ",
+        "clear": "TEMİZLE"
+    },
+    "hiddenFeatures": {
+        "title": "Gizli Özellikler",
+        "btnLabel": "Gizli Özellikleri Aç",
+        "unsupported": "Bu OBD2 adaptörü gizli özellikleri açmayı desteklemiyor.",
+        "unsupportedDesc": "Orijinal ELM327 v2.1 veya daha yukarısı gereklidir. Klon adaptörler desteklenmez.",
+        "notConnected": "Lütfen önce bir araca bağlanın.",
+        "notConnectedDesc": "OBD2 cihazı bağlı olmalıdır.",
+        "warning": "Bu değişiklikler aracınızın garantisini etkileyebilir.",
+        "confirmTitle": "Onay Gerekli",
+        "confirmMsg": "Bu Özelliği Değiştirmek Ecu Kontrol Ünitesi Ayarlarını Etkiler. Devam Etmek İstiyor Musunuz?",
+        "confirmOk": "Devam Et",
+        "confirmCancel": "İptal",
+        "categoryLighting": "Aydınlatma",
+        "categorySound": "Ses & Uyarılar",
+        "categoryDisplay": "Gösterge Paneli",
+        "categoryDriving": "Sürüş",
+        "featureDrl": "Gündüz Farları (DRL)",
+        "featureRearFog": "Arka Sis Farı İptali",
+        "featureDoorChime": "Kapı Uyarı Sesini Kapat",
+        "featureParkingAlert": "El Freni Sesli Uyarısı",
+        "featureRpmWarning": "Devir Sınırı Uyarısı",
+        "featureFuelSensitivity": "Yakıt Göstergesi Hassasiyeti",
+        "featureStartStop": "Start-Stop Varsayılan Kapalı",
+        "featureSportMemory": "Sport Modu Hafızası",
+        "enabled": "Aktif",
+        "disabled": "Pasif",
+        "writeSuccess": "Özellik başarıyla güncellendi.",
+        "writeError": "Yazma hatası. Lütfen tekrar deneyin.",
+        "simulationBanner": "Simülasyon Modu — ECU'ya gerçek yazma henüz aktif değil",
+        "closeBtn": "Kapat",
+        "disclaimerTitle": "SORUMLULUK REDDİ BEYANI",
+        "disclaimerFeature": "Özellik",
+        "disclaimerBody": "Bu özelliği değiştirmek aracınızın fabrika ayarlarını ve ECU yazılımını doğrudan etkiler. Lütfen aşağıdaki riskleri dikkatlice okuyun:\n\n• Yanlış uygulama araç garantinizi geçersiz kılabilir.\n• Bazı değişiklikler kalıcı arızalara veya beklenmedik elektriksel hatalara neden olabilir.\n• İşlem geri alınabilir olsa da bazı ECU modülleri fabrika ayarlarına sıfırlama gerektirebilir.\n• Bu özelliğin kullanımından doğacak her türlü maddi veya manevi zarardan tamamen kullanıcı sorumludur.\n• Bu değişikliklerin neden olabileceği herhangi bir arıza veya hasardan Cortex OBD2 Diagnosis Scanner sorumlu tutulamaz.\n\nBu uyarıyı okuduğunuzu ve anladığınızı onaylamanız gerekir.",
+        "checkboxTitle": "ONAY GEREKLİ",
+        "check1": "Bu uyarıyı okudum ve aracımın garantisinin etkilenebileceğini anlıyorum.",
+        "check2": "Bu işlemden kaynaklanan herhangi bir arıza veya hasardan Cortex OBD2 Diagnosis Scanner'in sorumlu olmadığını kabul ediyorum.",
+        "check3": "Bu değişikliği bilerek, kendi özgür irademle ve tüm riskleri üstlenerek yapmak istiyorum.",
+        "disclaimerCancel": "İPTAL",
+        "disclaimerContinue": "DEVAM ET",
+        "unsupportedTitle": "Desteklenmiyor",
+        "unsupportedMsg": "Bağlı OBD2 cihazı henüz bu özelliği desteklemiyor.\n\nGizli özellik yazmak için uyumlu bir ELM327 v2.1+ adaptör gereklidir. Klon veya standart adaptörler bu komutları işleyemez.",
+        "unsupportedOk": "Tamam"
+    },
+    "secretDebug": {
+        "title": "⚡ MOTO CORTEX DEV PANEL",
+        "logFileSize": "Kara Kutu / Dosya Boyutu:",
+        "dtcCloudSync": "🛰️ DTC BULUT SENKRONİZASYONU",
+        "lastSync": "Son Eşitleme",
+        "syncNow": "Şimdi Eşitle",
+        "developerTools": "GELİŞTİRİCİ ARAÇLARI",
+        "trialResetSuccess": "Free Trial sayacı sıfırlandı!",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "Uygulama şimdi kasten çökecektir. Crashlytics entegrasyonunu doğrulamak için bunu onaylayın.",
+        "crashButton": "Çökert",
+        "crashTest": "Crash Test"
+    },
+    "features": {
+        "title": "GİZLİ ÖZELLİK AÇ & UDS KODLAMA",
+        "subTitle": "ISO 14229 UDS Long Coding & Adaptasyon Motoru",
+        "batteryVoltage": "AKÜ VOLTAJI",
+        "voltageReady": "✓ Güvenli (ECU Kodlama Yazımına Hazır)",
+        "voltageLocked": "⚠️ Düşük Voltaj (Yazma Kilitli, Okuma Aktif)",
+        "locked": "KİLİTLİ",
+        "ready": "HAZIR",
+        "allMarks": "TÜM MARKALAR",
+        "writeBtn": "KODLA",
+        "catLighting": "AYDINLATMA",
+        "catSound": "SES & UYARILAR",
+        "catDisplay": "GÖSTERGE PANELİ",
+        "catComfort": "KONFOR",
+        "catSafety": "EMNİYET",
+        "safetyAlertTitle": "⚠️ Düşük Akü Voltaj Uyarısı",
+        "safetyAlertMsg": "Kodlama için minimum 12.2V akü voltajı gereklidir.\nLütfen şarj cihazı bağlayın veya motoru çalıştırın.",
+        "items": {
+            "vag_staging_needle_sweep": {
+                "name": "Kadran Selamlama (Staging / Needle Sweep)",
+                "desc": "Kontak açıldığında gösterge ibrelerinin sona vurup geri gelmesini sağlar."
+            },
+            "vag_acoustic_lock_confirmation": {
+                "name": "Korna ile Kilit Geri Bildirimi",
+                "desc": "Araç kumandadan kilitlendiğinde kornanın kısa bip uyarısı vermesini sağlar."
+            },
+            "vag_american_parking_lights": {
+                "name": "Amerikan Park Sinyalleri",
+                "desc": "Ön sinyal lambalarının parklar açıkken %20 parlaklıkta sabit yanmasını sağlar."
+            },
+            "vag_drl_menu_toggle": {
+                "name": "Gündüz Farı Menüsü (DRL Toggle)",
+                "desc": "Gündüz sürüş farlarının gösterge/multimedya ekranından açılıp kapatılmasını sağlar."
+            },
+            "vag_tear_wiping": {
+                "name": "Silecek Son Damla Silme (Tear Wiping)",
+                "desc": "Cam yıkama çalıştırıldıktan 5 saniye sonra sileceklerin akan son damlayı silmesini sağlar."
+            },
+            "vag_emergency_brake_flashing": {
+                "name": "Ani Frende Flaşör Yakma",
+                "desc": "Sert fren yapıldığında stop lambalarının ve dörtlülerin hızlıca flaş yapmasını sağlar."
+            },
+            "vag_cornering_lights": {
+                "name": "Viraj Aydınlatma Sis Farları",
+                "desc": "Direksiyon çevrilen taraftaki sis farının viraj aydınlatması olarak yanmasını sağlar."
+            },
+            "vag_comfort_mirror_folding": {
+                "name": "Kumandadan Ayna Katlama",
+                "desc": "Kumandadan kilit butonuna basılı tutulduğunda dikiz aynalarının otomatik katlanmasını sağlar."
+            },
+            "vag_lap_timer": {
+                "name": "Pist Tur Sayacı (Lap Timer)",
+                "desc": "Gösterge bilgi ekranına tur süresi ölçer sekmesini ekler."
+            },
+            "vag_refuel_quantity": {
+                "name": "Depo Boş Litre Göstergesi",
+                "desc": "Depoya tam dolum için kaç litre yakıt gerektiğini göstergede gösterir."
+            },
+            "bmw_start_stop_memory": {
+                "name": "Auto Start-Stop Hafıza Modu",
+                "desc": "Auto Start-Stop sisteminin araç kapatıldığındaki son durumunu (Açık/Kapalı) hatırlamasını sağlar."
+            },
+            "bmw_digital_speedometer": {
+                "name": "Dijital Hız Göstergesi",
+                "desc": "Gösterge paneli bilgi ekranına anlık dijital hız seçeneğini ekler."
+            },
+            "bmw_sport_displays": {
+                "name": "Spor Göstergeler (HP & Nm Kadranı)",
+                "desc": "iDrive multimedya ekranına anlık beygir gücü (HP) ve tork (Nm) kadranlarını ekler."
+            },
+            "bmw_acoustic_lock_sound": {
+                "name": "Kilit Sesli Uyarısı (Acoustic Lock)",
+                "desc": "Araç kilitlendiğinde veya açıldığında fabrika alarmından kısa onay bipleri verir."
+            },
+            "bmw_mirror_fold_delay_zero": {
+                "name": "Gecikmesiz Ayna Katlama",
+                "desc": "Kumandadan kilit butonuna basıldığı an bekleme süresi olmadan (0.0s) aynaları katlar."
+            },
+            "bmw_tpms_tire_temperature": {
+                "name": "Lastik Sıcaklık Ekranı",
+                "desc": "Lastik basınç kontrol ekranında basınç değerine ek olarak anlık lastik sıcaklığını da gösterir."
+            },
+            "renault_trip_computer_enable": {
+                "name": "Yol Bilgisayarı Aktifleştirme",
+                "desc": "Yol bilgisayarı kapalı gelen araçlarda ortalama tüketim ve menzil ekranlarını açar."
+            },
+            "renault_external_temp_display": {
+                "name": "Dış Sıcaklık Göstergesi",
+                "desc": "Gösterge ekranında dış hava sıcaklığı göstergesini aktif eder."
+            },
+            "renault_automatic_tailgate": {
+                "name": "Kumandadan Bagaj Kapağı Açma",
+                "desc": "Uzaktan kumanda üzerindeki bagaj butonuna tıklandığında kapağı tam kilit açarak bırakır."
+            },
+            "renault_alarm_chirp": {
+                "name": "Korna / Siren Kilit Onayı",
+                "desc": "Araç kilitlendiğinde kornadan onay sesi verir."
+            },
+            "renault_shift_indicator": {
+                "name": "Vites Değişim İkaz Işığı",
+                "desc": "Ekonomik sürüş için göstergede yukarı/aşağı vites değiştirme oklarını aktifleştirir."
+            },
+            "ford_double_horn_honk_disable": {
+                "name": "Motor Çalışırken Çift Korna İptali",
+                "desc": "Motor çalışırken anahtarla araçtan inip kapı kapatıldığında çalan rahatsız edici çift kornayı kapatır."
+            },
+            "ford_auto_door_locking": {
+                "name": "20 km/h Hızda Otomatik Kapı Kilitleme",
+                "desc": "Araç hızı 20 km/h üzerine çıktığında tüm kapıların otomatik kilitlenmesini sağlar."
+            },
+            "ford_tpms_psi_display": {
+                "name": "Sayısal Lastik Basınç Ekranı",
+                "desc": "Gösterge ekranında her lastiğin anlık bar/psi değerini sayısal olarak gösterir."
+            },
+            "ford_sync_climate_screen": {
+                "name": "SYNC Ekranında Klima Kontrolü",
+                "desc": "SYNC multimedya ekranına klima ve koltuk ısıtma kontrol sekmesini ekler."
+            },
+            "stellantis_power_windows_remote": {
+                "name": "Kumandadan Cam Otomatik Kapatma/Açma",
+                "desc": "Uzaktan kumanda kilit butonuna basılı tutulduğunda açık camları otomatik kapatır."
+            },
+            "stellantis_cornering_fogs": {
+                "name": "Viraj Sis Farları",
+                "desc": "Düşük hızlarda dönüş yönündeki sis farını yakarak viraj aydınlatması sağlar."
+            }
+        },
+        "codeBtn": "KODLA",
+        "removeBtn": "KALDIR",
+        "unsupportedTitle": "Araç Desteklemiyor",
+        "unsupportedMsg": "Bu özellik aracınızın ECU donanımı veya yazılım versiyonu tarafından desteklenmemektedir.",
+        "layoutChart": "GRAFİK"
     }
 }

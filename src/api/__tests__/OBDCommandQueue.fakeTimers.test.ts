@@ -595,4 +595,9 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
             expect(recordErrSpy).toHaveBeenCalledWith('QUEUE_OVERFLOW_DATA_DROPPED', expect.any(String));
         });
     });
+
+    afterAll(() => {
+        jest.useRealTimers();
+        jest.clearAllTimers();
+    });
 });

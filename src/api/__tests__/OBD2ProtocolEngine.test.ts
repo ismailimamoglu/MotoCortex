@@ -79,12 +79,36 @@ jest.mock('../BluetoothService', () => {
 
 describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
     let engine: OBD2ProtocolEngine;
+    let originalPerformanceNow: any;
+
+    beforeAll(() => {
+        originalPerformanceNow = global.performance.now;
+        global.performance.now = () => Date.now();
+    });
+
+    afterAll(() => {
+        global.performance.now = originalPerformanceNow;
+    });
+
+    const flushMicrotasks = async () => {
+        let pnd = true;
+        let limit = 0;
+        while (pnd && limit++ < 200) {
+            pnd = false;
+            await Promise.resolve().then(() => {
+                pnd = true;
+            });
+        }
+    };
 
     beforeEach(() => {
         jest.clearAllMocks();
         engine = new OBD2ProtocolEngine();
         useAppStore.getState().isPro = true; // Set user as PRO to isolate movement safety checks
         useBluetoothStore.getState().connectionState = 'TELEMETRY_ACTIVE';
+        engine.onVoltageReceived((voltage) => {
+            useBluetoothStore.getState().setSensorData({ voltage });
+        });
     });
 
     test('1. Sürüş Durumunda Bloklama Kontrolü (isPollingActive = true ve Hız > 0 iken DANGEROUS engellenmeli)', async () => {
@@ -189,4 +213,356 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
         writeSpy.mockRestore();
         clearSpy.mockRestore();
     });
+
+    test('7. %35 Sinyal Kalitesi (Veri Kırpma / Data Chopper) Testi', async () => {
+        jest.useFakeTimers();
+        const { TransportRateLimiter } = require('../../core/transport/TransportRateLimiter');
+        const rateLimitSpy = jest.spyOn(TransportRateLimiter, 'acquireToken').mockResolvedValue(undefined as any);
+
+        let callCount = 0;
+        const writeSpy = jest.spyOn(require('../BluetoothService').default, 'write').mockImplementation((cmd: any) => {
+            if (cmd === '\r') {
+                setTimeout(() => {
+                    if (mockRegisteredCallback) {
+                        mockRegisteredCallback('>');
+                    }
+                }, 0);
+                return Promise.resolve(true);
+            }
+            callCount++;
+            if (callCount === 1) {
+                // First command: returns incomplete response, triggering a timeout
+                setTimeout(() => {
+                    if (mockRegisteredCallback) {
+                        mockRegisteredCallback('41 0D 00\r\n');
+                    }
+                }, 0);
+            } else {
+                // Second command: returns response in 3 chunks!
+                // Chunk 1: "41 " (at 0ms)
+                setTimeout(() => {
+                    if (mockRegisteredCallback) mockRegisteredCallback('41 ');
+                }, 0);
+                // Chunk 2: "0D " (at 5ms)
+                setTimeout(() => {
+                    if (mockRegisteredCallback) mockRegisteredCallback('0D ');
+                }, 5);
+                // Chunk 3: "00\r\n>" (at 10ms)
+                setTimeout(() => {
+                    if (mockRegisteredCallback) mockRegisteredCallback('00\r\n>');
+                }, 10);
+            }
+            return Promise.resolve(true);
+        });
+
+        try {
+            const p1 = (engine as any).executeCommand('01 0D', 15);
+            await flushMicrotasks();
+            jest.advanceTimersByTime(0);
+            await flushMicrotasks();
+            jest.advanceTimersByTime(15);
+            await flushMicrotasks();
+            jest.advanceTimersByTime(1); // run the mock callback for '\r'
+            await flushMicrotasks();
+            jest.advanceTimersByTime(200);
+            await flushMicrotasks();
+
+            await expect(p1).rejects.toThrow('Timeout: 01 0D');
+
+            const p2 = (engine as any).executeCommand('01 0D', 1000);
+            await flushMicrotasks();
+            
+            // Advance by 0ms to deliver chunk 1 ("41 ")
+            jest.advanceTimersByTime(0);
+            await flushMicrotasks();
+            
+            // Advance by 5ms to deliver chunk 2 ("0D ")
+            jest.advanceTimersByTime(5);
+            await flushMicrotasks();
+            
+            // Advance by 5ms (total 10ms) to deliver chunk 3 ("00\r\n>")
+            jest.advanceTimersByTime(5);
+            await flushMicrotasks();
+
+            const res = await p2;
+            expect(res).toBe('41 0D 00');
+        } finally {
+            rateLimitSpy.mockRestore();
+            writeSpy.mockRestore();
+            jest.useRealTimers();
+        }
+    });
+
+    test('8. UART Tampon Bellek Taşması (Buffer Overflow & Stall) Testi', async () => {
+        jest.useFakeTimers();
+        const { TransportRateLimiter } = require('../../core/transport/TransportRateLimiter');
+        const rateLimitSpy = jest.spyOn(TransportRateLimiter, 'acquireToken').mockResolvedValue(undefined as any);
+
+        const writeSpy = jest.spyOn(require('../BluetoothService').default, 'write').mockImplementation((cmd: any) => {
+            if (cmd === '\r' || cmd === 'ATWS\r') {
+                return Promise.resolve(true);
+            }
+            setTimeout(() => {
+                if (mockRegisteredCallback) {
+                    mockRegisteredCallback('?\r\n>');
+                }
+            }, 0);
+            return Promise.resolve(true);
+        });
+
+        const clearSpy = jest.spyOn(engine, 'clear');
+
+        try {
+            // First 2 failures resolve to '?' but increment stallCounter
+            const p1 = (engine as any).executeCommand('01 0C');
+            await flushMicrotasks();
+            jest.advanceTimersByTime(0);
+            await flushMicrotasks();
+            const res1 = await p1;
+            expect(res1).toBe('?');
+            expect((engine as any).stallCounter).toBe(1);
+
+            const p2 = (engine as any).executeCommand('01 0C');
+            await flushMicrotasks();
+            jest.advanceTimersByTime(0);
+            await flushMicrotasks();
+            const res2 = await p2;
+            expect(res2).toBe('?');
+            expect((engine as any).stallCounter).toBe(2);
+
+            // 3rd failure triggers ADAPTER_STALL and rejects
+            const p3 = (engine as any).executeCommand('01 0C');
+            await flushMicrotasks();
+            jest.advanceTimersByTime(0);
+            await flushMicrotasks();
+            await expect(p3).rejects.toThrow('ADAPTER_STALL');
+
+            expect(clearSpy).toHaveBeenCalled();
+            expect((engine as any).stallCounter).toBe(0);
+
+            // The recovery command ATWS is sent after 100ms cooldown:
+            jest.advanceTimersByTime(100);
+            await flushMicrotasks();
+            expect(writeSpy).toHaveBeenCalledWith('ATWS\r');
+        } finally {
+            rateLimitSpy.mockRestore();
+            writeSpy.mockRestore();
+            clearSpy.mockRestore();
+            jest.useRealTimers();
+        }
+    });
+
+    test('9. Ad-Hoc Yarış Durumu (Race Condition) Testi', async () => {
+        jest.useFakeTimers();
+        const { TransportRateLimiter } = require('../../core/transport/TransportRateLimiter');
+        const transportLimitSpy = jest.spyOn(TransportRateLimiter, 'acquireToken').mockResolvedValue(undefined as any);
+        const rateLimitSpy = jest.spyOn(require('../../core/queue/CommandRateLimiter').default, 'pace').mockResolvedValue(undefined as any);
+
+        const executionOrder: string[] = [];
+        const writeSpy = jest.spyOn(require('../BluetoothService').default, 'write').mockImplementation((cmd: any) => {
+            if (cmd === '\r') {
+                return Promise.resolve(true);
+            }
+            executionOrder.push(cmd);
+            return new Promise<boolean>((resolve) => {
+                setTimeout(() => {
+                    if (mockRegisteredCallback) {
+                        mockRegisteredCallback('41 0D 00\r\n>');
+                    }
+                    resolve(true);
+                }, 30);
+            });
+        });
+
+        (engine as any).clear();
+        executionOrder.length = 0; // Clear '\r' written by clear()
+
+        try {
+            const t1Promise = engine.add('01 0D', 2000, 'HIGH');
+            await flushMicrotasks();
+
+            // Advance by 5ms to simulate the offset before other commands are queued
+            jest.advanceTimersByTime(5);
+            await flushMicrotasks();
+
+            const t2Promise = engine.add('01 0C', 2000, 'HIGH');
+            const t3Promise = engine.add('01 05', 2000, 'HIGH');
+
+            const a1Promise = engine.add('ATZ', 2000, 'HIGH_PRIORITY_AD_HOC');
+            const a2Promise = engine.add('ATE0', 2000, 'HIGH_PRIORITY_AD_HOC');
+            const a3Promise = engine.add('ATI', 2000, 'HIGH_PRIORITY_AD_HOC');
+            const a4Promise = engine.add('ATH0', 2000, 'HIGH_PRIORITY_AD_HOC');
+            const a5Promise = engine.add('ATS1', 2000, 'HIGH_PRIORITY_AD_HOC');
+            await flushMicrotasks();
+
+            // Step through each command execution deterministically.
+            // t1 finishes at 35ms (30ms from now)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            // a1 (ATZ) (30ms)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            // a2 (ATE0) - blocked by 500ms cooldown from previous ATZ reset command!
+            jest.advanceTimersByTime(500);
+            await flushMicrotasks();
+
+            // Resolve a2 (ATE0) (30ms)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            // a3 (ATI) (30ms)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            // a4 (ATH0) (30ms)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            // a5 (ATS1) (30ms)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            // t2 (01 0C) (30ms)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            // t3 (01 05) (30ms)
+            jest.advanceTimersByTime(30);
+            await flushMicrotasks();
+
+            await Promise.all([t1Promise, t2Promise, t3Promise, a1Promise, a2Promise, a3Promise, a4Promise, a5Promise]);
+
+            expect(executionOrder).toEqual([
+                '01 0D',
+                'ATZ',
+                'ATE0',
+                'ATI',
+                'ATH0',
+                'ATS1',
+                '01 0C',
+                '01 05'
+            ]);
+        } finally {
+            transportLimitSpy.mockRestore();
+            rateLimitSpy.mockRestore();
+            writeSpy.mockRestore();
+            jest.useRealTimers();
+        }
+    });
+
+    test('10. Çift Durumlu Konsol ve i18n Temizlik Denetimi (t() fallback dil kontrolü)', () => {
+        const fs = require('fs');
+        const path = require('path');
+        const fileContent = fs.readFileSync(path.resolve(__dirname, '../../screens/sandbox/DashboardSandbox.tsx'), 'utf8');
+
+        const tCallRegex = /t\(\s*['"`][^'"`]+['"`]\s*,\s*['"`]([^'"`]+)['"`]\s*\)/g;
+        let match;
+        const nonEnglishStrings: string[] = [];
+
+        while ((match = tCallRegex.exec(fileContent)) !== null) {
+            const defaultText = match[1];
+            if (/[ıİğĞüÜşŞöÖçÇ]/.test(defaultText)) {
+                nonEnglishStrings.push(defaultText);
+            }
+        }
+
+        expect(nonEnglishStrings).toEqual([]);
+    });
+
+    test('11. Hex Giriş Satırının (TextInput + SEND) Alt Kısma Dock Edildiğinin Yapısal Kontrolü', () => {
+        const fs = require('fs');
+        const path = require('path');
+        const fileContent = fs.readFileSync(path.resolve(__dirname, '../../screens/sandbox/DashboardSandbox.tsx'), 'utf8');
+
+        const flatListIndex = fileContent.indexOf('<FlatList');
+        const inputAreaIndex = fileContent.indexOf('style={sDyn.inputArea}');
+        
+        expect(flatListIndex).not.toBe(-1);
+        expect(inputAreaIndex).not.toBe(-1);
+        expect(flatListIndex).toBeLessThan(inputAreaIndex);
+    });
+
+    test('12. ATRV Komutunun parseResponse Tarafından Doğru Çözümlenmesi', () => {
+        (engine as any).parseResponse('ATRV', '14.2V');
+        expect(useBluetoothStore.getState().voltage).toBe('14.2V');
+
+        (engine as any).parseResponse('ATRV', '12.6\r\nV');
+        expect(useBluetoothStore.getState().voltage).toBe('12.6V');
+    });
+
+    test('13. PollingOrchestrator Desteklenmeyen PID\'leri Kara Listeye Alma Kontrolü', async () => {
+        const { PollingOrchestrator } = require('../../core/connection/PollingOrchestrator');
+        const OBDCommandQueue = require('../OBDCommandQueue').default;
+
+        const queueAddSpy = jest.spyOn(OBDCommandQueue, 'add')
+            .mockImplementation((cmd: any) => {
+                if (cmd === 'ATRV') return Promise.resolve('14.2V');
+                if (cmd === '01 05') return Promise.resolve('NO DATA');
+                if (cmd === '01 0C') return Promise.resolve('41 0C 00 00');
+                return Promise.resolve('OK');
+            });
+
+        setTimeout(() => {
+            PollingOrchestrator.stopPolling();
+        }, 100);
+
+        await PollingOrchestrator.startPolling(['05@7E8', '0C@7E8']);
+
+        expect((PollingOrchestrator as any).blacklistedPids.has('05')).toBe(true);
+        expect((PollingOrchestrator as any).blacklistedPids.has('0C')).toBe(false);
+
+        queueAddSpy.mockRestore();
+    });
+
+    test('14. Donanım Skoruna Dayalı Otomatik Adaptif Telemetri Pacing Doğrulaması', async () => {
+        const { PollingOrchestrator } = require('../../core/connection/PollingOrchestrator');
+        const OBDCommandQueue = require('../OBDCommandQueue').default;
+
+        const queueAddSpy = jest.spyOn(OBDCommandQueue, 'add').mockImplementation(() => Promise.resolve('OK'));
+        const logSpy = jest.spyOn(useBluetoothStore.getState(), 'addLog');
+
+        // SENARYO A: Düşük Skorlu Adaptör (Klon) -> Pacing gevşetilmeli
+        useBluetoothStore.setState({ adapterCapabilityScore: 45 });
+        
+        setTimeout(() => {
+            PollingOrchestrator.stopPolling();
+        }, 30);
+
+        await PollingOrchestrator.startPolling(['0C@7E8']);
+
+        const lowScoreLog = logSpy.mock.calls.find(call => 
+            call[0].includes('POLLING_ORCHESTRATOR: Target pacing parameters computed')
+        )?.[0] || '';
+        
+        expect(lowScoreLog).toContain('Score=45');
+        expect(lowScoreLog).toContain('interLoopDelay=50ms');
+        expect(lowScoreLog).toContain('cmdTimeoutBase=500ms');
+        expect(lowScoreLog).toContain('cmdPacingDelay=15ms');
+
+        logSpy.mockClear();
+
+        // SENARYO B: Yüksek Skorlu Adaptör (Orijinal) -> Pacing maksimum hıza çekilmeli
+        useBluetoothStore.setState({ adapterCapabilityScore: 92 });
+
+        setTimeout(() => {
+            PollingOrchestrator.stopPolling();
+        }, 30);
+
+        await PollingOrchestrator.startPolling(['0C@7E8']);
+
+        const highScoreLog = logSpy.mock.calls.find(call => 
+            call[0].includes('POLLING_ORCHESTRATOR: Target pacing parameters computed')
+        )?.[0] || '';
+
+        expect(highScoreLog).toContain('Score=92');
+        expect(highScoreLog).toContain('interLoopDelay=2ms');
+        expect(highScoreLog).toContain('cmdTimeoutBase=150ms');
+        expect(highScoreLog).toContain('cmdPacingDelay=0ms');
+
+        queueAddSpy.mockRestore();
+        logSpy.mockRestore();
+    });
 });
+

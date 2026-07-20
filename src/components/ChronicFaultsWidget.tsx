@@ -60,16 +60,16 @@ export default function ChronicFaultsWidget() {
       {/* Title */}
       <View style={styles.headerRow}>
         <Text style={[styles.title, { color: tc.textPri, fontSize: scaleFont(11.5), fontFamily: MONO }]}>
-          📊 {t('expertise.chronicFaultsTitle', 'İstatistiksel Kronik Sorunlar').toUpperCase()}
+          📊 {t('expertise.chronicFaultsTitle', 'Statistical Chronic Faults').toUpperCase()}
         </Text>
-        {isLoading && <ActivityIndicator size="small" color={tc.cyan} style={{ marginLeft: 6 }} />}
+        {isLoading && <ActivityIndicator size="small" color={tc.cyan} style={{ marginStart: 6 }} />}
       </View>
 
       {/* Content */}
       {showPending ? (
         <Animated.View style={{ opacity: pulseAnim, gap: scaleHeight(8), marginTop: scaleHeight(8) }}>
           <Text style={[styles.pendingText, { color: tc.textSec, fontSize: scaleFont(10), fontFamily: MONO }]}>
-            🔍 {t('expertise.chronicFaultsPending', 'Veri Havuzu Toplanıyor / İstatistikler Analiz Ediliyor')}
+            🔍 {t('expertise.chronicFaultsPending', 'Gathering Data Pool / Analyzing Statistics')}
           </Text>
           <View style={[styles.skeletonLine, { backgroundColor: tc.border, height: scaleHeight(8), width: '85%' }]} />
           <View style={[styles.skeletonLine, { backgroundColor: tc.border, height: scaleHeight(8), width: '60%' }]} />

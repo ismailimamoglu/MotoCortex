@@ -57,26 +57,28 @@
             "idCopied": "Идентификатор пользователя скопирован в буфер обмена.",
             "hardwareHealthAndId": "ЗДОРОВЬЕ И ИДЕНТИЧНОСТЬ ОБОРУДОВАНИЯ",
             "hardwareModalDesc": "Чтобы получить поддержку или выполнить активацию PRO-лицензии вручную, скопируйте идентификатор пользователя, указанный выше, и свяжитесь с нами.",
-            "supportEmailBody": "Здравствуйте, команда поддержки MotoCortex! --- Информация о приложении --- Идентификатор пользователя:{{userId}}Статус лицензии:{{license}}Ссылка:{{connection}}Статус устройства:{{deviceStatus}}--- Ваше сообщение ---",
+            "supportEmailBody": "Здравствуйте, команда поддержки Cortex OBD2 Diagnosis Scanner! --- Информация о приложении --- Идентификатор пользователя:{{userId}}Статус лицензии:{{license}}Ссылка:{{connection}}Статус устройства:{{deviceStatus}}--- Ваше сообщение ---",
             "deviceName": "Имя устройства:",
             "simulationObd": "Симуляция OBD",
-            "noLogsToShare": "There are no diagnostic logs to share.",
-            "obdHealthTitle": "",
-            "txRequests": "",
-            "rxResponses": "",
-            "timeouts": "",
-            "recoveries": "",
-            "avgLatency": "",
-            "lastErrorLabel": "",
-            "shareReport": "",
-            "diagnosticLog": "",
-            "noTraffic": "",
-            "shareError": ""
+            "obdHealthTitle": "OBD HEALTH STATISTICS",
+            "txRequests": "Requests Sent (TX):",
+            "rxResponses": "Responses Received (RX):",
+            "timeouts": "Timeouts:",
+            "recoveries": "Recovery Attempts:",
+            "avgLatency": "Avg. Latency:",
+            "lastErrorLabel": "Last Error:",
+            "shareReport": "SHARE DIAGNOSTICS REPORT",
+            "diagnosticLog": "DIAGNOSTIC LOG (LAST 500 ROWS)",
+            "noTraffic": "No streaming traffic yet...",
+            "shareError": "Sharing Error",
+            "noLogsToShare": "There are no diagnostic logs to share."
         },
         "aboutAppDesc": "Информация о приложении и руководство",
         "supportDesc": "Поддержка и Контакты",
         "shareDesc": "Поделиться приложением",
-        "noDtc": "ЧИСТО"
+        "noDtc": "ЧИСТО",
+        "featureCoding": "РАЗБЛОКИРОВКА СКРЫТЫХ ФУНКЦИЙ И UDS КОДИРОВАНИЕ",
+        "featureCodingSub": "VAG, BMW, Renault ISO 14229 Feature Unlocking"
     },
     "common": {
         "cancel": "Отмена",
@@ -116,10 +118,15 @@
         "close": "ЗАКРЫТЬ",
         "share": "SHARE",
         "info": "Info",
-        "enableDemoMode": "",
-        "exitDemoMode": "",
+        "enableDemoMode": "ENABLE DEMO MODE",
+        "exitDemoMode": "EXIT DEMO MODE",
         "revocationTitle": "Подписка отменена",
-        "revocationMsg": "Ваш доступ к функциям PRO был прекращен, так как ваша подписка была отменена или возвращена."
+        "revocationMsg": "Ваш доступ к функциям PRO был прекращен, так как ваша подписка была отменена или возвращена.",
+        "supported": "Поддерживается",
+        "copied": "Скопировано",
+        "cancelBtn": "Отмена",
+        "retry": "ПОВТОРИТЬ ПОДКЛЮЧЕНИЕ",
+        "changeType": "Изменить тип подключения"
     },
     "paywall": {
         "crownBadge": "МОТО КОРТЕКС ПРО",
@@ -154,7 +161,8 @@
         "errorTitle": "Не удалось загрузить продукты",
         "errorDesc": "При загрузке продуктов произошла ошибка. Проверьте подключение к Интернету и повторите попытку.",
         "retryBtn": "Попробуйте еще раз",
-        "loadingPrices": "Цены загружаются..."
+        "loadingPrices": "Цены загружаются...",
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnosis Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -163,11 +171,11 @@
         "online": "ОНЛАЙН",
         "offline": "ОФЛАЙН",
         "connecting": "ПОДКЛЮЧЕНИЕ",
-        "scanDevices": "СКАНИРОВАНИЕ УСТРОЙСТВА",
+        "scanDevices": "ПОИСК УСТРОЙСТВ",
         "connectLast": "ПОДКЛЮЧЕНИЕ К КОНЕЧНОМУ УСТРОЙСТВУ",
         "enableBt": "ВКЛЮЧИТЕ Bluetooth",
         "scanning": "Сканирование...",
-        "foundDevices": "НАЙДЕНЫ УСТРОЙСТВА",
+        "foundDevices": "НАЙДЕННЫЕ УСТРОЙСТВА OBD2",
         "unknownDevice": "Неизвестное устройство",
         "scanHint": "Сканируйте, чтобы найти сопряженные устройства OBD.",
         "ecuWait": "Подключение к ЭБУ...",
@@ -187,21 +195,59 @@
         "deviceNotPairedDesc": "Прежде чем подключать классические адаптеры Bluetooth OBD2, необходимо выполнить их сопряжение в настройках Bluetooth вашего телефона. Вы будете перенаправлены в настройки системы.",
         "unsupportedDeviceTitle": "Несовместимое оборудование",
         "unsupportedDeviceDesc": "Устройство, которое вы пытаетесь подключить, не является совместимым адаптером OBD2 или не поддерживает необходимые службы.",
+        "sendButton": "SEND",
+        "connectDevice": "ПОДКЛЮЧИТЬСЯ К OBD2 УСТРОЙСТВУ",
+        "adapterApproved": "ADAPTER APPROVED. ANALYZING CAPABILITIES... [2/5]",
+        "protocolNegotiating": "SCANNING PROTOCOL & WAKING UP... [3/5]",
+        "ecuDetected": "ECU DETECTED, VERIFYING... [4/5]",
+        "ecuResponding": "ECU RESPONDED, COMPLETING CONNECTION... [5/5]",
+        "protocolScanningHint": "(Scanning standard SP5, SP3, SP6, SP7 protocols sequentially...)",
+        "protocolFailed": "⚠️ COMPATIBLE PROTOCOL NOT FOUND! (SP5, SP3, SP4, SP6, SP7 tried)",
+        "ecuNotFound": "⚠️ VEHICLE ECU NOT RESPONDING!",
+        "hardwareCapabilityScore": "Adapter Hardware Capability Score: {{score}}/100",
+        "hardwareFatal": "Critical Error: Your hardware is a fake clone that does not support older vehicle protocols. Cannot connect to vehicle ECU. Please obtain a quality adapter (v1.5 or original).",
+        "progressFormat": "{{progress}}%",
+        "btDisabled": "Bluetooth отключён",
+        "btDisabledDesc": "Включите Bluetooth для поиска адаптеров OBD2.",
+        "btDescIos": "Подключение через BLE OBD2-адаптеры (Veepeak, vLinker).",
+        "btDescAndroid": "Подключение через Classic Bluetooth или BLE-адаптеры.",
+        "wifiDesc": "Подключение к Wi-Fi адаптерам (обычно 192.168.0.10).",
+        "wifiGuide": "Для подключения к Wi-Fi адаптеру зайдите в настройки Wi-Fi телефона и выберите сеть OBD-адаптера (напр. OBDII, V-LINK). Затем вернитесь сюда.",
+        "openWifiSettings": "ОТКРЫТЬ НАСТРОЙКИ WI-FI",
+        "connectWifi": "ПОДКЛЮЧИТЬСЯ ПО WI-FI",
+        "pairRequired": "Сопряжение устройства OBD2",
+        "pairRequiredDesc": "Android может запросить сопряжение, так как вы подключаетесь впервые. PIN-код сопряжения обычно следующий:",
+        "pairNow": "СОПРЯЧЬ И ПОДКЛЮЧИТЬ",
+        "pairingFailed": "Сопряжение не удалось. Выполните сопряжение вручную в настройках Android.",
+        "successVin": "Соединение установлено. Профиль автомобиля успешно определён.",
+        "cloneWarning": "Обнаружен несовместимый клонированный адаптер. Расширенные функции кодирования заблокированы для вашей безопасности.",
+        "viewHealth": "МЕНЮ ДИАГНОСТИКИ OBD2",
+        "statusPrompt": "Выберите предпочтительный интерфейс подключения OBD2.",
+        "scanHintIos": "Убедитесь, что BLE OBD2-адаптер включён и находится рядом с устройством iOS.",
+        "scanHintAndroid": "Убедитесь, что Bluetooth активен и адаптер готов к сопряжению.",
+        "negotiating": "СОГЛАСОВАНИЕ HANDSHAKE OBD2",
+        "failed": "ПОПЫТКА ПОДКЛЮЧЕНИЯ НЕ УДАЛАСЬ",
+        "errLayer1": "Устранение: Bluetooth отключён. Включите его в настройках устройства.",
+        "errLayer2": "Устранение: Тайм-аут соединения. Убедитесь, что адаптер плотно вставлен в порт OBD2 и горит индикатор питания.",
+        "errLayer5": "Устранение: Согласование протокола OBD2 не удалось. Убедитесь, что замок зажигания находится в положении ON (рекомендуется работающий двигатель).",
+        "errLayer6": "Устранение: Адаптер подключён, но ЭБУ автомобиля не отвечает. Включите зажигание или перезапустите подключение.",
+        "errGeneric": "Устранение: Убедитесь, что адаптер получает питание, зажигание включено и никакое другое OBD-приложение не открыто.",
+        "stepAdapter": "Подключение адаптера и оценка возможностей",
+        "stepProtocol": "Согласование протокола OBD2",
+        "stepHandshake": "Проверка связи с ЭБУ",
+        "stepStabilization": "Стабилизация активного цикла телеметрии",
+        "cancel": "Cancel",
         "terminalTitle": "OBD TERMINAL / CUSTOM CODE",
         "terminalDesc": "You can send OBD-II or AT/ST commands directly to the ECU. E.g., \"010C\" (Engine RPM) or \"ATRV\" (Battery Voltage).",
-        "sendButton": "SEND",
         "ecuResponseLabel": "ECU RESPONSE:",
         "adapterConnected": "ADAPTER CONNECTED (OK)",
-        "connectDevice": "",
-        "adapterApproved": "",
-        "protocolNegotiating": "",
-        "ecuDetected": "",
-        "ecuResponding": "",
-        "protocolScanningHint": "",
-        "protocolFailed": "",
-        "ecuNotFound": "",
-        "hardwareCapabilityScore": "",
-        "hardwareFatal": ""
+        "lowQualityAdapterWarning": "⚠️ Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols (like K-Line on Dacia, Renault, Fiat, Lada). We highly recommend upgrading to a high-quality OBD2 adapter (v1.5 or original OBDLink/vLinker) to connect successfully.",
+        "statusProfiling": "Analyzing OBD2 adapter capabilities...",
+        "statusScanningCan": "Scanning modern CAN-Bus protocols...",
+        "statusScanningKline": "Waking up K-Line protocols. Old vehicles (Dacia, Renault, Fiat) may take up to 15 seconds to respond...",
+        "statusHandshake": "Verifying ECU communication...",
+        "statusStabilization": "Stabilizing telemetry data stream...",
+        "changeType": "Change Connection Type"
     },
     "dashboard": {
         "selectDevice": "НАЖМИТЕ, ЧТОБЫ ВЫБРАТЬ УСТРОЙСТВО",
@@ -241,7 +287,18 @@
         "fuelLevel": "Уровень Топлива",
         "catalystTemp": "Темп. Катализатора",
         "layoutGauge": "ПРИБОРЫ",
-        "obdTerminalTitle": ""
+        "obdTerminalTitle": "OBD HEALTH & TERMINAL",
+        "adapterClone": "CLONE ADAPTER",
+        "adapterOriginal": "ORIGINAL",
+        "adapterCloneShort": "CLONE",
+        "adapterOriginalShort": "ORIGINAL",
+        "pidLabel": "PID: {{pid}}",
+        "limitReached": "Selection Limit",
+        "limitReachedDesc": "You can select a maximum of {{limit}} sensors with this protocol.",
+        "customizeSubtitleKLine": "K-Line protocol connected. You can select a maximum of {{limit}} sensors.",
+        "customizeSubtitleCAN": "CAN-Bus protocol connected. You can select a maximum of {{limit}} sensors.",
+        "unit": "Unit",
+        "layoutChart": "ГРАФИК"
     },
     "expertise": {
         "historyFound": "НАЙДЕНА ИСТОРИЯ АВТОМОБИЛЯ!",
@@ -306,13 +363,13 @@
     },
     "info": {
         "desc": "Профессиональное приложение для диагностики мотоциклов и транспортных средств. Совместим со всеми транспортными средствами.",
-        "upgrade": "👑 Обновите MotoCortex PRO",
+        "upgrade": "👑 Обновите Cortex OBD2 Diagnosis Scanner PRO",
         "upgradeAlert": "Ранний доступ 🎉",
-        "upgradeAlertDesc": "MotoCortex в настоящее время находится в разработке. Поскольку вы являетесь нашим первым пользователем, все профессиональные функции теперь доступны вам. Ваш отзыв очень ценен для нас!",
+        "upgradeAlertDesc": "Cortex OBD2 Diagnosis Scanner в настоящее время находится в разработке. Поскольку вы являетесь нашим первым пользователем, все профессиональные функции теперь доступны вам. Ваш отзыв очень ценен для нас!",
         "helpGuide": "ПОМОЩЬ И РУКОВОДСТВО",
         "language": "🌐 Язык / Язык / Бахаса",
-        "support": "📞 ЦЕНТР ПОДДЕРЖКИ",
-        "supportSubject": "Поддержка и отзывы MotoCortex",
+        "support": "ЦЕНТР ПОДДЕРЖКИ",
+        "supportSubject": "Поддержка и отзывы Cortex OBD2 Diagnosis Scanner",
         "thanks": "Спасибо!",
         "thanksDesc": "Спасибо за ваш отзыв. Вы можете оставить нам комментарий в Play Store.",
         "sections": {
@@ -353,7 +410,7 @@
         "dtcCount": "🔍 КОДЫ ОШИБОК (количество{{count}})",
         "sensorData": "📊 ЖИВЫЕ ДАННЫЕ С СЕНСОРА",
         "noData": "Не удалось прочитать данные",
-        "proApp": "Сканировано с помощью MotoCortex v7 PRO.",
+        "proApp": "Сканировано с помощью Cortex OBD2 Diagnosis Scanner v7 PRO.",
         "date": "дата",
         "vinNotFound": "Не обнаружен",
         "noDtcs": "НЕТ КОДОВ ОШИБОК – ЧИСТКА",
@@ -364,7 +421,7 @@
         "intakeAir": "Впускной воздух",
         "manifold": "Коллектор",
         "voltage": "Напряжение батареи",
-        "shareMessage": "Следите за состоянием вашего мотоцикла из своего кармана с помощью диагностического приложения Motocortex OBD2! 🏍️📲 Скачать: https://motocortex.app"
+        "shareMessage": "Следите за состоянием вашего мотоцикла из своего кармана с помощью диагностического приложения Motocortex OBD2! 🏍️📲 Скачать: https://cortexobd2.app"
     },
     "battery": {
         "title": "АККУМУЛЯТОРНАЯ БАТАРЕЯ И ПУСКОВОЙ ТЕСТ",
@@ -404,7 +461,7 @@
         }
     },
     "freeze": {
-        "title": "СТОП-КАДР",
+        "title": "FREEZE FRAME",
         "snapshot": "ПАМЯТЬ О НЕИСПРАВНОСТИ",
         "desc": "Он считывает параметры двигателя, когда загорается лампочка Check Engine. Эти данные предоставляют важную информацию при диагностике неисправностей.",
         "noDtcs": "Код неисправности не записан. Возможно, данных стоп-кадра нет.",
@@ -529,7 +586,12 @@
             "fuelAdaptation": "Сброс адаптации топлива",
             "ecuReset": "Сброс ЭБУ"
         },
-        "searchLanguage": ""
+        "searchLanguage": "Search Language...",
+        "connectionSection": "OBD Device Connection",
+        "noVehicleTitle": "VEHICLE DETECTION REQUIRED",
+        "noVehicleDesc": "Vehicle identity will be automatically discovered via OBD-II connection. Please pair and connect to your device below.",
+        "registeredVehiclesButton": "МОИ ЗАРЕГИСТРИРОВАННЫЕ АВТОМОБИЛИ",
+        "connectDevice": "ПОДКЛЮЧИТЬСЯ К OBD2 УСТРОЙСТВУ"
     },
     "brands": {
         "alfa_romeo": "Альфа Ромео",
@@ -540,7 +602,6 @@
         "benelli": "Бенелли",
         "bmw_car": "БМВ (Автомобиль)",
         "bmw_moto": "БМВ (Мотоцикл)",
-        "cfmoto": "CFMoto",
         "chery": "Чери",
         "chevrolet": "Шевроле",
         "citroen": "Ситроен",
@@ -593,7 +654,8 @@
         "volkswagen": "Фольксваген",
         "volvo": "Вольво",
         "yuki": "Юки",
-        "other": "Другое"
+        "other": "Другое",
+        "cfmoto": "CFMoto"
     },
     "permissions": {
         "headerSubtitle": "ПАНЕЛЬ РАЗРЕШЕНИЙ",
@@ -605,9 +667,11 @@
         "locSub": "Архитектура системы Android обязательна для поиска близлежащих устройств Bluetooth с низким энергопотреблением. Мы не отслеживаем ваше вождение.",
         "grantBtn": "РАЗРЕШИТЬ И ПРОДОЛЖИТЬ",
         "skipBtn": "Пропустить (Демо-режим)",
-        "deniedDesc": "В некоторых разрешениях было отказано. MotoCortex может не сканировать или успешно подключаться к устройствам OBD2.",
+        "deniedDesc": "В некоторых разрешениях было отказано. Cortex OBD2 Diagnosis Scanner может не сканировать или успешно подключаться к устройствам OBD2.",
         "proceedAnyway": "Продолжай в любом случае",
-        "openSettings": "Открыть настройки"
+        "openSettings": "Открыть настройки",
+        "langTitle": "Select Language",
+        "nextBtn": "CONTINUE"
     },
     "disclaimer": "Все названия продуктов, логотипы и бренды являются собственностью их владельцев. Все названия компаний, продуктов и услуг, используемые в этом приложении, предназначены только для целей идентификации. Использование этих названий, логотипов и брендов не подразумевает какого-либо одобрения или спонсорства.",
     "hiddenFeatures": {
@@ -640,38 +704,263 @@
         "writeError": "Ошибка записи. Попробуйте снова.",
         "simulationBanner": "РЕЖИМ СИМУЛЯЦИИ — Реальная запись в ЭБУ ещё не активна",
         "closeBtn": "ЗАКРЫТЬ",
+        "unsupportedOk": "OK",
         "disclaimerTitle": "LIABILITY DISCLAIMER",
         "disclaimerFeature": "Feature",
-        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• MotoCortex cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
+        "disclaimerBody": "Changing this feature directly affects your vehicle's factory settings and ECU software. Please read the following risks carefully:\n\n• Incorrect application may void your vehicle warranty.\n• Some changes may cause permanent faults or unexpected electrical errors.\n• While the operation may be reversible, some ECU modules may require a factory reset.\n• The user is solely responsible for any material or immaterial damage resulting from the use of this feature.\n• Cortex OBD2 Diagnosis Scanner cannot be held responsible for any malfunction or damage caused by these changes.\n\nYou must confirm that you have read and understood this warning.",
         "checkboxTitle": "CONFIRMATION REQUIRED",
         "check1": "I have read this warning and understand that my vehicle warranty may be affected.",
-        "check2": "I acknowledge that MotoCortex is not responsible for any faults or damages resulting from this operation.",
+        "check2": "I acknowledge that Cortex OBD2 Diagnosis Scanner is not responsible for any faults or damages resulting from this operation.",
         "check3": "I wish to make this change knowingly and of my own free will, accepting all risks.",
         "disclaimerCancel": "CANCEL",
         "disclaimerContinue": "CONTINUE",
-        "unsupportedTitle": "Not Supported",
-        "unsupportedMsg": "The connected OBD2 device does not yet support this feature.\n\nA compatible ELM327 v2.1+ adapter is required for hidden feature writing. Clone or standard adapters cannot process these commands.",
-        "unsupportedOk": "OK"
+        "unsupportedTitle": "Автомобиль Не Поддерживается",
+        "unsupportedMsg": "Эта функция не поддерживается оборудованием или ПО ЭБУ вашего автомобиля."
     },
     "disconnectShort": "ОТКЛ.",
     "obdTerminal": {
-        "title": "",
-        "terminalTitle": "",
-        "terminalPlaceholder": "",
-        "inputPlaceholder": "",
-        "sendButton": "",
-        "statsTitle": "",
-        "connectionProtocol": "",
-        "none": "",
-        "hardwareQualityScore": "",
-        "original": "",
-        "clone": "",
-        "requestResponseCount": "",
-        "timeoutCount": "",
-        "recoveryCount": "",
-        "diagnosticLogTitle": "",
-        "clearButton": "",
-        "shareButton": "",
-        "noLogs": ""
+        "title": "РАЗБЛОКИРОВКА СКРЫТЫХ ФУНКЦИЙ И UDS",
+        "terminalTitle": "OBD TERMINAL",
+        "terminalPlaceholder": "Type command below to send to ECU (e.g. 010C, ATRV)",
+        "inputPlaceholder": "Enter command...",
+        "sendButton": "SEND",
+        "statsTitle": "OBD HEALTH STATISTICS",
+        "connectionProtocol": "Connection Protocol:",
+        "none": "None",
+        "hardwareQualityScore": "Hardware Quality Score:",
+        "original": "Original",
+        "clone": "Clone",
+        "requestResponseCount": "Request / Response Count:",
+        "timeoutCount": "Timeout Count:",
+        "recoveryCount": "Recovery Count (Recovery):",
+        "diagnosticLogTitle": "DIAGNOSTIC LOG",
+        "clearButton": "CLEAR",
+        "shareButton": "SHARE",
+        "noLogs": "No diagnostic logs found."
+    },
+    "dtcContext": {
+        "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
+        "cooling": "Critical cooling hazard detected. View detailed repair steps →",
+        "ignition": "Ignition system issue detected. View detailed repair steps →",
+        "chassis": "Chassis safety system alert. Unlock PRO for full analysis →",
+        "body": "Body electronics fault found. Upgrade for complete diagnostics →",
+        "network": "Communication network error. PRO unlocks full troubleshooting →",
+        "fallback": "Unlock detailed fault analysis, repair costs & risk assessment →"
+    },
+    "perfTeaser": {
+        "limitTitle": "Daily Limit Reached",
+        "limitDesc": "You have reached the daily limit of 3 free 0-60 km/h tests. Upgrade to PRO for unlimited tests and 0-100 km/h measurements."
+    },
+    "sandbox": {
+        "title": "РАЗБЛОКИРОВКА СКРЫТЫХ ФУНКЦИЙ И UDS",
+        "connectionStatus": "Connection Status:",
+        "ecuStatus": "ECU Status:",
+        "fps": "UI Performance: {{fps}} FPS",
+        "stressBtnStart": "Start 20Hz Stress",
+        "stressBtnStop": "Stop Telemetry Loop",
+        "stopDisconnect": "Stop / Disconnect",
+        "discoveredDevices": "DISCOVERED DEVICES",
+        "connect": "CONNECT",
+        "scanning": "Scanning...",
+        "scan": "Scan Devices",
+        "rpm": "Engine RPM",
+        "speed": "Vehicle Speed",
+        "coolant": "Coolant Temp",
+        "throttle": "Throttle Position",
+        "notConnected": "Not Connected",
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "error": "Error",
+        "openSandbox": "DIAG",
+        "advancedTerminal": "Advanced Connection Terminal (DIAG)",
+        "terminalTitle": "Live Terminal & Bus Monitor",
+        "pause": "PAUSE",
+        "resume": "RESUME",
+        "share": "SHARE",
+        "clear": "CLEAR"
+    },
+    "health": {
+        "titleMenu": "ДИАГНОСТИКА OBD2",
+        "adapterQuality": "КАЧЕСТВО И ПРОИЗВОДИТЕЛЬНОСТЬ АДАПТЕРА",
+        "excellent": "ОТЛИЧНЫЙ (ОРИГИНАЛЬНЫЙ)",
+        "good": "ХОРОШИЙ (СТАНДАРТНЫЙ)",
+        "clone": "НЕСОВМЕСТИМЫЙ / КЛОН",
+        "firmware": "Версия прошивки:",
+        "capScore": "Оценка возможностей",
+        "latency": "Задержка (RTT)",
+        "protocol": "Активный протокол",
+        "featureSupport": "МАТРИЦА ФУНКЦИЙ ПРИЛОЖЕНИЯ",
+        "matrixReadCodes": "Чтение и сброс кодов ошибок",
+        "matrixLiveSensors": "Мониторинг датчиков в реальном времени (Базовый)",
+        "matrixBattery": "Тест аккумулятора / напряжения",
+        "matrixHighSpeed": "Высокоскоростная телеметрия (20Гц)",
+        "matrixCoding": "Кодирование и адаптации ЭБУ",
+        "active": "Активен",
+        "degraded": "Деградирован (Медленный RTT)",
+        "locked": "Заблокирован (Безопасный режим)",
+        "warning": "БЛОКИРОВКА БЕЗОПАСНОСТИ:",
+        "lockExplain": "Ваш адаптер определён как клонированный/поддельный чип. Поскольку клонированные адаптеры лишены точности синхронизации и могут повредить автомобиль при операциях записи, функции кодирования и адаптации заблокированы. Приобретите оригинальное устройство ELM327 v2.1 или vLinker для безопасного кодирования.",
+        "vehiclePids": "СПИСОК ПРОВЕРКИ ДАТЧИКОВ АВТОМОБИЛЯ",
+        "checklistPrompt": "Стандартные параметры датчиков (PID), поддерживаемые ЭБУ вашего автомобиля, перечислены ниже. Датчики без галочки не сообщаются вашим автомобилем.",
+        "supportedBadge": "✓ ПОДДЕРЖИВАЕТСЯ",
+        "unsupportedBadge": "❌ НЕ ПОДДЕРЖИВАЕТСЯ"
+    },
+    "sensor": {
+        "rpm": "Обороты двигателя (RPM)",
+        "speed": "Скорость автомобиля",
+        "coolant": "Температура охлаждающей жидкости",
+        "throttle": "Положение дроссельной заслонки",
+        "voltage": "Напряжение модуля управления",
+        "maf": "Расход воздуха MAF",
+        "iat": "Температура воздуха на впуске",
+        "load": "Расчётная нагрузка двигателя",
+        "fuel": "Уровень топлива",
+        "oilTemp": "Температура моторного масла"
+    },
+    "secretDebug": {
+        "title": "РАЗБЛОКИРОВКА СКРЫТЫХ ФУНКЦИЙ И UDS",
+        "logFileSize": "Black Box / File Size:",
+        "dtcCloudSync": "🛰️ DTC CLOUD SYNCHRONIZATION",
+        "lastSync": "Last Sync",
+        "syncNow": "Sync Now",
+        "developerTools": "DEVELOPER TOOLS",
+        "trialResetSuccess": "Free Trial counter reset successfully!",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "The application will now crash intentionally. Confirm to verify Crashlytics integration.",
+        "crashButton": "Crash",
+        "crashTest": "Crash Test"
+    },
+    "features": {
+        "title": "РАЗБЛОКИРОВКА СКРЫТЫХ ФУНКЦИЙ И UDS",
+        "subTitle": "Двигатель Адаптации И Long Coding ISO 14229 UDS",
+        "batteryVoltage": "НАПРЯЖЕНИЕ АКБ",
+        "voltageReady": "✓ Безопасно (Готово к Кодированию ЭБУ)",
+        "voltageLocked": "⚠️ Низкое Напряжение (Запись Заблокирована)",
+        "locked": "ЗАБЛОКИРОВАНО",
+        "ready": "ГОТОВО",
+        "allMarks": "ВСЕ МАРКИ",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "⚠️ Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
+        "items": {
+            "vag_staging_needle_sweep": {
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
+            },
+            "vag_acoustic_lock_confirmation": {
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
+            },
+            "vag_american_parking_lights": {
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
+            },
+            "vag_drl_menu_toggle": {
+                "name": "Daytime Running Lights (DRL) Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
+            },
+            "vag_tear_wiping": {
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
+            },
+            "vag_emergency_brake_flashing": {
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
+            },
+            "vag_cornering_lights": {
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
+            },
+            "vag_comfort_mirror_folding": {
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
+            },
+            "vag_lap_timer": {
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
+            },
+            "vag_refuel_quantity": {
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
+            },
+            "bmw_start_stop_memory": {
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state (OFF/ON) across vehicle restarts."
+            },
+            "bmw_digital_speedometer": {
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
+            },
+            "bmw_sport_displays": {
+                "name": "Sport Displays (HP & Nm Gauges)",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
+            },
+            "bmw_acoustic_lock_sound": {
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
+            },
+            "bmw_mirror_fold_delay_zero": {
+                "name": "Instant Mirror Folding (0.0s Delay)",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
+            },
+            "bmw_tpms_tire_temperature": {
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
+            },
+            "renault_trip_computer_enable": {
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
+            },
+            "renault_external_temp_display": {
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
+            },
+            "renault_automatic_tailgate": {
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
+            },
+            "renault_alarm_chirp": {
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
+            },
+            "renault_shift_indicator": {
+                "name": "Gear Shift Indicator (GSI)",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
+            },
+            "ford_double_horn_honk_disable": {
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
+            },
+            "ford_auto_door_locking": {
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
+            },
+            "ford_tpms_psi_display": {
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
+            },
+            "ford_sync_climate_screen": {
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
+            },
+            "stellantis_power_windows_remote": {
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
+            },
+            "stellantis_cornering_fogs": {
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
+            }
+        },
+        "codeBtn": "КОДИРОВАТЬ",
+        "removeBtn": "УДАЛИТЬ",
+        "unsupportedTitle": "Автомобиль Не Поддерживается",
+        "unsupportedMsg": "Эта функция не поддерживается оборудованием или ПО ЭБУ вашего автомобиля.",
+        "layoutChart": "ГРАФИК"
     }
 }
