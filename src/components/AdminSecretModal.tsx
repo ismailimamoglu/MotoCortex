@@ -147,7 +147,18 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
         return;
       }
 
+      // Ensure buffer is flushed & file exists
+      Logger.log('ADMIN_TERMINAL', 'Log export initiated');
       await Logger.flush();
+
+      const rawPath = Logger.getLogFileUri().replace(/^file:\/\//, '');
+      const exists = await RNFS.exists(rawPath);
+
+      if (!exists) {
+        Alert.alert('Bilgi', 'Paylaşılacak log kaydı bulunamadı.');
+        return;
+      }
+
       const fileUri = Logger.getLogFileUri();
 
       await Sharing.shareAsync(fileUri, {

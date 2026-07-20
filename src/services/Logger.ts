@@ -159,5 +159,6 @@ export async function clearLogs(): Promise<void> {
  * Returns the URI pointing to the log file on disk.
  */
 export function getLogFileUri(): string {
-    return FILE_PATH;
+    const cleanPath = FILE_PATH.replace(/^file:\/\//, '');
+    return `file://${cleanPath}`;
 }
