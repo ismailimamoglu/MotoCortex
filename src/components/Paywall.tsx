@@ -205,7 +205,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           is_mock: true
         }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
         const congratsTitle = t('paywall.congratsTitle', '🎉 Congratulations!');
-        const congratsMsg = t('paywall.congratsMsg', 'Your MotoCortex PRO membership has been successfully activated. Enjoy all professional features!');
+        const congratsMsg = t('paywall.congratsMsg', 'Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!');
         Alert.alert(congratsTitle, congratsMsg);
         onClose();
       }, 1200);
@@ -244,7 +244,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           is_mock: false
         }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
         const congratsTitle = t('paywall.congratsTitle', '🎉 Congratulations!');
-        const congratsMsg = t('paywall.congratsMsg', 'Your MotoCortex PRO membership has been successfully activated. Enjoy all professional features!');
+        const congratsMsg = t('paywall.congratsMsg', 'Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!');
         Alert.alert(congratsTitle, congratsMsg);
         onClose();
       }
@@ -277,7 +277,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         useAppStore.getState().setIsPro(true);
         analytics().logEvent('purchase_restore_success', { is_pro: true, is_mock: true }).catch(e => console.warn('[Analytics] Failed restore_success event:', e));
         const successTitle = t('paywall.restoreSuccessTitle', '✅ Purchases Restored');
-        const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using MotoCortex PRO features.');
+        const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using Cortex OBD2 PRO features.');
         Alert.alert(successTitle, successMsg);
         onClose();
       }, 1200);
@@ -293,7 +293,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       analytics().logEvent('purchase_restore_success', { is_pro: activePro, is_mock: false }).catch(e => console.warn('[Analytics] Failed restore_success event:', e));
       if (activePro) {
         const successTitle = t('paywall.restoreSuccessTitle', '✅ Purchases Restored');
-        const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using MotoCortex PRO features.');
+        const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using Cortex OBD2 PRO features.');
         Alert.alert(successTitle, successMsg);
         onClose();
       } else {

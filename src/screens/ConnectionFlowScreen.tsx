@@ -46,6 +46,8 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
     ecuStatus,
     adapterStatus,
     enableBluetooth,
+    scanDevices,
+    connect,
     lastDeviceId,
     lastDeviceName,
     vin
@@ -100,8 +102,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         }
       }
       
-      const BluetoothService = require('../api/BluetoothService').default;
-      const found = await BluetoothService.scanDevices();
+      const found = await scanDevices();
       setScannedDevices(found || []);
     } catch (err: any) {
       console.warn('[ConnectionFlow] Scan failed:', err);
@@ -114,13 +115,12 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
   // Connect to selected device
   const handleConnectDevice = async (id: string, name: string) => {
     triggerHaptic();
-    const BluetoothService = require('../api/BluetoothService').default;
     
     // On Android Classic, if the device is not bonded, show custom pairing helper overlay
     if (Platform.OS === 'android' && !id.includes('BLE') && !id.includes('SIM')) {
       try {
-        const bonded = await BluetoothService.scanDevices(); // returns bonded first
-        const isBonded = bonded.some((d: any) => d.address === id);
+        const bonded = await scanDevices(); // returns bonded first
+        const isBonded = bonded.some((d: any) => d.id === id || d.address === id);
         if (!isBonded) {
           setPairingDeviceId(id);
           setShowPairingOverlay(true);
@@ -134,35 +134,20 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
 
   const proceedWithConnection = (id: string, name: string) => {
     setShowPairingOverlay(false);
-    // Trigger connection through BluetoothService / store triggers
-    const BluetoothStore = useBluetoothStore.getState();
-    BluetoothStore.setSensorData({ status: 'connecting', deviceId: id, deviceName: name });
-    
-    const BluetoothService = require('../api/BluetoothService').default;
-    BluetoothService.connect(id)
-      .then((success: boolean) => {
-        if (success) {
-          const { ProtocolNegotiator } = require('../core/connection/ProtocolNegotiator');
-          ProtocolNegotiator.runBenchmark().then(() => {
-            const { CapabilityDiscoveryManager } = require('../core/connection/CapabilityDiscoveryManager');
-            CapabilityDiscoveryManager.discoverSupportedPids().then(() => {
-              BluetoothStore.setSensorData({ status: 'connected', ecuStatus: 'connected' });
-            });
-          });
-        }
-      })
-      .catch((err: any) => {
-        BluetoothStore.setSensorData({ status: 'error', ecuStatus: 'error', error: err?.message || String(err) });
-      });
+    // Delegate connection lifecycle to single source of truth: useBluetooth hook
+    connect(id, name).catch((err: any) => {
+      const BluetoothStore = useBluetoothStore.getState();
+      BluetoothStore.setSensorData({ status: 'error', ecuStatus: 'error', error: err?.message || String(err) });
+    });
   };
 
   // Open Wi-Fi system Settings panel
   const handleOpenWifiSettings = () => {
     triggerHaptic();
     if (Platform.OS === 'ios') {
-      Linking.openURL('App-Prefs:root=WIFI');
+      Linking.openURL('App-Prefs:root=WIFI').catch(() => Linking.openSettings());
     } else {
-      Linking.sendIntent('android.settings.WIFI_SETTINGS');
+      Linking.sendIntent('android.settings.WIFI_SETTINGS').catch(() => Linking.openSettings());
     }
   };
 
@@ -216,6 +201,30 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
     return t('connection.errGeneric', 'Troubleshoot: Please ensure the adapter has power, ignition is turned ON, and no other OBD app is open.');
   };
 
+  const getFormattedErrorReason = (rawMsg: string | null) => {
+    if (!rawMsg) return '';
+    const code = rawMsg.toUpperCase();
+    if (code.includes('BLUETOOTH_UNAVAILABLE') || code.includes('BLUETOOTH_DISABLED') || code.includes('POWERED_OFF')) {
+      return t('connection.errBluetoothUnavailable', 'Bluetooth is unavailable or disabled');
+    }
+    if (code.includes('DEVICE_NOT_FOUND') || code.includes('NO_DEVICE')) {
+      return t('connection.errDeviceNotFound', 'OBD2 device not found');
+    }
+    if (code.includes('TIMEOUT') || code.includes('CONNECTION_LOST')) {
+      return t('connection.errTimeout', 'Connection timeout');
+    }
+    if (code.includes('PROTOCOL_FAILED')) {
+      return t('connection.errProtocolFailed', 'Protocol negotiation failed');
+    }
+    if (code.includes('ECU_HANDSHAKE') || code.includes('NO_RESPONSE')) {
+      return t('connection.errEcuHandshake', 'ECU handshake failed');
+    }
+    return rawMsg
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  };
+
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.bg }]} contentContainerStyle={styles.content}>
       {/* Header */}
@@ -249,7 +258,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             </Text>
             {vin && (
               <Text style={[styles.vinText, { color: colors.green, fontSize: fs(13), fontFamily: colors.mono }]}>
-                VIN: {vin}
+                VIN: {vin.replace(/_SIMULATED/gi, ' (DEMO)').replace(/_/g, ' ')}
               </Text>
             )}
             
@@ -490,7 +499,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           </Text>
           
           <Text style={[styles.errorDetail, { color: colors.textPri, fontSize: fs(11.5) }]}>
-            {errorMsg}
+            {getFormattedErrorReason(errorMsg)}
           </Text>
           
           <View style={[styles.divider, { backgroundColor: `${colors.red}3A` }]} />
@@ -569,7 +578,6 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 style={[styles.overlayConfirm, { backgroundColor: colors.cyan }]}
                 onPress={() => {
                   if (pairingDeviceId) {
-                    const BluetoothService = require('../api/BluetoothService').default;
                     // Trigger native pairDevice call
                     RNBluetoothClassicPair(pairingDeviceId);
                   }

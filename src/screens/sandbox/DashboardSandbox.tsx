@@ -18,7 +18,6 @@ import { useBluetoothStore } from '../../store/useBluetoothStore';
 import { useTelemetryStore } from '../../store/useTelemetryStore';
 import OBDCommandQueue from '../../api/OBDCommandQueue';
 import VehicleConfirmationModal from './VehicleConfirmationModal';
-import FeatureActivationModal from '../../components/FeatureActivationModal';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -715,23 +714,8 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
             </View>
           </View>
 
-          {/* OEM Gizli Özellik Açma & UDS Coding Button */}
-          <TouchableOpacity
-            style={{
-              backgroundColor: `${colors.cyan}20`,
-              borderColor: colors.cyan,
-              borderWidth: 1.5,
-              borderRadius: scaleMod(10),
-              paddingVertical: scaleHeight(12),
-              alignItems: 'center',
-              marginBottom: scaleHeight(12)
-            }}
-            onPress={() => setIsFeatureModalVisible(true)}
-          >
-            <Text style={{ color: colors.cyan, fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO, letterSpacing: 0.5 }}>
-              ⚡ {t('bento.featureCoding', 'UNLOCK HIDDEN FEATURES & UDS CODING').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
+
+
 
           {/* Full height raw terminal with docked custom command TextInput */}
           <View style={[sDyn.terminalCard, { flex: 1 }]}>
@@ -806,12 +790,6 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
         profile={suggestedVehicleProfile}
         onConfirm={handleConfirmProfile}
         onCancel={() => setSuggestedVehicleProfile(null)}
-      />
-
-      {/* OEM Feature Activation & Long Coding Modal */}
-      <FeatureActivationModal
-        visible={isFeatureModalVisible}
-        onClose={() => setIsFeatureModalVisible(false)}
       />
       </KeyboardAvoidingView>
     </SafeAreaView>

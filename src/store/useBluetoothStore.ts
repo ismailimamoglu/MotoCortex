@@ -322,20 +322,16 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     addDiagnosticLog: (log) => set((state) => {
         const timestamp = new Date().toLocaleTimeString('tr-TR', { hour12: false });
         const entry = `[${timestamp}] ${log}`;
-        const newLogs = [...state.diagnosticLogs, entry];
-        if (newLogs.length > 500) {
-            newLogs.shift();
-        }
-        return { diagnosticLogs: newLogs };
+        state.diagnosticLogs.unshift(entry);
+        if (state.diagnosticLogs.length > 200) state.diagnosticLogs.pop();
+        return { diagnosticLogs: state.diagnosticLogs.slice(0) };
     }),
     clearDiagnosticLogs: () => set({ diagnosticLogs: [] }),
     addStructuredLog: (log) => set((state) => {
         const entry = typeof log === 'string' ? log : JSON.stringify(log);
-        const newLogs = [...state.structuredLogs, entry];
-        if (newLogs.length > 500) {
-            newLogs.shift();
-        }
-        return { structuredLogs: newLogs };
+        state.structuredLogs.unshift(entry);
+        if (state.structuredLogs.length > 200) state.structuredLogs.pop();
+        return { structuredLogs: state.structuredLogs.slice(0) };
     }),
     clearStructuredLogs: () => set({ structuredLogs: [] }),
     resetRecoveryAttempts: () => set({ recoveryAttempts: 0 }),

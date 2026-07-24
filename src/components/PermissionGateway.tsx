@@ -56,13 +56,25 @@ export default function PermissionGateway() {
       let locGranted = true;
 
       if (Platform.OS === 'android') {
-        const grantedBt = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-        ]);
-        btGranted =
-          grantedBt[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] === PermissionsAndroid.RESULTS.GRANTED &&
-          grantedBt[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] === PermissionsAndroid.RESULTS.GRANTED;
+        const androidVersion = typeof Platform.Version === 'number' ? Platform.Version : parseInt(String(Platform.Version), 10);
+        
+        if (androidVersion >= 31) {
+          const grantedBt = await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+          ]);
+          btGranted =
+            grantedBt[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] === PermissionsAndroid.RESULTS.GRANTED &&
+            grantedBt[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] === PermissionsAndroid.RESULTS.GRANTED;
+        } else {
+          // Android 11 and below require ACCESS_FINE_LOCATION for Bluetooth scanning
+          const grantedLegacy = await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          ]);
+          btGranted =
+            grantedLegacy[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] === PermissionsAndroid.RESULTS.GRANTED;
+        }
       } else {
         try {
           const manager = BLEBridge.getInstance();
@@ -114,7 +126,7 @@ export default function PermissionGateway() {
       } else {
         Alert.alert(
           t('common.warning', 'Warning'),
-          t('permissions.deniedDesc', 'Some permissions were denied. MotoCortex may not be able to scan or connect to OBD2 devices successfully.'),
+          t('permissions.deniedDesc', 'Some permissions were denied. Cortex OBD2 Diagnostic Scanner may not be able to scan or connect to OBD2 devices successfully.'),
           [
             { text: t('permissions.proceedAnyway', 'Proceed Anyway'), onPress: () => setHasOnboarded(true) },
             { 
@@ -306,7 +318,7 @@ export default function PermissionGateway() {
       <View style={sDyn.container}>
         {/* Header */}
         <View style={sDyn.header}>
-          <Text style={[sDyn.title, { color: colors.cyan }]}>MOTOCORTEX</Text>
+          <Text style={[sDyn.title, { color: colors.cyan }]}>CORTEX OBD2</Text>
           <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
             {step === 'language' 
               ? t('permissions.langSelectSub', 'LANGUAGE GATEWAY').toUpperCase()

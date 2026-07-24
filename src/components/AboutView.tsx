@@ -298,7 +298,7 @@ export default function AboutView({
     }
   };
 
-  const InfoAccordion = ({ id, icon, title, content }: { id: string, icon: string, title: string, content: string | React.ReactNode }) => (
+  const InfoAccordion = ({ id, title, content }: { id: string, title: string, content: string | React.ReactNode }) => (
     <View style={{ marginBottom: scaleHeight(8) }}>
       <TouchableOpacity
         style={{
@@ -320,7 +320,7 @@ export default function AboutView({
           fontFamily: tc.mono,
           fontWeight: '700'
         }}>
-          {icon}  {title}
+          {title}
         </Text>
         <Text style={{ color: tc.textSec, fontSize: scaleFont(12) }}>{expandedInfoSection === id ? '▼' : '▶'}</Text>
       </TouchableOpacity>
@@ -350,7 +350,7 @@ export default function AboutView({
           lineHeight: scaleFont(15),
           fontWeight: '700',
         }}>
-          💡 {texts.general}
+          {texts.general}
         </Text>
 
         {/* K-Line Card */}
@@ -369,7 +369,7 @@ export default function AboutView({
             fontWeight: '900',
             letterSpacing: 0.5
           }}>
-            ⚠️ {texts.klineHeader}
+            {texts.klineHeader}
           </Text>
           <Text style={{
             color: tc.textSec,
@@ -397,7 +397,7 @@ export default function AboutView({
             fontWeight: '900',
             letterSpacing: 0.5
           }}>
-            🚀 {texts.canbusHeader}
+            {texts.canbusHeader}
           </Text>
           <Text style={{
             color: tc.textSec,
@@ -432,7 +432,6 @@ export default function AboutView({
           paddingHorizontal: scaleWidth(12)
         }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(8) }}>
-            <Text style={{ fontSize: scaleFont(14) }}>⚡</Text>
             <Text style={{ color: tc.textPri, fontSize: scaleFont(11), fontFamily: tc.mono, fontWeight: '700' }}>
               {t('permissions.btLabel')}
             </Text>
@@ -468,7 +467,6 @@ export default function AboutView({
           paddingHorizontal: scaleWidth(12)
         }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(8) }}>
-            <Text style={{ fontSize: scaleFont(14) }}>📍</Text>
             <Text style={{ color: tc.textPri, fontSize: scaleFont(11), fontFamily: tc.mono, fontWeight: '700' }}>
               {t('permissions.locLabel')}
             </Text>
@@ -509,7 +507,7 @@ export default function AboutView({
         activeOpacity={0.4}
       >
         <Text style={{ color: tc.cyan, fontSize: scaleFont(10), fontWeight: '900', fontFamily: tc.mono }}>
-          🛡️ {t('info.reconfigurePermissions').toUpperCase()}
+          {t('info.reconfigurePermissions').toUpperCase()}
         </Text>
       </TouchableOpacity>
     </View>
@@ -545,44 +543,52 @@ export default function AboutView({
         </Text>
 
         <InfoAccordion
+          id="feature_coding"
+          title={t('info.sections.featureCoding.title')}
+          content={t('info.sections.featureCoding.content')}
+        />
+        <InfoAccordion
+          id="multi_ecu"
+          title={t('info.sections.multiEcu.title')}
+          content={t('info.sections.multiEcu.content')}
+        />
+        <InfoAccordion
+          id="advanced_diagnostics"
+          title={t('info.sections.advancedDiagnostics.title')}
+          content={t('info.sections.advancedDiagnostics.content')}
+        />
+        <InfoAccordion
+          id="demo_mode"
+          title={t('info.sections.demoMode.title')}
+          content={t('info.sections.demoMode.content')}
+        />
+        <InfoAccordion
           id="canli"
-          icon="📊"
           title={t('info.sections.live.title')}
           content={t('info.sections.live.content')}
         />
         <InfoAccordion
           id="ekspertiz"
-          icon="🔍"
           title={t('info.sections.expertise.title')}
           content={t('info.sections.expertise.content')}
         />
         <InfoAccordion
-          id="testler"
-          icon="⚡"
-          title={t('info.sections.tests.title')}
-          content={t('info.sections.tests.content')}
-        />
-        <InfoAccordion
           id="donanim"
-          icon="🔌"
           title={t('info.sections.hardware.title')}
           content={t('info.sections.hardware.content')}
         />
         <InfoAccordion
           id="uyarilar"
-          icon="⚠️"
           title={t('info.sections.warnings.title')}
           content={t('info.sections.warnings.content')}
         />
         <InfoAccordion
           id="performans_rehberi"
-          icon="⚡"
           title={PERFORMANCE_TRANSLATIONS[language]?.title || PERFORMANCE_TRANSLATIONS['en'].title}
           content={renderPerformanceGuide()}
         />
         <InfoAccordion
           id="onboarding"
-          icon="⚖️"
           title={t('info.sections.onboarding.title')}
           content={renderOnboardingAccordionContent()}
         />

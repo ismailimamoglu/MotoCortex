@@ -15,8 +15,8 @@ files.forEach(file => {
   modified = modified.replace(/MOTOCORTEX TEŞHİS RAPORU/g, 'CORTEX OBD2 TEŞHİS RAPORU');
   modified = modified.replace(/MOTOCORTEX OBD2/g, 'CORTEX OBD2');
   modified = modified.replace(/MOTOCORTEX/g, 'CORTEX OBD2');
-  modified = modified.replace(/MotoCortex OBD2/g, 'Cortex OBD2 Diagnosis Scanner');
-  modified = modified.replace(/MotoCortex/g, 'Cortex OBD2 Diagnosis Scanner');
+  modified = modified.replace(/MotoCortex OBD2/g, 'Cortex OBD2 Diagnostic Scanner');
+  modified = modified.replace(/MotoCortex/g, 'Cortex OBD2 Diagnostic Scanner');
   modified = modified.replace(/motocortex\.app/g, 'cortexobd2.app');
 
   if (modified !== content) {

@@ -55,35 +55,7 @@ export default function BluetoothConnectionPanel({
         {t('vehicleSelect.connectionSection', 'OBD DEVICE CONNECTION').toUpperCase()}
       </Text>
       
-      {/* Registered Vehicles Action Button */}
-      <TouchableOpacity 
-        style={{
-          backgroundColor: `${colors.purple}14`,
-          borderColor: colors.purple,
-          borderWidth: 1.5,
-          borderRadius: scaleMod(10),
-          paddingVertical: scaleHeight(11),
-          paddingHorizontal: scaleWidth(14),
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: scaleMod(8),
-        }}
-        onPress={() => {
-          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
-          if (onOpenRegisteredList) onOpenRegisteredList();
-        }}
-        activeOpacity={0.7}
-      >
-        <Text style={{ fontSize: scaleFont(14) }}>🏎️</Text>
-        <Text 
-          allowFontScaling={false}
-          style={{ color: colors.purple, fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.8 }}
-        >
-          {t('vehicleSelect.registeredVehiclesButton', 'KAYITLI ARAÇLARIM').toUpperCase()}
-        </Text>
-        <Text style={{ color: colors.purple, fontSize: scaleFont(13), fontWeight: '900' }}>{'>'}</Text>
-      </TouchableOpacity>
+
 
       {/* Scanning Status */}
       {status === 'scanning' && (

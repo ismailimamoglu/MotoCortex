@@ -20,6 +20,7 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
   const language = useAppStore((state) => state.language);
   const setLanguage = useAppStore((state) => state.setLanguage);
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
+  const toggleSimulationMode = useAppStore((state) => state.toggleSimulationMode);
   const connectionStatus = useBluetoothStore((s) => s.status);
   const isCloneDevice = useBluetoothStore((s) => s.isCloneDevice);
   const colors = useThemeColors();
@@ -241,54 +242,7 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
             <Text allowFontScaling={false} style={{ color: colors.textSec, fontSize: scaleFont(10) }}>▶</Text>
           </TouchableOpacity>
 
-          {/* Section 3: Hardware Health Info */}
-          <Text allowFontScaling={false} style={[sDyn.sectionTitle, { color: colors.textSec, marginTop: scaleHeight(18) }]}>
-            {t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO')}
-          </Text>
-          <View style={{
-            backgroundColor: `${colors.textPri}05`,
-            borderColor: `${colors.textPri}0D`,
-            borderWidth: 1.2,
-            borderRadius: scaleMod(12),
-            padding: scaleMod(12),
-            gap: scaleMod(8)
-          }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-               <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.connectionType', 'Connection Type:')}</Text>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textPri, fontFamily: MONO, fontWeight: '700' }}>
-                {connectionStatus === 'connected' ? 'BLE' : t('bento.settings.noConnection', 'No Connection')}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.protocol', 'Protokol:')}</Text>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textPri, fontFamily: MONO, fontWeight: '700' }}>
-                {connectionStatus === 'connected' ? 'CAN Bus (ISO-15765)' : t('bento.settings.none', 'Yok')}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.deviceStatus', 'Cihaz Durumu:')}</Text>
-              <Text allowFontScaling={false} style={{ 
-                fontSize: scaleFont(11.5), 
-                color: connectionStatus === 'connected' ? (isCloneDevice ? colors.red : colors.green) : colors.textSec, 
-                fontFamily: MONO, 
-                fontWeight: '700' 
-              }}>
-                {connectionStatus === 'connected' 
-                  ? (isCloneDevice ? t('bento.settings.safeMode', 'Safe Mode / Clone Adapter') : t('bento.settings.original', 'Original')) 
-                  : t('bento.settings.deviceNotConnected', 'Device Not Connected')}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textSec, fontFamily: MONO }}>{t('bento.settings.pollingRate', 'Polling Rate:')}</Text>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), color: colors.textPri, fontFamily: MONO, fontWeight: '700' }}>
-                {connectionStatus === 'connected' 
-                  ? (isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Low)') : t('bento.settings.pollingHigh', '4 Hz (High)')) 
-                  : t('bento.settings.pollingZero', '0 Hz')}
-              </Text>
-            </View>
-          </View>
-
-          {/* Section 4: Community & Support */}
+          {/* Section 3: Community & Support */}
           <Text allowFontScaling={false} style={[sDyn.sectionTitle, { color: colors.textSec, marginTop: scaleHeight(18) }]}>
             {t('bento.settings.community', 'COMMUNITY & SUPPORT')}
           </Text>
@@ -298,7 +252,6 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
               onPress={handleSupportEmail}
               activeOpacity={0.4}
             >
-              <Text allowFontScaling={false} style={sDyn.optionIcon}>📍</Text>
               <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.textPri }]}>{t('info.support', 'SUPPORT CENTER')}</Text>
             </TouchableOpacity>
 
@@ -314,8 +267,39 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
               }}
               activeOpacity={0.4}
             >
-              <Text allowFontScaling={false} style={sDyn.optionIcon}>✨</Text>
               <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.textPri }]}>{t('expertise.share', 'SHARE APP')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                sDyn.optionBtn,
+                {
+                  backgroundColor: isSimulationMode ? `${colors.green}14` : `${colors.textPri}05`,
+                  borderColor: isSimulationMode ? colors.green : colors.border,
+                }
+              ]}
+              onPress={() => {
+                const newMode = !isSimulationMode;
+                toggleSimulationMode();
+                if (newMode) {
+                  Alert.alert(t('common.demoMode', 'DEMO MODE'), t('common.demoModeDesc', 'No device? Test the app with mock telemetry data.'));
+                } else if (onDisconnect) {
+                  onDisconnect();
+                }
+              }}
+              activeOpacity={0.4}
+            >
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.textPri }]}>
+                  {t('common.demoMode', 'DEMO MODE').toUpperCase()}
+                </Text>
+                <View style={{
+                  width: scaleMod(8),
+                  height: scaleMod(8),
+                  borderRadius: scaleMod(4),
+                  backgroundColor: isSimulationMode ? colors.green : colors.textSec
+                }} />
+              </View>
             </TouchableOpacity>
 
             {!(isSimulationMode || __DEV__) && connectionStatus === 'connected' && (

@@ -20,13 +20,18 @@ export function generateUuid(): string {
       return Crypto.randomUUID();
     }
   } catch (e) {
-    // Fallback if native CSPRNG is unavailable
+    // Fallback using expo-crypto CSPRNG bytes
   }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+  try {
+    const randomBytes = Crypto.getRandomBytes(16);
+    randomBytes[6] = (randomBytes[6] & 0x0f) | 0x40; // Version 4
+    randomBytes[8] = (randomBytes[8] & 0x3f) | 0x80; // Variant 10xx
+    const hex = Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+  } catch (e) {
+    console.error('[Crypto] CSPRNG byte generation failed:', e);
+    throw new Error('CSPRNG_UNAVAILABLE: Secure random number generator failed.');
+  }
 }
 
 /**

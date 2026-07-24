@@ -257,19 +257,21 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
         };
     }, [scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet, isLargeTablet, colors, insets.top, insets.bottom]) as any;
 
+    if (!visible) return null;
+
     return (
         <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
             <View style={sDyn.modalOverlay}>
                 <View style={[sDyn.modalContainer, { backgroundColor: colors.bg }]}>
                     {/* Header */}
                     <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
-                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('perf.title')}</Text>
-                        <TouchableOpacity onPress={() => { resetTimer(); onClose(); }} style={sDyn.cancelBtn}>
-                            <Text style={[sDyn.cancelText, { color: colors.cyan }]}>{t('common.cancel').toUpperCase()}</Text>
+                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('perf.title', 'PERFORMANS TESTİ')}</Text>
+                        <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
+                            <Text style={[sDyn.cancelText, { color: colors.cyan }]}>{t('common.cancel', 'KAPAT').toUpperCase()}</Text>
                         </TouchableOpacity>
                     </View>
 
-                    <View style={sDyn.content}>
+                    <View style={{ flex: 1, padding: scaleMod(16) }}>
                         {/* Big Timer */}
                         <View style={sDyn.timerContainer}>
                             <Text style={[sDyn.timerValue, { color: colors.textPri, fontFamily: MONO }]}>{formatTime(elapsed)}</Text>
@@ -291,18 +293,18 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                             )}
                             {state === 'armed' && (
                                 <Text style={{ color: colors.amber, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
-                                    ⏱️ {t('perf.ready')}{'\n'}
+                                    {t('perf.ready')}{'\n'}
                                     {t('perf.readyDesc')}
                                 </Text>
                             )}
                             {state === 'running' && (
                                 <Text style={{ color: colors.green, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
-                                    🏁 {t('perf.measuring')}
+                                    {t('perf.measuring')}
                                 </Text>
                             )}
                             {state === 'done' && (
                                 <Text style={{ color: colors.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO, textAlign: 'center' }}>
-                                    ✅ {t('perf.done')}
+                                    {t('perf.done')}
                                 </Text>
                             )}
                         </View>
@@ -328,23 +330,23 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                         {/* Controls */}
                         {state === 'idle' && (
                             <TouchableOpacity style={[sDyn.startBtn, { backgroundColor: colors.cyan }]} onPress={armTimer}>
-                                <Text style={[sDyn.startBtnText, { color: colors.card, fontFamily: MONO }]}>🏁 {t('perf.start')}</Text>
+                                <Text style={[sDyn.startBtnText, { color: colors.card, fontFamily: MONO }]}>{t('perf.start')}</Text>
                             </TouchableOpacity>
                         )}
                         {state === 'running' && (
                             <TouchableOpacity style={[sDyn.startBtn, { backgroundColor: colors.red }]} onPress={stopTimer}>
-                                <Text style={[sDyn.startBtnText, { color: colors.card, fontFamily: MONO }]}>⏹ {t('perf.stop')}</Text>
+                                <Text style={[sDyn.startBtnText, { color: colors.card, fontFamily: MONO }]}>{t('perf.stop')}</Text>
                             </TouchableOpacity>
                         )}
                         {(state === 'done' || state === 'armed') && (
                             <TouchableOpacity style={[sDyn.startBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]} onPress={resetTimer}>
-                                <Text style={[sDyn.startBtnText, { color: colors.textSec, fontFamily: MONO }]}>↺ {t('perf.reset')}</Text>
+                                <Text style={[sDyn.startBtnText, { color: colors.textSec, fontFamily: MONO }]}>{t('perf.reset')}</Text>
                             </TouchableOpacity>
                         )}
 
                         {/* Instructions */}
                         <View style={[sDyn.infoPanel, { marginTop: scaleHeight(16), backgroundColor: colors.card, borderColor: colors.border }]}>
-                            <Text style={{ color: colors.cyan, fontSize: scaleFont(11), fontWeight: '800', fontFamily: MONO, marginBottom: scaleHeight(6) }}>📖 {t('perf.howItWorks')}</Text>
+                            <Text style={{ color: colors.cyan, fontSize: scaleFont(11), fontWeight: '800', fontFamily: MONO, marginBottom: scaleHeight(6) }}>{t('perf.howItWorks')}</Text>
                             <Text style={{ color: colors.textSec, fontSize: scaleFont(10), fontFamily: MONO, lineHeight: scaleFont(15) }}>
                                 {t('perf.howDesc')}
                             </Text>

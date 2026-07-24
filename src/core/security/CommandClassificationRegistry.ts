@@ -115,8 +115,8 @@ export function requiresProAccess(cls: CommandClass): boolean {
  * This is the Layer 3 (hardware) security gate — the last line of defense
  * before bytes hit the OBD transport wire.
  */
-export function assertHardwareGate(rawCmd: string, isPro: boolean): void {
-    const cls = classifyCommand(rawCmd);
+export function assertHardwareGate(rawCmd: string, isPro: boolean, isMoving: boolean = false): void {
+    const cls = classifyCommand(rawCmd, isMoving);
     if (requiresProAccess(cls) && !isPro) {
         throw new Error('HARDWARE_GATE_VIOLATION');
     }

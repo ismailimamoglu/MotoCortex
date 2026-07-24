@@ -16,7 +16,6 @@ interface HardwareHealthModalProps {
 function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
-  const appUserId = useAppStore((state) => state.appUserId);
   const connectionState = useBluetoothStore((s) => s.connectionState);
   const isConnected = connectionState !== 'DISCONNECTED' && connectionState !== 'ADAPTER_CONNECTING';
   const isCloneDevice = useBluetoothStore((s) => s.isCloneDevice);
@@ -24,17 +23,6 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
   const insets = useSafeAreaInsets();
 
   const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
-
-  const copyToClipboard = async () => {
-    if (appUserId) {
-      await Clipboard.setStringAsync(appUserId);
-      Alert.alert(
-        t('common.success', 'Success'),
-        t('bento.settings.idCopied', 'User ID copied to clipboard.'),
-        [{ text: t('common.ok', 'OK') }]
-      );
-    }
-  };
 
   const sDyn = React.useMemo(() => {
     const modalWidth = isTablet ? (isLargeTablet ? 650 : 520) : '100%';
@@ -131,7 +119,7 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
           {/* Header */}
           <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
             <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>
-              {t('bento.settings.hardwareHealthAndId', 'HARDWARE HEALTH & ID').toUpperCase()}
+              {t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO').toUpperCase()}
             </Text>
             <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
               <Text style={[sDyn.cancelText, { color: colors.cyan }]}>

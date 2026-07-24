@@ -82,6 +82,15 @@ export class CommandSchedulerClass {
                 return;
             }
 
+            // Drop oldest stale HIGH telemetry item if queue exceeds 50 items to eliminate latency
+            if (this.queue.length >= 50 && priority === 'HIGH') {
+                const staleIdx = this.queue.findIndex(q => q.priority === 'HIGH');
+                if (staleIdx !== -1) {
+                    const dropped = this.queue.splice(staleIdx, 1)[0];
+                    dropped.reject(new Error('QUEUE_OVERFLOW_STALE_PID_DROPPED'));
+                }
+            }
+
             this.queue.push(item);
             this.trigger();
         });
@@ -94,11 +103,20 @@ export class CommandSchedulerClass {
     }
 
     private async processLoop() {
+        let lockWaitStartTime = 0;
         while (this.queue.length > 0) {
             // Atomic Lock Guard: K-Line uyanma sinyali veya protokol taraması aktifse kuyruğu beklet
             if (this.checkLockFn && this.checkLockFn()) {
-                await new Promise(resolve => setTimeout(resolve, 50));
-                continue;
+                if (!lockWaitStartTime) lockWaitStartTime = Date.now();
+                if (Date.now() - lockWaitStartTime < 3000) {
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                    continue;
+                }
+                // Timeout guard: 3000ms max lock wait to prevent JS thread spin-lock deadlock
+                console.warn('[CommandScheduler] Lock wait timeout (3000ms) exceeded. Bypassing atomic lock guard.');
+                lockWaitStartTime = 0;
+            } else {
+                lockWaitStartTime = 0;
             }
 
             let selectedIndex = -1;

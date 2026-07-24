@@ -53,6 +53,10 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
   const proTapTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleProSecretTap = () => {
+    if (!__DEV__) {
+      Alert.alert('Geliştirici Modu', 'Gizli PRO geliştirici anahtarı canlı (production) derlemelerinde devre dışıdır.');
+      return;
+    }
     proTapCountRef.current += 1;
     if (proTapCountRef.current >= 7) {
       proTapCountRef.current = 0;
@@ -60,7 +64,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
       const nextPro = !isBackdoorPro;
       setIsBackdoorPro(nextPro);
       Alert.alert(
-        'Gizli PRO Anahtarı ⚡',
+        'Gizli PRO Anahtarı ⚡ (DEV)',
         `PRO Lisans Modu Durumu: ${nextPro ? 'AKTİF (AÇIK - Tüm Özellikler Erişilebilir)' : 'PASİF (KAPALI)'}`
       );
       return;
@@ -284,7 +288,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  🔒 YÖNETİCİ KULLANICI KİMLİK BİLGİLERİ
+                  {t('admin.userInfo', '🔒 YÖNETİCİ KULLANICI KİMLİK BİLGİLERİ')}
                 </Text>
 
                 {/* User ID Row */}
@@ -303,10 +307,10 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(4) }}>
                     <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: '800', letterSpacing: 0.5 }}>
-                      USER ID
+                      {t('admin.userId', 'USER ID')}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(4) }}>
-                      <Text style={{ color: colors.cyan, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>KOPYALA</Text>
+                      <Text style={{ color: colors.cyan, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>{t('admin.copy', 'KOPYALA')}</Text>
                       <Text style={{ color: colors.cyan, fontSize: scaleFont(11) }}>📋</Text>
                     </View>
                   </View>
@@ -330,10 +334,10 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(4) }}>
                     <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: '800', letterSpacing: 0.5 }}>
-                      DEVICE UUID
+                      {t('admin.deviceUuid', 'DEVICE UUID')}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(4) }}>
-                      <Text style={{ color: colors.amber, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>KOPYALA</Text>
+                      <Text style={{ color: colors.amber, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>{t('admin.copy', 'KOPYALA')}</Text>
                       <Text style={{ color: colors.amber, fontSize: scaleFont(11) }}>📋</Text>
                     </View>
                   </View>
@@ -364,12 +368,12 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  🖥️ CANLI OBD TERMINAL KONSOLU (TX / RX)
+                  {t('admin.terminalTitle', '🖥️ CANLI OBD TERMINAL KONSOLU (TX / RX)')}
                 </Text>
 
                 {/* Hazır Komut Butonları (Açıklamalı 2'li Grid Layout) */}
                 <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: 'bold', marginBottom: scaleHeight(6) }}>
-                  ⚡ HIZLI KOMUT SETİ:
+                  {t('admin.presetTitle', '⚡ HIZLI KOMUT SETİ:')}
                 </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleMod(6), marginBottom: scaleHeight(10) }}>
                   {presets.map((p) => (
@@ -436,7 +440,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                       <ActivityIndicator size="small" color="#000" />
                     ) : (
                       <Text style={{ color: '#000', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: colors.mono }}>
-                        GÖNDER
+                        {t('admin.send', 'GÖNDER')}
                       </Text>
                     )}
                   </TouchableOpacity>
@@ -477,7 +481,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  🛰️ BULUT VE SİSTEM ARAÇLARI
+                  {t('admin.cloudTools', '🛰️ BULUT VE SİSTEM ARAÇLARI')}
                 </Text>
 
                 <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
@@ -531,7 +535,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     activeOpacity={0.7}
                   >
                     <Text style={{ color: colors.red, fontSize: scaleFont(10), fontWeight: '900', fontFamily: colors.mono }}>
-                      💥 CRASH TEST
+                      {t('admin.crashTest', '💥 CRASH TEST')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -555,7 +559,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: colors.red, fontSize: scaleFont(10.5), fontWeight: '800', fontFamily: colors.mono }}>
-                  🗑️ TEMİZLE
+                  {t('admin.clear', '🗑️ TEMİZLE')}
                 </Text>
               </TouchableOpacity>
 
@@ -574,7 +578,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: colors.cyan, fontSize: scaleFont(10.5), fontWeight: '800', fontFamily: colors.mono }}>
-                  🔄 YENİLE
+                  {t('admin.refresh', '🔄 YENİLE')}
                 </Text>
               </TouchableOpacity>
 
@@ -591,7 +595,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: '#000', fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: colors.mono }}>
-                  📤 PAYLAŞ
+                  {t('admin.share', '📤 PAYLAŞ')}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -130,7 +130,9 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
           <View style={styles.metricItem}>
             <Text numberOfLines={1} style={[styles.metricVal, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
-              {isConnected ? protocol.split(' ')[0] : '—'}
+              {isConnected 
+                ? (protocol.includes('SIMULATED') ? 'CAN BUS (DEMO)' : protocol.replace(/_/g, ' ').split(' ')[0]) 
+                : '—'}
             </Text>
             <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(10) }]}>
               {t('health.protocol', 'Active Protocol')}

@@ -87,14 +87,23 @@ i18n
          *
          * saveMissing must be true for this handler to fire.
          */
-        saveMissing: !__DEV__,
+        saveMissing: true,
+        parseMissingKeyHandler: (key, defaultValue) => {
+            if (defaultValue && typeof defaultValue === 'string' && defaultValue !== key) {
+                return defaultValue;
+            }
+            if (__DEV__) {
+                return `[MISSING: ${key}]`;
+            }
+            return key;
+        },
         missingKeyHandler: (lngs, namespace, key, fallbackValue) => {
             const keyIdentifier = `${namespace}:${key}`;
             if (reportedMissingKeys.has(keyIdentifier)) return;
             reportedMissingKeys.add(keyIdentifier);
 
             if (__DEV__) {
-                console.log(`[i18n] Missing translation key: [${keyIdentifier}]`);
+                console.warn(`[i18n] Missing translation key detected: [${keyIdentifier}]`);
                 return;
             }
 

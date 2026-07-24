@@ -65,11 +65,41 @@ const DTC_DICTIONARY: Record<string, string> = {
     P0401: 'Egzoz Geri Dönüşüm (EGR) - Akış Yetersiz',
     P0402: 'Egzoz Geri Dönüşüm (EGR) - Akış Aşırı',
 
-    // Transmission
-    P0700: 'Şanzıman Kontrol Sistemi - Arıza',
+    // Transmission & DCT (Double Clutch)
+    P0700: 'Şanzıman Kontrol Sistemi - Genel Arıza',
     P0715: 'Türbin Devir Sensörü - Devre Arızası',
     P0720: 'Çıkış Devir Sensörü - Devre Arızası',
-    P0730: 'Yanlış Vites Oranı',
+    P0730: 'Yanlış Vites Oranı - Mekanik Arıza',
+    P0740: 'Tork Konvertör Kavrama Solenoidi - Devre Arızası',
+    P0841: 'Şanzıman Sıvı Basınç Sensörü A - Aralık/Performans',
+    P0900: 'Kavrama Aktüatörü - Açık Devre Arızası',
+    P17BF: 'DSG / DCT Mekatronik Hidrolik Basınç Düşüklüğü (Basınç Tüpü Kaçağı)',
+    P175D: '1. Kavrama İstenmeden Açıldı - Kavrama Aşınma Sınırı',
+    P175E: '2. Kavrama İstenmeden Açıldı - Kavrama Aşınma Sınırı',
+    P0741: 'Tork Konvertör Kavraması - Performans / Kapalı Takılı',
+
+    // Chassis & ABS / ESC
+    C0035: 'Sol Ön Tekerlek Hız Sensörü - Devre Arızası',
+    C0040: 'Sağ Ön Tekerlek Hız Sensörü - Devre Arızası',
+    C0045: 'Sol Arka Tekerlek Hız Sensörü - Devre Arızası',
+    C0050: 'Sağ Arka Tekerlek Hız Sensörü - Devre Arızası',
+    C0110: 'ABS Pompa Motoru - Devre Arızası',
+    C0131: 'Fren Basınç Sensörü - Devre Arızası',
+
+    // Body & Airbag (SRS)
+    B0001: 'Sürücü Ön Hava Yastığı A - Aşama 1 Kontrol Devresi',
+    B0002: 'Sürücü Ön Hava Yastığı A - Aşama 2 Kontrol Devresi',
+    B0010: 'Yolcu Ön Hava Yastığı - Kontrol Devresi Arızası',
+    B0020: 'Sol Yan Hava Yastığı - Kontrol Devresi Arızası',
+    B0028: 'Sağ Yan Hava Yastığı - Kontrol Devresi Arızası',
+    B1000: 'Hava Yastığı Kontrol Modülü (SDM) - İç Arıza',
+
+    // Network & CAN Bus
+    U0100: 'Motor Kontrol Modülü (ECM) ile İletişim Kaybı',
+    U0101: 'Şanzıman Kontrol Modülü (TCM) ile İletişim Kaybı',
+    U0121: 'ABS Kontrol Modülü ile İletişim Kaybı',
+    U0155: 'Gösterge Paneli Kontrol Modülü (IPC) ile İletişim Kaybı',
+    U0401: 'Motor Kontrol Modülünden Alınan Veri Geçersiz',
 
     // Battery & Charging
     P0560: 'Sistem Voltajı - Arıza',

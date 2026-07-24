@@ -18,9 +18,9 @@ export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id' | 'it' | 'ar' | 'zh' 
  * with a strict manual 7-day expiration check.
  */
 export const checkIsProStatus = (customerInfo: CustomerInfo): boolean => {
-  // Developer Backdoor check to bypass RevenueCat sandbox timeouts during local testing
+  // Developer Backdoor check to bypass RevenueCat sandbox timeouts during local testing (DEV ONLY)
   try {
-    if (useAppStore.getState().isBackdoorPro) {
+    if (__DEV__ && useAppStore.getState().isBackdoorPro) {
       return true;
     }
   } catch (e) {}
@@ -140,6 +140,9 @@ export function startSimulation() {
   mockDtcs.errorState = null;
 
   const btStore = useBluetoothStore.getState();
+  btStore.setStatus('connected');
+  btStore.setEcuStatus('connected');
+  btStore.setAdapterStatus('connected');
   btStore.setLastDevice('SIM-OBDII', 'SIM-DEVICE-ID');
   btStore.setSensorData({
     connectionState: 'TELEMETRY_ACTIVE' as any,
@@ -147,7 +150,7 @@ export function startSimulation() {
     deviceId: 'SIM-DEVICE-ID',
     protocol: 'SIMULATED_OBD',
     ecuId: 'SIM-ECU-001',
-    vin: '1M8GDM9A_SIMULATED',
+    vin: '1M8GDM9A',
     odometer: simulationOdometer,
     dtcs: mockDtcs,
     adapterCapabilityScore: 100,

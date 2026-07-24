@@ -28,12 +28,23 @@ function formatTimestamp(date: Date): string {
 }
 
 /**
+ * Anonymizes sensitive PII data (e.g. 17-character VIN numbers) in log messages.
+ */
+function anonymizeSensitiveData(msg: string): string {
+    // 17-character VIN regex (excluding letters I, O, Q)
+    const vinRegex = /\b[A-HJ-NPR-Z0-9]{17}\b/gi;
+    return msg.replace(vinRegex, (vin) => {
+        return `${vin.substring(0, 8)}******${vin.substring(14)}`;
+    });
+}
+
+/**
  * Appends a log line to the RAM buffer.
  * Automatically flushes if buffer size >= 200 or after 2 seconds.
  */
 export function log(tag: string, message: string): void {
     const timestamp = formatTimestamp(new Date());
-    const cleanMessage = message.replace(/[\r\n]+/g, ' ').trim();
+    const cleanMessage = anonymizeSensitiveData(message.replace(/[\r\n]+/g, ' ').trim());
     const logLine = `[${timestamp}] [${tag}] ${cleanMessage}`;
     logBuffer.push(logLine);
 
@@ -65,20 +76,11 @@ async function writeLogsToFile(newLogsStr: string) {
             
             // Check if appending new log chunk will exceed 5MB
             if (size + newLogsStr.length > MAX_FILE_SIZE) {
-                const existingContent = await RNFS.readFile(FILE_PATH, 'utf8');
-                const combined = existingContent + '\n' + newLogsStr;
-                // Keep the last 2.5 MB of data
-                const halfSize = Math.floor(MAX_FILE_SIZE / 2);
-                if (combined.length > halfSize) {
-                    let truncated = combined.substring(combined.length - halfSize);
-                    const firstNewline = truncated.indexOf('\n');
-                    if (firstNewline !== -1) {
-                        truncated = truncated.substring(firstNewline + 1);
-                    }
-                    await RNFS.writeFile(FILE_PATH, truncated, 'utf8');
-                } else {
-                    await RNFS.writeFile(FILE_PATH, combined, 'utf8');
-                }
+                // To prevent Hermes JS engine Out-Of-Memory (OOM) fatal errors from loading a 5MB string into RAM,
+                // unlink the oversized log file and start a fresh log file with newLogsStr.
+                await RNFS.unlink(FILE_PATH);
+                const header = `[${formatTimestamp(new Date())}] [Logger] Previous log file reset (exceeded 5MB limit)\n`;
+                await RNFS.writeFile(FILE_PATH, header + newLogsStr, 'utf8');
             } else {
                 await RNFS.appendFile(FILE_PATH, '\n' + newLogsStr, 'utf8');
             }

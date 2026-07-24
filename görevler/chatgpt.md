@@ -1,1567 +1,653 @@
-# **MotoCortex Universal Automotive Diagnostic Engine**
-
-## **ECU Discovery, OBD-II, UDS, KWP2000 ve OEM Diagnostic Database**
-
-### **Master Implementation Plan v1.0**
-
----
-
-# **1\. Projenin Ana Hedefi**
-
-MotoCortex yalnızca ELM327 üzerinden OBD-II PID okuyan bir uygulama olmamalıdır.
-
-Hedef mimari:
-
-                   ┌────────────────────┐  
-                    │    MotoCortex App   │  
-                    └──────────┬─────────┘  
-                               │  
-                    ┌──────────▼─────────┐  
-                    │ Diagnostic API      │  
-                    └──────────┬─────────┘  
-                               │  
-                    ┌──────────▼─────────┐  
-                    │ Diagnostic Engine   │  
-                    └──────────┬─────────┘  
-                               │  
-        ┌──────────────────────┼──────────────────────┐  
-        │                      │                      │  
-┌───────▼────────┐    ┌────────▼────────┐    ┌────────▼────────┐  
-│ Vehicle Identity│    │ ECU Discovery   │    │ Diagnostic DB    │  
-│ VIN / Fingerprint│   │ Address Scanner │    │ OEM Definitions  │  
-└───────┬────────┘    └────────┬────────┘    └────────┬────────┘  
-        │                      │                      │  
-        └──────────────────────┼──────────────────────┘  
-                               │  
-                    ┌──────────▼─────────┐  
-                    │ Protocol Engine     │  
-                    │ OBD / UDS / KWP     │  
-                    └──────────┬─────────┘  
-                               │  
-                    ┌──────────▼─────────┐  
-                    │ ISO-TP / K-Line     │  
-                    └──────────┬─────────┘  
-                               │  
-                    ┌──────────▼─────────┐  
-                    │ Native OBD Core     │  
-                    └──────────┬─────────┘  
-                               │  
-                    ┌──────────▼─────────┐  
-                    │ ELM327 / STN / VCI  │  
-                    └────────────────────┘
-
-MotoCortex'un temel çalışma mantığı:
-
-Connect  
-   ↓  
-Adapter Detection  
-   ↓  
-Physical Protocol Detection  
-   ↓  
-Vehicle Identity Discovery  
-   ↓  
-ECU Discovery  
-   ↓  
-ECU Identification  
-   ↓  
-Diagnostic Protocol Selection  
-   ↓  
-Read Capabilities  
-   ↓  
-Execute Supported Operations
-
----
-
-# **2\. Kritik Mimari Karar**
-
-## **Tek bir komut listesi kullanılmayacak**
-
-Yanlış mimari:
-
-if vehicle \== Renault:  
-    send command X
-
-Doğru mimari:
-
-VIN  
- ↓  
-Vehicle Platform  
- ↓  
-ECU  
- ↓  
-ECU Software / Hardware Identity  
- ↓  
-Protocol  
- ↓  
-Diagnostic Definition  
- ↓  
-Service  
- ↓  
-Command
-
-Örnek:
-
-VIN: VF1XXXXXXXXXXXXXX  
-        ↓  
-Renault Clio IV  
-        ↓  
-2015  
-        ↓  
-1.5 dCi  
-        ↓  
-Engine ECU  
-        ↓  
-Continental SID305  
-        ↓  
-UDS / KWP  
-        ↓  
-ECU Definition  
-        ↓  
-Supported Services  
-        ↓  
-Read DTC / Read Data / Routine
-
----
-
-# **3\. Faz 0 — Mevcut MotoCortex Mimarisi Korunacak**
-
-Aşağıdaki mevcut mimari korunmalıdır:
-
-Native OBD Core  
-├── Bluetooth Transport  
-├── Connection Manager  
-├── OBDCommandQueue  
-├── Transport Decoder  
-├── ISO-TP Decoder  
-├── Strict Sequential State Machine  
-├── Transport Lock  
-├── Guard Time  
-├── Watchdog  
-├── Recovery Loop  
-└── Diagnostic Logs
-
-Özellikle şu prensipler bozulmayacak:
-
-### **3.1 Aynı anda iki komut gönderilmeyecek**
-
-if (isTransportBusy) {  
-    await waitForTransport();  
-}
-
-Her diagnostic transaction:
-
-Acquire Lock  
-   ↓  
-Send  
-   ↓  
-Wait  
-   ↓  
-Parse  
-   ↓  
-Release Lock
-
----
-
-### **3.2 Telemetry ile Diagnostic Mode birbirinden ayrılacak**
-
-NORMAL  
-  ↓  
-TELEMETRY\_ACTIVE  
-  ↓  
-EXPERTISE\_MODE  
-  ↓  
-DIAGNOSTIC\_SESSION
-
-Diagnostic command başlamadan önce:
-
-Stop Telemetry  
-   ↓  
-Increment Session ID  
-   ↓  
-Wait 300 ms Silent Cooldown  
-   ↓  
-Start Diagnostic Session
-
-Diagnostic işlem bitince:
-
-Diagnostic Session  
-   ↓  
-Return to Default Session  
-   ↓  
-Wait  
-   ↓  
-Restart Telemetry
-
----
-
-# **4\. Faz 1 — Adapter Layer**
-
-MotoCortex ilk olarak kullanılan cihazın yeteneklerini anlamalıdır.
-
-## **Adapter Capability Model**
-
-interface AdapterCapabilities {  
-  manufacturer?: string;  
-  model?: string;  
-  firmwareVersion?: string;
-
-  supportsCan: boolean;  
-  supportsCan29Bit: boolean;  
-  supportsIsoTp: boolean;  
-  supportsKLine: boolean;  
-  supportsIso9141: boolean;  
-  supportsKwp2000: boolean;  
-  supportsJ1850: boolean;
-
-  supportsFlowControl: boolean;  
-  supportsExtendedAddressing: boolean;  
-}
-
-## **ELM327 başlangıç akışı**
-
-ATZ  
-  ↓  
-ATE0  
-  ↓  
-ATL0  
-  ↓  
-ATS0  
-  ↓  
-ATH1  
-  ↓  
-ATSP0  
-  ↓  
-ATDP  
-  ↓  
-ATI
-
-Fakat:
-
-ATZ
-
-çift tetiklenmemelidir.
-
-Connect işlemi idempotent olmalıdır:
-
-CONNECT\_REQUESTED  
-    ↓  
-if already connecting:  
-    return existing session
-
----
-
-# **5\. Faz 2 — Fiziksel Protokol Discovery**
-
-İlk aşamada:
-
-ATSP0
-
-kullanılabilir.
-
-Ancak otomatik protokol tespiti başarısız olursa kontrollü fallback uygulanmalıdır.
-
-Protocol Discovery  
-       │  
-       ├── CAN 11-bit 500k  
-       ├── CAN 29-bit 500k  
-       ├── CAN 11-bit 250k  
-       ├── CAN 29-bit 250k  
-       ├── ISO 9141-2  
-       ├── ISO 14230 KWP  
-       └── J1850
-
-## **K-Line için özel akış**
-
-Özellikle eski Renault/Dacia gibi araçlarda:
-
-5-Baud Init
-
-veya:
-
-Fast Init
-
-gereklidir.
-
-Bu nedenle adapter capability testi yapılmalıdır:
-
-AT H1  
-AT AL
-
-Ancak bu komutların cevapları tek başına K-Line desteğini kesin olarak kanıtlamaz.
-
-Gerçek test:
-
-ISO 9141 / KWP Init Attempt  
-        ↓  
-Success  
-        ↓  
-K-Line Supported
-
----
-
-# **6\. Faz 3 — Vehicle Identity Engine**
-
-Bu, MotoCortex'un yeni VIN fikrinin merkezidir.
-
-## **Discovery sırası**
-
-1\. OBD VIN  
-      ↓  
-2\. UDS VIN  
-      ↓  
-3\. ECU Identification  
-      ↓  
-4\. Calibration ID  
-      ↓  
-5\. Software Number  
-      ↓  
-6\. Hardware Number
-
-## **OBD VIN**
-
-09 02
-
-## **UDS VIN**
-
-22 F1 90
-
-Ancak:
-
-F190
-
-her ECU'da garanti edilmemelidir.
-
-Bu yüzden:
-
-Try Known DID  
-   ↓  
-Positive Response  
-   ↓  
-Validate VIN
-
-## **VIN doğrulama**
-
-VIN:
-
-17 characters
-
-olmalıdır.
-
-Kontrol:
-
-function isValidVin(vin: string): boolean {  
-  return (  
-    vin.length \=== 17 &&  
-    \!/\[IOQ\]/.test(vin) &&  
-    /^\[A-HJ-NPR-Z0-9\]+$/.test(vin)  
-  );  
-}
-
----
-
-# **7\. Vehicle Fingerprint**
-
-VIN tek başına yeterli değildir.
-
-MotoCortex şu kimliği oluşturmalıdır:
-
-interface VehicleFingerprint {  
-  vin: string;
-
-  make?: string;  
-  model?: string;  
-  year?: number;  
-  engine?: string;  
-  fuelType?: string;  
-  transmission?: string;
-
-  protocol?: string;
-
-  ecus: ECUFingerprint\[\];
-
-  confidence: number;  
-}
-
-ECU fingerprint:
-
-interface ECUFingerprint {  
-  ecuAddress: number;  
-  responseAddress?: number;
-
-  ecuName?: string;  
-  supplier?: string;
-
-  hardwareNumber?: string;  
-  softwareNumber?: string;  
-  softwareVersion?: string;
-
-  protocol: "OBD" | "UDS" | "KWP2000";  
-}
-
-Örnek:
-
-{  
-  "vin": "VF1...",  
-  "make": "Renault",  
-  "model": "Clio",  
-  "year": 2015,  
-  "engine": "1.5 dCi",  
-  "confidence": 0.97,  
-  "ecus": \[  
-    {  
-      "ecuName": "Engine ECU",  
-      "requestId": "0x7E0",  
-      "responseId": "0x7E8",  
-      "softwareNumber": "XXXX"  
-    }  
-  \]  
-}
-
----
-
-# **8\. Faz 4 — ECU Discovery Engine**
-
-Modern araçlarda tüm ECU'lar yalnızca `0x7DF` üzerinden bulunamaz.
-
-ECU discovery iki seviyeli olmalıdır.
-
-## **Seviye 1 — Functional Addressing**
-
-0x7DF
-
-veya protokole uygun functional request.
-
-Amaç:
-
-Engine  
-Transmission  
-ABS  
-Airbag  
-BCM  
-HVAC
-
-gibi ECU'lardan cevap almak.
-
----
-
-## **Seviye 2 — Physical Address Discovery**
-
-CAN üzerinde:
-
-0x700 \- 0x7FF
-
-veya araç platformuna göre tanımlı ID aralıkları taranabilir.
-
-Ancak kör tarama:
-
-for id in 0x000..0x7FF:  
-    send diagnostic command
-
-şeklinde yapılmamalıdır.
-
-Bu:
-
-* araç ağını gereksiz yükleyebilir  
-* gateway tarafından engellenebilir  
-* ECU'ları rahatsız edebilir
-
-Bunun yerine:
-
-Known Vehicle Map  
-        ↓  
-Known ECU IDs  
-        ↓  
-Safe Probe  
-        ↓  
-Positive Response
-
-kullanılmalıdır.
-
-Bilinmeyen araçlarda:
-
-Conservative Discovery Mode
-
-uygulanmalıdır.
-
----
-
-# **9\. ECU Identification**
-
-Her bulunan ECU için:
-
-Diagnostic Session  
-       ↓  
-Read Identification  
-       ↓  
-Hardware ID  
-       ↓  
-Software ID  
-       ↓  
-VIN  
-       ↓  
-Supplier
-
-UDS servisleri:
-
-0x10  
-0x22  
-0x3E
-
-Öncelikli olarak kullanılmalıdır.
-
-Standart DID'ler için:
-
-F190 → VIN  
-F187 → Software Number  
-F188 → Software Version  
-F189 → Hardware Number
-
-gibi tanımlar bulunabilir.
-
-Ancak:
-
-DID'ler ECU/üretici/versiyon bazında doğrulanmadan kesin kabul edilmemelidir.
-
----
-
-# **10\. Diagnostic Protocol Abstraction**
-
-MotoCortex'ta üst katman protokolden bağımsız olmalıdır.
-
-interface DiagnosticProtocol {  
-  connect(): Promise\<void\>;
-
-  readDtc(): Promise\<DTC\[\]\>;  
-  clearDtc(): Promise\<void\>;
-
-  readData(identifier: string): Promise\<DiagnosticValue\>;
-
-  startSession(  
-    session: DiagnosticSession  
-  ): Promise\<void\>;
-
-  testerPresent(): Promise\<void\>;  
-}
-
-Implementasyonlar:
-
-Obd2Protocol  
-UdsProtocol  
-Kwp2000Protocol  
-OemDiagnosticProtocol
-
-Böylece UI şu komutu gönderir:
-
-diagnosticEngine.readDtc(ecu)
-
-Aşağıdaki ayrıntıları UI bilmez:
-
-OBD Mode 03  
-UDS 0x19  
-KWP 0x18  
-OEM-specific command
-
----
-
-# **11\. OBD-II Engine**
-
-İlk production kapsamı:
-
-Mode 01 → Live Data  
-Mode 02 → Freeze Frame  
-Mode 03 → Stored DTC  
-Mode 04 → Clear DTC  
-Mode 06 → On-board Monitor  
-Mode 07 → Pending DTC  
-Mode 09 → Vehicle Information  
-Mode 0A → Permanent DTC
-
-## **PID Discovery**
-
-01 00  
-01 20  
-01 40  
-01 60  
-01 80  
-01 A0
-
-Sadece desteklenen PID'ler seçilmelidir.
-
-Örnek:
-
-supportedPids \= decodePidBitmask(response)
-
-Sonra:
-
-User Selected PIDs  
-        ↓  
-Intersection  
-        ↓  
-Supported PIDs  
-        ↓  
-Query Queue
-
-Bu, mevcut dynamic PID mimarinle doğrudan uyumludur.
-
----
-
-# **12\. UDS Engine**
-
-UDS servisleri ayrı bir service registry olarak tasarlanmalıdır.
-
-enum UdsService {  
-  DiagnosticSessionControl \= 0x10,  
-  EcuReset \= 0x11,  
-  ClearDiagnosticInformation \= 0x14,  
-  ReadDtcInformation \= 0x19,  
-  ReadDataByIdentifier \= 0x22,  
-  ReadMemoryByAddress \= 0x23,  
-  SecurityAccess \= 0x27,  
-  CommunicationControl \= 0x28,  
-  WriteDataByIdentifier \= 0x2E,  
-  InputOutputControl \= 0x2F,  
-  RoutineControl \= 0x31,  
-  TesterPresent \= 0x3E,  
-  ControlDtcSetting \= 0x85  
-}
-
-İlk implementasyon sırası:
-
-Phase 1:  
-0x10  
-0x19  
-0x22  
-0x3E
-
-Phase 2:  
-0x11  
-0x14  
-0x85
-
-Phase 3:  
-0x2F  
-0x31
-
-Phase 4:  
-Controlled Write Operations
-
----
-
-# **13\. ISO-TP Layer**
-
-UDS üzerinde en kritik katmanlardan biri ISO-TP'dir.
-
-Frame türleri:
-
-Single Frame  
-First Frame  
-Consecutive Frame  
-Flow Control
-
-Akış:
-
-ECU → First Frame  
-        ↓  
-MotoCortex → Flow Control  
-        ↓  
-ECU → Consecutive Frames  
-        ↓  
-Reassemble
-
-ISO-TP decoder:
-
-interface IsoTpFrame {  
-  type:  
-    | "SINGLE"  
-    | "FIRST"  
-    | "CONSECUTIVE"  
-    | "FLOW\_CONTROL";
-
-  payload: Uint8Array;  
-  sequenceNumber?: number;  
-  totalLength?: number;  
-}
-
-Kurallar:
-
-Wrong Sequence Number  
-    ↓  
-Abort Transaction
-
-Timeout  
-    ↓  
-Abort Transaction
-
-Unexpected Flow Control  
-    ↓  
-Abort Transaction
-
-ISO-TP, UDS'nin üzerinde çalışan bağımsız bir transport katmanı olarak tasarlanmalıdır. `can-isotp` bu katmanın açık kaynak referanslarından biridir; UDS servis modelinde ise `udsoncan` referans alınabilir.
-
----
-
-# **14\. UDS Negative Response Handling**
-
-Her UDS cevabı:
-
-Positive
-
-olmayabilir.
-
-Örnek:
-
-7F 22 78
-
-Anlamı:
-
-Response Pending
-
-Bu durumda:
-
-Wait  
-   ↓  
-Continue
-
-Örnek:
-
-7F 22 31
-
-Anlamı:
-
-Request Out Of Range
-
-MotoCortex bunu kullanıcıya:
-
-This ECU does not support this data identifier.
-
-şeklinde göstermelidir.
-
-Önemli NRC'ler:
-
-0x10 General Reject  
-0x11 Service Not Supported  
-0x12 Sub-function Not Supported  
-0x13 Incorrect Message Length  
-0x22 Conditions Not Correct  
-0x24 Request Sequence Error  
-0x31 Request Out Of Range  
-0x33 Security Access Denied  
-0x35 Invalid Key  
-0x36 Exceeded Number Of Attempts  
-0x37 Required Time Delay Not Expired  
-0x78 Response Pending
-
----
-
-# **15\. Tester Present**
-
-Extended diagnostic session açıkken ECU session timeout yaşayabilir.
-
-Bu nedenle:
-
-3E 00
-
-periyodik gönderilebilir.
-
-Mimari:
-
-DiagnosticSession  
-        ↓  
-TesterPresentScheduler  
-        ↓  
-Periodic 3E 00
-
-Ancak bu scheduler:
-
-Main Command Queue
-
-ile çakışmamalıdır.
-
-Doğru:
-
-Diagnostic Transport Scheduler  
-├── Main Request  
-└── Tester Present
-
-İki işlem aynı anda fiziksel transport'a erişmemelidir.
-
----
-
-# **16\. DTC Engine**
-
-DTC sistemi üç seviyeli olmalıdır.
-
-## **OBD DTC**
-
-P0133  
-C1234  
-B0001  
-U0100
-
-## **UDS DTC**
-
-DTC Number  
-Status Byte  
-Snapshot Data  
-Extended Data
-
-## **OEM DTC**
-
-Manufacturer-specific
-
-Model:
-
-interface DiagnosticTroubleCode {  
-  code: string;  
-  rawCode?: number;
-
-  ecu: string;  
-  protocol: string;
-
-  status: {  
-    testFailed: boolean;  
-    pending: boolean;  
-    confirmed: boolean;  
-    warningIndicatorRequested: boolean;  
-  };
-
-  description?: string;  
-  severity?: "info" | "low" | "medium" | "high" | "critical";
-
-  freezeFrame?: Record\<string, unknown\>;  
-  extendedData?: Record\<string, unknown\>;  
-}
-
----
-
-# **17\. Diagnostic Database**
-
-Bu sistemin kalbi veritabanıdır.
-
-Önerilen yapı:
-
-diagnostic-database/  
-│  
-├── manufacturers/  
-│   ├── renault/  
-│   ├── vag/  
-│   ├── bmw/  
-│   ├── toyota/  
-│   ├── ford/  
-│   ├── hyundai/  
-│   └── ...  
-│  
-├── vehicles/  
-│   ├── renault-clio/  
-│   ├── dacia-logan/  
-│   └── ...  
-│  
-├── ecus/  
-│   ├── bosch/  
-│   ├── continental/  
-│   ├── delphi/  
-│   └── ...  
-│  
-├── protocols/  
-│   ├── obd2/  
-│   ├── uds/  
-│   ├── kwp2000/  
-│   └── iso9141/  
-│  
-└── dtc/
-
----
-
-# **18\. Database Entity Model**
-
-interface VehicleDefinition {  
-  make: string;  
-  model: string;  
-  generation?: string;
-
-  yearStart?: number;  
-  yearEnd?: number;
-
-  engineCodes?: string\[\];  
-  fuelTypes?: string\[\];
-
-  protocolCandidates: ProtocolDefinition\[\];
-
-  ecus: ECUDefinition\[\];  
-}
-
-interface ECUDefinition {  
-  id: string;  
-  name: string;
-
-  requestIds: number\[\];  
-  responseIds: number\[\];
-
-  protocol: DiagnosticProtocolType;
-
-  identification: IdentificationDefinition;
-
-  supportedServices: DiagnosticServiceDefinition\[\];
-
-  dids: DIDDefinition\[\];  
-  routines: RoutineDefinition\[\];  
-  dtcs: DTCDefinition\[\];  
-}
-
----
-
-# **19\. ECU Definition Örneği**
-
-{  
-  "id": "renault.sid305",  
-  "name": "Continental SID305",  
-  "protocol": "UDS",  
-  "requestIds": \[  
-    "0x7E0"  
-  \],  
-  "responseIds": \[  
-    "0x7E8"  
-  \],  
-  "services": {  
-    "readDtc": {  
-      "service": "0x19"  
-    },  
-    "clearDtc": {  
-      "service": "0x14"  
-    }  
-  },  
-  "dids": \[  
-    {  
-      "id": "F190",  
-      "name": "VIN",  
-      "type": "ascii"  
-    }  
-  \]  
-}
-
----
-
-# **20\. Feature Activation Engine**
-
-Özellik açma işlemleri ayrı bir modül olmalıdır.
-
-Feature Activation  
-        ↓  
-Compatibility Check  
-        ↓  
-ECU Identification  
-        ↓  
-Read Current Configuration  
-        ↓  
-Create Backup  
-        ↓  
-User Confirmation  
-        ↓  
-Required Diagnostic Session  
-        ↓  
-Authorized Write  
-        ↓  
-Read Back  
-        ↓  
+MotoCortex — Full UI/UX & Functional QA Audit ve Düzeltme Emri
+ROLÜN
+
+Sen yalnızca kod yazan bir geliştirici değilsin.
+
+Senior Mobile QA Engineer + UI/UX Designer + React Native/Expo Specialist + Automotive Diagnostic App Tester olarak hareket edeceksin.
+
+MotoCortex uygulamasının tüm ekranlarını, tüm navigasyon akışlarını, tüm butonlarını, tüm modal ve form bileşenlerini, bağlantı durumlarını ve kullanıcı etkileşimlerini uçtan uca test edeceksin.
+
+Amacın:
+
+Uygulamadaki hiçbir ekran, buton, link, modal, tab, gesture veya navigasyon akışı çalışmadan ya da görsel olarak bozuk halde kalmayacak.
+
+❗ KESİN KURAL
+
+Sadece kodu okumak test değildir.
+
+Her özellik için aşağıdaki soruların tamamına cevap ver:
+
+Kullanıcı bu butona basabiliyor mu?
+Buton gerçekten doğru fonksiyonu çağırıyor mu?
+Fonksiyon doğru ekranı açıyor mu?
+İşlem sırasında loading state var mı?
+İşlem başarısız olursa hata gösteriliyor mu?
+İşlem başarılı olursa kullanıcıya feedback veriliyor mu?
+Bağlantı yokken doğru şekilde kilitleniyor mu?
+Kullanıcı işlemi tekrar tetiklerse duplicate işlem oluşuyor mu?
+Ekrandan çıkınca timer/listener/polling temizleniyor mu?
+Geri tuşuna basınca uygulama doğru state'e dönüyor mu?
+Farklı ekran boyutlarında tasarım bozuluyor mu?
+Uzun çeviri metinlerinde layout bozuluyor mu?
+Türkçe dışındaki dillerde text overflow oluşuyor mu?
+Dark/Light theme'de okunabilirlik korunuyor mu?
+Disabled buton gerçekten disabled mı?
+Loading sırasında kullanıcı işlemi tekrar başlatabiliyor mu?
+1. TÜM EKRANLARIN ENVANTERİNİ ÇIKAR
+
+Önce projeyi tarayarak bütün ekranları listele.
+
+Şu formatta rapor oluştur:
+
+Screen ID:
+Screen Name:
+File:
+Route:
+Parent Navigation:
+Accessible From:
+Main Purpose:
+Interactive Elements:
+API/OBD Dependency:
+Connection Dependency:
+Potential Issues:
+
+Şunlar dahil olmak üzere hiçbir ekranı atlama:
+
+Dashboard
+Connection / Bluetooth
+Vehicle Detection
+VIN Identification
+Vehicle Profile
+Live Data
+Gauges
+DTC Scan
+DTC Details
+DTC Clear
+Multi-ECU Scan
+Engine ECU
+ABS ECU
+Airbag ECU
+Transmission ECU
+DPF
+Fuel Trim
+STFT / LTFT
+Performance / Horsepower
+ECU Health
+Hidden Features / Ek Özellik Açma
+UDS
+Feature Activation
+Backup
+Rollback
+Recovery
+Adapter Benchmark
+Settings
+Language
+Theme
+Subscription / PRO
+Help
+About
+Legal / Disclaimer
+Onboarding
+Error Screens
+Empty States
+Loading States
+
+Kodda olup navigasyonda görünmeyen ekranları ayrıca tespit et.
+
+Navigasyonda görünen fakat gerçek ekranı olmayan route'ları da tespit et.
+
+2. EKRAN EKRAN GÖRSEL UI AUDIT YAP
+
+Her ekranı görsel olarak incele.
+
+Aşağıdaki kriterleri kontrol et:
+
+Layout
+Ekran taşması var mı?
+Safe Area doğru mu?
+iPhone Dynamic Island altında içerik kalıyor mu?
+Android navigation bar ile çakışma var mı?
+Küçük ekranlarda içerik kesiliyor mu?
+Tablet görünümü bozuluyor mu?
+Yatay modda layout kırılıyor mu?
+Spacing
+Padding tutarlı mı?
+Card'lar arasında mesafe tutarlı mı?
+Butonlar birbirine çok yakın mı?
+Başlıklar içeriklere fazla mı uzak?
+Görsel hiyerarşi doğru mu?
+Typography
+Başlıklar okunabilir mi?
+Font boyutları tutarlı mı?
+Çok uzun araç/model isimleri taşıyor mu?
+Çok uzun hata kodları taşıyor mu?
+Çince/Japonca/Korece karakterler kırılıyor mu?
+Arapça RTL düzeni bozuluyor mu?
+Buttons
+
+Her buton için:
+
+Button:
+Visual State:
+Pressable:
+onPress:
+Handler:
+Navigation:
+Loading State:
+Disabled State:
+Error State:
+Success Feedback:
+Issue:
+
+Özellikle şu hataları ara:
+
+onPress={() => {}}
+onPress={undefined}
+yalnızca görsel olarak bulunan ama işlevi olmayan butonlar
+yanlış route'a giden butonlar
+modal açması gereken ama hiçbir şey yapmayan butonlar
+disabled görünen ama tıklanabilen butonlar
+aktif görünen ama bağlantı olmadan çalışan butonlar
+loading sırasında ikinci kez tetiklenebilen butonlar
+3. TÜM BUTONLARI OTOMATİK OLARAK TARA
+
+Projede bulunan tüm:
+
+Pressable
+TouchableOpacity
+TouchableHighlight
+Button
+IconButton
+Link
+router.push
+router.replace
+navigation.navigate
+navigation.goBack
+
+kullanımlarını tarayarak bir Interactive Element Inventory oluştur.
+
+Her element için:
+
+Component:
+File:
+Line:
+Action:
+Target:
+Implemented:
+Tested:
+Result:
+
+Hiçbir interactive element "untested" bırakılmayacak.
+
+4. NAVIGATION TESTİ
+
+Her ekran için şu akışı test et:
+
+Dashboard
+ ↓
+Screen
+ ↓
+Detail Screen
+ ↓
+Modal
+ ↓
+Action
+ ↓
+Success/Error
+ ↓
+Back
+ ↓
+Dashboard
+
+Kontrol et:
+
+Back çalışıyor mu?
+Android back button çalışıyor mu?
+iOS swipe-back çalışıyor mu?
+Modal kapatma çalışıyor mu?
+Modal dışına basınca kapanması gerekiyorsa kapanıyor mu?
+Modal kapanınca state temizleniyor mu?
+Ekrana tekrar girince eski loading state kalıyor mu?
+Navigation stack duplicate ekran oluşturuyor mu?
+5. STATE-BASED UI TESTİ
+
+MotoCortex'te özellikle bağlantı durumları çok önemlidir.
+
+Aşağıdaki tüm state'leri simüle et:
+
+Connection States
+DISCONNECTED
+SCANNING
+CONNECTING
+CONNECTED
+ADAPTER_READY
+ECU_DISCOVERING
+ECU_CONNECTED
+ECU_SESSION_ACTIVE
+CONNECTION_LOST
+RECONNECTING
+RECOVERY_REQUIRED
+
+Her ekranı bu state'lerde kontrol et.
+
+Örneğin:
+
+Araç bağlı değilken
+Ek Özellik Açma butonu kilitli mi?
+UDS butonu kilitli mi?
+Multi-ECU Scan doğru uyarıyı gösteriyor mu?
+Kullanıcı yanlışlıkla ECU komutu gönderebiliyor mu?
+Bağlantı kopunca
+UI doğru state'e dönüyor mu?
+Polling duruyor mu?
+Queue temizleniyor mu?
+Reconnect başlıyor mu?
+Kullanıcıya doğru mesaj gösteriliyor mu?
+Kontak kapanınca
+ECU bağlantısı doğru şekilde kapanıyor mu?
+Uygulama sonsuz retry yapıyor mu?
+Kullanıcıya "Kontak ON konumuna getirin" mesajı veriliyor mu?
+6. TÜM BUTONLARIN GERÇEKTEN ÇALIŞTIĞINI TEST ET
+
+Aşağıdaki özelliklerin her biri için başarılı, başarısız, bağlantısız ve tekrar tıklama senaryolarını test et:
+
+Connection
+Scan
+Connect
+Disconnect
+Safe Disconnect
+Reconnect
+Auto Reconnect
+Diagnostics
+Read DTC
+Clear DTC
+Multi-ECU Scan
+ECU Selection
+DTC Details
+DTC Explanation
+Refresh
+Live Data
+Add Gauge
+Remove Gauge
+Change PID
+Start Live Data
+Stop Live Data
+Reset
+Fullscreen
+Feature Activation
+Open Feature
+Read Current Value
+Backup
+Write
 Verify
+Cancel
+Rollback
+Recovery
+Retry
+Settings
+Language
+Theme
+Units
+Notifications
+Subscription
+Privacy
+Legal
 
-Örnek:
+Her işlem için:
 
-interface VehicleFeature {  
-  id: string;  
-  name: string;
+PASS
+FAIL
+PARTIAL
+NOT IMPLEMENTED
 
-  supportedVehicles: VehicleMatcher\[\];  
-  requiredEcu: string;
+sonuçlarından birini ver.
 
-  readConfiguration(): Promise\<ConfigurationState\>;  
-  writeConfiguration(  
-    state: ConfigurationState  
-  ): Promise\<void\>;
+7. GÖRSEL TUTARSIZLIK DENETİMİ
 
-  verifyConfiguration(): Promise\<boolean\>;  
-}
+Tüm uygulama genelinde şu değerleri karşılaştır:
 
----
+Border Radius
+Card Radius
+Button Height
+Input Height
+Font Sizes
+Font Weights
+Icon Sizes
+Horizontal Padding
+Vertical Spacing
+Header Height
+Bottom Tab Height
+Modal Radius
+Shadow / Elevation
+Color Tokens
 
-# **21\. Feature Activation Safety Policy**
+Aynı amaçlı bileşenler farklı görünüyorsa tek bir Design System'e taşı.
 
-MotoCortex'un default davranışı:
+Örneğin:
 
-READ \= Allowed  
-WRITE \= Restricted  
-PROGRAMMING \= Disabled
+PrimaryButton
+SecondaryButton
+DangerButton
+GhostButton
+IconButton
+Card
+SectionHeader
+StatusBadge
+LoadingState
+EmptyState
+ErrorState
 
-## **Risk seviyeleri**
+oluştur.
 
-Level 0:  
-Read-only
+8. RESPONSIVE TEST
 
-Level 1:  
-Diagnostic clear
+En az şu cihaz boyutlarını test et:
 
-Level 2:  
-Adaptation / configuration
+iPhone SE
+iPhone 14 / 15
+iPhone Pro Max
+Android Small
+Android Standard
+Android Large
+Tablet
 
-Level 3:  
-Actuator control
+Aşağıdaki durumları kontrol et:
 
-Level 4:  
-Security-protected write
+Font büyütme
+Uzun araç adı
+Uzun ECU adı
+Uzun DTC açıklaması
+Çok uzun çeviri
+3 haneli RPM
+4 haneli RPM
+3 haneli hız
+6 haneli değer
+Çok büyük sayı
+Null değer
+N/A
+--
+Loading
+9. GLOBAL LANGUAGE TESTİ
 
-Level 5:  
-Programming / flashing
+En az şu dillerde UI test et:
 
-Production uygulamasında:
+English
+Turkish
+German
+French
+Spanish
+Italian
+Portuguese
+Russian
+Arabic
+Chinese Simplified
+Japanese
+Korean
 
-Level 0 → İlk sürüm  
-Level 1 → Kontrollü  
-Level 2 → Vehicle-specific  
-Level 3 → Expert Mode  
-Level 4 → Yetkilendirme ve özel güvenlik politikası  
-Level 5 → İlk sürümlerde yok
+Kontrol et:
 
-Yanlış ECU'ya yanlış yazma işlemi ECU'yu çalışamaz duruma getirebilir. Bu nedenle her write işlemi için araç/ECU eşleşmesi, güvenilir veri tanımı, transaction doğrulaması ve geri okuma zorunlu olmalıdır.
+Text overflow
+Button overflow
+Modal overflow
+RTL layout
+Navigation title overflow
+Tab label overflow
+DTC açıklaması
+Error message
+Toast
+Alert
+Empty State
 
----
+Bir çeviri eksikse fallback dili sessizce kullanmak yerine raporla.
 
-# **22\. OEM Plugin Mimarisi**
+10. OBD / ECU FONKSİYONEL TEST
 
-Her marka için ayrı uygulama kodu yazılmamalıdır.
+UI testinin yanında gerçek uygulama mantığını da test et.
 
-OEM Plugin  
-    ↓  
-Definition Provider  
-    ↓  
-Diagnostic Database
+Şu senaryoları simüle et:
 
-Örnek:
+Adapter connected
+Adapter disconnected
+ECU connected
+ECU not responding
+Timeout
+NRC 0x78
+NRC 0x33
+NRC 0x35
+NRC 0x36
+NRC 0x37
+Voltage low
+Voltage critical
+Ignition OFF
+Vehicle moving
+Speed unknown
+Fingerprint mismatch
+Fingerprint partial match
+Unsupported protocol
+Tier 3 adapter
+Read-back mismatch
+Verification inconclusive
 
-RenaultPlugin  
-├── VehicleMatcher  
-├── ECUDefinitions  
-├── DTCDefinitions  
-├── DIDDefinitions  
-└── FeatureDefinitions
+Her senaryoda:
 
-VAGPlugin  
-├── VehicleMatcher  
-├── ECUDefinitions  
-├── DTCDefinitions  
-├── DIDDefinitions  
-└── FeatureDefinitions
+Expected UI:
+Actual UI:
+Expected State:
+Actual State:
+Expected User Message:
+Actual User Message:
+PASS/FAIL:
+11. LOADING / ERROR / EMPTY STATE DENETİMİ
 
----
+Uygulamadaki her async işlem için şu üç durum mutlaka olmalı:
 
-# **23\. İlk Marka Önceliği**
+LOADING
+SUCCESS
+ERROR
 
-Ben şu sırayı öneriyorum:
+Ayrıca:
 
-## **Faz A**
+EMPTY
+TIMEOUT
+CANCELLED
+CONNECTION_LOST
+RETRY
 
-Universal OBD-II
+durumlarını da kontrol et.
 
-## **Faz B**
+Özellikle şu hataları ara:
 
-Renault / Dacia
+Sonsuz spinner
+Spinner başladıktan sonra hiç bitmemesi
+Error state'te retry olmaması
+Error sonrası eski verinin ekranda kalması
+Empty state yerine boş beyaz ekran
+Network hatasında crash
+Bluetooth bağlantısı kopunca loading'in devam etmesi
+12. MEMORY LEAK & LIFECYCLE TEST
 
-Çünkü:
+Tüm ekranlarda şunları kontrol et:
 
-* K-Line  
-* KWP2000  
-* UDS  
-* ECU discovery  
-* PyRen gibi açık kaynak referanslar
+setInterval
+setTimeout
+addListener
+Bluetooth listeners
+EventEmitter
+OBD polling
+subscriptions
+animated listeners
 
-MotoCortex'un mevcut test geçmişiyle de doğrudan örtüşüyor.
-
-## **Faz C**
-
-VAG
-
-## **Faz D**
-
-Ford / Mazda / Volvo / JLR
-
-## **Faz E**
-
-Hyundai / Kia  
-Toyota  
-BMW  
-Mercedes  
-Stellantis
-
-Generic Diagnostic Tool özellikle Ford, Mazda, JLR, Volvo ve OBD-II uyumlu araçlar üzerinde UDS/KWP2000/J2534 yaklaşımı için faydalı bir referanstır.
-
----
-
-# **24\. Repo Araştırmasından Alınacak Mimari Fikirler**
-
-## **Renault CANanalyze**
+Her birinin cleanup'ı olmalı.
 
 Özellikle:
 
-CAN  
-ISO-TP  
-UDS  
-ECU discovery  
-Service scanning
-
-mimarisi incelenmelidir.
-
-Repo, bilinmeyen UDS CAN ID'lerini keşfetme ve servisleri tarama yaklaşımı göstermektedir. Ancak MotoCortex'ta bu özellik daha güvenli ve araç profili odaklı uygulanmalıdır.
-
----
-
-## **udsoncan**
-
-Şunlar için referans:
-
-UDS Service abstraction  
-Request/Response parsing  
-Negative response handling  
-DID handling  
-Session handling
-
-MotoCortex'a doğrudan Python kodu taşınmayacak; mimari referans alınacaktır.
-
----
-
-## **can-isotp**
-
-Şunlar için referans:
-
-First Frame  
-Consecutive Frame  
-Flow Control  
-Sequence Number  
-Timeout  
-Reassembly
-
-Native Android tarafında Kotlin implementasyonu yazılmalıdır. Python kütüphanesi doğrudan mobil uygulamaya taşınmamalıdır.
-
----
-
-## **OpenDBC**
-
-Şunlar için referans:
-
-Vehicle-specific CAN definitions  
-DBC parsing  
-Signal definitions  
-Vehicle fingerprints
-
-Ancak:
-
-DBC  
-≠  
-UDS Diagnostic Database
-
-Bu iki veri modeli ayrı tutulmalıdır.
-
----
-
-# **25\. Önerilen Native Kotlin Klasör Yapısı**
-
-native-obd-core/  
-│  
-├── transport/  
-│   ├── BluetoothTransport.kt  
-│   ├── BleTransport.kt  
-│   ├── WifiTransport.kt  
-│   └── TransportLock.kt  
-│  
-├── adapter/  
-│   ├── Elm327Adapter.kt  
-│   ├── StnAdapter.kt  
-│   └── AdapterCapabilities.kt  
-│  
-├── protocol/  
-│   ├── obd/  
-│   │   ├── ObdProtocol.kt  
-│   │   ├── ObdPidDecoder.kt  
-│   │   └── ObdDtcDecoder.kt  
-│   │  
-│   ├── uds/  
-│   │   ├── UdsClient.kt  
-│   │   ├── UdsService.kt  
-│   │   ├── UdsResponseParser.kt  
-│   │   └── UdsNrcDecoder.kt  
-│   │  
-│   ├── kwp/  
-│   │   └── Kwp2000Client.kt  
-│   │  
-│   └── iso9141/  
-│       └── Iso9141Client.kt  
-│  
-├── transport\_protocol/  
-│   ├── IsoTpEncoder.kt  
-│   ├── IsoTpDecoder.kt  
-│   ├── IsoTpSession.kt  
-│   └── FlowControlManager.kt  
-│  
-├── discovery/  
-│   ├── ProtocolDiscovery.kt  
-│   ├── EcuDiscovery.kt  
-│   ├── VehicleIdentityDiscovery.kt  
-│   └── VehicleFingerprint.kt  
-│  
-├── diagnostic/  
-│   ├── DiagnosticEngine.kt  
-│   ├── DiagnosticSessionManager.kt  
-│   ├── TesterPresentScheduler.kt  
-│   ├── DtcManager.kt  
-│   └── FeatureActivationEngine.kt  
-│  
-├── database/  
-│   ├── VehicleDefinition.kt  
-│   ├── EcuDefinition.kt  
-│   ├── DidDefinition.kt  
-│   ├── RoutineDefinition.kt  
-│   └── DtcDefinition.kt  
-│  
-├── safety/  
-│   ├── WriteOperationGuard.kt  
-│   ├── CompatibilityValidator.kt  
-│   └── TransactionVerifier.kt  
-│  
-└── diagnostics/  
-    ├── DiagnosticLogger.kt  
-    ├── TraceRecorder.kt  
-    └── SessionRecorder.kt
-
----
-
-# **26\. Uygulama Sırası**
-
-## **Sprint 1 — Core Stability**
-
-* Mevcut Native OBD Core stabilizasyonu  
-* Transport Lock  
-* Session ID  
-* Queue cancellation  
-* Watchdog  
-* K-Line capability detection
-
----
-
-## **Sprint 2 — Universal OBD**
-
-* Mode 01  
-* Mode 02  
-* Mode 03  
-* Mode 04  
-* Mode 06  
-* Mode 07  
-* Mode 09  
-* Mode 0A
-
----
+useEffect(() => {
+  const timer = setInterval(...);
 
-## **Sprint 3 — VIN Identity**
+  return () => {
+    clearInterval(timer);
+  };
+}, []);
 
-* VIN read  
-* VIN validation  
-* WMI decoding  
-* Vehicle metadata resolver  
-* User confirmation UI
+olmayan tüm durumları bul.
 
-Akış:
+Ekrana 20 kez girip çıkıldığında:
 
-ECU VIN  
-   ↓  
-Decode  
-   ↓  
-Brand / Model / Year Prediction  
-   ↓  
-User Confirmation  
-   ↓  
-Save Vehicle Profile
+timer sayısı artıyor mu?
+listener sayısı artıyor mu?
+memory kullanımı artıyor mu?
+duplicate OBD command oluşuyor mu?
 
----
+test et.
 
-## **Sprint 4 — ISO-TP**
+13. DUPLICATE ACTION TESTİ
 
-* Single Frame  
-* First Frame  
-* Consecutive Frame  
-* Flow Control  
-* Timeout  
-* Sequence validation  
-* Reassembly
+Her kritik butona hızlıca 5-10 kez bas.
 
----
+Özellikle:
 
-## **Sprint 5 — UDS Read-Only**
+Connect
+Scan
+Read DTC
+Clear DTC
+Write ECU
+Rollback
+Reconnect
 
-* 0x10  
-* 0x19  
-* 0x22  
-* 0x3E
+testlerinde:
 
-İlk hedef:
+1 tap
+2 taps
+5 rapid taps
+10 rapid taps
 
-UDS ECU Discovery  
-        ↓  
-ECU Identification  
-        ↓  
-DTC Read  
-        ↓  
-DID Read
+senaryolarını uygula.
 
----
+Beklenen:
 
-## **Sprint 6 — KWP2000**
+Aynı işlem duplicate başlamamalı.
+Queue şişmemeli.
+İkinci yazma komutu gönderilmemeli.
+UI kilitlenmeli veya işlem güvenli şekilde ignore edilmeli.
+14. TASARIM DÜZELTME KURALI
 
-* K-Line initialization  
-* Slow init  
-* Fast init  
-* KWP framing  
-* KWP DTC  
-* KWP data read
+Bir tasarım hatası bulduğunda yalnızca o ekranı düzeltme.
 
-Bu sprint özellikle 2011 Dacia Logan benzeri araçlar için kritik olacaktır.
+Aynı problemi tüm uygulamada ara.
 
----
+Örneğin:
 
-## **Sprint 7 — Diagnostic Database**
+Dashboard'da buton yüksekliği hatalıysa tüm butonları kontrol et.
 
-İlk database:
+Bir modalda text overflow varsa tüm modalları kontrol et.
 
-Universal  
-Renault  
-Dacia  
-VAG
+Bir ekranın loading state'i bozuksa tüm async ekranları kontrol et.
 
----
+15. HER DÜZELTME İÇİN REGRESSION TEST EKLE
 
-## **Sprint 8 — OEM Diagnostic**
-
-* ECU definitions  
-* DID definitions  
-* DTC definitions  
-* Routine definitions  
-* Compatibility matcher
-
----
-
-## **Sprint 9 — Controlled Features**
-
-İlk olarak:
-
-Read configuration
-
-Sonra:
-
-User confirmation
-
-Sonra:
-
-Controlled write
-
----
-
-# **27\. Test Stratejisi**
-
-Her protokol için üç test seviyesi olmalıdır.
-
-## **Unit Test**
-
-Raw Bytes  
-    ↓  
-Decoder  
-    ↓  
-Expected Object
+Bir bug düzeltildikten sonra test ekle.
 
 Örnek:
 
-41 0C 1A F8
+Bug:
+DTC Refresh butonu çalışmıyordu.
 
-beklenen:
+Fix:
+handleRefresh fonksiyonu bağlandı.
 
-RPM \= 1726
+Regression Test:
+DTC_REFRESH_BUTTON_TRIGGERS_SCAN
 
----
+Result:
+PASS
+16. SON RAPORU BU FORMATTA SUN
+Executive Summary
+Total Screens:
+Total Interactive Elements:
+Total Buttons:
+Total Navigation Routes:
+Total Async Operations:
+Total Issues:
+Critical:
+High:
+Medium:
+Low:
+Critical Bugs
+ID:
+Screen:
+File:
+Line:
+Problem:
+Reproduction Steps:
+Expected:
+Actual:
+Root Cause:
+Fix:
+Test Result:
+UI/UX Issues
+Screen:
+Problem:
+Severity:
+Screenshot/Reference:
+Recommended Fix:
+Non-Functional Buttons
+Button:
+Screen:
+File:
+Handler:
+Problem:
+Fix:
+Navigation Issues
+Route:
+From:
+To:
+Problem:
+Fix:
+Responsive Issues
+Device:
+Screen:
+Problem:
+Fix:
+Localization Issues
+Language:
+Screen:
+Problem:
+Fix:
+Memory / Lifecycle Issues
+Component:
+Leak Type:
+Reproduction:
+Fix:
+Final Score
+UI/UX:
+Functional:
+Navigation:
+OBD:
+ECU:
+Performance:
+Accessibility:
+Localization:
+Overall:
+🚫 KESİNLİKLE YAPMA
+Sadece TypeScript derleme testine güvenme.
+Sadece Jest testlerinin başarılı olmasını yeterli kabul etme.
+Sadece dosyaları okuyup "çalışıyor" deme.
+onPress var diye butonu çalışıyor kabul etme.
+Mock başarılı diye gerçek akışı başarılı kabul etme.
+Görsel olarak güzel diye UX'i tamamlanmış kabul etme.
+Bir ekranı test edip diğerlerini varsayma.
+"Muhtemelen çalışıyordur" deme.
+Test edilmemiş hiçbir özelliği PASS olarak işaretleme.
+🎯 SON HEDEF
 
-## **Replay Test**
+Bu çalışmanın sonunda MotoCortex için:
 
-Gerçek araçtan kaydedilmiş:
+"Tüm ekranları incelendi, tüm butonları test edildi, tüm navigasyon akışları doğrulandı, tüm kritik UI/UX hataları giderildi ve regression testleri oluşturuldu."
 
-TX  
-RX  
-Timestamp
+diyebileceğimiz gerçek bir QA raporu istiyorum.
 
-verisi yeniden oynatılır.
+Önce analiz et. Sonra sorunları önem derecesine göre listele. Daha sonra düzeltmeleri uygula. Son olarak tüm düzeltmeleri yeniden test et.
 
-CAN Trace  
-    ↓  
-Replay Engine  
-    ↓  
-Diagnostic Engine
+Düzeltme yapmadan önce bana soru sorma; mevcut proje mimarisine uygun en güvenli ve tutarlı çözümü uygula.
 
----
-
-## **Hardware Test**
-
-Gerçek araç:
-
-Vehicle  
-    ↓  
-Adapter  
-    ↓  
-MotoCortex
-
-Test matrisi:
-
-Vehicle  
-Protocol  
-Adapter  
-Connection  
-VIN  
-DTC  
-Live Data  
-UDS  
-KWP
-
----
-
-# **28\. Log Sistemi**
-
-Her diagnostic transaction kaydedilmelidir:
-
-{  
-  "timestamp": 1750000000,  
-  "protocol": "UDS",  
-  "requestId": "0x7E0",  
-  "responseId": "0x7E8",  
-  "request": "22F190",  
-  "response": "62F190...",  
-  "latencyMs": 423,  
-  "session": "extended",  
-  "result": "success"  
-}
-
-Bu sistem:
-
-Bug Report  
-    ↓  
-Diagnostic Trace  
-    ↓  
-Replay  
-    ↓  
-Issue Reproduction
-
-için kritik olacaktır.
-
----
-
-# **29\. Agent'a Verilecek Ana Kurallar**
-
-Kodlama ajanına şu kurallar kesinlikle verilmelidir:
-
-1\. Mevcut Native OBD Core mimarisini bozma.
-
-2\. Yeni protokol eklerken Transport Layer ile Diagnostic Layer'ı ayır.
-
-3\. UDS, KWP2000 ve OBD-II aynı sınıf içinde karıştırılmayacak.
-
-4\. ISO-TP bağımsız transport protocol olarak uygulanacak.
-
-5\. Her command strict sequential queue üzerinden gönderilecek.
-
-6\. Aynı anda birden fazla fiziksel transport transaction çalışmayacak.
-
-7\. Telemetry ve diagnostic işlemleri birbirinden izole edilecek.
-
-8\. Her UDS negative response özel olarak parse edilecek.
-
-9\. Bilinmeyen DID'ler körlemesine taranmayacak.
-
-10\. ECU write işlemleri default olarak disabled olacak.
-
-11\. Her write işlemi öncesi vehicle/ECU compatibility doğrulanacak.
-
-12\. Her write işleminden sonra read-back verification yapılacak.
-
-13\. VIN sonucu kullanıcıya otomatik öneri olarak sunulacak; kesin bilgi olarak kaydedilmeden önce kullanıcı doğrulaması alınacak.
-
-14\. Marka/model/ECU bilgileri hardcoded if/else zinciri ile değil, versioned diagnostic database ile yönetilecek.
-
-15\. Her yeni araç desteği database definition olarak eklenebilecek.
-
-16\. Gerçek araç testleri replay log ile tekrarlanabilir olacak.
-
-17\. Her protocol için unit test \+ replay test \+ hardware test oluşturulacak.
-
-18\. K-Line desteklemeyen adapter'lar erken aşamada tespit edilecek.
-
-19\. Timeout, retry ve recovery davranışları protocol-specific olacak.
-
-20\. Yeni bir command eklemeden önce hangi ECU/protocol/session için geçerli olduğu tanımlanacak.
-
----
-
-# **30\. Son Hedef Mimari**
-
-MotoCortex'un nihai mimarisi:
-
-                ┌────────────────────┐  
-                 │       VIN           │  
-                 └─────────┬──────────┘  
-                           │  
-                 ┌─────────▼──────────┐  
-                 │ Vehicle Identity    │  
-                 └─────────┬──────────┘  
-                           │  
-                 ┌─────────▼──────────┐  
-                 │ Vehicle Fingerprint │  
-                 └─────────┬──────────┘  
-                           │  
-                 ┌─────────▼──────────┐  
-                 │ ECU Discovery       │  
-                 └─────────┬──────────┘  
-                           │  
-                 ┌─────────▼──────────┐  
-                 │ ECU Identification  │  
-                 └─────────┬──────────┘  
-                           │  
-             ┌─────────────┼─────────────┐  
-             │             │             │  
-        ┌────▼────┐   ┌────▼────┐   ┌────▼────┐  
-        │ OBD-II  │   │   UDS   │   │   KWP   │  
-        └────┬────┘   └────┬────┘   └────┬────┘  
-             │             │             │  
-             └─────────────┼─────────────┘  
-                           │  
-                 ┌─────────▼──────────┐  
-                 │ Diagnostic Database │  
-                 └─────────┬──────────┘  
-                           │  
-       ┌───────────────────┼───────────────────┐  
-       │                   │                   │  
-  Read Live Data      Read DTC          Feature Activation  
-       │                   │                   │  
-       └───────────────────┼───────────────────┘  
-                           │  
-                 ┌─────────▼──────────┐  
-                 │ Safety & Validation │  
-                 └────────────────────┘
-
-## **En önemli stratejik karar**
-
-MotoCortex'un geleceği:
-
-OBD Scanner
-
-olmaktan çıkıp:
-
-Vehicle Identity Platform  
-        \+  
-Universal Diagnostic Engine  
-        \+  
-OEM Diagnostic Knowledge Base
-
-haline gelmesidir.
-
-Bu planın ilk uygulanacak bölümü **Faz 0 → Faz 5** olmalıdır. Özellikle senin mevcut uygulamanın yaşadığı bağlantı ve telemetry stabilite problemleri tamamen çözülmeden UDS/özellik açma katmanına geçilmemeli. Önce sağlam bir **transport \+ session \+ ISO-TP temeli**, sonra protokol ve OEM bilgisi eklenmelidir.
-
+Hiçbir test edilmemiş ekran, buton veya akışı başarılı kabul etme.

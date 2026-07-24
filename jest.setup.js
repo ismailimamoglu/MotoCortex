@@ -111,3 +111,25 @@ jest.mock('react-native-fs', () => ({
   writeFile: jest.fn().mockResolvedValue(true),
   unlink: jest.fn().mockResolvedValue(true),
 }));
+
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock')
+);
+
+jest.mock('expo-crypto', () => ({
+  CryptoDigestAlgorithm: {
+    SHA256: 'SHA-256',
+  },
+  digestStringAsync: jest.fn(async (algo, str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash).toString(16).padStart(64, '0');
+  }),
+  randomUUID: jest.fn(() => '12345678-1234-4234-8234-1234567890ab'),
+  getRandomBytes: jest.fn((size) => new Uint8Array(size).fill(7)),
+}));
+
+

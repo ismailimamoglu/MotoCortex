@@ -262,10 +262,11 @@ export class OBD2ProtocolEngine {
     }
 
     private async executeCommand(command: string, timeoutMs?: number): Promise<string> {  
+        const isMoving = this.currentSpeed > 0 || this.currentRpm > 0;
         try {  
             const { useAppStore } = require('../store/useAppStore');  
             const isPro = useAppStore.getState().isPro;  
-            assertHardwareGate(command, isPro);  
+            assertHardwareGate(command, isPro, isMoving);  
         } catch (gateErr: any) {  
             if (gateErr?.message === 'HARDWARE_GATE_VIOLATION') {  
                 throw wrapError(new Error('HARDWARE_GATE_VIOLATION'), command);  
@@ -276,7 +277,6 @@ export class OBD2ProtocolEngine {
         const cleanCmd = command.replace(/\s+/g, '').toUpperCase();
 
         // Sandbox Security Gate: Block dangerous commands when vehicle is in motion during active polling
-        const isMoving = this.currentSpeed > 0 || this.currentRpm > 0;
         if (this.isPollingActive && isMoving) {
             const cmdClass = classifyCommand(command, isMoving);
             const isBanned = OBD2ProtocolEngine.BANNED_COMMANDS_CRITICAL.has(cleanCmd);

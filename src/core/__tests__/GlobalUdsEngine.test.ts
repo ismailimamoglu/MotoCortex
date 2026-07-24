@@ -150,6 +150,9 @@ describe('4. Zero-Literal Key-Based OEM Database & 26-Language Matrix Tests', ()
 
         const allFeatures = oemDatabaseProvider.getFeaturesForMake();
         for (const feat of allFeatures) {
+            if (!enData.features.items[feat.id] || !trData.features.items[feat.id]) {
+                console.log('Failing feature ID:', feat.id, 'en:', !!enData.features.items[feat.id], 'tr:', !!trData.features.items[feat.id]);
+            }
             expect(enData.features.items[feat.id]).toBeDefined();
             expect(trData.features.items[feat.id]).toBeDefined();
             expect(enData.features.items[feat.id].name).toBeDefined();

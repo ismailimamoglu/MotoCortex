@@ -101,7 +101,7 @@ export default function ContextualPaywallModal() {
             const activePro = checkIsProStatus(customerInfo);
             setIsPro(activePro);
             if (activePro) {
-                Alert.alert(t('paywall.congratsTitle', '🎉 Congratulations!'), t('paywall.congratsMsg', 'Your MotoCortex PRO membership has been successfully activated. Enjoy all professional features!'));
+                Alert.alert(t('paywall.congratsTitle', '🎉 Congratulations!'), t('paywall.congratsMsg', 'Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!'));
                 clearPaywallContext();
             }
         } catch (error: any) {
@@ -217,15 +217,19 @@ export default function ContextualPaywallModal() {
             onRequestClose={clearPaywallContext}
         >
             <TouchableOpacity activeOpacity={1} style={sDyn.overlay} onPress={clearPaywallContext}>
-                <TouchableOpacity activeOpacity={1} style={sDyn.container}>
+                <TouchableOpacity activeOpacity={1} style={sDyn.container} onPress={(e) => e.stopPropagation()}>
                     <View style={sDyn.handle} />
-                    <Text style={sDyn.title}>👑 {t('paywall.crownBadge')}</Text>
+                    <Text style={sDyn.title}>👑 {t('paywall.crownBadge', 'MOTO CORTEX PRO')}</Text>
                     <Text style={sDyn.desc}>
                         {t('paywall.contextualDesc', 'Upgrade to PRO to see critical risks of this trouble code on the engine, potential repair costs, and detailed solution guidelines.')}
                     </Text>
                     
                     <View style={sDyn.codeBox}>
-                        <Text style={sDyn.codeText}>{paywallContext}</Text>
+                        <Text style={sDyn.codeText}>
+                            {paywallContext === 'ACTION_LOCKED' 
+                                ? '🔒 ' + t('paywall.actionLocked', 'PRO KİLİTLİ ÖZELLİK')
+                                : paywallContext}
+                        </Text>
                     </View>
 
                     <TouchableOpacity style={sDyn.option} onPress={() => handlePurchase('weekly')} disabled={isLoading}>

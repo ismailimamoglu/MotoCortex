@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './global.css';
-import { AppState, StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList, Linking, useWindowDimensions, KeyboardAvoidingView, LogBox, Image, Animated, I18nManager } from 'react-native';
+import { AppState, StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, StatusBar, TextInput, Platform, PermissionsAndroid, ActivityIndicator, Share, Modal, Alert, FlatList, Linking, useWindowDimensions, KeyboardAvoidingView, LogBox, Image, Animated, I18nManager, NativeModules, DeviceEventEmitter } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,7 +13,6 @@ import { lookupDTC, prefetchDtcChunksForCodes } from './src/data/dtcDictionary';
 import BatteryTestModal from './src/components/BatteryTestModal';
 import FreezeFrameModal from './src/components/FreezeFrameModal';
 import PerformanceModal from './src/components/PerformanceModal';
-import HardwareHealthModal from './src/components/HardwareHealthModal';
 import { useBluetoothStore } from './src/store/useBluetoothStore';
 import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
 import i18n from './src/i18n';
@@ -49,7 +48,26 @@ import DashboardSandbox from './src/screens/sandbox/DashboardSandbox';
 import { useJsiTelemetry } from './src/hooks/useJsiTelemetry';
 import ConnectionFlowScreen from './src/screens/ConnectionFlowScreen';
 import ObdHealthScreen from './src/screens/ObdHealthScreen';
+import IgnitionWarningModal from './src/components/IgnitionWarningModal';
+import HorsepowerModal from './src/components/HorsepowerModal';
+import FuelTrimModal from './src/components/FuelTrimModal';
+import DpfMonitorModal from './src/components/DpfMonitorModal';
+import MultiEcuScanModal from './src/components/MultiEcuScanModal';
+import DctResetModal from './src/components/DctResetModal';
 import FeatureActivationModal from './src/components/FeatureActivationModal';
+import ObdService from './src/services/obdService';
+
+// Force disable Element Inspector overlay if it was left active in React Native DevMenu
+if (__DEV__) {
+  try {
+    const Inspector = require('react-native/Libraries/Inspector/Inspector');
+    if (Inspector && typeof Inspector.isShown === 'function' && Inspector.isShown()) {
+      if (NativeModules.DevSettings && typeof NativeModules.DevSettings.toggleElementInspector === 'function') {
+        NativeModules.DevSettings.toggleElementInspector();
+      }
+    }
+  } catch (e) {}
+}
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -74,6 +92,7 @@ LogBox.ignoreLogs([
   /SSInternalErrorDomain/,
   /AppTransaction Failed/
 ]);
+
 
 // [v7.5.0 FIX-4] SHIMMER SENSOR CARD
 // Displayed during PID capability discovery (supportedPids.length === 0 while connected).
@@ -289,11 +308,10 @@ const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: 
   );
 };
 
-const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpertise, onOpenHardwareHealth, onOpenCustomize }: {
+const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpertise, onOpenCustomize }: {
   ecuStatus: string;
   lastDeviceName: string | null;
   onGoToExpertise: () => void;
-  onOpenHardwareHealth: () => void;
   onOpenCustomize: () => void;
 }) => {
   const { t } = useTranslation();
@@ -448,7 +466,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
               borderRadius: scaleMod(12), paddingHorizontal: scaleMod(8), paddingVertical: scaleHeight(3),
             }}>
               <Text style={{ color: tc.purple, fontSize: scaleFont(8.2), fontFamily: MONO, fontWeight: '800' }}>
-                🔌 {protocol}
+                {protocol === 'SIMULATED_OBD' ? 'CAN BUS (DEMO)' : protocol.replace(/_/g, ' ')}
               </Text>
             </View>
           )}
@@ -998,27 +1016,6 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
     </TouchableOpacity>
   );
 
-  const renderHardwareHealthButton = () => (
-    <TouchableOpacity
-      style={{ 
-        backgroundColor: tc.card, 
-        borderRadius: scaleMod(12), 
-        padding: isTablet ? scaleMod(12) : scaleMod(9), 
-        flexDirection: 'row', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        gap: isTablet ? scaleMod(10) : scaleMod(6),
-        borderWidth: 1.5,
-        borderColor: tc.cyan,
-        flexShrink: 0,
-      }}
-      onPress={onOpenHardwareHealth}
-    >
-      <Text numberOfLines={1} style={{ color: tc.cyan, fontSize: isTablet ? scaleFont(12.5) : scaleFont(10.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.8 }}>
-        {(isTablet ? t('bento.settings.hardwareHealth', 'DONANIM SAĞLIK BİLGİSİ') : t('bento.settings.hardwareHealthShort', 'DONANIM SAĞLIĞI')).toUpperCase()}
-      </Text>
-    </TouchableOpacity>
-  );
 
   const renderCustomizeButton = () => (
     <TouchableOpacity
@@ -1175,6 +1172,22 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
   const appUserId = useAppStore((state) => state.appUserId);
   const language = useAppStore((state) => state.language);
   const setLanguage = useAppStore((state) => state.setLanguage);
+  const isSimulationMode = useAppStore((state) => state.isSimulationMode);
+  const toggleSimulationMode = useAppStore((state) => state.toggleSimulationMode);
+
+  const handleSupportEmail = () => {
+    const siteUrl = `https://motocortex-telemetry.vercel.app/?lang=${language}`;
+    Linking.openURL(siteUrl).catch((e) => console.error('Error opening support website:', e));
+  };
+
+  const handleShareApp = async () => {
+    try {
+      await Share.share({
+        message: t('report.shareMessage', 'Check out MotoCortex - The ultimate motorcycle diagnostics tool! https://motocortex.app'),
+        title: 'MotoCortex'
+      });
+    } catch (e) { console.error(e); }
+  };
 
   const copyToClipboard = async () => {
     if (appUserId) {
@@ -1253,33 +1266,93 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
           <Text style={{ color: tc.textSec, fontSize: 10 }}>▶</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Community & Support Section */}
+      <View style={s.panel}>
+        <Text style={s.panelTitle}>{t('bento.settings.community', 'COMMUNITY & SUPPORT')}</Text>
+        <View style={{ gap: scaleMod(8) }}>
+          {/* Support Center */}
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 1.2,
+              borderRadius: 12,
+              paddingVertical: scaleHeight(12),
+              paddingHorizontal: scaleWidth(14),
+              backgroundColor: `${tc.cyan}0D`,
+              borderColor: `${tc.cyan}26`,
+            }}
+            onPress={handleSupportEmail}
+            activeOpacity={0.8}
+          >
+            <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.textPri }}>
+              {t('info.support', 'SUPPORT CENTER')}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Share App */}
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 1.2,
+              borderRadius: 12,
+              paddingVertical: scaleHeight(12),
+              paddingHorizontal: scaleWidth(14),
+              backgroundColor: `${tc.purple}0D`,
+              borderColor: `${tc.purple}26`,
+            }}
+            onPress={handleShareApp}
+            activeOpacity={0.8}
+          >
+            <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.textPri }}>
+              {t('expertise.share', 'SHARE APP')}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Demo Mode Toggle */}
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderWidth: 1.2,
+              borderRadius: 12,
+              paddingVertical: scaleHeight(12),
+              paddingHorizontal: scaleWidth(14),
+              backgroundColor: isSimulationMode ? `${tc.green}14` : `${tc.textPri}05`,
+              borderColor: isSimulationMode ? tc.green : tc.border,
+            }}
+            onPress={() => {
+              const newMode = !isSimulationMode;
+              toggleSimulationMode();
+              if (newMode) {
+                Alert.alert(t('common.demoMode', 'DEMO MODE'), t('common.demoModeDesc', 'No device? Test the app with mock telemetry data.'));
+              } else {
+                disconnect();
+              }
+            }}
+            activeOpacity={0.8}
+          >
+            <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.textPri }}>
+              {t('common.demoMode', 'DEMO MODE').toUpperCase()}
+            </Text>
+            <View style={{
+              width: scaleMod(8),
+              height: scaleMod(8),
+              borderRadius: scaleMod(4),
+              backgroundColor: isSimulationMode ? tc.green : tc.textSec,
+            }} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 
   const renderRightSettings = (isCompact: boolean) => (
     <View style={{ flex: isCompact ? undefined : 1.2, gap: scaleHeight(12) }}>
-      {/* User ID Section */}
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>{t('bento.settings.userIdLabel', 'USER ID')}</Text>
-        <View style={{ gap: scaleMod(8) }}>
-          <TouchableOpacity 
-            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: scaleHeight(2) }}
-            onPress={copyToClipboard}
-            activeOpacity={0.7}
-          >
-            <Text style={{ fontSize: scaleFont(11), color: tc.textSec, fontFamily: MONO, flexShrink: 0 }}>{t('bento.settings.userIdLabel', 'User ID:')}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, flex: 1, justifyContent: 'flex-end', marginLeft: 12 }}>
-              <Text style={{ fontSize: scaleFont(9.5), color: tc.cyan, fontFamily: MONO, fontWeight: '700', flexShrink: 1 }} numberOfLines={1}>
-                {appUserId || t('bento.settings.none', 'None')}
-              </Text>
-              {!!appUserId && <Text style={{ fontSize: scaleFont(11), color: tc.cyan }}>📋</Text>}
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-
-      {/* Support & Community Section */}
+      {/* Disconnect Button */}
       {connectionStatus === 'connected' && (
         <View style={s.panel}>
           <Text style={s.panelTitle}>{t('connection.disconnect', 'BAĞLANTIYI KES').toUpperCase()}</Text>
@@ -1292,7 +1365,6 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
               }}
               activeOpacity={0.8}
             >
-              <Text style={{ fontSize: scaleFont(14), marginRight: scaleWidth(10) }}>🔌</Text>
               <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.red }}>{t('connection.disconnect', 'BAĞLANTIYI KES')}</Text>
             </TouchableOpacity>
           </View>
@@ -1374,6 +1446,8 @@ function MainApp() {
 
   // Start background sync manager
   useTelemetrySync();
+
+
 
   const {
     status, adapterStatus, ecuStatus, logs,
@@ -1464,8 +1538,8 @@ function MainApp() {
   const handleShareApp = async () => {
     try {
       await Share.share({
-        message: t('report.shareMessage', 'Check out Cortex OBD2 Diagnosis Scanner! https://cortexobd2.app'),
-        title: 'Cortex OBD2 Diagnosis Scanner'
+        message: t('report.shareMessage', 'Check out Cortex OBD2 Diagnostic Scanner! https://cortexobd2.app'),
+        title: 'Cortex OBD2 Diagnostic Scanner'
       });
     } catch (e) { console.error(e); }
   };
@@ -1631,16 +1705,60 @@ function MainApp() {
 
   const verifyEntitlement = useAppStore((state) => state.verifyEntitlement);
   const fetchAppUserId = useAppStore((state) => state.fetchAppUserId);
-  const [activeHubView, setActiveHubView] = useState<'hub' | 'vehicle' | 'sensors' | 'expertise' | 'info' | 'settings' | 'connection_flow' | 'obd_health'>('hub');
-  const [isHardwareHealthVisible, setIsHardwareHealthVisible] = useState(false);
+  const [activeHubView, setActiveHubView] = useState<
+    | 'hub'
+    | 'vehicle'
+    | 'sensors'
+    | 'expertise'
+    | 'info'
+    | 'settings'
+    | 'connection_flow'
+    | 'obd_health'
+    | 'hp_gauge'
+    | 'fuel_trim'
+    | 'dpf'
+    | 'multi_ecu'
+    | 'dct'
+    | 'feature_coding'
+  >('hub');
   const [isPaywallVisible, setIsPaywallVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard'); // Kept for legacy fallback views compatibility
   const [isCustomizeModalVisible, setIsCustomizeModalVisible] = useState(false);
   const [isDiagVisible, setIsDiagVisible] = useState(false);
-  const [isFeatureCodingVisible, setIsFeatureCodingVisible] = useState(false);
   const [isAdminModalVisible, setIsAdminModalVisible] = useState(false);
+  const [isHpModalVisible, setIsHpModalVisible] = useState(false);
+  const [isFuelTrimModalVisible, setIsFuelTrimModalVisible] = useState(false);
+  const [isDpfModalVisible, setIsDpfModalVisible] = useState(false);
+  const [isMultiEcuModalVisible, setIsMultiEcuModalVisible] = useState(false);
+  const [isDctModalVisible, setIsDctModalVisible] = useState(false);
+  const [isIgnitionModalVisible, setIsIgnitionModalVisible] = useState(false);
   const adminTapCountRef = useRef(0);
   const adminTapTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Force disable React Native Element Inspector overlay on startup if currently shown
+  useEffect(() => {
+    if (__DEV__) {
+      const dismissInspector = () => {
+        try {
+          const Inspector = require('react-native/Libraries/Inspector/Inspector');
+          if (Inspector && typeof Inspector.isShown === 'function' && Inspector.isShown()) {
+            if (NativeModules.DevSettings && typeof NativeModules.DevSettings.toggleElementInspector === 'function') {
+              NativeModules.DevSettings.toggleElementInspector();
+            }
+          }
+        } catch (e) {}
+      };
+
+      dismissInspector();
+      const t1 = setTimeout(dismissInspector, 400);
+      const t2 = setTimeout(dismissInspector, 1000);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, []);
 
   const handleAdminHeaderTap = () => {
     if (activeHubView !== 'info') return;
@@ -1691,6 +1809,11 @@ function MainApp() {
 
   // Navigation Safety Gate: Auto Kick-out if clone device locks coding features
   const isCodingAllowed = useBluetoothStore((s) => s.isCodingAllowed);
+  const storeVoltage = useBluetoothStore((s) => s.voltage);
+  const storeRpm = useBluetoothStore((s) => s.rpm);
+  const engineLoad = useBluetoothStore((s) => s.engineLoad);
+  const oilTemp = useBluetoothStore((s) => s.oilTemp);
+  const mafFlow = useBluetoothStore((s) => s.mafFlow);
   useEffect(() => {
     if (!isCodingAllowed && isDiagVisible) {
       setIsDiagVisible(false);
@@ -1702,19 +1825,24 @@ function MainApp() {
   }, [isCodingAllowed, isDiagVisible]);
 
   // RevenueCat CustomerInfo Listener for Entitlement Revocation Security
+  const wasProRef = useRef<boolean>(useAppStore.getState().isPro);
+
   useEffect(() => {
     const listener = async (customerInfo: any) => {
       try {
+        const isSimulationMode = useAppStore.getState().isSimulationMode;
         const bypass = await AsyncStorage.getItem('bypass_pro');
         if (bypass === 'true') {
           const expiryStr = await AsyncStorage.getItem('bypass_pro_expiry');
           if (expiryStr) {
             const expiryTime = parseInt(expiryStr, 10);
             if (!isNaN(expiryTime) && Date.now() < expiryTime) {
+              wasProRef.current = true;
               useAppStore.getState().setIsPro(true);
               return;
             }
           } else {
+            wasProRef.current = true;
             useAppStore.getState().setIsPro(true);
             return;
           }
@@ -1724,21 +1852,29 @@ function MainApp() {
         const { isAtomicOperationRunning, triggerPendingRevocation, flushPendingRevocation } = useBluetoothStore.getState();
 
         if (!isProActive) {
+          const hadActiveSubscription = wasProRef.current;
+          wasProRef.current = false;
+
           if (isAtomicOperationRunning) {
             // Defer revocation since critical diagnostic/telemetry loop is running
             triggerPendingRevocation();
           } else {
-            // Lock immediately
+            // Update store state
             useAppStore.getState().setIsPro(false);
             flushPendingRevocation();
 
-            Alert.alert(
-              t('common.revocationTitle', 'Abonelik Sonlandırıldı'),
-              t('common.revocationMsg', 'Aboneliğiniz iptal edildiği veya iade edildiği için PRO özelliklerine erişiminiz sonlandırılmıştır.')
-            );
+            // ONLY alert if user previously had an active PRO subscription that was cancelled/refunded
+            // Do NOT alert on fresh app launch, non-PRO users, or in Demo/Simulation Mode
+            if (hadActiveSubscription && !isSimulationMode) {
+              Alert.alert(
+                t('common.revocationTitle', 'Abonelik Sonlandırıldı'),
+                t('common.revocationMsg', 'Aboneliğiniz iptal edildiği veya iade edildiği için PRO özelliklerine erişiminiz sonlandırılmıştır.')
+              );
+            }
           }
         } else {
           // Ensure status is Pro
+          wasProRef.current = true;
           useAppStore.getState().setIsPro(true);
           // Clear pending revocation if subscription active
           flushPendingRevocation();
@@ -1908,12 +2044,7 @@ function MainApp() {
     }
   }, [ecuStatus]);
 
-  // No longer blocking navigation when disconnected.
-  useEffect(() => {
-    if (ecuStatus === 'connected') {
-      setActiveHubView('hub');
-    }
-  }, [ecuStatus]);
+
 
   // Load garage records
   useEffect(() => {
@@ -2114,7 +2245,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
       {/* Logo */}
       <View style={s.logoArea}>
         <Text style={s.logoText}>CORTEX</Text>
-        <Text style={[s.logoText, { fontSize: scaleFont(14), letterSpacing: 2, marginTop: scaleHeight(2) }]}>OBD2 DIAGNOSIS SCANNER</Text>
+        <Text style={[s.logoText, { fontSize: scaleFont(14), letterSpacing: 2, marginTop: scaleHeight(2) }]}>OBD2 DIAGNOSTIC SCANNER</Text>
         <Text style={s.logoSub}>v7 PRO {isSimulationMode ? '(SIM)' : ''}</Text>
       </View>
 
@@ -2719,7 +2850,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
             borderColor: isConnected ? colors.green : colors.cyan,
             borderRadius: scaleMod(16),
             paddingHorizontal: scaleMod(18),
-            paddingVertical: scaleHeight(15),
+            paddingVertical: scaleHeight(24),
             alignItems: 'center',
             justifyContent: 'center',
             shadowColor: '#000',
@@ -2738,7 +2869,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
             minimumFontScale={0.8}
             style={{
               color: isConnected ? colors.green : colors.cyan,
-              fontSize: scaleFont(12.5),
+              fontSize: scaleFont(13.5),
               fontFamily: MONO,
               fontWeight: '900',
               letterSpacing: 1,
@@ -2890,7 +3021,9 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               paddingVertical: scaleHeight(5),
               maxWidth: scaleWidth(185),
             }}>
-              <Text allowFontScaling={false} numberOfLines={1} ellipsizeMode="tail" style={{ color: colors.purple, fontSize: scaleFont(9.5), fontFamily: MONO, fontWeight: '800' }}>{protocol}</Text>
+              <Text allowFontScaling={false} numberOfLines={1} ellipsizeMode="tail" style={{ color: colors.purple, fontSize: scaleFont(9.5), fontFamily: MONO, fontWeight: '800' }}>
+                {protocol === 'SIMULATED_OBD' ? 'CAN BUS (DEMO)' : protocol.replace(/_/g, ' ')}
+              </Text>
             </View>
           )}
         </View>
@@ -3011,7 +3144,14 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     onOpenSupport={handleSupportEmail}
                     onShareApp={handleShareApp}
                     onDisconnect={disconnect}
-                    onOpenFeatureCoding={() => setIsFeatureCodingVisible(true)}
+                    onOpenHpGauge={() => setActiveHubView('hp_gauge')}
+                    onOpenFuelTrim={() => setActiveHubView('fuel_trim')}
+                    onOpenDpf={() => setActiveHubView('dpf')}
+                    onOpenMultiEcu={() => setActiveHubView('multi_ecu')}
+                    onOpenDct={() => setActiveHubView('dct')}
+                    onSafeDisconnect={() => ObdService.safeDisconnect(sendCommand, disconnect)}
+                    onOpenConnect={() => setActiveHubView('connection_flow')}
+                    onOpenFeatureActivation={() => setActiveHubView('feature_coding')}
                   />
                 </View>
               </View>
@@ -3059,7 +3199,14 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                       onOpenSupport={handleSupportEmail}
                       onShareApp={handleShareApp}
                       onDisconnect={disconnect}
-                      onOpenFeatureCoding={() => setIsFeatureCodingVisible(true)}
+                      onOpenHpGauge={() => setActiveHubView('hp_gauge')}
+                      onOpenFuelTrim={() => setActiveHubView('fuel_trim')}
+                      onOpenDpf={() => setActiveHubView('dpf')}
+                      onOpenMultiEcu={() => setActiveHubView('multi_ecu')}
+                      onOpenDct={() => setActiveHubView('dct')}
+                      onSafeDisconnect={() => ObdService.safeDisconnect(sendCommand, disconnect)}
+                      onOpenConnect={() => setActiveHubView('connection_flow')}
+                      onOpenFeatureActivation={() => setActiveHubView('feature_coding')}
                     />
                 </View>
               </View>
@@ -3083,14 +3230,29 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
         ) : (
           <View style={{ flex: 1 }}>
             {/* Prominent Hub Navigation Header */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 8 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 8, zIndex: 100, elevation: 100, position: 'relative' }}>
               <TouchableOpacity
-                style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1, marginEnd: 8 }}
-                onPress={() => setActiveHubView('hub')}
-                activeOpacity={0.8}
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4, paddingEnd: 12, zIndex: 110, elevation: 110 }}
+                onPress={() => {
+                  console.log('[App] Back to Hub pressed!');
+                  setIsCustomizeModalVisible(false);
+                  setIsPaywallVisible(false);
+                  setIsAdminModalVisible(false);
+                  setIsDiagVisible(false);
+                  setIsBatteryTestVisible(false);
+                  setIsFreezeFrameVisible(false);
+                  setIsPerformanceVisible(false);
+                  setIsSaveModalVisible(false);
+                  setIsIgnitionModalVisible(false);
+                  useBluetoothStore.getState().clearPaywallContext();
+                  setActiveHubView('hub');
+                }}
+                activeOpacity={0.6}
+                delayPressIn={0}
+                hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
               >
                 <Text style={{ color: colors.cyan, fontSize: 18, fontWeight: '900' }}>←</Text>
-                <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: colors.textPri, fontSize: 13, fontWeight: '800', fontFamily: MONO, flex: 1 }}>
+                <Text numberOfLines={1} style={{ color: colors.textPri, fontSize: 13, fontWeight: '800', fontFamily: MONO }}>
                   {t('hub.backToHub')}
                 </Text>
               </TouchableOpacity>
@@ -3098,9 +3260,20 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                 <TouchableOpacity
                   onPress={handleAdminHeaderTap}
                   activeOpacity={activeHubView === 'info' ? 0.6 : 1}
+                  style={{ flex: 1, alignItems: 'flex-end' }}
                 >
-                  <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: colors.textSec, fontSize: 11, fontFamily: MONO }}>
-                    {activeHubView === 'sensors' ? t('hub.liveSensorsView') : activeHubView === 'expertise' ? t('hub.diagnosticsView') : activeHubView === 'settings' ? t('bento.quickSettings') : activeHubView === 'vehicle' ? t('vehicleSelect.titleMenu', 'Araç & Bağlantı') : t('hub.vehicleProfileView')}
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: colors.textSec, fontSize: 11, fontFamily: MONO, textAlign: 'right' }}>
+                    {activeHubView === 'sensors' ? t('hub.liveSensorsView') 
+                     : activeHubView === 'expertise' ? t('hub.diagnosticsView') 
+                     : activeHubView === 'settings' ? t('bento.quickSettings') 
+                     : activeHubView === 'vehicle' ? t('vehicleSelect.titleMenu', 'Araç & Bağlantı') 
+                     : activeHubView === 'hp_gauge' ? t('bento.hpGauge', 'Beygir & Tork Analizi') 
+                     : activeHubView === 'fuel_trim' ? t('bento.fuelTrim', 'Yakıt Trimi & STFT/LTFT') 
+                     : activeHubView === 'dpf' ? t('bento.dpfFilter', 'DPF Filtre & Rejenerasyon') 
+                     : activeHubView === 'multi_ecu' ? t('bento.multiEcu', 'Multi-ECU Modül Taraması') 
+                     : activeHubView === 'dct' ? t('bento.dctAdapt', 'DCT & Şanzıman Adaptasyonu') 
+                     : activeHubView === 'feature_coding' ? t('bento.featureActivation', 'Gizli Özellik Açma & ECU Kodlama')
+                     : t('hub.vehicleProfileView')}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -3113,12 +3286,56 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                   ecuStatus={ecuStatus} 
                   lastDeviceName={lastDeviceName} 
                   onGoToExpertise={() => setActiveHubView('expertise')}
-                  onOpenHardwareHealth={() => setIsHardwareHealthVisible(true)}
                   onOpenCustomize={() => setIsCustomizeModalVisible(true)}
                 />
               )}
-               {activeHubView === 'expertise' && renderExpertise()}
+              {activeHubView === 'expertise' && renderExpertise()}
               {activeHubView === 'info' && renderInfo()}
+              {activeHubView === 'feature_coding' && (
+                <FeatureActivationModal
+                  visible={true}
+                  onClose={() => setActiveHubView('hub')}
+                  currentVoltage={parseFloat(storeVoltage || '12.6') || 12.6}
+                  connectedVehicleMake={activeSessionVehicle?.brand}
+                />
+              )}
+              {activeHubView === 'hp_gauge' && (
+                <HorsepowerModal
+                  visible={true}
+                  onClose={() => setActiveHubView('hub')}
+                  rpm={storeRpm || 0}
+                  mafGps={mafFlow || 0}
+                  engineTorqueNm={0}
+                  calculatedLoadPct={engineLoad || 0}
+                />
+              )}
+              {activeHubView === 'fuel_trim' && (
+                <FuelTrimModal
+                  visible={true}
+                  onClose={() => setActiveHubView('hub')}
+                  stftBank1Pct={0}
+                  ltftBank1Pct={0}
+                />
+              )}
+              {activeHubView === 'dpf' && (
+                <DpfMonitorModal
+                  visible={true}
+                  onClose={() => setActiveHubView('hub')}
+                />
+              )}
+              {activeHubView === 'multi_ecu' && (
+                <MultiEcuScanModal
+                  visible={true}
+                  onClose={() => setActiveHubView('hub')}
+                />
+              )}
+              {activeHubView === 'dct' && (
+                <DctResetModal
+                  visible={true}
+                  onClose={() => setActiveHubView('hub')}
+                  transmissionOilTempC={oilTemp || 55}
+                />
+              )}
               {activeHubView === 'connection_flow' && (
                 <ConnectionFlowScreen
                   onBack={() => setActiveHubView('hub')}
@@ -3291,55 +3508,50 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
 
 
 
+        {/* Customize Dashboard Modal */}
+        <CustomizeDashboardModal
+          visible={isCustomizeModalVisible}
+          onClose={() => setIsCustomizeModalVisible(false)}
+        />
+
+        {/* Paywall Modal Overlay */}
+        <Paywall
+          visible={isPaywallVisible}
+          onClose={() => setIsPaywallVisible(false)}
+        />
+
+        {/* Contextual Paywall Modal */}
+        <ContextualPaywallModal />
+
+        {/* DIAG Modal */}
+        <Modal
+          visible={isDiagVisible}
+          animationType="slide"
+          transparent={false}
+          onRequestClose={() => setIsDiagVisible(false)}
+        >
+          <View style={{ flex: 1, backgroundColor: colors.bg }}>
+            <DashboardSandbox
+              onClose={() => setIsDiagVisible(false)}
+            />
+          </View>
+        </Modal>
+
+        {/* Secret Admin & OBD Terminal Modal */}
+        <AdminSecretModal
+          visible={isAdminModalVisible}
+          onClose={() => setIsAdminModalVisible(false)}
+        />
+
+        {/* 1. Ignition Warning Modal */}
+        <IgnitionWarningModal
+          visible={isIgnitionModalVisible}
+          onClose={() => setIsIgnitionModalVisible(false)}
+          onRetry={retryEcu}
+          voltageV={parseFloat(storeVoltage || '0') || 0}
+        />
       </View>
       </SafeAreaView>
-
-      {/* Hardware Health & ID Modal */}
-      <HardwareHealthModal
-        visible={isHardwareHealthVisible}
-        onClose={() => setIsHardwareHealthVisible(false)}
-      />
-
-
-
-      {/* Customize Dashboard Modal */}
-      <CustomizeDashboardModal
-        visible={isCustomizeModalVisible}
-        onClose={() => setIsCustomizeModalVisible(false)}
-      />
-
-      {/* Paywall Modal Overlay */}
-      <Paywall
-        visible={isPaywallVisible}
-        onClose={() => setIsPaywallVisible(false)}
-      />
-
-      {/* Contextual Paywall Modal */}
-      <ContextualPaywallModal />
-
-      {/* DIAG Modal */}
-      <Modal
-        visible={isDiagVisible}
-        animationType="slide"
-        transparent={false}
-        onRequestClose={() => setIsDiagVisible(false)}
-      >
-        <View style={{ flex: 1, backgroundColor: colors.bg }}>
-          <DashboardSandbox onClose={() => setIsDiagVisible(false)} />
-        </View>
-      </Modal>
-
-      {/* OEM Feature Activation & UDS Coding Modal */}
-      <FeatureActivationModal
-        visible={isFeatureCodingVisible}
-        onClose={() => setIsFeatureCodingVisible(false)}
-      />
-
-      {/* Secret Admin & OBD Terminal Modal */}
-      <AdminSecretModal
-        visible={isAdminModalVisible}
-        onClose={() => setIsAdminModalVisible(false)}
-      />
       </View>
     </BluetoothBridgeInitializer>
   );
@@ -3350,7 +3562,7 @@ function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
     <View style={{ flex: 1, backgroundColor: '#090d16', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
       <Text style={{ color: '#ff4444', fontSize: 22, fontWeight: 'bold', marginBottom: 10 }}>⚠️ System Recovery</Text>
       <Text style={{ color: '#88a0c0', textAlign: 'center', marginBottom: 20 }}>
-        Cortex OBD2 Diagnosis Scanner encountered an unexpected UI error. The crash event has been reported.
+        Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.
       </Text>
       <TouchableOpacity
         onPress={resetErrorBoundary}

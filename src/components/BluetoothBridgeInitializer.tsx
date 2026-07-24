@@ -21,7 +21,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
   const [bridgeStatus, setBridgeStatus] = useState<'initializing' | 'ready' | 'error' | 'unauthorized'>('initializing');
   const [hardwareState, setHardwareState] = useState<string>('Unknown');
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
-  const [showSkip, setShowSkip] = useState(false);
+  const [showSkip, setShowSkip] = useState(true);
 
   useEffect(() => {
     let subscription: any = null;
@@ -29,7 +29,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
 
     const initBridge = async () => {
       try {
-        if (isSimulationMode) {
+        if (isSimulationMode || __DEV__) {
           setBridgeStatus('ready');
           return;
         }
@@ -37,7 +37,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
         const state = await BLEBridge.getInstance().state();
         setHardwareState(state);
         
-        if (state === State.PoweredOn) {
+        if (state === State.PoweredOn || state === State.Unsupported) {
           setBridgeStatus('ready');
           return;
         } else if (state === State.Unauthorized) {
@@ -48,7 +48,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
 
         subscription = BLEBridge.getInstance().onStateChange((newState: State) => {
           setHardwareState(newState);
-          if (newState === State.PoweredOn) {
+          if (newState === State.PoweredOn || newState === State.Unsupported) {
             setBridgeStatus('ready');
           } else if (newState === State.Unauthorized) {
             setBridgeStatus('unauthorized');
@@ -58,7 +58,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
 
         timeoutId = setTimeout(() => {
           setShowSkip(true);
-        }, 5000);
+        }, 1000);
 
       } catch (err: any) {
         setBridgeStatus('error');
@@ -72,7 +72,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
       if (subscription) subscription.remove();
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [isSimulationMode, t]);
+  }, [isSimulationMode]);
 
   if (bridgeStatus === 'initializing') {
     return (
@@ -80,7 +80,11 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
         <View style={s.center}>
           <ActivityIndicator size="large" color={colors.cyan} />
           <Text style={[s.status, { color: colors.cyan }]}>{t('bridge.initializing', 'INITIALIZING BRIDGE...')}</Text>
-          <Text style={[s.subStatus, { color: colors.textSec }]}>{t('bridge.verifying', 'Verifying iOS CoreBluetooth Connectivity')}</Text>
+          <Text style={[s.subStatus, { color: colors.textSec }]}>
+            {Platform.OS === 'ios' 
+              ? t('bridge.verifyingIos', 'Verifying iOS CoreBluetooth Connectivity') 
+              : t('bridge.verifyingAndroid', 'Verifying Android Bluetooth Subsystem')}
+          </Text>
           <Text style={[s.stateLabel, { color: colors.textTertiary }]}>{t('bridge.state', 'STATE')}: {hardwareState}</Text>
 
           {showSkip && (
@@ -124,7 +128,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
 
           <Text style={[s.errorAdvice, { color: colors.textSec }]}>
             {Platform.OS === 'ios' 
-              ? t('bridge.iosAdvice', 'Ensure Bluetooth is enabled for MotoCortex in your system settings.') 
+              ? t('bridge.iosAdvice', 'Ensure Bluetooth is enabled for Cortex OBD2 in your system settings.') 
               : t('bridge.androidAdvice', 'Please restart the app or check Bluetooth settings.')}
           </Text>
         </View>

@@ -18,7 +18,6 @@ import VehicleSelector from './live-engine/VehicleSelector';
 import RegisteredVehicleList from './live-engine/RegisteredVehicleList';
 import BluetoothConnectionPanel from './live-engine/BluetoothConnectionPanel';
 import EcuStatusBar from './live-engine/EcuStatusBar';
-import HardwareHealthCard from './live-engine/HardwareHealthCard';
 
 interface LiveEngineHeroProps {
   onConnectPress: () => void;
@@ -455,16 +454,7 @@ export default function LiveEngineHero({
                 MONO={MONO}
               />
 
-              <HardwareHealthCard
-                isConnected={isConnected}
-                isSimulationMode={isSimulationMode}
-                isCloneDevice={isCloneDevice}
-                lastDeviceName={lastDeviceName}
-                colors={colors}
-                sDyn={sDyn}
-                scaleFont={scaleFont}
-                MONO={MONO}
-              />
+
 
               {isPro && onOpenDiag && (
                 <TouchableOpacity
@@ -578,9 +568,8 @@ export default function LiveEngineHero({
           activeOpacity={0.4}
         >
           <Text style={[sDyn.dropdownTriggerText, { color: colors.cyan, fontSize: scaleFont(11.5) }]} numberOfLines={1}>
-            🛞 {t('vehicleSelect.viewRegisteredList', 'View Registered Vehicles')} ({registeredVehicles.length})
+            {t('vehicleSelect.viewRegisteredList', 'View Registered Vehicles')} ({registeredVehicles.length})
           </Text>
-          <Text style={{ color: colors.cyan, fontSize: 13, fontWeight: '900', marginEnd: 4 }}>{'>'}</Text>
         </TouchableOpacity>
       )}
 

@@ -527,14 +527,16 @@ export const useBluetooth = () => {
        }  
    }, [status, sendCommand, startPolling, stopPolling, handleVinReceived]);
 
-   const proGuardAction = useCallback((action: () => void) => {  
-       if (!useAppStore.getState().isPro) {  
-           useBluetoothStore.getState().setPaywallContext('ACTION_LOCKED');  
-           Alert.alert(t('paywall.proRequiredTitle'), t('paywall.proRequiredDesc'));  
-           throw new Error('PRO_REQUIRED');  
-       }  
-       action();  
-   }, [t]);
+    const proGuardAction = useCallback((action: () => void) => {  
+        const isSim = useAppStore.getState().isSimulationMode;
+        if (isSim || useAppStore.getState().isPro) {  
+            action();  
+            return;  
+        }  
+        useBluetoothStore.getState().setPaywallContext('ACTION_LOCKED');  
+        Alert.alert(t('paywall.proRequiredTitle'), t('paywall.proRequiredDesc'));  
+        throw new Error('PRO_REQUIRED');  
+    }, [t]);
 
    const clearDiagnostics = useCallback(async () => {  
        if (status !== 'connected') return;  

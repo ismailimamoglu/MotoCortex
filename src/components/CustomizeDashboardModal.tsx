@@ -5,11 +5,13 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
+  Pressable,
   ScrollView,
   SafeAreaView,
   Platform,
   Switch,
-  Alert
+  Alert,
+  TouchableWithoutFeedback
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
@@ -39,6 +41,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
 
   const [draftSensors, setDraftSensors] = React.useState<string[]>(activeSensors);
   const [draftLayout, setDraftLayout] = React.useState<'grid' | 'list' | 'gauge' | 'chart'>(layoutType);
+  const [showLimitWarning, setShowLimitWarning] = React.useState<boolean>(false);
 
   // Sync draft with store state when modal becomes visible
   React.useEffect(() => {
@@ -49,21 +52,19 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
       }
       setDraftSensors(initialSensors);
       setDraftLayout(layoutType);
+      setShowLimitWarning(false);
     }
   }, [visible, activeSensors, layoutType, isKLineProtocol]);
 
   const handleToggleSensor = (key: string) => {
+    setShowLimitWarning(false);
     const isExists = draftSensors.includes(key);
     if (isExists) {
       if (draftSensors.length <= 1) return;
       setDraftSensors(draftSensors.filter((k) => k !== key));
     } else {
       if (draftSensors.length >= maxLimit) {
-        Alert.alert(
-          t('dashboard.limitReached', 'Selection Limit'),
-          t('dashboard.limitReachedDesc', { defaultValue: `You can select a maximum of ${maxLimit} sensors with this protocol.`, limit: maxLimit }),
-          [{ text: t('common.ok', 'OK') }]
-        );
+        setShowLimitWarning(true);
         return;
       }
       setDraftSensors([...draftSensors, key]);
@@ -71,6 +72,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
   };
 
   const handleReset = () => {
+    setShowLimitWarning(false);
     const DEFAULT_SENSORS = ['rpm', 'speed', 'coolant', 'voltage'];
     let initialSensors = [...DEFAULT_SENSORS];
     if (isKLineProtocol && initialSensors.length > 4) {
@@ -97,24 +99,28 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
     return {
       overlay: {
         flex: 1,
+        width: '100%' as any,
+        height: '100%' as any,
         justifyContent: 'center' as const,
         alignItems: 'center' as const,
         backgroundColor: colors.overlayHeavy,
       },
       backdrop: {
         ...StyleSheet.absoluteFillObject,
+        zIndex: 1,
       },
       container: {
-        width: (isTablet ? scaleWidth(480) : '92%') as any,
+        width: (isTablet ? 480 : '92%') as any,
         height: '80%' as any,
-        maxHeight: scaleHeight(650),
+        maxHeight: 650,
         borderRadius: scaleMod(16),
         borderWidth: 1.5,
         padding: scaleMod(16),
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.25,
         shadowRadius: 16,
-        elevation: 6,
+        elevation: 20,
+        zIndex: 10,
       },
       header: {
         flexDirection: 'row' as const,
@@ -238,19 +244,19 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
       animationType="fade"
       transparent={true}
       onRequestClose={onClose}
+      statusBarTranslucent={true}
     >
       <View style={sDyn.overlay}>
-        <TouchableOpacity 
-          style={sDyn.backdrop} 
-          activeOpacity={1} 
-          onPress={onClose} 
-        />
-        
-        <View style={[sDyn.container, { backgroundColor: colors.card, borderColor: colors.purple }]}>
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={sDyn.backdrop} />
+        </TouchableWithoutFeedback>
+        <View 
+          style={[sDyn.container, { backgroundColor: colors.card, borderColor: colors.purple }]}
+        >
           {/* Header */}
           <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
             <View style={{ flex: 1, paddingRight: scaleWidth(8) }}>
-              <Text style={[sDyn.title, { color: colors.purple }]}>⚡ {t('dashboard.customizeTitle', 'Dashboard Settings')}</Text>
+              <Text style={[sDyn.title, { color: colors.purple }]}>{t('dashboard.customizeTitle', 'GÖSTERGE PANELDEN AYARLAR')}</Text>
               <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
                 {isKLineProtocol 
                   ? t('dashboard.customizeSubtitleKLine', { defaultValue: `K-Line protocol connected. You can select a maximum of ${maxLimit} sensors.`, limit: maxLimit })
@@ -259,17 +265,28 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
             </View>
             <TouchableOpacity 
               onPress={onClose} 
+              activeOpacity={0.6}
               style={[sDyn.closeBtn, { backgroundColor: `${colors.purple}18` }]}
             >
               <Text style={[sDyn.closeBtnText, { color: colors.purple }]}>{t('common.close', 'Close')}</Text>
             </TouchableOpacity>
           </View>
 
+          {/* Inline Limit Warning Badge */}
+          {showLimitWarning && (
+            <View style={{ backgroundColor: `${colors.amber}18`, borderColor: colors.amber, borderWidth: 1, borderRadius: 8, padding: scaleMod(6), marginBottom: scaleHeight(8), alignItems: 'center' }}>
+              <Text style={{ color: colors.amber, fontSize: scaleFont(9.5), fontWeight: 'bold' }}>
+                ⚠️ {t('dashboard.limitReachedDesc', { defaultValue: `En fazla ${maxLimit} sensör seçebilirsiniz.`, limit: maxLimit })}
+              </Text>
+            </View>
+          )}
+
           {/* Layout Type Selection */}
           <View style={[sDyn.layoutRow, { backgroundColor: `${colors.purple}05`, borderColor: colors.border }]}>
             <Text style={[sDyn.layoutLabel, { color: colors.textPri }]}>{t('dashboard.layoutType', 'Layout Style')}</Text>
             <View style={sDyn.layoutButtons}>
               <TouchableOpacity
+                activeOpacity={0.7}
                 style={[
                   sDyn.layoutBtn,
                   {
@@ -284,6 +301,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                activeOpacity={0.7}
                 style={[
                   sDyn.layoutBtn,
                   {
@@ -298,6 +316,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                activeOpacity={0.7}
                 style={[
                   sDyn.layoutBtn,
                   {
@@ -312,6 +331,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                activeOpacity={0.7}
                 style={[
                   sDyn.layoutBtn,
                   {
@@ -338,8 +358,10 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
               const isActive = draftSensors.includes(sensor.key);
               
               return (
-                <View 
+                <TouchableOpacity 
                   key={sensor.key}
+                  activeOpacity={0.7}
+                  onPress={() => handleToggleSensor(sensor.key)}
                   style={[
                     sDyn.sensorCard, 
                     { 
@@ -367,7 +389,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
                     thumbColor={isActive ? colors.purple : '#fff'}
                     ios_backgroundColor={colors.border}
                   />
-                </View>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
@@ -375,6 +397,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
           {/* Footer Reset & Apply */}
           <View style={[sDyn.footer, { borderTopColor: colors.border }]}>
             <TouchableOpacity 
+              activeOpacity={0.7}
               style={[sDyn.footerBtn, { borderColor: colors.border, marginRight: scaleWidth(8) }]}
               onPress={handleReset}
             >
@@ -384,6 +407,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
             </TouchableOpacity>
 
             <TouchableOpacity 
+              activeOpacity={0.7}
               style={[sDyn.footerBtn, { backgroundColor: colors.purple, borderColor: colors.purple }]}
               onPress={handleApply}
             >
