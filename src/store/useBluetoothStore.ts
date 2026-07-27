@@ -313,7 +313,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         // Unshift ile başa ekle, length > 500 ise pop ile kuyruktan at (O(1) son eleman),
         // ardından tek bir slice(0) ile Zustand için yeni referans oluştur.
         state.logs.unshift(`[${new Date().toLocaleTimeString()}] ${entry}`);
-        if (state.logs.length > 500) state.logs.pop();
+        if (state.logs.length > 100) state.logs.pop();
         return { logs: state.logs.slice(0) };
     }),
     clearLogs: () => set({ logs: [] }),
@@ -323,14 +323,14 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         const timestamp = new Date().toLocaleTimeString('tr-TR', { hour12: false });
         const entry = `[${timestamp}] ${log}`;
         state.diagnosticLogs.unshift(entry);
-        if (state.diagnosticLogs.length > 200) state.diagnosticLogs.pop();
+        if (state.diagnosticLogs.length > 100) state.diagnosticLogs.pop();
         return { diagnosticLogs: state.diagnosticLogs.slice(0) };
     }),
     clearDiagnosticLogs: () => set({ diagnosticLogs: [] }),
     addStructuredLog: (log) => set((state) => {
         const entry = typeof log === 'string' ? log : JSON.stringify(log);
         state.structuredLogs.unshift(entry);
-        if (state.structuredLogs.length > 200) state.structuredLogs.pop();
+        if (state.structuredLogs.length > 100) state.structuredLogs.pop();
         return { structuredLogs: state.structuredLogs.slice(0) };
     }),
     clearStructuredLogs: () => set({ structuredLogs: [] }),
