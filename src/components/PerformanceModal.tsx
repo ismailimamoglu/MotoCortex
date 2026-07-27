@@ -60,7 +60,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 if (timerRef.current) clearInterval(timerRef.current);
             }
         }
-    }, [speed, state, visible]);
+    }, [speed, visible]);
 
     const armTimer = async () => {
         const isPro = useAppStore.getState().isPro;

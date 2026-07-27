@@ -149,7 +149,7 @@ export default function LiveEngineHero({
       );
     }
     setWasConnected(isConnected);
-  }, [isConnected, wasConnected, isCloneDevice, lastDeviceName, isSimulationMode, t]);
+  }, [isConnected, isCloneDevice, lastDeviceName, isSimulationMode, t]);
 
   // Sort brands alphabetically based on localized string in current language
   const sortedBrands = React.useMemo(() => {
