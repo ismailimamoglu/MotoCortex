@@ -69,6 +69,8 @@ export default function FeatureActivationModal({
     const insets = useSafeAreaInsets();
     const isCloneDevice = useBluetoothStore((s) => s.isCloneDevice);
     const isSimulationMode = useAppStore((s) => s.isSimulationMode);
+    const rpm = useBluetoothStore((s) => s.rpm);
+    const speed = useBluetoothStore((s) => s.speed);
 
     const [selectedBrand, setSelectedBrand] = useState<string>(() => {
         if (connectedVehicleMake) return connectedVehicleMake;
@@ -166,21 +168,32 @@ export default function FeatureActivationModal({
             }
         }
 
-        // 2. Battery Voltage Safety Gate Check (Voltage >= 12.2V, Bypassed in Demo Mode)
+        // 2. Safety Gate Checks: Battery Voltage, Vehicle Motion & Engine Running (Bypassed in Demo Mode)
         if (!inSim) {
             try {
                 featureActivationEngine.validateSafetyGate({
                     batteryVoltage: effectiveVoltage,
-                    vehicleSpeed: 0,
+                    vehicleSpeed: speed || 0,
                     isSpeedReadable: true,
-                    isEngineRunning: false,
+                    isEngineRunning: (rpm || 0) > 0,
                 });
             } catch (err: any) {
-                Alert.alert(
-                    t('features.safetyAlertTitle', '⚠️ Low Battery Voltage Alert'),
-                    t('features.safetyAlertMsg', `Minimum 12.2V battery voltage required for coding.\nCurrent Voltage: ${effectiveVoltage.toFixed(1)}V.\nPlease connect a charger or start the engine.`),
-                    [{ text: t('common.ok', 'OK'), style: 'cancel' }]
-                );
+                const errMsg = err?.message || String(err);
+                let title = t('features.safetyAlertTitle', '⚠️ Safety Gate Alert');
+                let message = errMsg;
+
+                if (errMsg.includes('LOW_VOLTAGE')) {
+                    title = t('features.lowVoltageTitle', '⚠️ Low Battery Voltage Alert');
+                    message = t('features.lowVoltageMsg', `Minimum 12.2V battery voltage required for coding.\nCurrent Voltage: ${effectiveVoltage.toFixed(1)}V.\nPlease connect a charger.`);
+                } else if (errMsg.includes('VEHICLE_IN_MOTION')) {
+                    title = t('features.motionAlertTitle', '🚨 Vehicle in Motion');
+                    message = t('features.motionAlertMsg', 'ECU write operations are blocked while the vehicle is moving. Please park safely before coding.');
+                } else if (errMsg.includes('ENGINE_RUNNING')) {
+                    title = t('features.engineRunningTitle', '⚠️ Engine Running');
+                    message = t('features.engineRunningMsg', 'ECU coding requires Ignition ON with Engine OFF (RPM == 0) to prevent alternator voltage spikes.');
+                }
+
+                Alert.alert(title, message, [{ text: t('common.ok', 'OK'), style: 'cancel' }]);
                 return;
             }
         }

@@ -49,7 +49,7 @@ export class FeatureActivationEngine {
      */
     public getVoltageState(voltage: number): VoltageState {
         if (voltage < 11.8) return VoltageState.CRITICAL;
-        if (voltage < 12.0) return VoltageState.LOW;
+        if (voltage < 12.2) return VoltageState.LOW;
         if (voltage < 12.4) return VoltageState.WARNING;
         return VoltageState.STABLE;
     }
@@ -109,14 +109,20 @@ export class FeatureActivationEngine {
             );
         } else {
             // Fallback global check if no definition is passed
+            if (check.isSpeedReadable === false) {
+                throw new Error('SAFETY_VIOLATION_UNKNOWN_SPEED: Vehicle speed cannot be verified.');
+            }
             if (check.vehicleSpeed !== undefined && check.vehicleSpeed > 0) {
-                throw new Error('SAFETY_VIOLATION_VEHICLE_IN_MOTION: Vehicle in motion.');
+                throw new Error('SAFETY_VIOLATION_VEHICLE_IN_MOTION: Vehicle speed is ' + check.vehicleSpeed + ' km/h. ECU write blocked while moving.');
+            }
+            if (check.isEngineRunning) {
+                throw new Error('SAFETY_VIOLATION_ENGINE_RUNNING: Feature requires engine to be OFF (RPM == 0).');
             }
         }
 
         const vState = this.getVoltageState(check.batteryVoltage);
         if (vState === VoltageState.CRITICAL || vState === VoltageState.LOW) {
-            throw new Error(`SAFETY_VIOLATION_LOW_VOLTAGE: Battery voltage is ${check.batteryVoltage.toFixed(1)}V (< 12.0V). Emergency abort triggered to protect ECU. Please connect a battery charger.`);
+            throw new Error(`SAFETY_VIOLATION_LOW_VOLTAGE: Battery voltage is ${check.batteryVoltage.toFixed(1)}V (< 12.2V). Minimum 12.2V required for coding. Emergency abort triggered.`);
         }
 
         return vState;
