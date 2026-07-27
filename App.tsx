@@ -3079,20 +3079,27 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               </View>
             </View>
             <View style={s.topRight}>
-              {ecuStatus === 'connected' && (
+              {(ecuStatus === 'connected' || isSimulationMode) && (
                 <TouchableOpacity 
-                  onPress={() => disconnect()} 
+                  onPress={() => {
+                    if (isSimulationMode) {
+                      toggleSimulationMode();
+                    } else {
+                      disconnect();
+                    }
+                  }} 
                   style={{ 
-                    paddingHorizontal: 8, 
-                    paddingVertical: 4, 
+                    paddingHorizontal: 10, 
+                    paddingVertical: 5, 
                     backgroundColor: `${colors.red}1F`, 
                     borderRadius: 12, 
-                    borderWidth: 1, 
+                    borderWidth: 1.2, 
                     borderColor: colors.red 
                   }}
+                  activeOpacity={0.6}
                 >
-                  <Text style={[s.topDisconnect, { color: colors.red }]}>
-                    {isPhone ? t('connection.disconnectShort').toUpperCase() : t('connection.disconnect').toUpperCase()}
+                  <Text style={[s.topDisconnect, { color: colors.red, fontFamily: MONO, fontWeight: '900', fontSize: scaleFont(9.5) }]}>
+                    {t('bento.safeDisconnect', 'GÜVENLİ ÇIKIŞ').toUpperCase()}
                   </Text>
                 </TouchableOpacity>
               )}

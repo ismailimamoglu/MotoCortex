@@ -308,8 +308,22 @@ export default function BentoGrid({
           <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.dctAdapt', 'DCT ADAPT')}</Text>
         </BentoButton>
 
-        <BentoButton style={[sDyn.toolTile, { borderColor: `${colors.red}40` }]} onPress={() => executeActiveAction(onSafeDisconnect ? onSafeDisconnect : onDisconnect, true)}>
-          <Text numberOfLines={1} style={[sDyn.toolTileText, { color: colors.red }]}>{t('bento.safeDisconnect', 'SAFE DISCONNECT')}</Text>
+        <BentoButton
+          style={[
+            sDyn.toolTile,
+            isSimulationMode && { borderColor: colors.green, backgroundColor: `${colors.green}1F` }
+          ]}
+          onPress={toggleSimulationMode}
+        >
+          <Text
+            numberOfLines={1}
+            style={[
+              sDyn.toolTileText,
+              isSimulationMode && { color: colors.green }
+            ]}
+          >
+            {isSimulationMode ? `• ${t('common.demoMode', 'DEMO MODU').toUpperCase()}` : t('common.demoMode', 'DEMO MODU').toUpperCase()}
+          </Text>
         </BentoButton>
       </View>
 
