@@ -1238,113 +1238,16 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
 
   const renderLeftSettings = (isCompact: boolean) => (
     <View style={{ flex: isCompact ? undefined : 1, gap: scaleHeight(12) }}>
-      {/* Language Selector Popup Section */}
-      <View style={[s.panel, { zIndex: 100 }]}>
-        <Text style={s.panelTitle}>{t('bento.settings.language', 'DİL / LANGUAGE')}</Text>
-        
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderWidth: 1.2,
-            borderRadius: 12,
-            paddingVertical: scaleHeight(12),
-            paddingHorizontal: scaleWidth(14),
-            backgroundColor: `${tc.textPri}05`,
-            borderColor: tc.border,
-          }}
-          onPress={() => setIsLangModalOpen(true)}
-          activeOpacity={0.8}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={{ fontSize: scaleFont(14) }}>{currentLanguageObj.flag}</Text>
-            <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.textPri }}>
-              {currentLanguageObj.label}
-            </Text>
-          </View>
-          <Text style={{ color: tc.textSec, fontSize: 10 }}>▶</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Community & Support Section */}
-      <View style={s.panel}>
-        <Text style={s.panelTitle}>{t('bento.settings.community', 'COMMUNITY & SUPPORT')}</Text>
-        <View style={{ gap: scaleMod(8) }}>
-          {/* Support Center */}
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderWidth: 1.2,
-              borderRadius: 12,
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(14),
-              backgroundColor: `${tc.cyan}0D`,
-              borderColor: `${tc.cyan}26`,
+      {/* Language Selector Section */}
+      <View style={[s.panel, { flex: 1, minHeight: 400 }]}>
+        <Text style={s.panelTitle}>🌐 {t('bento.languageSelect', 'DİL SEÇİMİ').toUpperCase()}</Text>
+        <View style={{ flex: 1, marginTop: scaleHeight(8) }}>
+          <LanguageSelectionView
+            currentLanguage={language}
+            onSelect={(selectedLang) => {
+              setLanguage(selectedLang);
             }}
-            onPress={handleSupportEmail}
-            activeOpacity={0.8}
-          >
-            <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.textPri }}>
-              {t('info.support', 'SUPPORT CENTER')}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Share App */}
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderWidth: 1.2,
-              borderRadius: 12,
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(14),
-              backgroundColor: `${tc.purple}0D`,
-              borderColor: `${tc.purple}26`,
-            }}
-            onPress={handleShareApp}
-            activeOpacity={0.8}
-          >
-            <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.textPri }}>
-              {t('expertise.share', 'SHARE APP')}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Demo Mode Toggle */}
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              borderWidth: 1.2,
-              borderRadius: 12,
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(14),
-              backgroundColor: isSimulationMode ? `${tc.green}14` : `${tc.textPri}05`,
-              borderColor: isSimulationMode ? tc.green : tc.border,
-            }}
-            onPress={() => {
-              const newMode = !isSimulationMode;
-              toggleSimulationMode();
-              if (newMode) {
-                Alert.alert(t('common.demoMode', 'DEMO MODE'), t('common.demoModeDesc', 'No device? Test the app with mock telemetry data.'));
-              } else {
-                disconnect();
-              }
-            }}
-            activeOpacity={0.8}
-          >
-            <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.textPri }}>
-              {t('common.demoMode', 'DEMO MODE').toUpperCase()}
-            </Text>
-            <View style={{
-              width: scaleMod(8),
-              height: scaleMod(8),
-              borderRadius: scaleMod(4),
-              backgroundColor: isSimulationMode ? tc.green : tc.textSec,
-            }} />
-          </TouchableOpacity>
+          />
         </View>
       </View>
     </View>
