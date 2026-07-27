@@ -31,6 +31,7 @@ import { adapterTierBenchmark } from './AdapterTierBenchmark';
 import { recoveryStateMachine } from './RecoveryStateMachine';
 import { isSafetyCriticalModule } from '../security/SafetyCriticalEcuRegistry';
 import { UdsNrcCode } from '../protocol/uds/UdsClient';
+import { UdsNrcHandler } from '../protocol/uds/UdsNrcHandler';
 
 export interface PreWriteSafetyCheck {
     batteryVoltage: number;
@@ -70,6 +71,12 @@ export class FeatureActivationEngine {
      * Throws an Error if any constraint is violated (Fail-Safe Speed Check: Default to BLOCK).
      */
     public validateSafetyGate(check: PreWriteSafetyCheck, definition?: FeatureDefinition): VoltageState {
+        // Enforce UDS NRC Security Cooldown Guard (e.g. NRC 0x36)
+        if (UdsNrcHandler.isLockoutActive()) {
+            const remaining = UdsNrcHandler.getRemainingLockoutSeconds();
+            throw new Error(`SAFETY_VIOLATION_ECU_LOCKOUT: ECU security lockout active (NRC 0x36). Cooldown remaining: ${remaining}s.`);
+        }
+
         if (definition) {
             // Hard-Block ABS/ESP and Airbag/SRS Write Attempts via SafetyCriticalEcuRegistry
             const targetModule = ((definition as any).targetModule || '').toUpperCase();
