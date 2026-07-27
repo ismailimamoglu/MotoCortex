@@ -541,27 +541,6 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               🎮 {t('common.demoMode', 'SİMÜLASYON MODUNDA İNCELE').toUpperCase()}
             </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[styles.retryBtn, { backgroundColor: colors.purple, marginTop: 10 }]}
-            onPress={() => {
-              triggerHaptic();
-              const store = useBluetoothStore.getState();
-              DiagnosticLogMailer.sendReport({
-                status: 'FAILED',
-                protocol: store.protocol,
-                adapterScore: store.adapterCapabilityScore,
-                isClone: store.isCloneDevice,
-                logs: store.logs,
-                errorReason: errorMsg || 'User Manual Export',
-                forceSend: true,
-              });
-            }}
-          >
-            <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              📧 KARA KUTU LOĞUNU MAİL İLE GÖNDER
-            </Text>
-          </TouchableOpacity>
         </View>
       )}
 
