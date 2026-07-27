@@ -1625,6 +1625,8 @@ function MainApp() {
     | 'dct'
     | 'feature_coding'
   >('hub');
+
+  const handleCloseSubView = React.useCallback(() => setActiveHubView('hub'), []);
   const [isPaywallVisible, setIsPaywallVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard'); // Kept for legacy fallback views compatibility
   const [isCustomizeModalVisible, setIsCustomizeModalVisible] = useState(false);
@@ -3217,7 +3219,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               {activeHubView === 'feature_coding' && (
                 <FeatureActivationModal
                   visible={true}
-                  onClose={() => setActiveHubView('hub')}
+                  onClose={handleCloseSubView}
                   connectedVehicleMake={activeSessionBrand}
                 />
               )}

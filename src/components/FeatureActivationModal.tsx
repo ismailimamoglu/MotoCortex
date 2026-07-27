@@ -58,12 +58,12 @@ const CATEGORY_FILTERS: { id: FeatureCategory | 'ALL'; labelKey: string; default
     { id: 'SECURITY_SAFETY', labelKey: 'features.securitySafety', defaultLabel: 'SECURITY & SAFETY' },
 ];
 
-export default function FeatureActivationModal({
+const FeatureActivationModalComponent = ({
     visible,
     onClose,
     currentVoltage = 12.6,
     connectedVehicleMake,
-}: FeatureActivationModalProps) {
+}: FeatureActivationModalProps) => {
     const { t } = useTranslation();
     const colors = useThemeColors();
     const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet } = useResponsive();
@@ -257,7 +257,7 @@ export default function FeatureActivationModal({
 
             return true;
         });
-    }, [rawList, selectedBrand, selectedCategory, searchQuery, t]);
+    }, [rawList, selectedBrand, selectedCategory, searchQuery]);
 
     const handleRestoreFactoryState = (feature: OEMFeatureDefinition) => {
         if (isCloneDevice && !isSimulationMode) {
@@ -540,4 +540,6 @@ export default function FeatureActivationModal({
             />
         </View>
     );
-}
+};
+
+export default React.memo(FeatureActivationModalComponent);
