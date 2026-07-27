@@ -116,7 +116,7 @@ export interface FeatureDefinition {
     name: string;                // Human readable name
     description: string;
     category: 'COMFORT' | 'LIGHTING' | 'INSTRUMENT' | 'SAFETY' | 'PERFORMANCE' | 'SERVICE';
-    oem: 'VOLKSWAGEN' | 'AUDI' | 'SEAT' | 'SKODA' | 'BMW' | 'MERCEDES' | 'FORD' | 'TOYOTA' | 'GENERIC';
+    oem: 'VOLKSWAGEN' | 'AUDI' | 'SEAT' | 'SKODA' | 'BMW' | 'MERCEDES' | 'FORD' | 'TOYOTA' | 'RENAULT' | 'DACIA' | 'HYUNDAI' | 'KIA' | 'FIAT' | 'BYD' | 'CHERY' | 'VOLVO' | 'TESLA' | 'DODGE' | 'CHEVROLET' | 'GENERIC';
     platform: string;            // e.g. "MQB", "F30", "G20", "C2"
     targetEcuAddress: string;    // e.g. "0x17"
     identificationDids: string[];// DIDs required for fingerprint verification

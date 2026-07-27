@@ -21,6 +21,7 @@ import { udsClient, UdsSessionType } from '../core/protocol/uds/UdsClient';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import { useAppStore } from '../store/useAppStore';
 import DisclaimersModal from './DisclaimersModal';
+import { mapOemToFeatureDefinition } from '../core/features/OemFeatureMapper';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -168,21 +169,25 @@ export default function FeatureActivationModal({
             }
         }
 
-        // 2. Safety Gate Checks: Battery Voltage, Vehicle Motion & Engine Running (Bypassed in Demo Mode)
+        // 2. Safety Gate Checks: Battery Voltage, Vehicle Motion, Engine Running & Safety-Critical Module Protection
         if (!inSim) {
             try {
+                const mappedDefinition = mapOemToFeatureDefinition(feature);
                 featureActivationEngine.validateSafetyGate({
                     batteryVoltage: effectiveVoltage,
                     vehicleSpeed: speed || 0,
                     isSpeedReadable: true,
                     isEngineRunning: (rpm || 0) > 0,
-                });
+                }, mappedDefinition);
             } catch (err: any) {
                 const errMsg = err?.message || String(err);
                 let title = t('features.safetyAlertTitle', '⚠️ Safety Gate Alert');
                 let message = errMsg;
 
-                if (errMsg.includes('LOW_VOLTAGE')) {
+                if (errMsg.includes('UNSAFE_MODULE_WRITE')) {
+                    title = t('features.unsafeModuleTitle', '🚫 Protected Safety Module');
+                    message = t('features.unsafeModuleMsg', 'ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.');
+                } else if (errMsg.includes('LOW_VOLTAGE')) {
                     title = t('features.lowVoltageTitle', '⚠️ Low Battery Voltage Alert');
                     message = t('features.lowVoltageMsg', `Minimum 12.2V battery voltage required for coding.\nCurrent Voltage: ${effectiveVoltage.toFixed(1)}V.\nPlease connect a charger.`);
                 } else if (errMsg.includes('VEHICLE_IN_MOTION')) {

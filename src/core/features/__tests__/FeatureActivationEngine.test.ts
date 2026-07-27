@@ -209,6 +209,26 @@ describe('MotoCortex ECU Coding & UDS Safety Engine v1.2 Consensus Tests', () =>
             }).toThrow('SAFETY_VIOLATION_UNSAFE_MODULE_WRITE');
         });
 
+        it('should PASS EV battery features on 0x7E2 without false-positive ABS/SRS hard-block', () => {
+            const evBatteryFeature: FeatureDefinition = {
+                ...sampleFeature,
+                id: 'mg_ev_battery_preconditioning',
+                name: 'EV Battery Preconditioning',
+                targetEcuAddress: '0x7E2',
+            };
+            const resultVoltageState = featureActivationEngine.validateSafetyGate(
+                {
+                    batteryVoltage: 12.6,
+                    vehicleSpeed: 0,
+                    isSpeedReadable: true,
+                    isEngineRunning: false,
+                    ignitionState: 'ON',
+                },
+                evBatteryFeature
+            );
+            expect(resultVoltageState).toBe(VoltageState.STABLE);
+        });
+
         it('should PASS safety gate when stationary, battery >= 12.0V, and valid preconditions', () => {
             const resultVoltageState = featureActivationEngine.validateSafetyGate(
                 {

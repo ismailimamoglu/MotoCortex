@@ -29,6 +29,7 @@ import {
 import { pendingWriteStore } from './PendingWriteStore';
 import { adapterTierBenchmark } from './AdapterTierBenchmark';
 import { recoveryStateMachine } from './RecoveryStateMachine';
+import { isSafetyCriticalModule } from '../security/SafetyCriticalEcuRegistry';
 import { UdsNrcCode } from '../protocol/uds/UdsClient';
 
 export interface PreWriteSafetyCheck {
@@ -70,10 +71,14 @@ export class FeatureActivationEngine {
      */
     public validateSafetyGate(check: PreWriteSafetyCheck, definition?: FeatureDefinition): VoltageState {
         if (definition) {
-            // CLAUDE CONSENSUS RULE 1: Hard-Block ABS and Airbag/SRS Write Attempts
-            const targetModule = ((definition as any).targetModule || definition.id || '').toUpperCase();
-            if (targetModule.includes('ABS') || targetModule.includes('AIRBAG') || targetModule.includes('SRS') || targetModule.includes('7E2') || targetModule.includes('7E3')) {
-                throw new Error('SAFETY_VIOLATION_UNSAFE_MODULE_WRITE: ECU write operations to ABS (0x7E2) and Airbag/SRS (0x7E3) modules are 100% HARD-BLOCKED at code level to prevent brake calibration loss or accidental deployment.');
+            // Hard-Block ABS/ESP and Airbag/SRS Write Attempts via SafetyCriticalEcuRegistry
+            const targetModule = ((definition as any).targetModule || '').toUpperCase();
+            if (
+                targetModule === 'ABS_ESP' ||
+                targetModule === 'SRS_AIRBAG' ||
+                isSafetyCriticalModule(definition.targetEcuAddress, definition.id, definition.name)
+            ) {
+                throw new Error('SAFETY_VIOLATION_UNSAFE_MODULE_WRITE: ECU write operations to ABS/ESP and Airbag/SRS modules are 100% HARD-BLOCKED at code level to prevent brake calibration loss or accidental deployment.');
             }
 
             // Step 1: Enforce static policy (maxRollbackAttempts <= 1)
