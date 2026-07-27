@@ -50,6 +50,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
     enableBluetooth,
     scanDevices,
     connect,
+    disconnect,
     lastDeviceId,
     lastDeviceName,
     vin
@@ -350,7 +351,6 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           {(isScanning || scannedDevices.length === 0) && (
             <View style={[styles.radarContainer, { backgroundColor: `${colors.cyan}0F`, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: ms(16), marginVertical: vs(10), alignItems: 'center' }]}>
               <ActivityIndicator size="large" color={colors.cyan} style={{ marginBottom: vs(8) }} />
-              <Animated.View style={[styles.radarCircle, { transform: [{ scale: radarScale }], borderColor: colors.cyan }]} />
               <Text style={[styles.radarLabel, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '600', marginTop: vs(6) }]}>
                 {isScanning ? '🔍 OBD2 Bluetooth Cihazları Taranıyor...' : '🔄 Adaptör Taranıyor (Cevap Bekleniyor)...'}
               </Text>
@@ -434,7 +434,22 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
 
       {/* Connecting Steps Visual Progress */}
       {status === 'connecting' && (
-        <View style={[styles.progressBlock, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <View style={{ width: '100%' }}>
+          <TouchableOpacity 
+            onPress={() => {
+              triggerHaptic();
+              disconnect();
+              useBluetoothStore.getState().setSensorData({ status: 'disconnected', adapterStatus: 'disconnected' });
+              setSelectedType(null);
+            }} 
+            style={{ marginBottom: vs(12) }}
+          >
+            <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
+              ← {t('common.changeType', 'Bağlantı Türünü Değiştir')}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={[styles.progressBlock, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Text style={[styles.progressHeader, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
             {t('connection.negotiating', 'NEGOTIATING OBD2 HANDSHAKE')}
           </Text>
@@ -476,6 +491,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               {t(connectionStatusTextKey)}
             </Text>
           )}
+          </View>
         </View>
       )}
 
