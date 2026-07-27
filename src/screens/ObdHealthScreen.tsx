@@ -1,56 +1,62 @@
 // src/screens/ObdHealthScreen.tsx
 // MotoCortex v7.9.9 - OBD2 Health & Hardware Capability Diagnostics
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
-  Platform,
-  Linking
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useBluetooth } from '../hooks/useBluetooth';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
-import { triggerHaptic } from '../utils/haptics';
 
 interface ObdHealthScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
-  const { fs, ms, vs } = useResponsive();
+  const { fs } = useResponsive();
 
   // Load metrics from Bluetooth Store
   const adapterCapabilityScore = useBluetoothStore(s => s.adapterCapabilityScore);
   const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
   const avgRtt = useBluetoothStore(s => s.avgRtt);
   const adapterFirmware = useBluetoothStore(s => s.adapterFirmware) || 'ELM327 v1.5';
-  const protocol = useBluetoothStore(s => s.protocol) || 'ISO 15765-4 (CAN)';
+  const rawProtocol = useBluetoothStore(s => s.protocol) || 'ISO 15765-4 (CAN)';
   const supportedPids = useBluetoothStore(s => s.supportedPids) || [];
   const ecuStatus = useBluetoothStore(s => s.ecuStatus);
 
   const isConnected = ecuStatus === 'connected';
 
   // Quality rating calculation
-  const getQualityRating = () => {
-    if (!isConnected) return { text: t('common.unknown', 'UNKNOWN'), color: colors.textSec, badge: '⚪' };
+  const rating = useMemo(() => {
+    if (!isConnected) return { text: t('common.unknown', 'BİLİNMİYOR'), color: colors.textSec, badge: '⚪' };
     if (adapterCapabilityScore >= 80) {
-      return { text: t('health.excellent', 'EXCELLENT (ORIGINAL)'), color: colors.green, badge: '🟢' };
+      return { text: t('health.excellent', 'MÜKEMMEL (ORİJİNAL)'), color: colors.green, badge: '🟢' };
     } else if (adapterCapabilityScore >= 60) {
-      return { text: t('health.good', 'GOOD (STANDARD)'), color: colors.amber, badge: '🟡' };
+      return { text: t('health.good', 'İYİ (STANDART)'), color: colors.amber, badge: '🟡' };
     } else {
-      return { text: t('health.clone', 'INCOMPATIBLE / CLONE'), color: colors.red, badge: '🔴' };
+      return { text: t('health.clone', 'UYUMSUZ / KLON'), color: colors.red, badge: '🔴' };
     }
-  };
+  }, [isConnected, adapterCapabilityScore, t, colors]);
 
-  const rating = getQualityRating();
+  // Clean protocol display
+  const protocolDisplay = useMemo(() => {
+    if (!isConnected) return '—';
+    if (rawProtocol.includes('SIMULATED') || rawProtocol.includes('DEMO')) {
+      return 'CAN BUS (DEMO)';
+    }
+    const clean = rawProtocol.replace(/_/g, ' ');
+    if (clean.includes('15765') || clean.includes('CAN')) return 'CAN BUS (500k)';
+    if (clean.includes('14230') || clean.includes('KWP')) return 'KWP2000';
+    if (clean.includes('9141')) return 'ISO 9141-2';
+    return clean.split(' ')[0] || clean;
+  }, [isConnected, rawProtocol]);
 
   // Check if a specific PID is supported in the vehicle's registry
   const checkPidSupported = (pidHex: string) => {
@@ -58,7 +64,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
   };
 
   // Define PIDs to list in the Vehicle Support Checklist
-  const monitoredPids = [
+  const monitoredPids = useMemo(() => [
     { name: t('sensor.rpm', 'Engine RPM (RPM)'), pid: '0C' },
     { name: t('sensor.speed', 'Vehicle Speed (Speed)'), pid: '0D' },
     { name: t('sensor.coolant', 'Engine Coolant Temp'), pid: '05' },
@@ -69,40 +75,24 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
     { name: t('sensor.load', 'Calculated Engine Load (Engine Load)'), pid: '04' },
     { name: t('sensor.fuel', 'Fuel Level Input (Fuel Level)'), pid: '2F' },
     { name: t('sensor.oilTemp', 'Engine Oil Temp (Oil Temp)'), pid: '5C' }
-  ];
+  ], [t]);
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.bg }]} contentContainerStyle={styles.content}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={[styles.backBtn, { borderColor: colors.border }]} onPress={onBack}>
-          <Text style={[styles.backText, { color: colors.textPri, fontSize: fs(14) }]}>
-            ← {t('common.back', 'Back')}
-          </Text>
-        </TouchableOpacity>
-        <Text 
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={[styles.title, { color: colors.textPri, fontSize: fs(17), fontFamily: colors.mono, flex: 1 }]}
-        >
-          {t('health.titleMenu', 'OBD2 HEALTH & CAPABILITY')}
-        </Text>
-      </View>
-
       {/* 1. Quality & Performance Badge */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.adapterQuality', 'ADAPTER QUALITY & PERFORMANCE')}
+          {t('health.adapterQuality', 'ADAPTÖR KALİTESİ & PERFORMANSI')}
         </Text>
 
         <View style={styles.ratingRow}>
           <Text style={styles.ratingBadge}>{rating.badge}</Text>
           <View style={styles.ratingInfo}>
-            <Text style={[styles.ratingLabel, { color: rating.color, fontSize: fs(15), fontFamily: colors.mono }]}>
+            <Text style={[styles.ratingLabel, { color: rating.color, fontSize: fs(14.5), fontFamily: colors.mono }]}>
               {rating.text}
             </Text>
             <Text style={[styles.firmwareLabel, { color: colors.textSec, fontSize: fs(11) }]}>
-              {t('health.firmware', 'Firmware Version:')} {adapterFirmware}
+              {t('health.firmware', 'Yazılım Sürümü:')} {adapterFirmware}
             </Text>
           </View>
         </View>
@@ -111,31 +101,34 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
         <View style={styles.metricsGrid}>
           <View style={styles.metricItem}>
-            <Text style={[styles.metricVal, { color: colors.textPri, fontSize: fs(16), fontFamily: colors.mono }]}>
+            <Text style={[styles.metricVal, { color: colors.textPri, fontSize: fs(15), fontFamily: colors.mono }]}>
               {isConnected ? `${adapterCapabilityScore}/100` : '—'}
             </Text>
-            <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(10) }]}>
-              {t('health.capScore', 'Capability Score')}
+            <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(9.5) }]} numberOfLines={1}>
+              {t('health.capScore', 'Yetenek Skoru')}
             </Text>
           </View>
 
           <View style={styles.metricItem}>
-            <Text style={[styles.metricVal, { color: colors.textPri, fontSize: fs(16), fontFamily: colors.mono }]}>
+            <Text style={[styles.metricVal, { color: colors.textPri, fontSize: fs(15), fontFamily: colors.mono }]}>
               {isConnected ? `${avgRtt} ms` : '—'}
             </Text>
-            <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(10) }]}>
-              {t('health.latency', 'Latency (RTT)')}
+            <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(9.5) }]} numberOfLines={1}>
+              {t('health.latency', 'Gecikme Süresi')}
             </Text>
           </View>
 
           <View style={styles.metricItem}>
-            <Text numberOfLines={1} style={[styles.metricVal, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
-              {isConnected 
-                ? (protocol.includes('SIMULATED') ? 'CAN BUS (DEMO)' : protocol.replace(/_/g, ' ').split(' ')[0]) 
-                : '—'}
+            <Text 
+              adjustsFontSizeToFit
+              minimumFontScale={0.75}
+              numberOfLines={1} 
+              style={[styles.metricVal, { color: colors.textPri, fontSize: fs(12), fontFamily: colors.mono }]}
+            >
+              {protocolDisplay}
             </Text>
-            <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(10) }]}>
-              {t('health.protocol', 'Active Protocol')}
+            <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(9.5) }]} numberOfLines={1}>
+              {t('health.protocol', 'Aktif Protokol')}
             </Text>
           </View>
         </View>
@@ -144,66 +137,66 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 2. Feature Support Matrix (App Capabilities) */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.featureSupport', 'APPLICATION FEATURE MATRIX')}
+          {t('health.featureSupport', 'UYGULAMA ÖZELLİK MATRİSİ')}
         </Text>
 
         <View style={styles.matrixContainer}>
           <View style={styles.matrixRow}>
-            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12.5) }]}>
-              {t('health.matrixReadCodes', 'Read & Clear Fault Codes')}
+            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
+              {t('health.matrixReadCodes', 'Hata Kodu Okuma & Silme')}
             </Text>
-            <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              ✅ {t('common.supported', 'Supported')}
-            </Text>
-          </View>
-
-          <View style={styles.matrixRow}>
-            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12.5) }]}>
-              {t('health.matrixLiveSensors', 'Live Sensor Monitoring (Basic)')}
-            </Text>
-            <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              ✅ {t('common.supported', 'Supported')}
+            <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
+              ✅ {t('common.supported', 'Destekleniyor')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
-            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12.5) }]}>
-              {t('health.matrixBattery', 'Battery / Voltage Test')}
+            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
+              {t('health.matrixLiveSensors', 'Canlı Sensör İzleme (Temel)')}
             </Text>
-            <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              ✅ {t('common.supported', 'Supported')}
+            <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
+              ✅ {t('common.supported', 'Destekleniyor')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
-            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12.5) }]}>
-              {t('health.matrixHighSpeed', 'High-Speed Telemetry (20Hz)')}
+            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
+              {t('health.matrixBattery', 'Akü / Voltaj Testi')}
+            </Text>
+            <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
+              ✅ {t('common.supported', 'Destekleniyor')}
+            </Text>
+          </View>
+
+          <View style={styles.matrixRow}>
+            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
+              {t('health.matrixHighSpeed', 'Yüksek Hızlı Telemetri (20Hz)')}
             </Text>
             <Text style={[
               styles.matrixStatus, 
-              { color: isConnected && avgRtt < 120 ? colors.green : colors.amber, fontSize: fs(12.5), fontFamily: colors.mono }
+              { color: isConnected && avgRtt < 120 ? colors.green : colors.amber, fontSize: fs(12), fontFamily: colors.mono }
             ]}>
               {isConnected 
                 ? avgRtt < 120 
-                  ? `✅ ${t('health.active', 'Active')}`
-                  : `⚠️ ${t('health.degraded', 'Degraded (Slow RTT)')}`
+                  ? `✅ ${t('health.active', 'Aktif')}`
+                  : `⚠️ ${t('health.degraded', 'Sınırlı (Yavaş Yanıt)')}`
                 : '—'
               }
             </Text>
           </View>
 
           <View style={[styles.matrixRow, { borderBottomWidth: 0, paddingBottom: 0 }]}>
-            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12.5) }]}>
-              {t('health.matrixCoding', 'ECU Coding & Adaptations')}
+            <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
+              {t('health.matrixCoding', 'ECU Kodlama & Adaptasyon')}
             </Text>
             <Text style={[
               styles.matrixStatus, 
-              { color: isConnected && !isCloneDevice ? colors.green : colors.red, fontSize: fs(12.5), fontFamily: colors.mono }
+              { color: isConnected && !isCloneDevice ? colors.green : colors.red, fontSize: fs(12), fontFamily: colors.mono }
             ]}>
               {isConnected 
                 ? !isCloneDevice 
-                  ? `✅ ${t('common.supported', 'Supported')}`
-                  : `❌ ${t('health.locked', 'Locked (Safe Mode)')}`
+                  ? `✅ ${t('common.supported', 'Destekleniyor')}`
+                  : `❌ ${t('health.locked', 'Kilitli (Güvenli Mod)')}`
                 : '—'
               }
             </Text>
@@ -211,8 +204,8 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
           {isConnected && isCloneDevice && (
             <View style={[styles.lockWarningBlock, { backgroundColor: `${colors.red}0F`, borderColor: colors.red }]}>
-              <Text style={[styles.lockWarningText, { color: colors.textSec, fontSize: fs(11) }]}>
-                ⚠️ <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning', 'SECURITY LOCK:')}</Text> {t('health.lockExplain', 'Your adapter has been flagged as a clone/fake chip. Because clone adapters lack timing precision and can brick the vehicle during write operations, coding and adaptation features are locked. Please obtain an original ELM327 v2.1 or vLinker device for safe coding.')}
+              <Text style={[styles.lockWarningText, { color: colors.textSec, fontSize: fs(10.5) }]}>
+                ⚠️ <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning', 'GÜVENLİK KİLİDİ:')}</Text> {t('health.lockExplain', 'Adaptörünüz klon veya taklit çip olarak tespit edilmiştir. Güvenli kodlama için orijinal vLinker veya ELM327 adaptörü kullanmalısınız.')}
               </Text>
             </View>
           )}
@@ -222,11 +215,11 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 3. Vehicle Sensor Checklist (PID Support) */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.vehiclePids', 'VEHICLE SENSOR CHECKLIST')}
+          {t('health.vehiclePids', 'ARAÇ SENSÖR DESTEK LİSTESİ')}
         </Text>
 
-        <Text style={[styles.checklistDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-          {t('health.checklistPrompt', 'The standard sensor parameters (PIDs) supported by your vehicle\'s ECU are listed below. Sensors without a checkmark are not reported by your vehicle.')}
+        <Text style={[styles.checklistDesc, { color: colors.textSec, fontSize: fs(11) }]}>
+          {t('health.checklistPrompt', 'Aracınızın motor beyni tarafından desteklenen canlı sensör parametreleri aşağıda listelenmiştir. İşaretli olmayan sensör verileri aracınız tarafından desteklenmemektedir.')}
         </Text>
 
         <View style={styles.checklistGrid}>
@@ -234,7 +227,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             const isSupported = isConnected && checkPidSupported(item.pid);
             return (
               <View key={item.pid + idx} style={[styles.checkRow, { borderBottomColor: colors.border }]}>
-                <Text style={[styles.checkName, { color: colors.textPri, fontSize: fs(12) }]}>
+                <Text style={[styles.checkName, { color: colors.textPri, fontSize: fs(11.5) }]}>
                   {item.name}
                 </Text>
                 <View style={[
@@ -243,9 +236,9 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
                 ]}>
                   <Text style={[
                     styles.checkBadgeText, 
-                    { color: isSupported ? colors.green : colors.red, fontSize: fs(10.5), fontFamily: colors.mono }
+                    { color: isSupported ? colors.green : colors.red, fontSize: fs(10), fontFamily: colors.mono }
                   ]}>
-                    {isSupported ? t('health.supportedBadge', '✓ SUPPORTED') : t('health.unsupportedBadge', '❌ UNSUPPORTED')}
+                    {isSupported ? t('health.supportedBadge', '✓ DESTEKLENİYOR') : t('health.unsupportedBadge', '❌ DESTEKLENMİYOR')}
                   </Text>
                 </View>
               </View>
@@ -264,26 +257,6 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 40,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    marginTop: 10,
-  },
-  backBtn: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginEnd: 16,
-  },
-  backText: {
-    fontWeight: '700',
-  },
-  title: {
-    fontWeight: '900',
-    letterSpacing: 0.5,
   },
   card: {
     borderRadius: 16,
@@ -322,6 +295,7 @@ const styles = StyleSheet.create({
   metricsGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 8,
   },
   metricItem: {
     flex: 1,
@@ -330,9 +304,11 @@ const styles = StyleSheet.create({
   metricVal: {
     fontWeight: '900',
     marginBottom: 4,
+    textAlign: 'center',
   },
   metricLabel: {
     fontWeight: '700',
+    textAlign: 'center',
   },
   matrixContainer: {
     gap: 10,
