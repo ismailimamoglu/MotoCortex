@@ -3,6 +3,7 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIn
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { KNOWN_ECU_MODULES, ModuleDiagnosticResult } from '../services/multiEcuService';
+import { useBluetoothStore } from '../store/useBluetoothStore';
 
 interface MultiEcuScanModalProps {
   visible: boolean;
@@ -39,7 +40,8 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
           dtcCodes = await onScanModule(mod.txHeader).catch(() => []);
         } else {
           // Fallback demo simulation
-          if (mod.id === 'ecm') dtcCodes = [];
+          const currentDtcs = useBluetoothStore.getState().dtcs || [];
+          if (mod.id === 'ecm') dtcCodes = currentDtcs;
           else if (mod.id === 'tcm') dtcCodes = [];
           else if (mod.id === 'abs') dtcCodes = [];
           else if (mod.id === 'srs') dtcCodes = [];
@@ -52,7 +54,7 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
           dtcCount: dtcCodes.length,
           dtcCodes,
           status: dtcCodes.length === 0 ? 'CLEAN' : 'FAULT_DETECTED',
-          latencyMs: Math.floor(Math.random() * 30) + 15,
+          latencyMs: Math.floor(Math.random() * 20) + 12,
         });
       }
 

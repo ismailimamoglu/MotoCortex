@@ -218,7 +218,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
     useBluetoothStore.getState().addLog(`TX: ${cmd}`);
 
     try {
-      const response = await OBDCommandQueue.add(cmd, 2000, 'HIGH_PRIORITY_AD_HOC');
+      const response = await sendCommand(cmd);
       const resText = response || 'NO RESPONSE';
       useBluetoothStore.getState().addLog(`RX: ${resText}`);
     } catch (err: any) {

@@ -70,13 +70,19 @@ export class FeatureActivationEngine {
      */
     public validateSafetyGate(check: PreWriteSafetyCheck, definition?: FeatureDefinition): VoltageState {
         if (definition) {
+            // CLAUDE CONSENSUS RULE 1: Hard-Block ABS and Airbag/SRS Write Attempts
+            const targetModule = ((definition as any).targetModule || definition.id || '').toUpperCase();
+            if (targetModule.includes('ABS') || targetModule.includes('AIRBAG') || targetModule.includes('SRS') || targetModule.includes('7E2') || targetModule.includes('7E3')) {
+                throw new Error('SAFETY_VIOLATION_UNSAFE_MODULE_WRITE: ECU write operations to ABS (0x7E2) and Airbag/SRS (0x7E3) modules are 100% HARD-BLOCKED at code level to prevent brake calibration loss or accidental deployment.');
+            }
+
             // Step 1: Enforce static policy (maxRollbackAttempts <= 1)
             recoveryStateMachine.validateSafetyPolicy(definition);
 
             // Step 2: Validate feature-specific preconditions
             const pre = definition.preconditions || {};
 
-            // Fail-Safe Speed Check: Default to BLOCK if speed required but unreadable or moving
+            // Fail-Safe Speed & Engine RPM Check: Default to BLOCK if moving or RPM > 0
             if (pre.requiresVehicleStationary) {
                 if (check.isSpeedReadable === false || check.vehicleSpeed === undefined) {
                     throw new Error('SAFETY_VIOLATION_UNKNOWN_SPEED: Vehicle speed PID cannot be verified. Write blocked as fail-safe precondition for stationary features.');
@@ -87,9 +93,9 @@ export class FeatureActivationEngine {
                 }
             }
 
-            // Ignition & Engine Preconditions
-            if (pre.engineState === 'OFF' && check.isEngineRunning) {
-                throw new Error('SAFETY_VIOLATION_ENGINE_RUNNING: Feature requires engine to be OFF during write operation.');
+            // CLAUDE CONSENSUS RULE 2: RPM Check (Ignition ON, Engine OFF - KL15)
+            if (check.isEngineRunning) {
+                throw new Error('SAFETY_VIOLATION_ENGINE_RUNNING: Feature requires engine to be OFF (RPM == 0, Ignition ON - KL15) during write operation to prevent alternator voltage spikes.');
             }
             if (pre.ignitionState === 'ON' && check.ignitionState === 'OFF') {
                 throw new Error('SAFETY_VIOLATION_IGNITION_OFF: Feature requires ignition to be switched ON.');

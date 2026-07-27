@@ -15,16 +15,11 @@ interface BentoButtonProps {
   activeOpacity?: number;
 }
 const BentoButton = ({ style, onPress, children, activeOpacity = 0.4 }: BentoButtonProps) => {
-  const lastTapRef = React.useRef<number>(0);
-
   return (
     <TouchableOpacity
       style={style}
       activeOpacity={activeOpacity}
       onPress={() => {
-        const now = Date.now();
-        if (now - lastTapRef.current < 400) return;
-        lastTapRef.current = now;
         triggerHaptic();
         onPress();
       }}

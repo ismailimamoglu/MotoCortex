@@ -131,6 +131,14 @@ export function stopSimulation() {
   }
 }
 
+export function clearDemoDtcs() {
+  const { useBluetoothStore } = require('./useBluetoothStore');
+  const cleanDtcs: any = [];
+  cleanDtcs.isNotScanned = false;
+  cleanDtcs.errorState = null;
+  useBluetoothStore.getState().setSensorData({ dtcs: cleanDtcs });
+}
+
 export function startSimulation() {
   stopSimulation();
 
@@ -201,6 +209,7 @@ export function startSimulation() {
       fuelLevel,
       intakeAirTemp,
       odometer: odometerRounded,
+      lastSuccessfulResponseAt: Date.now(),
     });
 
     // Add simulated OBD traffic logs

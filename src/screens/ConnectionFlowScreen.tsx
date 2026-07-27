@@ -18,10 +18,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useBluetooth } from '../hooks/useBluetooth';
 import { useBluetoothStore, ConnectionStep } from '../store/useBluetoothStore';
+import { useAppStore } from '../store/useAppStore';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { triggerHaptic } from '../utils/haptics';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import { DiagnosticLogMailer } from '../services/DiagnosticLogMailer';
 
 interface ConnectionFlowScreenProps {
   onBack: () => void;
@@ -33,7 +35,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
   const colors = useThemeColors();
   const { fs, ms, vs } = useResponsive();
 
-  const [selectedType, setSelectedType] = useState<'BLUETOOTH' | 'WIFI' | null>(null);
+  const [selectedType, setSelectedType] = useState<'BLUETOOTH' | 'WIFI' | null>('BLUETOOTH');
   const [scannedDevices, setScannedDevices] = useState<any[]>([]);
   const [isScanning, setIsScanning] = useState(false);
   const [showPairingOverlay, setShowPairingOverlay] = useState(false);
@@ -154,22 +156,11 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
   // Connect via Wi-Fi (IP/Port)
   const handleConnectWifi = async () => {
     triggerHaptic();
-    const { useWifiTransport } = require('../hooks/useWifiTransport');
-    // Set default Wi-Fi OBD adapter address (192.168.0.10:35000)
     const store = useBluetoothStore.getState();
     store.setSensorData({ connectionType: 'WIFI', deviceId: '192.168.0.10:35000', deviceName: 'Wi-Fi OBDII' });
     
-    // Perform connect
-    try {
-      const tcpConnect = await MotoCortexOBDModuleConnect('wifi', '192.168.0.10:35000');
-      if (tcpConnect) {
-        store.setSensorData({ status: 'connected', adapterStatus: 'connected' });
-      } else {
-        store.setSensorData({ status: 'error', adapterStatus: 'error', error: 'Wi-Fi connection failed. Ensure you are connected to the OBD Wi-Fi network.' });
-      }
-    } catch (err: any) {
-      store.setSensorData({ status: 'error', adapterStatus: 'error', error: err?.message || String(err) });
-    }
+    // Delegate connection to single source of truth: useBluetooth hook
+    proceedWithConnection('192.168.0.10:35000', 'Wi-Fi OBDII');
   };
 
   const MotoCortexOBDModuleConnect = async (type: 'bluetooth' | 'ble' | 'wifi', target: string): Promise<boolean> => {
@@ -356,11 +347,18 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             </TouchableOpacity>
           </View>
 
-          {isScanning && (
-            <View style={styles.radarContainer}>
+          {(isScanning || scannedDevices.length === 0) && (
+            <View style={[styles.radarContainer, { backgroundColor: `${colors.cyan}0F`, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: ms(16), marginVertical: vs(10), alignItems: 'center' }]}>
+              <ActivityIndicator size="large" color={colors.cyan} style={{ marginBottom: vs(8) }} />
               <Animated.View style={[styles.radarCircle, { transform: [{ scale: radarScale }], borderColor: colors.cyan }]} />
-              <Text style={[styles.radarLabel, { color: colors.textSec, fontSize: fs(11) }]}>
-                {t('connection.scanning', 'Scanning for OBD2 adapters...')}
+              <Text style={[styles.radarLabel, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '600', marginTop: vs(6) }]}>
+                {isScanning ? '🔍 OBD2 Bluetooth Cihazları Taranıyor...' : '🔄 Adaptör Taranıyor (Cevap Bekleniyor)...'}
+              </Text>
+              <Text style={[{ color: colors.textSec, fontSize: fs(11), textAlign: 'center', marginTop: vs(4) }]}>
+                {Platform.OS === 'ios'
+                  ? 'BLE OBD2 adaptörünüzün açık ve yakında olduğundan emin olun.'
+                  : 'Bluetooth ve konum servislerinizin aktif olduğundan emin olun.'
+                }
               </Text>
             </View>
           )}
@@ -386,7 +384,6 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                     </Text>
                   </View>
                   <View style={styles.rssiContainer}>
-
                     <Text style={[styles.rssiText, { color: colors.textSec, fontSize: fs(10) }]}>
                       {dev.rssi ? `${dev.rssi} dBm` : ''}
                     </Text>
@@ -394,15 +391,6 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 </TouchableOpacity>
               ))}
             </View>
-          )}
-
-          {!isScanning && scannedDevices.length === 0 && (
-            <Text style={[styles.scanHint, { color: colors.textSec, fontSize: fs(11) }]}>
-              {Platform.OS === 'ios'
-                ? t('connection.scanHintIos', 'Ensure your BLE OBD2 adapter is powered on and near your iOS device.')
-                : t('connection.scanHintAndroid', 'Make sure Bluetooth is active and the adapter is ready to pair.')
-              }
-            </Text>
           )}
         </View>
       )}
@@ -519,6 +507,42 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           >
             <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
               {t('common.retry', 'RETRY CONNECTION')}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.retryBtn, { backgroundColor: colors.cyan, marginTop: 10 }]}
+            onPress={() => {
+              triggerHaptic();
+              const appStore = useAppStore.getState();
+              if (!appStore.isSimulationMode) {
+                appStore.toggleSimulationMode();
+              }
+              onBack();
+            }}
+          >
+            <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
+              🎮 {t('common.demoMode', 'SİMÜLASYON MODUNDA İNCELE').toUpperCase()}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.retryBtn, { backgroundColor: colors.purple, marginTop: 10 }]}
+            onPress={() => {
+              triggerHaptic();
+              const store = useBluetoothStore.getState();
+              DiagnosticLogMailer.sendReport({
+                status: 'FAILED',
+                protocol: store.protocol,
+                adapterScore: store.adapterCapabilityScore,
+                isClone: store.isCloneDevice,
+                logs: store.logs,
+                errorReason: errorMsg || 'User Manual Export',
+              });
+            }}
+          >
+            <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
+              📧 KARA KUTU LOĞUNU MAİL İLE GÖNDER
             </Text>
           </TouchableOpacity>
         </View>

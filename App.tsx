@@ -2445,6 +2445,18 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               <TouchableOpacity style={s.retryBtn} onPress={retryEcu}>
                 <Text style={s.retryBtnText}>{t('connection.retry')}</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[s.retryBtn, { backgroundColor: tc.cyan, marginTop: 8 }]} 
+                onPress={() => {
+                  if (!isSimulationMode) {
+                    toggleSimulationMode();
+                  }
+                  setActiveHubView('hub');
+                }}
+              >
+                <Text style={s.retryBtnText}>🎮 {t('common.demoMode', 'SİMÜLASYON MODUNDA İNCELE').toUpperCase()}</Text>
+              </TouchableOpacity>
             </View>
           )}
           <TouchableOpacity style={s.disconnectBtn} onPress={disconnect}>

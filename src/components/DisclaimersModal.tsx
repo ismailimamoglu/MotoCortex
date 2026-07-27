@@ -71,6 +71,7 @@ export default function DisclaimersModal({
 
               {/* Checkbox 1 */}
               <TouchableOpacity
+                testID="disclaimer-check-voltage"
                 activeOpacity={0.8}
                 style={[styles.checkboxRow, { borderColor: colors.border }]}
                 onPress={() => {
@@ -88,6 +89,7 @@ export default function DisclaimersModal({
 
               {/* Checkbox 2 */}
               <TouchableOpacity
+                testID="disclaimer-check-risk"
                 activeOpacity={0.8}
                 style={[styles.checkboxRow, { borderColor: colors.border }]}
                 onPress={() => {
@@ -107,6 +109,7 @@ export default function DisclaimersModal({
             {/* Footer Buttons */}
             <View style={styles.footer}>
               <TouchableOpacity
+                testID="disclaimer-cancel-btn"
                 style={[styles.cancelBtn, { borderColor: colors.border }]}
                 onPress={onDecline}
               >
@@ -116,6 +119,7 @@ export default function DisclaimersModal({
               </TouchableOpacity>
 
               <TouchableOpacity
+                testID="disclaimer-proceed-btn"
                 disabled={!canProceed}
                 style={[
                   styles.confirmBtn,

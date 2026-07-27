@@ -1,43 +1,38 @@
-Bu üçüncü tur, gerçek bir olgunluğa ulaşmış — rollback'in tanım seviyesinde reddedilmesi (rejectFeatureDefinition) ve önkoşulların özellik bazına indirgenmesi, önceki turlardaki "tek boyutlu global kural" sorununu doğru şekilde çözüyor. Detaylı inceleme:
+Bu mimaride birkaç kritik güvenlik kilidi eksik görünüyor. Sıralayayım:
 
-✅ Güçlü Kararlar
+1. En kritik eksik: ABS/Airbag için "yazma" ayrımı yok
 
-Rollback'in motor seviyesinde reddi — maxRollbackAttempts > 1 olan bir FeatureDefinition'ın sisteme hiç kabul edilmemesi, "kod incelemesinde gözden kaçan bir tanım production'a sızar mı" endişesini ortadan kaldırıyor. Bu, çalışma zamanı kontrolünden çok daha güçlü bir savunma katmanı (derleme/veri girişi zamanında engelleme).
+TCM, ABS ve Airbag header'larını çoklu tarama (multi-ECU scan) amacıyla sorguladığınızı belirtmişsiniz — bu haliyle salt okunur (DTC okuma, kimlik bilgisi) ise sorun yok. Ama mimaride şunu netleştirmeniz gerekiyor:
 
-Özellik bazlı önkoşullar (VehiclePreconditions) — Doğru yön. Örneğin "iç aydınlatma rengi değiştirme" gibi düşük riskli bir özellik için requiresVehicleStationary: false mantıklı olabilirken, ABS/şanzıman coding'i için bu her zaman true olmalı. Global tek kural yerine özellik bazlı esneklik, hem güvenliği hem kullanılabilirliği optimize ediyor.
+0x7E2 (ABS) ve 0x7E3 (Airbag/SRS) adreslerine hiçbir zaman Security Access (0x27) veya Routine Control / Write DID (yazma) isteği gönderilmemeli — bu kısıtlama voltaj/hız kontrolünden bağımsız, kod seviyesinde sabit (hard-block) olmalı. Çünkü:
+Airbag modülünde yanlış bir servis ID'si crash-data (kaza kaydı) alanlarını bozabilir veya deploy mantığını etkileyebilir.
+ABS'de yanlış adaptasyon/reset, fren dağılım kalibrasyonunu (EBD) etkileyebilir.
+Şu an sadece VAG/BMW/Renault için tanımlı olan voltaj+hız kilidi, ileride biri "TCM'ye de yazma ekleyelim" dediğinde otomatik devreye giriyor mu, yoksa ayrı bir modül mü? Mimarinin bunu garanti etmesi lazım — kilidin merkezi bir "yazma politikası" katmanında olması, her ECU implementasyonunda tekrar tekrar uygulanmaması gerekir.
+2. Hız=0 kontrolü motor durumunu garanti etmiyor
 
-compatibleVersions allowlist'in sezgisel skordan tamamen çıkarılması — Önceki turda sorduğum soruyu net cevaplıyor: artık COMPATIBLE_MATCH sadece QA onaylı, elle doğrulanmış bir listeye bağlı. UNKNOWN ve PARTIAL_MATCH'in yazmayı %100 engellemesi doğru fail-safe varsayılan.
+Aracın nötrde, el freni çekili, motor çalışır durumda (rölanti/yüksek devir) olması mümkün. Bu durumda:
 
-🔴 Netleştirilmesi Gereken Tutarsızlık
+Alternatör voltaj dalgalanmaları olabilir (voltaj eşiğinizi anlık geçebilir/altına düşebilir).
+CAN bus yükü değişebilir (motor ECU'su aktif mesaj trafiği artırır).
 
-Faz sayısı uyuşmuyor. Plan "13 aşamalı günlük" diyor ama Phase-to-Recovery tablosunda yalnızca ~9 farklı durum listelenmiş (PRECHECK, BACKUP_COMPLETE, WRITE_STARTED, WRITE_RESPONSE_RECEIVED, VERIFICATION_STARTED, INCONCLUSIVE, RECOVERY_REQUIRED, ROLLBACK_STARTED, COMPLETED). Eksik olan ~4 faz nedir? Muhtemelen pipeline'ın daha erken adımları (ECU_DISCOVERY, FINGERPRINT_MATCHED, USER_CONFIRMATION, DTC_RESCAN gibi) de journal'a dahil edilmiş olabilir — ama bu netleşmeden onaylamak riskli, çünkü listelenmeyen fazların kurtarma aksiyonu tanımsız kalmış olabilir. Ekipten tam 13 fazın listesini isteyin; her biri için (tabloya eklenmemiş olanlar dahil) açık bir kurtarma aksiyonu olmalı.
+Öneri: Kontak/Motor durumu (RPM veya ignition status DID üzerinden) kontrolünü de ekleyin — sadece hız değil, "motor kapalı + kontak açık (KL15)" durumu ideal yazma penceresidir.
 
-🟡 Ele Alınması Gereken Kenar Durumlar
+3. Yazma sırasında sürekli izleme yok mu?
 
-A. maxAllowedSpeedKmh + bilinmeyen hız kombinasyonu net değil.
-Tablo/plan sadece requiresVehicleStationary: true + hız bilinmiyor senaryosunu kapsıyor. Peki requiresVehicleStationary: false ama maxAllowedSpeedKmh: 5 gibi bir eşik tanımlanmışsa ve hız okunamıyorsa ne olur? Tutarlılık için: herhangi bir hız-bağımlı önkoşul tanımlıysa ve hız doğrulanamıyorsa, varsayılan her zaman engelleme olmalı — sadece requiresVehicleStationary alanına özel bir istisna bırakılmamalı.
+Voltaj kontrolü sadece yazma öncesi yapılıyorsa yetersiz. Yazma 5-30 saniye sürebilir; bu süre içinde voltaj 12V altına düşerse (örn. biri farları/klimayı açtı) kilitlenmiş (bricked) modül riski oluşur. Gerekli:
 
-B. ROLLBACK_STARTED fazında uygulama tam ortada kapanırsa?
-Tablo "yanıt kontrol edilir, başarısızsa CRITICAL_MANUAL_INTERVENTION" diyor ama bu, rollback'in yanıtı beklenirken kesintiye uğradığı senaryoyu kapsamıyor gibi görünüyor. maxRollbackAttempts = 1 zaten tüketilmiş durumda olduğundan, uygulama yeniden açıldığında bu fazda asla ikinci bir 0x2E rollback denemesi göndermemeli — sadece 0x22 ile mevcut durumu okuyup, orijinal yedekle eşleşiyorsa COMPLETED'e (rollback başarılı olmuş), eşleşmiyorsa doğrudan CRITICAL_MANUAL_INTERVENTION'a geçmeli. Bunun açıkça yazılması gerekiyor, yoksa "rollback'i tekrar dene" gibi yanlış bir varsayılan koda sızabilir.
+Yazma sırasında periyodik voltaj örneklemesi (örn. her 500ms) ve eşik altına düşerse anlık abort + rollback.
+Kesinti/timeout durumunda ECU'nun yarım yamalak kodlanmış kalmaması için checksum doğrulama + otomatik geri yazma (rollback) mekanizması.
+4. Orijinal kodlama yedeği (backup-before-write) yok
 
-C. integrityHash neyi koruyor — tanımlanmamış.
-SHA-256 hash'in neyin bütünlüğünü doğruladığı belirtilmemiş: journal kaydının kendisi mi (disk bozulmasını tespit etmek için), yoksa ECU'dan okunan/yedeklenen hex verisi mi (yedeğin bozulmadığını doğrulamak için)? İkisi de değerli ama farklı amaçlar taşıyor ve farklı hata aksiyonları gerektirir:
+VCDS/ODIS gibi profesyonel araçların altın kuralı: yazmadan önce mevcut coding bloğunu oku ve yerel olarak sakla. Sizin mimaride bu adım belirtilmemiş — kullanıcı yanlış "Kadran Selamlama" değeri yazarsa geri dönüş yolu olmalı.
 
-Journal kaydı hash uyuşmazlığı → muhtemelen CRITICAL_MANUAL_INTERVENTION (diske ne yazıldığından emin olunamıyor).
-Yedek verisi hash uyuşmazlığı → rollback denenmemeli (bozuk yedekle geri yazmak durumu kötüleştirir), doğrudan manuel müdahale.
+5. Protokol karışımı riski (UDS ↔ KWP2000)
 
-Bu ikisi ayrı ayrı ele alınmalı, "integrityHash" tek bir kavram olarak bırakılmamalı.
+VAG/BMW UDS, Renault ise KWP2000 kullanıyor — aynı uygulama içinde protokol/oturum (session) geçiş mantığında bir bug olursa (örn. yanlış P2/P3 zamanlayıcı veya yanlış servis ID eşlemesi), bir komut yanlış ECU'ya yanlış protokolle gidebilir. Protokol seçiminin araç/ECU eşleşmesinden bağımsız olarak da doğrulanması (örn. ECU'dan dönen ident/response ile beklenen protokolün çapraz kontrolü) önerilir.
 
-D. compatibleVersions allowlist'in bakım süreci hâlâ tanımsız.
-Bu, üçüncü kez sorduğum bir soru ama teknik değil, operasyonel bir boşluk: Üretici bir yazılım güncellemesi (OTA) yayınlayıp bir ECU'nun SW ID'sini değiştirdiğinde, önceden EXACT_MATCH olan bir araç aniden MISMATCH/UNKNOWN olacaktır — bu doğru ve güvenli bir davranış (yazma otomatik olarak durur). Ama şunu netleştirin: sahada UNKNOWN olarak işaretlenen yeni varyantlar nasıl QA'ya ulaşıyor ve allowlist'e ekleniyor? Anonim, opt-in bir "bu araç desteklenmiyor" telemetri sinyali toplayıp QA ekibinin fiziksel test sonrası onaylaması gibi bir süreç öneririm — aksi halde allowlist zamanla eskiyip kullanıcı tabanının büyük kısmı sessizce "desteklenmiyor" durumuna düşebilir.
+6. Gateway routing doğrulaması
 
-📋 Test Planına Ek Öneriler
+Fiziksel adresleme (0x7E1/7E2/7E3) modern araçlarda çoğunlukla merkezi gateway üzerinden yönlendirilir. Yanlış routing ayarı, isteğin farklı bir modüle gitmesine yol açabilir — özellikle bağlantı öncesi "hangi ECU'yla konuştuğumu" ident/VIN okuma ile teyit etmek kritik.
 
-Mevcut liste iyi ama şunlar eksik:
-
-ROLLBACK_STARTED fazında yeniden başlatma testi (madde B) — ikinci bir 0x2E'nin asla gönderilmediğini doğrulayan negatif test.
-integrityHash uyuşmazlığı testi — hem journal hem yedek verisi için ayrı ayrı, doğru aksiyonun tetiklendiğini doğrulayan test.
-13 fazın tamamının en az bir kez test kapsamında tetiklenip tetiklenmediğini doğrulayan bir "coverage" kontrolü (hangi fazların testte hiç egzersiz edilmediğini gösteren rapor).
-Onay Durumu
-
-Faz-Kurtarma haritasını eksik faz sayısı netleşmeden onaylamıyorum — 13 vs 9 farkı kapatılmalı. Diğer üç madde (A, C, D) HIL testine geçişi engellemez ama dokümante edilmesi ve idealde kod içinde açık şekilde ele alınması gerekiyor. Madde B (ROLLBACK_STARTED resume mantığı) ise gerçek bir düzeltme gerektirebilir — kod incelemesi öncesi ekipten bu senaryonun mevcut implementasyonda nasıl ele alındığını teyit etmenizi öneririm.
+Özet öncelik sırası: (1) Airbag/ABS'yi yazmadan tamamen ve kod seviyesinde izole edin, (2) motor/RPM durumunu kilide ekleyin, (3) yazma sırasında sürekli voltaj izleme + abort/rollback ekleyin, (4) yazmadan önce otomatik backup mekanizması kurun.

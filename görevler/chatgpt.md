@@ -1,653 +1,277 @@
-MotoCortex — Full UI/UX & Functional QA Audit ve Düzeltme Emri
-ROLÜN
+Evet, genel fikir doğru, fakat önemli bir ayrım var: AT WS'yi her fallback geçişinde standart bir “zorunlu reset” gibi kullanmanızı önermem. Ucuz v1.5 klonlar için bunu bir recovery katmanı olarak kullanmak daha doğru.
 
-Sen yalnızca kod yazan bir geliştirici değilsin.
+Kısa karar
+Komut	Değerlendirme
+AT ST FF	Evet, mantıklı — timeout'u artırır; ancak klonlarda FF gerçek ELM327 ile aynı yorumlanmayabilir
+AT WS	Evet, recovery için kullanılabilir — fakat protokol geçişinden önce her zaman gerekli değil
+AT SP 6	CAN 11-bit / 500 kbit/s için doğru
+AT SP 5	KWP2000 Fast Init için doğru
+AT PC	Bence eklenmeli — protokol oturumunu kapatıp temiz bir başlangıç sağlar
+AT Z	Son çare recovery — tüm adaptörü yeniden başlatır
+AT TP x / AT TP Ax	Fallback mimariniz için daha doğru bir alternatif olabilir
 
-Senior Mobile QA Engineer + UI/UX Designer + React Native/Expo Specialist + Automotive Diagnostic App Tester olarak hareket edeceksin.
+ELM327'nin resmi davranışında AT SP 0, bir sonraki OBD komutunda otomatik protokol araması başlatır ve SEARCHING... mesajı bu sürecin parçasıdır. Ancak belirli bir protokolü AT SP 5 veya AT SP 6 ile seçtiğinizde artık otomatik arama yapılmaz. AT TP ise protokolü deneyip başarısız olursa mevcut otomatik arama mantığını koruyabilen daha uygun bir mekanizmadır.
 
-MotoCortex uygulamasının tüm ekranlarını, tüm navigasyon akışlarını, tüm butonlarını, tüm modal ve form bileşenlerini, bağlantı durumlarını ve kullanıcı etkileşimlerini uçtan uca test edeceksin.
+Benim önerdiğim fallback akışı
+1. İlk deneme
+AT SP 0
+0100
 
-Amacın:
+Burada adaptör:
 
-Uygulamadaki hiçbir ekran, buton, link, modal, tab, gesture veya navigasyon akışı çalışmadan ya da görsel olarak bozuk halde kalmayacak.
+SEARCHING...
 
-❗ KESİN KURAL
-
-Sadece kodu okumak test değildir.
-
-Her özellik için aşağıdaki soruların tamamına cevap ver:
-
-Kullanıcı bu butona basabiliyor mu?
-Buton gerçekten doğru fonksiyonu çağırıyor mu?
-Fonksiyon doğru ekranı açıyor mu?
-İşlem sırasında loading state var mı?
-İşlem başarısız olursa hata gösteriliyor mu?
-İşlem başarılı olursa kullanıcıya feedback veriliyor mu?
-Bağlantı yokken doğru şekilde kilitleniyor mu?
-Kullanıcı işlemi tekrar tetiklerse duplicate işlem oluşuyor mu?
-Ekrandan çıkınca timer/listener/polling temizleniyor mu?
-Geri tuşuna basınca uygulama doğru state'e dönüyor mu?
-Farklı ekran boyutlarında tasarım bozuluyor mu?
-Uzun çeviri metinlerinde layout bozuluyor mu?
-Türkçe dışındaki dillerde text overflow oluşuyor mu?
-Dark/Light theme'de okunabilirlik korunuyor mu?
-Disabled buton gerçekten disabled mı?
-Loading sırasında kullanıcı işlemi tekrar başlatabiliyor mu?
-1. TÜM EKRANLARIN ENVANTERİNİ ÇIKAR
-
-Önce projeyi tarayarak bütün ekranları listele.
-
-Şu formatta rapor oluştur:
-
-Screen ID:
-Screen Name:
-File:
-Route:
-Parent Navigation:
-Accessible From:
-Main Purpose:
-Interactive Elements:
-API/OBD Dependency:
-Connection Dependency:
-Potential Issues:
-
-Şunlar dahil olmak üzere hiçbir ekranı atlama:
-
-Dashboard
-Connection / Bluetooth
-Vehicle Detection
-VIN Identification
-Vehicle Profile
-Live Data
-Gauges
-DTC Scan
-DTC Details
-DTC Clear
-Multi-ECU Scan
-Engine ECU
-ABS ECU
-Airbag ECU
-Transmission ECU
-DPF
-Fuel Trim
-STFT / LTFT
-Performance / Horsepower
-ECU Health
-Hidden Features / Ek Özellik Açma
-UDS
-Feature Activation
-Backup
-Rollback
-Recovery
-Adapter Benchmark
-Settings
-Language
-Theme
-Subscription / PRO
-Help
-About
-Legal / Disclaimer
-Onboarding
-Error Screens
-Empty States
-Loading States
-
-Kodda olup navigasyonda görünmeyen ekranları ayrıca tespit et.
-
-Navigasyonda görünen fakat gerçek ekranı olmayan route'ları da tespit et.
-
-2. EKRAN EKRAN GÖRSEL UI AUDIT YAP
-
-Her ekranı görsel olarak incele.
-
-Aşağıdaki kriterleri kontrol et:
-
-Layout
-Ekran taşması var mı?
-Safe Area doğru mu?
-iPhone Dynamic Island altında içerik kalıyor mu?
-Android navigation bar ile çakışma var mı?
-Küçük ekranlarda içerik kesiliyor mu?
-Tablet görünümü bozuluyor mu?
-Yatay modda layout kırılıyor mu?
-Spacing
-Padding tutarlı mı?
-Card'lar arasında mesafe tutarlı mı?
-Butonlar birbirine çok yakın mı?
-Başlıklar içeriklere fazla mı uzak?
-Görsel hiyerarşi doğru mu?
-Typography
-Başlıklar okunabilir mi?
-Font boyutları tutarlı mı?
-Çok uzun araç/model isimleri taşıyor mu?
-Çok uzun hata kodları taşıyor mu?
-Çince/Japonca/Korece karakterler kırılıyor mu?
-Arapça RTL düzeni bozuluyor mu?
-Buttons
-
-Her buton için:
-
-Button:
-Visual State:
-Pressable:
-onPress:
-Handler:
-Navigation:
-Loading State:
-Disabled State:
-Error State:
-Success Feedback:
-Issue:
-
-Özellikle şu hataları ara:
-
-onPress={() => {}}
-onPress={undefined}
-yalnızca görsel olarak bulunan ama işlevi olmayan butonlar
-yanlış route'a giden butonlar
-modal açması gereken ama hiçbir şey yapmayan butonlar
-disabled görünen ama tıklanabilen butonlar
-aktif görünen ama bağlantı olmadan çalışan butonlar
-loading sırasında ikinci kez tetiklenebilen butonlar
-3. TÜM BUTONLARI OTOMATİK OLARAK TARA
-
-Projede bulunan tüm:
-
-Pressable
-TouchableOpacity
-TouchableHighlight
-Button
-IconButton
-Link
-router.push
-router.replace
-navigation.navigate
-navigation.goBack
-
-kullanımlarını tarayarak bir Interactive Element Inventory oluştur.
-
-Her element için:
-
-Component:
-File:
-Line:
-Action:
-Target:
-Implemented:
-Tested:
-Result:
-
-Hiçbir interactive element "untested" bırakılmayacak.
-
-4. NAVIGATION TESTİ
-
-Her ekran için şu akışı test et:
-
-Dashboard
- ↓
-Screen
- ↓
-Detail Screen
- ↓
-Modal
- ↓
-Action
- ↓
-Success/Error
- ↓
-Back
- ↓
-Dashboard
-
-Kontrol et:
-
-Back çalışıyor mu?
-Android back button çalışıyor mu?
-iOS swipe-back çalışıyor mu?
-Modal kapatma çalışıyor mu?
-Modal dışına basınca kapanması gerekiyorsa kapanıyor mu?
-Modal kapanınca state temizleniyor mu?
-Ekrana tekrar girince eski loading state kalıyor mu?
-Navigation stack duplicate ekran oluşturuyor mu?
-5. STATE-BASED UI TESTİ
-
-MotoCortex'te özellikle bağlantı durumları çok önemlidir.
-
-Aşağıdaki tüm state'leri simüle et:
-
-Connection States
-DISCONNECTED
-SCANNING
-CONNECTING
-CONNECTED
-ADAPTER_READY
-ECU_DISCOVERING
-ECU_CONNECTED
-ECU_SESSION_ACTIVE
-CONNECTION_LOST
-RECONNECTING
-RECOVERY_REQUIRED
-
-Her ekranı bu state'lerde kontrol et.
+durumunda kalırsa, sizin uygulama tarafındaki transport watchdog devreye girmeli.
 
 Örneğin:
 
-Araç bağlı değilken
-Ek Özellik Açma butonu kilitli mi?
-UDS butonu kilitli mi?
-Multi-ECU Scan doğru uyarıyı gösteriyor mu?
-Kullanıcı yanlışlıkla ECU komutu gönderebiliyor mu?
-Bağlantı kopunca
-UI doğru state'e dönüyor mu?
-Polling duruyor mu?
-Queue temizleniyor mu?
-Reconnect başlıyor mu?
-Kullanıcıya doğru mesaj gösteriliyor mu?
-Kontak kapanınca
-ECU bağlantısı doğru şekilde kapanıyor mu?
-Uygulama sonsuz retry yapıyor mu?
-Kullanıcıya "Kontak ON konumuna getirin" mesajı veriliyor mu?
-6. TÜM BUTONLARIN GERÇEKTEN ÇALIŞTIĞINI TEST ET
+SEARCHING... > 8-12 saniye
 
-Aşağıdaki özelliklerin her biri için başarılı, başarısız, bağlantısız ve tekrar tıklama senaryolarını test et:
+veya:
 
-Connection
-Scan
-Connect
-Disconnect
-Safe Disconnect
-Reconnect
-Auto Reconnect
-Diagnostics
-Read DTC
-Clear DTC
-Multi-ECU Scan
-ECU Selection
-DTC Details
-DTC Explanation
-Refresh
-Live Data
-Add Gauge
-Remove Gauge
-Change PID
-Start Live Data
-Stop Live Data
-Reset
-Fullscreen
-Feature Activation
-Open Feature
-Read Current Value
-Backup
-Write
-Verify
-Cancel
-Rollback
-Recovery
-Retry
-Settings
-Language
-Theme
-Units
-Notifications
-Subscription
-Privacy
-Legal
+AT komutu gönderildi
+↓
+cevap yok
+↓
+timeout
+↓
+Bluetooth bağlantısı fiziksel olarak hâlâ açık
 
-Her işlem için:
+Bu durumda hemen AT WS göndermek yerine önce protokol oturumunu kapatmayı tercih ederim.
 
-PASS
-FAIL
-PARTIAL
-NOT IMPLEMENTED
+Önerilen Recovery Sequence
+AT PC
 
-sonuçlarından birini ver.
+Ardından:
 
-7. GÖRSEL TUTARSIZLIK DENETİMİ
+AT ST FF
 
-Tüm uygulama genelinde şu değerleri karşılaştır:
+Sonra:
 
-Border Radius
-Card Radius
-Button Height
-Input Height
-Font Sizes
-Font Weights
-Icon Sizes
-Horizontal Padding
-Vertical Spacing
-Header Height
-Bottom Tab Height
-Modal Radius
-Shadow / Elevation
-Color Tokens
+AT TP 6
+0100
 
-Aynı amaçlı bileşenler farklı görünüyorsa tek bir Design System'e taşı.
+Başarısızsa:
 
-Örneğin:
+AT PC
+AT TP 5
+0100
 
-PrimaryButton
-SecondaryButton
-DangerButton
-GhostButton
-IconButton
-Card
-SectionHeader
-StatusBadge
-LoadingState
-EmptyState
-ErrorState
+Başarısızsa:
 
-oluştur.
+AT PC
+AT TP 7
+0100
 
-8. RESPONSIVE TEST
+ve diğer protokoller.
 
-En az şu cihaz boyutlarını test et:
+Neden TP?
 
-iPhone SE
-iPhone 14 / 15
-iPhone Pro Max
-Android Small
-Android Standard
-Android Large
-Tablet
+AT SP 6 doğrudan protokolü seçer. Bu, klonun mevcut başarısız initialization state'ini temizlemeden yeni protokole geçmeye çalışmasına neden olabilir.
 
-Aşağıdaki durumları kontrol et:
+AT TP 6 ise “bu protokolü dene” mantığına daha yakındır. ELM327 dokümantasyonunda TP, SP ile benzer şekilde protokol denemesi yapar; ancak başarılı protokolü kalıcı protokol olarak yazma davranışı farklıdır. Bu nedenle fallback taraması için mimari olarak daha uygundur.
 
-Font büyütme
-Uzun araç adı
-Uzun ECU adı
-Uzun DTC açıklaması
-Çok uzun çeviri
-3 haneli RPM
-4 haneli RPM
-3 haneli hız
-6 haneli değer
-Çok büyük sayı
-Null değer
-N/A
---
-Loading
-9. GLOBAL LANGUAGE TESTİ
+AT WS nerede kullanılmalı?
 
-En az şu dillerde UI test et:
+Ben olsam şu şekilde kullanırım:
 
-English
-Turkish
-German
-French
-Spanish
-Italian
-Portuguese
-Russian
-Arabic
-Chinese Simplified
-Japanese
-Korean
+AT SP 0
+0100
+↓
+SEARCHING timeout
+↓
+AT PC
+↓
+AT WS
+↓
+AT ST FF
+↓
+AT TP 6
+0100
 
-Kontrol et:
+Eğer klonlarda AT PC sonrası hâlâ:
 
-Text overflow
-Button overflow
-Modal overflow
-RTL layout
-Navigation title overflow
-Tab label overflow
-DTC açıklaması
-Error message
-Toast
-Alert
-Empty State
+SEARCHING...
 
-Bir çeviri eksikse fallback dili sessizce kullanmak yerine raporla.
+veya:
 
-10. OBD / ECU FONKSİYONEL TEST
+NO DATA
 
-UI testinin yanında gerçek uygulama mantığını da test et.
+durumu düzgün temizlenmiyorsa:
 
-Şu senaryoları simüle et:
+AT WS
 
-Adapter connected
-Adapter disconnected
-ECU connected
-ECU not responding
-Timeout
-NRC 0x78
-NRC 0x33
-NRC 0x35
-NRC 0x36
-NRC 0x37
-Voltage low
-Voltage critical
-Ignition OFF
-Vehicle moving
-Speed unknown
-Fingerprint mismatch
-Fingerprint partial match
-Unsupported protocol
-Tier 3 adapter
-Read-back mismatch
-Verification inconclusive
+kullanılabilir.
 
-Her senaryoda:
+Ancak burada kritik nokta şu:
 
-Expected UI:
-Actual UI:
-Expected State:
-Actual State:
-Expected User Message:
-Actual User Message:
-PASS/FAIL:
-11. LOADING / ERROR / EMPTY STATE DENETİMİ
+AT WS, araç ECU'sunun “warm start” işlemi değildir. Adaptörün kendi protokol/OBD bağlantı durumunu yeniden başlatma mekanizmasıdır.
 
-Uygulamadaki her async işlem için şu üç durum mutlaka olmalı:
+Dolayısıyla AT WS CAN bus üzerinde ISO 15765-4 standardının bir komutu değildir; ELM327 adaptörünün AT komutudur. Bu nedenle “otomotiv standardı gereği fallback halkasında bulunmalıdır” demek doğru olmaz. Standart uyumluluk açısından zorunlu değil, klon toleransı açısından pratik bir recovery aracıdır.
 
-LOADING
-SUCCESS
-ERROR
+Benim daha güçlü önerim: AT PC + AT WS kombinasyonunu koşullu kullanın
 
-Ayrıca:
+MotoCortex için aşağıdaki recovery state machine'i öneririm:
 
-EMPTY
-TIMEOUT
-CANCELLED
-CONNECTION_LOST
-RETRY
+┌─────────────────────────┐
+│ AT SP 0                 │
+└────────────┬────────────┘
+             │
+             ▼
+        OBD Request
+             │
+             ▼
+      SEARCHING...
+             │
+     ┌───────┴────────┐
+     │                │
+  SUCCESS          TIMEOUT
+                       │
+                       ▼
+                   AT PC
+                       │
+                       ▼
+                   AT WS
+                       │
+                       ▼
+                 AT ST FF
+                       │
+                       ▼
+                 AT TP 6
+                       │
+                  0100
+                       │
+       ┌───────────────┴──────────────┐
+       │                              │
+    SUCCESS                        FAIL
+                                      │
+                                      ▼
+                                   AT PC
+                                      │
+                                      ▼
+                                   AT TP 5
+                                      │
+                                    0100
 
-durumlarını da kontrol et.
+Sonra:
 
-Özellikle şu hataları ara:
+TP 7
+TP 8
+TP 3
+TP 4
 
-Sonsuz spinner
-Spinner başladıktan sonra hiç bitmemesi
-Error state'te retry olmaması
-Error sonrası eski verinin ekranda kalması
-Empty state yerine boş beyaz ekran
-Network hatasında crash
-Bluetooth bağlantısı kopunca loading'in devam etmesi
-12. MEMORY LEAK & LIFECYCLE TEST
+gibi bir sıra.
 
-Tüm ekranlarda şunları kontrol et:
+Fakat burada araçtan gelen VIN, model/yıl bilgisi veya geçmişte başarıyla kullanılan protokol varsa, AT SP 0 ile başlamak yerine doğrudan:
 
-setInterval
-setTimeout
-addListener
-Bluetooth listeners
-EventEmitter
-OBD polling
-subscriptions
-animated listeners
+AT TP 6
 
-Her birinin cleanup'ı olmalı.
+veya:
 
-Özellikle:
+AT TP 5
 
-useEffect(() => {
-  const timer = setInterval(...);
+ile başlamak daha iyi olur.
 
-  return () => {
-    clearInterval(timer);
-  };
-}, []);
+Bu, MotoCortex'un sizin geliştirdiğiniz Compatibility Intelligence Layer için de önemli: adaptörün her bağlantıda tüm protokol evrenini taramasını beklemek yerine, araç geçmişinden öğrenilmiş protokolü ilk sıraya alabilirsiniz.
 
-olmayan tüm durumları bul.
+Eklenmesini özellikle önerdiğim komut: AT DPN
 
-Ekrana 20 kez girip çıkıldığında:
+Her başarılı protokol denemesinden sonra:
 
-timer sayısı artıyor mu?
-listener sayısı artıyor mu?
-memory kullanımı artıyor mu?
-duplicate OBD command oluşuyor mu?
+AT DPN
 
-test et.
-
-13. DUPLICATE ACTION TESTİ
-
-Her kritik butona hızlıca 5-10 kez bas.
-
-Özellikle:
-
-Connect
-Scan
-Read DTC
-Clear DTC
-Write ECU
-Rollback
-Reconnect
-
-testlerinde:
-
-1 tap
-2 taps
-5 rapid taps
-10 rapid taps
-
-senaryolarını uygula.
-
-Beklenen:
-
-Aynı işlem duplicate başlamamalı.
-Queue şişmemeli.
-İkinci yazma komutu gönderilmemeli.
-UI kilitlenmeli veya işlem güvenli şekilde ignore edilmeli.
-14. TASARIM DÜZELTME KURALI
-
-Bir tasarım hatası bulduğunda yalnızca o ekranı düzeltme.
-
-Aynı problemi tüm uygulamada ara.
+gönderin.
 
 Örneğin:
 
-Dashboard'da buton yüksekliği hatalıysa tüm butonları kontrol et.
+AT TP 6
+0100
 
-Bir modalda text overflow varsa tüm modalları kontrol et.
+başarılıysa:
 
-Bir ekranın loading state'i bozuksa tüm async ekranları kontrol et.
+AT DPN
 
-15. HER DÜZELTME İÇİN REGRESSION TEST EKLE
+cevabı:
 
-Bir bug düzeltildikten sonra test ekle.
+A6
 
-Örnek:
+olmalıdır.
 
-Bug:
-DTC Refresh butonu çalışmıyordu.
+Bunu şu amaçlarla kullanabilirsiniz:
 
-Fix:
-handleRefresh fonksiyonu bağlandı.
+Detected Protocol: 6
+Transport: CAN
+CAN Speed: 500 kbit/s
 
-Regression Test:
-DTC_REFRESH_BUTTON_TRIGGERS_SCAN
+Sonraki bağlantıda:
 
-Result:
-PASS
-16. SON RAPORU BU FORMATTA SUN
-Executive Summary
-Total Screens:
-Total Interactive Elements:
-Total Buttons:
-Total Navigation Routes:
-Total Async Operations:
-Total Issues:
-Critical:
-High:
-Medium:
-Low:
-Critical Bugs
-ID:
-Screen:
-File:
-Line:
-Problem:
-Reproduction Steps:
-Expected:
-Actual:
-Root Cause:
-Fix:
-Test Result:
-UI/UX Issues
-Screen:
-Problem:
-Severity:
-Screenshot/Reference:
-Recommended Fix:
-Non-Functional Buttons
-Button:
-Screen:
-File:
-Handler:
-Problem:
-Fix:
-Navigation Issues
-Route:
-From:
-To:
-Problem:
-Fix:
-Responsive Issues
-Device:
-Screen:
-Problem:
-Fix:
-Localization Issues
-Language:
-Screen:
-Problem:
-Fix:
-Memory / Lifecycle Issues
-Component:
-Leak Type:
-Reproduction:
-Fix:
-Final Score
-UI/UX:
-Functional:
-Navigation:
-OBD:
-ECU:
-Performance:
-Accessibility:
-Localization:
-Overall:
-🚫 KESİNLİKLE YAPMA
-Sadece TypeScript derleme testine güvenme.
-Sadece Jest testlerinin başarılı olmasını yeterli kabul etme.
-Sadece dosyaları okuyup "çalışıyor" deme.
-onPress var diye butonu çalışıyor kabul etme.
-Mock başarılı diye gerçek akışı başarılı kabul etme.
-Görsel olarak güzel diye UX'i tamamlanmış kabul etme.
-Bir ekranı test edip diğerlerini varsayma.
-"Muhtemelen çalışıyordur" deme.
-Test edilmemiş hiçbir özelliği PASS olarak işaretleme.
-🎯 SON HEDEF
+AT TP 6
 
-Bu çalışmanın sonunda MotoCortex için:
+ile başlayabilirsiniz.
 
-"Tüm ekranları incelendi, tüm butonları test edildi, tüm navigasyon akışları doğrulandı, tüm kritik UI/UX hataları giderildi ve regression testleri oluşturuldu."
+Bu, AT SP 0 otomatik taramasının ucuz klonlarda oluşturduğu SEARCHING... riskini ciddi biçimde azaltabilir. ELM327 dokümantasyonunda AT DPN, aktif protokolü numarasıyla bildirmek için tanımlanmıştır.
 
-diyebileceğimiz gerçek bir QA raporu istiyorum.
+Benim net önerim
 
-Önce analiz et. Sonra sorunları önem derecesine göre listele. Daha sonra düzeltmeleri uygula. Son olarak tüm düzeltmeleri yeniden test et.
+MotoCortex için protokol keşif algoritması şu olsun:
 
-Düzeltme yapmadan önce bana soru sorma; mevcut proje mimarisine uygun en güvenli ve tutarlı çözümü uygula.
+1. Cached Protocol varsa
+   ↓
+   AT TP <cached>
+   ↓
+   0100
+   ↓
+   Success → AT DPN → lock protocol
 
-Hiçbir test edilmemiş ekran, buton veya akışı başarılı kabul etme.
+2. Cached Protocol yoksa
+   ↓
+   AT SP 0
+   ↓
+   0100
+   ↓
+   Success → AT DPN → cache protocol
+
+3. SEARCHING timeout
+   ↓
+   AT PC
+   ↓
+   AT WS
+   ↓
+   AT ST FF
+   ↓
+   AT TP 6
+   ↓
+   0100
+
+4. Fail
+   ↓
+   AT PC
+   ↓
+   AT TP 5
+   ↓
+   0100
+
+5. Fail
+   ↓
+   AT PC
+   ↓
+   AT TP 7 / 8 / 3 / 4
+Son derece önemli bir ayrıntı
+
+AT WS veya AT PC gönderildikten sonra hemen bir sonraki protokol komutunu göndermeyin. Ucuz klonlarda Bluetooth UART buffer'ı ve firmware state machine'i gecikmeli çalışabiliyor. Sizin daha önce belirlediğiniz strict sequential state machine + transport lock + guard time mimarisi burada kesinlikle korunmalı.
+
+Ben başlangıçta şu aralıkları test ederdim:
+
+AT PC
+↓ 150–300 ms
+AT WS
+↓ 150–300 ms
+AT ST FF
+↓ 100–200 ms
+AT TP 6
+↓ 100–200 ms
+0100
+
+Ancak bu gecikmeleri sabit yapmak yerine adapter profile'a göre öğrenilebilir hale getirmek daha iyi olur.
+
+Sonuç: AT WS + AT ST FF yaklaşımınız yanlış değil; hatta ucuz klonlar için faydalı bir recovery stratejisi. Fakat ben mimariyi AT WS merkezli değil, AT PC → (gerekirse AT WS) → AT ST FF → AT TP <protocol> şeklinde kurardım. Ek olarak AT DPN ile başarılı protokolü kaydedip sonraki bağlantılarda AT SP 0 aramasını mümkün olduğunca bypass etmek, MotoCortex için daha sağlam ve daha hızlı çözüm olur.

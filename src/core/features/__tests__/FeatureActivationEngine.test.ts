@@ -177,6 +177,38 @@ describe('MotoCortex ECU Coding & UDS Safety Engine v1.2 Consensus Tests', () =>
             }).toThrow(/SAFETY_VIOLATION_VEHICLE_IN_MOTION/);
         });
 
+        it('should BLOCK coding when engine is RUNNING (RPM > 0)', () => {
+            expect(() => {
+                featureActivationEngine.validateSafetyGate(
+                    {
+                        batteryVoltage: 12.6,
+                        vehicleSpeed: 0,
+                        isSpeedReadable: true,
+                        isEngineRunning: true, // Engine active (RPM > 0)
+                    },
+                    sampleFeature
+                );
+            }).toThrow('SAFETY_VIOLATION_ENGINE_RUNNING');
+        });
+
+        it('should HARD-BLOCK ECU write attempts to ABS (0x7E2) and Airbag/SRS (0x7E3) modules', () => {
+            const unsafeAbsFeature: FeatureDefinition = {
+                ...sampleFeature,
+                id: 'ABS_BRAKE_RESET_TEST',
+            };
+            expect(() => {
+                featureActivationEngine.validateSafetyGate(
+                    {
+                        batteryVoltage: 12.8,
+                        vehicleSpeed: 0,
+                        isSpeedReadable: true,
+                        isEngineRunning: false,
+                    },
+                    unsafeAbsFeature
+                );
+            }).toThrow('SAFETY_VIOLATION_UNSAFE_MODULE_WRITE');
+        });
+
         it('should PASS safety gate when stationary, battery >= 12.0V, and valid preconditions', () => {
             const resultVoltageState = featureActivationEngine.validateSafetyGate(
                 {

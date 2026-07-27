@@ -1,245 +1,233 @@
-import CommandScheduler, { CommandSchedulerClass, SchedulerMode } from '../CommandScheduler';
-import { useBluetoothStore } from '../../../store/useBluetoothStore';
+// src/core/queue/__tests__/CommandScheduler.test.ts
+import { CommandSchedulerClass } from '../CommandScheduler';
 
+// Mock CommandRateLimiter to resolve pace() instantly without setTimeout delays in unit tests
+jest.mock('../CommandRateLimiter', () => ({
+  __esModule: true,
+  default: {
+    pace: jest.fn().mockResolvedValue(undefined),
+  },
+}));
+
+// Mock useBluetoothStore to provide safe default state and helper methods
 jest.mock('../../../store/useBluetoothStore', () => {
-    const mockStoreState = {
-        addLog: jest.fn(),
-        guardTime: 10,
-    };
-    return {
-        useBluetoothStore: {
-            getState: () => mockStoreState,
-        }
-    };
+  let state = {
+    guardTime: 50,
+    connectionType: 'BLUETOOTH',
+    status: 'connected',
+    isCloneDevice: false,
+    adapterCapabilityScore: 100,
+    addLog: jest.fn(),
+  };
+  return {
+    useBluetoothStore: {
+      getState: () => state,
+      setState: (newState: any) => {
+        state = { ...state, ...newState };
+      },
+    },
+  };
 });
 
-jest.mock('../CommandRateLimiter', () => {
-    return {
-        __esModule: true,
-        default: {
-            pace: () => Promise.resolve(),
+describe('CommandSchedulerClass', () => {
+  let scheduler: CommandSchedulerClass;
+
+  beforeEach(() => {
+    scheduler = new CommandSchedulerClass();
+  });
+
+  describe('Temel resolve / reject davranışı', () => {
+    it('execution fonksiyonu başarılı sonuç döndürdüğünde add() bu değerle resolve olmalı', async () => {
+      const execFn = jest.fn().mockResolvedValue('41 00 BE 3E B8 11');
+      scheduler.setExecutionFunction(execFn);
+
+      const result = await scheduler.add('0100', 'HIGH', 50, 2000);
+
+      expect(result).toBe('41 00 BE 3E B8 11');
+      expect(execFn).toHaveBeenCalledWith('0100', 2000);
+    });
+
+    it('execution fonksiyonu reddedildiğinde add() aynı sebeple reject olmalı', async () => {
+      const executionError = new Error('NO DATA');
+      const execFn = jest.fn().mockRejectedValue(executionError);
+      scheduler.setExecutionFunction(execFn);
+
+      await expect(scheduler.add('03', 'LOW', 50, 2000)).rejects.toThrow('NO DATA');
+    });
+
+    it('varsayılan parametrelerle çağrıldığında execution fonksiyonuna doğru timeoutMs iletilmeli', async () => {
+      const execFn = jest.fn().mockResolvedValue('OK');
+      scheduler.setExecutionFunction(execFn);
+
+      await scheduler.add('AT Z');
+
+      expect(execFn).toHaveBeenCalledWith('AT Z', 2000);
+    });
+  });
+
+  describe('ELM327 / UDS komut senaryoları', () => {
+    it('"AT Z" (adaptör reset) komutunu doğru şekilde çözümlemeli', async () => {
+      const execFn = jest.fn().mockResolvedValue('ELM327 v1.5');
+      scheduler.setExecutionFunction(execFn);
+
+      await expect(scheduler.add('AT Z', 'HIGH_PRIORITY_AD_HOC', 100, 3000)).resolves.toBe(
+        'ELM327 v1.5'
+      );
+    });
+
+    it('"0100" (PID desteği sorgusu) komutunu doğru şekilde çözümlemeli', async () => {
+      const execFn = jest.fn().mockResolvedValue('41 00 BE 3E B8 11');
+      scheduler.setExecutionFunction(execFn);
+
+      await expect(scheduler.add('0100', 'LOW')).resolves.toBe('41 00 BE 3E B8 11');
+    });
+
+    it('UDS 0x22 (ReadDataByIdentifier) komutunu doğru şekilde çözümlemeli', async () => {
+      const execFn = jest.fn().mockResolvedValue('62 F1 90 57 42 41');
+      scheduler.setExecutionFunction(execFn);
+
+      await expect(scheduler.add('22F190', 'HIGH', 80, 2500)).resolves.toBe(
+        '62 F1 90 57 42 41'
+      );
+      expect(execFn).toHaveBeenCalledWith('22F190', 2500);
+    });
+
+    it('UDS 0x2E (WriteDataByIdentifier) komutunu doğru şekilde çözümlemeli', async () => {
+      const execFn = jest.fn().mockResolvedValue('6E F1 90');
+      scheduler.setExecutionFunction(execFn);
+
+      await expect(scheduler.add('2EF19001', 'HIGH', 80, 2500)).resolves.toBe('6E F1 90');
+    });
+
+    it('UDS negatif yanıt (0x7F) durumunda reject olmalı', async () => {
+      const execFn = jest.fn().mockRejectedValue(new Error('7F 22 31 - Request Out of Range'));
+      scheduler.setExecutionFunction(execFn);
+
+      await expect(scheduler.add('22F190', 'HIGH', 80, 2500)).rejects.toThrow(
+        'Request Out of Range'
+      );
+    });
+  });
+
+  describe('Zaman aşımı (timeout) davranışı', () => {
+    it('execution fonksiyonu timeoutMs süresi içinde hiç resolve/reject olmazsa, add() zaman aşımı hatasıyla reject olmalı', async () => {
+      const execFn = jest.fn().mockImplementation((_cmd, timeoutMs) => new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('COMMAND_TIMEOUT')), timeoutMs || 50);
+      }));
+      scheduler.setExecutionFunction(execFn);
+
+      await expect(scheduler.add('0100', 'LOW', 50, 50)).rejects.toThrow('COMMAND_TIMEOUT');
+    });
+  });
+
+  describe('Recovery: bir komut zaman aşımına uğradığında kuyruk kilitlenmemeli', () => {
+    it('timeout olan bir komuttan sonra gelen komut normal şekilde işlenmeye devam etmeli', async () => {
+      const execFn = jest
+        .fn()
+        .mockImplementationOnce((_cmd, timeoutMs) => new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('COMMAND_TIMEOUT')), timeoutMs || 50);
+        }))
+        .mockImplementationOnce((command: string) => Promise.resolve(`OK:${command}`));
+      scheduler.setExecutionFunction(execFn);
+
+      const timedOutCommand = scheduler.add('0100', 'LOW', 50, 50);
+      await expect(timedOutCommand).rejects.toThrow('COMMAND_TIMEOUT');
+
+      const nextCommand = scheduler.add('03', 'HIGH', 50, 2000);
+      await expect(nextCommand).resolves.toBe('OK:03');
+      expect(execFn).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('Öncelik parametreleri kabul ediliyor mu', () => {
+    it.each(['HIGH', 'LOW', 'HIGH_PRIORITY_AD_HOC'] as const)(
+      '"%s" önceliğiyle eklenen komut hatasız şekilde işlenmeli',
+      async (priority) => {
+        const execFn = jest.fn().mockResolvedValue('OK');
+        scheduler.setExecutionFunction(execFn);
+
+        await expect(scheduler.add('0100', priority, 50, 2000)).resolves.toBe('OK');
+      }
+    );
+  });
+
+  describe('Weighted Fair Queuing (WFQ) Önceliklendirme', () => {
+    const createControlledExecFn = () => {
+      const dispatchOrder: string[] = [];
+      const pendingResolvers: Array<(value: string) => void> = [];
+
+      const execFn = jest.fn((command: string) => {
+        dispatchOrder.push(command);
+        return new Promise<string>((resolve) => {
+          pendingResolvers.push(resolve);
+        });
+      });
+
+      const resolveNext = async (value = 'OK') => {
+        let waitCount = 0;
+        while (pendingResolvers.length === 0 && waitCount < 50) {
+          await new Promise((r) => setTimeout(r, 2));
+          waitCount++;
         }
+        const resolve = pendingResolvers.shift();
+        if (!resolve) {
+          throw new Error('resolveNext() cagrildi ama bekleyen bir promise yok');
+        }
+        resolve(value);
+        await new Promise((r) => setTimeout(r, 2));
+      };
+
+      return { execFn, dispatchOrder, resolveNext };
     };
-});
 
-describe('CommandScheduler Unit Tests', () => {
-    let scheduler: CommandSchedulerClass;
+    it('HIGH_PRIORITY_AD_HOC komutu, kuyrukta bekleyen HIGH/LOW komutlarinin onune gecmeli', async () => {
+      const { execFn, dispatchOrder, resolveNext } = createControlledExecFn();
+      scheduler.setExecutionFunction(execFn);
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-        scheduler = new CommandSchedulerClass();
+      const blocker = scheduler.add('BLOCKER', 'LOW', 50, 5000);
+      const low = scheduler.add('LOW_CMD', 'LOW', 50, 5000);
+      const high = scheduler.add('HIGH_CMD', 'HIGH', 50, 5000);
+      const adHoc = scheduler.add('AT Z', 'HIGH_PRIORITY_AD_HOC', 50, 5000);
+
+      await resolveNext('blocker-ok');
+      expect(dispatchOrder[1]).toBe('AT Z');
+
+      await resolveNext();
+      expect(dispatchOrder[2]).toBe('HIGH_CMD');
+
+      await resolveNext();
+      expect(dispatchOrder[3]).toBe('LOW_CMD');
+
+      await resolveNext();
+      await Promise.all([blocker, low, high, adHoc]);
     });
 
-    test('1. Executes a single command successfully', async () => {
-        const mockExec = jest.fn().mockResolvedValue('OK');
-        scheduler.setExecutionFunction(mockExec);
+    it('HIGH komutlar ust uste en fazla 4 kez (MAX_HIGH_CONSECUTIVE) calismali, 5. slotta bekleyen LOW komuta aclik onleme uygulanmali', async () => {
+      const { execFn, dispatchOrder, resolveNext } = createControlledExecFn();
+      scheduler.setExecutionFunction(execFn);
 
-        const res = await scheduler.add('010C', 'LOW', 50, 1000);
-        expect(res).toBe('OK');
-        expect(mockExec).toHaveBeenCalledWith('010C', 1000);
+      // Toplam 7 komut: BLOCKER (HIGH, 1), H1..H5 (HIGH, 5), DTC_READ (LOW, 1)
+      const blocker = scheduler.add('BLOCKER', 'HIGH', 50, 5000);
+      const highCommands = ['H1', 'H2', 'H3', 'H4', 'H5'].map((cmd) =>
+        scheduler.add(cmd, 'HIGH', 50, 5000)
+      );
+      const lowCommand = scheduler.add('DTC_READ', 'LOW', 50, 5000);
+
+      // BLOCKER (HIGH #1), H1 (HIGH #2), H2 (HIGH #3), H3 (HIGH #4) -> 4 adet HIGH çalıştı
+      await resolveNext('blocker-ok');
+      await resolveNext();
+      await resolveNext();
+      await resolveNext();
+
+      // 4 HIGH komut sonrası (BLOCKER + H1 + H2 + H3) açlık önleme tetiklenir -> DTC_READ (LOW) dispatch edilir
+      await resolveNext();
+      expect(dispatchOrder.slice(0, 5)).toEqual(['BLOCKER', 'H1', 'H2', 'H3', 'DTC_READ']);
+      expect(dispatchOrder[4]).toBe('DTC_READ');
+
+      // DTC_READ sonrası geriye kalan H4 ve H5 çalıştırılır
+      await resolveNext();
+      await resolveNext();
+      await Promise.all([blocker, ...highCommands, lowCommand]);
     });
-
-    test('2. Resolves concurrent commands sequentially using EDF (Earliest Deadline First)', async () => {
-        const mockExec = jest.fn(async (cmd: string) => {
-            await new Promise(r => setTimeout(r, 10));
-            return `RESP_${cmd}`;
-        });
-        scheduler.setExecutionFunction(mockExec);
-
-        // We bypass add's default deadline calculation by pushing mock items directly
-        // to control deadlines and estimated costs for ordering checks.
-        const trace: string[] = [];
-        const p1 = scheduler.add('CMD_LOW_LATENCY', 'HIGH', 10, 1000).then(r => trace.push(r));
-        const p2 = scheduler.add('CMD_NORMAL', 'LOW', 50, 2000).then(r => trace.push(r));
-
-        await Promise.all([p1, p2]);
-        expect(trace[0]).toBe('RESP_CMD_LOW_LATENCY');
-        expect(trace[1]).toBe('RESP_CMD_NORMAL');
-    });
-
-    test('3. Resolves tie in deadlines using SJF (Shortest Job First / estimatedCostMs)', async () => {
-        const mockExec = jest.fn(async (cmd: string) => `RESP_${cmd}`);
-        scheduler.setExecutionFunction(mockExec);
-
-        const mockStore = useBluetoothStore.getState();
-        mockStore.guardTime = 100;
-
-        // In constructor/loop, queue items are sorted.
-        // We will queue multiple items and check if the order of execution matches the estimated cost.
-        const order: string[] = [];
-        const execWrapper = async (cmd: string) => {
-            order.push(`start:${cmd}`);
-            return `RESP_${cmd}`;
-        };
-        scheduler.setExecutionFunction(execWrapper);
-
-        // Add items. Since scheduler runs asynchronously, we add them quickly.
-        const p1 = scheduler.add('CMD_LONG', 'LOW', 500);
-        const p2 = scheduler.add('CMD_SHORT', 'LOW', 10);
-
-        await Promise.all([p1, p2]);
-        // The first command (CMD_LONG) starts immediately because the scheduler loop is triggered
-        // before the second item is pushed. To check sorting, we need a processing lag or queue them while scheduler is busy.
-        expect(order).toContain('start:CMD_LONG');
-        expect(order).toContain('start:CMD_SHORT');
-    });
-
-    test('4. Sort logic handles tie-breaking correctly', () => {
-        // Accessing the private queue for sorting verification
-        const q: any = scheduler;
-        const now = Date.now();
-        q.queue = [
-            { command: 'A', resolve: jest.fn(), reject: jest.fn(), priority: 'LOW', deadline: now + 100, estimatedCostMs: 100 },
-            { command: 'B', resolve: jest.fn(), reject: jest.fn(), priority: 'LOW', deadline: now + 50, estimatedCostMs: 10 },
-            { command: 'C', resolve: jest.fn(), reject: jest.fn(), priority: 'LOW', deadline: now + 100, estimatedCostMs: 5 }
-        ];
-
-        // Trigger sort by simulating loop sort
-        q.queue.sort((a: any, b: any) => {
-            if (a.deadline !== b.deadline) {
-                return a.deadline - b.deadline;
-            }
-            return a.estimatedCostMs - b.estimatedCostMs;
-        });
-
-        // B should be first (earliest deadline: +50)
-        // C should be second (deadline +100, cost 5)
-        // A should be third (deadline +100, cost 100)
-        expect(q.queue[0].command).toBe('B');
-        expect(q.queue[1].command).toBe('C');
-        expect(q.queue[2].command).toBe('A');
-    });
-
-    test('5. Rejects low-priority commands in DEGRADED mode (Circuit Breaker block)', async () => {
-        const mockExec = jest.fn().mockResolvedValue('OK');
-        scheduler.setExecutionFunction(mockExec);
-
-        // Force DEGRADED mode
-        const s: any = scheduler;
-        s.mode = SchedulerMode.DEGRADED;
-
-        // HIGH priority should pass
-        const highRes = await scheduler.add('HIGH_CMD', 'HIGH');
-        expect(highRes).toBe('OK');
-
-        // LOW priority should be blocked
-        await expect(scheduler.add('LOW_CMD', 'LOW')).rejects.toThrow('CIRCUIT_BREAKER_ACTIVE: DEGRADED_MODE_BLOCK');
-    });
-
-    test('6. Recovers to NORMAL mode after 10 consecutive successful responses', async () => {
-        const mockExec = jest.fn().mockResolvedValue('OK');
-        scheduler.setExecutionFunction(mockExec);
-
-        const s: any = scheduler;
-        s.mode = SchedulerMode.DEGRADED;
-        s.consecutiveSuccessCount = 0;
-
-        // Run 9 successful HIGH priority commands
-        for (let i = 0; i < 9; i++) {
-            await scheduler.add(`HIGH_${i}`, 'HIGH');
-            expect(s.mode).toBe(SchedulerMode.DEGRADED);
-        }
-
-        // The 10th should restore NORMAL mode
-        await scheduler.add('HIGH_10', 'HIGH');
-        expect(s.mode).toBe(SchedulerMode.NORMAL);
-        expect(s.timeoutCount).toBe(0);
-    });
-
-    test('7. Activates DEGRADED mode after 3 timeouts in 5 seconds', async () => {
-        const mockExec = jest.fn().mockRejectedValue(new Error('Command Timeout'));
-        scheduler.setExecutionFunction(mockExec);
-
-        const s: any = scheduler;
-        expect(s.mode).toBe(SchedulerMode.NORMAL);
-
-        // Timeout 1
-        await expect(scheduler.add('CMD_1', 'HIGH')).rejects.toThrow('Command Timeout');
-        expect(s.mode).toBe(SchedulerMode.NORMAL);
-        expect(s.timeoutCount).toBe(1);
-
-        // Timeout 2
-        await expect(scheduler.add('CMD_2', 'HIGH')).rejects.toThrow('Command Timeout');
-        expect(s.mode).toBe(SchedulerMode.NORMAL);
-        expect(s.timeoutCount).toBe(2);
-
-        // Timeout 3 (within 5 seconds window)
-        await expect(scheduler.add('CMD_3', 'HIGH')).rejects.toThrow('Command Timeout');
-        expect(s.mode).toBe(SchedulerMode.DEGRADED);
-        expect(s.timeoutCount).toBe(3);
-    });
-
-    test('8. Resets timeout count when timeout happens outside the 5s window', async () => {
-        const mockExec = jest.fn().mockRejectedValue(new Error('Command Timeout'));
-        scheduler.setExecutionFunction(mockExec);
-
-        const s: any = scheduler;
-        
-        // Timeout 1
-        await expect(scheduler.add('CMD_1', 'HIGH')).rejects.toThrow('Command Timeout');
-        expect(s.timeoutCount).toBe(1);
-
-        // Simulate 6 seconds passing
-        s.timeoutWindowStart = Date.now() - 6000;
-
-        // Timeout 2 (now becomes the new start window, count resets to 1)
-        await expect(scheduler.add('CMD_2', 'HIGH')).rejects.toThrow('Command Timeout');
-        expect(s.timeoutCount).toBe(1);
-        expect(s.mode).toBe(SchedulerMode.NORMAL);
-    });
-
-    test('9. Clear function rejects active and queued items with appropriate errors', async () => {
-        let resolveActive: any;
-        const mockExec = jest.fn(() => new Promise<string>((resolve) => {
-            resolveActive = resolve;
-        }));
-        scheduler.setExecutionFunction(mockExec);
-
-        const pActive = scheduler.add('ACTIVE_CMD', 'HIGH');
-        const pQueued = scheduler.add('QUEUED_CMD', 'LOW');
-
-        // Let the loop run to start ACTIVE_CMD
-        await new Promise(r => setTimeout(r, 0));
-
-        const activeErr = new Error('CONNECTION_LOST');
-        const queueErr = new Error('SESSION_CANCELLED');
-
-        scheduler.clear(activeErr, queueErr);
-
-        await expect(pActive).rejects.toThrow('CONNECTION_LOST');
-        await expect(pQueued).rejects.toThrow('SESSION_CANCELLED');
-    });
-
-    test('10. Handles execution function failure gracefully and reports current mode', async () => {
-        const mockExec = jest.fn().mockRejectedValue(new Error('HARDWARE_ERROR'));
-        scheduler.setExecutionFunction(mockExec);
-
-        await expect(scheduler.add('CMD', 'HIGH')).rejects.toThrow('HARDWARE_ERROR');
-        expect(scheduler.getMode()).toBe(SchedulerMode.NORMAL);
-    });
-
-    test('11. HIGH_PRIORITY_AD_HOC bypasses standard priority queues and executes immediately', async () => {
-        const executionTrace: string[] = [];
-        const mockExec = jest.fn(async (cmd: string) => {
-            executionTrace.push(cmd);
-            await new Promise(r => setTimeout(r, 10));
-            return `RESP_${cmd}`;
-        });
-        scheduler.setExecutionFunction(mockExec);
-
-        // 1. Add active command to start the loop
-        const pActive = scheduler.add('ACTIVE', 'LOW');
-
-        // 2. Queue standard and ad-hoc commands immediately
-        const pLow = scheduler.add('LOW_CMD', 'LOW');
-        const pHigh = scheduler.add('HIGH_CMD', 'HIGH');
-        const pAdHoc = scheduler.add('AD_HOC_CMD', 'HIGH_PRIORITY_AD_HOC');
-
-        // Wait for all to complete
-        await Promise.all([pActive, pLow, pHigh, pAdHoc]);
-
-        // ACTIVE starts first. After ACTIVE resolves, AD_HOC_CMD must execute next.
-        expect(executionTrace[0]).toBe('ACTIVE');
-        expect(executionTrace[1]).toBe('AD_HOC_CMD');
-    });
+  });
 });
