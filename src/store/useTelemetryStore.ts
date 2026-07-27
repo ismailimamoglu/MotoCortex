@@ -177,7 +177,7 @@ export const useTelemetryStore = create<TelemetryState>()(
         
         const newItem: TelemetryItem = {
           ...standardizedItem,
-          id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
           retry_count: 0,
           success: false,
           created_at: standardizedItem.created_at || new Date(ProtocolEngine.getRelativeLogicalTimestamp()).toISOString()

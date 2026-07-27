@@ -3,14 +3,14 @@
 
 import { Linking, Platform } from 'react-native';
 
-export const TARGET_TEST_EMAIL = 'ismailimamgolu610@gmail.com';
-export const IS_TEST_BUILD = true; // Set to false for global production releases
+export const TARGET_TEST_EMAIL = 'ismailimamoglu610@gmail.com';
+export const IS_TEST_BUILD = __DEV__; // Automatically true in DEV, false in PRODUCTION builds
 
 export class DiagnosticLogMailer {
   private static lastSentTimestamp = 0;
 
   /**
-   * Compiles and dispatches the raw OBD terminal logs (Kara Kutu) to the test email address.
+   * Compiles and dispatches raw OBD terminal logs (Kara Kutu) to support/dev email address.
    */
   public static async sendReport(params: {
     status: 'SUCCESS' | 'FAILED';
@@ -20,8 +20,9 @@ export class DiagnosticLogMailer {
     vehicleName?: string;
     logs: string[];
     errorReason?: string;
+    forceSend?: boolean;
   }): Promise<boolean> {
-    if (!IS_TEST_BUILD) return false;
+    if (!IS_TEST_BUILD && !params.forceSend) return false;
 
     // Cooldown: prevent sending duplicate emails within 15 seconds
     const now = Date.now();

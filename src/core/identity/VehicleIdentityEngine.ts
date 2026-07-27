@@ -22,7 +22,7 @@ export class VehicleIdentityEngine {
         const hexOnly = clean.replace(/[^0-9A-F]/g, '');
         let asciiStr = '';
         for (let i = 0; i < hexOnly.length - 1; i += 2) {
-            const code = parseInt(hexOnly.substr(i, 2), 16);
+            const code = parseInt(hexOnly.slice(i, i + 2), 16);
             if (code >= 32 && code <= 126) {
                 asciiStr += String.fromCharCode(code);
             }

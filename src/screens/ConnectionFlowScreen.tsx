@@ -538,6 +538,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 isClone: store.isCloneDevice,
                 logs: store.logs,
                 errorReason: errorMsg || 'User Manual Export',
+                forceSend: true,
               });
             }}
           >
