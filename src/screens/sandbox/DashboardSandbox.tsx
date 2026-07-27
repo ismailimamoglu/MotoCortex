@@ -49,6 +49,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
     adapterCapabilityScore,
     runDiagnostics,
     clearDiagnostics,
+    sendCommand,
   } = useBluetooth();
 
   const rpm = useBluetoothStore((s) => s.rpm);
