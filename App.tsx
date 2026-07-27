@@ -1345,6 +1345,7 @@ function MainApp() {
   const isSmallPhone = height < 820;
 
   const activeSessionVehicle = useTelemetryStore((state) => state.activeSessionVehicle);
+  const activeSessionBrand = useTelemetryStore((state) => state.activeSessionVehicle?.brand);
   const fetchChronicFaults = useTelemetryStore((state) => state.fetchChronicFaults);
 
   // Start background sync manager
@@ -1379,10 +1380,10 @@ function MainApp() {
 
   // Fetch chronic faults on connection/brand changes
   useEffect(() => {
-    if (ecuStatus === 'connected' && activeSessionVehicle?.brand) {
-      fetchChronicFaults(activeSessionVehicle.brand);
+    if (ecuStatus === 'connected' && activeSessionBrand) {
+      fetchChronicFaults(activeSessionBrand);
     }
-  }, [ecuStatus, activeSessionVehicle?.brand]);
+  }, [ecuStatus, activeSessionBrand]);
 
   // Initialize the persistent Device UUID
   useEffect(() => {
@@ -3217,8 +3218,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                 <FeatureActivationModal
                   visible={true}
                   onClose={() => setActiveHubView('hub')}
-                  currentVoltage={parseFloat(storeVoltage || '12.6') || 12.6}
-                  connectedVehicleMake={activeSessionVehicle?.brand}
+                  connectedVehicleMake={activeSessionBrand}
                 />
               )}
               {activeHubView === 'hp_gauge' && (

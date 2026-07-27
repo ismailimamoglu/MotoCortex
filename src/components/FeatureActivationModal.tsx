@@ -73,6 +73,10 @@ export default function FeatureActivationModal({
     const rpm = useBluetoothStore((s) => s.rpm);
     const speed = useBluetoothStore((s) => s.speed);
 
+    const storeVoltage = useBluetoothStore((s) => s.voltage);
+    const parsedVoltage = parseFloat(storeVoltage || '');
+    const liveVoltage = !isNaN(parsedVoltage) ? parsedVoltage : currentVoltage;
+
     const [selectedBrand, setSelectedBrand] = useState<string>(() => {
         if (connectedVehicleMake) return connectedVehicleMake;
         if (isSimulationMode) return 'Volkswagen';
@@ -80,12 +84,10 @@ export default function FeatureActivationModal({
     });
 
     React.useEffect(() => {
-        if (connectedVehicleMake && selectedBrand !== connectedVehicleMake) {
+        if (connectedVehicleMake && selectedBrand === 'ALL') {
             setSelectedBrand(connectedVehicleMake);
-        } else if (isSimulationMode && selectedBrand === 'ALL') {
-            setSelectedBrand('Volkswagen');
         }
-    }, [connectedVehicleMake, isSimulationMode]);
+    }, [connectedVehicleMake]);
 
     const [selectedCategory, setSelectedCategory] = useState<FeatureCategory | 'ALL'>('ALL');
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -100,7 +102,7 @@ export default function FeatureActivationModal({
     const [isBrandPickerOpen, setIsBrandPickerOpen] = useState(false);
     const [isCategoryPickerOpen, setIsCategoryPickerOpen] = useState(false);
 
-    const effectiveVoltage = isSimulationMode ? 12.8 : currentVoltage;
+    const effectiveVoltage = isSimulationMode ? 12.8 : liveVoltage;
     const isVoltageLow = !isSimulationMode && effectiveVoltage < 12.2;
     const rawList = useMemo(() => oemDatabaseProvider.getFeaturesForMake(), []);
 
