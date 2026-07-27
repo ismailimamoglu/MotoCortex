@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
   Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -67,10 +66,11 @@ export default function LanguageSelectionView({
     return sortedLanguages.filter((opt) => opt.label.toLowerCase().includes(q));
   }, [sortedLanguages, searchQuery]);
 
-  const renderItem = ({ item }: { item: typeof languagesList[0] }) => {
+  const renderItem = (item: typeof languagesList[0]) => {
     const isSelected = currentLanguage === item.value;
     return (
       <TouchableOpacity
+        key={item.value}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -135,15 +135,10 @@ export default function LanguageSelectionView({
         />
       </View>
 
-      {/* FlatList */}
-      <FlatList
-        data={filteredOptions}
-        keyExtractor={(item) => item.value}
-        renderItem={renderItem}
-        style={{ flex: 1 }}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={true}
-      />
+      {/* Language List */}
+      <View style={{ width: '100%' }}>
+        {filteredOptions.map((item) => renderItem(item))}
+      </View>
     </View>
   );
 }
