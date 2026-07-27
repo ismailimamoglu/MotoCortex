@@ -346,11 +346,16 @@ export default function BentoGrid({
           onPress={onOpenSettings}
           activeOpacity={0.4}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(2) }}>
-            <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', paddingHorizontal: scaleWidth(2) }}>
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.65}
+              style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1, textAlign: 'center' }]}
+            >
               {t('bento.languageSelect', 'DİL SEÇİMİ').toUpperCase()}
             </Text>
-            <Text style={{ fontSize: scaleFont(9), marginStart: 2 }}>{langFlag}</Text>
+            <Text style={{ fontSize: scaleFont(10), marginStart: 3 }}>{langFlag}</Text>
           </View>
         </BentoButton>
       </View>
