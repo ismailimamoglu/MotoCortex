@@ -85,7 +85,7 @@ export default function FeatureActivationModal({
         } else if (isSimulationMode && selectedBrand === 'ALL') {
             setSelectedBrand('Volkswagen');
         }
-    }, [connectedVehicleMake, isSimulationMode, selectedBrand]);
+    }, [connectedVehicleMake, isSimulationMode]);
 
     const [selectedCategory, setSelectedCategory] = useState<FeatureCategory | 'ALL'>('ALL');
     const [searchQuery, setSearchQuery] = useState<string>('');
