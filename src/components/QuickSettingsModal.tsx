@@ -197,179 +197,27 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
         <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
           <TouchableOpacity activeOpacity={0.4} onPress={handleTitleTap}>
             <Text allowFontScaling={false} style={[sDyn.headerTitle, { color: colors.textPri }]}>
-              {t('bento.settings.title', 'Quick Settings').toUpperCase()}
+              🌐 {t('bento.languageSelect', 'DİL SEÇİMİ').toUpperCase()}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
             <Text allowFontScaling={false} style={[sDyn.cancelText, { color: colors.cyan }]}>
-              {t('bento.settings.done', 'DONE').toUpperCase()}
+              {t('bento.settings.done', 'BİTTİ').toUpperCase()}
             </Text>
           </TouchableOpacity>
         </View>
 
-        <ScrollView 
-          style={sDyn.content} 
-          showsVerticalScrollIndicator={false} 
-          contentContainerStyle={{ paddingBottom: isTablet ? scaleHeight(24) : (Platform.OS === 'ios' ? insets.bottom + scaleHeight(24) : scaleHeight(24)) }}
-        >
-          {/* Section 2: Language Selection */}
-          <Text allowFontScaling={false} style={[sDyn.sectionTitle, { color: colors.textSec, marginTop: scaleHeight(18) }]}>
-            {t('bento.settings.language', 'Language')}
-          </Text>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderWidth: 1.2,
-              borderRadius: scaleMod(12),
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(14),
-              backgroundColor: `${colors.textPri}05`,
-              borderColor: colors.border,
-              marginTop: scaleHeight(4),
-            }}
-            onPress={() => setIsLangModalOpen(true)}
-            activeOpacity={0.4}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(8) }}>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(14) }}>{currentLanguageObj.flag}</Text>
-              <Text allowFontScaling={false} style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: colors.textPri }}>
-                {currentLanguageObj.label}
-              </Text>
-            </View>
-            <Text allowFontScaling={false} style={{ color: colors.textSec, fontSize: scaleFont(10) }}>▶</Text>
-          </TouchableOpacity>
-
-          {/* Section 3: Community & Support */}
-          <Text allowFontScaling={false} style={[sDyn.sectionTitle, { color: colors.textSec, marginTop: scaleHeight(18) }]}>
-            {t('bento.settings.community', 'COMMUNITY & SUPPORT')}
-          </Text>
-          <View style={{ gap: scaleMod(8) }}>
-            <TouchableOpacity
-              style={[sDyn.optionBtn, { backgroundColor: `${colors.cyan}0D`, borderColor: `${colors.cyan}26` }]}
-              onPress={handleSupportEmail}
-              activeOpacity={0.4}
-            >
-              <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.textPri }]}>{t('info.support', 'SUPPORT CENTER')}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[sDyn.optionBtn, { backgroundColor: `${colors.purple}0D`, borderColor: `${colors.purple}26` }]}
-              onPress={async () => {
-                try {
-                  await Share.share({
-                    message: t('report.shareMessage', 'Check out MotoCortex - The ultimate motorcycle diagnostics tool! https://motocortex.app'),
-                    title: 'MotoCortex'
-                  });
-                } catch (e) { console.error(e); }
-              }}
-              activeOpacity={0.4}
-            >
-              <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.textPri }]}>{t('expertise.share', 'SHARE APP')}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                sDyn.optionBtn,
-                {
-                  backgroundColor: isSimulationMode ? `${colors.green}14` : `${colors.textPri}05`,
-                  borderColor: isSimulationMode ? colors.green : colors.border,
-                }
-              ]}
-              onPress={() => {
-                const newMode = !isSimulationMode;
-                toggleSimulationMode();
-                if (newMode) {
-                  Alert.alert(t('common.demoMode', 'DEMO MODE'), t('common.demoModeDesc', 'No device? Test the app with mock telemetry data.'));
-                } else if (onDisconnect) {
-                  onDisconnect();
-                }
-              }}
-              activeOpacity={0.4}
-            >
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.textPri }]}>
-                  {t('common.demoMode', 'DEMO MODE').toUpperCase()}
-                </Text>
-                <View style={{
-                  width: scaleMod(8),
-                  height: scaleMod(8),
-                  borderRadius: scaleMod(4),
-                  backgroundColor: isSimulationMode ? colors.green : colors.textSec
-                }} />
-              </View>
-            </TouchableOpacity>
-
-            {!(isSimulationMode || __DEV__) && connectionStatus === 'connected' && (
-              <TouchableOpacity
-                style={[
-                  sDyn.optionBtn, 
-                  { 
-                    backgroundColor: `${colors.red}0D`, 
-                    borderColor: colors.red, 
-                    marginTop: scaleHeight(8),
-                  }
-                ]}
-                onPress={() => {
-                  if (onDisconnect) {
-                    onDisconnect();
-                  }
-                  onClose();
-                }}
-                activeOpacity={0.4}
-              >
-                <Text allowFontScaling={false} style={sDyn.optionIcon}>🔌</Text>
-                <Text allowFontScaling={false} style={[sDyn.optionLabel, { color: colors.red }]}>{t('connection.disconnect', 'DISCONNECT')}</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {/* Disclaimer */}
-          <Text allowFontScaling={false} style={{
-            fontSize: scaleFont(8.5),
-            color: colors.textSec,
-            fontFamily: MONO,
-            marginTop: scaleHeight(20),
-            textAlign: 'center',
-            lineHeight: scaleFont(12),
-            opacity: 0.65,
-            paddingHorizontal: scaleWidth(10),
-          }}>
-            {t('disclaimer')}
-          </Text>
-        </ScrollView>
-      </View>
-
-      {/* Standalone Full-Screen Language Selection Modal */}
-      <Modal
-        visible={isLangModalOpen}
-        animationType="slide"
-        transparent={false}
-        onRequestClose={() => setIsLangModalOpen(false)}
-      >
-        <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: Platform.OS === 'ios' ? 50 : 0 }}>
-          <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
-            <TouchableOpacity onPress={() => setIsLangModalOpen(false)} style={sDyn.cancelBtn}>
-              <Text allowFontScaling={false} style={[sDyn.cancelText, { color: colors.cyan }]}>
-                {`← ${t('common.back', 'BACK').toUpperCase()}`}
-              </Text>
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={[sDyn.headerTitle, { color: colors.textPri }]}>
-              {t('bento.settings.language', 'Language').toUpperCase()}
-            </Text>
-            <View style={{ width: scaleWidth(60) }} />
-          </View>
+        <View style={{ flex: 1, padding: scaleMod(12) }}>
           <LanguageSelectionView
             currentLanguage={language}
-            onSelect={(val) => {
-              setLanguage(val);
-              setIsLangModalOpen(false);
+            onSelect={(selectedLang) => {
+              setLanguage(selectedLang);
+              onClose();
             }}
           />
         </View>
-      </Modal>
+      </View>
     </View>
   );
 }

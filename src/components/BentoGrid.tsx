@@ -340,7 +340,7 @@ export default function BentoGrid({
           </Text>
         </BentoButton>
 
-        {/* Card 4: Quick Settings */}
+        {/* Card 4: Language Selection */}
         <BentoButton
           style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
           onPress={onOpenSettings}
@@ -348,7 +348,7 @@ export default function BentoGrid({
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: scaleHeight(2) }}>
             <Text numberOfLines={1} style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1 }]}>
-              {t('bento.quickSettings').toUpperCase()}
+              {t('bento.languageSelect', 'DİL SEÇİMİ').toUpperCase()}
             </Text>
             <Text style={{ fontSize: scaleFont(9), marginStart: 2 }}>{langFlag}</Text>
           </View>
