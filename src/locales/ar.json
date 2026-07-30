@@ -86,7 +86,10 @@
         "multiEcu": "وحدات متعددة ECU",
         "dctAdapt": "تكيف DCT",
         "safeDisconnect": "فصل آمن",
-        "featureActivation": "تفعيل الميزات المخفية / ترميز ECU"
+        "featureActivation": "تفعيل الميزات المخفية / ترميز ECU",
+        "disabled": "معطل",
+        "enabled": "مفعل",
+        "languageSelect": "اللغة"
     },
     "common": {
         "cancel": "إلغاء",
@@ -135,7 +138,17 @@
         "changeType": "تغيير نوع الاتصال",
         "revocationTitle": "Subscription Cancelled",
         "revocationMsg": "Your access to PRO features has been terminated because your subscription was cancelled or refunded.",
-        "recommended": "RECOMMENDED"
+        "recommended": "RECOMMENDED",
+        "brand": "العلامة التجارية",
+        "confirm": "نعم، صحيح",
+        "edit": "تعديل",
+        "pending": "قيد الانتظار",
+        "proActiveTitle": "حالة PRO نشطة",
+        "refresh": "تحديث",
+        "status": "الحالة",
+        "syncing": "جارٍ المزامنة...",
+        "continueBtn": "CONTINUE",
+        "selected": "محدد"
     },
     "paywall": {
         "crownBadge": "موتو كورتيكس برو",
@@ -171,7 +184,26 @@
         "errorDesc": "حدث خطأ أثناء تحميل المنتجات، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
         "retryBtn": "حاول مرة أخرى",
         "loadingPrices": "جاري تحميل الاسعار...",
-        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code.",
+        "actionLocked": "ميزة PRO مقفلة",
+        "congratsMsg": "تم تفعيل عضوية Cortex OBD2 PRO بنجاح!",
+        "congratsTitle": "🎉 تهانينا!",
+        "errMsg": "حدث خطأ أثناء الشراء. يرجى المحاولة مرة أخرى.",
+        "errTitle": "❌ فشل الشراء",
+        "monthlyNotice": "اشتراك شهري يتجدد تلقائياً",
+        "noPkgMsg": "يرجى اختيار حزمة.",
+        "noPkgTitle": "⚠️ لم يتم اختيار حزمة",
+        "noPurchasesMsg": "لم يتم العثور على عضوية PRO نشطة.",
+        "noPurchasesTitle": "ℹ️ لا توجد مشتريات",
+        "proRequiredDesc": "تتطلب هذه الميزة اشتراك PRO.",
+        "proRequiredTitle": "يتطلب PRO",
+        "purchasingText": "تأمين المعاملة...",
+        "restoreErrorMsg": "يرجى التحقق من اتصال الإنترنت.",
+        "restoreErrorTitle": "⚠️ خطأ في الاستعادة",
+        "restoreSuccessMsg": "تمت استعادة عضويتك المميزة بنجاح!",
+        "restoreSuccessTitle": "✅ تمت استعادة المشتريات",
+        "weeklyNotice": "شراء لمرة واحدة، بدون تجديد تلقائي",
+        "yearlyNotice": "اشتراك سنوي يتجدد تلقائياً"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -276,10 +308,10 @@
         "batteryLowDesc": "جهد البطارية عند{{voltage}}. قم بتشغيل السيارة أو شحنها. قد ينقطع اتصال وحدة التحكم الإلكترونية عند الجهد المنخفض.",
         "batteryWarn": "البطارية أصبحت ضعيفة",
         "batteryWarnDesc": "جهد البطارية{{voltage}}. كن حذرًا أثناء العمليات طويلة المدى.",
-        "rpm": "دورة في الدقيقة",
-        "speed": "كم/ساعة",
+        "rpm": "دوران المحرك (RPM)",
+        "speed": "سرعة السيارة",
         "temp": "درجة الحرارة",
-        "throttle": "غاز",
+        "throttle": "موضع الصمام (الثروتل)",
         "status": "حالة النقل",
         "statusHigh": "عالية",
         "statusNormal": "عادي",
@@ -294,17 +326,17 @@
         "layoutGrid": "شبكة",
         "layoutList": "قائمة",
         "customizeButton": "تعديل المؤشرات",
-        "coolant": "حرارة المحرك",
+        "coolant": "حرارة سائل التبريد",
         "voltage": "جهد البطارية",
         "engineLoad": "حمل المحرك",
-        "intakeAirTemp": "حرارة السحب",
-        "manifoldPressure": "ضغط المانيفولد",
+        "intakeAirTemp": "حرارة هواء السحب",
+        "manifoldPressure": "ضغط المانيفولد (MAP)",
         "ambientTemp": "الحرارة الخارجية",
-        "oilTemp": "حرارة الزيت",
-        "mafFlow": "تدفق الهواء MAF",
-        "timingAdvance": "توقيت الإشعال",
+        "oilTemp": "حرارة زيت المحرك",
+        "mafFlow": "تدفق هواء MAF",
+        "timingAdvance": "توقيت الشرارة",
         "fuelLevel": "مستوى الوقود",
-        "catalystTemp": "حرارة المحفز",
+        "catalystTemp": "حرارة المحفز (الكاتاليزر)",
         "layoutGauge": "مقياس",
         "obdTerminalTitle": "OBD HEALTH & TERMINAL",
         "adapterClone": "CLONE ADAPTER",
@@ -493,7 +525,8 @@
             "regLow": "الشحن: شحن منخفض",
             "regHigh": "الشحن: فاحش",
             "regFail": "الشحن: المنظم معيب"
-        }
+        },
+        "verdictLocked": "قم بالترقية إلى PRO لعرض تقرير البطارية المفصل."
     },
     "freeze": {
         "title": "FREEZE FRAME",
@@ -581,7 +614,21 @@
         "P0730": "نسبة التروس خاطئة",
         "P0560": "جهد النظام - عطل",
         "P0562": "جهد النظام - منخفض",
-        "P0563": "جهد النظام - مرتفع"
+        "P0563": "جهد النظام - مرتفع",
+        "U0100": "Lost Communication With Engine Control Module (ECM/PCM)",
+        "U0121": "Lost Communication With Anti-Lock Brake System (ABS) Module",
+        "C0035": "Left Front Wheel Speed Sensor Circuit Malfunction",
+        "B0001": "Driver Front Stage 1 Deployment Control Circuit",
+        "P0750": "Shift Solenoid A Malfunction",
+        "P0814": "Transmission Range Display Circuit Malfunction",
+        "U0140": "Lost Communication With Body Control Module (BCM)",
+        "C0040": "Right Front Wheel Speed Sensor Circuit Malfunction",
+        "C0110": "ABS Pump Motor Circuit Malfunction",
+        "C0121": "Brake Pressure Sensor Circuit Malfunction",
+        "B0010": "Passenger Front Stage 1 Deployment Control",
+        "B0020": "Left Side Airbag Deployment Control",
+        "B1000": "Body Control Module (BCM) Hardware Fault",
+        "B1325": "Device Power Supply Circuit Low Voltage"
     },
     "vehicleSelect": {
         "title": "اختر سيارتك لزيادة دقة التشخيص",
@@ -711,7 +758,9 @@
         "proceedAnyway": "الاستمرار على أي حال",
         "openSettings": "افتح الإعدادات",
         "langTitle": "Select Language",
-        "nextBtn": "CONTINUE"
+        "nextBtn": "CONTINUE",
+        "langDesc": "يرجى اختيار لغتك المفضلة.",
+        "langSelectSub": "بوابة اللغة"
     },
     "disclaimer": "جميع أسماء المنتجات والشعارات والعلامات التجارية هي ملك لأصحابها. جميع أسماء الشركات والمنتجات والخدمات المستخدمة في هذا التطبيق هي لأغراض التعريف فقط. استخدام هذه الأسماء والشعارات والعلامات التجارية لا يعني أي تأييد أو رعاية.",
     "hiddenFeatures": {
@@ -776,7 +825,8 @@
         "diagnosticLogTitle": "DIAGNOSTIC LOG",
         "clearButton": "CLEAR",
         "shareButton": "SHARE",
-        "noLogs": "No diagnostic logs found."
+        "noLogs": "No diagnostic logs found.",
+        "noShareSupport": "ميزات المشاركة غير متاحة على هذا الجهاز."
     },
     "dtcContext": {
         "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
@@ -817,7 +867,12 @@
         "pause": "PAUSE",
         "resume": "RESUME",
         "share": "SHARE",
-        "clear": "CLEAR"
+        "clear": "CLEAR",
+        "clearDtcs": "مسح DTC",
+        "dtcTitle": "تشخيص DTC وأكواد الأعطال",
+        "noDtcs": "لم يتم العثور على أكواد DTC في ECU",
+        "readDtcs": "قراءة DTC",
+        "sendDtcs": "إرسال"
     },
     "health": {
         "titleMenu": "صحة وقدرات OBD2",
@@ -855,7 +910,14 @@
         "iat": "درجة حرارة هواء السحب",
         "load": "حمولة المحرك المحسوبة",
         "fuel": "مستوى الوقود",
-        "oilTemp": "درجة حرارة زيت المحرك"
+        "oilTemp": "درجة حرارة زيت المحرك",
+        "boost": "Turbo Boost Pressure",
+        "widebandAfr": "Wideband O2 / AFR Ratio",
+        "transTemp": "Transmission Temperature",
+        "catalystTemp": "Catalyst Temperature",
+        "ethanol": "Ethanol Fuel %",
+        "timingAdvance": "Ignition Timing Advance",
+        "baro": "Barometric Pressure"
     },
     "secretDebug": {
         "title": "فتح الميزات الخفية وتشفير UDS",
@@ -1344,7 +1406,17 @@
         "waitingVehicle": "في انتظار السيارة المتصلة",
         "activeFeaturesCount": "{{count}} ميزة OEM خاصة بالسيارة نشطة",
         "demoFeaturesCount": "تم عرض {{count}} ميزة تجريبية",
-        "connectForFeaturesNote": "اتصل بجهاز OBD2 لعرض الميزات الخاصة بالسيارة"
+        "connectForFeaturesNote": "اتصل بجهاز OBD2 لعرض الميزات الخاصة بالسيارة",
+        "codingFailed": "فشل الترميز.",
+        "engineRunningMsg": "يتطلب ترميز ECU تشغيل الإشعال مع إيقاف المحرك (RPM == 0).",
+        "engineRunningTitle": "⚠️ المحرك يعمل",
+        "lowVoltageMsg": "جهد البطارية أقل من العتبة الآمنة.",
+        "lowVoltageTitle": "⚠️ تنبيه انخفاض جهد البطارية",
+        "motionAlertMsg": "عمليات كتابة ECU محظورة أثناء حركة المركبة.",
+        "motionAlertTitle": "🚨 المركبة متحركة",
+        "noMatchingFeatures": "لم يتم العثور على ميزات مطابقة.",
+        "unsafeModuleMsg": "عمليات كتابة ECU لوحدات ABS/ESP والوسائد الهوائية محظورة بنسبة 100%.",
+        "unsafeModuleTitle": "🚫 وحدة أمان محمية"
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -1354,7 +1426,8 @@
         "reconnectingDesc": "Ignition cycle detected. Re-establishing link automatically in background.",
         "lowVoltageOff": "Low Battery Voltage (Ignition OFF)",
         "noEcuResponse": "No ECU Response (Ignition OFF)",
-        "on": "Ignition ON (CONNECTED)"
+        "on": "Ignition ON (CONNECTED)",
+        "batteryVoltage": "جهد البطارية:"
     },
     "hpGauge": {
         "title": "LIVE POWER & TORQUE GAUGE",
@@ -1368,7 +1441,8 @@
         "methodTorque": "Live Torque PID Based",
         "methodLoad": "Calculated Load Based",
         "configWeight": "Vehicle Weight (kg):",
-        "configDisplacement": "Engine Displacement (L):"
+        "configDisplacement": "Engine Displacement (L):",
+        "calcMethod": "طريقة الحساب"
     },
     "fuelTrim": {
         "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
@@ -1437,7 +1511,13 @@
         "statusClean": "0 FAULTS (HEALTHY)",
         "statusFault": "{{count}} FAULTS DETECTED",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
-        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units."
+        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units.",
+        "gatewayName": "بوابة الشبكة المركزية (Gateway)",
+        "ipcName": "لوحة العدادات (IPC / Cockpit)",
+        "epsName": "توجيه كهربائي مؤازر (EPS)",
+        "hvacName": "التكييف والتحكم بالمناخ (HVAC)",
+        "tpmsName": "نظام مراقبة ضغط الإطارات (TPMS)",
+        "bmsName": "نظام إدارة البطارية (BMS / EV)"
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
@@ -1450,12 +1530,181 @@
         "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
-        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!"
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 (K1) Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 (K2) Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting."
     },
     "safeExit": {
         "btn": "SAFE DISCONNECT & ADAPTER RESET",
         "confirmTitle": "Safe Disconnect Confirmation",
         "confirmDesc": "ATZ hardware reset will be issued to OBD2 adapter and connection closed cleanly. Proceed?",
         "success": "OBD2 adapter reset and connection cleanly terminated."
+    },
+    "admin": {
+        "clear": "🗑️ مسح",
+        "cloudTools": "🛰️ أدوات السحابة والنظام",
+        "copy": "نسخ",
+        "crashTest": "💥 اختبار التعطل",
+        "crashBtn": "تعطيل",
+        "deviceUuid": "UUID الجهاز",
+        "presetTitle": "⚡ مجموعة الأوامر السريعة:",
+        "presetReset": "إعادة تعيين محول OBD2",
+        "presetSpeed": "سرعة المركبة (كم/س)",
+        "presetReadDtc": "قراءة أكواد الأعطال",
+        "presetClearDtc": "مسح أكواد الأعطال",
+        "refresh": "🔄 تحديث",
+        "send": "إرسال",
+        "share": "📤 مشاركة",
+        "terminalTitle": "🖥️ وحدة تحكم OBD المباشرة (TX / RX)",
+        "userId": "معرف المستخدم",
+        "userInfo": "🔒 بيانات اعتماد المسؤول",
+        "devModeAlert": "Secret PRO developer key is disabled in production builds.",
+        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
+        "noLogsInfo": "No log records found to share."
+    },
+    "bridge": {
+        "androidAdvice": "أعد تشغيل التطبيق أو تحقق من إعدادات البلوتوث.",
+        "fatalError": "خطأ فادح في الجسر",
+        "genericError": "فشل في تهيئة نظام BLE الفرعي.",
+        "goToSettings": "الذهاب للإعدادات",
+        "ignoreEnterApp": "تجاهل وفتح التطبيق",
+        "initializing": "جارٍ تهيئة الجسر...",
+        "iosAdvice": "تأكد من تمكين البلوتوث لـ Cortex OBD2 في الإعدادات.",
+        "nativeState": "الحالة_الأصلية",
+        "proceedBypass": "الانتقال للوحة التحكم (تخطي)",
+        "state": "الحالة",
+        "unauthorized": "أذونات البلوتوث غير مصرح بها.",
+        "verifyingAndroid": "التحقق من نظام بلوتوث أندرويد",
+        "verifyingIos": "التحقق من اتصال iOS CoreBluetooth"
+    },
+    "vehicle": {
+        "brand": "العلامة:",
+        "detectDesc": "تم اكتشاف معلومات المركبة التالية.",
+        "detectTitle": "تم تحديد المركبة",
+        "editTitle": "تعديل المركبة",
+        "fuel": {
+            "diesel": "ديزل",
+            "gasoline": "بنزين"
+        },
+        "fuelType": "نوع الوقود:",
+        "model": "الموديل:",
+        "transmission": {
+            "automatic": "أوتوماتيك",
+            "manual": "يدوي"
+        },
+        "unknown": "غير معروف",
+        "year": "السنة:"
+    },
+    "sgw": {
+        "title": "Security Gateway (SGW) Active",
+        "subtitle": "{{brandName}} ECU Security Restriction",
+        "description": "Security Gateway (SGW) protection is active on this vehicle. Standard OBD2 telemetry is readable; however, advanced diagnostic routines and adaptation require OEM authentication."
+    },
+    "evBms": {
+        "title": "EV BMS Diagnostics",
+        "subtitle": "Battery Management System & Cell Health ({{brand}})",
+        "sohLabel": "STATE OF HEALTH (SOH)",
+        "capacityRetained": "Capacity Retained",
+        "socLabel": "STATE OF CHARGE (SOC)",
+        "remainingCharge": "Remaining Charge",
+        "cellBalance": "Cell Voltage Balance (16S Pack)",
+        "optimalBalance": "Optimal Balance (<30mV delta)",
+        "mildImbalance": "Mild Imbalance Detected",
+        "thermalStatus": "Thermal Status & Pack Info",
+        "packTemp": "Pack Temperature:",
+        "packVoltage": "Pack Voltage:",
+        "chargeCycles": "Charge Cycles:",
+        "cycles": "Cycles"
+    },
+    "serviceReset": {
+        "title": "Service & Maintenance Reset Wizard",
+        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "preCheckTitle": "Pre-Requirement Checklist",
+        "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
+        "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
+        "preCheckBattery": "Battery voltage must be above 12.2V.",
+        "selectRoutine": "SELECT SERVICE ROUTINE",
+        "intervalReset": "Service Maintenance Interval Reset",
+        "intervalTitle": "Reset Service Interval Indicator Light",
+        "intervalSubtitle": "Clears dash service warning and resets next inspection interval.",
+        "tpsReset": "Throttle Position Sensor (TPS) Reset",
+        "tpsTitle": "Throttle Position Sensor (TPS) Adaptation",
+        "tpsSubtitle": "Re-calibrates zero-throttle voltage stop point.",
+        "absBleed": "ABS Bleeding & Valve Test",
+        "absTitle": "ABS Hydraulic Pump Bleed Test",
+        "absSubtitle": "Cycles ABS solenoid valves to purge air bubbles from brake lines.",
+        "ecuRejected": "ECU rejected reset command. Ensure ignition is ON and engine is OFF."
+    },
+    "aiDoctor": {
+        "analyzing": "Analyzing DTC codes & engine telemetry with AI Doctor...",
+        "healthImpact": "Health Score Impact: {{score}}/100",
+        "drivingSafety": "Driving Safety Guidance",
+        "causes": "Probable Causes",
+        "recommendedAction": "Recommended Mechanical Action",
+        "estimatedCost": "Estimated Component / Repair Cost",
+        "noFaultsTitle": "System Optimal — No Fault Codes Detected",
+        "noFaultsSummary": "ECU telemetry shows no active diagnostic trouble codes. Engine parameters are within normal operating thresholds.",
+        "stepMaintain": "Maintain regular oil and filter service intervals.",
+        "stepCheckVoltage": "Periodically check battery resting voltage.",
+        "safeDrive": "Safe for regular operation.",
+        "misfireTitle": "Engine Cylinder Misfire Detected",
+        "misfireSummary": "Active misfire detected in one or more cylinders. Unburnt fuel may enter catalytic converter causing permanent damage.",
+        "causeSparkPlug": "Worn or fouled spark plug",
+        "causeIgnitionCoil": "Failing ignition coil or wire",
+        "causeFuelInjector": "Clogged or faulty fuel injector",
+        "stepInspectPlugs": "Inspect and gap spark plugs.",
+        "stepSwapCoils": "Swap ignition coils between cylinders to test for fault transfer.",
+        "stepFuelPressure": "Measure fuel rail pressure.",
+        "criticalDrive": "Do not drive extended distances under heavy throttle. Drive immediately to service.",
+        "o2Title": "Oxygen (O2) Sensor Circuit Malfunction",
+        "o2Summary": "Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.",
+        "causeO2Heater": "O2 sensor heating element failure",
+        "causeExhaustLeak": "Exhaust manifold leak upstream of sensor",
+        "causeHarness": "Damaged wiring harness connector",
+        "stepCheckWiring": "Inspect O2 sensor wiring harness for melting or fraying.",
+        "stepCleanSensor": "Clean O2 sensor tip or replace sensor if resistance out of spec.",
+        "warningDrive": "Safe to drive to repair shop at moderate speed.",
+        "genericTitle": "Diagnostic Code Analysis ({{codes}})",
+        "genericSummary": "Active trouble code(s) detected: {{codes}}. System monitoring recommended.",
+        "causeGeneric1": "Sensor circuit out of expected voltage range",
+        "causeGeneric2": "Loose electrical connection or ground fault",
+        "stepGeneric1": "Perform diagnostic scan and record freeze frame data.",
+        "stepGeneric2": "Clear DTC codes after inspecting harness connectors.",
+        "reportTitle": "Diagnostic Code Analysis",
+        "healthImpactTitle": "ENGINE HEALTH SCORE IMPACT"
+    },
+    "dtcRisk": {
+        "safeTitle": "🟢 آمن للقيادة",
+        "safeDesc": "هذا العطل لا يهدد سلامة القيادة مباشرة. يمكنك القيادة بسرعة معتدلة حتى مركز الصيانة.",
+        "warningTitle": "🟡 تحذير: فحص الصيانة مطلوب",
+        "warningDesc": "قد يحدث فقدان في الأداء وارتفاع الانبعاثات. يرجى زيارة مركز صيانة معتمد في أقرب وقت.",
+        "criticalTitle": "🔴 حرج: أوقف القيادة فوراً / صيانة عاجلة",
+        "criticalDesc": "خطر ميكانيكي أو كهربائي حرج! قد يتعرض المحرك أو أنظمة السلامة للتلف. إركن السيارة بأمان فوراً."
+    },
+    "dtcDetail": {
+        "descTitle": "وصف كود التوصيل التشخيصي",
+        "possibleCausesTitle": "الأسباب المحتملة وإرشادات الإصلاح",
+        "cause1": "Loose connection or corrosion in sensor circuit or wiring harness",
+        "cause2": "Mechanical wear or electrical fault in component",
+        "cause3": "Perform voltage/resistance test with multimeter or replace component",
+        "recommendedAction": "الإجراء الموصى به",
+        "tsbTitle": "TECHNICAL SERVICE BULLETIN (TSB)",
+        "aiDoctorBtn": "تحليل الخبراء AI DOCTOR",
+        "backToDetail": "العودة إلى تفاصيل العطل"
+    },
+    "dtcCategory": {
+        "powertrain": "المحرك / ناقل الحركة",
+        "chassis": "الهيكل / نظام الفرامل",
+        "body": "إلكترونيات الهيكل",
+        "network": "الشبكة / نظام ناقل CAN"
+    },
+    "guidedDiag": {
+        "p0102_cause1": "حساس MAF متسخ أو تالف",
+        "p0102_cause2": "تسريب في سحب الهواء / تسريب مفرغ الهواء",
+        "p0102_cause3": "تلف أو أكسدة في ضفيرة الأسلاك",
+        "p0102_action": "قم بتنظيف حساس MAF بلمنظف الجاف أو افحص علبة فلتر الهواء للتأكد من عدم وجود تسريب.",
+        "p0102_tsb": "TSB-2023-09: افحص عزم شد مِرَبَّط خرطوم سحب الهواء قبل استبدال حساس MAF."
     }
 }

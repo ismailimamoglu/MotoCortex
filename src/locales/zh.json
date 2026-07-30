@@ -86,7 +86,10 @@
         "multiEcu": "多ECU扫描",
         "dctAdapt": "DCT自适应",
         "safeDisconnect": "安全断开",
-        "featureActivation": "解锁隐藏功能 / ECU 编码"
+        "featureActivation": "解锁隐藏功能 / ECU 编码",
+        "disabled": "已禁用",
+        "enabled": "已启用",
+        "languageSelect": "语言"
     },
     "common": {
         "cancel": "取消",
@@ -135,7 +138,17 @@
         "cancelBtn": "取消",
         "retry": "重试连接",
         "changeType": "更改连接类型",
-        "recommended": "RECOMMENDED"
+        "recommended": "RECOMMENDED",
+        "brand": "品牌",
+        "confirm": "是的，正确",
+        "edit": "编辑",
+        "pending": "待处理",
+        "proActiveTitle": "PRO状态已激活",
+        "refresh": "刷新",
+        "status": "状态",
+        "syncing": "同步中...",
+        "continueBtn": "CONTINUE",
+        "selected": "已选择"
     },
     "paywall": {
         "crownBadge": "摩托皮质专业版",
@@ -171,7 +184,26 @@
         "errorDesc": "加载产品时出错，请检查您的互联网连接并重试。",
         "retryBtn": "再试一次",
         "loadingPrices": "价格正在加载中...",
-        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code.",
+        "actionLocked": "PRO锁定功能",
+        "congratsMsg": "您的Cortex OBD2 PRO会员已成功激活！",
+        "congratsTitle": "🎉 恭喜！",
+        "errMsg": "购买过程中发生错误，请重试。",
+        "errTitle": "❌ 购买失败",
+        "monthlyNotice": "月度自动续订",
+        "noPkgMsg": "请选择一个套餐。",
+        "noPkgTitle": "⚠️ 未选择套餐",
+        "noPurchasesMsg": "未找到活跃的PRO会员。",
+        "noPurchasesTitle": "ℹ️ 未找到购买记录",
+        "proRequiredDesc": "此功能需要PRO订阅。",
+        "proRequiredTitle": "需要PRO",
+        "purchasingText": "正在保护交易...",
+        "restoreErrorMsg": "请检查网络连接。",
+        "restoreErrorTitle": "⚠️ 恢复错误",
+        "restoreSuccessMsg": "您的高级会员已成功恢复！",
+        "restoreSuccessTitle": "✅ 购买已恢复",
+        "weeklyNotice": "一次性购买，不自动续订",
+        "yearlyNotice": "年度自动续订"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -276,10 +308,10 @@
         "batteryLowDesc": "电池电压为{{voltage}}。启动车辆或给车辆充电。低电压时 ECU 通信可能会中断。",
         "batteryWarn": "电池电量越来越弱",
         "batteryWarnDesc": "电池电压{{voltage}}。长期操作时要小心。",
-        "rpm": "转速",
-        "speed": "公里/小时",
+        "rpm": "发动机转速 (RPM)",
+        "speed": "车速",
         "temp": "温度",
-        "throttle": "天然气",
+        "throttle": "节气门开度",
         "status": "转移状态",
         "statusHigh": "高",
         "statusNormal": "正常",
@@ -294,17 +326,17 @@
         "layoutGrid": "网格",
         "layoutList": "列表",
         "customizeButton": "自定义仪表盘",
-        "coolant": "引擎温度",
-        "voltage": "电池电压",
-        "engineLoad": "引擎负荷",
+        "coolant": "冷却液温度",
+        "voltage": "电瓶电压",
+        "engineLoad": "发动机负荷",
         "intakeAirTemp": "进气温度",
-        "manifoldPressure": "进气歧管压力",
+        "manifoldPressure": "进气歧管压力 (MAP)",
         "ambientTemp": "环境温度",
         "oilTemp": "机油温度",
-        "mafFlow": "空气流量 MAF",
+        "mafFlow": "MAF空气流量",
         "timingAdvance": "点火提前角",
-        "fuelLevel": "燃料油位",
-        "catalystTemp": "催化器温度",
+        "fuelLevel": "油量",
+        "catalystTemp": "催化转换器温度",
         "layoutGauge": "表盘",
         "obdTerminalTitle": "OBD HEALTH & TERMINAL",
         "adapterClone": "CLONE ADAPTER",
@@ -493,7 +525,8 @@
             "regLow": "充电：低电量",
             "regHigh": "充电：过充",
             "regFail": "充电：稳压器故障"
-        }
+        },
+        "verdictLocked": "升级到PRO以查看详细的电池评估报告。"
     },
     "freeze": {
         "title": "FREEZE FRAME",
@@ -581,7 +614,21 @@
         "P0730": "齿轮比错误",
         "P0560": "系统电压 - 故障",
         "P0562": "系统电压 - 低",
-        "P0563": "系统电压 - 高"
+        "P0563": "系统电压 - 高",
+        "U0100": "Lost Communication With Engine Control Module (ECM/PCM)",
+        "U0121": "Lost Communication With Anti-Lock Brake System (ABS) Module",
+        "C0035": "Left Front Wheel Speed Sensor Circuit Malfunction",
+        "B0001": "Driver Front Stage 1 Deployment Control Circuit",
+        "P0750": "Shift Solenoid A Malfunction",
+        "P0814": "Transmission Range Display Circuit Malfunction",
+        "U0140": "Lost Communication With Body Control Module (BCM)",
+        "C0040": "Right Front Wheel Speed Sensor Circuit Malfunction",
+        "C0110": "ABS Pump Motor Circuit Malfunction",
+        "C0121": "Brake Pressure Sensor Circuit Malfunction",
+        "B0010": "Passenger Front Stage 1 Deployment Control",
+        "B0020": "Left Side Airbag Deployment Control",
+        "B1000": "Body Control Module (BCM) Hardware Fault",
+        "B1325": "Device Power Supply Circuit Low Voltage"
     },
     "vehicleSelect": {
         "title": "选择您的车辆以提高诊断准确性",
@@ -711,7 +758,9 @@
         "proceedAnyway": "无论如何继续",
         "openSettings": "打开设置",
         "langTitle": "Select Language",
-        "nextBtn": "CONTINUE"
+        "nextBtn": "CONTINUE",
+        "langDesc": "请选择您的首选语言。",
+        "langSelectSub": "语言门户"
     },
     "disclaimer": "所有产品名称、徽标和品牌均为其各自所有者的财产。本应用程序中使用的所有公司、产品和服务名称仅用于识别目的。使用这些名称、徽标和品牌并不意味着任何认可或赞助。",
     "hiddenFeatures": {
@@ -776,7 +825,8 @@
         "diagnosticLogTitle": "DIAGNOSTIC LOG",
         "clearButton": "CLEAR",
         "shareButton": "SHARE",
-        "noLogs": "No diagnostic logs found."
+        "noLogs": "No diagnostic logs found.",
+        "noShareSupport": "此设备不支持分享功能。"
     },
     "dtcContext": {
         "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
@@ -817,7 +867,12 @@
         "pause": "PAUSE",
         "resume": "RESUME",
         "share": "SHARE",
-        "clear": "CLEAR"
+        "clear": "CLEAR",
+        "clearDtcs": "清除DTC",
+        "dtcTitle": "DTC诊断和故障码",
+        "noDtcs": "ECU中未找到DTC码",
+        "readDtcs": "读取DTC",
+        "sendDtcs": "发送"
     },
     "health": {
         "titleMenu": "OBD2健康与能力",
@@ -855,7 +910,14 @@
         "iat": "进气温度",
         "load": "计算的发动机负荷",
         "fuel": "燃油液位",
-        "oilTemp": "发动机油温"
+        "oilTemp": "发动机油温",
+        "boost": "Turbo Boost Pressure",
+        "widebandAfr": "Wideband O2 / AFR Ratio",
+        "transTemp": "Transmission Temperature",
+        "catalystTemp": "Catalyst Temperature",
+        "ethanol": "Ethanol Fuel %",
+        "timingAdvance": "Ignition Timing Advance",
+        "baro": "Barometric Pressure"
     },
     "secretDebug": {
         "title": "解锁隐藏功能与UDS编码",
@@ -1344,7 +1406,17 @@
         "waitingVehicle": "等待已连接车辆",
         "activeFeaturesCount": "{{count}} 项车辆专用 OEM 隐藏功能可用",
         "demoFeaturesCount": "列出 {{count}} 项演示功能",
-        "connectForFeaturesNote": "连接至 OBD2 设备以列出特定车辆功能"
+        "connectForFeaturesNote": "连接至 OBD2 设备以列出特定车辆功能",
+        "codingFailed": "编码失败。",
+        "engineRunningMsg": "ECU编码需要点火开关打开且发动机关闭（RPM == 0）。",
+        "engineRunningTitle": "⚠️ 发动机运行中",
+        "lowVoltageMsg": "电池电压低于ECU写入的安全阈值。",
+        "lowVoltageTitle": "⚠️ 低电池电压警告",
+        "motionAlertMsg": "车辆行驶中ECU写入操作被阻止。",
+        "motionAlertTitle": "🚨 车辆行驶中",
+        "noMatchingFeatures": "未找到匹配的功能。",
+        "unsafeModuleMsg": "对ABS/ESP和安全气囊/SRS模块的ECU写入被100%阻止。",
+        "unsafeModuleTitle": "🚫 受保护的安全模块"
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -1354,7 +1426,8 @@
         "reconnectingDesc": "Ignition cycle detected. Re-establishing link automatically in background.",
         "lowVoltageOff": "Low Battery Voltage (Ignition OFF)",
         "noEcuResponse": "No ECU Response (Ignition OFF)",
-        "on": "Ignition ON (CONNECTED)"
+        "on": "Ignition ON (CONNECTED)",
+        "batteryVoltage": "电池电压："
     },
     "hpGauge": {
         "title": "LIVE POWER & TORQUE GAUGE",
@@ -1368,7 +1441,8 @@
         "methodTorque": "Live Torque PID Based",
         "methodLoad": "Calculated Load Based",
         "configWeight": "Vehicle Weight (kg):",
-        "configDisplacement": "Engine Displacement (L):"
+        "configDisplacement": "Engine Displacement (L):",
+        "calcMethod": "计算方法"
     },
     "fuelTrim": {
         "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
@@ -1437,7 +1511,13 @@
         "statusClean": "0 FAULTS (HEALTHY)",
         "statusFault": "{{count}} FAULTS DETECTED",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
-        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units."
+        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units.",
+        "gatewayName": "中央网络网关 (Gateway)",
+        "ipcName": "仪表盘组合 (IPC / Cockpit)",
+        "epsName": "电动助力转向系统 (EPS)",
+        "hvacName": "空调与气候控制系统 (HVAC)",
+        "tpmsName": "胎压监测系统 (TPMS)",
+        "bmsName": "电池管理系统 (BMS / EV)"
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
@@ -1450,12 +1530,181 @@
         "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
-        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!"
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 (K1) Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 (K2) Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting."
     },
     "safeExit": {
         "btn": "SAFE DISCONNECT & ADAPTER RESET",
         "confirmTitle": "Safe Disconnect Confirmation",
         "confirmDesc": "ATZ hardware reset will be issued to OBD2 adapter and connection closed cleanly. Proceed?",
         "success": "OBD2 adapter reset and connection cleanly terminated."
+    },
+    "admin": {
+        "clear": "🗑️ 清除",
+        "cloudTools": "🛰️ 云端和系统工具",
+        "copy": "复制",
+        "crashTest": "💥 崩溃测试",
+        "crashBtn": "崩溃",
+        "deviceUuid": "设备UUID",
+        "presetTitle": "⚡ 快速命令集：",
+        "presetReset": "重置OBD2适配器",
+        "presetSpeed": "车速 (km/h)",
+        "presetReadDtc": "读取故障码",
+        "presetClearDtc": "清除故障码",
+        "refresh": "🔄 刷新",
+        "send": "发送",
+        "share": "📤 分享",
+        "terminalTitle": "🖥️ 实时OBD终端控制台 (TX / RX)",
+        "userId": "用户ID",
+        "userInfo": "🔒 管理员凭证",
+        "devModeAlert": "Secret PRO developer key is disabled in production builds.",
+        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
+        "noLogsInfo": "No log records found to share."
+    },
+    "bridge": {
+        "androidAdvice": "请重启应用或检查蓝牙设置。",
+        "fatalError": "桥接致命错误",
+        "genericError": "无法初始化BLE子系统。",
+        "goToSettings": "前往设置",
+        "ignoreEnterApp": "忽略并进入应用",
+        "initializing": "正在初始化桥接...",
+        "iosAdvice": "请确保在系统设置中为Cortex OBD2启用了蓝牙。",
+        "nativeState": "原生状态",
+        "proceedBypass": "前往仪表板（跳过）",
+        "state": "状态",
+        "unauthorized": "蓝牙权限未授权。",
+        "verifyingAndroid": "正在验证Android蓝牙子系统",
+        "verifyingIos": "正在验证iOS CoreBluetooth连接"
+    },
+    "vehicle": {
+        "brand": "品牌：",
+        "detectDesc": "从OBD2连接检测到以下车辆信息。",
+        "detectTitle": "车辆已识别",
+        "editTitle": "编辑车辆",
+        "fuel": {
+            "diesel": "柴油",
+            "gasoline": "汽油"
+        },
+        "fuelType": "燃料类型：",
+        "model": "型号：",
+        "transmission": {
+            "automatic": "自动",
+            "manual": "手动"
+        },
+        "unknown": "未知",
+        "year": "年份："
+    },
+    "sgw": {
+        "title": "Security Gateway (SGW) Active",
+        "subtitle": "{{brandName}} ECU Security Restriction",
+        "description": "Security Gateway (SGW) protection is active on this vehicle. Standard OBD2 telemetry is readable; however, advanced diagnostic routines and adaptation require OEM authentication."
+    },
+    "evBms": {
+        "title": "EV BMS Diagnostics",
+        "subtitle": "Battery Management System & Cell Health ({{brand}})",
+        "sohLabel": "STATE OF HEALTH (SOH)",
+        "capacityRetained": "Capacity Retained",
+        "socLabel": "STATE OF CHARGE (SOC)",
+        "remainingCharge": "Remaining Charge",
+        "cellBalance": "Cell Voltage Balance (16S Pack)",
+        "optimalBalance": "Optimal Balance (<30mV delta)",
+        "mildImbalance": "Mild Imbalance Detected",
+        "thermalStatus": "Thermal Status & Pack Info",
+        "packTemp": "Pack Temperature:",
+        "packVoltage": "Pack Voltage:",
+        "chargeCycles": "Charge Cycles:",
+        "cycles": "Cycles"
+    },
+    "serviceReset": {
+        "title": "Service & Maintenance Reset Wizard",
+        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "preCheckTitle": "Pre-Requirement Checklist",
+        "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
+        "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
+        "preCheckBattery": "Battery voltage must be above 12.2V.",
+        "selectRoutine": "SELECT SERVICE ROUTINE",
+        "intervalReset": "Service Maintenance Interval Reset",
+        "intervalTitle": "Reset Service Interval Indicator Light",
+        "intervalSubtitle": "Clears dash service warning and resets next inspection interval.",
+        "tpsReset": "Throttle Position Sensor (TPS) Reset",
+        "tpsTitle": "Throttle Position Sensor (TPS) Adaptation",
+        "tpsSubtitle": "Re-calibrates zero-throttle voltage stop point.",
+        "absBleed": "ABS Bleeding & Valve Test",
+        "absTitle": "ABS Hydraulic Pump Bleed Test",
+        "absSubtitle": "Cycles ABS solenoid valves to purge air bubbles from brake lines.",
+        "ecuRejected": "ECU rejected reset command. Ensure ignition is ON and engine is OFF."
+    },
+    "aiDoctor": {
+        "analyzing": "Analyzing DTC codes & engine telemetry with AI Doctor...",
+        "healthImpact": "Health Score Impact: {{score}}/100",
+        "drivingSafety": "Driving Safety Guidance",
+        "causes": "Probable Causes",
+        "recommendedAction": "Recommended Mechanical Action",
+        "estimatedCost": "Estimated Component / Repair Cost",
+        "noFaultsTitle": "System Optimal — No Fault Codes Detected",
+        "noFaultsSummary": "ECU telemetry shows no active diagnostic trouble codes. Engine parameters are within normal operating thresholds.",
+        "stepMaintain": "Maintain regular oil and filter service intervals.",
+        "stepCheckVoltage": "Periodically check battery resting voltage.",
+        "safeDrive": "Safe for regular operation.",
+        "misfireTitle": "Engine Cylinder Misfire Detected",
+        "misfireSummary": "Active misfire detected in one or more cylinders. Unburnt fuel may enter catalytic converter causing permanent damage.",
+        "causeSparkPlug": "Worn or fouled spark plug",
+        "causeIgnitionCoil": "Failing ignition coil or wire",
+        "causeFuelInjector": "Clogged or faulty fuel injector",
+        "stepInspectPlugs": "Inspect and gap spark plugs.",
+        "stepSwapCoils": "Swap ignition coils between cylinders to test for fault transfer.",
+        "stepFuelPressure": "Measure fuel rail pressure.",
+        "criticalDrive": "Do not drive extended distances under heavy throttle. Drive immediately to service.",
+        "o2Title": "Oxygen (O2) Sensor Circuit Malfunction",
+        "o2Summary": "Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.",
+        "causeO2Heater": "O2 sensor heating element failure",
+        "causeExhaustLeak": "Exhaust manifold leak upstream of sensor",
+        "causeHarness": "Damaged wiring harness connector",
+        "stepCheckWiring": "Inspect O2 sensor wiring harness for melting or fraying.",
+        "stepCleanSensor": "Clean O2 sensor tip or replace sensor if resistance out of spec.",
+        "warningDrive": "Safe to drive to repair shop at moderate speed.",
+        "genericTitle": "Diagnostic Code Analysis ({{codes}})",
+        "genericSummary": "Active trouble code(s) detected: {{codes}}. System monitoring recommended.",
+        "causeGeneric1": "Sensor circuit out of expected voltage range",
+        "causeGeneric2": "Loose electrical connection or ground fault",
+        "stepGeneric1": "Perform diagnostic scan and record freeze frame data.",
+        "stepGeneric2": "Clear DTC codes after inspecting harness connectors.",
+        "reportTitle": "Diagnostic Code Analysis",
+        "healthImpactTitle": "ENGINE HEALTH SCORE IMPACT"
+    },
+    "dtcRisk": {
+        "safeTitle": "🟢 允许继续行驶",
+        "safeDesc": "此故障不会直接影响行驶安全。您可以保持中低速行驶前往维修店。",
+        "warningTitle": "🟡 警告：需要前往维修店检查",
+        "warningDesc": "可能会出现动力下降和排放增加。请尽快前往授权维修店检查。",
+        "criticalTitle": "🔴 危险：请立即停车 / 紧急维修",
+        "criticalDesc": "严重的机械或电路故障隐患！发动机或安全系统可能会遭受严重损坏。请立即靠边安全停车。"
+    },
+    "dtcDetail": {
+        "descTitle": "故障诊断码说明",
+        "possibleCausesTitle": "可能的原因和维修指南",
+        "cause1": "Loose connection or corrosion in sensor circuit or wiring harness",
+        "cause2": "Mechanical wear or electrical fault in component",
+        "cause3": "Perform voltage/resistance test with multimeter or replace component",
+        "recommendedAction": "建议操作",
+        "tsbTitle": "TECHNICAL SERVICE BULLETIN (TSB)",
+        "aiDoctorBtn": "AI DOCTOR 专家诊断分析",
+        "backToDetail": "返回故障详情"
+    },
+    "dtcCategory": {
+        "powertrain": "发动机 / 动力总成",
+        "chassis": "底盘 / 制动系统",
+        "body": "车身电子系统",
+        "network": "网络 / CAN总线系统"
+    },
+    "guidedDiag": {
+        "p0102_cause1": "MAF空气流量计脏污或故障",
+        "p0102_cause2": "进气管道泄漏 / 真空泄漏",
+        "p0102_cause3": "线束损坏或腐蚀",
+        "p0102_action": "使用触点清洁剂清洗MAF传感器，或检查空气滤清器壳体是否存在泄露。",
+        "p0102_tsb": "TSB-2023-09：在更换MAF之前，请先检查进气软管卡箍的紧固扭矩。"
     }
 }

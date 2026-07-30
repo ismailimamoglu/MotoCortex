@@ -2,7 +2,9 @@ import { classifySafetyModule, isSafetyCriticalModule } from '../SafetyCriticalE
 
 describe('SafetyCriticalEcuRegistry', () => {
     it('should classify curated safety headers as ABS_ESP or SRS_AIRBAG', () => {
+        expect(classifySafetyModule('0x7D0')).toBe('ABS_ESP');
         expect(classifySafetyModule('0x7D2')).toBe('ABS_ESP');
+        expect(classifySafetyModule('0x770')).toBe('SRS_AIRBAG');
         expect(classifySafetyModule('0x7D3')).toBe('SRS_AIRBAG');
     });
 

@@ -59,7 +59,7 @@ export default function VehicleSelector({
           activeOpacity={0.7}
         >
           <Text style={{ color: colors.purple, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5 }}>
-            {t('vehicleSelect.registeredVehiclesButton', 'KAYITLI ARAÇLARIM').toUpperCase()}
+            {t('vehicleSelect.registeredVehiclesButton', 'MY REGISTERED VEHICLES').toUpperCase()}
           </Text>
         </TouchableOpacity>
 

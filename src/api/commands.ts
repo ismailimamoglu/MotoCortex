@@ -33,6 +33,34 @@ export const ADAPTER_COMMANDS = {
     READ_VIN: '09 02',         // Read Vehicle Identification Number
     READ_CALIBRATION_ID: '09 04', // Read Calibration ID / ECU ID
 
+    // Torque & Engine Power PIDs
+    DRIVER_DEMAND_TORQUE: '01 61', // Driver Demand Engine Percent Torque (1 byte: A - 125)
+    ACTUAL_TORQUE: '01 62',        // Actual Engine Percent Torque (1 byte: A - 125)
+    ENGINE_REF_TORQUE: '01 63',    // Engine Reference Torque in Nm (2 bytes: 256*A + B)
+
+    // Diesel & Euro-6 Emission PIDs
+    ADBLUE_LEVEL: '01 9B',         // Diesel Exhaust Fluid / AdBlue Level (1 byte: 100*A/255)
+    EGT_B1S1: '01 78',             // Exhaust Gas Temperature Bank 1 Sensor 1
+    EGT_B1S2: '01 79',             // Exhaust Gas Temperature Bank 1 Sensor 2
+    EGT_B2S1: '01 7A',             // Exhaust Gas Temperature Bank 2 Sensor 1
+    EGT_B2S2: '01 7B',             // Exhaust Gas Temperature Bank 2 Sensor 2
+    NOX_SENSOR_B1: '01 83',        // NOx Sensor Concentration Bank 1
+    NOX_SENSOR_B2: '01 84',        // NOx Sensor Concentration Bank 2
+
+    // Advanced OBD & Mode 09 Commands
+    READ_CVN: '09 06',             // Calibration Verification Numbers (CVN)
+    MODE_06_MONITOR: '06 00',      // Mode 06 On-Board Monitor Test Results
+
+    // Global Telemetry PIDs (Mode 01)
+    BAROMETRIC_PRESSURE: '01 33',  // Absolute Barometric Pressure in kPa
+    WIDEBAND_O2_AFR: '01 34',      // Wideband Oxygen Sensor Air-Fuel Ratio / Lambda
+    CATALYST_TEMP_B1: '01 3C',     // Catalyst Temperature Bank 1
+    CATALYST_TEMP_B2: '01 3D',     // Catalyst Temperature Bank 2
+    ETHANOL_PERCENT: '01 52',      // Ethanol Fuel Percentage (%)
+    ENGINE_OIL_TEMP: '01 5C',      // Engine Oil Temperature (°C)
+    TRANS_OIL_TEMP: '01 7C',       // Transmission Fluid Temperature (°C)
+    TIMING_ADVANCE: '01 0E',       // Ignition Timing Advance (degrees)
+
     // Odometer & Expertise Metrics
     ODOMETER: '01 A6',         // Total Odometer (OBD-II 2019+)
     DISTANCE_SINCE_CLEARED: '01 31', // Distance traveled since codes cleared

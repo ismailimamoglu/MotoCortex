@@ -40,7 +40,7 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
 
   const handleStartReset = async () => {
     if (!preconditionResult.allPassed) {
-      Alert.alert(t('common.warning'), 'Lütfen tüm güvenlik şartlarını sağlayın.');
+      Alert.alert(t('common.warning'), t('dct.ensurePreconditions', 'Lütfen tüm güvenlik şartlarını sağlayın.'));
       return;
     }
 
@@ -83,10 +83,10 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
                 <ActivityIndicator size="large" color={tc.cyan} />
                 <Text style={[styles.execTitle, { color: tc.cyan }]}>
                   {progressStep === 1
-                    ? '1/3: Hidrolik Basınç Dengelemesi Yapılıyor...'
+                    ? t('dct.step1', '1/3: Hidrolik Basınç Dengelemesi Yapılıyor...')
                     : progressStep === 2
-                    ? '2/3: 1. Kavrama (K1) Temel Ayarları Yapılıyor...'
-                    : '3/3: 2. Kavrama (K2) Vites Çatalı Adaptasyonu...'}
+                    ? t('dct.step2', '2/3: 1. Kavrama (K1) Temel Ayarları Yapılıyor...')
+                    : t('dct.step3', '3/3: 2. Kavrama (K2) Vites Çatalı Adaptasyonu...')}
                 </Text>
                 <Text style={[styles.execWarning, { color: tc.red }]}>{t('dct.inProgress')}</Text>
               </View>
@@ -100,19 +100,19 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
                   <View style={styles.checklistRow}>
                     <TouchableOpacity style={styles.checkItem} onPress={() => setGearPark(!gearPark)}>
                       <Text style={[styles.checkText, { color: gearPark ? tc.green : tc.red }]}>
-                        {gearPark ? '✅' : '❌'} {t('dct.checkGearPark')}
+                        {gearPark ? '[OK]' : '[HATA]'} {t('dct.checkGearPark')}
                       </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.checkItem} onPress={() => setFootBrake(!footBrake)}>
                       <Text style={[styles.checkText, { color: footBrake ? tc.green : tc.red }]}>
-                        {footBrake ? '✅' : '❌'} {t('dct.checkFootBrake')}
+                        {footBrake ? '[OK]' : '[HATA]'} {t('dct.checkFootBrake')}
                       </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.checkItem} onPress={() => setHandBrake(!handBrake)}>
                       <Text style={[styles.checkText, { color: handBrake ? tc.green : tc.red }]}>
-                        {handBrake ? '✅' : '❌'} {t('dct.checkHandBrake')}
+                        {handBrake ? '[OK]' : '[HATA]'} {t('dct.checkHandBrake')}
                       </Text>
                     </TouchableOpacity>
 
@@ -128,7 +128,7 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
                           },
                         ]}
                       >
-                        {transmissionOilTempC >= 30 && transmissionOilTempC <= 90 ? '✅' : '❌'}{' '}
+                        {transmissionOilTempC >= 30 && transmissionOilTempC <= 90 ? '[OK]' : '[HATA]'}{' '}
                         {t('dct.checkOilTemp')} ({transmissionOilTempC}°C)
                       </Text>
                     </View>
@@ -140,7 +140,7 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
                   style={[
                     styles.startBtn,
                     {
-                      backgroundColor: preconditionResult.allPassed ? tc.red : tc.border,
+                      backgroundColor: preconditionResult.allPassed ? tc.cyan : tc.border,
                       opacity: preconditionResult.allPassed ? 1 : 0.6,
                     },
                   ]}

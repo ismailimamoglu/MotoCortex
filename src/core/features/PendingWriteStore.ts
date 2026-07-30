@@ -73,6 +73,9 @@ export class PendingWriteStore {
             };
 
             history.push(record);
+            if (history.length > 50) {
+                history.shift();
+            }
             await AsyncStorage.setItem(JOURNAL_STORAGE_KEY, JSON.stringify(history));
             Logger.log('PENDING_WRITE_JOURNAL', `Appended Phase [${phase}] (Seq #${sequenceNumber}) - Hash: ${integrityHash}`);
             return record;

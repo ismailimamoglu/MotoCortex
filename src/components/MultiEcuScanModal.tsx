@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { KNOWN_ECU_MODULES, ModuleDiagnosticResult } from '../services/multiEcuService';
 import { useBluetoothStore } from '../store/useBluetoothStore';
+import { lookupDTC } from '../data/dtcDictionary';
 
 interface MultiEcuScanModalProps {
   visible: boolean;
@@ -97,7 +98,7 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
             {results.length === 0 && !isScanning && (
               <View style={[styles.emptyBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
                 <Text style={[styles.emptyText, { color: tc.textSec }]}>
-                  {t('multiEcu.scanHintText', 'Tüm elektronik kontrol ünitelerini (Motor, Şanzıman, ABS, Hava Yastığı) taramak için yukarıdaki butona basın.')}
+                  {t('multiEcu.scanHintText', "Tap SCAN ALL MODULES to query diagnostic trouble codes across all vehicle electronic control units.")}
                 </Text>
               </View>
             )}
@@ -117,9 +118,6 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
                   <View style={{ flex: 1, marginRight: 8 }}>
                     <Text style={[styles.moduleName, { color: tc.textPri }]} numberOfLines={1}>
                       {t(res.module.nameKey)}
-                    </Text>
-                    <Text style={[styles.headerCode, { color: tc.textSec }]}>
-                      CAN Header: 0x{res.module.txHeader} ({res.latencyMs}ms)
                     </Text>
                   </View>
 
@@ -146,12 +144,16 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
                 </View>
 
                 {res.dtcCodes.length > 0 && (
-                  <View style={styles.dtcList}>
-                    {res.dtcCodes.map((code) => (
-                      <View key={code} style={[styles.dtcChip, { backgroundColor: tc.card, borderColor: tc.red }]}>
-                        <Text style={[styles.dtcChipText, { color: tc.red }]}>{code}</Text>
-                      </View>
-                    ))}
+                  <View style={{ gap: 6, marginTop: 10 }}>
+                    {res.dtcCodes.map((code) => {
+                      const desc = lookupDTC(code);
+                      return (
+                        <View key={code} style={{ backgroundColor: tc.card, borderWidth: 1, borderColor: `${tc.red}40`, borderRadius: 8, padding: 8 }}>
+                          <Text style={{ color: tc.red, fontWeight: '800', fontSize: 12, fontFamily: 'monospace' }}>{code}</Text>
+                          {desc && <Text style={{ color: tc.textSec, fontSize: 10, fontFamily: 'monospace', marginTop: 2 }}>{desc}</Text>}
+                        </View>
+                      );
+                    })}
                   </View>
                 )}
               </View>

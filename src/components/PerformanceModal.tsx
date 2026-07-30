@@ -265,7 +265,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 <View style={[sDyn.modalContainer, { backgroundColor: colors.bg }]}>
                     {/* Header */}
                     <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
-                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('perf.title', 'PERFORMANS TESTİ')}</Text>
+                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('perf.title', 'PERFORMANCE TEST')}</Text>
                         <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
                             <Text style={[sDyn.cancelText, { color: colors.cyan }]}>{t('common.cancel', 'KAPAT').toUpperCase()}</Text>
                         </TouchableOpacity>

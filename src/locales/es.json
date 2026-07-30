@@ -86,7 +86,10 @@
         "multiEcu": "MULTI-ECU",
         "dctAdapt": "ADAPTACIÓN DCT",
         "safeDisconnect": "DESCONEXIÓN SEGURA",
-        "featureActivation": "FUNCIONES OCULTAS / CODIFICACIÓN ECU"
+        "featureActivation": "FUNCIONES OCULTAS / CODIFICACIÓN ECU",
+        "disabled": "DESACTIVADO",
+        "enabled": "ACTIVADO",
+        "languageSelect": "IDIOMA"
     },
     "common": {
         "cancel": "Cancelar",
@@ -135,7 +138,17 @@
         "retry": "REINTENTAR CONEXIÓN",
         "changeType": "Cambiar tipo de conexión",
         "freeAccount": "MOTO CORTEX FREE",
-        "recommended": "RECOMMENDED"
+        "recommended": "RECOMMENDED",
+        "brand": "Marca",
+        "confirm": "SÍ, CORRECTO",
+        "edit": "EDITAR",
+        "pending": "Pendiente",
+        "proActiveTitle": "ESTADO PRO ACTIVO",
+        "refresh": "Actualizar",
+        "status": "Estado",
+        "syncing": "Sincronizando...",
+        "continueBtn": "CONTINUE",
+        "selected": "SELECCIONADO"
     },
     "paywall": {
         "subtitle": "Desbloquee una profundidad diagnóstica suprema y parámetros infinitos.",
@@ -171,7 +184,26 @@
         "errorTitle": "Failed to Load Products",
         "errorDesc": "An error occurred while loading products. Please check your internet connection and try again.",
         "retryBtn": "Try Again",
-        "loadingPrices": "Loading prices..."
+        "loadingPrices": "Loading prices...",
+        "actionLocked": "FUNCIÓN PRO BLOQUEADA",
+        "congratsMsg": "¡Su membresía Cortex OBD2 PRO ha sido activada exitosamente!",
+        "congratsTitle": "🎉 ¡Felicidades!",
+        "errMsg": "Ocurrió un error durante la compra. Inténtelo de nuevo.",
+        "errTitle": "❌ Compra fallida",
+        "monthlyNotice": "Suscripción mensual con renovación automática",
+        "noPkgMsg": "Seleccione un paquete para continuar.",
+        "noPkgTitle": "⚠️ Sin paquete seleccionado",
+        "noPurchasesMsg": "No se encontró membresía PRO activa.",
+        "noPurchasesTitle": "ℹ️ Sin compras encontradas",
+        "proRequiredDesc": "Esta función requiere una suscripción PRO.",
+        "proRequiredTitle": "PRO requerido",
+        "purchasingText": "Asegurando transacción...",
+        "restoreErrorMsg": "Verifique su conexión a internet.",
+        "restoreErrorTitle": "⚠️ Error de restauración",
+        "restoreSuccessMsg": "¡Su membresía premium fue restaurada exitosamente!",
+        "restoreSuccessTitle": "✅ Compras restauradas",
+        "weeklyNotice": "Compra única, sin renovación automática",
+        "yearlyNotice": "Suscripción anual con renovación automática"
     },
     "connection": {
         "adapter": "ADAPTADOR",
@@ -276,10 +308,10 @@
         "batteryLowDesc": "El voltaje de la batería es {{voltage}}. Arranque el motor o cargue.",
         "batteryWarn": "BATERÍA DÉBIL",
         "batteryWarnDesc": "Voltaje {{voltage}}. Precaución en operaciones largas.",
-        "rpm": "RPM",
-        "speed": "KM/H",
+        "rpm": "Revoluciones Motor (RPM)",
+        "speed": "Velocidad Vehículo",
         "temp": "TEMP",
-        "throttle": "ACELERADOR",
+        "throttle": "Posición Mariposa",
         "status": "ESTADO RPM",
         "statusHigh": "ALTO",
         "statusLow": "BAJO",
@@ -293,17 +325,17 @@
         "layoutGrid": "CUADRÍCULA",
         "layoutList": "LISTA",
         "customizeButton": "AJUSTAR GAUGE",
-        "coolant": "Temp. del Motor",
-        "voltage": "Voltaje de Batería",
+        "coolant": "Temp. Refrigerante",
+        "voltage": "Voltaje Batería",
         "engineLoad": "Carga del Motor",
-        "intakeAirTemp": "Temp. de Admisión",
-        "manifoldPressure": "Presión del Múltiple",
-        "ambientTemp": "Temp. Ambiental",
-        "oilTemp": "Temp. de Aceite",
-        "mafFlow": "Flujo de Aire MAF",
-        "timingAdvance": "Avance de Encendido",
-        "fuelLevel": "Nivel de Combustível",
-        "catalystTemp": "Temp. del Catalizador",
+        "intakeAirTemp": "Temp. Aire Admisión",
+        "manifoldPressure": "Presión Colector (MAP)",
+        "ambientTemp": "Temp. Exterior",
+        "oilTemp": "Temp. del Aceite",
+        "mafFlow": "Caudal de Aire MAF",
+        "timingAdvance": "Avance Encendido",
+        "fuelLevel": "Nivel de Combustible",
+        "catalystTemp": "Temp. Catalizador",
         "layoutGauge": "INDICADOR",
         "obdTerminalTitle": "OBD HEALTH & TERMINAL",
         "adapterClone": "CLONE ADAPTER",
@@ -493,7 +525,8 @@
             "regLow": "Bajo",
             "regHigh": "Alto",
             "regFail": "Defectuoso"
-        }
+        },
+        "verdictLocked": "Actualice a PRO para ver el informe detallado de la batería."
     },
     "freeze": {
         "snapshot": "CAPTURA DE FALLO",
@@ -581,7 +614,21 @@
         "P0730": "Relación de transmisión incorrecta",
         "P0560": "Voltaje del sistema - Mal funcionamiento",
         "P0562": "Voltaje del sistema - Bajo",
-        "P0563": "Voltaje del sistema - Alto"
+        "P0563": "Voltaje del sistema - Alto",
+        "U0100": "Lost Communication With Engine Control Module (ECM/PCM)",
+        "U0121": "Lost Communication With Anti-Lock Brake System (ABS) Module",
+        "C0035": "Left Front Wheel Speed Sensor Circuit Malfunction",
+        "B0001": "Driver Front Stage 1 Deployment Control Circuit",
+        "P0750": "Shift Solenoid A Malfunction",
+        "P0814": "Transmission Range Display Circuit Malfunction",
+        "U0140": "Lost Communication With Body Control Module (BCM)",
+        "C0040": "Right Front Wheel Speed Sensor Circuit Malfunction",
+        "C0110": "ABS Pump Motor Circuit Malfunction",
+        "C0121": "Brake Pressure Sensor Circuit Malfunction",
+        "B0010": "Passenger Front Stage 1 Deployment Control",
+        "B0020": "Left Side Airbag Deployment Control",
+        "B1000": "Body Control Module (BCM) Hardware Fault",
+        "B1325": "Device Power Supply Circuit Low Voltage"
     },
     "vehicleSelect": {
         "title": "SELECCIONE SU VEHÍCULO PARA UNA PRECISIÓN DIAGNÓSTICA",
@@ -711,7 +758,9 @@
         "openSettings": "Abrir Configuración",
         "btLabel": "Bluetooth (BLE)",
         "langTitle": "Select Language",
-        "nextBtn": "CONTINUE"
+        "nextBtn": "CONTINUE",
+        "langDesc": "Seleccione su idioma preferido.",
+        "langSelectSub": "SELECCIÓN DE IDIOMA"
     },
     "disclaimer": "Todos los nombres de productos, logotipos y marcas son propiedad de sus respectivos propietarios. Todos los nombres de empresas, productos y servicios utilizados en esta aplicación son solo para fines de identificación. El uso de estos nombres, logotipos y marcas no implica ningún tipo de respaldo.",
     "hiddenFeatures": {
@@ -776,7 +825,8 @@
         "diagnosticLogTitle": "DIAGNOSTIC LOG",
         "clearButton": "CLEAR",
         "shareButton": "SHARE",
-        "noLogs": "No diagnostic logs found."
+        "noLogs": "No diagnostic logs found.",
+        "noShareSupport": "Las funciones de compartir no están disponibles en este dispositivo."
     },
     "dtcContext": {
         "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
@@ -817,7 +867,12 @@
         "pause": "PAUSE",
         "resume": "RESUME",
         "share": "SHARE",
-        "clear": "CLEAR"
+        "clear": "CLEAR",
+        "clearDtcs": "BORRAR DTC",
+        "dtcTitle": "DIAGNÓSTICO DTC Y CÓDIGOS DE FALLO",
+        "noDtcs": "NO SE ENCONTRARON CÓDIGOS DTC EN LA ECU",
+        "readDtcs": "LEER DTC",
+        "sendDtcs": "ENVIAR"
     },
     "health": {
         "titleMenu": "SALUD Y CAPACIDAD OBD2",
@@ -855,7 +910,14 @@
         "iat": "Temp. de admisión de aire",
         "load": "Carga del motor calculada",
         "fuel": "Nivel de combustible",
-        "oilTemp": "Temp. aceite del motor"
+        "oilTemp": "Temp. aceite del motor",
+        "boost": "Turbo Boost Pressure",
+        "widebandAfr": "Wideband O2 / AFR Ratio",
+        "transTemp": "Transmission Temperature",
+        "catalystTemp": "Catalyst Temperature",
+        "ethanol": "Ethanol Fuel %",
+        "timingAdvance": "Ignition Timing Advance",
+        "baro": "Barometric Pressure"
     },
     "secretDebug": {
         "title": "DESBLOQUEAR FUNCIONES OCULTAS & UDS",
@@ -1344,7 +1406,17 @@
         "waitingVehicle": "ESPERANDO VEHÍCULO CONECTADO",
         "activeFeaturesCount": "{{count}} funciones OEM específicas del vehículo activas",
         "demoFeaturesCount": "{{count}} funciones de demostración listadas",
-        "connectForFeaturesNote": "Conéctese al dispositivo OBD2 para listar funciones específicas"
+        "connectForFeaturesNote": "Conéctese al dispositivo OBD2 para listar funciones específicas",
+        "codingFailed": "Codificación fallida.",
+        "engineRunningMsg": "La codificación ECU requiere contacto encendido con motor apagado (RPM == 0).",
+        "engineRunningTitle": "⚠️ Motor en marcha",
+        "lowVoltageMsg": "El voltaje de la batería está por debajo del umbral seguro.",
+        "lowVoltageTitle": "⚠️ Alerta de bajo voltaje",
+        "motionAlertMsg": "Las operaciones de escritura ECU están bloqueadas mientras el vehículo está en movimiento.",
+        "motionAlertTitle": "🚨 Vehículo en movimiento",
+        "noMatchingFeatures": "No se encontraron funciones para los filtros seleccionados.",
+        "unsafeModuleMsg": "Las escrituras ECU en módulos ABS/ESP y Airbag/SRS están bloqueadas al 100%.",
+        "unsafeModuleTitle": "🚫 Módulo de seguridad protegido"
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -1354,7 +1426,8 @@
         "reconnectingDesc": "Ignition cycle detected. Re-establishing link automatically in background.",
         "lowVoltageOff": "Low Battery Voltage (Ignition OFF)",
         "noEcuResponse": "No ECU Response (Ignition OFF)",
-        "on": "Ignition ON (CONNECTED)"
+        "on": "Ignition ON (CONNECTED)",
+        "batteryVoltage": "Voltaje de batería:"
     },
     "hpGauge": {
         "title": "LIVE POWER & TORQUE GAUGE",
@@ -1368,7 +1441,8 @@
         "methodTorque": "Live Torque PID Based",
         "methodLoad": "Calculated Load Based",
         "configWeight": "Vehicle Weight (kg):",
-        "configDisplacement": "Engine Displacement (L):"
+        "configDisplacement": "Engine Displacement (L):",
+        "calcMethod": "MÉTODO DE CÁLCULO"
     },
     "fuelTrim": {
         "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
@@ -1437,7 +1511,13 @@
         "statusClean": "0 FAULTS (HEALTHY)",
         "statusFault": "{{count}} FAULTS DETECTED",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
-        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units."
+        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units.",
+        "gatewayName": "Pasarela de Red Central (Gateway)",
+        "ipcName": "Cuadro de Instrumentos (IPC / Cockpit)",
+        "epsName": "Dirección Asistida Eléctrica (EPS)",
+        "hvacName": "Climatización y Aire Acondicionado (HVAC)",
+        "tpmsName": "Sistema de Presión de Neumáticos (TPMS)",
+        "bmsName": "Sistema de Gestión de Batería (BMS / EV)"
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
@@ -1450,12 +1530,181 @@
         "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
-        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!"
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 (K1) Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 (K2) Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting."
     },
     "safeExit": {
         "btn": "SAFE DISCONNECT & ADAPTER RESET",
         "confirmTitle": "Safe Disconnect Confirmation",
         "confirmDesc": "ATZ hardware reset will be issued to OBD2 adapter and connection closed cleanly. Proceed?",
         "success": "OBD2 adapter reset and connection cleanly terminated."
+    },
+    "admin": {
+        "clear": "🗑️ BORRAR",
+        "cloudTools": "🛰️ HERRAMIENTAS EN LA NUBE Y SISTEMA",
+        "copy": "COPIAR",
+        "crashTest": "💥 PRUEBA DE CAÍDA",
+        "crashBtn": "Forzar caída",
+        "deviceUuid": "UUID DEL DISPOSITIVO",
+        "presetTitle": "⚡ CONJUNTO DE COMANDOS RÁPIDOS:",
+        "presetReset": "Reiniciar adaptador OBD2",
+        "presetSpeed": "Velocidad del vehículo (km/h)",
+        "presetReadDtc": "Leer códigos de fallo",
+        "presetClearDtc": "Borrar códigos de fallo",
+        "refresh": "🔄 ACTUALIZAR",
+        "send": "ENVIAR",
+        "share": "📤 COMPARTIR",
+        "terminalTitle": "🖥️ CONSOLA TERMINAL OBD EN VIVO (TX / RX)",
+        "userId": "ID DE USUARIO",
+        "userInfo": "🔒 CREDENCIALES DE ADMINISTRADOR",
+        "devModeAlert": "Secret PRO developer key is disabled in production builds.",
+        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
+        "noLogsInfo": "No log records found to share."
+    },
+    "bridge": {
+        "androidAdvice": "Reinicie la aplicación o verifique la configuración de Bluetooth.",
+        "fatalError": "ERROR FATAL DEL PUENTE",
+        "genericError": "No se pudo inicializar el subsistema BLE.",
+        "goToSettings": "IR A AJUSTES",
+        "ignoreEnterApp": "IGNORAR Y ENTRAR",
+        "initializing": "INICIALIZANDO PUENTE...",
+        "iosAdvice": "Asegúrese de que Bluetooth esté habilitado para Cortex OBD2 en la configuración.",
+        "nativeState": "ESTADO_NATIVO",
+        "proceedBypass": "IR AL PANEL (OMITIR)",
+        "state": "ESTADO",
+        "unauthorized": "Los permisos de Bluetooth no están autorizados.",
+        "verifyingAndroid": "Verificando subsistema Bluetooth de Android",
+        "verifyingIos": "Verificando conectividad iOS CoreBluetooth"
+    },
+    "vehicle": {
+        "brand": "Marca:",
+        "detectDesc": "Se detectó la siguiente información del vehículo.",
+        "detectTitle": "VEHÍCULO IDENTIFICADO",
+        "editTitle": "EDITAR VEHÍCULO",
+        "fuel": {
+            "diesel": "DIÉSEL",
+            "gasoline": "GASOLINA"
+        },
+        "fuelType": "Tipo de combustible:",
+        "model": "Modelo:",
+        "transmission": {
+            "automatic": "AUTOMÁTICA",
+            "manual": "MANUAL"
+        },
+        "unknown": "Desconocido",
+        "year": "Año:"
+    },
+    "sgw": {
+        "title": "Security Gateway (SGW) Active",
+        "subtitle": "{{brandName}} ECU Security Restriction",
+        "description": "Security Gateway (SGW) protection is active on this vehicle. Standard OBD2 telemetry is readable; however, advanced diagnostic routines and adaptation require OEM authentication."
+    },
+    "evBms": {
+        "title": "EV BMS Diagnostics",
+        "subtitle": "Battery Management System & Cell Health ({{brand}})",
+        "sohLabel": "STATE OF HEALTH (SOH)",
+        "capacityRetained": "Capacity Retained",
+        "socLabel": "STATE OF CHARGE (SOC)",
+        "remainingCharge": "Remaining Charge",
+        "cellBalance": "Cell Voltage Balance (16S Pack)",
+        "optimalBalance": "Optimal Balance (<30mV delta)",
+        "mildImbalance": "Mild Imbalance Detected",
+        "thermalStatus": "Thermal Status & Pack Info",
+        "packTemp": "Pack Temperature:",
+        "packVoltage": "Pack Voltage:",
+        "chargeCycles": "Charge Cycles:",
+        "cycles": "Cycles"
+    },
+    "serviceReset": {
+        "title": "Service & Maintenance Reset Wizard",
+        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "preCheckTitle": "Pre-Requirement Checklist",
+        "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
+        "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
+        "preCheckBattery": "Battery voltage must be above 12.2V.",
+        "selectRoutine": "SELECT SERVICE ROUTINE",
+        "intervalReset": "Service Maintenance Interval Reset",
+        "intervalTitle": "Reset Service Interval Indicator Light",
+        "intervalSubtitle": "Clears dash service warning and resets next inspection interval.",
+        "tpsReset": "Throttle Position Sensor (TPS) Reset",
+        "tpsTitle": "Throttle Position Sensor (TPS) Adaptation",
+        "tpsSubtitle": "Re-calibrates zero-throttle voltage stop point.",
+        "absBleed": "ABS Bleeding & Valve Test",
+        "absTitle": "ABS Hydraulic Pump Bleed Test",
+        "absSubtitle": "Cycles ABS solenoid valves to purge air bubbles from brake lines.",
+        "ecuRejected": "ECU rejected reset command. Ensure ignition is ON and engine is OFF."
+    },
+    "aiDoctor": {
+        "analyzing": "Analyzing DTC codes & engine telemetry with AI Doctor...",
+        "healthImpact": "Health Score Impact: {{score}}/100",
+        "drivingSafety": "Driving Safety Guidance",
+        "causes": "Probable Causes",
+        "recommendedAction": "Recommended Mechanical Action",
+        "estimatedCost": "Estimated Component / Repair Cost",
+        "noFaultsTitle": "System Optimal — No Fault Codes Detected",
+        "noFaultsSummary": "ECU telemetry shows no active diagnostic trouble codes. Engine parameters are within normal operating thresholds.",
+        "stepMaintain": "Maintain regular oil and filter service intervals.",
+        "stepCheckVoltage": "Periodically check battery resting voltage.",
+        "safeDrive": "Safe for regular operation.",
+        "misfireTitle": "Engine Cylinder Misfire Detected",
+        "misfireSummary": "Active misfire detected in one or more cylinders. Unburnt fuel may enter catalytic converter causing permanent damage.",
+        "causeSparkPlug": "Worn or fouled spark plug",
+        "causeIgnitionCoil": "Failing ignition coil or wire",
+        "causeFuelInjector": "Clogged or faulty fuel injector",
+        "stepInspectPlugs": "Inspect and gap spark plugs.",
+        "stepSwapCoils": "Swap ignition coils between cylinders to test for fault transfer.",
+        "stepFuelPressure": "Measure fuel rail pressure.",
+        "criticalDrive": "Do not drive extended distances under heavy throttle. Drive immediately to service.",
+        "o2Title": "Oxygen (O2) Sensor Circuit Malfunction",
+        "o2Summary": "Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.",
+        "causeO2Heater": "O2 sensor heating element failure",
+        "causeExhaustLeak": "Exhaust manifold leak upstream of sensor",
+        "causeHarness": "Damaged wiring harness connector",
+        "stepCheckWiring": "Inspect O2 sensor wiring harness for melting or fraying.",
+        "stepCleanSensor": "Clean O2 sensor tip or replace sensor if resistance out of spec.",
+        "warningDrive": "Safe to drive to repair shop at moderate speed.",
+        "genericTitle": "Diagnostic Code Analysis ({{codes}})",
+        "genericSummary": "Active trouble code(s) detected: {{codes}}. System monitoring recommended.",
+        "causeGeneric1": "Sensor circuit out of expected voltage range",
+        "causeGeneric2": "Loose electrical connection or ground fault",
+        "stepGeneric1": "Perform diagnostic scan and record freeze frame data.",
+        "stepGeneric2": "Clear DTC codes after inspecting harness connectors.",
+        "reportTitle": "Diagnostic Code Analysis",
+        "healthImpactTitle": "ENGINE HEALTH SCORE IMPACT"
+    },
+    "dtcRisk": {
+        "safeTitle": "🟢 SEGURO PARA CONDUCIR",
+        "safeDesc": "Esta avería no compromete la seguridad al conducir. Puede conducir a velocidad moderada hasta el taller.",
+        "warningTitle": "🟡 ADVERTENCIA: REVISIÓN DE TALLER REQUERIDA",
+        "warningDesc": "Pueden producirse pérdidas de rendimiento y mayor emisión. Visite un taller autorizado lo antes posible.",
+        "criticalTitle": "🔴 CRÍTICO: DETENGA EL VEHÍCULO / TALLER URGENTE",
+        "criticalDesc": "¡Riesgo mecánico o eléctrico crítico! El motor o sistemas de seguridad pueden dañarse. Deténgase de inmediato."
+    },
+    "dtcDetail": {
+        "descTitle": "DESCRIPCIÓN DEL CÓDIGO DE DIVERGENCIA",
+        "possibleCausesTitle": "CAUSAS PROBABLES Y GUÍA DE REPARACIÓN",
+        "cause1": "Loose connection or corrosion in sensor circuit or wiring harness",
+        "cause2": "Mechanical wear or electrical fault in component",
+        "cause3": "Perform voltage/resistance test with multimeter or replace component",
+        "recommendedAction": "Acción recomendada",
+        "tsbTitle": "TECHNICAL SERVICE BULLETIN (TSB)",
+        "aiDoctorBtn": "ANÁLISIS EXPERTO AI DOCTOR",
+        "backToDetail": "VOLVER A LOS DETALLES DEL ERROR"
+    },
+    "dtcCategory": {
+        "powertrain": "MOTOR / TREN DE RODAJE",
+        "chassis": "CHASIS / SISTEMA DE FRENOS",
+        "body": "ELECTRÓNICA DE CARROCERÍA",
+        "network": "RED / SISTEMA CAN BUS"
+    },
+    "guidedDiag": {
+        "p0102_cause1": "Sensor MAF sucio o defectuoso",
+        "p0102_cause2": "Fuga de admisión / Fuga de vacío",
+        "p0102_cause3": "Daños en el cableado o corrosión",
+        "p0102_action": "Limpie el sensor MAF con limpiador de contactos o revise la caja del filtro de aire.",
+        "p0102_tsb": "TSB-2023-09: Inspeccione el par de apriete de las abrazaderas de admisión antes de cambiar el MAF."
     }
 }

@@ -197,13 +197,13 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
         <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
           <TouchableOpacity activeOpacity={0.4} onPress={handleTitleTap}>
             <Text allowFontScaling={false} style={[sDyn.headerTitle, { color: colors.textPri }]}>
-              🌐 {t('bento.languageSelect', 'DİL SEÇİMİ').toUpperCase()}
+              🌐 {t('bento.languageSelect', 'LANGUAGE').toUpperCase()}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
             <Text allowFontScaling={false} style={[sDyn.cancelText, { color: colors.cyan }]}>
-              {t('bento.settings.done', 'BİTTİ').toUpperCase()}
+              {t('bento.settings.done', 'DONE').toUpperCase()}
             </Text>
           </TouchableOpacity>
         </View>

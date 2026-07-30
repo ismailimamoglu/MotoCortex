@@ -106,4 +106,38 @@ export class AdaptivePollingController {
 
         return Math.max(minInterval, Math.min(maxInterval, this.currentInterval));
     }
+
+    /**
+     * Calculates specific polling interval for target tier loop (fast, medium, slow).
+     */
+    public static getTierInterval(tier: 'fast' | 'medium' | 'slow'): number {
+        const baseInterval = this.calculateInterval();
+        switch (tier) {
+            case 'fast':
+                // Fast Loop: High-frequency 20-30Hz (25ms - 75ms)
+                return Math.max(25, Math.min(75, Math.round(baseInterval * 0.25)));
+            case 'medium':
+                // Medium Loop: 3-5Hz (150ms - 350ms)
+                return Math.max(150, Math.min(350, baseInterval));
+            case 'slow':
+            default:
+                // Slow Loop: 0.2 - 0.5Hz (2000ms - 5000ms)
+                return 2000;
+        }
+    }
+
+    /**
+     * Combines multiple Mode 01 PID queries into a single batch ELM327 command.
+     * Example: ['010C', '010D', '010B', '0111'] -> '010C0D0B11'
+     */
+    public static packMultiPidCommand(pids: string[]): string {
+        if (!pids || pids.length === 0) return '';
+        if (pids.length === 1) return pids[0];
+
+        const cleanPids = pids.map((p) => p.trim().toUpperCase().replace(/\s+/g, ''));
+        const mode = cleanPids[0].slice(0, 2);
+        const pidSuffixes = cleanPids.map((p) => (p.startsWith(mode) ? p.slice(2) : p));
+
+        return `${mode}${pidSuffixes.join('')}`;
+    }
 }

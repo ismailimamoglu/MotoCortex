@@ -10,7 +10,7 @@ import BluetoothService from '../api/BluetoothService';
 import { BluetoothPermissionError } from '../api/BluetoothService';  
 import OBDCommandQueue, { preciseSleep, waitForELMPrompt } from '../api/OBDCommandQueue';  
 import { useBluetoothStore, DiagnosticDtcArray, ConnectionStep } from '../store/useBluetoothStore';  
-import { useAppStore } from '../store/useAppStore';  
+import { useAppStore, clearDemoDtcs } from '../store/useAppStore';  
 import { ADAPTER_COMMANDS } from '../api/commands';  
 import { CapabilityDiscoveryManager } from '../core/connection/CapabilityDiscoveryManager';  
 import { VehicleProfileDB } from '../core/pids/VehicleProfileDB';  
@@ -468,17 +468,23 @@ export const useBluetooth = () => {
     }, [t]);
 
    const clearDiagnostics = useCallback(async () => {  
-       if (status !== 'connected') return;  
+       const isSim = useAppStore.getState().isSimulationMode;
+       if (status !== 'connected' && !isSim) return;  
        try { proGuardAction(() => { }); } catch { return; }  
        useBluetoothStore.getState().setDiagnosticMode(true);  
-       stopPolling();  
+       if (!isSim) stopPolling();  
        try {  
-           await sendCommand(ADAPTER_COMMANDS.CLEAR_DTC);  
-           await preciseSleep(500);  
+           if (!isSim) {
+               await sendCommand(ADAPTER_COMMANDS.CLEAR_DTC);  
+               await preciseSleep(500);  
+           } else {
+               await preciseSleep(300);
+               clearDemoDtcs();
+           }
            useBluetoothStore.getState().setSensorData({ dtcs: [] });  
        } catch { } finally {  
            useBluetoothStore.getState().setDiagnosticMode(false);  
-           startPolling();  
+           if (!isSim) startPolling();  
        }  
    }, [status, sendCommand, startPolling, stopPolling, proGuardAction]);
 
@@ -631,6 +637,10 @@ export const useBluetooth = () => {
         OBDCommandQueue.onVoltageReceived((voltage) => {
             useBluetoothStore.getState().setSensorData({ voltage });
         });
+        return () => {
+            OBDCommandQueue.onKLineFallback(null);
+            OBDCommandQueue.onVoltageReceived(null);
+        };
     }, []);
 
     return {  

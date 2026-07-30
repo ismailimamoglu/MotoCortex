@@ -13,10 +13,15 @@ export type SafetyModuleClass = 'ABS_ESP' | 'SRS_AIRBAG' | 'NONE';
  * Expandable as more OEM CAN mapping data is integrated.
  */
 const CURATED_SAFETY_HEADERS: Record<string, SafetyModuleClass> = {
-    // VAG / BMW / Ford / GM ABS & SRS ECU CAN Request IDs
+    // Curated ABS/ESP & SRS/Airbag CAN Request IDs (7D0 = ABS, 770 = SRS)
+    '7D0': 'ABS_ESP',
     '7D2': 'ABS_ESP',
-    '7D3': 'SRS_AIRBAG',
+    '0X7D0': 'ABS_ESP',
     '0X7D2': 'ABS_ESP',
+
+    '770': 'SRS_AIRBAG',
+    '7D3': 'SRS_AIRBAG',
+    '0X770': 'SRS_AIRBAG',
     '0X7D3': 'SRS_AIRBAG',
 };
 

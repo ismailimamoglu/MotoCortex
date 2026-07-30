@@ -84,14 +84,14 @@ export default function BentoGrid({
   const dtcCount = dtcs.length;
   const isClean = dtcCount === 0;
 
-  const LANGUAGE_FLAGS: Record<string, string> = {
-    en: '🇬🇧', de: '🇩🇪', es: '🇪🇸', tr: '🇹🇷', id: '🇮🇩', it: '🇮🇹',
-    ar: '🇸🇦', zh: '🇨🇳', da: '🇩🇰', fi: '🇫🇮', fr: '🇫🇷', hi: '🇮🇳',
-    nl: '🇳🇱', ja: '🇯🇵', ko: '🇰🇷', pl: '🇵🇱', hu: '🇭🇺', no: '🇳🇴',
-    pt: '🇵🇹', ro: '🇷🇴', ru: '🇷🇺', th: '🇹🇭', uk: '🇺🇦', el: '🇬🇷',
-    cs: '🇨🇿', sv: '🇸🇪'
+  const LANGUAGE_CODES: Record<string, string> = {
+    en: '[EN]', de: '[DE]', es: '[ES]', tr: '[TR]', id: '[ID]', it: '[IT]',
+    ar: '[AR]', zh: '[ZH]', da: '[DA]', fi: '[FI]', fr: '[FR]', hi: '[HI]',
+    nl: '[NL]', ja: '[JA]', ko: '[KO]', pl: '[PL]', hu: '[HU]', no: '[NO]',
+    pt: '[PT]', ro: '[RO]', ru: '[RU]', th: '[TH]', uk: '[UK]', el: '[EL]',
+    cs: '[CS]', sv: '[SV]'
   };
-  const langFlag = LANGUAGE_FLAGS[language] || '🇬🇧';
+  const langBadge = LANGUAGE_CODES[language] || '[EN]';
 
   const handleProPress = () => {
     if (isPro || isSimulationMode) {
@@ -282,7 +282,7 @@ export default function BentoGrid({
           adjustsFontSizeToFit
           style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}
         >
-          {t('bento.featureActivation', 'GİZLİ ÖZELLİK AÇMA / ECU CODING').toUpperCase()}
+          {t('bento.featureActivation', 'UNLOCK HIDDEN FEATURES / ECU CODING').toUpperCase()}
         </Text>
       </BentoButton>
 
@@ -353,9 +353,9 @@ export default function BentoGrid({
               minimumFontScale={0.65}
               style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1, textAlign: 'center' }]}
             >
-              {t('bento.languageSelect', 'DİL SEÇİMİ').toUpperCase()}
+              {t('bento.languageSelect', 'LANGUAGE').toUpperCase()}
             </Text>
-            <Text style={{ fontSize: scaleFont(10), marginStart: 3 }}>{langFlag}</Text>
+            <Text style={{ fontSize: scaleFont(10), fontFamily: MONO, color: colors.cyan, marginStart: 3 }}>{langBadge}</Text>
           </View>
         </BentoButton>
       </View>

@@ -16,6 +16,12 @@ export type FeatureCategory =
 
 export type FeatureRiskLevel = 'LOW' | 'MEDIUM' | 'HIGH';
 
+export type OEMVerificationStatus = 'BENCH_VERIFIED' | 'OEM_DOCUMENTED' | 'COMMUNITY_TESTED' | 'DRAFT_UNVERIFIED';
+
+export type OEMSignalEndianness = 'LITTLE_ENDIAN' | 'BIG_ENDIAN_MOTOROLA';
+
+export type OEMReadBackTiming = 'IMMEDIATE_PRE_RESET' | 'POST_RESET_REQUIRED';
+
 export interface OEMFeatureDefinition {
     id: string;
     nameKey: string;
@@ -28,6 +34,8 @@ export interface OEMFeatureDefinition {
     didHex: string;
     byteIndex: number;
     bitIndex: number;
+    bitWidth?: number;
+    endianness?: OEMSignalEndianness;
     requiresSecurityAccess: boolean;
     securityLevel?: number;
     requiresExtendedSession: boolean;
@@ -35,6 +43,11 @@ export interface OEMFeatureDefinition {
     riskLevel: FeatureRiskLevel;
     sfdProtected?: boolean;
     streetLegalNoteKey?: string;
+    compatibleSoftwareVersions?: string[];
+    verificationStatus?: OEMVerificationStatus;
+    readBackTiming?: OEMReadBackTiming;
+    postResetSecurityDelayMs?: number;
+    postWriteAction?: 'NONE' | 'CRC_RECALCULATE' | 'ROUTINE_COMMIT' | 'ECU_RESET' | 'VERIFY_ONLY' | 'SIGNATURE_VERIFY';
 }
 
 const EXTENDED_OEM_FEATURES: OEMFeatureDefinition[] = [

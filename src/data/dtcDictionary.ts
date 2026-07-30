@@ -110,35 +110,49 @@ const DTC_DICTIONARY: Record<string, string> = {
 import i18n from '../i18n';
 import { lookupDtcSync, prefetchDtcChunks, prefetchDtcChunksForCodes } from './dtcStorage';
 import { SemanticDtcDictionary } from '../utils/DtcDictionary';
+import { lookupOemDtc } from '../services/dtcIntelligenceService';
 
 /**
  * Looks up a DTC code synchronously and returns its localized description.
  * Returns null if the code is not found.
  */
-export function lookupDTC(code: string): string | null {
+export function lookupDTC(code: string, brand?: string): string | null {
     const normalized = code.toUpperCase().trim();
-    
-    // 1. Semantic map (Highest priority)
-    const semanticDesc = SemanticDtcDictionary[normalized];
-    if (semanticDesc) {
-        return semanticDesc;
+
+    // 1. OEM Specific Lookup
+    const oemDesc = lookupOemDtc(normalized, brand);
+    if (oemDesc) {
+        return oemDesc;
     }
 
+    // 2. Check i18n translation key first (26 Locales)
     const i18nKey = `dtc.${normalized}`;
-    
     if (i18n.isInitialized && i18n.exists(i18nKey)) {
         return i18n.t(i18nKey);
     }
-    
-    const currentLang = i18n.language || 'en';
+
+    const currentLang = (i18n.language || 'en').toLowerCase();
+
+    // 3. Turkish Semantic & Local Dictionary (Only when active language is Turkish)
     if (currentLang.startsWith('tr')) {
+        const semanticDesc = SemanticDtcDictionary[normalized];
+        if (semanticDesc) {
+            return semanticDesc;
+        }
         const localDesc = DTC_DICTIONARY[normalized];
         if (localDesc) {
             return localDesc;
         }
     }
     
-    return lookupDtcSync(normalized);
+    // 4. Synchronous chunk lookup (26 Locales)
+    const chunkDesc = lookupDtcSync(normalized);
+    if (chunkDesc) {
+        return chunkDesc;
+    }
+
+    // 5. General fallback
+    return currentLang.startsWith('tr') ? (SemanticDtcDictionary[normalized] || DTC_DICTIONARY[normalized] || null) : null;
 }
 
 export { prefetchDtcChunks, prefetchDtcChunksForCodes };

@@ -384,13 +384,15 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         zIndex: 10,
         top: scaleHeight(12),
         right: scaleWidth(16),
-        width: scaleMod(32),
-        height: scaleMod(32),
-        borderRadius: scaleMod(16),
+        paddingHorizontal: scaleWidth(12),
+        paddingVertical: scaleHeight(6),
+        minWidth: scaleMod(44),
+        height: scaleMod(30),
+        borderRadius: scaleMod(15),
       },
       closeBtnText: {
         fontWeight: 'bold' as const,
-        fontSize: scaleFont(12),
+        fontSize: scaleFont(10),
       },
       crownBadge: {
         borderWidth: 1.5,
@@ -733,17 +735,17 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
 
   const features = [
     {
-      icon: '📊',
+      icon: '',
       title: t('paywall.feat1Title'),
       desc: t('paywall.feat1Desc'),
     },
     {
-      icon: '🔍',
+      icon: '',
       title: t('paywall.feat2Title'),
       desc: t('paywall.feat2Desc'),
     },
     {
-      icon: '💾',
+      icon: '',
       title: t('paywall.feat3Title'),
       desc: t('paywall.feat3Desc'),
     },
@@ -776,13 +778,19 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
               style={[sDyn.closeBtn, { backgroundColor: `${colors.textPri}14` }]}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             >
-              <Text style={[sDyn.closeBtnText, { color: colors.textTertiary }]}>✕</Text>
+              <Text 
+                numberOfLines={1}
+                adjustsFontSizeToFit={true}
+                style={[sDyn.closeBtnText, { color: colors.textPri, fontSize: scaleFont(10), fontWeight: '800' }]}
+              >
+                {t('common.close', 'KAPAT').toUpperCase()}
+              </Text>
             </TouchableOpacity>
             
             <View style={[sDyn.crownBadge, { backgroundColor: `${colors.purple}26`, borderColor: colors.purple }]}>
-              <Text style={[sDyn.crownText, { color: `${colors.purple}EE` }]}>👑 MOTO CORTEX PRO</Text>
+              <Text style={[sDyn.crownText, { color: colors.textPri, fontWeight: '900' }]}>MOTO CORTEX PRO</Text>
             </View>
-            <Text style={[sDyn.subtitle, { color: colors.textTertiary }]}>
+            <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
               {t('paywall.subtitle')}
             </Text>
           </View>
@@ -798,13 +806,10 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
             <View style={sDyn.featuresRow}>
               {features.map((feat, i) => (
                 <View key={i} style={[sDyn.featureCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-                  <View style={[sDyn.iconCircle, { backgroundColor: `${colors.purple}14` }]}>
-                    <Text style={{ fontSize: scaleFont(14) }}>{feat.icon}</Text>
-                  </View>
-                  <Text numberOfLines={2} ellipsizeMode="tail" style={[sDyn.featureTitle, { color: colors.textPri }]}>
+                  <Text numberOfLines={2} ellipsizeMode="tail" style={[sDyn.featureTitle, { color: colors.textPri, fontWeight: '900' }]}>
                     {feat.title}
                   </Text>
-                  <Text numberOfLines={3} ellipsizeMode="tail" style={[sDyn.featureDesc, { color: colors.textTertiary }]}>
+                  <Text numberOfLines={3} ellipsizeMode="tail" style={[sDyn.featureDesc, { color: colors.textSec, fontWeight: '600' }]}>
                     {feat.desc}
                   </Text>
                 </View>

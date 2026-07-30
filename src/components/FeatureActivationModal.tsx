@@ -93,7 +93,10 @@ const FeatureActivationModalComponent = ({
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [activeCodingId, setActiveCodingId] = useState<string | null>(null);
     const [codingLogs, setCodingLogs] = useState<string[]>([]);
-    const [enabledFeatures, setEnabledFeatures] = useState<Record<string, boolean>>({});
+    
+    const storeEnabledFeatures = useAppStore((s) => s.enabledFeatures) || {};
+    const setFeatureEnabledInStore = useAppStore((s) => s.setFeatureEnabled);
+
     const [initialStateBackup, setInitialStateBackup] = useState<Record<string, boolean>>({});
     const [pendingDisclaimerFeature, setPendingDisclaimerFeature] = useState<OEMFeatureDefinition | null>(null);
     const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
@@ -110,7 +113,7 @@ const FeatureActivationModalComponent = ({
 
     const executeToggleFeature = async (feature: OEMFeatureDefinition) => {
         if (activeCodingId !== null) return;
-        const currentlyEnabled = !!enabledFeatures[feature.id];
+        const currentlyEnabled = !!storeEnabledFeatures[feature.id];
         const newTargetState = !currentlyEnabled;
 
         // Backup initial state before first modification
@@ -131,14 +134,14 @@ const FeatureActivationModalComponent = ({
             ]);
 
             await new Promise((res) => setTimeout(res, 400));
-            setEnabledFeatures(prev => ({ ...prev, [feature.id]: newTargetState }));
+            setFeatureEnabledInStore(feature.id, newTargetState);
             const featureName = t(feature.nameKey, feature.defaultName);
-            const statusStr = newTargetState ? t('bento.enabled', 'AKTİF HALE GETİRİLDİ') : t('bento.disabled', 'DEVRE DIŞI BIRAKILDI');
-            setCodingToastMessage(`✅ "${featureName}" ${statusStr}.`);
+            const statusStr = newTargetState ? t('bento.enabled', 'ENABLED') : t('bento.disabled', 'DISABLED');
+            setCodingToastMessage(`[BAŞARILI] "${featureName}" ${statusStr}.`);
             setTimeout(() => setCodingToastMessage(null), 3500);
         } catch (err) {
             console.warn('[FeatureActivationModal] Toggle failed:', err);
-            setCodingToastMessage(`❌ ${t('features.codingFailed', 'Kodlama başarısız oldu.')}`);
+            setCodingToastMessage(`[HATA] ${t('features.codingFailed', 'Coding failed.')}`);
             setTimeout(() => setCodingToastMessage(null), 3500);
         } finally {
             setActiveCodingId(null);
@@ -279,7 +282,7 @@ const FeatureActivationModalComponent = ({
         ]);
 
         setTimeout(() => {
-            setEnabledFeatures(prev => ({ ...prev, [feature.id]: initialState }));
+            setFeatureEnabledInStore(feature.id, initialState);
             setActiveCodingId(null);
             Alert.alert(
                 '🔄 ' + t('features.restoreSuccessTitle', 'Factory State Restored'),
@@ -317,7 +320,7 @@ const FeatureActivationModalComponent = ({
                     }}>
                         <Text style={{ fontSize: scaleFont(14) }}>⚠️</Text>
                         <Text style={{ color: colors.red, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, flex: 1 }}>
-                            {t('features.cloneLockedBanner', '⚠️ Klon Adaptör Tespit Edildi — Kodlama Kilitli (İnceleme Modu)').toUpperCase()}
+                            {t('features.cloneLockedBanner', '⚠️ Clone Adapter Detected — Coding Locked (Read-Only Mode)').toUpperCase()}
                         </Text>
                     </View>
                 )}
@@ -357,14 +360,14 @@ const FeatureActivationModalComponent = ({
                                 ? String(t('features.vehicleMatched', { make: connectedVehicleMake.toUpperCase(), defaultValue: `${connectedVehicleMake.toUpperCase()} — EŞLEŞTİ` }))
                                 : isSimulationMode 
                                 ? String(t('features.demoModeVehicle', { make: 'VOLKSWAGEN', defaultValue: 'DEMO MODU: VOLKSWAGEN' })) 
-                                : String(t('features.waitingVehicle', 'BAĞLI ARAÇ BEKLENİYOR'))}
+                                : String(t('features.waitingVehicle', 'WAITING FOR CONNECTED VEHICLE'))}
                         </Text>
                         <Text numberOfLines={1} style={{ color: colors.textSec, fontSize: scaleFont(9), fontFamily: MONO, marginTop: 2 }}>
                             {connectedVehicleMake 
                                 ? String(t('features.activeFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} adet araca özel OEM gizli özellik aktif` }))
                                 : isSimulationMode 
                                 ? String(t('features.demoFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} adet demo özellik listeleniyor` }))
-                                : String(t('features.connectForFeaturesNote', 'OBD2 cihazına bağlandığınızda araca özel özellikler gelir'))}
+                                : String(t('features.connectForFeaturesNote', 'Connect to an OBD2 device to list vehicle-specific features'))}
                         </Text>
                     </View>
                     <View style={{
@@ -397,7 +400,7 @@ const FeatureActivationModalComponent = ({
                         </View>
                     )}
                     renderItem={({ item }) => {
-                        const isEnabled = !!enabledFeatures[item.id];
+                        const isEnabled = !!storeEnabledFeatures[item.id];
                         const isCodingThis = activeCodingId === item.id;
                         const hasBackup = initialStateBackup[item.id] !== undefined;
                         const translatedTitle = t(item.nameKey, item.defaultName);
@@ -437,7 +440,7 @@ const FeatureActivationModalComponent = ({
                                                     fontWeight: '900',
                                                     fontFamily: MONO
                                                 }}>
-                                                    {item.riskLevel === 'HIGH' ? t('features.riskHigh', 'YÜKSEK RİSK') : item.riskLevel === 'MEDIUM' ? t('features.riskMedium', 'ORTA RİSK') : t('features.riskLow', 'DÜŞÜK RİSK')}
+                                                    {item.riskLevel === 'HIGH' ? t('features.riskHigh', 'HIGH RISK') : item.riskLevel === 'MEDIUM' ? t('features.riskMedium', 'MEDIUM RISK') : t('features.riskLow', 'LOW RISK')}
                                                 </Text>
                                             </View>
 

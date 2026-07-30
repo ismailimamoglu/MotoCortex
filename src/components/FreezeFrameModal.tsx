@@ -6,9 +6,13 @@ import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 
 interface FreezeData {
+    dtcCode: string | null;
     rpm: number | null;
     speed: number | null;
     coolant: number | null;
+    throttle: number | null;
+    map: number | null;
+    stft: number | null;
 }
 
 interface Props {
@@ -29,6 +33,21 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
     const [error, setError] = useState<string | null>(null);
 
     const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
+
+    const decodeDtcFromHex = (hex: string): string | null => {
+        if (!hex || hex.length < 4) return null;
+        const a = parseInt(hex.substring(0, 2), 16);
+        const b = parseInt(hex.substring(2, 4), 16);
+        if (isNaN(a) || isNaN(b) || (a === 0 && b === 0)) return null;
+
+        const typeNum = (a & 0xC0) >> 6;
+        const prefixes = ['P', 'C', 'B', 'U'];
+        const prefix = prefixes[typeNum] || 'P';
+        const d1 = (a & 0x30) >> 4;
+        const d2 = (a & 0x0F).toString(16).toUpperCase();
+        const d3d4 = b.toString(16).padStart(2, '0').toUpperCase();
+        return `${prefix}${d1}${d2}${d3d4}`;
+    };
 
     const parseHex = (response: string, echo: string, bytes: number): number | null => {
         const clean = response.replace(/\s+/g, '').replace('SEARCHING...', '');
@@ -55,19 +74,50 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
         setData(null);
 
         try {
+            // Mode 02 PID 020200: Freeze Frame DTC verification
+            const dtcRes = await sendCommand('020200');
             const rpmRes = await sendCommand('020C00');
             const speedRes = await sendCommand('020D00');
             const coolRes = await sendCommand('020500');
+            const throttleRes = await sendCommand('021100');
+            const mapRes = await sendCommand('020B00');
+            const stftRes = await sendCommand('020600');
+
+            let dtcCode: string | null = null;
+            if (dtcRes) {
+                const clean = dtcRes.replace(/\s+/g, '');
+                if (clean.includes('4202')) {
+                    const parts = clean.split('4202');
+                    if (parts[1] && parts[1].length >= 4) {
+                        dtcCode = decodeDtcFromHex(parts[1].substring(0, 4));
+                    }
+                }
+            }
 
             const rpmVal = rpmRes ? parseHex(rpmRes, '420C', 2) : null;
             const speedVal = speedRes ? parseHex(speedRes, '420D', 1) : null;
             const coolRaw = coolRes ? parseHex(coolRes, '4205', 1) : null;
             const coolVal = coolRaw !== null ? coolRaw - 40 : null;
 
-            if (rpmVal === null && speedVal === null && coolVal === null) {
+            const throttleRaw = throttleRes ? parseHex(throttleRes, '4211', 1) : null;
+            const throttleVal = throttleRaw !== null ? Math.round((throttleRaw * 100) / 255) : null;
+
+            const mapVal = mapRes ? parseHex(mapRes, '420B', 1) : null;
+            const stftRaw = stftRes ? parseHex(stftRes, '4206', 1) : null;
+            const stftVal = stftRaw !== null ? Number((((stftRaw - 128) * 100) / 128).toFixed(1)) : null;
+
+            if (rpmVal === null && speedVal === null && coolVal === null && dtcCode === null) {
                 setError(t('freeze.noData'));
             } else {
-                setData({ rpm: rpmVal, speed: speedVal, coolant: coolVal });
+                setData({
+                    dtcCode,
+                    rpm: rpmVal,
+                    speed: speedVal,
+                    coolant: coolVal,
+                    throttle: throttleVal,
+                    map: mapVal,
+                    stft: stftVal
+                });
             }
         } catch (e) {
             setError(t('freeze.error') + ': ' + (e instanceof Error ? e.message : String(e)));
@@ -236,9 +286,17 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                         {/* Results */}
                         {data && (
                             <View style={{ marginTop: scaleHeight(8) }}>
-                                <Text style={{ color: colors.textPri, fontSize: scaleFont(12), fontWeight: '800', fontFamily: MONO, marginBottom: scaleHeight(12), textAlign: 'center' }}>
+                                <Text style={{ color: colors.textPri, fontSize: scaleFont(12), fontWeight: '800', fontFamily: MONO, marginBottom: scaleHeight(8), textAlign: 'center' }}>
                                     📸 {t('freeze.values')}
                                 </Text>
+
+                                {data.dtcCode && (
+                                    <View style={{ alignSelf: 'center', backgroundColor: colors.red + '20', borderColor: colors.red, borderWidth: 1, paddingHorizontal: scaleWidth(12), paddingVertical: scaleHeight(4), borderRadius: scaleMod(16), marginBottom: scaleHeight(12) }}>
+                                        <Text style={{ color: colors.red, fontSize: scaleFont(11), fontWeight: '900', fontFamily: MONO }}>
+                                            ⚠️ FREEZE DTC: {data.dtcCode}
+                                        </Text>
+                                    </View>
+                                )}
 
                                 <View style={{ flexDirection: 'row', gap: scaleMod(8), marginBottom: scaleHeight(8) }}>
                                     <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -259,6 +317,26 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                                         <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>°C</Text>
                                     </View>
                                 </View>
+
+                                {(data.throttle !== null || data.map !== null || data.stft !== null) && (
+                                    <View style={{ flexDirection: 'row', gap: scaleMod(8), marginBottom: scaleHeight(8) }}>
+                                        <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.throttle', 'THROTTLE')}</Text>
+                                            <Text style={[sDyn.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.throttle !== null ? `${data.throttle}%` : '--'}</Text>
+                                            <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>%</Text>
+                                        </View>
+                                        <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.mapPressure', 'MAP PRESSURE')}</Text>
+                                            <Text style={[sDyn.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.map !== null ? data.map : '--'}</Text>
+                                            <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>kPa</Text>
+                                        </View>
+                                        <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.stft', 'STFT')}</Text>
+                                            <Text style={[sDyn.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.stft !== null ? `${data.stft}%` : '--'}</Text>
+                                            <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>Trim</Text>
+                                        </View>
+                                    </View>
+                                )}
 
                                 <TouchableOpacity
                                     style={[sDyn.actionBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]}

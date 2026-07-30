@@ -37,12 +37,14 @@ export enum FingerprintMatchResult {
 export enum VerificationResult {
     VERIFIED = 'VERIFIED',
     NOT_VERIFIED = 'NOT_VERIFIED',
+    POST_WRITE_DTC_DETECTED = 'POST_WRITE_DTC_DETECTED', // New DTC detected after read-back verification
     INCONCLUSIVE = 'INCONCLUSIVE', // Connection loss / timeout -> INCONCLUSIVE_LOCKED state
 }
 
 export interface VerificationOutcome {
     result: VerificationResult;
-    reason?: 'READ_BACK_MISMATCH' | 'TRANSPORT_LOST' | 'TIMEOUT' | 'ECU_UNAVAILABLE' | 'UNKNOWN';
+    reason?: 'READ_BACK_MISMATCH' | 'TRANSPORT_LOST' | 'TIMEOUT' | 'ECU_UNAVAILABLE' | 'NEW_DTC_DETECTED' | 'UNKNOWN';
+    detectedDtcs?: string[];
 }
 
 export interface ProtocolCapability {
@@ -57,6 +59,12 @@ export interface ProtocolCapability {
     fastInit?: boolean;
 }
 
+export type FeatureVerificationStatus = 'BENCH_VERIFIED' | 'OEM_DOCUMENTED' | 'COMMUNITY_TESTED' | 'DRAFT_UNVERIFIED';
+
+export type SignalEndianness = 'LITTLE_ENDIAN' | 'BIG_ENDIAN_MOTOROLA';
+
+export type ReadBackTiming = 'IMMEDIATE_PRE_RESET' | 'POST_RESET_REQUIRED';
+
 export interface VehiclePreconditions {
     requiresVehicleStationary?: boolean;
     maxAllowedSpeedKmh?: number;
@@ -64,6 +72,9 @@ export interface VehiclePreconditions {
     engineState?: 'RUNNING' | 'OFF' | 'ANY';
     minimumVoltage?: number;
     voltageStableForMs?: number;
+    isEv?: boolean;
+    isHighVoltageReady?: boolean;
+    isEvCharging?: boolean;
 }
 
 export interface EcuFingerprint {
@@ -92,13 +103,21 @@ export interface FeatureBackupRecord {
 
 export type OperationType = 'READ_MODIFY_WRITE' | 'ROUTINE_CONTROL' | 'DIRECT_WRITE' | 'CUSTOM_CAN';
 
+export type PostWriteAction = 'NONE' | 'CRC_RECALCULATE' | 'ROUTINE_COMMIT' | 'ECU_RESET' | 'VERIFY_ONLY' | 'SIGNATURE_VERIFY';
+
 export interface FeaturePayloadSpec {
     readDid: string;             // e.g. "0201"
     writeDid: string;            // e.g. "0201"
     byteIndex: number;           // Target byte in DID payload
     bitIndex: number;            // Target bit (0-7)
+    bitWidth?: number;           // Bit width (default: 1)
+    endianness?: SignalEndianness;// LITTLE_ENDIAN | BIG_ENDIAN_MOTOROLA
     enableValueHex?: string;     // Optional direct hex value override if not bitwise
     disableValueHex?: string;
+    postWriteAction?: PostWriteAction;
+    readBackTiming?: ReadBackTiming; // IMMEDIATE_PRE_RESET | POST_RESET_REQUIRED
+    postResetSecurityDelayMs?: number; // Delay after ECU reset before re-auth
+    crcType?: 'CRC16_CCITT' | 'CRC32' | 'XOR' | 'NONE';
 }
 
 export interface FeatureSafetySpec {
@@ -121,6 +140,7 @@ export interface FeatureDefinition {
     targetEcuAddress: string;    // e.g. "0x17"
     identificationDids: string[];// DIDs required for fingerprint verification
     compatibleSoftwareVersions?: string[]; // QA-verified allowlist for COMPATIBLE_MATCH
+    verificationStatus?: FeatureVerificationStatus; // BENCH_VERIFIED | OEM_DOCUMENTED | COMMUNITY_TESTED | DRAFT_UNVERIFIED
     operationType: OperationType;
     payloadSpec: FeaturePayloadSpec;
     safetySpec: FeatureSafetySpec;
@@ -142,7 +162,10 @@ export type PendingWriteJournalPhase =
     | 'RECOVERY_REQUIRED'
     | 'ROLLBACK_STARTED'
     | 'CRITICAL_MANUAL_INTERVENTION'
-    | 'COMPLETED';
+    | 'COMPLETED'
+    | 'RE_AUTHENTICATING'              // Post-reset 0x27 re-authentication phase
+    | 'RECOVERY_COOLDOWN_PENDING'      // Waiting for postResetSecurityDelayMs cooldown
+    | 'EMERGENCY_SESSION_FLUSH';       // 0x10 01 Default Session flush after abort
 
 export interface PendingWriteRecord {
     pendingWriteId: string;

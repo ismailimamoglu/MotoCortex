@@ -15,7 +15,7 @@ export class CapabilityDiscoveryManager {
         const store = useBluetoothStore.getState();
         store.addLog('CAPABILITY_DISCOVERY: Starting multi-node routing table discovery.');
 
-        const blockPids = ['00', '20', '40', '60'];
+        const blockPids = ['00', '20', '40', '60', '80'];
         const blockStatus: Record<string, 'supported' | 'unsupported' | 'unknown'> = {};
 
         const pidRoutingTable: Record<string, string[]> = {};

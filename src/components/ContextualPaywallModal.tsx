@@ -227,7 +227,7 @@ export default function ContextualPaywallModal() {
                     <View style={sDyn.codeBox}>
                         <Text style={sDyn.codeText}>
                             {paywallContext === 'ACTION_LOCKED' 
-                                ? '🔒 ' + t('paywall.actionLocked', 'PRO KİLİTLİ ÖZELLİK')
+                                ? '🔒 ' + t('paywall.actionLocked', 'PRO LOCKED FEATURE')
                                 : paywallContext}
                         </Text>
                     </View>

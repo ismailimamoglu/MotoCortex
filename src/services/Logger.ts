@@ -107,8 +107,8 @@ export async function flush(): Promise<void> {
         await writeLogsToFile(newLogsStr);
     } catch (error) {
         console.error('[Logger] Error in flush:', error);
-        // Put the items back at the beginning of the buffer to avoid losing them
-        logBuffer = [...itemsToWrite, ...logBuffer];
+        // Put items back at the beginning, capped to 300 items to prevent Hermes memory leak on disk failure
+        logBuffer = [...itemsToWrite, ...logBuffer].slice(-300);
     } finally {
         isFlushing = false;
         // Check if more items accumulated during flush

@@ -26,6 +26,7 @@ const CHUNK_MAP: Record<string, () => any> = {
     'P19': () => require('./chunks/P19.json'),
     'P20': () => require('./chunks/P20.json'),
     'P21': () => require('./chunks/P21.json'),
+    'P0A': () => require('./chunks/P0A.json'),
 };
 
 const SYNC_DIR = `${RNFS.CachesDirectoryPath}/dtc_chunks/`;

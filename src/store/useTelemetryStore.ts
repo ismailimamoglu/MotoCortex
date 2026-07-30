@@ -192,7 +192,19 @@ export const useTelemetryStore = create<TelemetryState>()(
         }
 
         SQLiteStorage.enqueueTelemetry(newItem);
-        const updatedQueue = SQLiteStorage.getAllItems();
+        let updatedQueue = SQLiteStorage.getAllItems();
+
+        // Single ring-buffer cap: max 2000 items to prevent Hermes JS heap OOM during extended offline driving
+        const MAX_OFFLINE_TELEMETRY_ITEMS = 2000;
+        if (updatedQueue.length > MAX_OFFLINE_TELEMETRY_ITEMS) {
+          const excess = updatedQueue.length - MAX_OFFLINE_TELEMETRY_ITEMS;
+          const overflowItems = updatedQueue.slice(0, excess);
+          for (const item of overflowItems) {
+            SQLiteStorage.removeTelemetryItem(item.id);
+          }
+          updatedQueue = SQLiteStorage.getAllItems();
+        }
+
         const newBytes = estimateQueueBytes(updatedQueue);
 
         return {

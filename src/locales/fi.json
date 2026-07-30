@@ -86,7 +86,10 @@
         "multiEcu": "MULTI-ECU",
         "dctAdapt": "DCT-SOPUTUS",
         "safeDisconnect": "TURVALLINEN KATKAISU",
-        "featureActivation": "PIILOTETUT OMINAISUUDET / ECU-KOODAUS"
+        "featureActivation": "PIILOTETUT OMINAISUUDET / ECU-KOODAUS",
+        "disabled": "DISABLED",
+        "enabled": "ENABLED",
+        "languageSelect": "JĘZYK"
     },
     "common": {
         "cancel": "Peruuta",
@@ -135,7 +138,17 @@
         "changeType": "Muuta yhteystyyppiä",
         "revocationTitle": "Subscription Cancelled",
         "revocationMsg": "Your access to PRO features has been terminated because your subscription was cancelled or refunded.",
-        "recommended": "RECOMMENDED"
+        "recommended": "RECOMMENDED",
+        "brand": "Brand",
+        "confirm": "YES, CORRECT",
+        "edit": "EDIT",
+        "pending": "Pending",
+        "proActiveTitle": "PRO STATUS ACTIVE",
+        "refresh": "Refresh",
+        "status": "Status",
+        "syncing": "Syncing...",
+        "continueBtn": "CONTINUE",
+        "selected": "VALITTU"
     },
     "paywall": {
         "subtitle": "Avaa syvimmät diagnostiikkaominaisuudet ja kaikki parametrit.",
@@ -171,7 +184,26 @@
         "retryBtn": "Yritä uudelleen",
         "loadingPrices": "Hinnat latautuvat...",
         "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code.",
-        "crownBadge": "MOTO CORTEX PRO"
+        "crownBadge": "MOTO CORTEX PRO",
+        "actionLocked": "PRO LOCKED FEATURE",
+        "congratsMsg": "Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!",
+        "congratsTitle": "🎉 Congratulations!",
+        "errMsg": "An error occurred during the purchase. Please try again.",
+        "errTitle": "❌ Purchase Failed",
+        "monthlyNotice": "Monthly auto-renewable subscription",
+        "noPkgMsg": "Please select a package to proceed.",
+        "noPkgTitle": "⚠️ No Package Selected",
+        "noPurchasesMsg": "No active PRO membership associated with your Apple account was found.",
+        "noPurchasesTitle": "ℹ️ No Purchases Found",
+        "proRequiredDesc": "This feature requires a PRO subscription to use.",
+        "proRequiredTitle": "PRO Required",
+        "purchasingText": "Securing transaction...",
+        "restoreErrorMsg": "Please check your internet connection and try again.",
+        "restoreErrorTitle": "⚠️ Restore Error",
+        "restoreSuccessMsg": "Your premium membership was successfully restored! You can now start using Cortex OBD2 PRO features.",
+        "restoreSuccessTitle": "✅ Purchases Restored",
+        "weeklyNotice": "One-time purchase, does not auto-renew",
+        "yearlyNotice": "Yearly auto-renewable subscription"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -276,10 +308,10 @@
         "batteryLowDesc": "Akun jännite on{{voltage}}. Käynnistä tai lataa ajoneuvo. ECU:n tiedonsiirto saattaa katketa ​​matalalla jännitteellä.",
         "batteryWarn": "AKKU HEIKKEÄÄ",
         "batteryWarnDesc": "Akun jännite{{voltage}}. Ole varovainen pitkäaikaisessa käytössä.",
-        "rpm": "RPM",
-        "speed": "KM/H",
+        "rpm": "Moottorin kierrosluku (RPM)",
+        "speed": "Ajoneuvon nopeus",
         "temp": "LÄMPÖTILA",
-        "throttle": "KAASU",
+        "throttle": "Kaasuläpän asento",
         "status": "SIIRTOTILA",
         "statusHigh": "KORKEA",
         "statusNormal": "NORMAALI",
@@ -293,17 +325,17 @@
         "layoutGrid": "RUUDUKKO",
         "layoutList": "LUETTELO",
         "customizeButton": "MUOKKAA MITTAREITA",
-        "coolant": "Moottorin Lämpö",
-        "voltage": "Akun Jännite",
-        "engineLoad": "Moottorin Kuormitus",
-        "intakeAirTemp": "Imuilman Lämpö",
-        "manifoldPressure": "Imusarjan Paine",
+        "coolant": "Jäähdytysnesteen lämpötila",
+        "voltage": "Akkujännite",
+        "engineLoad": "Moottorin kuormitus",
+        "intakeAirTemp": "Imuilman lämpötila",
+        "manifoldPressure": "Imusarjan paine (MAP)",
         "ambientTemp": "Ulkolämpötila",
-        "oilTemp": "Öljyn Lämpötila",
-        "mafFlow": "MAF Ilmavirtaus",
+        "oilTemp": "Öljyn lämpötila",
+        "mafFlow": "MAF-ilmavirtaus",
         "timingAdvance": "Sytytysennakko",
-        "fuelLevel": "Polttoainetaso",
-        "catalystTemp": "Katalysaattorin Lämpö",
+        "fuelLevel": "Polttoainemäärä",
+        "catalystTemp": "Katalysaattorin lämpötila",
         "layoutGauge": "MITTARI",
         "obdTerminalTitle": "OBD HEALTH & TERMINAL",
         "adapterClone": "CLONE ADAPTER",
@@ -493,7 +525,8 @@
             "regLow": "Lataus: Alhainen lataus",
             "regHigh": "Lataus: Ylilataus",
             "regFail": "Lataus: Säädin on viallinen"
-        }
+        },
+        "verdictLocked": "Upgrade to PRO to view detailed battery assessment report and cranking analysis graph."
     },
     "freeze": {
         "title": "FREEZE FRAME",
@@ -581,7 +614,21 @@
         "P0730": "Väärä välityssuhde",
         "P0560": "Järjestelmän jännite - Toimintahäiriö",
         "P0562": "Järjestelmän jännite - Matala",
-        "P0563": "Järjestelmän jännite - korkea"
+        "P0563": "Järjestelmän jännite - korkea",
+        "U0100": "Lost Communication With Engine Control Module (ECM/PCM)",
+        "U0121": "Lost Communication With Anti-Lock Brake System (ABS) Module",
+        "C0035": "Left Front Wheel Speed Sensor Circuit Malfunction",
+        "B0001": "Driver Front Stage 1 Deployment Control Circuit",
+        "P0750": "Shift Solenoid A Malfunction",
+        "P0814": "Transmission Range Display Circuit Malfunction",
+        "U0140": "Lost Communication With Body Control Module (BCM)",
+        "C0040": "Right Front Wheel Speed Sensor Circuit Malfunction",
+        "C0110": "ABS Pump Motor Circuit Malfunction",
+        "C0121": "Brake Pressure Sensor Circuit Malfunction",
+        "B0010": "Passenger Front Stage 1 Deployment Control",
+        "B0020": "Left Side Airbag Deployment Control",
+        "B1000": "Body Control Module (BCM) Hardware Fault",
+        "B1325": "Device Power Supply Circuit Low Voltage"
     },
     "vehicleSelect": {
         "title": "VALITSE AJONEUVOSI PARANTAAksesi DIAGNOSTIIKKATARKKUUTTA",
@@ -711,7 +758,9 @@
         "openSettings": "Avaa Asetukset",
         "btLabel": "Bluetooth (BLE)",
         "langTitle": "Select Language",
-        "nextBtn": "CONTINUE"
+        "nextBtn": "CONTINUE",
+        "langDesc": "Please select your preferred language to customize your diagnostics experience.",
+        "langSelectSub": "LANGUAGE GATEWAY"
     },
     "disclaimer": "Kaikki tuotenimet, logot ja tuotemerkit ovat omistajiensa omaisuutta. Kaikki tässä sovelluksessa käytetyt yritysten, tuotteiden ja palveluiden nimet ovat vain tunnistamistarkoituksiin. Näiden nimien, logojen ja tuotemerkkien käyttö ei tarkoita minkäänlaista tukea tai sponsorointia.",
     "hiddenFeatures": {
@@ -776,7 +825,8 @@
         "diagnosticLogTitle": "DIAGNOSTIC LOG",
         "clearButton": "CLEAR",
         "shareButton": "SHARE",
-        "noLogs": "No diagnostic logs found."
+        "noLogs": "No diagnostic logs found.",
+        "noShareSupport": "Sharing features are not available on this device."
     },
     "dtcContext": {
         "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
@@ -817,7 +867,12 @@
         "pause": "PAUSE",
         "resume": "RESUME",
         "share": "SHARE",
-        "clear": "CLEAR"
+        "clear": "CLEAR",
+        "clearDtcs": "CLEAR DTC",
+        "dtcTitle": "DTC DIAGNOSTICS & FAULT CODES",
+        "noDtcs": "NO DTC CODES FOUND IN ECU",
+        "readDtcs": "READ DTC",
+        "sendDtcs": "SEND"
     },
     "health": {
         "titleMenu": "OBD2 TERVEYS JA KYVYT",
@@ -855,7 +910,14 @@
         "iat": "Imusahko-lämpötila",
         "load": "Laskettu moottorikuorma",
         "fuel": "Polttoainetaso",
-        "oilTemp": "Moottoriöljyn lämpötila"
+        "oilTemp": "Moottoriöljyn lämpötila",
+        "boost": "Turbo Boost Pressure",
+        "widebandAfr": "Wideband O2 / AFR Ratio",
+        "transTemp": "Transmission Temperature",
+        "catalystTemp": "Catalyst Temperature",
+        "ethanol": "Ethanol Fuel %",
+        "timingAdvance": "Ignition Timing Advance",
+        "baro": "Barometric Pressure"
     },
     "secretDebug": {
         "title": "MOTO CORTEX DEV PANEL",
@@ -1344,7 +1406,17 @@
         "waitingVehicle": "ODOTETAAN YHDISTETTYÄ AONEVOA",
         "activeFeaturesCount": "{{count}} ajoneuvokohtaista OEM-ominaisuutta aktiivisena",
         "demoFeaturesCount": "{{count}} demo-ominaisuutta lueteltu",
-        "connectForFeaturesNote": "Yhdistä OBD2-laitteeseen luetteloidaksesi ominaisuudet"
+        "connectForFeaturesNote": "Yhdistä OBD2-laitteeseen luetteloidaksesi ominaisuudet",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF (RPM == 0) to prevent alternator voltage spikes.",
+        "engineRunningTitle": "⚠️ Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "⚠️ Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "🚨 Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "🚫 Protected Safety Module"
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -1354,7 +1426,8 @@
         "reconnectingDesc": "Ignition cycle detected. Re-establishing link automatically in background.",
         "lowVoltageOff": "Low Battery Voltage (Ignition OFF)",
         "noEcuResponse": "No ECU Response (Ignition OFF)",
-        "on": "Ignition ON (CONNECTED)"
+        "on": "Ignition ON (CONNECTED)",
+        "batteryVoltage": "Battery Voltage:"
     },
     "hpGauge": {
         "title": "LIVE POWER & TORQUE GAUGE",
@@ -1368,7 +1441,8 @@
         "methodTorque": "Live Torque PID Based",
         "methodLoad": "Calculated Load Based",
         "configWeight": "Vehicle Weight (kg):",
-        "configDisplacement": "Engine Displacement (L):"
+        "configDisplacement": "Engine Displacement (L):",
+        "calcMethod": "CALCULATION METHOD"
     },
     "fuelTrim": {
         "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
@@ -1437,7 +1511,13 @@
         "statusClean": "0 FAULTS (HEALTHY)",
         "statusFault": "{{count}} FAULTS DETECTED",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
-        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units."
+        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units.",
+        "gatewayName": "Keskusverkkoyhdyskäytävä (Gateway)",
+        "ipcName": "Mittaristo (IPC / Cockpit)",
+        "epsName": "Sähköinen Ohjaustehostin (EPS)",
+        "hvacName": "Ilmastointi ja Lämmitys (HVAC)",
+        "tpmsName": "Rengaspainejärjestelmä (TPMS)",
+        "bmsName": "Akkujen Hallintajärjestelmä (BMS / EV)"
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
@@ -1450,12 +1530,181 @@
         "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
-        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!"
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 (K1) Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 (K2) Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting."
     },
     "safeExit": {
         "btn": "SAFE DISCONNECT & ADAPTER RESET",
         "confirmTitle": "Safe Disconnect Confirmation",
         "confirmDesc": "ATZ hardware reset will be issued to OBD2 adapter and connection closed cleanly. Proceed?",
         "success": "OBD2 adapter reset and connection cleanly terminated."
+    },
+    "admin": {
+        "clear": "🗑️ CLEAR",
+        "cloudTools": "🛰️ CLOUD & SYSTEM TOOLS",
+        "copy": "COPY",
+        "crashTest": "💥 CRASH TEST",
+        "crashBtn": "Crash",
+        "deviceUuid": "DEVICE UUID",
+        "presetTitle": "⚡ QUICK COMMAND SET:",
+        "presetReset": "Reset OBD2 Adapter",
+        "presetSpeed": "Vehicle Speed (km/h)",
+        "presetReadDtc": "Read Fault Codes",
+        "presetClearDtc": "Clear Fault Codes",
+        "refresh": "🔄 REFRESH",
+        "send": "SEND",
+        "share": "📤 SHARE",
+        "terminalTitle": "🖥️ LIVE OBD TERMINAL CONSOLE (TX / RX)",
+        "userId": "USER ID",
+        "userInfo": "🔒 ADMIN USER CREDENTIALS",
+        "devModeAlert": "Secret PRO developer key is disabled in production builds.",
+        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
+        "noLogsInfo": "No log records found to share."
+    },
+    "bridge": {
+        "androidAdvice": "Please restart the app or check Bluetooth settings.",
+        "fatalError": "BRIDGE FATAL ERROR",
+        "genericError": "Failed to initialize BLE subsystem.",
+        "goToSettings": "GO TO SETTINGS",
+        "ignoreEnterApp": "IGNORE & ENTER APP",
+        "initializing": "INITIALIZING BRIDGE...",
+        "iosAdvice": "Ensure Bluetooth is enabled for Cortex OBD2 in your system settings.",
+        "nativeState": "NATIVE_STATE",
+        "proceedBypass": "PROCEED TO DASHBOARD (BYPASS)",
+        "state": "STATE",
+        "unauthorized": "Bluetooth permissions are unauthorized.",
+        "verifyingAndroid": "Verifying Android Bluetooth Subsystem",
+        "verifyingIos": "Verifying iOS CoreBluetooth Connectivity"
+    },
+    "vehicle": {
+        "brand": "Brand:",
+        "detectDesc": "We detected the following vehicle information from your OBD2 connection.",
+        "detectTitle": "VEHICLE IDENTIFIED",
+        "editTitle": "EDIT VEHICLE",
+        "fuel": {
+            "diesel": "DIESEL",
+            "gasoline": "GASOLINE"
+        },
+        "fuelType": "Fuel Type:",
+        "model": "Model:",
+        "transmission": {
+            "automatic": "AUTOMATIC",
+            "manual": "MANUAL"
+        },
+        "unknown": "Unknown",
+        "year": "Year:"
+    },
+    "sgw": {
+        "title": "Security Gateway (SGW) Active",
+        "subtitle": "{{brandName}} ECU Security Restriction",
+        "description": "Security Gateway (SGW) protection is active on this vehicle. Standard OBD2 telemetry is readable; however, advanced diagnostic routines and adaptation require OEM authentication."
+    },
+    "evBms": {
+        "title": "EV BMS Diagnostics",
+        "subtitle": "Battery Management System & Cell Health ({{brand}})",
+        "sohLabel": "STATE OF HEALTH (SOH)",
+        "capacityRetained": "Capacity Retained",
+        "socLabel": "STATE OF CHARGE (SOC)",
+        "remainingCharge": "Remaining Charge",
+        "cellBalance": "Cell Voltage Balance (16S Pack)",
+        "optimalBalance": "Optimal Balance (<30mV delta)",
+        "mildImbalance": "Mild Imbalance Detected",
+        "thermalStatus": "Thermal Status & Pack Info",
+        "packTemp": "Pack Temperature:",
+        "packVoltage": "Pack Voltage:",
+        "chargeCycles": "Charge Cycles:",
+        "cycles": "Cycles"
+    },
+    "serviceReset": {
+        "title": "Service & Maintenance Reset Wizard",
+        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "preCheckTitle": "Pre-Requirement Checklist",
+        "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
+        "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
+        "preCheckBattery": "Battery voltage must be above 12.2V.",
+        "selectRoutine": "SELECT SERVICE ROUTINE",
+        "intervalReset": "Service Maintenance Interval Reset",
+        "intervalTitle": "Reset Service Interval Indicator Light",
+        "intervalSubtitle": "Clears dash service warning and resets next inspection interval.",
+        "tpsReset": "Throttle Position Sensor (TPS) Reset",
+        "tpsTitle": "Throttle Position Sensor (TPS) Adaptation",
+        "tpsSubtitle": "Re-calibrates zero-throttle voltage stop point.",
+        "absBleed": "ABS Bleeding & Valve Test",
+        "absTitle": "ABS Hydraulic Pump Bleed Test",
+        "absSubtitle": "Cycles ABS solenoid valves to purge air bubbles from brake lines.",
+        "ecuRejected": "ECU rejected reset command. Ensure ignition is ON and engine is OFF."
+    },
+    "aiDoctor": {
+        "analyzing": "Analyzing DTC codes & engine telemetry with AI Doctor...",
+        "healthImpact": "Health Score Impact: {{score}}/100",
+        "drivingSafety": "Driving Safety Guidance",
+        "causes": "Probable Causes",
+        "recommendedAction": "Recommended Mechanical Action",
+        "estimatedCost": "Estimated Component / Repair Cost",
+        "noFaultsTitle": "System Optimal — No Fault Codes Detected",
+        "noFaultsSummary": "ECU telemetry shows no active diagnostic trouble codes. Engine parameters are within normal operating thresholds.",
+        "stepMaintain": "Maintain regular oil and filter service intervals.",
+        "stepCheckVoltage": "Periodically check battery resting voltage.",
+        "safeDrive": "Safe for regular operation.",
+        "misfireTitle": "Engine Cylinder Misfire Detected",
+        "misfireSummary": "Active misfire detected in one or more cylinders. Unburnt fuel may enter catalytic converter causing permanent damage.",
+        "causeSparkPlug": "Worn or fouled spark plug",
+        "causeIgnitionCoil": "Failing ignition coil or wire",
+        "causeFuelInjector": "Clogged or faulty fuel injector",
+        "stepInspectPlugs": "Inspect and gap spark plugs.",
+        "stepSwapCoils": "Swap ignition coils between cylinders to test for fault transfer.",
+        "stepFuelPressure": "Measure fuel rail pressure.",
+        "criticalDrive": "Do not drive extended distances under heavy throttle. Drive immediately to service.",
+        "o2Title": "Oxygen (O2) Sensor Circuit Malfunction",
+        "o2Summary": "Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.",
+        "causeO2Heater": "O2 sensor heating element failure",
+        "causeExhaustLeak": "Exhaust manifold leak upstream of sensor",
+        "causeHarness": "Damaged wiring harness connector",
+        "stepCheckWiring": "Inspect O2 sensor wiring harness for melting or fraying.",
+        "stepCleanSensor": "Clean O2 sensor tip or replace sensor if resistance out of spec.",
+        "warningDrive": "Safe to drive to repair shop at moderate speed.",
+        "genericTitle": "Diagnostic Code Analysis ({{codes}})",
+        "genericSummary": "Active trouble code(s) detected: {{codes}}. System monitoring recommended.",
+        "causeGeneric1": "Sensor circuit out of expected voltage range",
+        "causeGeneric2": "Loose electrical connection or ground fault",
+        "stepGeneric1": "Perform diagnostic scan and record freeze frame data.",
+        "stepGeneric2": "Clear DTC codes after inspecting harness connectors.",
+        "reportTitle": "Diagnostic Code Analysis",
+        "healthImpactTitle": "ENGINE HEALTH SCORE IMPACT"
+    },
+    "dtcRisk": {
+        "safeTitle": "🟢 TURVALLISTA AJAA",
+        "safeDesc": "Tämä vika ei suoraan vaaranna ajoturvallisuutta. Voit ajaa kohtuullisella nopeudella korjaamolle.",
+        "warningTitle": "🟡 VAROITUS: KORJAAMOTARKASTUS TARPEEN",
+        "warningDesc": "Tehonmenetystä ja korkeampia päästöjä saattaa esiintyä. Vieraile valtuutetussa korjaamossa pian.",
+        "criticalTitle": "🔴 KRIITTINEN: PYSÄYTÄ AJO / KORJAAMO HETI",
+        "criticalDesc": "Kriittinen mekaaninen tai sähköinen riski! Moottori tai turvajärjestelmät voivat vaurioitua. Pysäytä välittömästi."
+    },
+    "dtcDetail": {
+        "descTitle": "VIKAKOODIN KUVAUS",
+        "possibleCausesTitle": "MAHDOLLISET SYYT JA KORJAUSOHJEET",
+        "cause1": "Loose connection or corrosion in sensor circuit or wiring harness",
+        "cause2": "Mechanical wear or electrical fault in component",
+        "cause3": "Perform voltage/resistance test with multimeter or replace component",
+        "recommendedAction": "Suositeltu toimenpide",
+        "tsbTitle": "TECHNICAL SERVICE BULLETIN (TSB)",
+        "aiDoctorBtn": "AI DOCTOR ASIANTUNTIJA-ANALYYSI",
+        "backToDetail": "PALAA VIAN TIETOIHIN"
+    },
+    "dtcCategory": {
+        "powertrain": "MOOTTORI / VOIMANSIIRTO",
+        "chassis": "ALUSTA / JARRUJÄRJESTELMÄ",
+        "body": "KORIELEKTRONIIKKA",
+        "network": "VERKKO / CAN-VÄYLÄJÄRJESTELMÄ"
+    },
+    "guidedDiag": {
+        "p0102_cause1": "Likainen tai viallinen MAF-anturi",
+        "p0102_cause2": "Imuvuoto / Tyhjiövuoto",
+        "p0102_cause3": "Johdinsarjan vaurio",
+        "p0102_action": "Puhdista MAF-anturi kontaktipuhdistusaineella tai tarkista ilmansuodattimen kotelo vuotojen varalta.",
+        "p0102_tsb": "TSB-2023-09: Tarkista imuletkun kiristimen momentti ennen MAF-anturin vaihtoa."
     }
 }

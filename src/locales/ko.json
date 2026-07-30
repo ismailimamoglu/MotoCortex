@@ -86,7 +86,10 @@
         "multiEcu": "멀티 ECU",
         "dctAdapt": "DCT 어댑트",
         "safeDisconnect": "안전 해제",
-        "featureActivation": "숨겨진 기능 해제 / ECU 코딩"
+        "featureActivation": "숨겨진 기능 해제 / ECU 코딩",
+        "disabled": "비활성화됨",
+        "enabled": "활성화됨",
+        "languageSelect": "언어"
     },
     "common": {
         "cancel": "취소",
@@ -135,7 +138,17 @@
         "cancelBtn": "취소",
         "retry": "연결 재시도",
         "changeType": "연결 유형 변경",
-        "recommended": "RECOMMENDED"
+        "recommended": "RECOMMENDED",
+        "brand": "브랜드",
+        "confirm": "예, 맞습니다",
+        "edit": "편집",
+        "pending": "대기 중",
+        "proActiveTitle": "PRO 상태 활성",
+        "refresh": "새로고침",
+        "status": "상태",
+        "syncing": "동기화 중...",
+        "continueBtn": "CONTINUE",
+        "selected": "선택됨"
     },
     "paywall": {
         "crownBadge": "모토 코텍스 프로",
@@ -171,7 +184,26 @@
         "errorDesc": "상품을 로드하는 중 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.",
         "retryBtn": "다시 시도",
         "loadingPrices": "가격을 로드하는 중입니다...",
-        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code.",
+        "actionLocked": "PRO 잠금 기능",
+        "congratsMsg": "Cortex OBD2 PRO 멤버십이 성공적으로 활성화되었습니다!",
+        "congratsTitle": "🎉 축하합니다!",
+        "errMsg": "구매 중 오류가 발생했습니다. 다시 시도해 주세요.",
+        "errTitle": "❌ 구매 실패",
+        "monthlyNotice": "월간 자동 갱신 구독",
+        "noPkgMsg": "패키지를 선택하세요.",
+        "noPkgTitle": "⚠️ 패키지 미선택",
+        "noPurchasesMsg": "활성 PRO 멤버십을 찾을 수 없습니다.",
+        "noPurchasesTitle": "ℹ️ 구매 내역 없음",
+        "proRequiredDesc": "이 기능은 PRO 구독이 필요합니다.",
+        "proRequiredTitle": "PRO 필요",
+        "purchasingText": "거래 보안 중...",
+        "restoreErrorMsg": "인터넷 연결을 확인하세요.",
+        "restoreErrorTitle": "⚠️ 복원 오류",
+        "restoreSuccessMsg": "프리미엄 멤버십이 성공적으로 복원되었습니다!",
+        "restoreSuccessTitle": "✅ 구매 복원됨",
+        "weeklyNotice": "일회성 구매, 자동 갱신 없음",
+        "yearlyNotice": "연간 자동 갱신 구독"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -276,10 +308,10 @@
         "batteryLowDesc": "배터리 전압은{{voltage}}입니다. 차량을 시동하거나 충전하십시오. 저전압에서는 ECU 통신이 중단될 수 있습니다.",
         "batteryWarn": "배터리가 약해지고 있습니다",
         "batteryWarnDesc": "배터리 전압{{voltage}}. 장기간 작업 중에는 주의하십시오.",
-        "rpm": "RPM",
-        "speed": "KM/H",
+        "rpm": "엔진 회전수 (RPM)",
+        "speed": "차량 속도",
         "temp": "온도",
-        "throttle": "가스",
+        "throttle": "스프롤 위치",
         "status": "전송 상태",
         "statusHigh": "높음",
         "statusNormal": "일반",
@@ -294,16 +326,16 @@
         "layoutGrid": "그리드",
         "layoutList": "리스트",
         "customizeButton": "대시보드 설정",
-        "coolant": "엔진 온도",
+        "coolant": "냉각수 온도",
         "voltage": "배터리 전압",
         "engineLoad": "엔진 부하",
         "intakeAirTemp": "흡기 온도",
-        "manifoldPressure": "매니폴드 압력",
+        "manifoldPressure": "매니폴드 압력 (MAP)",
         "ambientTemp": "외기 온도",
-        "oilTemp": "오일 온도",
-        "mafFlow": "공기 유량 MAF",
-        "timingAdvance": "점화 진각",
-        "fuelLevel": "연료 레벨",
+        "oilTemp": "엔진 오일 온도",
+        "mafFlow": "MAF 유량",
+        "timingAdvance": "점화 점화 진각",
+        "fuelLevel": "연료 잔량",
         "catalystTemp": "촉매 온도",
         "layoutGauge": "게이지",
         "obdTerminalTitle": "OBD HEALTH & TERMINAL",
@@ -493,7 +525,8 @@
             "regLow": "충전 중: 충전 부족",
             "regHigh": "충전 중: 과충전",
             "regFail": "충전 중: 레귤레이터에 결함이 있습니다."
-        }
+        },
+        "verdictLocked": "상세 배터리 보고서를 보려면 PRO로 업그레이드하세요."
     },
     "freeze": {
         "title": "FREEZE FRAME",
@@ -581,7 +614,21 @@
         "P0730": "잘못된 기어비",
         "P0560": "시스템 전압 - 오작동",
         "P0562": "시스템 전압 - 낮음",
-        "P0563": "시스템 전압 - 높음"
+        "P0563": "시스템 전압 - 높음",
+        "U0100": "Lost Communication With Engine Control Module (ECM/PCM)",
+        "U0121": "Lost Communication With Anti-Lock Brake System (ABS) Module",
+        "C0035": "Left Front Wheel Speed Sensor Circuit Malfunction",
+        "B0001": "Driver Front Stage 1 Deployment Control Circuit",
+        "P0750": "Shift Solenoid A Malfunction",
+        "P0814": "Transmission Range Display Circuit Malfunction",
+        "U0140": "Lost Communication With Body Control Module (BCM)",
+        "C0040": "Right Front Wheel Speed Sensor Circuit Malfunction",
+        "C0110": "ABS Pump Motor Circuit Malfunction",
+        "C0121": "Brake Pressure Sensor Circuit Malfunction",
+        "B0010": "Passenger Front Stage 1 Deployment Control",
+        "B0020": "Left Side Airbag Deployment Control",
+        "B1000": "Body Control Module (BCM) Hardware Fault",
+        "B1325": "Device Power Supply Circuit Low Voltage"
     },
     "vehicleSelect": {
         "title": "진단 정확도를 높이려면 차량을 선택하세요",
@@ -711,7 +758,9 @@
         "proceedAnyway": "어쨌든 계속해라",
         "openSettings": "설정 열기",
         "langTitle": "Select Language",
-        "nextBtn": "CONTINUE"
+        "nextBtn": "CONTINUE",
+        "langDesc": "원하는 언어를 선택하세요.",
+        "langSelectSub": "언어 게이트웨이"
     },
     "disclaimer": "모든 제품 이름, 로고 및 브랜드는 해당 소유자의 자산입니다. 본 애플리케이션에 사용된 모든 회사, 제품 및 서비스 이름은 식별 목적으로만 사용됩니다. 이러한 이름, 로고 및 브랜드를 사용한다고 해서 어떠한 보증이나 후원을 의미하는 것은 아닙니다.",
     "hiddenFeatures": {
@@ -776,7 +825,8 @@
         "diagnosticLogTitle": "DIAGNOSTIC LOG",
         "clearButton": "CLEAR",
         "shareButton": "SHARE",
-        "noLogs": "No diagnostic logs found."
+        "noLogs": "No diagnostic logs found.",
+        "noShareSupport": "이 장치에서는 공유 기능을 사용할 수 없습니다."
     },
     "dtcContext": {
         "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
@@ -817,7 +867,12 @@
         "pause": "PAUSE",
         "resume": "RESUME",
         "share": "SHARE",
-        "clear": "CLEAR"
+        "clear": "CLEAR",
+        "clearDtcs": "DTC 삭제",
+        "dtcTitle": "DTC 진단 & 고장 코드",
+        "noDtcs": "ECU에서 DTC 코드를 찾을 수 없음",
+        "readDtcs": "DTC 읽기",
+        "sendDtcs": "전송"
     },
     "health": {
         "titleMenu": "OBD2 건강 및 기능",
@@ -855,7 +910,14 @@
         "iat": "흡기 온도",
         "load": "계산된 엔진 부하",
         "fuel": "연료 수준",
-        "oilTemp": "엔진 오일 온도"
+        "oilTemp": "엔진 오일 온도",
+        "boost": "Turbo Boost Pressure",
+        "widebandAfr": "Wideband O2 / AFR Ratio",
+        "transTemp": "Transmission Temperature",
+        "catalystTemp": "Catalyst Temperature",
+        "ethanol": "Ethanol Fuel %",
+        "timingAdvance": "Ignition Timing Advance",
+        "baro": "Barometric Pressure"
     },
     "secretDebug": {
         "title": "MOTO CORTEX DEV PANEL",
@@ -1344,7 +1406,17 @@
         "waitingVehicle": "연결된 차량 대기 중",
         "activeFeaturesCount": "{{count}}개의 차량 전용 OEM 숨겨진 기능 활성화",
         "demoFeaturesCount": "{{count}}개의 데모 기능 표시 중",
-        "connectForFeaturesNote": "차량 전용 기능을 보려면 OBD2 장치에 연결하세요"
+        "connectForFeaturesNote": "차량 전용 기능을 보려면 OBD2 장치에 연결하세요",
+        "codingFailed": "코딩 실패.",
+        "engineRunningMsg": "ECU 코딩은 시동 ON, 엔진 OFF (RPM == 0) 상태가 필요합니다.",
+        "engineRunningTitle": "⚠️ 엔진 가동 중",
+        "lowVoltageMsg": "배터리 전압이 ECU 쓰기 안전 임계값 미만입니다.",
+        "lowVoltageTitle": "⚠️ 저전압 경고",
+        "motionAlertMsg": "차량 이동 중에는 ECU 쓰기 작업이 차단됩니다.",
+        "motionAlertTitle": "🚨 차량 이동 중",
+        "noMatchingFeatures": "선택한 필터에 맞는 기능이 없습니다.",
+        "unsafeModuleMsg": "ABS/ESP 및 에어백/SRS 모듈에 대한 ECU 쓰기는 100% 차단됩니다.",
+        "unsafeModuleTitle": "🚫 보호된 안전 모듈"
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -1354,7 +1426,8 @@
         "reconnectingDesc": "Ignition cycle detected. Re-establishing link automatically in background.",
         "lowVoltageOff": "Low Battery Voltage (Ignition OFF)",
         "noEcuResponse": "No ECU Response (Ignition OFF)",
-        "on": "Ignition ON (CONNECTED)"
+        "on": "Ignition ON (CONNECTED)",
+        "batteryVoltage": "배터리 전압:"
     },
     "hpGauge": {
         "title": "LIVE POWER & TORQUE GAUGE",
@@ -1368,7 +1441,8 @@
         "methodTorque": "Live Torque PID Based",
         "methodLoad": "Calculated Load Based",
         "configWeight": "Vehicle Weight (kg):",
-        "configDisplacement": "Engine Displacement (L):"
+        "configDisplacement": "Engine Displacement (L):",
+        "calcMethod": "계산 방법"
     },
     "fuelTrim": {
         "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
@@ -1437,7 +1511,13 @@
         "statusClean": "0 FAULTS (HEALTHY)",
         "statusFault": "{{count}} FAULTS DETECTED",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
-        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units."
+        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units.",
+        "gatewayName": "중앙 네트워크 게이트웨이",
+        "ipcName": "계기판 클러스터 (IPC / Cockpit)",
+        "epsName": "전동식 파워 스티어링 (EPS)",
+        "hvacName": "에어컨 및 공조 시스템 (HVAC)",
+        "tpmsName": "타이어 공기압 감지 시스템 (TPMS)",
+        "bmsName": "배터리 관리 시스템 (BMS / EV)"
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
@@ -1450,12 +1530,181 @@
         "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
-        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!"
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 (K1) Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 (K2) Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting."
     },
     "safeExit": {
         "btn": "SAFE DISCONNECT & ADAPTER RESET",
         "confirmTitle": "Safe Disconnect Confirmation",
         "confirmDesc": "ATZ hardware reset will be issued to OBD2 adapter and connection closed cleanly. Proceed?",
         "success": "OBD2 adapter reset and connection cleanly terminated."
+    },
+    "admin": {
+        "clear": "🗑️ 지우기",
+        "cloudTools": "🛰️ 클라우드 & 시스템 도구",
+        "copy": "복사",
+        "crashTest": "💥 크래시 테스트",
+        "crashBtn": "크래시",
+        "deviceUuid": "장치 UUID",
+        "presetTitle": "⚡ 빠른 명령 세트:",
+        "presetReset": "OBD2 어댑터 초기화",
+        "presetSpeed": "차량 속도 (km/h)",
+        "presetReadDtc": "고장 코드 읽기",
+        "presetClearDtc": "고장 코드 삭제",
+        "refresh": "🔄 새로고침",
+        "send": "전송",
+        "share": "📤 공유",
+        "terminalTitle": "🖥️ 라이브 OBD 터미널 콘솔 (TX / RX)",
+        "userId": "사용자 ID",
+        "userInfo": "🔒 관리자 자격 증명",
+        "devModeAlert": "Secret PRO developer key is disabled in production builds.",
+        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
+        "noLogsInfo": "No log records found to share."
+    },
+    "bridge": {
+        "androidAdvice": "앱을 재시작하거나 블루투스 설정을 확인하세요.",
+        "fatalError": "브리지 치명적 오류",
+        "genericError": "BLE 하위 시스템 초기화 실패.",
+        "goToSettings": "설정으로 이동",
+        "ignoreEnterApp": "무시하고 앱 열기",
+        "initializing": "브리지 초기화 중...",
+        "iosAdvice": "시스템 설정에서 Cortex OBD2의 블루투스가 활성화되어 있는지 확인하세요.",
+        "nativeState": "네이티브_상태",
+        "proceedBypass": "대시보드로 이동 (건너뛰기)",
+        "state": "상태",
+        "unauthorized": "블루투스 권한이 승인되지 않았습니다.",
+        "verifyingAndroid": "Android 블루투스 하위 시스템 확인 중",
+        "verifyingIos": "iOS CoreBluetooth 연결 확인 중"
+    },
+    "vehicle": {
+        "brand": "브랜드:",
+        "detectDesc": "OBD2 연결에서 다음 차량 정보가 감지되었습니다.",
+        "detectTitle": "차량 식별됨",
+        "editTitle": "차량 편집",
+        "fuel": {
+            "diesel": "디젤",
+            "gasoline": "가솔린"
+        },
+        "fuelType": "연료 유형:",
+        "model": "모델:",
+        "transmission": {
+            "automatic": "자동",
+            "manual": "수동"
+        },
+        "unknown": "알 수 없음",
+        "year": "연식:"
+    },
+    "sgw": {
+        "title": "Security Gateway (SGW) Active",
+        "subtitle": "{{brandName}} ECU Security Restriction",
+        "description": "Security Gateway (SGW) protection is active on this vehicle. Standard OBD2 telemetry is readable; however, advanced diagnostic routines and adaptation require OEM authentication."
+    },
+    "evBms": {
+        "title": "EV BMS Diagnostics",
+        "subtitle": "Battery Management System & Cell Health ({{brand}})",
+        "sohLabel": "STATE OF HEALTH (SOH)",
+        "capacityRetained": "Capacity Retained",
+        "socLabel": "STATE OF CHARGE (SOC)",
+        "remainingCharge": "Remaining Charge",
+        "cellBalance": "Cell Voltage Balance (16S Pack)",
+        "optimalBalance": "Optimal Balance (<30mV delta)",
+        "mildImbalance": "Mild Imbalance Detected",
+        "thermalStatus": "Thermal Status & Pack Info",
+        "packTemp": "Pack Temperature:",
+        "packVoltage": "Pack Voltage:",
+        "chargeCycles": "Charge Cycles:",
+        "cycles": "Cycles"
+    },
+    "serviceReset": {
+        "title": "Service & Maintenance Reset Wizard",
+        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "preCheckTitle": "Pre-Requirement Checklist",
+        "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
+        "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
+        "preCheckBattery": "Battery voltage must be above 12.2V.",
+        "selectRoutine": "SELECT SERVICE ROUTINE",
+        "intervalReset": "Service Maintenance Interval Reset",
+        "intervalTitle": "Reset Service Interval Indicator Light",
+        "intervalSubtitle": "Clears dash service warning and resets next inspection interval.",
+        "tpsReset": "Throttle Position Sensor (TPS) Reset",
+        "tpsTitle": "Throttle Position Sensor (TPS) Adaptation",
+        "tpsSubtitle": "Re-calibrates zero-throttle voltage stop point.",
+        "absBleed": "ABS Bleeding & Valve Test",
+        "absTitle": "ABS Hydraulic Pump Bleed Test",
+        "absSubtitle": "Cycles ABS solenoid valves to purge air bubbles from brake lines.",
+        "ecuRejected": "ECU rejected reset command. Ensure ignition is ON and engine is OFF."
+    },
+    "aiDoctor": {
+        "analyzing": "Analyzing DTC codes & engine telemetry with AI Doctor...",
+        "healthImpact": "Health Score Impact: {{score}}/100",
+        "drivingSafety": "Driving Safety Guidance",
+        "causes": "Probable Causes",
+        "recommendedAction": "Recommended Mechanical Action",
+        "estimatedCost": "Estimated Component / Repair Cost",
+        "noFaultsTitle": "System Optimal — No Fault Codes Detected",
+        "noFaultsSummary": "ECU telemetry shows no active diagnostic trouble codes. Engine parameters are within normal operating thresholds.",
+        "stepMaintain": "Maintain regular oil and filter service intervals.",
+        "stepCheckVoltage": "Periodically check battery resting voltage.",
+        "safeDrive": "Safe for regular operation.",
+        "misfireTitle": "Engine Cylinder Misfire Detected",
+        "misfireSummary": "Active misfire detected in one or more cylinders. Unburnt fuel may enter catalytic converter causing permanent damage.",
+        "causeSparkPlug": "Worn or fouled spark plug",
+        "causeIgnitionCoil": "Failing ignition coil or wire",
+        "causeFuelInjector": "Clogged or faulty fuel injector",
+        "stepInspectPlugs": "Inspect and gap spark plugs.",
+        "stepSwapCoils": "Swap ignition coils between cylinders to test for fault transfer.",
+        "stepFuelPressure": "Measure fuel rail pressure.",
+        "criticalDrive": "Do not drive extended distances under heavy throttle. Drive immediately to service.",
+        "o2Title": "Oxygen (O2) Sensor Circuit Malfunction",
+        "o2Summary": "Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.",
+        "causeO2Heater": "O2 sensor heating element failure",
+        "causeExhaustLeak": "Exhaust manifold leak upstream of sensor",
+        "causeHarness": "Damaged wiring harness connector",
+        "stepCheckWiring": "Inspect O2 sensor wiring harness for melting or fraying.",
+        "stepCleanSensor": "Clean O2 sensor tip or replace sensor if resistance out of spec.",
+        "warningDrive": "Safe to drive to repair shop at moderate speed.",
+        "genericTitle": "Diagnostic Code Analysis ({{codes}})",
+        "genericSummary": "Active trouble code(s) detected: {{codes}}. System monitoring recommended.",
+        "causeGeneric1": "Sensor circuit out of expected voltage range",
+        "causeGeneric2": "Loose electrical connection or ground fault",
+        "stepGeneric1": "Perform diagnostic scan and record freeze frame data.",
+        "stepGeneric2": "Clear DTC codes after inspecting harness connectors.",
+        "reportTitle": "Diagnostic Code Analysis",
+        "healthImpactTitle": "ENGINE HEALTH SCORE IMPACT"
+    },
+    "dtcRisk": {
+        "safeTitle": "🟢 주행 가능",
+        "safeDesc": "이 고장은 주행 안전을 직접 위협하지 않습니다. 정비소까지 서행하여 이동할 수 있습니다.",
+        "warningTitle": "🟡 경고: 정비소 점검 필요",
+        "warningDesc": "출력 저하 및 배출가스 증가가 발생할 수 있습니다. 가급적 빨리 정비소를 방문하세요.",
+        "criticalTitle": "🔴 위험: 즉시 정차 및 정비 요청",
+        "criticalDesc": "심각한 기계적/전기적 위험! 엔진이나 안전 시스템이 손상될 수 있습니다. 즉시 안전한 곳에 정차하세요."
+    },
+    "dtcDetail": {
+        "descTitle": "고장 코드 설명",
+        "possibleCausesTitle": "추정 원인 및 정비 가이드",
+        "cause1": "Loose connection or corrosion in sensor circuit or wiring harness",
+        "cause2": "Mechanical wear or electrical fault in component",
+        "cause3": "Perform voltage/resistance test with multimeter or replace component",
+        "recommendedAction": "권장 조치 사항",
+        "tsbTitle": "TECHNICAL SERVICE BULLETIN (TSB)",
+        "aiDoctorBtn": "AI DOCTOR 전문가 진단 분석",
+        "backToDetail": "고장 상세 정보로 돌아가기"
+    },
+    "dtcCategory": {
+        "powertrain": "엔진 / 파워트레인",
+        "chassis": "섀시 / 브레이크 시스템",
+        "body": "바디 전장 시스템",
+        "network": "네트워크 / CAN 버스 시스템"
+    },
+    "guidedDiag": {
+        "p0102_cause1": "오염되거나 고장난 MAF 센서",
+        "p0102_cause2": "흡기 누설 / 진공 누설",
+        "p0102_cause3": "배선 하네스 손상 또는 부식",
+        "p0102_action": "접점 세정제로 MAF 센서를 청소하거나 에어 클리너 하우징의 누설을 점검하세요.",
+        "p0102_tsb": "TSB-2023-09: MAF 교체 전 흡기 호스 클램프 체결 토크를 점검하세요."
     }
 }

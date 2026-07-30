@@ -10,9 +10,12 @@ import ChronicFaultsWidget from './src/components/ChronicFaultsWidget';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { ADAPTER_COMMANDS } from './src/api/commands';
 import { lookupDTC, prefetchDtcChunksForCodes } from './src/data/dtcDictionary';
+import { getGuidedDiagnostics } from './src/services/dtcIntelligenceService';
 import BatteryTestModal from './src/components/BatteryTestModal';
 import FreezeFrameModal from './src/components/FreezeFrameModal';
 import PerformanceModal from './src/components/PerformanceModal';
+import AiDoctorModal from './src/components/AiDoctorModal';
+import { AiDiagnosticContext } from './src/services/aiDoctorService';
 import { useBluetoothStore } from './src/store/useBluetoothStore';
 import { saveGarageRecord, getGarageRecords, deleteGarageRecord, getRecordsByVin, GarageRecord } from './src/store/garageStore';
 import i18n from './src/i18n';
@@ -164,9 +167,16 @@ const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: 
   else if (sensor.key === 'voltage') { min = 9; max = 16; }
   else if (sensor.key === 'throttle') { min = 0; max = 100; }
   else if (sensor.key === 'engineLoad') { min = 0; max = 100; }
-  else if (sensor.key === 'oilTemp') { min = 0; max = 150; }
-  else if (sensor.key === 'fuelLevel') { min = 0; max = 100; }
+  else if (sensor.key === 'oilTemp' || sensor.key === 'transTemp') { min = 0; max = 150; }
+  else if (sensor.key === 'catalystTemp' || sensor.key === 'egtTemp') { min = 0; max = 1000; }
+  else if (sensor.key === 'fuelLevel' || sensor.key === 'ethanolPercent' || sensor.key === 'adblueLevel') { min = 0; max = 100; }
   else if (sensor.key === 'manifoldPressure') { min = 0; max = 250; }
+  else if (sensor.key === 'baroPressure') { min = 50; max = 120; }
+  else if (sensor.key === 'turboBoost') { min = 0; max = 3; }
+  else if (sensor.key === 'widebandAfr') { min = 9; max = 20; }
+  else if (sensor.key === 'actualTorque' || sensor.key === 'driverTorque') { min = 0; max = 600; }
+  else if (sensor.key === 'noxSensor') { min = 0; max = 500; }
+  else if (sensor.key === 'timingAdvance') { min = -10; max = 50; }
   else if (sensor.key === 'intakeAirTemp' || sensor.key === 'ambientTemp') { min = -20; max = 80; }
   
   const pct = Math.max(0, Math.min(1, (displayNumVal - min) / (max - min)));
@@ -270,10 +280,10 @@ const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: 
         allowFontScaling={false}
         style={{
           position: 'absolute',
-          left: size * 0.22,
-          bottom: size * 0.24,
-          fontSize: scaleFont(7.5),
-          fontWeight: '900',
+          left: size * 0.14,
+          bottom: size * 0.12,
+          fontSize: scaleFont(7),
+          fontWeight: '800',
           color: tc.textSec,
           fontFamily: MONO,
         }}
@@ -284,10 +294,10 @@ const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: 
         allowFontScaling={false}
         style={{
           position: 'absolute',
-          right: size * 0.22,
-          bottom: size * 0.24,
-          fontSize: scaleFont(7.5),
-          fontWeight: '900',
+          right: size * 0.14,
+          bottom: size * 0.12,
+          fontSize: scaleFont(7),
+          fontWeight: '800',
           color: tc.textSec,
           fontFamily: MONO,
         }}
@@ -295,12 +305,12 @@ const CircularGauge = ({ sensor, value, size = 100, tc }: { sensor: any, value: 
         {max}
       </Text>
 
-      {/* Value Text Overlaid */}
-      <View style={{ position: 'absolute', bottom: scaleHeight(11), alignItems: 'center' }}>
-        <Text allowFontScaling={false} style={{ fontSize: scaleFont(11), fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>
+      {/* Value Text Overlaid Centered Below Needle */}
+      <View style={{ position: 'absolute', bottom: size * 0.18, alignItems: 'center' }}>
+        <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), fontWeight: '900', color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(13) }}>
           {displayVal}
         </Text>
-        <Text allowFontScaling={false} style={{ fontSize: scaleFont(7.5), color: tc.textSec, fontFamily: MONO, fontWeight: '700' }}>
+        <Text allowFontScaling={false} style={{ fontSize: scaleFont(7.5), color: tc.textSec, fontFamily: MONO, fontWeight: '700', marginTop: 1 }}>
           {sensor.unit}
         </Text>
       </View>
@@ -321,6 +331,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
   const isLandscape = !isPortrait;
 
   // Read preferences and hardware state
+  const isSimulationMode = useAppStore(state => state.isSimulationMode);
   const { activeSensors, layoutType } = useDashboardStore();
   const protocol = useBluetoothStore(s => s.protocol);
   const adapterCapabilityScore = useBluetoothStore(s => s.adapterCapabilityScore);
@@ -339,6 +350,16 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
   const timingAdvance = useBluetoothStore(s => s.timingAdvance);
   const fuelLevel = useBluetoothStore(s => s.fuelLevel);
   const catalystTemp = useBluetoothStore(s => s.catalystTemp);
+  const baroPressure = useBluetoothStore(s => s.baroPressure);
+  const widebandAfr = useBluetoothStore(s => s.widebandAfr);
+  const transTemp = useBluetoothStore(s => s.transTemp);
+  const ethanolPercent = useBluetoothStore(s => s.ethanolPercent);
+  const driverTorque = useBluetoothStore(s => s.driverTorque);
+  const actualTorque = useBluetoothStore(s => s.actualTorque);
+  const engineRefTorque = useBluetoothStore(s => s.engineRefTorque);
+  const adblueLevel = useBluetoothStore(s => s.adblueLevel);
+  const egtTemp = useBluetoothStore(s => s.egtTemp);
+  const noxSensor = useBluetoothStore(s => s.noxSensor);
 
   // [v7.5.0 FIX-4] PID capability discovery state
   const supportedPids = useBluetoothStore(s => s.supportedPids);
@@ -384,20 +405,32 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
 
   // Read all sensor values from useBluetoothStore with fallback to JSI Direct Pipeline for high freq sensors
   const sensorValues = {
-    rpm: ecuStatus === 'connected' ? (localSensors.rpm || storeRpm) : null,
-    speed: ecuStatus === 'connected' ? (localSensors.speed || storeSpeed) : null,
-    coolant: ecuStatus === 'connected' ? (localSensors.coolant || storeCoolant) : null,
-    throttle: ecuStatus === 'connected' ? (localSensors.throttle || storeThrottle) : null,
-    voltage: ecuStatus === 'connected' ? (storeVoltage || localSensors.voltage) : null,
-    engineLoad: ecuStatus === 'connected' ? engineLoad : null,
-    intakeAirTemp: ecuStatus === 'connected' ? intakeAirTemp : null,
-    manifoldPressure: ecuStatus === 'connected' ? manifoldPressure : null,
-    ambientTemp: ecuStatus === 'connected' ? ambientTemp : null,
-    oilTemp: ecuStatus === 'connected' ? oilTemp : null,
-    mafFlow: ecuStatus === 'connected' ? mafFlow : null,
-    timingAdvance: ecuStatus === 'connected' ? timingAdvance : null,
-    fuelLevel: ecuStatus === 'connected' ? fuelLevel : null,
-    catalystTemp: ecuStatus === 'connected' ? catalystTemp : null,
+    rpm: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.rpm || storeRpm || (isSimulationMode ? 1724 : null)) : null,
+    speed: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.speed || storeSpeed || (isSimulationMode ? 50 : null)) : null,
+    coolant: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.coolant || storeCoolant || (isSimulationMode ? 87 : null)) : null,
+    throttle: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.throttle || storeThrottle || (isSimulationMode ? 25 : null)) : null,
+    voltage: (ecuStatus === 'connected' || isSimulationMode) ? (storeVoltage || localSensors.voltage || (isSimulationMode ? '14.2V' : null)) : null,
+    engineLoad: (ecuStatus === 'connected' || isSimulationMode) ? (engineLoad !== null ? engineLoad : (isSimulationMode ? 35 : null)) : null,
+    intakeAirTemp: (ecuStatus === 'connected' || isSimulationMode) ? (intakeAirTemp !== null ? intakeAirTemp : (isSimulationMode ? 28 : null)) : null,
+    manifoldPressure: (ecuStatus === 'connected' || isSimulationMode) ? (manifoldPressure !== null ? manifoldPressure : (isSimulationMode ? 100 : null)) : null,
+    ambientTemp: (ecuStatus === 'connected' || isSimulationMode) ? (ambientTemp !== null ? ambientTemp : (isSimulationMode ? 22 : null)) : null,
+    oilTemp: (ecuStatus === 'connected' || isSimulationMode) ? (oilTemp !== null ? oilTemp : (isSimulationMode ? 92 : null)) : null,
+    mafFlow: (ecuStatus === 'connected' || isSimulationMode) ? (mafFlow !== null ? mafFlow : (isSimulationMode ? 12.5 : null)) : null,
+    timingAdvance: (ecuStatus === 'connected' || isSimulationMode) ? (timingAdvance !== null ? timingAdvance : (isSimulationMode ? 10.5 : null)) : null,
+    fuelLevel: (ecuStatus === 'connected' || isSimulationMode) ? (fuelLevel !== null ? fuelLevel : (isSimulationMode ? 65 : null)) : null,
+    catalystTemp: (ecuStatus === 'connected' || isSimulationMode) ? (catalystTemp !== null ? catalystTemp : (isSimulationMode ? 600 : null)) : null,
+
+    // Extended Global Sensors
+    turboBoost: (ecuStatus === 'connected' || isSimulationMode) ? (manifoldPressure ? Number((manifoldPressure - (baroPressure || 101)).toFixed(1)) : (isSimulationMode ? 1.2 : null)) : null,
+    widebandAfr: (ecuStatus === 'connected' || isSimulationMode) ? (widebandAfr !== null ? widebandAfr : (isSimulationMode ? 14.7 : null)) : null,
+    transTemp: (ecuStatus === 'connected' || isSimulationMode) ? (transTemp !== null ? transTemp : (isSimulationMode ? 85 : null)) : null,
+    ethanolPercent: (ecuStatus === 'connected' || isSimulationMode) ? (ethanolPercent !== null ? ethanolPercent : (isSimulationMode ? 10 : null)) : null,
+    baroPressure: (ecuStatus === 'connected' || isSimulationMode) ? (baroPressure !== null ? baroPressure : (isSimulationMode ? 101 : null)) : null,
+    actualTorque: (ecuStatus === 'connected' || isSimulationMode) ? (actualTorque !== null ? actualTorque : (isSimulationMode ? 450 : null)) : null,
+    driverTorque: (ecuStatus === 'connected' || isSimulationMode) ? (driverTorque !== null ? driverTorque : (isSimulationMode ? 350 : null)) : null,
+    adblueLevel: (ecuStatus === 'connected' || isSimulationMode) ? (adblueLevel !== null ? adblueLevel : (isSimulationMode ? 80 : null)) : null,
+    egtTemp: (ecuStatus === 'connected' || isSimulationMode) ? (egtTemp !== null ? egtTemp : (isSimulationMode ? 600 : null)) : null,
+    noxSensor: (ecuStatus === 'connected' || isSimulationMode) ? (noxSensor !== null ? noxSensor : (isSimulationMode ? 45 : null)) : null,
   };
 
   const voltage = sensorValues.voltage;
@@ -634,7 +667,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
     const CRITICAL_PIDS = ['0C', '0D', '05'];
     const activeConfigs = ALL_SENSORS.filter(s => {
       if (!activeSensors.includes(s.key)) return false;
-      if (supportedPids.length === 0) return true; // Show all user-selected sensors when disconnected/offline
+      if (isSimulationMode || supportedPids.length === 0) return true; // Show all user-selected sensors in simulation mode or offline
       const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
       if (!pidHex) return true;
       if (CRITICAL_PIDS.includes(pidHex)) return true;
@@ -741,7 +774,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
     const CRITICAL_PIDS = ['0C', '0D', '05'];
     const activeConfigs = ALL_SENSORS.filter(s => {
       if (!activeSensors.includes(s.key)) return false;
-      if (supportedPids.length === 0) return true; // Show all user-selected sensors when disconnected/offline
+      if (isSimulationMode || supportedPids.length === 0) return true; // Show all user-selected sensors in simulation mode or offline
       const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
       if (!pidHex) return true;
       if (CRITICAL_PIDS.includes(pidHex)) return true;
@@ -791,16 +824,6 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
                     }}
                   >
                     {t(sensor.nameKey, sensor.defaultName)}
-                  </Text>
-                  <Text 
-                    style={{ 
-                      fontSize: scaleFont(8.5), 
-                      color: tc.textSec, 
-                      fontFamily: MONO, 
-                      marginTop: scaleHeight(1.5) 
-                    }}
-                  >
-                    {t('dashboard.pidLabel', { pid: sensor.pid })}
                   </Text>
                 </View>
               </View>
@@ -857,7 +880,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
     const CRITICAL_PIDS = ['0C', '0D', '05'];
     const activeConfigs = ALL_SENSORS.filter(s => {
       if (!activeSensors.includes(s.key)) return false;
-      if (supportedPids.length === 0) return true; // Show all user-selected sensors when disconnected/offline
+      if (isSimulationMode || supportedPids.length === 0) return true; // Show all user-selected sensors in simulation mode or offline
       const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
       if (!pidHex) return true;
       if (CRITICAL_PIDS.includes(pidHex)) return true;
@@ -919,7 +942,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
     const CRITICAL_PIDS = ['0C', '0D', '05'];
     const activeConfigs = ALL_SENSORS.filter(s => {
       if (!activeSensors.includes(s.key)) return false;
-      if (supportedPids.length === 0) return true;
+      if (isSimulationMode || supportedPids.length === 0) return true;
       const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
       if (!pidHex) return true;
       if (CRITICAL_PIDS.includes(pidHex)) return true;
@@ -952,13 +975,12 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
               {/* Header: Icon, Name & Current Value */}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(8), flex: 1 }}>
-                  <Text style={{ fontSize: scaleFont(16) }}>{sensor.icon}</Text>
                   <View style={{ flex: 1 }}>
                     <Text numberOfLines={1} style={{ fontSize: scaleFont(12), fontWeight: '900', color: tc.textPri, fontFamily: MONO }}>
                       {t(sensor.nameKey, sensor.defaultName)}
                     </Text>
                     <Text style={{ fontSize: scaleFont(8.5), color: tc.textSec, fontFamily: MONO, marginTop: 1 }}>
-                      {t('dashboard.pidLabel', { pid: sensor.pid })} | {t('bento.realtimeData', 'REAL-TIME DATA')}
+                      {t('bento.realtimeData', 'CANLI VERİ AKIŞI')}
                     </Text>
                   </View>
                 </View>
@@ -1398,6 +1420,8 @@ function MainApp() {
 
   const [vinHistory, setVinHistory] = useState<GarageRecord[]>([]);
   const [manualVin, setManualVin] = useState('');
+  const [selectedDtcDetail, setSelectedDtcDetail] = useState<string | null>(null);
+  const [isDtcModalOpen, setIsDtcModalOpen] = useState(false);
 
   const [hasShownCloneWarning, setHasShownCloneWarning] = useState(false);
 
@@ -1412,6 +1436,260 @@ function MainApp() {
   const initializeDeviceUuid = useAppStore((state) => state.initializeDeviceUuid);
   const appUserId = useAppStore((state) => state.appUserId);
   const language = useAppStore((state) => state.language);
+
+  const [isAiDoctorAnalysisActive, setIsAiDoctorAnalysisActive] = useState(false);
+
+  const handleOpenDtcDetail = (dtcCode: string) => {
+    setSelectedDtcDetail(dtcCode);
+    setIsAiDoctorAnalysisActive(false);
+    setIsDtcModalOpen(true);
+  };
+
+  const renderDtcDetailModal = () => {
+    if (!selectedDtcDetail) return null;
+    const code = selectedDtcDetail.toUpperCase();
+    const desc = lookupDTC(code) || t('dtc.generalFault', 'Sistem Arızası');
+    const prefix = code.charAt(0);
+
+    let categoryName = t('dtcCategory.powertrain', 'MOTOR / GÜÇ AKTARMA');
+    let categoryColor = tc.red;
+
+    if (prefix === 'C') {
+      categoryName = t('dtcCategory.chassis', 'ŞASİ / FREN SİSTEMİ');
+      categoryColor = tc.amber;
+    } else if (prefix === 'B') {
+      categoryName = t('dtcCategory.body', 'GÖVDE ELEKTRONİĞİ');
+      categoryColor = tc.cyan;
+    } else if (prefix === 'U') {
+      categoryName = t('dtcCategory.network', 'İLETİŞİM / AĞ SİSTEMİ');
+      categoryColor = tc.purple;
+    }
+
+    if (isAiDoctorAnalysisActive) {
+      const guided = getGuidedDiagnostics(code);
+      return (
+        <Modal
+          visible={isDtcModalOpen}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setIsDtcModalOpen(false)}
+        >
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'flex-end' }}>
+            <View style={{
+              backgroundColor: tc.card,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              borderWidth: 1,
+              borderColor: tc.cyan,
+              padding: scaleMod(20),
+              maxHeight: '85%',
+            }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(16) }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
+                  <View style={{ backgroundColor: `${tc.cyan}20`, borderWidth: 1, borderColor: tc.cyan, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
+                    <Text style={{ color: tc.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>AI DOCTOR</Text>
+                  </View>
+                  <Text style={{ color: tc.textPri, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>{code} {t('aiDoctor.reportTitle', 'Arıza Kodu Analizi')}</Text>
+                </View>
+                <TouchableOpacity onPress={() => setIsDtcModalOpen(false)} style={{ padding: scaleMod(6) }}>
+                  <Text style={{ color: tc.textSec, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO }}>✕</Text>
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleHeight(14), paddingBottom: scaleHeight(20) }}>
+                {/* Health Score Impact Card */}
+                <View style={{ backgroundColor: '#0d331e', borderWidth: 1, borderColor: '#00cc66', borderRadius: 12, padding: scaleMod(12), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Text style={{ color: '#00ee77', fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
+                    {t('aiDoctor.healthImpactTitle', 'MOTOR SAĞLIK ETKİ SKORU').toUpperCase()}
+                  </Text>
+                  <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO }}>75 / 100</Text>
+                </View>
+
+                {/* Driving Safety Guidance */}
+                <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(6) }}>
+                  <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                    {t('aiDoctor.drivingSafety', 'SÜRÜŞ EMNİYETİ REHBERİ').toUpperCase()}
+                  </Text>
+                  <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                    {t('aiDoctor.warningDrive', 'Düşük hızda servise kadar sürülmesi emniyetlidir. Yüksek devirde zorlamayın.')}
+                  </Text>
+                </View>
+
+                {/* Probable Causes */}
+                <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
+                  <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                    {t('aiDoctor.causes', 'OLASI KÖK NEDENLER').toUpperCase()}
+                  </Text>
+                  {guided.probableCauses.map((pc, idx) => (
+                    <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, flex: 1 }}>• {pc.cause}</Text>
+                      <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', marginLeft: scaleWidth(8) }}>%{pc.probability}</Text>
+                    </View>
+                  ))}
+                </View>
+
+                {/* Mechanical Steps */}
+                <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
+                  <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                    {t('aiDoctor.recommendedAction', 'TAVSİYE EDİLEN MEKANİK İŞLEMLER').toUpperCase()}
+                  </Text>
+                  <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                    1. {guided.recommendedAction}
+                  </Text>
+                  <Text style={{ fontSize: scaleFont(11), color: tc.textSec, fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                    2. {t('aiDoctor.stepGeneric2', 'Multimetre ile tesisat voltajını ölçün ve konnektör oksitlenmelerini temizleyin.')}
+                  </Text>
+                </View>
+
+                <View style={{ gap: scaleHeight(10), marginTop: scaleHeight(4) }}>
+                  <TouchableOpacity
+                    style={{ backgroundColor: tc.bg, borderWidth: 1, borderColor: tc.cyan, borderRadius: 10, paddingVertical: scaleHeight(12), alignItems: 'center' }}
+                    onPress={() => setIsAiDoctorAnalysisActive(false)}
+                  >
+                    <Text style={{ color: tc.cyan, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, letterSpacing: 1 }}>
+                      {t('dtcDetail.backToDetail', 'ARIZA DETAYLARINA DÖN').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{ backgroundColor: `${tc.red}18`, borderWidth: 1, borderColor: tc.red, borderRadius: 10, paddingVertical: scaleHeight(10), alignItems: 'center' }}
+                    onPress={() => {
+                      setIsDtcModalOpen(false);
+                      clearDiagnostics();
+                    }}
+                  >
+                    <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
+                      {t('service.clearCodes', 'ARIZA KODUNU HIZLICA SİL').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
+      );
+    }
+
+    return (
+      <Modal
+        visible={isDtcModalOpen}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsDtcModalOpen(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.75)', justifyContent: 'flex-end' }}>
+          <View style={{
+            backgroundColor: tc.card,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderWidth: 1,
+            borderColor: tc.border,
+            padding: scaleMod(20),
+            maxHeight: '85%',
+          }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(16) }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
+                <View style={{ backgroundColor: `${categoryColor}20`, borderWidth: 1, borderColor: categoryColor, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
+                  <Text style={{ color: categoryColor, fontSize: scaleFont(14), fontWeight: '900', fontFamily: MONO }}>{code}</Text>
+                </View>
+                <Text style={{ color: tc.textSec, fontSize: scaleFont(10), fontWeight: '800', fontFamily: MONO, letterSpacing: 1 }}>{categoryName}</Text>
+              </View>
+              <TouchableOpacity onPress={() => setIsDtcModalOpen(false)} style={{ padding: scaleMod(6) }}>
+                <Text style={{ color: tc.textSec, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO }}>✕</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleHeight(16), paddingBottom: scaleHeight(20) }}>
+              <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border }}>
+                <Text style={{ fontSize: scaleFont(10), color: tc.textSec, fontFamily: MONO, fontWeight: '800', letterSpacing: 1, marginBottom: scaleHeight(6) }}>
+                  {t('dtcDetail.descTitle', 'ARIZA KODU AÇIKLAMASI').toUpperCase()}
+                </Text>
+                <Text style={{ fontSize: scaleFont(13), color: tc.textPri, fontFamily: MONO, fontWeight: '700', lineHeight: scaleFont(18) }}>
+                  {desc}
+                </Text>
+              </View>
+
+              {/* Smart Driving Safety Risk Assessment */}
+              {(() => {
+                let riskBadge = { color: tc.green, title: t('dtcRisk.safeTitle', '🟢 SÜRÜŞ İÇİN GÜVENLİ'), desc: t('dtcRisk.safeDesc', 'Bu arıza sürüş emniyetini doğrudan tehdit etmez. Aracı servise götürene kadar düşük hızda sürebilirsiniz.') };
+                if (['P0300', 'P0700', 'C0110', 'B0001', 'P0AA6', 'P0562', 'P0115'].includes(code)) {
+                  riskBadge = { color: tc.red, title: t('dtcRisk.criticalTitle', '🔴 ACİL: SÜRÜŞÜ DURDURUN / SERVİSE BAŞVURUN'), desc: t('dtcRisk.criticalDesc', 'Kritik mekanik/elektriksel risk! Motor veya güvenlik sistemleri hasar görebilir. Aracı derhal emniyetli alana çekin.') };
+                } else if (prefix === 'P' || prefix === 'C' || prefix === 'B') {
+                  riskBadge = { color: tc.amber, title: t('dtcRisk.warningTitle', '🟡 DİKKAT: SERVİS KONTROLÜ GEREKLİ'), desc: t('dtcRisk.warningDesc', 'Performans kayıpları ve emisyon yüksekliği oluşabilir. En kısa sürede yetkili servise başvurun.') };
+                }
+                return (
+                  <View style={{ backgroundColor: `${riskBadge.color}15`, borderRadius: 12, padding: scaleMod(12), borderWidth: 1, borderColor: riskBadge.color }}>
+                    <Text style={{ fontSize: scaleFont(11), color: riskBadge.color, fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5, marginBottom: scaleHeight(4) }}>
+                      {riskBadge.title}
+                    </Text>
+                    <Text style={{ fontSize: scaleFont(10), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(14) }}>
+                      {riskBadge.desc}
+                    </Text>
+                  </View>
+                );
+              })()}
+
+              {(() => {
+                const guided = getGuidedDiagnostics(code);
+                return (
+                  <View style={{ gap: scaleHeight(12) }}>
+                    <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
+                      <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', letterSpacing: 1 }}>
+                        {t('dtcDetail.possibleCausesTitle', 'MUHTEMEL KÖK NEDENLER & TAMİR TALİMATLARI').toUpperCase()}
+                      </Text>
+                      {guided.probableCauses.map((pc, idx) => (
+                        <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, flex: 1 }}>• {pc.cause}</Text>
+                          <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', marginLeft: scaleWidth(8) }}>%{pc.probability}</Text>
+                        </View>
+                      ))}
+                      <Text style={{ fontSize: scaleFont(10), color: tc.textSec, fontFamily: MONO, marginTop: scaleHeight(4), fontStyle: 'italic' }}>
+                        💡 {t('dtcDetail.recommendedAction', 'Tavsiye Edilen Adım')}: {guided.recommendedAction}
+                      </Text>
+                    </View>
+
+                    {guided.tsbSummary && (
+                      <View style={{ backgroundColor: `${tc.purple}15`, borderWidth: 1, borderColor: tc.purple, borderRadius: 12, padding: scaleMod(12) }}>
+                        <Text style={{ fontSize: scaleFont(10), color: tc.purple, fontFamily: MONO, fontWeight: '900', letterSpacing: 1, marginBottom: scaleHeight(4) }}>
+                          📋 {t('dtcDetail.tsbTitle', 'TEKNİK SERVİS BÜLTENİ (TSB)')}
+                        </Text>
+                        <Text style={{ fontSize: scaleFont(10), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(14) }}>
+                          {guided.tsbSummary}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                );
+              })()}
+
+              <View style={{ gap: scaleHeight(10), marginTop: scaleHeight(4) }}>
+                <TouchableOpacity
+                  style={{ backgroundColor: tc.cyan, borderRadius: 10, paddingVertical: scaleHeight(12), alignItems: 'center' }}
+                  onPress={() => setIsAiDoctorAnalysisActive(true)}
+                >
+                  <Text style={{ color: tc.card, fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO, letterSpacing: 1 }}>
+                    {t('dtcDetail.aiDoctorBtn', 'AI DOCTOR UZMAN ANALİZİ BAŞLAT').toUpperCase()}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ backgroundColor: `${tc.red}18`, borderWidth: 1, borderColor: tc.red, borderRadius: 10, paddingVertical: scaleHeight(10), alignItems: 'center' }}
+                  onPress={() => {
+                    setIsDtcModalOpen(false);
+                    clearDiagnostics();
+                  }}
+                >
+                  <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
+                    {t('service.clearCodes', 'ARIZA KODUNU HIZLICA SİL').toUpperCase()}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
   // Sync language selection to i18n instance on rehydration and updates
   useEffect(() => {
@@ -1638,6 +1916,8 @@ function MainApp() {
   const [isMultiEcuModalVisible, setIsMultiEcuModalVisible] = useState(false);
   const [isDctModalVisible, setIsDctModalVisible] = useState(false);
   const [isIgnitionModalVisible, setIsIgnitionModalVisible] = useState(false);
+  const [isAiDoctorModalVisible, setIsAiDoctorModalVisible] = useState(false);
+  const [aiDoctorContext, setAiDoctorContext] = useState<AiDiagnosticContext>({ dtcCodes: [] });
   const adminTapCountRef = useRef(0);
   const adminTapTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -2476,15 +2756,6 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           <View style={[s.panel, { padding: panelPad, marginBottom: 0 }]}>
             <View style={[s.panelHeader, { marginBottom: isCompact ? scaleHeight(4) : scaleHeight(8) }]}>
               <Text style={[s.panelTitle, { marginBottom: 0, fontSize: titleSz }]}>{t('expertise.dtcTitle')}</Text>
-              {dtcs.length > 0 && (
-                <TouchableOpacity onPress={() => {
-                  try {
-                    proGuardAction(clearDiagnostics);
-                  } catch (e) {}
-                }} disabled={isDiagnosticMode} style={s.clearBtn}>
-                  <Text style={[s.clearBtnText, { fontSize: isCompact ? scaleFont(9) : scaleFont(11) }]}>{t('common.clear')}</Text>
-                </TouchableOpacity>
-              )}
             </View>
             {dtcs.length === 0 ? (
               isCompact ? (
@@ -2518,17 +2789,13 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               isCompact ? (
                 dtcs.map((dtc, i) => {
                   const desc = lookupDTC(dtc);
-                  const isPro = useAppStore.getState().isPro;
+                  const isPro = useAppStore.getState().isPro || isSimulationMode;
                   const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
                   return (
                     <TouchableOpacity
                       key={i}
                       style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
-                      onPress={() => {
-                        if (!isPro) {
-                          useBluetoothStore.getState().setPaywallContext(dtc);
-                        }
-                      }}
+                      onPress={() => handleOpenDtcDetail(dtc)}
                     >
                       <View style={s.dtcDot} />
                       <View style={{ flex: 1 }}>
@@ -2542,17 +2809,13 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                 <View style={{ gap: scaleHeight(4) }}>
                   {dtcs.map((dtc, i) => {
                     const desc = lookupDTC(dtc);
-                    const isPro = useAppStore.getState().isPro;
+                    const isPro = useAppStore.getState().isPro || isSimulationMode;
                     const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
                     return (
                       <TouchableOpacity
                         key={i}
                         style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
-                        onPress={() => {
-                          if (!isPro) {
-                            useBluetoothStore.getState().setPaywallContext(dtc);
-                          }
-                        }}
+                        onPress={() => handleOpenDtcDetail(dtc)}
                       >
                         <View style={s.dtcDot} />
                         <View style={{ flex: 1 }}>
@@ -2705,7 +2968,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     text: t('service.clearCodes'),
                     style: 'destructive',
                     onPress: async () => {
-                      await runAdaptationRoutine('fuel');
+                      await clearDiagnostics();
                       Alert.alert(
                         t('service.step2'),
                         t('service.step2Desc'),
@@ -3432,11 +3695,8 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
 
 
 
-        {/* Customize Dashboard Modal */}
-        <CustomizeDashboardModal
-          visible={isCustomizeModalVisible}
-          onClose={() => setIsCustomizeModalVisible(false)}
-        />
+        {/* DTC Detail Modal */}
+        {renderDtcDetailModal()}
 
         {/* Paywall Modal Overlay */}
         <Paywall
@@ -3473,6 +3733,13 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           onClose={() => setIsIgnitionModalVisible(false)}
           onRetry={retryEcu}
           voltageV={parseFloat(storeVoltage || '0') || 0}
+        />
+
+        {/* AI Doctor Diagnostic Modal */}
+        <AiDoctorModal
+          visible={isAiDoctorModalVisible}
+          onClose={() => setIsAiDoctorModalVisible(false)}
+          context={aiDoctorContext}
         />
       </View>
       </SafeAreaView>

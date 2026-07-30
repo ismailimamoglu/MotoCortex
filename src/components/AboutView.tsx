@@ -25,6 +25,59 @@ export interface AboutViewProps {
   onAccordionToggle?: (section: string | null) => void;
 }
 
+interface InfoAccordionProps {
+  id: string;
+  title: string;
+  content: string | React.ReactNode;
+  isExpanded: boolean;
+  onToggle: (id: string) => void;
+  tc: any;
+  scaleWidth: (v: number) => number;
+  scaleHeight: (v: number) => number;
+  scaleMod: (v: number) => number;
+  scaleFont: (v: number) => number;
+}
+
+const InfoAccordion = React.memo(({ id, title, content, isExpanded, onToggle, tc, scaleWidth, scaleHeight, scaleMod, scaleFont }: InfoAccordionProps) => (
+  <View style={{ marginBottom: scaleHeight(8) }}>
+    <TouchableOpacity
+      style={{
+        backgroundColor: isExpanded ? tc.elevated : tc.card,
+        borderWidth: 1,
+        borderColor: tc.border,
+        borderRadius: scaleMod(6),
+        paddingVertical: scaleHeight(14),
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: scaleWidth(16)
+      }}
+      onPress={() => onToggle(id)}
+    >
+      <Text style={{
+        color: isExpanded ? tc.cyan : tc.textPri,
+        fontSize: scaleFont(12),
+        fontFamily: tc.mono,
+        fontWeight: '700'
+      }}>
+        {title}
+      </Text>
+      <Text style={{ color: tc.textSec, fontSize: scaleFont(12) }}>{isExpanded ? '▼' : '▶'}</Text>
+    </TouchableOpacity>
+    {isExpanded && (
+      <View style={{ backgroundColor: tc.bg, padding: scaleMod(16), borderWidth: 1, borderTopWidth: 0, borderColor: tc.border, borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}>
+        {typeof content === 'string' ? (
+          <Text style={{ color: tc.textSec, fontSize: scaleFont(11), fontFamily: tc.mono, lineHeight: scaleFont(15) }}>
+            {content}
+          </Text>
+        ) : (
+          content
+        )}
+      </View>
+    )}
+  </View>
+));
+
 const DESCRIPTION_TRANSLATIONS: Record<string, string> = {
   en: 'Next-generation OBD2 Scanner with a high-frequency data stream (Batch Query) engine for cars and motorcycles',
   tr: 'Otomobil ve motosikletler için yüksek frekanslı veri akış (Batch Query) motoruna sahip yeni nesil OBD2 Scanner',
@@ -300,45 +353,6 @@ export default function AboutView({
     }
   };
 
-  const InfoAccordion = ({ id, title, content }: { id: string, title: string, content: string | React.ReactNode }) => (
-    <View style={{ marginBottom: scaleHeight(8) }}>
-      <TouchableOpacity
-        style={{
-          backgroundColor: expandedInfoSection === id ? tc.elevated : tc.card,
-          borderWidth: 1,
-          borderColor: tc.border,
-          borderRadius: scaleMod(6),
-          paddingVertical: scaleHeight(14),
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingHorizontal: scaleWidth(16)
-        }}
-        onPress={() => toggleInfoAcc(id)}
-      >
-        <Text style={{
-          color: expandedInfoSection === id ? tc.cyan : tc.textPri,
-          fontSize: scaleFont(12),
-          fontFamily: tc.mono,
-          fontWeight: '700'
-        }}>
-          {title}
-        </Text>
-        <Text style={{ color: tc.textSec, fontSize: scaleFont(12) }}>{expandedInfoSection === id ? '▼' : '▶'}</Text>
-      </TouchableOpacity>
-      {expandedInfoSection === id && (
-        <View style={{ backgroundColor: tc.bg, padding: scaleMod(16), borderWidth: 1, borderTopWidth: 0, borderColor: tc.border, borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }}>
-          {typeof content === 'string' ? (
-            <Text style={{ color: tc.textSec, fontSize: scaleFont(11), fontFamily: tc.mono, lineHeight: scaleFont(15) }}>
-              {content}
-            </Text>
-          ) : (
-            content
-          )}
-        </View>
-      )}
-    </View>
-  );
 
   const renderPerformanceGuide = () => {
     const texts = PERFORMANCE_TRANSLATIONS[language] || PERFORMANCE_TRANSLATIONS['en'];
@@ -555,9 +569,9 @@ export default function AboutView({
             }}
             activeOpacity={0.6}
           >
-            <Text style={{ fontSize: scaleFont(12) }}>🌐</Text>
+
             <Text style={{ color: tc.textPri, fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: tc.mono }}>
-              {t('info.support', 'DESTEK MERKEZİ').toUpperCase()}
+              {t('info.support', 'SUPPORT CENTER').toUpperCase()}
             </Text>
           </TouchableOpacity>
 
@@ -585,9 +599,9 @@ export default function AboutView({
             }}
             activeOpacity={0.6}
           >
-            <Text style={{ fontSize: scaleFont(12) }}>📢</Text>
+
             <Text style={{ color: tc.textPri, fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: tc.mono }}>
-              {t('expertise.share', 'PAYLAŞ').toUpperCase()}
+              {t('expertise.share', 'SHARE').toUpperCase()}
             </Text>
           </TouchableOpacity>
         </View>
@@ -608,51 +622,81 @@ export default function AboutView({
           id="feature_coding"
           title={t('info.sections.featureCoding.title')}
           content={t('info.sections.featureCoding.content')}
+          isExpanded={expandedInfoSection === 'feature_coding'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="multi_ecu"
           title={t('info.sections.multiEcu.title')}
           content={t('info.sections.multiEcu.content')}
+          isExpanded={expandedInfoSection === 'multi_ecu'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="advanced_diagnostics"
           title={t('info.sections.advancedDiagnostics.title')}
           content={t('info.sections.advancedDiagnostics.content')}
+          isExpanded={expandedInfoSection === 'advanced_diagnostics'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="demo_mode"
           title={t('info.sections.demoMode.title')}
           content={t('info.sections.demoMode.content')}
+          isExpanded={expandedInfoSection === 'demo_mode'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="canli"
           title={t('info.sections.live.title')}
           content={t('info.sections.live.content')}
+          isExpanded={expandedInfoSection === 'canli'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="ekspertiz"
           title={t('info.sections.expertise.title')}
           content={t('info.sections.expertise.content')}
+          isExpanded={expandedInfoSection === 'ekspertiz'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="donanim"
           title={t('info.sections.hardware.title')}
           content={t('info.sections.hardware.content')}
+          isExpanded={expandedInfoSection === 'donanim'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="uyarilar"
           title={t('info.sections.warnings.title')}
           content={t('info.sections.warnings.content')}
+          isExpanded={expandedInfoSection === 'uyarilar'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="performans_rehberi"
           title={PERFORMANCE_TRANSLATIONS[language]?.title || PERFORMANCE_TRANSLATIONS['en'].title}
           content={renderPerformanceGuide()}
+          isExpanded={expandedInfoSection === 'performans_rehberi'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
         <InfoAccordion
           id="onboarding"
           title={t('info.sections.onboarding.title')}
           content={renderOnboardingAccordionContent()}
+          isExpanded={expandedInfoSection === 'onboarding'}
+          onToggle={toggleInfoAcc}
+          tc={tc} scaleWidth={scaleWidth} scaleHeight={scaleHeight} scaleMod={scaleMod} scaleFont={scaleFont}
         />
 
         {/* App Info Card removed and moved to main dashboard page */}

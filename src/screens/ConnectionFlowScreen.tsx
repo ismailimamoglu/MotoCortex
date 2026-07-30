@@ -445,7 +445,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             style={{ marginBottom: vs(12) }}
           >
             <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-              ← {t('common.changeType', 'Bağlantı Türünü Değiştir')}
+              ← {t('common.changeType', 'Change Connection Type')}
             </Text>
           </TouchableOpacity>
 
@@ -538,7 +538,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             }}
           >
             <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              🎮 {t('common.demoMode', 'SİMÜLASYON MODUNDA İNCELE').toUpperCase()}
+              🎮 {t('common.demoMode', 'DEMO MODE').toUpperCase()}
             </Text>
           </TouchableOpacity>
         </View>

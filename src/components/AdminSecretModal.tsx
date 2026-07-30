@@ -47,14 +47,14 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
 
-  const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet } = useResponsive();
+  const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet, width, height } = useResponsive();
 
   const proTapCountRef = useRef(0);
   const proTapTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleProSecretTap = () => {
     if (!__DEV__) {
-      Alert.alert('Geliştirici Modu', 'Gizli PRO geliştirici anahtarı canlı (production) derlemelerinde devre dışıdır.');
+      Alert.alert('admin.devModeAlert', 'Secret PRO developer key is disabled in production builds.');
       return;
     }
     proTapCountRef.current += 1;
@@ -116,7 +116,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
   const handleSendCommand = async (cmdToSend?: string) => {
     const targetCmd = (cmdToSend || customCommand).trim();
     if (!targetCmd) {
-      Alert.alert('Hata', 'Lütfen geçerli bir OBD komutu girin (örn: 01 0C veya AT Z)');
+      Alert.alert('admin.invalidCmdError', 'Please enter a valid OBD command (e.g., 01 0C or AT Z)');
       return;
     }
 
@@ -147,7 +147,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
     try {
       const isAvailable = await Sharing.isAvailableAsync();
       if (!isAvailable) {
-        Alert.alert('Desteklenmiyor', 'Paylaşım özelliği bu cihazda kullanılamıyor.');
+        Alert.alert('obdTerminal.noShareSupport', 'Sharing features are not available on this device.');
         return;
       }
 
@@ -159,7 +159,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
       const exists = await RNFS.exists(rawPath);
 
       if (!exists) {
-        Alert.alert('Bilgi', 'Paylaşılacak log kaydı bulunamadı.');
+        Alert.alert('admin.noLogsInfo', 'No log records found to share.');
         return;
       }
 
@@ -177,7 +177,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
 
   const handleClear = () => {
     Alert.alert('Logları Temizle', 'Tüm yerel OBD terminal logları silinecektir.', [
-      { text: 'İptal', style: 'cancel' },
+      { text: t('common.cancel', 'Cancel'), style: 'cancel' },
       {
         text: 'Temizle',
         style: 'destructive',
@@ -197,17 +197,17 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
   };
 
   const presets = [
-    { label: 'AT Z', cmd: 'AT Z', desc: 'OBD2 Adaptörü Sıfırla' },
+    { label: 'AT Z', cmd: 'AT Z', desc: t('admin.presetReset', 'Reset OBD2 Adapter') },
     { label: 'AT SP 0', cmd: 'AT SP 0', desc: 'Otomatik Protokol' },
     { label: '01 00', cmd: '01 00', desc: "Desteklenen PID'ler" },
     { label: '01 0C', cmd: '01 0C', desc: 'Motor Devri (RPM)' },
-    { label: '01 0D', cmd: '01 0D', desc: 'Araç Hızı (km/h)' },
-    { label: '03', cmd: '03', desc: 'Arıza Kodlarını Oku' },
-    { label: '04', cmd: '04', desc: 'Arıza Kodlarını Sil' },
+    { label: '01 0D', cmd: '01 0D', desc: t('admin.presetSpeed', 'Vehicle Speed (km/h)') },
+    { label: '03', cmd: '03', desc: t('admin.presetReadDtc', 'Read Fault Codes') },
+    { label: '04', cmd: '04', desc: t('admin.presetClearDtc', 'Clear Fault Codes') },
   ];
 
-  const modalWidth = isTablet ? (isLargeTablet ? 680 : 540) : '94%';
-  const modalHeight = isTablet ? '88%' : '92%';
+  const modalWidth = isTablet ? (isLargeTablet ? 680 : 540) : Math.min(width * 0.94, 460);
+  const modalHeight = isTablet ? Math.min(height * 0.88, 750) : Math.min(height * 0.92, 680);
 
   return (
     <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
@@ -288,7 +288,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  {t('admin.userInfo', '🔒 YÖNETİCİ KULLANICI KİMLİK BİLGİLERİ')}
+                  {t('admin.userInfo', '🔒 ADMIN USER CREDENTIALS')}
                 </Text>
 
                 {/* User ID Row */}
@@ -373,7 +373,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
 
                 {/* Hazır Komut Butonları (Açıklamalı 2'li Grid Layout) */}
                 <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: 'bold', marginBottom: scaleHeight(6) }}>
-                  {t('admin.presetTitle', '⚡ HIZLI KOMUT SETİ:')}
+                  {t('admin.presetTitle', '⚡ QUICK COMMAND SET:')}
                 </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleMod(6), marginBottom: scaleHeight(10) }}>
                   {presets.map((p) => (
@@ -440,7 +440,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                       <ActivityIndicator size="small" color="#000" />
                     ) : (
                       <Text style={{ color: '#000', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: colors.mono }}>
-                        {t('admin.send', 'GÖNDER')}
+                        {t('admin.send', 'SEND')}
                       </Text>
                     )}
                   </TouchableOpacity>
@@ -481,7 +481,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  {t('admin.cloudTools', '🛰️ BULUT VE SİSTEM ARAÇLARI')}
+                  {t('admin.cloudTools', '🛰️ CLOUD & SYSTEM TOOLS')}
                 </Text>
 
                 <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
@@ -521,9 +521,9 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     }}
                     onPress={() => {
                       Alert.alert('Çökme Testi', 'Firebase Crashlytics entegrasyonu için test çökmesi başlatılacaktır.', [
-                        { text: 'İptal', style: 'cancel' },
+                        { text: t('common.cancel', 'Cancel'), style: 'cancel' },
                         {
-                          text: 'Çöktür',
+                          text: t('admin.crashBtn', 'Crash'),
                           style: 'destructive',
                           onPress: () => {
                             crashlytics().log('Test crash triggered by developer in AdminSecretModal');
@@ -559,7 +559,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: colors.red, fontSize: scaleFont(10.5), fontWeight: '800', fontFamily: colors.mono }}>
-                  {t('admin.clear', '🗑️ TEMİZLE')}
+                  {t('admin.clear', '🗑️ CLEAR')}
                 </Text>
               </TouchableOpacity>
 
@@ -578,7 +578,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: colors.cyan, fontSize: scaleFont(10.5), fontWeight: '800', fontFamily: colors.mono }}>
-                  {t('admin.refresh', '🔄 YENİLE')}
+                  {t('admin.refresh', '🔄 REFRESH')}
                 </Text>
               </TouchableOpacity>
 
@@ -595,7 +595,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: '#000', fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: colors.mono }}>
-                  {t('admin.share', '📤 PAYLAŞ')}
+                  {t('admin.share', '📤 SHARE')}
                 </Text>
               </TouchableOpacity>
             </View>

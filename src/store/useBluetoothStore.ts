@@ -56,6 +56,16 @@ interface BluetoothState {
     timingAdvance: number | null;
     fuelLevel: number | null;
     catalystTemp: number | null;
+    baroPressure: number | null;
+    widebandAfr: number | null;
+    transTemp: number | null;
+    ethanolPercent: number | null;
+    driverTorque: number | null;
+    actualTorque: number | null;
+    engineRefTorque: number | null;
+    adblueLevel: number | null;
+    egtTemp: number | null;
+    noxSensor: number | null;
 
     dtcs: DiagnosticDtcArray;
     vin: string | null;
@@ -173,6 +183,16 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     timingAdvance: null,
     fuelLevel: null,
     catalystTemp: null,
+    baroPressure: null,
+    widebandAfr: null,
+    transTemp: null,
+    ethanolPercent: null,
+    driverTorque: null,
+    actualTorque: null,
+    engineRefTorque: null,
+    adblueLevel: null,
+    egtTemp: null,
+    noxSensor: null,
     dtcs: createInitialDtcs(),
     vin: null,
     ecuId: null,
@@ -274,7 +294,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
             }
         }
         if (data.pidLastUpdateTimes) {
-            nextData.pidLastUpdateTimes = { ...state.pidLastUpdateTimes, ...data.pidLastUpdateTimes };
+            nextData.pidLastUpdateTimes = Object.assign({}, state.pidLastUpdateTimes, data.pidLastUpdateTimes);
         }
         return nextData;
     }),
@@ -309,12 +329,9 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     flushPendingRevocation: () => set({ pendingProRevocation: false }),
     triggerPendingRevocation: () => set({ pendingProRevocation: true }),
     addLog: (entry) => set((state) => {
-        // PERF FIX: Spread operatörü 20Hz'de saniyede 20 tam dizi kopyası üretir.
-        // Unshift ile başa ekle, length > 500 ise pop ile kuyruktan at (O(1) son eleman),
-        // ardından tek bir slice(0) ile Zustand için yeni referans oluştur.
         state.logs.unshift(`[${new Date().toLocaleTimeString()}] ${entry}`);
         if (state.logs.length > 100) state.logs.pop();
-        return { logs: state.logs.slice(0) };
+        return { logs: state.logs };
     }),
     clearLogs: () => set({ logs: [] }),
     setProtocol: (protocol) => set({ protocol }),
@@ -324,14 +341,14 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         const entry = `[${timestamp}] ${log}`;
         state.diagnosticLogs.unshift(entry);
         if (state.diagnosticLogs.length > 100) state.diagnosticLogs.pop();
-        return { diagnosticLogs: state.diagnosticLogs.slice(0) };
+        return { diagnosticLogs: state.diagnosticLogs };
     }),
     clearDiagnosticLogs: () => set({ diagnosticLogs: [] }),
     addStructuredLog: (log) => set((state) => {
         const entry = typeof log === 'string' ? log : JSON.stringify(log);
         state.structuredLogs.unshift(entry);
         if (state.structuredLogs.length > 100) state.structuredLogs.pop();
-        return { structuredLogs: state.structuredLogs.slice(0) };
+        return { structuredLogs: state.structuredLogs };
     }),
     clearStructuredLogs: () => set({ structuredLogs: [] }),
     resetRecoveryAttempts: () => set({ recoveryAttempts: 0 }),
@@ -362,6 +379,16 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         timingAdvance: null,
         fuelLevel: null,
         catalystTemp: null,
+        baroPressure: null,
+        widebandAfr: null,
+        transTemp: null,
+        ethanolPercent: null,
+        driverTorque: null,
+        actualTorque: null,
+        engineRefTorque: null,
+        adblueLevel: null,
+        egtTemp: null,
+        noxSensor: null,
         dtcs: createInitialDtcs(),
         vin: null,
         suggestedVehicleProfile: null,

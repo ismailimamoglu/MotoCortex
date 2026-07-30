@@ -143,7 +143,7 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
                 </Text>
               </View>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.protocol', 'Protokol:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.protocol', 'Protocol:')}</Text>
                 <Text style={sDyn.rowValue}>
                   {isConnected ? 'CAN Bus (ISO-15765)' : t('bento.settings.none', 'None')}
                 </Text>

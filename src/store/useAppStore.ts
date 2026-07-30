@@ -103,6 +103,7 @@ interface AppState {
   freeUsageCount: number; // Persistent free trial usage counter
   appUserId: string | null;
   deviceUuid: string | null;
+  enabledFeatures: Record<string, boolean>; // Persistent ECU coding feature activation states
   
   // Actions
   setTheme: (theme: ThemeMode) => void;
@@ -110,6 +111,7 @@ interface AppState {
   setIsPro: (isPro: boolean) => void;
   setIsBackdoorPro: (isBackdoorPro: boolean) => void;
   setHasOnboarded: (hasOnboarded: boolean) => void;
+  setFeatureEnabled: (id: string, enabled: boolean) => void;
   toggleSimulationMode: () => void;
   incrementFreeUsage: () => void; // Track trial count
   resetFreeUsage: () => void; // Reset trial count
@@ -158,8 +160,8 @@ export function startSimulation() {
     deviceId: 'SIM-DEVICE-ID',
     protocol: 'SIMULATED_OBD',
     ecuId: 'SIM-ECU-001',
-    vin: '1M8GDM9A',
-    odometer: simulationOdometer,
+    vin: 'WVWZZZ1KZAW123456',
+    odometer: Math.round(simulationOdometer),
     dtcs: mockDtcs,
     adapterCapabilityScore: 100,
     isCloneDevice: false,
@@ -195,11 +197,12 @@ export function startSimulation() {
     const fuelLevel = 65;
     const intakeAirTemp = 35;
 
-    // Increment odometer slowly
+    // Increment odometer slowly (rounded to integer)
     simulationOdometer += 0.01;
-    const odometerRounded = Math.round(simulationOdometer * 100) / 100;
+    const odometerRounded = Math.round(simulationOdometer);
 
-    currentStore.setSensorData({
+    const { telemetryBuffer } = require('../services/TelemetryBuffer');
+    telemetryBuffer.pushTelemetry({
       rpm,
       speed,
       coolant,
@@ -252,12 +255,16 @@ export const useAppStore = create<AppState>()(
       freeUsageCount: 0,
       appUserId: null,
       deviceUuid: null,
+      enabledFeatures: {},
 
       setTheme: (theme) => set({ theme }),
       setLanguage: async (language) => {
         set({ language });
         await i18n.changeLanguage(language);
       },
+      setFeatureEnabled: (id, enabled) => set((state) => ({
+        enabledFeatures: { ...state.enabledFeatures, [id]: enabled }
+      })),
       setIsPro: (isPro) => {
         set({ isPro });
         if (isPro) {
@@ -478,6 +485,7 @@ export const useAppStore = create<AppState>()(
         deviceUuid: state.deviceUuid,
         isBackdoorPro: state.isBackdoorPro,
         isPro: state.isPro,
+        enabledFeatures: state.enabledFeatures,
         // isSessionProMemoryLock intentionally EXCLUDED — RAM-only lock
       }),
       onRehydrateStorage: () => (state) => {

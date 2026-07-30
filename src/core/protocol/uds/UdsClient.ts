@@ -179,6 +179,15 @@ export class UdsClient {
     public buildTesterPresentCmd(): string {
         return '3E 00';
     }
+
+    /**
+     * Builds ELM327 / STN adaptor timeout isolation command sequence for UDS writing.
+     * Sets AT ST FF (max 1020ms command timeout) and AT AT 1 (adaptive timing) to prevent
+     * premature ELM327 adaptor timeouts during ECU NRC 0x78 ResponsePending loops.
+     */
+    public buildElm327AdaptorTimeoutInitCmds(): string[] {
+        return ['AT ST FF', 'AT AT 1'];
+    }
 }
 
 export const udsClient = new UdsClient();

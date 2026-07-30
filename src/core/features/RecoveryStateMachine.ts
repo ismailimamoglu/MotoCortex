@@ -42,11 +42,14 @@ export class RecoveryStateMachine {
 
     /**
      * Determines immediate recovery execution plan based on specific NRC or failure condition.
+     * Enforces T_Total_Max (global watchdog) check on repeated NRC 0x78 (ResponsePending) responses.
      */
     public classifyFailure(
         nrcCode: UdsNrcCode | undefined,
         isTimeout: boolean,
-        isVoltageCritical: boolean
+        isVoltageCritical: boolean,
+        operationDurationMs?: number,
+        maxTotalOperationTimeMs: number = 60000
     ): RecoveryExecutionPlan {
         if (isVoltageCritical) {
             return {
@@ -65,10 +68,18 @@ export class RecoveryStateMachine {
         }
 
         if (nrcCode === UdsNrcCode.ResponsePending) {
+            if (operationDurationMs !== undefined && operationDurationMs >= maxTotalOperationTimeMs) {
+                Logger.log('WATCHDOG', `Global watchdog T_Total_Max exceeded (${operationDurationMs}ms >= ${maxTotalOperationTimeMs}ms). Transitioning to INCONCLUSIVE_LOCK.`);
+                return {
+                    action: 'INCONCLUSIVE_LOCK',
+                    waitMs: 1000,
+                    userMessage: `WATCHDOG_TIMEOUT: Total operation duration (${operationDurationMs}ms) exceeded maximum safety threshold (${maxTotalOperationTimeMs}ms). ECU locked for recovery.`
+                };
+            }
             return {
                 action: 'EXTEND_TIMEOUT',
                 waitMs: 2000,
-                userMessage: 'RESPONSE_PENDING: ECU is processing request (NRC 0x78). Dynamic P2* timer active.'
+                userMessage: 'RESPONSE_PENDING: ECU is processing request (NRC 0x78). Dynamic P2* timer reset.'
             };
         }
 

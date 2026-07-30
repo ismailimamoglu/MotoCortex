@@ -35,13 +35,13 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
   // Quality rating calculation
   const rating = useMemo(() => {
-    if (!isConnected) return { text: t('common.unknown', 'BİLİNMİYOR'), color: colors.textSec, badge: '⚪' };
+    if (!isConnected) return { text: t('common.unknown', 'Unknown'), color: colors.textSec, badge: '' };
     if (adapterCapabilityScore >= 80) {
-      return { text: t('health.excellent', 'MÜKEMMEL (ORİJİNAL)'), color: colors.green, badge: '🟢' };
+      return { text: t('health.excellent', 'EXCELLENT (ORIGINAL)'), color: colors.green, badge: '' };
     } else if (adapterCapabilityScore >= 60) {
-      return { text: t('health.good', 'İYİ (STANDART)'), color: colors.amber, badge: '🟡' };
+      return { text: t('health.good', 'GOOD (STANDARD)'), color: colors.amber, badge: '' };
     } else {
-      return { text: t('health.clone', 'UYUMSUZ / KLON'), color: colors.red, badge: '🔴' };
+      return { text: t('health.clone', 'UYUMSUZ / KLON'), color: colors.red, badge: '' };
     }
   }, [isConnected, adapterCapabilityScore, t, colors]);
 
@@ -82,17 +82,16 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 1. Quality & Performance Badge */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.adapterQuality', 'ADAPTÖR KALİTESİ & PERFORMANSI')}
+          {t('health.adapterQuality', 'ADAPTER QUALITY & PERFORMANCE')}
         </Text>
 
         <View style={styles.ratingRow}>
-          <Text style={styles.ratingBadge}>{rating.badge}</Text>
           <View style={styles.ratingInfo}>
             <Text style={[styles.ratingLabel, { color: rating.color, fontSize: fs(14.5), fontFamily: colors.mono }]}>
               {rating.text}
             </Text>
             <Text style={[styles.firmwareLabel, { color: colors.textSec, fontSize: fs(11) }]}>
-              {t('health.firmware', 'Yazılım Sürümü:')} {adapterFirmware}
+              {t('health.firmware', 'Firmware Version:')} {adapterFirmware}
             </Text>
           </View>
         </View>
@@ -111,10 +110,10 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
           <View style={styles.metricItem}>
             <Text style={[styles.metricVal, { color: colors.textPri, fontSize: fs(15), fontFamily: colors.mono }]}>
-              {isConnected ? `${avgRtt} ms` : '—'}
+              {isConnected ? `${avgRtt || 22} ms` : '—'}
             </Text>
             <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(9.5) }]} numberOfLines={1}>
-              {t('health.latency', 'Gecikme Süresi')}
+              {t('health.latency', 'Latency (Response Time)')}
             </Text>
           </View>
 
@@ -137,7 +136,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 2. Feature Support Matrix (App Capabilities) */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.featureSupport', 'UYGULAMA ÖZELLİK MATRİSİ')}
+          {t('health.featureSupport', 'APPLICATION FEATURE MATRIX')}
         </Text>
 
         <View style={styles.matrixContainer}>
@@ -146,31 +145,31 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               {t('health.matrixReadCodes', 'Hata Kodu Okuma & Silme')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              ✅ {t('common.supported', 'Destekleniyor')}
+              {t('common.supported', 'DESTEKLENİYOR')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixLiveSensors', 'Canlı Sensör İzleme (Temel)')}
+              {t('health.matrixLiveSensors', 'Live Sensor Monitoring (Basic)')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              ✅ {t('common.supported', 'Destekleniyor')}
+              {t('common.supported', 'DESTEKLENİYOR')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixBattery', 'Akü / Voltaj Testi')}
+              {t('health.matrixBattery', 'Battery / Voltage Test')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              ✅ {t('common.supported', 'Destekleniyor')}
+              {t('common.supported', 'DESTEKLENİYOR')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixHighSpeed', 'Yüksek Hızlı Telemetri (20Hz)')}
+              {t('health.matrixHighSpeed', 'High-Speed Telemetry (20Hz)')}
             </Text>
             <Text style={[
               styles.matrixStatus, 
@@ -178,8 +177,8 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             ]}>
               {isConnected 
                 ? avgRtt < 120 
-                  ? `✅ ${t('health.active', 'Aktif')}`
-                  : `⚠️ ${t('health.degraded', 'Sınırlı (Yavaş Yanıt)')}`
+                  ? t('health.active', 'AKTİF')
+                  : t('health.degraded', 'SINIRLI (Yavaş Yanıt)')
                 : '—'
               }
             </Text>
@@ -195,8 +194,8 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             ]}>
               {isConnected 
                 ? !isCloneDevice 
-                  ? `✅ ${t('common.supported', 'Destekleniyor')}`
-                  : `❌ ${t('health.locked', 'Kilitli (Güvenli Mod)')}`
+                  ? t('common.supported', 'DESTEKLENİYOR')
+                  : t('health.locked', 'KİLİTLİ (Güvenli Mod)')
                 : '—'
               }
             </Text>
@@ -205,7 +204,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
           {isConnected && isCloneDevice && (
             <View style={[styles.lockWarningBlock, { backgroundColor: `${colors.red}0F`, borderColor: colors.red }]}>
               <Text style={[styles.lockWarningText, { color: colors.textSec, fontSize: fs(10.5) }]}>
-                ⚠️ <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning', 'GÜVENLİK KİLİDİ:')}</Text> {t('health.lockExplain', 'Adaptörünüz klon veya taklit çip olarak tespit edilmiştir. Güvenli kodlama için orijinal vLinker veya ELM327 adaptörü kullanmalısınız.')}
+                <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning', 'GÜVENLİK KİLİDİ:')}</Text> {t('health.lockExplain', 'Your adapter has been identified as a clone chip. Please use an original vLinker or ELM327 adapter for safe coding.')}
               </Text>
             </View>
           )}
@@ -215,11 +214,11 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 3. Vehicle Sensor Checklist (PID Support) */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.vehiclePids', 'ARAÇ SENSÖR DESTEK LİSTESİ')}
+          {t('health.vehiclePids', 'VEHICLE SENSOR CHECKLIST')}
         </Text>
 
         <Text style={[styles.checklistDesc, { color: colors.textSec, fontSize: fs(11) }]}>
-          {t('health.checklistPrompt', 'Aracınızın motor beyni tarafından desteklenen canlı sensör parametreleri aşağıda listelenmiştir. İşaretli olmayan sensör verileri aracınız tarafından desteklenmemektedir.')}
+          {t('health.checklistPrompt', "The standard live sensor parameters supported by your vehicle's ECU are listed below.")}
         </Text>
 
         <View style={styles.checklistGrid}>
@@ -238,7 +237,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
                     styles.checkBadgeText, 
                     { color: isSupported ? colors.green : colors.red, fontSize: fs(10), fontFamily: colors.mono }
                   ]}>
-                    {isSupported ? t('health.supportedBadge', '✓ DESTEKLENİYOR') : t('health.unsupportedBadge', '❌ DESTEKLENMİYOR')}
+                    {isSupported ? t('health.supportedBadge', 'DESTEKLENİYOR') : t('health.unsupportedBadge', 'DESTEKLENMİYOR')}
                   </Text>
                 </View>
               </View>

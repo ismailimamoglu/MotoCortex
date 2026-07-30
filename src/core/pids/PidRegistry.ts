@@ -393,6 +393,50 @@ const standardPidsList: PidDefinition[] = [
         decode: (bytes) => bytes.map(b => b.toString(16).padStart(2, '0')).join('')
     },
     {
+        mode: "01", pid: "61", name: "DRIVER_DEMAND_TORQUE", description: "Driver demand engine percent torque", min: -125, max: 125, unit: "%",
+        decode: (bytes) => (bytes[0] || 0) - 125
+    },
+    {
+        mode: "01", pid: "62", name: "ACTUAL_TORQUE", description: "Actual engine percent torque", min: -125, max: 125, unit: "%",
+        decode: (bytes) => (bytes[0] || 0) - 125
+    },
+    {
+        mode: "01", pid: "63", name: "ENGINE_REF_TORQUE", description: "Engine reference torque", min: 0, max: 65535, unit: "Nm",
+        decode: (bytes) => ((bytes[0] || 0) * 256) + (bytes[1] || 0)
+    },
+    {
+        mode: "01", pid: "78", name: "EGT_B1S1", description: "Exhaust gas temperature: Bank 1, Sensor 1", min: -40, max: 6513.5, unit: "°C",
+        decode: (bytes) => Number(((((bytes[0] || 0) * 256) + (bytes[1] || 0)) / 10 - 40).toFixed(1))
+    },
+    {
+        mode: "01", pid: "79", name: "EGT_B1S2", description: "Exhaust gas temperature: Bank 1, Sensor 2", min: -40, max: 6513.5, unit: "°C",
+        decode: (bytes) => Number(((((bytes[0] || 0) * 256) + (bytes[1] || 0)) / 10 - 40).toFixed(1))
+    },
+    {
+        mode: "01", pid: "7A", name: "EGT_B2S1", description: "Exhaust gas temperature: Bank 2, Sensor 1", min: -40, max: 6513.5, unit: "°C",
+        decode: (bytes) => Number(((((bytes[0] || 0) * 256) + (bytes[1] || 0)) / 10 - 40).toFixed(1))
+    },
+    {
+        mode: "01", pid: "7B", name: "EGT_B2S2", description: "Exhaust gas temperature: Bank 2, Sensor 2", min: -40, max: 6513.5, unit: "°C",
+        decode: (bytes) => Number(((((bytes[0] || 0) * 256) + (bytes[1] || 0)) / 10 - 40).toFixed(1))
+    },
+    {
+        mode: "01", pid: "80", name: "PIDS_SUPPORTED_81_A0", description: "PIDs supported [81 - A0]", min: 0, max: 0xffffffff, unit: "Bitmask",
+        decode: (bytes) => bytes.map(b => b.toString(16).padStart(2, '0')).join('')
+    },
+    {
+        mode: "01", pid: "83", name: "NOX_SENSOR_B1", description: "NOx sensor concentration: Bank 1", min: 0, max: 65535, unit: "ppm",
+        decode: (bytes) => ((bytes[0] || 0) * 256) + (bytes[1] || 0)
+    },
+    {
+        mode: "01", pid: "84", name: "NOX_SENSOR_B2", description: "NOx sensor concentration: Bank 2", min: 0, max: 65535, unit: "ppm",
+        decode: (bytes) => ((bytes[0] || 0) * 256) + (bytes[1] || 0)
+    },
+    {
+        mode: "01", pid: "9B", name: "ADBLUE_LEVEL", description: "Diesel exhaust fluid / AdBlue level", min: 0, max: 100, unit: "%",
+        decode: (bytes) => Math.round(((bytes[0] || 0) * 100) / 255)
+    },
+    {
         mode: "01", pid: "A6", name: "ODOMETER", description: "Odometer reading", min: 0, max: 429496729.5, unit: "km",
         decode: (bytes) => {
             const a = bytes[0] || 0;
@@ -420,6 +464,40 @@ export class PidRegistry {
 
     public static getAllPids(): PidDefinition[] {
         return Array.from(pidsMap.values());
+    }
+
+    /**
+     * Calculates actual Engine Torque in Nm using Actual Torque % (PID 01 62) and Engine Reference Torque (PID 01 63).
+     * If PID 01 63 is NO DATA / unsupported, falls back to estimated Reference Torque based on vehicle profile or displacement.
+     */
+    public static calculateActualTorqueNm(
+        actualTorquePct: number,
+        engineRefTorqueNm: number | null,
+        displacementLiters: number = 1.6
+    ): number {
+        let refNm = engineRefTorqueNm;
+        if (!refNm || refNm <= 0) {
+            // Fallback Matrix: Estimated reference torque for NA/Turbo engine (approx 140 Nm per Liter base)
+            refNm = Math.round(displacementLiters * 150);
+        }
+        const torqueNm = Math.round((actualTorquePct * refNm) / 100);
+        return Math.max(0, torqueNm);
+    }
+
+    /**
+     * Checks whether a specific PID is supported based on PID Bitmask hex string (e.g. from PID 0100, 0120, 0140, 0160, 0180).
+     */
+    public static isPidSupportedInBitmask(bitmaskHex: string, pidHex: string): boolean {
+        const pidNum = parseInt(pidHex, 16);
+        if (isNaN(pidNum)) return false;
+        
+        const bitOffset = (pidNum - 1) % 32;
+        const cleanHex = bitmaskHex.replace(/\s+/g, '').padEnd(8, '0');
+        const bitmaskVal = parseInt(cleanHex.substring(0, 8), 16);
+        if (isNaN(bitmaskVal)) return false;
+
+        const mask = 1 << (31 - bitOffset);
+        return (bitmaskVal & mask) !== 0;
     }
 
     /**
@@ -459,5 +537,23 @@ export class PidRegistry {
             }
         }
         return true;
+    }
+
+    /**
+     * Exponential Moving Average (EMA) smoothing filter to dampen noisy CAN telemetry spikes.
+     */
+    public static applyEmaSmoothing(currentValue: number, previousSmoothedValue: number | null, alpha = 0.25): number {
+        if (previousSmoothedValue === null || isNaN(previousSmoothedValue)) return currentValue;
+        const smoothed = alpha * currentValue + (1 - alpha) * previousSmoothedValue;
+        return Number(smoothed.toFixed(2));
+    }
+
+    /**
+     * Calculates Stoichiometric Air-Fuel Ratio (AFR) from Wideband O2 Equivalence Ratio (PID 01 34).
+     */
+    public static calculateWidebandAfr(lambda: number, fuelType: 'petrol' | 'e85' | 'diesel' = 'petrol'): number {
+        const baseStoi = fuelType === 'e85' ? 14.5 : fuelType === 'diesel' ? 14.6 : 14.7;
+        const afr = lambda * baseStoi;
+        return Number(afr.toFixed(2));
     }
 }

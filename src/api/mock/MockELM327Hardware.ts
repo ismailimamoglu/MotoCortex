@@ -80,13 +80,17 @@ export class MockELM327Hardware {
       }
     }
 
-    // 8. OBD2 Mode 01 PID 00 Handshake Query
+    // 8. OBD2 Mode 01 PID 00/20/40/60/80 Handshake & Capability Queries
     if (cmd === '0100') {
       if (this.currentProtocol === 'UNRESPONSIVE_ECU') {
         return 'CAN ERROR\r\r>';
       }
       return '41 00 BE 3F B8 13\r\r>';
     }
+    if (cmd === '0120') return '41 20 FF FF FF FF\r\r>';
+    if (cmd === '0140') return '41 40 FF FF FF FF\r\r>';
+    if (cmd === '0160') return '41 60 FF FF FF FF\r\r>';
+    if (cmd === '0180') return '41 80 FF FF FF FF\r\r>';
 
     // 9. OBD2 Mode 01 PID 0C (RPM) Query
     if (cmd === '010C') {
@@ -113,6 +117,45 @@ export class MockELM327Hardware {
       }
       // Returns P0300 (Random Misfire) -> 43 01 33 00 00 00 00
       return '43 01 33 00 00 00 00\r\r>';
+    }
+
+    // 12. Torque PIDs (Mode 01 PID 61, 62, 63)
+    if (cmd === '0161') return '41 61 9B\r\r>'; // 30%
+    if (cmd === '0162') return '41 62 A0\r\r>'; // 35%
+    if (cmd === '0163') return '41 63 01 C2\r\r>'; // 450 Nm
+
+    // 13. Diesel & Euro-6 Emission PIDs (AdBlue 9B, EGT 78/79, NOx 83)
+    if (cmd === '019B') return '41 9B CB\r\r>'; // 80% AdBlue
+    if (cmd === '0178') return '41 78 19 00\r\r>'; // 600°C EGT B1S1
+    if (cmd === '0179') return '41 79 17 70\r\r>'; // 560°C EGT B1S2
+    if (cmd === '0183') return '41 83 00 2D\r\r>'; // 45 ppm NOx
+
+    // 14. Freeze Frame PIDs (Mode 02)
+    if (cmd.startsWith('0202')) return '42 02 01 13\r\r>'; // P0113 DTC
+    if (cmd.startsWith('020C')) return '42 0C 1A F0\r\r>'; // 1724 RPM
+    if (cmd.startsWith('020D')) return '42 0D 32\r\r>'; // 50 KM/H
+    if (cmd.startsWith('0205')) return '42 05 7F\r\r>'; // 87 °C
+    if (cmd.startsWith('0211')) return '42 11 40\r\r>'; // 25% Throttle
+    if (cmd.startsWith('020B')) return '42 0B 64\r\r>'; // 100 kPa MAP
+    if (cmd.startsWith('0206')) return '42 06 85\r\r>'; // STFT +2.3%
+
+    // 15. Mode 09 CVN & Mode 06 Monitor Test
+    if (cmd === '0906') return '49 06 01 9F A2 8B 1C\r\r>';
+    if (cmd === '0600') return '46 01 01 00 00 50 00 10 00 C8\r\r>';
+
+    // 16. Global Telemetry PIDs (Baro, Wideband O2, Oil Temp, Trans Temp, Catalyst Temp, Ethanol, Timing Advance)
+    if (cmd === '0133') return '41 33 65\r\r>'; // 101 kPa Baro
+    if (cmd === '0134') return '41 34 80 00 80 00\r\r>'; // Lambda 1.0 (14.7 AFR)
+    if (cmd === '013C') return '41 3C 19 00\r\r>'; // 600°C Catalyst Temp B1
+    if (cmd === '013D') return '41 3D 17 70\r\r>'; // 560°C Catalyst Temp B2
+    if (cmd === '0152') return '41 52 1A\r\r>'; // 10% Ethanol
+    if (cmd === '015C') return '41 5C 84\r\r>'; // 92°C Engine Oil Temp
+    if (cmd === '017C') return '41 7C 7D\r\r>'; // 85°C Transmission Temp
+    if (cmd === '010E') return '41 0E 95\r\r>'; // 10.5° Timing Advance
+
+    // 17. Multi-PID Packed Command Mock (e.g. 010C0D0B11)
+    if (cmd.startsWith('01') && cmd.length > 4) {
+      return '41 0C 1A F0 0D 32 0B 64 11 40\r\r>';
     }
 
     // Fallback OK for standard AT commands

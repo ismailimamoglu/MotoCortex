@@ -86,7 +86,10 @@
         "multiEcu": "मल्टी-ECU",
         "dctAdapt": "DCT अनुकूलन",
         "safeDisconnect": "सुरक्षित डिस्कनेクト",
-        "featureActivation": "छिपे फ़ीचर्स / ECU कोडिंग"
+        "featureActivation": "छिपे फ़ीचर्स / ECU कोडिंग",
+        "disabled": "DISABLED",
+        "enabled": "ENABLED",
+        "languageSelect": "JĘZYK"
     },
     "common": {
         "cancel": "रद्द करें",
@@ -123,7 +126,7 @@
         "back": "पीछे",
         "chassis": "चेसिस",
         "operations": "संचालन",
-        "close": "बंद करें",
+        "close": "بند کریں / बंद करें",
         "share": "SHARE",
         "info": "Info",
         "enableDemoMode": "ENABLE DEMO MODE",
@@ -135,7 +138,17 @@
         "changeType": "कनेक्शन प्रकार बदलें",
         "revocationTitle": "Subscription Cancelled",
         "revocationMsg": "Your access to PRO features has been terminated because your subscription was cancelled or refunded.",
-        "recommended": "RECOMMENDED"
+        "recommended": "RECOMMENDED",
+        "brand": "Brand",
+        "confirm": "YES, CORRECT",
+        "edit": "EDIT",
+        "pending": "Pending",
+        "proActiveTitle": "PRO STATUS ACTIVE",
+        "refresh": "Refresh",
+        "status": "Status",
+        "syncing": "Syncing...",
+        "continueBtn": "CONTINUE",
+        "selected": "चयनित"
     },
     "paywall": {
         "crownBadge": "मोटो कॉर्टेक्स प्रो",
@@ -171,7 +184,26 @@
         "errorDesc": "उत्पादों को लोड करते समय एक त्रुटि हुई, कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।",
         "retryBtn": "पुनः प्रयास करें",
         "loadingPrices": "कीमतें लोड हो रही हैं...",
-        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code."
+        "contextualDesc": "Upgrade to Cortex OBD2 Diagnostic Scanner PRO to unlock full diagnostic analysis, critical engine risks, repair cost estimations, and step-by-step guidance for this trouble code.",
+        "actionLocked": "PRO LOCKED FEATURE",
+        "congratsMsg": "Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!",
+        "congratsTitle": "🎉 Congratulations!",
+        "errMsg": "An error occurred during the purchase. Please try again.",
+        "errTitle": "❌ Purchase Failed",
+        "monthlyNotice": "Monthly auto-renewable subscription",
+        "noPkgMsg": "Please select a package to proceed.",
+        "noPkgTitle": "⚠️ No Package Selected",
+        "noPurchasesMsg": "No active PRO membership associated with your Apple account was found.",
+        "noPurchasesTitle": "ℹ️ No Purchases Found",
+        "proRequiredDesc": "This feature requires a PRO subscription to use.",
+        "proRequiredTitle": "PRO Required",
+        "purchasingText": "Securing transaction...",
+        "restoreErrorMsg": "Please check your internet connection and try again.",
+        "restoreErrorTitle": "⚠️ Restore Error",
+        "restoreSuccessMsg": "Your premium membership was successfully restored! You can now start using Cortex OBD2 PRO features.",
+        "restoreSuccessTitle": "✅ Purchases Restored",
+        "weeklyNotice": "One-time purchase, does not auto-renew",
+        "yearlyNotice": "Yearly auto-renewable subscription"
     },
     "connection": {
         "logoSub": "v7प्रो",
@@ -276,10 +308,10 @@
         "batteryLowDesc": "बैटरी वोल्टेज{{voltage}}पर है। वाहन को स्टार्ट या चार्ज करें. कम वोल्टेज पर ईसीयू संचार बाधित हो सकता है।",
         "batteryWarn": "बैटरी कमज़ोर हो रही है",
         "batteryWarnDesc": "बैटरी वोल्टेज{{voltage}}। लंबी अवधि के कार्यों के दौरान सावधान रहें।",
-        "rpm": "आरपीएम",
-        "speed": "किमी/घंटा",
+        "rpm": "इंजन आरपीएम (RPM)",
+        "speed": "वाहन की गति",
         "temp": "तापमान",
-        "throttle": "गैस",
+        "throttle": "थ्रॉटल स्थिति",
         "status": "स्थानांतरण स्थिति",
         "statusHigh": "उच्च",
         "statusNormal": "सामान्य",
@@ -294,16 +326,16 @@
         "layoutGrid": "ग्रिड",
         "layoutList": "सूची",
         "customizeButton": "इंडिकेटर बदलें",
-        "coolant": "इंजन का तापमान",
+        "coolant": "कूलेंट तापमान",
         "voltage": "बैटरी वोल्टेज",
         "engineLoad": "इंजन लोड",
-        "intakeAirTemp": "इनटेक तापमान",
-        "manifoldPressure": "कई गुना दबाव",
+        "intakeAirTemp": "इनटेक एयर तापमान",
+        "manifoldPressure": "मैनिफोल्ड दबाव",
         "ambientTemp": "बाहरी तापमान",
-        "oilTemp": "तेल का तापमान",
-        "mafFlow": "हवा का बहाव MAF",
-        "timingAdvance": "इग्निशन एडवांस",
-        "fuelLevel": "ईंधन स्तर",
+        "oilTemp": "ऑयल तापमान",
+        "mafFlow": "MAF एयर फ्लो",
+        "timingAdvance": "इग्निशन टाइमिंग",
+        "fuelLevel": "ईंधन का स्तर",
         "catalystTemp": "उत्प्रेरक तापमान",
         "layoutGauge": "गेज",
         "obdTerminalTitle": "OBD HEALTH & TERMINAL",
@@ -493,7 +525,8 @@
             "regLow": "चार्जिंग: कम चार्ज",
             "regHigh": "चार्जिंग: ओवरचार्ज",
             "regFail": "चार्जिंग: रेगुलेटर ख़राब है"
-        }
+        },
+        "verdictLocked": "Upgrade to PRO to view detailed battery assessment report and cranking analysis graph."
     },
     "freeze": {
         "title": "FREEZE FRAME",
@@ -581,7 +614,21 @@
         "P0730": "ग़लत गियर अनुपात",
         "P0560": "सिस्टम वोल्टेज - खराबी",
         "P0562": "सिस्टम वोल्टेज - कम",
-        "P0563": "सिस्टम वोल्टेज - उच्च"
+        "P0563": "सिस्टम वोल्टेज - उच्च",
+        "U0100": "Lost Communication With Engine Control Module (ECM/PCM)",
+        "U0121": "Lost Communication With Anti-Lock Brake System (ABS) Module",
+        "C0035": "Left Front Wheel Speed Sensor Circuit Malfunction",
+        "B0001": "Driver Front Stage 1 Deployment Control Circuit",
+        "P0750": "Shift Solenoid A Malfunction",
+        "P0814": "Transmission Range Display Circuit Malfunction",
+        "U0140": "Lost Communication With Body Control Module (BCM)",
+        "C0040": "Right Front Wheel Speed Sensor Circuit Malfunction",
+        "C0110": "ABS Pump Motor Circuit Malfunction",
+        "C0121": "Brake Pressure Sensor Circuit Malfunction",
+        "B0010": "Passenger Front Stage 1 Deployment Control",
+        "B0020": "Left Side Airbag Deployment Control",
+        "B1000": "Body Control Module (BCM) Hardware Fault",
+        "B1325": "Device Power Supply Circuit Low Voltage"
     },
     "vehicleSelect": {
         "title": "नैदानिक सटीकता बढ़ाने के लिए अपना वाहन चुनें",
@@ -711,7 +758,9 @@
         "proceedAnyway": "वैसे भी जारी रखें",
         "openSettings": "सेटिंग्स खोलें",
         "langTitle": "Select Language",
-        "nextBtn": "CONTINUE"
+        "nextBtn": "CONTINUE",
+        "langDesc": "Please select your preferred language to customize your diagnostics experience.",
+        "langSelectSub": "LANGUAGE GATEWAY"
     },
     "disclaimer": "सभी उत्पाद नाम, लोगो और ब्रांड उनके संबंधित स्वामियों की संपत्ति हैं। इस एप्लिकेशन में उपयोग किए गए सभी कंपनी, उत्पाद और सेवा नाम केवल पहचान उद्देश्यों के लिए हैं। इन नामों, लोगो और ब्रांडों का उपयोग कोई समर्थन या प्रायोजन नहीं दर्शाता है।",
     "hiddenFeatures": {
@@ -776,7 +825,8 @@
         "diagnosticLogTitle": "DIAGNOSTIC LOG",
         "clearButton": "CLEAR",
         "shareButton": "SHARE",
-        "noLogs": "No diagnostic logs found."
+        "noLogs": "No diagnostic logs found.",
+        "noShareSupport": "Sharing features are not available on this device."
     },
     "dtcContext": {
         "powertrain": "This fault may affect fuel economy and engine performance. Unlock full diagnosis →",
@@ -817,7 +867,12 @@
         "pause": "PAUSE",
         "resume": "RESUME",
         "share": "SHARE",
-        "clear": "CLEAR"
+        "clear": "CLEAR",
+        "clearDtcs": "CLEAR DTC",
+        "dtcTitle": "DTC DIAGNOSTICS & FAULT CODES",
+        "noDtcs": "NO DTC CODES FOUND IN ECU",
+        "readDtcs": "READ DTC",
+        "sendDtcs": "SEND"
     },
     "health": {
         "titleMenu": "OBD2 स्वास्थ्य और क्षमता",
@@ -855,7 +910,14 @@
         "iat": "इनटेक वायु तापमान",
         "load": "गणना किया इंजन लोड",
         "fuel": "ईंधन स्तर",
-        "oilTemp": "इंजन तेल तापमान"
+        "oilTemp": "इंजन तेल तापमान",
+        "boost": "Turbo Boost Pressure",
+        "widebandAfr": "Wideband O2 / AFR Ratio",
+        "transTemp": "Transmission Temperature",
+        "catalystTemp": "Catalyst Temperature",
+        "ethanol": "Ethanol Fuel %",
+        "timingAdvance": "Ignition Timing Advance",
+        "baro": "Barometric Pressure"
     },
     "secretDebug": {
         "title": "हिडन फीचर्स अनलॉक और यूडीएस कोडिंग",
@@ -1344,7 +1406,17 @@
         "waitingVehicle": "कनेक्टेड वाहन का इंतज़ार",
         "activeFeaturesCount": "{{count}} वाहन-विशिष्ट OEM फ़ीचर्स सक्रिय",
         "demoFeaturesCount": "{{count}} डेमो फ़ीचर्स सूचीबद्ध",
-        "connectForFeaturesNote": "फ़ायदेमंद फ़ीचर्स देखने के लिए OBD2 डिवाइस से कनेक्ट करें"
+        "connectForFeaturesNote": "फ़ायदेमंद फ़ीचर्स देखने के लिए OBD2 डिवाइस से कनेक्ट करें",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF (RPM == 0) to prevent alternator voltage spikes.",
+        "engineRunningTitle": "⚠️ Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "⚠️ Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "🚨 Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "🚫 Protected Safety Module"
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -1354,7 +1426,8 @@
         "reconnectingDesc": "Ignition cycle detected. Re-establishing link automatically in background.",
         "lowVoltageOff": "Low Battery Voltage (Ignition OFF)",
         "noEcuResponse": "No ECU Response (Ignition OFF)",
-        "on": "Ignition ON (CONNECTED)"
+        "on": "Ignition ON (CONNECTED)",
+        "batteryVoltage": "Battery Voltage:"
     },
     "hpGauge": {
         "title": "LIVE POWER & TORQUE GAUGE",
@@ -1368,7 +1441,8 @@
         "methodTorque": "Live Torque PID Based",
         "methodLoad": "Calculated Load Based",
         "configWeight": "Vehicle Weight (kg):",
-        "configDisplacement": "Engine Displacement (L):"
+        "configDisplacement": "Engine Displacement (L):",
+        "calcMethod": "CALCULATION METHOD"
     },
     "fuelTrim": {
         "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
@@ -1437,7 +1511,13 @@
         "statusClean": "0 FAULTS (HEALTHY)",
         "statusFault": "{{count}} FAULTS DETECTED",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
-        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units."
+        "scanHintText": "Tap 'SCAN ALL MODULES' to query diagnostic trouble codes across all vehicle electronic control units.",
+        "gatewayName": "सेंट्रल नेटवर्क गेटवे",
+        "ipcName": "इंस्ट्रूमेंट क्लस्टर (IPC)",
+        "epsName": "इलेक्ट्रिक पावर स्टीयरिंग (EPS)",
+        "hvacName": "जलवायु और वातानुकूलन (HVAC)",
+        "tpmsName": "टायर दबाव प्रणाली (TPMS)",
+        "bmsName": "बैटरी प्रबंधन प्रणाली (BMS / EV)"
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
@@ -1450,12 +1530,181 @@
         "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
-        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!"
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 (K1) Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 (K2) Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting."
     },
     "safeExit": {
         "btn": "SAFE DISCONNECT & ADAPTER RESET",
         "confirmTitle": "Safe Disconnect Confirmation",
         "confirmDesc": "ATZ hardware reset will be issued to OBD2 adapter and connection closed cleanly. Proceed?",
         "success": "OBD2 adapter reset and connection cleanly terminated."
+    },
+    "admin": {
+        "clear": "🗑️ CLEAR",
+        "cloudTools": "🛰️ CLOUD & SYSTEM TOOLS",
+        "copy": "COPY",
+        "crashTest": "💥 CRASH TEST",
+        "crashBtn": "Crash",
+        "deviceUuid": "DEVICE UUID",
+        "presetTitle": "⚡ QUICK COMMAND SET:",
+        "presetReset": "Reset OBD2 Adapter",
+        "presetSpeed": "Vehicle Speed (km/h)",
+        "presetReadDtc": "Read Fault Codes",
+        "presetClearDtc": "Clear Fault Codes",
+        "refresh": "🔄 REFRESH",
+        "send": "SEND",
+        "share": "📤 SHARE",
+        "terminalTitle": "🖥️ LIVE OBD TERMINAL CONSOLE (TX / RX)",
+        "userId": "USER ID",
+        "userInfo": "🔒 ADMIN USER CREDENTIALS",
+        "devModeAlert": "Secret PRO developer key is disabled in production builds.",
+        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
+        "noLogsInfo": "No log records found to share."
+    },
+    "bridge": {
+        "androidAdvice": "Please restart the app or check Bluetooth settings.",
+        "fatalError": "BRIDGE FATAL ERROR",
+        "genericError": "Failed to initialize BLE subsystem.",
+        "goToSettings": "GO TO SETTINGS",
+        "ignoreEnterApp": "IGNORE & ENTER APP",
+        "initializing": "INITIALIZING BRIDGE...",
+        "iosAdvice": "Ensure Bluetooth is enabled for Cortex OBD2 in your system settings.",
+        "nativeState": "NATIVE_STATE",
+        "proceedBypass": "PROCEED TO DASHBOARD (BYPASS)",
+        "state": "STATE",
+        "unauthorized": "Bluetooth permissions are unauthorized.",
+        "verifyingAndroid": "Verifying Android Bluetooth Subsystem",
+        "verifyingIos": "Verifying iOS CoreBluetooth Connectivity"
+    },
+    "vehicle": {
+        "brand": "Brand:",
+        "detectDesc": "We detected the following vehicle information from your OBD2 connection.",
+        "detectTitle": "VEHICLE IDENTIFIED",
+        "editTitle": "EDIT VEHICLE",
+        "fuel": {
+            "diesel": "DIESEL",
+            "gasoline": "GASOLINE"
+        },
+        "fuelType": "Fuel Type:",
+        "model": "Model:",
+        "transmission": {
+            "automatic": "AUTOMATIC",
+            "manual": "MANUAL"
+        },
+        "unknown": "Unknown",
+        "year": "Year:"
+    },
+    "sgw": {
+        "title": "Security Gateway (SGW) Active",
+        "subtitle": "{{brandName}} ECU Security Restriction",
+        "description": "Security Gateway (SGW) protection is active on this vehicle. Standard OBD2 telemetry is readable; however, advanced diagnostic routines and adaptation require OEM authentication."
+    },
+    "evBms": {
+        "title": "EV BMS Diagnostics",
+        "subtitle": "Battery Management System & Cell Health ({{brand}})",
+        "sohLabel": "STATE OF HEALTH (SOH)",
+        "capacityRetained": "Capacity Retained",
+        "socLabel": "STATE OF CHARGE (SOC)",
+        "remainingCharge": "Remaining Charge",
+        "cellBalance": "Cell Voltage Balance (16S Pack)",
+        "optimalBalance": "Optimal Balance (<30mV delta)",
+        "mildImbalance": "Mild Imbalance Detected",
+        "thermalStatus": "Thermal Status & Pack Info",
+        "packTemp": "Pack Temperature:",
+        "packVoltage": "Pack Voltage:",
+        "chargeCycles": "Charge Cycles:",
+        "cycles": "Cycles"
+    },
+    "serviceReset": {
+        "title": "Service & Maintenance Reset Wizard",
+        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "preCheckTitle": "Pre-Requirement Checklist",
+        "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
+        "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
+        "preCheckBattery": "Battery voltage must be above 12.2V.",
+        "selectRoutine": "SELECT SERVICE ROUTINE",
+        "intervalReset": "Service Maintenance Interval Reset",
+        "intervalTitle": "Reset Service Interval Indicator Light",
+        "intervalSubtitle": "Clears dash service warning and resets next inspection interval.",
+        "tpsReset": "Throttle Position Sensor (TPS) Reset",
+        "tpsTitle": "Throttle Position Sensor (TPS) Adaptation",
+        "tpsSubtitle": "Re-calibrates zero-throttle voltage stop point.",
+        "absBleed": "ABS Bleeding & Valve Test",
+        "absTitle": "ABS Hydraulic Pump Bleed Test",
+        "absSubtitle": "Cycles ABS solenoid valves to purge air bubbles from brake lines.",
+        "ecuRejected": "ECU rejected reset command. Ensure ignition is ON and engine is OFF."
+    },
+    "aiDoctor": {
+        "analyzing": "Analyzing DTC codes & engine telemetry with AI Doctor...",
+        "healthImpact": "Health Score Impact: {{score}}/100",
+        "drivingSafety": "Driving Safety Guidance",
+        "causes": "Probable Causes",
+        "recommendedAction": "Recommended Mechanical Action",
+        "estimatedCost": "Estimated Component / Repair Cost",
+        "noFaultsTitle": "System Optimal — No Fault Codes Detected",
+        "noFaultsSummary": "ECU telemetry shows no active diagnostic trouble codes. Engine parameters are within normal operating thresholds.",
+        "stepMaintain": "Maintain regular oil and filter service intervals.",
+        "stepCheckVoltage": "Periodically check battery resting voltage.",
+        "safeDrive": "Safe for regular operation.",
+        "misfireTitle": "Engine Cylinder Misfire Detected",
+        "misfireSummary": "Active misfire detected in one or more cylinders. Unburnt fuel may enter catalytic converter causing permanent damage.",
+        "causeSparkPlug": "Worn or fouled spark plug",
+        "causeIgnitionCoil": "Failing ignition coil or wire",
+        "causeFuelInjector": "Clogged or faulty fuel injector",
+        "stepInspectPlugs": "Inspect and gap spark plugs.",
+        "stepSwapCoils": "Swap ignition coils between cylinders to test for fault transfer.",
+        "stepFuelPressure": "Measure fuel rail pressure.",
+        "criticalDrive": "Do not drive extended distances under heavy throttle. Drive immediately to service.",
+        "o2Title": "Oxygen (O2) Sensor Circuit Malfunction",
+        "o2Summary": "Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.",
+        "causeO2Heater": "O2 sensor heating element failure",
+        "causeExhaustLeak": "Exhaust manifold leak upstream of sensor",
+        "causeHarness": "Damaged wiring harness connector",
+        "stepCheckWiring": "Inspect O2 sensor wiring harness for melting or fraying.",
+        "stepCleanSensor": "Clean O2 sensor tip or replace sensor if resistance out of spec.",
+        "warningDrive": "Safe to drive to repair shop at moderate speed.",
+        "genericTitle": "Diagnostic Code Analysis ({{codes}})",
+        "genericSummary": "Active trouble code(s) detected: {{codes}}. System monitoring recommended.",
+        "causeGeneric1": "Sensor circuit out of expected voltage range",
+        "causeGeneric2": "Loose electrical connection or ground fault",
+        "stepGeneric1": "Perform diagnostic scan and record freeze frame data.",
+        "stepGeneric2": "Clear DTC codes after inspecting harness connectors.",
+        "reportTitle": "Diagnostic Code Analysis",
+        "healthImpactTitle": "ENGINE HEALTH SCORE IMPACT"
+    },
+    "dtcRisk": {
+        "safeTitle": "🟢 ड्राइव के लिए सुरक्षित",
+        "safeDesc": "यह खराबी सीधे ड्राइविंग सुरक्षा को खतरे में नहीं डालती है। आप सर्विस तक धीमी गति से गाड़ी चला सकते हैं।",
+        "warningTitle": "🟡 चेतावनी: सर्विस निरीक्षण आवश्यक है",
+        "warningDesc": "प्रदर्शन में कमी और अधिक उत्सर्जन हो सकता है। कृपया जल्द ही किसी अधिकृत सेवा केंद्र पर जाएं।",
+        "criticalTitle": "🔴 गंभीर: तुरंत गाड़ी रोकें / सेवा लें",
+        "criticalDesc": "गंभीर यांत्रिक या विद्युत जोखिम! इंजन या सुरक्षा प्रणालियों को नुकसान पहुंच सकता है। तुरंत सुरक्षित स्थान पर रुकें।"
+    },
+    "dtcDetail": {
+        "descTitle": "नैदानिक खराबी कोड विवरण",
+        "possibleCausesTitle": "संभावित मूल कारण और मरम्मत दिशानिर्देश",
+        "cause1": "Loose connection or corrosion in sensor circuit or wiring harness",
+        "cause2": "Mechanical wear or electrical fault in component",
+        "cause3": "Perform voltage/resistance test with multimeter or replace component",
+        "recommendedAction": "अनुशंसित कदम",
+        "tsbTitle": "TECHNICAL SERVICE BULLETIN (TSB)",
+        "aiDoctorBtn": "AI DOCTOR विशेषज्ञ विश्लेषण",
+        "backToDetail": "खराबी विवरण पर वापस जाएं"
+    },
+    "dtcCategory": {
+        "powertrain": "इंजन / पावरट्रेन",
+        "chassis": "चेसिस / ब्रेक सिस्टम",
+        "body": "बॉडी इलेक्ट्रॉनिक्स",
+        "network": "नेटवर्क / CAN बस सिस्टम"
+    },
+    "guidedDiag": {
+        "p0102_cause1": "गंदा या खराब MAF सेंसर",
+        "p0102_cause2": "इंटेक लीक / वैक्यूम लीक",
+        "p0102_cause3": "वायरिंग हार्नेस क्षति",
+        "p0102_action": "कंटैक्ट क्लीनर से MAF सेंसर साफ करें या एयर फ़िल्टर हाउसिंग की जांच करें।",
+        "p0102_tsb": "TSB-2023-09: MAF बदलने से पहले एयर इंटेक होस क्लैंप टॉर्क की जांच करें।"
     }
 }

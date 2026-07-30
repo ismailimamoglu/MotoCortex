@@ -16,6 +16,7 @@ import DiagnosticSessionRecorder from '../core/monitor/DiagnosticSessionRecorder
 import AppLifecycleCoordinator from '../core/transport/AppLifecycleCoordinator';  
 import { PidRegistry } from '../core/pids/PidRegistry';  
 import { assertHardwareGate, CommandClass, classifyCommand } from '../core/security/CommandClassificationRegistry';
+import { telemetryBuffer } from '../services/TelemetryBuffer';
 
 export enum ErrorLayer {
     BLE_TRANSPORT = 'BLE transport',
@@ -170,13 +171,13 @@ export class OBD2ProtocolEngine {
     */
     private kLineFallbackCallback: (() => void) | null = null;
  
-    public onKLineFallback(cb: () => void): void {
+    public onKLineFallback(cb: (() => void) | null): void {
         this.kLineFallbackCallback = cb;
     }
 
     private voltageCallback: ((voltage: string) => void) | null = null;
 
-    public onVoltageReceived(cb: (voltage: string) => void): void {
+    public onVoltageReceived(cb: ((voltage: string) => void) | null): void {
         this.voltageCallback = cb;
     }
 
@@ -216,6 +217,12 @@ export class OBD2ProtocolEngine {
               clean === '?'                || clean.endsWith('?');  
    }
 
+    private sgwNotificationCallback: ((service: string, nrc: string) => void) | null = null;
+
+    public onSgwRestriction(cb: ((service: string, nrc: string) => void) | null): void {
+        this.sgwNotificationCallback = cb;
+    }
+
    private interpretUdsNegativeResponse(cleanLine: string) {  
        const store = useBluetoothStore.getState();  
        const udsMatch = cleanLine.match(/^\s*7F([0-9A-F]{2})([0-9A-F]{2})/);  
@@ -230,6 +237,12 @@ export class OBD2ProtocolEngine {
            else if (nrc === '33') humanReadableError = 'Security Access Denied (Gateway Locked)';
 
            store.addLog(`🚨 GLOBAL_UDS_ALERT: Service 0x${service} Rejected with NRC 0x${nrc} (${humanReadableError}).`);  
+
+           if (nrc === '33' || nrc === '7E' || nrc === '35') {
+               if (this.sgwNotificationCallback) {
+                   this.sgwNotificationCallback(service, nrc);
+               }
+           }
            return true;  
        }  
        return false;  
@@ -573,59 +586,108 @@ export class OBD2ProtocolEngine {
                const elapsed = lastSuccess === 0 ? 9999 : nowWall - lastSuccess;
 
                switch (pidInResponse) {  
-                   case '0C':  
-                       if (!isNaN(a) && !isNaN(b)) {  
-                           const rpm = Math.round(((a * 256) + b) / 4);  
-                           this.currentRpm = rpm;
-                           const prevRpm = store.rpm;  
-                           const pidDef = PidRegistry.getPid('01', '0C');  
-                           if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, rpm, prevRpm, elapsed)) {  
-                               store.setRpm(rpm);  
-                           }  
-                       }  
-                       break;  
-                   case '0D':  
-                       if (!isNaN(a)) {  
-                           const speed = a;  
-                           this.currentSpeed = speed;
-                           const prevSpeed = store.speed;  
-                           const pidDef = PidRegistry.getPid('01', '0D');  
-                           if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, speed, prevSpeed, elapsed)) {  
-                               store.setSensorData({ speed });  
-                           }  
-                       }  
-                       break;  
-                   case '05':  
-                       if (!isNaN(a)) {  
-                           const coolant = a - 40;  
-                           const prevCoolant = store.coolant;  
-                           const pidDef = PidRegistry.getPid('01', '05');  
-                           if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, coolant, prevCoolant, elapsed)) {  
-                               store.setSensorData({ coolant });  
-                           }  
-                       }  
-                       break;  
-                   case '11':  
-                   case '49':  
-                       if (!isNaN(a)) store.setSensorData({ throttle: Math.round((a * 100) / 255) });  
-                       break;  
-                   case '04':  
-                       if (!isNaN(a)) store.setSensorData({ engineLoad: Math.round((a * 100) / 255) });  
-                       break;  
-                   case '2F':  
-                       if (!isNaN(a)) store.setSensorData({ fuelLevel: Math.round((a * 100) / 255) });  
-                       break;  
-                   case '0F':  
-                       if (!isNaN(a)) store.setSensorData({ intakeAirTemp: a - 40 });  
-                       break;  
-                   case '42':  
-                       if (!isNaN(a) && !isNaN(b)) store.setSensorData({ voltage: (((a * 256) + b) / 1000).toFixed(2) + 'V' });  
-                       break;  
-                   case 'A6':  
-                       if (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) {  
-                           store.setSensorData({ odometer: Math.round(((a * 16777216) + (b * 65536) + (c * 256) + d) / 10) });  
-                       }  
-                       break;  
+                    case '0C':  
+                        if (!isNaN(a) && !isNaN(b)) {  
+                            const rpm = Math.round(((a * 256) + b) / 4);  
+                            this.currentRpm = rpm;
+                            const prevRpm = store.rpm;  
+                            const pidDef = PidRegistry.getPid('01', '0C');  
+                            if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, rpm, prevRpm, elapsed)) {  
+                                telemetryBuffer.pushTelemetry({ rpm }, '010C');  
+                            }  
+                        }  
+                        break;  
+                    case '0D':  
+                        if (!isNaN(a)) {  
+                            const speed = a;  
+                            this.currentSpeed = speed;
+                            const prevSpeed = store.speed;  
+                            const pidDef = PidRegistry.getPid('01', '0D');  
+                            if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, speed, prevSpeed, elapsed)) {  
+                                telemetryBuffer.pushTelemetry({ speed }, '010D');  
+                            }  
+                        }  
+                        break;  
+                    case '05':  
+                        if (!isNaN(a)) {  
+                            const coolant = a - 40;  
+                            const prevCoolant = store.coolant;  
+                            const pidDef = PidRegistry.getPid('01', '05');  
+                            if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, coolant, prevCoolant, elapsed)) {  
+                                telemetryBuffer.pushTelemetry({ coolant }, '0105');  
+                            }  
+                        }  
+                        break;  
+                    case '11':  
+                    case '49':  
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ throttle: Math.round((a * 100) / 255) }, '0111');  
+                        break;  
+                    case '04':  
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ engineLoad: Math.round((a * 100) / 255) }, '0104');  
+                        break;  
+                    case '2F':  
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ fuelLevel: Math.round((a * 100) / 255) }, '012F');  
+                        break;  
+                    case '0F':  
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ intakeAirTemp: a - 40 }, '010F');  
+                        break;  
+                    case '42':  
+                        if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ voltage: (((a * 256) + b) / 1000).toFixed(2) + 'V' }, '0142');  
+                        break;  
+                    case '0B':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ manifoldPressure: a }, '010B');
+                        break;
+                    case '10':
+                        if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ mafFlow: Number((((a * 256) + b) / 100).toFixed(2)) }, '0110');
+                        break;
+                    case '0E':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ timingAdvance: Number((a / 2 - 64).toFixed(1)) }, '010E');
+                        break;
+                    case '33':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ baroPressure: a }, '0133');
+                        break;
+                    case '34':
+                        if (!isNaN(a) && !isNaN(b)) {
+                            const lambda = Number((((a * 256) + b) / 32768).toFixed(3));
+                            const afr = PidRegistry.calculateWidebandAfr(lambda);
+                            telemetryBuffer.pushTelemetry({ widebandAfr: afr }, '0134');
+                        }
+                        break;
+                    case '3C':
+                        if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ catalystTemp: Number((((a * 256) + b) / 10 - 40).toFixed(1)) }, '013C');
+                        break;
+                    case '52':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ ethanolPercent: Math.round((a * 100) / 255) }, '0152');
+                        break;
+                    case '5C':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ oilTemp: a - 40 }, '015C');
+                        break;
+                    case '7C':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ transTemp: a - 40 }, '017C');
+                        break;
+                    case '61':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ driverTorque: a - 125 }, '0161');
+                        break;
+                    case '62':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ actualTorque: a - 125 }, '0162');
+                        break;
+                    case '63':
+                        if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ engineRefTorque: (a * 256) + b }, '0163');
+                        break;
+                    case '9B':
+                        if (!isNaN(a)) telemetryBuffer.pushTelemetry({ adblueLevel: Math.round((a * 100) / 255) }, '019B');
+                        break;
+                    case '78':
+                        if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ egtTemp: Number((((a * 256) + b) / 10 - 40).toFixed(1)) }, '0178');
+                        break;
+                    case '83':
+                        if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ noxSensor: (a * 256) + b }, '0183');
+                        break;
+                    case 'A6':  
+                        if (!isNaN(a) && !isNaN(b) && !isNaN(c) && !isNaN(d)) {  
+                            telemetryBuffer.pushTelemetry({ odometer: Math.round(((a * 16777216) + (b * 65536) + (c * 256) + d) / 10) });  
+                        }  
+                        break;  
                }  
                currentPos = dataEnd;  
            } else {  

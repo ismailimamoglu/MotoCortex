@@ -17,7 +17,7 @@ export class TesterPresentScheduler {
      * Starts the periodic TesterPresent timer for active Extended Diagnostic Sessions.
      */
     public start(sendTesterPresentCallback: () => Promise<void>): void {
-        if (this.isActive) return;
+        this.stop(); // Clean up any existing timer or active session defensively
         this.isActive = true;
         Logger.log('UDS_SCHEDULER', 'TesterPresentScheduler started (2000ms interval)');
 
@@ -35,7 +35,6 @@ export class TesterPresentScheduler {
      * Stops the TesterPresent scheduler.
      */
     public stop(): void {
-        if (!this.isActive) return;
         this.isActive = false;
         if (this.intervalTimer) {
             clearInterval(this.intervalTimer);
