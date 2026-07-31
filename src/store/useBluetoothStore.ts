@@ -80,6 +80,7 @@ interface BluetoothState {
     lastDeviceName: string | null;
     isCloneDevice: boolean;
     isCodingAllowed: boolean;
+    multiframeIsotpSupported: boolean;
     connectionType: 'BLUETOOTH' | 'WIFI' | 'WIFI_CUSTOM' | null;
     elmVersionTested: string | null;
     isSgwActive: boolean;
@@ -206,6 +207,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     lastDeviceName: null,
     isCloneDevice: false,
     isCodingAllowed: true,
+    multiframeIsotpSupported: false,
     connectionType: null,
     elmVersionTested: null,
     isSgwActive: false,

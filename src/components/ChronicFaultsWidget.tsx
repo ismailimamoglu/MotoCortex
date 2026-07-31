@@ -84,7 +84,7 @@ export default function ChronicFaultsWidget() {
                   code: item.fault_code,
                   days: item.unique_days_count,
                   total: item.total_occurrence,
-                  defaultValue: `${item.fault_code} (Gözlem: ${item.unique_days_count} Farklı Gün / Toplam: ${item.total_occurrence} Kez)`
+                  defaultValue: `${item.fault_code} (Observation: ${item.unique_days_count} Unique Days / Total: ${item.total_occurrence} Times)`
                 })}
               </Text>
             </View>

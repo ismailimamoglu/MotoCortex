@@ -137,11 +137,13 @@ const FeatureActivationModalComponent = ({
             setFeatureEnabledInStore(feature.id, newTargetState);
             const featureName = t(feature.nameKey, feature.defaultName);
             const statusStr = newTargetState ? t('bento.enabled', 'ENABLED') : t('bento.disabled', 'DISABLED');
-            setCodingToastMessage(`[BAŞARILI] "${featureName}" ${statusStr}.`);
+            const successTag = t('common.successTag', '[SUCCESS]');
+            setCodingToastMessage(`${successTag} "${featureName}" ${statusStr}.`);
             setTimeout(() => setCodingToastMessage(null), 3500);
         } catch (err) {
             console.warn('[FeatureActivationModal] Toggle failed:', err);
-            setCodingToastMessage(`[HATA] ${t('features.codingFailed', 'Coding failed.')}`);
+            const errorTag = t('common.errorTag', '[ERROR]');
+            setCodingToastMessage(`${errorTag} ${t('features.codingFailed', 'Coding failed.')}`);
             setTimeout(() => setCodingToastMessage(null), 3500);
         } finally {
             setActiveCodingId(null);
@@ -357,16 +359,16 @@ const FeatureActivationModalComponent = ({
                     <View style={{ flex: 1, paddingRight: scaleWidth(8) }}>
                         <Text numberOfLines={1} style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
                             {connectedVehicleMake 
-                                ? String(t('features.vehicleMatched', { make: connectedVehicleMake.toUpperCase(), defaultValue: `${connectedVehicleMake.toUpperCase()} — EŞLEŞTİ` }))
+                                ? String(t('features.vehicleMatched', { make: connectedVehicleMake.toUpperCase(), defaultValue: `${connectedVehicleMake.toUpperCase()} — MATCHED` }))
                                 : isSimulationMode 
-                                ? String(t('features.demoModeVehicle', { make: 'VOLKSWAGEN', defaultValue: 'DEMO MODU: VOLKSWAGEN' })) 
+                                ? String(t('features.demoModeVehicle', { make: 'VOLKSWAGEN', defaultValue: 'DEMO MODE: VOLKSWAGEN' })) 
                                 : String(t('features.waitingVehicle', 'WAITING FOR CONNECTED VEHICLE'))}
                         </Text>
                         <Text numberOfLines={1} style={{ color: colors.textSec, fontSize: scaleFont(9), fontFamily: MONO, marginTop: 2 }}>
                             {connectedVehicleMake 
-                                ? String(t('features.activeFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} adet araca özel OEM gizli özellik aktif` }))
+                                ? String(t('features.activeFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} vehicle OEM hidden features active` }))
                                 : isSimulationMode 
-                                ? String(t('features.demoFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} adet demo özellik listeleniyor` }))
+                                ? String(t('features.demoFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} demo features listed` }))
                                 : String(t('features.connectForFeaturesNote', 'Connect to an OBD2 device to list vehicle-specific features'))}
                         </Text>
                     </View>

@@ -136,5 +136,21 @@ export const OtaService = {
         } finally {
             otaWriting = false;
         }
+    },
+
+    otaFailureCounts: {} as Record<string, number>,
+    otaBlacklistedProfiles: new Set<string>(),
+
+    recordOtaProfileFailure(profileId: string): void {
+        const count = (this.otaFailureCounts[profileId] || 0) + 1;
+        this.otaFailureCounts[profileId] = count;
+        if (count >= 3) {
+            this.otaBlacklistedProfiles.add(profileId);
+            Logger.log('OTA_SERVICE', `SAFEGUARD: Profile [${profileId}] blacklisted after 3 consecutive failures. Falling back to ATSP0.`);
+        }
+    },
+
+    isProfileBlacklisted(profileId: string): boolean {
+        return this.otaBlacklistedProfiles.has(profileId);
     }
 };

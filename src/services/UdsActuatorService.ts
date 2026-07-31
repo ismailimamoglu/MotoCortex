@@ -7,6 +7,7 @@
  * 4. Teardown: Return Control To ECU (UDS 0x2F [DID] 00 00) on exit or transport disconnect.
  */
 
+import i18n from '../i18n';
 import { UdsProtocolEngine, UdsServiceId } from '../api/udsProtocol';
 
 export interface ActuatorTarget {
@@ -20,21 +21,21 @@ export interface ActuatorTarget {
 export const KNOWN_ACTUATORS: ActuatorTarget[] = [
   {
     didHex: 'F010',
-    name: 'Radyatör Soğutma Fanı Testi',
+    get name() { return i18n.t('actuator.fanTest', 'Radiator Cooling Fan Test'); },
     category: 'cooling',
     controlStateOn: [0x03, 0x64], // 100% duty cycle
     controlStateOff: [0x03, 0x00],
   },
   {
     didHex: 'F020',
-    name: 'Yakıt Pompası Röle Testi',
+    get name() { return i18n.t('actuator.fuelPumpTest', 'Fuel Pump Relay Test'); },
     category: 'fuel',
     controlStateOn: [0x03, 0x01], // Relay ON
     controlStateOff: [0x03, 0x00],
   },
   {
     didHex: 'F030',
-    name: 'Rölanti Kelebeği Açma Testi',
+    get name() { return i18n.t('actuator.throttleTest', 'Idle Throttle Actuator Test'); },
     category: 'engine',
     controlStateOn: [0x03, 0x14], // 20% position
     controlStateOff: [0x03, 0x00],
@@ -50,10 +51,10 @@ export class UdsActuatorService {
    */
   public static validateSafetyPreconditions(speedKmH: number, voltageV: number): { isSafe: boolean; reason?: string } {
     if (speedKmH > 0) {
-      return { isSafe: false, reason: 'Güvenlik Uyarısı: Araç hareket halindeyken aktüatör testi çalıştırılamaz!' };
+      return { isSafe: false, reason: i18n.t('actuator.safetySpeed', 'Safety Warning: Actuator test cannot be run while vehicle is in motion!') };
     }
     if (voltageV < 11.8) {
-      return { isSafe: false, reason: 'Güvenlik Uyarısı: Akü voltajı yetersiz (<11.8V). Aktüatör testi iptal edildi.' };
+      return { isSafe: false, reason: i18n.t('actuator.safetyVoltage', 'Safety Warning: Battery voltage insufficient (<11.8V). Actuator test cancelled.') };
     }
     return { isSafe: true };
   }

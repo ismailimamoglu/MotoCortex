@@ -352,12 +352,14 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             <View style={[styles.radarContainer, { backgroundColor: `${colors.cyan}0F`, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: ms(16), marginVertical: vs(10), alignItems: 'center' }]}>
               <ActivityIndicator size="large" color={colors.cyan} style={{ marginBottom: vs(8) }} />
               <Text style={[styles.radarLabel, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '600', marginTop: vs(6) }]}>
-                {isScanning ? '🔍 OBD2 Bluetooth Cihazları Taranıyor...' : '🔄 Adaptör Taranıyor (Cevap Bekleniyor)...'}
+                {isScanning 
+                  ? t('connection.scanningDevices', '🔍 Scanning OBD2 Bluetooth Devices...') 
+                  : t('connection.scanningAdapter', '🔄 Scanning Adapter (Awaiting Response)...')}
               </Text>
               <Text style={[{ color: colors.textSec, fontSize: fs(11), textAlign: 'center', marginTop: vs(4) }]}>
                 {Platform.OS === 'ios'
-                  ? 'BLE OBD2 adaptörünüzün açık ve yakında olduğundan emin olun.'
-                  : 'Bluetooth ve konum servislerinizin aktif olduğundan emin olun.'
+                  ? t('connection.scanHintIos', 'Ensure your BLE OBD2 adapter is powered on and near your iOS device.')
+                  : t('connection.scanHintAndroid', 'Ensure Bluetooth and location services are active and your adapter is ready to pair.')
                 }
               </Text>
             </View>

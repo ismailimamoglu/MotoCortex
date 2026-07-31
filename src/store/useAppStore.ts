@@ -104,6 +104,7 @@ interface AppState {
   appUserId: string | null;
   deviceUuid: string | null;
   enabledFeatures: Record<string, boolean>; // Persistent ECU coding feature activation states
+  isTelemetryOptedIn: boolean; // Opt-in diagnostic & compatibility telemetry flag (default: false)
   
   // Actions
   setTheme: (theme: ThemeMode) => void;
@@ -112,6 +113,7 @@ interface AppState {
   setIsBackdoorPro: (isBackdoorPro: boolean) => void;
   setHasOnboarded: (hasOnboarded: boolean) => void;
   setFeatureEnabled: (id: string, enabled: boolean) => void;
+  setIsTelemetryOptedIn: (enabled: boolean) => void;
   toggleSimulationMode: () => void;
   incrementFreeUsage: () => void; // Track trial count
   resetFreeUsage: () => void; // Reset trial count
@@ -256,6 +258,7 @@ export const useAppStore = create<AppState>()(
       appUserId: null,
       deviceUuid: null,
       enabledFeatures: {},
+      isTelemetryOptedIn: false,
 
       setTheme: (theme) => set({ theme }),
       setLanguage: async (language) => {
@@ -265,6 +268,7 @@ export const useAppStore = create<AppState>()(
       setFeatureEnabled: (id, enabled) => set((state) => ({
         enabledFeatures: { ...state.enabledFeatures, [id]: enabled }
       })),
+      setIsTelemetryOptedIn: (isTelemetryOptedIn) => set({ isTelemetryOptedIn }),
       setIsPro: (isPro) => {
         set({ isPro });
         if (isPro) {
@@ -486,6 +490,7 @@ export const useAppStore = create<AppState>()(
         isBackdoorPro: state.isBackdoorPro,
         isPro: state.isPro,
         enabledFeatures: state.enabledFeatures,
+        isTelemetryOptedIn: state.isTelemetryOptedIn,
         // isSessionProMemoryLock intentionally EXCLUDED — RAM-only lock
       }),
       onRehydrateStorage: () => (state) => {

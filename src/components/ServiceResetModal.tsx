@@ -66,7 +66,7 @@ export default function ServiceResetModal({ visible, onClose, vehicleMake }: Ser
         <View style={styles.header}>
           <View>
             <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>🔧 {t('serviceReset.title', 'Service & Maintenance Reset')}</Text>
-            <Text style={styles.headerSubtitle}>{t('serviceReset.subtitle', { make: activeMake }, `OEM UDS Maintenance & Adaptation Calibration (${activeMake})`)}</Text>
+            <Text style={styles.headerSubtitle}>{t('serviceReset.subtitle', `OEM UDS Maintenance & Adaptation Calibration (${activeMake})`, { make: activeMake })}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>

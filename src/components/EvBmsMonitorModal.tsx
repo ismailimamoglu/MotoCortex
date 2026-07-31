@@ -46,7 +46,7 @@ export default function EvBmsMonitorModal({ visible, onClose, evBrand = 'Zero / 
         <View style={styles.header}>
           <View>
             <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>⚡ {t('evBms.title', 'EV BMS Diagnostics')}</Text>
-            <Text style={styles.headerSubtitle}>{t('evBms.subtitle', { brand: evBrand }, `Battery Management System & Cell Health (${evBrand})`)}</Text>
+            <Text style={styles.headerSubtitle}>{t('evBms.subtitle', `Battery Management System & Cell Health (${evBrand})`, { brand: evBrand })}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>

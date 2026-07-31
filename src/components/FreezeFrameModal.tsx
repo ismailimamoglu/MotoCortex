@@ -333,7 +333,7 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                                         <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
                                             <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.stft', 'STFT')}</Text>
                                             <Text style={[sDyn.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.stft !== null ? `${data.stft}%` : '--'}</Text>
-                                            <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>Trim</Text>
+                                            <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.trimUnit', 'Trim')}</Text>
                                         </View>
                                     </View>
                                 )}

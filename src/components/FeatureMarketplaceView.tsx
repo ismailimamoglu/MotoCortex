@@ -101,8 +101,8 @@ export default function FeatureMarketplaceView({ visible, onClose }: FeatureMark
       <SafeAreaView style={[styles.container, { backgroundColor: colors.bg || '#090d16' }]}>
         <View style={styles.header}>
           <View>
-            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>🛒 One-Click Feature Marketplace</Text>
-            <Text style={styles.headerSubtitle}>Community & OEM Feature Packs for MotoCortex</Text>
+            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>{t('marketplace.title', '🛒 One-Click Feature Marketplace')}</Text>
+            <Text style={styles.headerSubtitle}>{t('marketplace.subtitle', 'Community & OEM Feature Packs for MotoCortex')}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>

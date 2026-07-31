@@ -70,6 +70,7 @@ export async function runIdentifierTest(): Promise<{
   isCodingAllowed: boolean;
   capabilityScore: number;
   elmVersionTested: string;
+  multiframeIsotpSupported: boolean;
 }> {
   const store = useBluetoothStore.getState();
   store.addLog('ELM_IDENTIFIER: Starting ELM327 compatibility & clone scan.');
@@ -122,7 +123,8 @@ export async function runIdentifierTest(): Promise<{
               isCloneDevice: true,
               isCodingAllowed: false,
               capabilityScore: finalScore,
-              elmVersionTested: 'Clone v1.5'
+              elmVersionTested: 'Clone v1.5',
+              multiframeIsotpSupported: false
             };
           } else {
             // Non-core command (beyond v1.4b) failed.
@@ -152,13 +154,15 @@ export async function runIdentifierTest(): Promise<{
             isCodingAllowed: false,
             adapterCapabilityScore: finalScore,
             elmVersionTested: 'Clone v1.5',
+            multiframeIsotpSupported: false
           });
 
           return {
             isCloneDevice: true,
             isCodingAllowed: false,
             capabilityScore: finalScore,
-            elmVersionTested: 'Clone v1.5'
+            elmVersionTested: 'Clone v1.5',
+            multiframeIsotpSupported: false
           };
         } else {
           isCodingAllowed = false;
@@ -172,20 +176,34 @@ export async function runIdentifierTest(): Promise<{
     }
   }
 
+  // Perform non-destructive multi-frame ISO-TP verification test (e.g. UDS 22 F1 90 VIN query or 0902 VIN)
+  let multiframeIsotpSupported = false;
+  try {
+    const mfResponse = await OBDCommandQueue.add('0902', 800, 'HIGH_PRIORITY_AD_HOC');
+    const cleanMf = mfResponse.replace(/\s+/g, '').toUpperCase();
+    if (cleanMf.startsWith('4902') || cleanMf.length > 16) {
+      multiframeIsotpSupported = true;
+    }
+  } catch (e) {
+    multiframeIsotpSupported = false;
+  }
+
   const finalScore = Math.round((passedCount / totalCommandsCount) * 100);
   store.setSensorData({
     isCloneDevice,
     isCodingAllowed,
     adapterCapabilityScore: finalScore,
     elmVersionTested: detectedMaxVersion,
+    multiframeIsotpSupported,
   });
 
-  store.addLog(`ELM_IDENTIFIER: Scan finished. Version: ${detectedMaxVersion}, Capability: ${finalScore}%, Clone: ${isCloneDevice}, Coding Allowed: ${isCodingAllowed}`);
+  store.addLog(`ELM_IDENTIFIER: Scan finished. Version: ${detectedMaxVersion}, Capability: ${finalScore}%, Clone: ${isCloneDevice}, Multi-Frame ISO-TP: ${multiframeIsotpSupported}`);
 
   return {
     isCloneDevice,
     isCodingAllowed,
     capabilityScore: finalScore,
-    elmVersionTested: detectedMaxVersion
+    elmVersionTested: detectedMaxVersion,
+    multiframeIsotpSupported,
   };
 }

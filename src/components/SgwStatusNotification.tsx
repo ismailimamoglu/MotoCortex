@@ -28,7 +28,7 @@ export const SgwStatusNotification: React.FC<Props> = ({ visible, brandName = 'O
           </Text>
 
           <Text style={[styles.subTitle, { color: colors.textSec, fontSize: scaleFont(11) }]}>
-            {t('sgw.subtitle', { brandName }, `${brandName} ECU Security Restriction`)}
+            {t('sgw.subtitle', `${brandName} ECU Security Restriction`, { brandName })}
           </Text>
         </View>
       </View>

@@ -141,6 +141,11 @@ export const useTelemetryStore = create<TelemetryState>()(
       sessionDynamicKey: null,
 
       enqueueTelemetry: (item) => set((state) => {
+        // === GUARD 0: Strict Opt-In Check (Enforced in production builds) ===
+        if (!__DEV__ && !useAppStore.getState().isTelemetryOptedIn) {
+          return state;
+        }
+
         // === GUARD 1: Runtime isSimulationMode flag check ===
         if (useAppStore.getState().isSimulationMode) {
           return state;

@@ -10,10 +10,13 @@ import {
   Platform,
   SafeAreaView
 } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { AiDoctorService, AiDiagnosticResult, AiDiagnosticContext } from '../services/aiDoctorService';
+import { useAppStore } from '../store/useAppStore';
+import { useBluetoothStore } from '../store/useBluetoothStore';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -30,24 +33,55 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
 
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<AiDiagnosticResult | null>(null);
+  const [isFreeTrial, setIsFreeTrial] = useState(false);
 
   const dtcKey = (context?.dtcCodes || []).join(',');
   const contextKey = visible ? `${dtcKey}_${context?.vin || ''}` : '';
 
   useEffect(() => {
     let isMounted = true;
+
     if (visible && contextKey) {
-      setLoading(true);
-      AiDoctorService.analyzeFaults(context)
-        .then((res) => {
-          if (isMounted) setResult(res);
-        })
-        .catch(() => {
-          if (isMounted) setResult(null);
-        })
-        .finally(() => {
-          if (isMounted) setLoading(false);
-        });
+      const isPro = useAppStore.getState().isPro;
+      const isSim = useAppStore.getState().isSimulationMode;
+
+      const runDiagnosticWorkflow = async () => {
+        if (!isPro && !isSim) {
+          try {
+            const used = await SecureStore.getItemAsync('motocortex_ai_trial_used');
+            if (used === 'true') {
+              if (isMounted) {
+                onClose();
+                useBluetoothStore.getState().setPaywallContext('AI_DOCTOR_LIMIT');
+              }
+              return;
+            } else {
+              if (isMounted) setIsFreeTrial(true);
+              await SecureStore.setItemAsync('motocortex_ai_trial_used', 'true');
+            }
+          } catch (err) {
+            console.warn('[AiDoctorModal] SecureStore trial check error:', err);
+          }
+        } else {
+          if (isMounted) setIsFreeTrial(false);
+        }
+
+        if (isMounted) {
+          setLoading(true);
+          AiDoctorService.analyzeFaults(context)
+            .then((res) => {
+              if (isMounted) setResult(res);
+            })
+            .catch(() => {
+              if (isMounted) setResult(null);
+            })
+            .finally(() => {
+              if (isMounted) setLoading(false);
+            });
+        }
+      };
+
+      runDiagnosticWorkflow();
     }
     return () => { isMounted = false; };
   }, [visible, contextKey]);
@@ -71,8 +105,8 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
       <SafeAreaView style={[styles.container, { backgroundColor: colors.bg || '#090d16' }]}>
         <View style={styles.header}>
           <View>
-            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>MotoCortex AI Doctor</Text>
-            <Text style={styles.headerSubtitle}>26-Language Intelligent DTC Diagnostic Specialist</Text>
+            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>{t('aiDoctor.modalTitle', 'MotoCortex AI Doctor')}</Text>
+            <Text style={styles.headerSubtitle}>{t('aiDoctor.modalSubtitle', '26-Language Intelligent DTC Diagnostic Specialist')}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>
@@ -86,10 +120,19 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
           </View>
         ) : result ? (
           <ScrollView contentContainerStyle={styles.scrollContent}>
+            {/* Free Trial Banner */}
+            {isFreeTrial && (
+              <View style={styles.freeTrialBanner}>
+                <Text style={styles.freeTrialBadgeText}>
+                  {t('aiDoctor.freeTrialBadge', '🎁 YOU ARE USING YOUR 1 FREE AI DIAGNOSTIC TRIAL')}
+                </Text>
+              </View>
+            )}
+
             {/* Risk Badge Banner */}
             <View style={[styles.riskBanner, { backgroundColor: badge.bg, borderColor: badge.border }]}>
               <Text style={[styles.riskBadgeText, { color: badge.text }]}>{badge.label.replace('🔴 ', '').replace('🟡 ', '').replace('🟢 ', '')}</Text>
-              <Text style={styles.riskScoreText}>{t('aiDoctor.healthImpact', { score: result.riskScore }, `Health Score Impact: ${result.riskScore}/100`)}</Text>
+              <Text style={styles.riskScoreText}>{t('aiDoctor.healthImpact', `Health Score Impact: ${result.riskScore}/100`, { score: result.riskScore })}</Text>
             </View>
 
             {/* Analysis Title & Summary */}
@@ -262,5 +305,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#00ffaa',
     fontFamily: MONO,
+  },
+  freeTrialBanner: {
+    backgroundColor: '#1b2d42',
+    borderWidth: 1.5,
+    borderColor: '#00e5ff',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    alignItems: 'center',
+  },
+  freeTrialBadgeText: {
+    fontSize: 12,
+    fontWeight: '900',
+    color: '#00e5ff',
+    fontFamily: MONO,
+    textAlign: 'center',
   },
 });

@@ -149,7 +149,9 @@
         "refresh": "Refresh",
         "status": "Status",
         "syncing": "Syncing...",
-        "continueBtn": "CONTINUE"
+        "continueBtn": "CONTINUE",
+        "successTag": "[SUCCESS]",
+        "errorTag": "[ERROR]"
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -204,7 +206,9 @@
         "restoreSuccessMsg": "Your premium membership was successfully restored! You can now start using Cortex OBD2 PRO features.",
         "restoreSuccessTitle": "✅ Purchases Restored",
         "weeklyNotice": "One-time purchase, does not auto-renew",
-        "yearlyNotice": "Yearly auto-renewable subscription"
+        "yearlyNotice": "Yearly auto-renewable subscription",
+        "aiDoctorLimitTitle": "AI DOCTOR LIMIT REACHED",
+        "aiDoctorLimitDesc": "You have used your 1 free AI engine diagnostic trial. Upgrade to PRO for unlimited AI analyses."
     },
     "connection": {
         "cancel": "Cancel",
@@ -299,7 +303,9 @@
         "stepAdapter": "Adapter Connection & Cap Score",
         "stepProtocol": "OBD2 Protocol Negotiation",
         "stepHandshake": "ECU Communication Verification",
-        "stepStabilization": "Active Telemetry Loop Stabilization"
+        "stepStabilization": "Active Telemetry Loop Stabilization",
+        "scanningAdapter": "🔄 Scanning Adapter (Awaiting Response)...",
+        "scanningDevices": "🔍 Scanning OBD2 Bluetooth Devices..."
     },
     "health": {
         "titleMenu": "OBD2 ADAPTER CAPABILITIES & MATRIX",
@@ -1606,6 +1612,7 @@
         "ecuRejected": "ECU rejected reset command. Ensure ignition is ON and engine is OFF."
     },
     "aiDoctor": {
+        "freeTrialBadge": "🎁 YOU ARE USING YOUR 1 FREE AI DIAGNOSTIC TRIAL",
         "analyzing": "Analyzing DTC codes & engine telemetry with AI Doctor...",
         "healthImpact": "Health Score Impact: {{score}}/100",
         "drivingSafety": "Driving Safety Guidance",

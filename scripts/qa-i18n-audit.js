@@ -68,25 +68,48 @@ files.forEach(file => {
     const emptyKeys = [];
     const interpolationMismatches = [];
 
-    for (const keyPath in enKeys) {
-        if (!targetKeys.hasOwnProperty(keyPath)) {
-            missingKeys.push(keyPath);
-        } else {
-            const enVal = String(enKeys[keyPath]);
-            const targetVal = String(targetKeys[keyPath]);
+// CLDR Plural Rule Suffixes Map
+const cldrPluralSuffixes = ['_zero', '_one', '_two', '_few', '_many', '_other'];
 
-            if (targetVal.trim() === '') {
-                emptyKeys.push(keyPath);
-            }
-
-            // Check interpolation variables e.g. {{count}}
-            const enVars = enVal.match(/\{\{.*?\}\}/g) || [];
-            const targetVars = targetVal.match(/\{\{.*?\}\}/g) || [];
-            if (enVars.sort().join(',') !== targetVars.sort().join(',')) {
-                interpolationMismatches.push(keyPath);
-            }
+// Helper to strip CLDR plural suffix to get base key
+function getBaseKey(keyPath) {
+    for (const suffix of cldrPluralSuffixes) {
+        if (keyPath.endsWith(suffix)) {
+            return { baseKey: keyPath.slice(0, -suffix.length), suffix };
         }
     }
+    return { baseKey: keyPath, suffix: null };
+}
+
+for (const keyPath in enKeys) {
+    const { baseKey, suffix } = getBaseKey(keyPath);
+    const hasDirect = targetKeys.hasOwnProperty(keyPath);
+    
+    // Check if target key exists directly or via valid target CLDR plural form
+    let existsInTarget = hasDirect;
+    if (!existsInTarget && suffix) {
+        // Check if any valid target CLDR plural key exists for this baseKey
+        existsInTarget = cldrPluralSuffixes.some(s => targetKeys.hasOwnProperty(`${baseKey}${s}`));
+    }
+
+    if (!existsInTarget) {
+        missingKeys.push(keyPath);
+    } else {
+        const targetVal = String(targetKeys[keyPath] || targetKeys[`${baseKey}_one`] || targetKeys[`${baseKey}_other`] || '');
+        const enVal = String(enKeys[keyPath]);
+
+        if (targetVal.trim() === '') {
+            emptyKeys.push(keyPath);
+        }
+
+        // Check interpolation variables e.g. {{count}}
+        const enVars = enVal.match(/\{\{.*?\}\}/g) || [];
+        const targetVars = targetVal.match(/\{\{.*?\}\}/g) || [];
+        if (enVars.sort().join(',') !== targetVars.sort().join(',')) {
+            interpolationMismatches.push(keyPath);
+        }
+    }
+}
 
     const isPass = missingKeys.length === 0 && emptyKeys.length === 0 && interpolationMismatches.length === 0;
     if (!isPass) totalFailures++;

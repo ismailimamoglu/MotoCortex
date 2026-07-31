@@ -221,14 +221,18 @@ export default function ContextualPaywallModal() {
                     <View style={sDyn.handle} />
                     <Text style={sDyn.title}>👑 {t('paywall.crownBadge', 'MOTO CORTEX PRO')}</Text>
                     <Text style={sDyn.desc}>
-                        {t('paywall.contextualDesc', 'Upgrade to PRO to see critical risks of this trouble code on the engine, potential repair costs, and detailed solution guidelines.')}
+                        {paywallContext === 'AI_DOCTOR_LIMIT'
+                            ? t('paywall.aiDoctorLimitDesc', 'You have used your 1 free AI engine diagnostic trial. Upgrade to PRO for unlimited AI analyses.')
+                            : t('paywall.contextualDesc', 'Upgrade to PRO to see critical risks of this trouble code on the engine, potential repair costs, and detailed solution guidelines.')}
                     </Text>
                     
                     <View style={sDyn.codeBox}>
                         <Text style={sDyn.codeText}>
-                            {paywallContext === 'ACTION_LOCKED' 
-                                ? '🔒 ' + t('paywall.actionLocked', 'PRO LOCKED FEATURE')
-                                : paywallContext}
+                            {paywallContext === 'AI_DOCTOR_LIMIT'
+                                ? '🤖 ' + t('paywall.aiDoctorLimitTitle', 'AI DOCTOR LIMIT REACHED')
+                                : paywallContext === 'ACTION_LOCKED' 
+                                    ? '🔒 ' + t('paywall.actionLocked', 'PRO LOCKED FEATURE')
+                                    : paywallContext}
                         </Text>
                     </View>
 

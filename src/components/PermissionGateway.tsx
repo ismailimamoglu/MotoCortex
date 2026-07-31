@@ -41,6 +41,8 @@ export default function PermissionGateway() {
   const { t, i18n } = useTranslation();
   const setHasOnboarded = useAppStore((state) => state.setHasOnboarded);
   const setLanguage = useAppStore((state) => state.setLanguage);
+  const isTelemetryOptedIn = useAppStore((state) => state.isTelemetryOptedIn);
+  const setIsTelemetryOptedIn = useAppStore((state) => state.setIsTelemetryOptedIn);
   const colors = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isLargeTablet } = useResponsive();
 
@@ -318,7 +320,7 @@ export default function PermissionGateway() {
       <View style={sDyn.container}>
         {/* Header */}
         <View style={sDyn.header}>
-          <Text style={[sDyn.title, { color: colors.cyan }]}>CORTEX OBD2</Text>
+          <Text style={[sDyn.title, { color: colors.cyan }]}>{t('common.brandName', 'CORTEX OBD2')}</Text>
           <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
             {step === 'language' 
               ? t('permissions.langSelectSub', 'LANGUAGE GATEWAY').toUpperCase()
@@ -422,6 +424,28 @@ export default function PermissionGateway() {
                   {locStatus === 'denied' && <Text style={[sDyn.statusIcon, { color: colors.red }]}>✕</Text>}
                 </View>
               )}
+
+              {/* Perm Item 3: Opt-In Telemetry */}
+              <TouchableOpacity
+                style={[sDyn.permRow, { backgroundColor: isTelemetryOptedIn ? `${colors.cyan}15` : `${colors.textPri}08`, borderColor: isTelemetryOptedIn ? colors.cyan : `${colors.textPri}0D` }]}
+                onPress={() => setIsTelemetryOptedIn(!isTelemetryOptedIn)}
+                activeOpacity={0.7}
+              >
+                <View style={[sDyn.permIconBox, { backgroundColor: `${colors.cyan}1A` }]}>
+                  <Text style={sDyn.permIcon}>📊</Text>
+                </View>
+                <View style={sDyn.permTextContainer}>
+                  <Text style={[sDyn.permLabel, { color: colors.textPri }]}>
+                    {t('permissions.telemetryLabel', 'Diagnostic Telemetry (Opt-In)')}
+                  </Text>
+                  <Text style={[sDyn.permSub, { color: colors.textSec }]}>
+                    {t('permissions.telemetrySub', 'Share anonymous protocol and error logs to improve vehicle compatibility.')}
+                  </Text>
+                </View>
+                <Text style={[sDyn.statusIcon, { color: isTelemetryOptedIn ? colors.cyan : colors.textSec }]}>
+                  {isTelemetryOptedIn ? '☑' : '☐'}
+                </Text>
+              </TouchableOpacity>
             </View>
 
             {/* Action Button */}

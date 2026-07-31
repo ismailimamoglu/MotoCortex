@@ -5,6 +5,7 @@ export interface AiDiagnosticContext {
   vehicleMake?: string;
   vehicleModel?: string;
   vehicleYear?: number;
+  vin?: string;
   engineVoltage?: number;
   coolantTemp?: number;
   rpm?: number;

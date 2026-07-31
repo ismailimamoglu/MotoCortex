@@ -335,7 +335,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
           {showLimitWarning && (
             <View style={sDyn.warningBadge}>
               <Text style={{ color: colors.amber, fontSize: scaleFont(9.5), fontWeight: 'bold' }}>
-                ⚠️ {t('dashboard.limitReachedDesc', { defaultValue: `En fazla ${maxLimit} sensör seçebilirsiniz.`, limit: maxLimit })}
+                ⚠️ {t('dashboard.limitReachedDesc', { defaultValue: `You can select up to ${maxLimit} sensors.`, limit: maxLimit })}
               </Text>
             </View>
           )}

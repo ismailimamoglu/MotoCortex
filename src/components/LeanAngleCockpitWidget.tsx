@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useImuTelemetry } from '../hooks/useImuTelemetry';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
@@ -13,6 +14,7 @@ export default function LeanAngleCockpitWidget({
   currentRpm = 0,
   currentSpeed = 0
 }: LeanAngleCockpitWidgetProps) {
+  const { t } = useTranslation();
   const { leanAngle, pitchAngle, maxLeftLean, maxRightLean, gForceX, gForceY, resetMaxLean } = useImuTelemetry();
 
   // Angle indicator position
@@ -22,9 +24,9 @@ export default function LeanAngleCockpitWidget({
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.title}>🏍️ LEAN ANGLE & TELEMETRY STUDIO</Text>
+        <Text style={styles.title}>{t('leanAngle.title', '🏍️ LEAN ANGLE & TELEMETRY STUDIO')}</Text>
         <TouchableOpacity style={styles.resetButton} onPress={resetMaxLean}>
-          <Text style={styles.resetText}>RESET MAX</Text>
+          <Text style={styles.resetText}>{t('leanAngle.resetMax', 'RESET MAX')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -32,7 +34,7 @@ export default function LeanAngleCockpitWidget({
       <View style={styles.gaugeContainer}>
         {/* Left Max */}
         <View style={styles.maxBox}>
-          <Text style={styles.maxLabel}>MAX LEFT</Text>
+          <Text style={styles.maxLabel}>{t('leanAngle.maxLeft', 'MAX LEFT')}</Text>
           <Text style={[styles.maxValue, { color: '#00e5ff' }]}>{maxLeftLean}°</Text>
         </View>
 
@@ -46,7 +48,7 @@ export default function LeanAngleCockpitWidget({
 
         {/* Right Max */}
         <View style={styles.maxBox}>
-          <Text style={styles.maxLabel}>MAX RIGHT</Text>
+          <Text style={styles.maxLabel}>{t('leanAngle.maxRight', 'MAX RIGHT')}</Text>
           <Text style={[styles.maxValue, { color: '#ff8800' }]}>{maxRightLean}°</Text>
         </View>
       </View>
@@ -74,17 +76,17 @@ export default function LeanAngleCockpitWidget({
       {/* G-Force & Secondary Telemetry Grid */}
       <View style={styles.statsGrid}>
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>LATERAL G</Text>
+          <Text style={styles.statLabel}>{t('leanAngle.lateralG', 'LATERAL G')}</Text>
           <Text style={styles.statValue}>{gForceX} G</Text>
         </View>
 
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>LONGITUDINAL G</Text>
+          <Text style={styles.statLabel}>{t('leanAngle.longitudinalG', 'LONGITUDINAL G')}</Text>
           <Text style={styles.statValue}>{gForceY} G</Text>
         </View>
 
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>PITCH</Text>
+          <Text style={styles.statLabel}>{t('leanAngle.pitch', 'PITCH')}</Text>
           <Text style={styles.statValue}>{pitchAngle}°</Text>
         </View>
       </View>

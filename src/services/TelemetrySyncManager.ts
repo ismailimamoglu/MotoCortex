@@ -187,6 +187,11 @@ export class TelemetrySyncManager {
       );
     }
 
+    if (!__DEV__ && !useAppStore.getState().isTelemetryOptedIn) {
+      Logger.log('TELEMETRY_SYNC', 'GUARD: Telemetry Opt-In is disabled by user — skipping sync.');
+      return;
+    }
+
     if (useAppStore.getState().isSimulationMode) {
       Logger.log('TELEMETRY_SYNC', 'GUARD: Sim mode active — skipping sync.');
       return;

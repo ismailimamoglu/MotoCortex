@@ -1691,7 +1691,7 @@ function MainApp() {
     );
   };
 
-  // Sync language selection to i18n instance on rehydration and updates
+  // Sync language selection to i18n instance on rehydration and updates with session protection
   useEffect(() => {
     if (language) {
       i18n.changeLanguage(language);
@@ -1699,14 +1699,18 @@ function MainApp() {
       if (I18nManager.isRTL !== isRTL) {
         I18nManager.allowRTL(isRTL);
         I18nManager.forceRTL(isRTL);
-        setTimeout(() => {
-          Updates.reloadAsync().catch(err => {
-            console.error('Failed to reload bundle for RTL transition:', err);
-          });
-        }, 300);
+        
+        // Protect active Bluetooth OBD2 telemetry streams from getting disconnected
+        if (!isPolling) {
+          setTimeout(() => {
+            Updates.reloadAsync().catch(err => {
+              console.error('Failed to reload bundle for RTL transition:', err);
+            });
+          }, 300);
+        }
       }
     }
-  }, [language]);
+  }, [language, isPolling]);
 
 
 
@@ -3740,6 +3744,12 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           visible={isAiDoctorModalVisible}
           onClose={() => setIsAiDoctorModalVisible(false)}
           context={aiDoctorContext}
+        />
+
+        {/* Customize Dashboard Modal */}
+        <CustomizeDashboardModal
+          visible={isCustomizeModalVisible}
+          onClose={() => setIsCustomizeModalVisible(false)}
         />
       </View>
       </SafeAreaView>

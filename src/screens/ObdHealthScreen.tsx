@@ -142,10 +142,10 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
         <View style={styles.matrixContainer}>
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixReadCodes', 'Hata Kodu Okuma & Silme')}
+              {t('health.matrixReadCodes', 'DTC Read & Clear')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              {t('common.supported', 'DESTEKLENİYOR')}
+              {t('common.supported', 'SUPPORTED')}
             </Text>
           </View>
 
@@ -154,7 +154,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               {t('health.matrixLiveSensors', 'Live Sensor Monitoring (Basic)')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              {t('common.supported', 'DESTEKLENİYOR')}
+              {t('common.supported', 'SUPPORTED')}
             </Text>
           </View>
 
@@ -163,7 +163,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               {t('health.matrixBattery', 'Battery / Voltage Test')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              {t('common.supported', 'DESTEKLENİYOR')}
+              {t('common.supported', 'SUPPORTED')}
             </Text>
           </View>
 
@@ -177,8 +177,8 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             ]}>
               {isConnected 
                 ? avgRtt < 120 
-                  ? t('health.active', 'AKTİF')
-                  : t('health.degraded', 'SINIRLI (Yavaş Yanıt)')
+                  ? t('health.active', 'ACTIVE')
+                  : t('health.degraded', 'DEGRADED (Slow Response)')
                 : '—'
               }
             </Text>
@@ -186,7 +186,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
           <View style={[styles.matrixRow, { borderBottomWidth: 0, paddingBottom: 0 }]}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixCoding', 'ECU Kodlama & Adaptasyon')}
+              {t('health.matrixCoding', 'ECU Coding & Adaptation')}
             </Text>
             <Text style={[
               styles.matrixStatus, 
@@ -194,8 +194,8 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             ]}>
               {isConnected 
                 ? !isCloneDevice 
-                  ? t('common.supported', 'DESTEKLENİYOR')
-                  : t('health.locked', 'KİLİTLİ (Güvenli Mod)')
+                  ? t('common.supported', 'SUPPORTED')
+                  : t('health.locked', 'LOCKED (Safe Mode)')
                 : '—'
               }
             </Text>
@@ -204,7 +204,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
           {isConnected && isCloneDevice && (
             <View style={[styles.lockWarningBlock, { backgroundColor: `${colors.red}0F`, borderColor: colors.red }]}>
               <Text style={[styles.lockWarningText, { color: colors.textSec, fontSize: fs(10.5) }]}>
-                <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning', 'GÜVENLİK KİLİDİ:')}</Text> {t('health.lockExplain', 'Your adapter has been identified as a clone chip. Please use an original vLinker or ELM327 adapter for safe coding.')}
+                <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning', 'SAFETY LOCK:')}</Text> {t('health.lockExplain', 'Your adapter has been identified as a clone chip. Please use an original vLinker or ELM327 adapter for safe coding.')}
               </Text>
             </View>
           )}
@@ -237,7 +237,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
                     styles.checkBadgeText, 
                     { color: isSupported ? colors.green : colors.red, fontSize: fs(10), fontFamily: colors.mono }
                   ]}>
-                    {isSupported ? t('health.supportedBadge', 'DESTEKLENİYOR') : t('health.unsupportedBadge', 'DESTEKLENMİYOR')}
+                    {isSupported ? t('health.supportedBadge', 'SUPPORTED') : t('health.unsupportedBadge', 'UNSUPPORTED')}
                   </Text>
                 </View>
               </View>

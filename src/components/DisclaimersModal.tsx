@@ -54,7 +54,7 @@ export default function DisclaimersModal({
             {/* Header */}
             <View style={styles.header}>
               <Text style={[styles.warningBadge, { backgroundColor: colors.red + '22', color: colors.red }]}>
-                ⚠️ CRITICAL SAFETY NOTICE
+                {t('disclaimers.safetyNotice', '⚠️ CRITICAL SAFETY NOTICE')}
               </Text>
               <Text style={[styles.title, { color: colors.textPri, fontSize: fs(18) }]}>
                 {featureTitle}

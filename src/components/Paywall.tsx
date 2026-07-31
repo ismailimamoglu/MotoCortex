@@ -56,8 +56,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       product: {
         price: 2.99,
         priceString: '$2.99',
-        title: 'Haftalık Üyelik',
-        description: 'Hızlı bir kontrol için ideal.',
+        title: t('paywall.weekly', 'Weekly Subscription'),
+        description: t('paywall.weeklyDesc', 'Ideal for a quick check.'),
       },
     },
     {
@@ -66,8 +66,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       product: {
         price: 5.99,
         priceString: '$5.99',
-        title: 'Aylık Üyelik',
-        description: 'En popüler seçim.',
+        title: t('paywall.monthly', 'Monthly Subscription'),
+        description: t('paywall.monthlyDesc', 'Most popular choice.'),
       },
     },
     {
@@ -76,8 +76,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       product: {
         price: 19.99,
         priceString: '$19.99',
-        title: 'Yıllık Üyelik',
-        description: 'En iyi fiyat garantisi.',
+        title: t('paywall.yearly', 'Yearly Subscription'),
+        description: t('paywall.yearlyDesc', 'Best value guaranteed.'),
       },
     },
   ];
