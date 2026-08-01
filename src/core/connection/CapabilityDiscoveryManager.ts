@@ -15,7 +15,7 @@ export class CapabilityDiscoveryManager {
         const store = useBluetoothStore.getState();
         store.addLog('CAPABILITY_DISCOVERY: Starting multi-node routing table discovery.');
 
-        const blockPids = ['00', '20', '40', '60', '80'];
+        const blockPids = ['00', '20', '40', '60', '80', 'A0', 'C0'];
         const blockStatus: Record<string, 'supported' | 'unsupported' | 'unknown'> = {};
 
         const pidRoutingTable: Record<string, string[]> = {};
@@ -133,6 +133,54 @@ export class CapabilityDiscoveryManager {
                 }
             }
         }
+    }
+
+    /**
+     * Probes supported UDS diagnostic services (0x10, 0x22, 0x19, 0x27, 0x31) on Engine ECU.
+     */
+    public static async probeUdsServices(): Promise<Record<string, boolean>> {
+        const store = useBluetoothStore.getState();
+        store.addLog('CAPABILITY_DISCOVERY: Probing UDS Diagnostic Services (0x10, 0x22, 0x19, 0x27)...');
+
+        const udsServicesMap: Record<string, boolean> = {
+            '0x10_DiagnosticSession': false,
+            '0x22_ReadDataByIdentifier': false,
+            '0x19_ReadDTCInformation': false,
+            '0x27_SecurityAccess': false,
+        };
+
+        try {
+            await OBDCommandQueue.add('AT SH 7E0', 800).catch(() => {});
+
+            // Probe 0x10 Diagnostic Session
+            const res10 = await OBDCommandQueue.add('10 01', 2000).catch(() => '');
+            if (res10 && (res10.includes('50') || res10.includes('7F 10 78'))) {
+                udsServicesMap['0x10_DiagnosticSession'] = true;
+            }
+
+            // Probe 0x22 ReadDataByIdentifier (VIN DID F190)
+            const res22 = await OBDCommandQueue.add('22 F1 90', 2500).catch(() => '');
+            if (res22 && (res22.includes('62 F1 90') || res22.includes('62F190'))) {
+                udsServicesMap['0x22_ReadDataByIdentifier'] = true;
+            }
+
+            // Probe 0x19 ReadDTCInformation
+            const res19 = await OBDCommandQueue.add('19 02 08', 2500).catch(() => '');
+            if (res19 && (res19.includes('59') || res19.includes('7F 19 78'))) {
+                udsServicesMap['0x19_ReadDTCInformation'] = true;
+            }
+
+            // Probe 0x27 Security Access (Seed Request)
+            const res27 = await OBDCommandQueue.add('27 01', 2500).catch(() => '');
+            if (res27 && (res27.includes('67 01') || res27.includes('6701') || res27.includes('7F 27 33') || res27.includes('7F 27 7E'))) {
+                udsServicesMap['0x27_SecurityAccess'] = true;
+            }
+        } catch (err: any) {
+            store.addLog(`CAPABILITY_DISCOVERY_WARN: UDS probe exception: ${err?.message || err}`);
+        }
+
+        store.addLog(`CAPABILITY_DISCOVERY: UDS Services map: ${JSON.stringify(udsServicesMap)}`);
+        return udsServicesMap;
     }
 }
 export default CapabilityDiscoveryManager;

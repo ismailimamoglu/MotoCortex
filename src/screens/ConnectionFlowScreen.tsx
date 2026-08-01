@@ -23,7 +23,6 @@ import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { triggerHaptic } from '../utils/haptics';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
-import { DiagnosticLogMailer } from '../services/DiagnosticLogMailer';
 
 interface ConnectionFlowScreenProps {
   onBack: () => void;

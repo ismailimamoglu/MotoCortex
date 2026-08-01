@@ -13,6 +13,7 @@ import { useBluetoothStore, DiagnosticDtcArray, ConnectionStep } from '../store/
 import { useAppStore, clearDemoDtcs } from '../store/useAppStore';  
 import { ADAPTER_COMMANDS } from '../api/commands';  
 import { CapabilityDiscoveryManager } from '../core/connection/CapabilityDiscoveryManager';  
+import { ModuleDiscoveryManager } from '../core/connection/ModuleDiscoveryManager';  
 import { VehicleProfileDB } from '../core/pids/VehicleProfileDB';  
 import { ProtocolCircuitBreaker } from '../core/connection/ProtocolCircuitBreaker';  
 import { TransportRateLimiter } from '../core/transport/TransportRateLimiter';  
@@ -23,7 +24,6 @@ import { preloadDynamicDtc } from '../data/dtcStorage';
 import { useTelemetryStore } from '../store/useTelemetryStore';  
 import { calculateSessionHash } from '../utils/crypto';  
 import { bindVinToRegisteredVehicle } from '../store/garageStore';  
-import { DiagnosticLogMailer } from '../services/DiagnosticLogMailer';
 import { ConnectionStateMachine, ConnectionState } from '../core/connection/ConnectionStateMachine';  
 import { ProtocolNegotiator } from '../core/connection/ProtocolNegotiator';  
 import { PollingOrchestrator } from '../core/connection/PollingOrchestrator';  
@@ -211,40 +211,55 @@ export const useBluetooth = () => {
                 const selectedProtocol = await OBDCommandQueue.add("AT DP", 3000);  
                 useBluetoothStore.getState().setProtocol(selectedProtocol ? selectedProtocol.trim() : `AUTO (SP 0 / DPN ${cleanDpn})`);  
             } catch (e) {  
-                useBluetoothStore.getState().addLog('CHATGPT_RECOVERY: AT SP 0 timeout. Executing AT PC -> AT WS -> AT ST FF -> AT TP recovery chain...');
+                useBluetoothStore.getState().addLog('GLOBAL_PROTOCOL_ENGINE: AT SP 0 unconfirmed. Executing dynamic fallback matrix (AT SP 6/7/8/9/5/4/3/1/2)...');
 
                 const fallbackProtocols = [
-                    { tp: 'AT TP 6', name: 'ISO 15765-4 (CAN 11/500)' },
-                    { tp: 'AT TP 7', name: 'ISO 15765-4 (CAN 29/500)' },
-                    { tp: 'AT TP 5', name: 'ISO 14230-4 (KWP Fast)' },
-                    { tp: 'AT TP 3', name: 'ISO 9141-2' },
+                    { sp: 'AT SP 6', name: 'ISO 15765-4 (CAN 11b/500k)', isCan: true, timeout: 3500 },
+                    { sp: 'AT SP 7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, timeout: 3500 },
+                    { sp: 'AT SP 8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 3500 },
+                    { sp: 'AT SP 9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 3500 },
+                    { sp: 'AT SP 5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 4500, isKLine: true },
+                    { sp: 'AT SP 4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 4500, isKLine: true },
+                    { sp: 'AT SP 3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 4500, isKLine: true },
+                    { sp: 'AT SP 1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 3500 },
+                    { sp: 'AT SP 2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 3500 },
                 ];
 
                 for (const item of fallbackProtocols) {
                     if (ecuConnected) break;
                     try {
-                        useBluetoothStore.getState().addLog(`CHATGPT_RECOVERY: Executing ${item.tp}...`);
-                        await OBDCommandQueue.add("AT PC", 1000).catch(() => {});
-                        await preciseSleep(150);
-                        await OBDCommandQueue.add("AT WS", 1000).catch(() => {});
-                        await preciseSleep(150);
-                        await OBDCommandQueue.add("AT ST FF", 1000).catch(() => {});
+                        useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Trying ${item.sp} [${item.name}]...`);
+                        await OBDCommandQueue.add("AT PC", 800).catch(() => {});
                         await preciseSleep(100);
-                        await OBDCommandQueue.add(item.tp, 1500);
+                        await OBDCommandQueue.add(item.sp, 1500);
                         await preciseSleep(100);
 
-                        const initRes = await OBDCommandQueue.add("01 00", 4000);
+                        if (item.isCan) {
+                            // CAN Engine Header Scoping to avoid Multi-ECU response collisions
+                            await OBDCommandQueue.add("AT SH 7E0", 1000).catch(() => {});
+                        }
+
+                        let initRes = await OBDCommandQueue.add("01 00", item.timeout);
                         ecuConnected = verifyHandshakeResponse(initRes, "01 00");
+
+                        // K-Line Latch-up Physical Recovery & Retry if BUS INIT ERROR occurs
+                        if (!ecuConnected && item.isKLine && (initRes || '').toUpperCase().includes('BUS INIT')) {
+                            useBluetoothStore.getState().addLog(`KLINE_RECOVERY: Bus init stall detected on ${item.sp}. Executing AT BI line reset...`);
+                            await OBDCommandQueue.add("AT BI", 1000).catch(() => {});
+                            await preciseSleep(500);
+                            initRes = await OBDCommandQueue.add("01 00", item.timeout);
+                            ecuConnected = verifyHandshakeResponse(initRes, "01 00");
+                        }
 
                         if (ecuConnected) {
                             const dpnRes = await OBDCommandQueue.add("AT DPN", 2000).catch(() => '');
                             const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
                             useBluetoothStore.getState().setProtocol(`${item.name} (DPN ${cleanDpn})`);
-                            useBluetoothStore.getState().addLog(`CHATGPT_RECOVERY_SUCCESS: Connected via ${item.name} (DPN: ${cleanDpn})`);
+                            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE_SUCCESS: Connected via ${item.name} (DPN: ${cleanDpn})`);
                             break;
                         }
                     } catch (fallbackErr: any) {
-                        useBluetoothStore.getState().addLog(`CHATGPT_RECOVERY_FAIL: ${item.tp} failed: ${fallbackErr?.message || fallbackErr}`);
+                        useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE_FAIL: ${item.sp} failed: ${fallbackErr?.message || fallbackErr}`);
                     }
                     await preciseSleep(200);
                 }
@@ -306,21 +321,20 @@ export const useBluetooth = () => {
                useBluetoothStore.getState().addLog(`DIAG_WARN: PID Discovery stalled or timed out: ${err.message}`);
            });
 
+           if (isCan) {
+               await ModuleDiscoveryManager.discoverModules().catch(err => {
+                   useBluetoothStore.getState().addLog(`DIAG_WARN: Module discovery skipped or timed out: ${err?.message || err}`);
+               });
+               await CapabilityDiscoveryManager.probeUdsServices().catch(err => {
+                   useBluetoothStore.getState().addLog(`DIAG_WARN: UDS probing skipped: ${err?.message || err}`);
+               });
+           }
+
             setEcuStatus('connected');
             updateStep('stabilization', 'success', 100);  
             useBluetoothStore.getState().setConnectionStatusText(null);
             startPolling();  
             initSuccess = true;  
-
-            // Trigger test diagnostic auto-mailer on successful connection
-            DiagnosticLogMailer.sendReport({
-                status: 'SUCCESS',
-                protocol: connectedProtocol,
-                adapterScore: useBluetoothStore.getState().adapterCapabilityScore,
-                isClone: useBluetoothStore.getState().isCloneDevice,
-                vehicleName: useTelemetryStore.getState().activeSessionVehicle?.brand,
-                logs: useBluetoothStore.getState().logs,
-            }).catch(() => {});
 
             setTimeout(() => {
                 runDiagnostics().catch(err => {
@@ -334,17 +348,6 @@ export const useBluetooth = () => {
            setEcuStatus('error');  
            setError('ECU Connection Failed: ' + errorReasonStr);  
            ConnectionStateMachine.transitionTo(ConnectionState.HARDWARE_FATAL, 'ECU_HANDSHAKE_FAILED');  
-
-           // Trigger test diagnostic auto-mailer on failed connection
-           DiagnosticLogMailer.sendReport({
-               status: 'FAILED',
-               protocol: useBluetoothStore.getState().protocol,
-               adapterScore: useBluetoothStore.getState().adapterCapabilityScore,
-               isClone: useBluetoothStore.getState().isCloneDevice,
-               vehicleName: useTelemetryStore.getState().activeSessionVehicle?.brand,
-               logs: useBluetoothStore.getState().logs,
-               errorReason: errorReasonStr,
-           }).catch(() => {});
        } finally {  
            if (!initSuccess) {  
                await Promise.race([  
