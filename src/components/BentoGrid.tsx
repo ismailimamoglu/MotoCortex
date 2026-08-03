@@ -331,17 +331,7 @@ export default function BentoGrid({
       <View style={{ flexDirection: 'row', gap: scaleMod(6), width: '100%' }}>
         {/* Card 1: About App / Profile */}
         <BentoButton
-          style={{
-            flex: 1,
-            backgroundColor: colors.cardBg,
-            borderColor: colors.cardBorder,
-            borderWidth: scaleMod(1),
-            borderRadius: scaleMod(8),
-            paddingVertical: scaleHeight(10),
-            paddingHorizontal: scaleWidth(4),
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={[sDyn.toolTile, { flex: 1, width: undefined }]}
           onPress={onOpenProfile}
           activeOpacity={0.4}
         >
@@ -352,22 +342,12 @@ export default function BentoGrid({
 
         {/* Card 2: Language Selection */}
         <BentoButton
-          style={{
-            flex: 1,
-            backgroundColor: colors.cardBg,
-            borderColor: colors.cardBorder,
-            borderWidth: scaleMod(1),
-            borderRadius: scaleMod(8),
-            paddingVertical: scaleHeight(10),
-            paddingHorizontal: scaleWidth(4),
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={[sDyn.toolTile, { flex: 1, width: undefined }]}
           onPress={onOpenSettings}
           activeOpacity={0.4}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
+            <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri, marginTop: 0 }]}>
               {t('bento.languageSelect', 'LANG').toUpperCase()}
             </Text>
             <Text style={{ fontSize: scaleFont(9), fontFamily: MONO, color: colors.cyan, marginStart: 2 }}>{langBadge}</Text>
@@ -376,17 +356,7 @@ export default function BentoGrid({
 
         {/* Card 3: Support Center */}
         <BentoButton
-          style={{
-            flex: 1,
-            backgroundColor: colors.cardBg,
-            borderColor: colors.cardBorder,
-            borderWidth: scaleMod(1),
-            borderRadius: scaleMod(8),
-            paddingVertical: scaleHeight(10),
-            paddingHorizontal: scaleWidth(4),
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={[sDyn.toolTile, { flex: 1, width: undefined }]}
           onPress={onOpenSupport}
           activeOpacity={0.4}
         >
@@ -397,17 +367,7 @@ export default function BentoGrid({
 
         {/* Card 4: Share with Friend */}
         <BentoButton
-          style={{
-            flex: 1,
-            backgroundColor: colors.cardBg,
-            borderColor: colors.cardBorder,
-            borderWidth: scaleMod(1),
-            borderRadius: scaleMod(8),
-            paddingVertical: scaleHeight(10),
-            paddingHorizontal: scaleWidth(4),
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={[sDyn.toolTile, { flex: 1, width: undefined }]}
           onPress={onShareApp}
           activeOpacity={0.4}
         >
