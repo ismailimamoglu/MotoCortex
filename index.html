@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cortex OBD2 Diagnostic Scanner — Official Privacy Policy & App Support</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #07080a;
+            --bg-card: rgba(18, 22, 28, 0.75);
+            --border-glow: rgba(0, 245, 212, 0.15);
+            --accent-cyan: #00b4d8;
+            --accent-neon: #00f5d4;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-tertiary: #6b7280;
+            --glow-color: rgba(0, 245, 212, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Ambient Glow Backgrounds */
+        .ambient-glow-1 {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.12) 0%, rgba(7, 8, 10, 0) 70%);
+            top: -200px;
+            left: -150px;
+            z-index: -1;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        .ambient-glow-2 {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(0, 245, 212, 0.08) 0%, rgba(7, 8, 10, 0) 70%);
+            bottom: -200px;
+            right: -200px;
+            z-index: -1;
+            filter: blur(100px);
+            pointer-events: none;
+        }
+
+        header {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-neon));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--glow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .brand-text {
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--text-primary), #a5f3fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-neon);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-neon);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        main {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px 80px 24px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            line-height: 1.15;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 680px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 48px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            margin-bottom: 40px;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-glow);
+            box-shadow: 0 25px 60px rgba(0, 245, 212, 0.05);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 28px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 16px;
+        }
+
+        h2 svg {
+            color: var(--accent-neon);
+        }
+
+        .statement-box {
+            background: rgba(0, 245, 212, 0.04);
+            border-left: 4px solid var(--accent-neon);
+            padding: 24px;
+            border-radius: 0 16px 16px 0;
+            margin-bottom: 32px;
+            box-shadow: inset 0 0 15px rgba(0, 245, 212, 0.02);
+        }
+
+        .statement-box p {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        .privacy-body {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+        }
+
+        .privacy-body p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .privacy-body h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 28px 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .privacy-body ul {
+            list-style-type: none;
+            margin-bottom: 28px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .privacy-body li {
+            position: relative;
+            padding-left: 28px;
+            color: var(--text-secondary);
+        }
+
+        .privacy-body li::before {
+            content: "✓";
+            color: var(--accent-neon);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .contact-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .contact-text p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .email-display {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-neon));
+            color: #07080a;
+            font-weight: 800;
+            text-decoration: none;
+            padding: 16px 36px;
+            border-radius: 14px;
+            gap: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0, 245, 212, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 245, 212, 0.35);
+            opacity: 0.95;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--text-tertiary);
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            background-color: rgba(7, 8, 10, 0.8);
+        }
+
+        footer p {
+            margin-bottom: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .card {
+                padding: 32px 24px;
+            }
+            .contact-section {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            header {
+                flex-direction: column;
+                gap: 20px;
+                padding-top: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+
+    <header>
+        <div class="brand">
+            <div class="brand-logo">
+                <img src="logo.png" alt="Cortex OBD2 Diagnostic Scanner Logo" />
+            </div>
+            <span class="brand-text">CORTEX OBD2</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#privacy" class="nav-link">Privacy Policy</a>
+            <a href="#terms" class="nav-link">Terms of Service</a>
+            <a href="#support" class="nav-link">Customer Support</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Legal Compliance & Support Portal</h1>
+            <p>Official Privacy Policy, Terms of Service, and Customer Support for Cortex OBD2 Diagnostic Scanner</p>
+        </section>
+
+        <!-- PRIVACY POLICY CARD -->
+        <section class="card" id="privacy">
+            <h2>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Privacy Policy
+            </h2>
+            
+            <div class="statement-box">
+                <p>
+                    Cortex OBD2 Diagnostic Scanner strictly DOES NOT collect, store, or transmit any personal identification data, user identities, or real-time personal location details. To provide high-precision OBD-II diagnostics, 26-language AI Doctor mechanical assistance, and Pro Appraisal Reports, only completely anonymized technical snapshots (Device UUID, engine RPM, coolant temperature, fuel trim, DPF soot load, and DTC trouble codes) are processed securely.
+                </p>
+            </div>
+
+            <div class="privacy-body">
+                <p>
+                    At Cortex OBD2 Diagnostic Scanner, user privacy and data sovereignty are fundamental engineering principles. 
+                    Our application is fully compliant with the European Union General Data Protection Regulation (GDPR), KVKK, and Apple App Store / Google Play Store Review Guidelines.
+                </p>
+
+                <h3>Anonymized Technical Data Processed by Cortex OBD2 Diagnostic Scanner</h3>
+                <ul>
+                    <li><strong>Device Identifier:</strong> A randomly generated app-specific UUID used solely for diagnostic session continuity, unlinked to hardware credentials or personal identities.</li>
+                    <li><strong>Vehicle & ECU Metadata:</strong> Scanned vehicle manufacturer, model name, model year, and ECU protocol parameters.</li>
+                    <li><strong>Live Engine Telemetry:</strong> Instant engine RPM, coolant temperature, battery voltage, fuel trim (STFT/LTFT), and DPF filter soot load snapshots captured during diagnostic scans.</li>
+                    <li><strong>Diagnostic Trouble Codes (DTC):</strong> Active, pending, and historical Powertrain (P), Chassis (C), Body (B), and Network (U) diagnostic trouble codes.</li>
+                    <li><strong>AI Doctor Context Data:</strong> Anonymized DTC codes and telemetry parameters processed via secure Supabase Edge Functions for 26-language AI mechanical analysis with zero persistent personal data retention.</li>
+                </ul>
+
+                <h3>Local Storage & End-to-End Cryptography</h3>
+                <p>
+                    For riders traversing remote areas without internet coverage, Cortex OBD2 Diagnostic Scanner uses an offline-first architecture powered by local SQLite storage. When connectivity is established, telemetry data is encrypted using <code>TweetNaCl</code> end-to-end cryptography standards before syncing with our cloud database. Technically, it is impossible to link this technical data to real individuals, geographic locations, or personal vehicle identification numbers (VIN).
+                </p>
+            </div>
+        </section>
+
+        <!-- TERMS OF SERVICE CARD -->
+        <section class="card" id="terms">
+            <h2>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                Terms of Service
+            </h2>
+            
+            <div class="privacy-body">
+                <p>
+                    Welcome to Cortex OBD2 Diagnostic Scanner. By installing or using our application, you agree to comply with and be bound by the following Terms of Service.
+                </p>
+
+                <h3>1. License & Scope of Usage</h3>
+                <p>
+                    Cortex OBD2 Diagnostic Scanner grants you a personal, non-exclusive, non-transferable, and revocable license to use the software on your compatible mobile device for vehicle diagnostics, live telemetry monitoring, and Pro Appraisal PDF report export.
+                </p>
+
+                <h3>2. AI Doctor & Appraisal PDF Disclaimer</h3>
+                <p>
+                    Diagnostic assessments generated by the <strong>AI Doctor</strong> engine and exported via the <strong>Pro ECU Appraisal Report</strong> are automated software analysis outputs designed for informational assistance. They do not constitute official mechanical engineering certifications and DO NOT replace a physical inspection performed by a certified technician or authorized repair facility.
+                </p>
+
+                <h3>3. Hardware & Bluetooth Adapter Safety</h3>
+                <p>
+                    Cortex OBD2 Diagnostic Scanner connects with standard Bluetooth (BLE and SPP Classic) ELM327 OBD-II adapters. We are not responsible for connection drops, electrical damage, or vehicle ECU malfunctions caused by unverified or low-quality hardware clone adapters.
+                </p>
+
+                <h3>4. Disclaimer of Warranties & Modifications</h3>
+                <p>
+                    Cortex OBD2 Diagnostic Scanner is provided "as is" and "as available". We reserve the right to modify these terms or update software features at any time to maintain security and regulatory compliance.
+                </p>
+            </div>
+        </section>
+
+        <!-- CUSTOMER SUPPORT CARD -->
+        <section class="card" id="support">
+            <h2>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Customer Support
+            </h2>
+            
+            <div class="contact-section">
+                <div class="contact-text">
+                    <p>
+                        For technical support, licensing inquiries, feedback, or regulatory questions regarding Cortex OBD2 Diagnostic Scanner, please contact our support team. We aim to respond to all inquiries within 24-48 hours.
+                    </p>
+                    <div class="email-display">ismailimamoglu610@gmail.com</div>
+                </div>
+                <div>
+                    <a href="mailto:ismailimamoglu610@gmail.com?subject=Cortex%20OBD2%20Diagnostic%20Scanner%20Support" class="contact-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        Send Email
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Cortex OBD2 Diagnostic Scanner. All Rights Reserved.</p>
+        <p style="font-size: 0.85rem; color: var(--text-tertiary);">GDPR, KVKK & Apple App Store Connect / Google Play Console Compliant Legal Portal</p>
+    </footer>
+
+    <script>
+        (function() {
+            // Dynamic userId mailto integration for app support requests
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+            if (userId) {
+                const supportCard = document.getElementById('support');
+                if (supportCard) {
+                    const btn = supportCard.querySelector('.contact-btn');
+                    if (btn) {
+                        const subject = encodeURIComponent("Cortex OBD2 Diagnostic Scanner Support");
+                        const body = encodeURIComponent(`Hi Support Team,\n\n--- App Info ---\nUser ID: ${userId}\n\n--- Issue Description ---\n`);
+                        btn.setAttribute('href', `mailto:ismailimamoglu610@gmail.com?subject=${subject}&body=${body}`);
+                    }
+                    const emailDisplay = supportCard.querySelector('.email-display');
+                    if (emailDisplay) {
+                        const userIdDiv = document.createElement('div');
+                        userIdDiv.style.fontSize = '0.9rem';
+                        userIdDiv.style.color = '#38bdf8';
+                        userIdDiv.style.fontFamily = 'monospace';
+                        userIdDiv.style.marginTop = '8px';
+                        userIdDiv.textContent = `User ID: ${userId}`;
+                        emailDisplay.parentNode.appendChild(userIdDiv);
+                    }
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
