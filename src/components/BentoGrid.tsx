@@ -327,36 +327,93 @@ export default function BentoGrid({
         </BentoButton>
       </View>
 
-      {/* Row 2: About & Quick Settings (Aligned 2 Columns under Feature Coding) */}
-      <View style={sDyn.row}>
-        {/* Card 3: Profile/About */}
+      {/* Row 2: 4 Compact Action Tiles (About, Language, Support, Share) */}
+      <View style={{ flexDirection: 'row', gap: scaleMod(6), width: '100%' }}>
+        {/* Card 1: About App / Profile */}
         <BentoButton
-          style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+          style={{
+            flex: 1,
+            backgroundColor: colors.cardBg,
+            borderColor: colors.cardBorder,
+            borderWidth: scaleMod(1),
+            borderRadius: scaleMod(8),
+            paddingVertical: scaleHeight(10),
+            paddingHorizontal: scaleWidth(4),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
           onPress={onOpenProfile}
           activeOpacity={0.4}
         >
-          <Text numberOfLines={1} adjustsFontSizeToFit style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}>
-            {t('bento.vehicleProfile').toUpperCase()}
+          <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
+            {t('bento.vehicleProfile', 'ABOUT').toUpperCase()}
           </Text>
         </BentoButton>
 
-        {/* Card 4: Language Selection */}
+        {/* Card 2: Language Selection */}
         <BentoButton
-          style={[sDyn.cardSecondary, { backgroundColor: colors.cardBg, borderColor: colors.cardBorder }]}
+          style={{
+            flex: 1,
+            backgroundColor: colors.cardBg,
+            borderColor: colors.cardBorder,
+            borderWidth: scaleMod(1),
+            borderRadius: scaleMod(8),
+            paddingVertical: scaleHeight(10),
+            paddingHorizontal: scaleWidth(4),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
           onPress={onOpenSettings}
           activeOpacity={0.4}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', paddingHorizontal: scaleWidth(2) }}>
-            <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.65}
-              style={[sDyn.cardTitleSecondary, { color: colors.textPri, marginTop: 0, flex: 1, textAlign: 'center' }]}
-            >
-              {t('bento.languageSelect', 'LANGUAGE').toUpperCase()}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
+              {t('bento.languageSelect', 'LANG').toUpperCase()}
             </Text>
-            <Text style={{ fontSize: scaleFont(10), fontFamily: MONO, color: colors.cyan, marginStart: 3 }}>{langBadge}</Text>
+            <Text style={{ fontSize: scaleFont(9), fontFamily: MONO, color: colors.cyan, marginStart: 2 }}>{langBadge}</Text>
           </View>
+        </BentoButton>
+
+        {/* Card 3: Support Center */}
+        <BentoButton
+          style={{
+            flex: 1,
+            backgroundColor: colors.cardBg,
+            borderColor: colors.cardBorder,
+            borderWidth: scaleMod(1),
+            borderRadius: scaleMod(8),
+            paddingVertical: scaleHeight(10),
+            paddingHorizontal: scaleWidth(4),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={onOpenSupport}
+          activeOpacity={0.4}
+        >
+          <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
+            {t('info.support', 'SUPPORT').toUpperCase()}
+          </Text>
+        </BentoButton>
+
+        {/* Card 4: Share with Friend */}
+        <BentoButton
+          style={{
+            flex: 1,
+            backgroundColor: colors.cardBg,
+            borderColor: colors.cardBorder,
+            borderWidth: scaleMod(1),
+            borderRadius: scaleMod(8),
+            paddingVertical: scaleHeight(10),
+            paddingHorizontal: scaleWidth(4),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={onShareApp}
+          activeOpacity={0.4}
+        >
+          <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
+            {t('info.shareWithFriend', 'SHARE').toUpperCase()}
+          </Text>
         </BentoButton>
       </View>
 
