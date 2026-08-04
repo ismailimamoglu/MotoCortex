@@ -395,11 +395,19 @@ export function useTelemetrySync() {
     const manager = TelemetrySyncManager.getInstance();
     manager.start();
 
+    let syncDebounceTimer: NodeJS.Timeout | null = null;
+    const triggerDebouncedSync = () => {
+      if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
+      syncDebounceTimer = setTimeout(() => {
+        manager.syncQueue();
+      }, 2000);
+    };
+
     const unsubscribe = SafeNetInfo.addEventListener((state: any) => {
       const isConnected = state.isConnected && state.isInternetReachable !== false;
       manager.setNetInfoConnected(isConnected);
       if (isConnected) {
-        manager.syncQueue();
+        triggerDebouncedSync();
       }
     });
 
@@ -407,13 +415,15 @@ export function useTelemetrySync() {
       const isConnected = state.isConnected && state.isInternetReachable !== false;
       manager.setNetInfoConnected(isConnected);
       if (isConnected) {
-        manager.syncQueue();
+        triggerDebouncedSync();
       }
     });
 
     return () => {
+      if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
       unsubscribe();
       manager.stop();
     };
   }, []);
 }
+

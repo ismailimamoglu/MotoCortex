@@ -1,20 +1,41 @@
 import { useBluetoothStore } from '../../store/useBluetoothStore';
-import { AdapterProfileRegistry } from '../transport/AdapterProfileRegistry';
+import { AdapterProfileRegistry, AdapterProfile } from '../transport/AdapterProfileRegistry';
 
 export class FlowControlManager {
-    shouldInjectManualFlowControl(responseLines: string[]): boolean {
+    /**
+     * [Gap-fix] Resolves the brand-specific AdapterProfile.
+     *
+     * Previously this only ever matched 'OBDLink' (score >= 92) or fell back
+     * to 'ELM327_v1.5'/'CLONE_v2.1' — meaning every other named entry in
+     * AdapterProfileRegistry (e.g. 'Vgate') could never actually be selected,
+     * regardless of what adapter the user owned. adapterFirmware already
+     * captures the raw "ATI"/"AT@1" identity string during ProtocolNegotiator's
+     * post-reset benchmark, but nothing consulted it for profile selection.
+     */
+    private resolveAdapterProfile(): AdapterProfile {
         const store = useBluetoothStore.getState();
-        
-        let profile = AdapterProfileRegistry['ELM327_v1.5']; // default fallback
-        
-        if (store.isCloneDevice) {
-            profile = AdapterProfileRegistry['CLONE_v2.1'];
-        } else {
-            const score = store.adapterCapabilityScore;
-            if (score >= 92) {
-                profile = AdapterProfileRegistry.OBDLink;
-            }
+        const firmware = (store.adapterFirmware || '').toUpperCase();
+
+        if (firmware) {
+            if (firmware.includes('OBDLINK')) return AdapterProfileRegistry.OBDLink;
+            if (firmware.includes('VGATE') || firmware.includes('ICAR')) return AdapterProfileRegistry.Vgate;
+            if (firmware.includes('V1.5') || firmware.includes('V 1.5')) return AdapterProfileRegistry['ELM327_v1.5'];
         }
+
+        if (store.isCloneDevice) {
+            return AdapterProfileRegistry['CLONE_v2.1'];
+        }
+
+        const score = store.adapterCapabilityScore;
+        if (score >= 92) {
+            return AdapterProfileRegistry.OBDLink;
+        }
+
+        return AdapterProfileRegistry['ELM327_v1.5']; // default fallback
+    }
+
+    shouldInjectManualFlowControl(responseLines: string[]): boolean {
+        const profile = this.resolveAdapterProfile();
 
         // Only inject if manual flow control is supported by the profile (Condition 5)
         if (!profile.supportsManualFlowControl) {

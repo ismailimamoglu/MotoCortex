@@ -182,5 +182,51 @@ export class CapabilityDiscoveryManager {
         store.addLog(`CAPABILITY_DISCOVERY: UDS Services map: ${JSON.stringify(udsServicesMap)}`);
         return udsServicesMap;
     }
+
+    /**
+     * [Gap-fix] Probes manufacturer-specific (Mode 22) PIDs for the vehicle's
+     * detected make via OemPidRegistry. This is what actually turns the OEM
+     * PID data added for VAG/BMW/Mercedes/Ford/Toyota into a live capability,
+     * instead of a static table nothing ever queries.
+     *
+     * Safe by construction: only runs for makes present in OemPidRegistry,
+     * switches ECU header per-PID via "AT SH", and any single PID failure
+     * (unsupported DID, NO DATA, negative response) is swallowed so it can
+     * never block or fail the main connection/telemetry flow.
+     */
+    public static async discoverOemPids(make: string): Promise<Record<string, boolean>> {
+        const store = useBluetoothStore.getState();
+        const { OemPidRegistry } = require('../pids/OemPidRegistry');
+        const oemPids = OemPidRegistry.getPidsForMake(make);
+        const result: Record<string, boolean> = {};
+
+        if (oemPids.length === 0) {
+            return result;
+        }
+
+        store.addLog(`CAPABILITY_DISCOVERY: Probing ${oemPids.length} OEM-specific PID(s) for make="${make}"...`);
+        let lastHeader: string | null = null;
+
+        for (const def of oemPids) {
+            try {
+                if (def.ecuHeader && def.ecuHeader !== lastHeader) {
+                    await OBDCommandQueue.add(`AT SH ${def.ecuHeader}`, 800).catch(() => {});
+                    lastHeader = def.ecuHeader;
+                }
+                const cmd = `22 ${def.pid.substring(0, 2)} ${def.pid.substring(2, 4)}`;
+                const res = await OBDCommandQueue.add(cmd, 2000).catch(() => '');
+                const clean = res ? res.replace(/\s+/g, '').toUpperCase() : '';
+                const expectedEcho = `62${def.pid.toUpperCase()}`;
+                const supported = clean.includes(expectedEcho) && !clean.includes('NODATA') && !clean.includes('7F22');
+                result[def.name] = supported;
+            } catch (err: any) {
+                result[def.name] = false;
+                store.addLog(`CAPABILITY_DISCOVERY_WARN: OEM PID ${def.name} probe failed: ${err?.message || err}`);
+            }
+        }
+
+        store.addLog(`CAPABILITY_DISCOVERY: OEM PID map (${make}): ${JSON.stringify(result)}`);
+        return result;
+    }
 }
 export default CapabilityDiscoveryManager;

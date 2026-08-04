@@ -3,7 +3,7 @@ export class ISOTPDecoder {
      * Global Hardened Multi-ECU aware ISO-TP Decoder
      */
     decode(lines: string[]): string {
-        const pendingBuffers = new Map<string, { totalLength: number; accumulatedHex: string; isMulti: boolean }>();
+        const pendingBuffers = new Map<string, { totalLength: number; accumulatedHex: string; isMulti: boolean; expectedSeqNo: number }>();
         const stablePayloads: string[] = [];
 
         for (const line of lines) {
@@ -57,13 +57,22 @@ export class ISOTPDecoder {
                 pendingBuffers.set(ecuId, {
                     totalLength: totalLength * 2,
                     accumulatedHex: cleanLine.substring(4),
-                    isMulti: true
+                    isMulti: true,
+                    expectedSeqNo: 1
                 });
             } else if (pciType === 2) {
                 // Consecutive Frame (CF)
                 const currentCtx = pendingBuffers.get(ecuId);
                 if (currentCtx && currentCtx.isMulti) {
+                    const seqNo = parseInt(cleanLine.substring(1, 2), 16);
+                    if (seqNo !== currentCtx.expectedSeqNo) {
+                        // Sequence number mismatch / Out-of-order frame: discard corrupt buffer
+                        pendingBuffers.delete(ecuId);
+                        continue;
+                    }
+
                     currentCtx.accumulatedHex += cleanLine.substring(2);
+                    currentCtx.expectedSeqNo = (currentCtx.expectedSeqNo + 1) % 16;
 
                     if (currentCtx.accumulatedHex.length >= currentCtx.totalLength) {
                         stablePayloads.push(currentCtx.accumulatedHex.substring(0, currentCtx.totalLength));
@@ -74,12 +83,6 @@ export class ISOTPDecoder {
                 continue;
             } else {
                 stablePayloads.push(cleanLine);
-            }
-        }
-
-        for (const [_, ctx] of pendingBuffers) {
-            if (ctx.accumulatedHex.length > 0) {
-                stablePayloads.push(ctx.accumulatedHex.substring(0, ctx.totalLength));
             }
         }
 

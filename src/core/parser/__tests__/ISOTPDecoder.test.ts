@@ -71,4 +71,36 @@ describe('ISOTPDecoder Unit Tests', () => {
         ]);
         expect(response).toBe('41 0C 11 22 41 0D 33 44');
     });
+
+    test('11. Discards corrupt buffer when Consecutive Frame (CF) is out-of-order', () => {
+        const response = ISOTPDecoder.decode([
+            '7E8 10 0A 41 0C 11 22 33 44', // FF: seq expected next is 1
+            '7E8 23 55 66 77 88'           // CF: seq 3 (out of order, expected 1) -> buffer discarded
+        ]);
+        expect(response).toBe('');
+    });
+
+    test('12. Omits incomplete multi-frame payloads if stream ends before total length is met', () => {
+        const response = ISOTPDecoder.decode([
+            '7E8 10 0F 41 0C 11 22 33 44', // FF: length 15 (0x0F)
+            '7E8 21 55 66 77 88'           // CF: seq 1, total accumulated length 10 bytes < 15 bytes
+        ]);
+        expect(response).toBe('');
+    });
+
+    test('13. Correctly handles sequence number wraparound (0x0F -> 0x00)', () => {
+        // Construct a long multi-frame with 17 CF frames to test 0xF -> 0x0 seq wraparound
+        const frames = ['7E8 10 74 41 0C 00 00 00 00']; // FF: 116 bytes (232 hex chars), 6 bytes in FF
+        let seq = 1;
+        // Need 110 more bytes -> 16 CF frames (16 * 7 = 112 bytes)
+        for (let i = 0; i < 16; i++) {
+            const seqHex = seq.toString(16).toUpperCase();
+            frames.push(`7E8 2${seqHex} 11 22 33 44 55 66 77`);
+            seq = (seq + 1) % 16;
+        }
+        const response = ISOTPDecoder.decode(frames);
+        expect(response).not.toBe('');
+        expect(response.startsWith('41 0C')).toBe(true);
+    });
 });
+

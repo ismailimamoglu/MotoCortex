@@ -88,6 +88,11 @@ class BluetoothServiceAndroid implements IBluetoothService {
 
     private dataSubscription: any | null = null;
     private dataListener: DataListener | null = null;
+
+    // ── WiFi (ELM327 TCP) transport state ──────────────────────────────
+    private wifiSocket: any | null = null;
+    private wifiDataBuffer: string = '';
+    private wifiTarget: string | null = null;
     private disconnectCallback: DisconnectCallback | null = null;
     private connectionMonitorId: ReturnType<typeof setInterval> | null = null;
     private readonly STORAGE_KEY = '@last_connected_device';
@@ -217,6 +222,15 @@ class BluetoothServiceAndroid implements IBluetoothService {
 
     async connect(deviceId: string): Promise<boolean> {
         this.isManualDisconnect = false;
+
+        // ── WiFi ELM327 (e.g. "WIFI:192.168.0.10:35000") ───────────────
+        // Must be checked BEFORE any Bluetooth Classic API call, since an
+        // IP:PORT string is not a valid BT MAC and previously fell through
+        // into the RFCOMM pairing fallback (always failing with PAIRING_FAILED).
+        if (deviceId.startsWith('WIFI:')) {
+            return this.connectWifi(deviceId.substring('WIFI:'.length));
+        }
+
         try {
             await RNBluetoothClassic.cancelDiscovery();
         } catch (e) {
@@ -311,6 +325,82 @@ class BluetoothServiceAndroid implements IBluetoothService {
         ]);
     }
 
+    private async connectWifi(target: string): Promise<boolean> {
+        const parts = target.split(':');
+        const ip = parts[0] || '192.168.0.10';
+        const port = parts[1] ? parseInt(parts[1], 10) : 35000;
+
+        try {
+            let TcpSocket: any;
+            try {
+                TcpSocket = require('react-native-tcp-socket');
+            } catch (e) {
+                console.error('[BluetoothService Android] react-native-tcp-socket not installed:', e);
+                return false;
+            }
+
+            this.disconnectWifiSocket();
+            this.wifiTarget = `${ip}:${port}`;
+            this.wifiDataBuffer = '';
+
+            return await Promise.race([
+                new Promise<boolean>((resolve) => {
+                    const socket = TcpSocket.createConnection({ port, host: ip, tls: false }, () => {
+                        Logger.log('WIFI_CONNECTED', `TCP socket connected to ${ip}:${port}`);
+                        this.wifiSocket = socket;
+                        this.reconnectAttempts = 0;
+                        this.startConnectionMonitor();
+                        resolve(true);
+                    });
+
+                    socket.on('data', (data: any) => {
+                        const chunk = typeof data === 'string' ? data : data.toString('utf8');
+                        this.processWifiChunk(chunk);
+                    });
+
+                    socket.on('error', (error: any) => {
+                        console.error('[BluetoothService Android] WiFi socket error:', error?.message || error);
+                        this.disconnectWifiSocket();
+                        resolve(false);
+                    });
+
+                    socket.on('close', () => {
+                        Logger.log('WIFI_CLOSED', 'TCP socket closed');
+                        if (!this.isManualDisconnect) this.handleDroppedConnection();
+                    });
+                }),
+                new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 5000)),
+            ]);
+        } catch (err) {
+            console.error('[BluetoothService Android] WiFi connect failed:', err);
+            return false;
+        }
+    }
+
+    private processWifiChunk(chunk: string) {
+        if (this.isDraining) return;
+        Logger.log('WIFI_READ_CHUNK_RAW', chunk);
+        this.wifiDataBuffer += chunk;
+        while (this.wifiDataBuffer.includes('>')) {
+            const index = this.wifiDataBuffer.indexOf('>');
+            const fullResponse = this.wifiDataBuffer.substring(0, index + 1);
+            this.wifiDataBuffer = this.wifiDataBuffer.substring(index + 1);
+            Logger.log('WIFI_READ_FULL_RESPONSE', fullResponse);
+            if (this.dataListener) {
+                this.dataListener(fullResponse);
+            }
+        }
+    }
+
+    private disconnectWifiSocket(keepTarget: boolean = false) {
+        if (this.wifiSocket) {
+            try { this.wifiSocket.destroy(); } catch (e) {}
+            this.wifiSocket = null;
+        }
+        this.wifiDataBuffer = '';
+        if (!keepTarget) this.wifiTarget = null;
+    }
+
     private async connectBLE(deviceId: string): Promise<boolean> {
         const manager = BLEBridge.getInstance();
         try {
@@ -382,6 +472,11 @@ class BluetoothServiceAndroid implements IBluetoothService {
     async disconnect() {
         this.isManualDisconnect = true;
         this.stopConnectionMonitor();
+        if (this.wifiSocket) {
+            this.disconnectWifiSocket();
+            this.disconnectCallback = null;
+            return;
+        }
         if (this.bleSubscription) { this.bleSubscription.remove(); this.bleSubscription = null; }
         if (this.bleConnectedDevice) {
             try { await BLEBridge.getInstance().cancelDeviceConnection(this.bleConnectedDevice.id); } catch (e) {}
@@ -409,6 +504,11 @@ class BluetoothServiceAndroid implements IBluetoothService {
         }
 
         const command = data.endsWith('\r') ? data : data + '\r';
+        if (this.wifiSocket) {
+            Logger.log('WIFI_WRITE', command);
+            this.wifiSocket.write(command);
+            return;
+        }
         if (this.bleConnectedDevice && this.bleWriteCharacteristic) {
             Logger.log('BLE_WRITE', command);
             const b64 = base64Encode(command);
@@ -435,6 +535,7 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
     clearBuffer() {
         this.bleDataBuffer = '';
+        this.wifiDataBuffer = '';
         this.isDraining = true;
         if (this.drainTimeout) clearTimeout(this.drainTimeout);
         this.drainTimeout = setTimeout(() => {
@@ -462,7 +563,9 @@ class BluetoothServiceAndroid implements IBluetoothService {
         this.connectionMonitorId = setInterval(async () => {
             let connected = false;
             try {
-                if (this.bleConnectedDevice) {
+                if (this.wifiSocket) {
+                    connected = true; // liveness tracked via socket 'close'/'error' events
+                } else if (this.bleConnectedDevice) {
                     connected = await BLEBridge.getInstance().isDeviceConnected(this.bleConnectedDevice.id);
                 } else if (this.connectedDevice) {
                     connected = await this.connectedDevice.isConnected();
@@ -478,12 +581,17 @@ class BluetoothServiceAndroid implements IBluetoothService {
 
     private async handleDroppedConnection() {
         console.warn('[Bluetooth Android] Connection lost!');
-        const lastId = this.bleConnectedDevice?.id || this.connectedDevice?.address;
+        try {
+            const { UdsActuatorService } = require('../services/UdsActuatorService');
+            UdsActuatorService.stopActuatorSession().catch(() => {});
+        } catch (e) {}
+        const lastId = this.wifiTarget ? `WIFI:${this.wifiTarget}` : (this.bleConnectedDevice?.id || this.connectedDevice?.address);
         this.stopConnectionMonitor();
         if (this.bleSubscription) this.bleSubscription.remove();
         this.bleConnectedDevice = null;
         this.stopListening();
         this.connectedDevice = null;
+        this.disconnectWifiSocket();
 
         if (lastId && this.reconnectAttempts < this.MAX_RECONNECT_ATTEMPTS) {
             this.reconnectAttempts++;
