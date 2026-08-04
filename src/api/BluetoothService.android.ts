@@ -581,6 +581,10 @@ class BluetoothServiceAndroid implements IBluetoothService {
 
     private async handleDroppedConnection() {
         console.warn('[Bluetooth Android] Connection lost!');
+        try {
+            const { UdsActuatorService } = require('../services/UdsActuatorService');
+            UdsActuatorService.stopActuatorSession().catch(() => {});
+        } catch (e) {}
         const lastId = this.wifiTarget ? `WIFI:${this.wifiTarget}` : (this.bleConnectedDevice?.id || this.connectedDevice?.address);
         this.stopConnectionMonitor();
         if (this.bleSubscription) this.bleSubscription.remove();

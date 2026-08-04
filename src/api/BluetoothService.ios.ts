@@ -545,6 +545,10 @@ class BluetoothServiceIOS implements IBluetoothService {
 
     private async handleDroppedConnection() {
         console.warn('[Bluetooth iOS] Connection lost!');
+        try {
+            const { UdsActuatorService } = require('../services/UdsActuatorService');
+            UdsActuatorService.stopActuatorSession().catch(() => {});
+        } catch (e) {}
         const lastId = this.wifiTarget ? `WIFI:${this.wifiTarget}` : this.bleConnectedDevice?.id;
         this.stopConnectionMonitor();
         if (this.bleSubscription) this.bleSubscription.remove();
