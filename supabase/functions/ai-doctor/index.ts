@@ -1,10 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
-
 interface AiDoctorRequest {
   dtcCodes: string[];
   vehicleMake?: string;
@@ -17,37 +12,34 @@ interface AiDoctorRequest {
 }
 
 serve(async (req: Request) => {
-  // Handle CORS preflight requests
+  // Handle CORS preflight request
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+      },
+    });
   }
 
   try {
-    const body: AiDoctorRequest = await req.json();
-    const { dtcCodes, vehicleMake, vehicleModel, vehicleYear, engineVoltage, coolantTemp, freezeFrameData, lang = 'en' } = body;
-
-    // Server-side secret key from Supabase Environment Secrets
     const apiKey = Deno.env.get("GEMINI_API_KEY");
-
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: "SERVER_SECRET_MISSING: GEMINI_API_KEY is not set in Supabase Secrets." }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "GEMINI_API_KEY environment secret missing on server." }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    if (!dtcCodes || !Array.isArray(dtcCodes) || dtcCodes.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "BAD_REQUEST: dtcCodes array is required." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+    const payload: AiDoctorRequest = await req.json();
+    const lang = payload.lang || "en";
+    const dtcCodes = Array.isArray(payload.dtcCodes) ? payload.dtcCodes : [];
 
     const prompt = `You are MotoCortex AI Mechanic. Analyze vehicle diagnostic data and output strict JSON in language code '${lang}'.
-Vehicle: ${vehicleYear || ''} ${vehicleMake || 'Motorcycle/Car'} ${vehicleModel || ''}
+Vehicle: ${payload.vehicleYear || ''} ${payload.vehicleMake || 'Motorcycle/Car'} ${payload.vehicleModel || ''}
 DTC Codes: ${dtcCodes.join(', ')}
-Voltage: ${engineVoltage || 'N/A'}V, Coolant Temp: ${coolantTemp || 'N/A'}°C
-Freeze Frame: ${JSON.stringify(freezeFrameData || {})}
+Voltage: ${payload.engineVoltage || 'N/A'}V, Coolant Temp: ${payload.coolantTemp || 'N/A'}°C
+Freeze Frame: ${JSON.stringify(payload.freezeFrameData || {})}
 
 Return JSON structure:
 {
@@ -59,54 +51,49 @@ Return JSON structure:
   "canDriveSafetyText": "Advice on whether driving to repair shop is safe"
 }`;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-    const geminiResponse = await fetch(
+    const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            responseMimeType: "application/json",
-            maxOutputTokens: 1000,
-          },
-        }),
-        signal: controller.signal,
+          generationConfig: { responseMimeType: "application/json" }
+        })
       }
     );
-    clearTimeout(timeoutId);
 
-    if (!geminiResponse.ok) {
-      const errorText = await geminiResponse.text();
+    if (!response.ok) {
+      const errText = await response.text();
       return new Response(
-        JSON.stringify({ error: `GEMINI_API_ERROR: ${geminiResponse.status} - ${errorText}` }),
-        { status: geminiResponse.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: `Gemini API Gateway Error: ${errText}` }),
+        { status: response.status, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    const data = await geminiResponse.json();
+    const data = await response.json();
     const textResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!textResponse) {
       return new Response(
-        JSON.stringify({ error: "EMPTY_AI_RESPONSE: Candidate output text was empty." }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Empty response from Gemini model" }),
+        { status: 502, headers: { "Content-Type": "application/json" } }
       );
     }
 
     const parsedData = JSON.parse(textResponse);
-
     return new Response(JSON.stringify(parsedData), {
       status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
     });
-  } catch (err: any) {
+
+  } catch (error: any) {
     return new Response(
-      JSON.stringify({ error: `SERVER_ERROR: ${err?.message || err}` }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ error: error?.message || "Internal server error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 });

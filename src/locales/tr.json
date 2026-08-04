@@ -1301,8 +1301,8 @@
                 "desc": "Geri vitese takılıp tekrar D'ye geçildiğinde i-PEDAL modunun Seviye 3'e düşmesini engeller."
             },
             "hyundai_utility_mode_12v_saver": {
-                "name": "Utility Kamp Modu Yüksek Voltaj Akü Koruması",
-                "desc": "220V V2L prizini ana bataryadan besleyerek küçük 12V akünün bitmesini önler."
+                "name": "Kamp / Utility Modu 12V Akü Koruyucu Kilidi",
+                "desc": "Kamp modunda araç içi tüm elektroniği doğrudan yüksek voltajlı çekiş bataryasından besler."
             },
             "hyundai_phev_no_ice_climate_start": {
                 "name": "PHEV Elektrik Modu Isıtma Motor Engelleyici",
@@ -1347,6 +1347,422 @@
             "tesla_cabin_overheat_threshold_30c": {
                 "name": "Tesla Kabin Aşırı Isınma Koruması Eşik Derecesi (30°C)",
                 "desc": "Güneş altında kalan araçta klimanın açılma eşik sıcaklığını 40°C yerine 30°C'ye düşürür."
+            },
+            "bmwmotorrad_quickshifter_pro_readapt": {
+                "name": "Shift Assistant Pro Vites Sensörü Yeniden Kalibrasyonu",
+                "desc": "Vites değişim sensörü öğrenme parametrelerini sıfırlar ve hızlı vites kalibrasyonunu başlatır."
+            },
+            "bmwmotorrad_esa_zero_point_calib": {
+                "name": "Dynamic ESA Elektronik Süspansiyon Sıfır Noktası Kalibrasyonu",
+                "desc": "Elektronik süspansiyon yük ve strok sensörlerini fabrika sıfır konumuna kalibre eder."
+            },
+            "bmwmotorrad_abs_pro_cornering_toggle": {
+                "name": "ABS Pro Viraj Modu Müdahale Eşiği",
+                "desc": "Pist kullanımı için yatış açısına duyarlı ABS müdahale hassasiyetini ayarlar."
+            },
+            "bmwmotorrad_service_interval_reset": {
+                "name": "Yıllık ve Mesafe Servis Hatırlatıcı Sıfırlama",
+                "desc": "Gösterge paneli servis göstergesini sıfırlar ve özel bakım aralığı tanımlar."
+            },
+            "bmwmotorrad_headlight_pro_cornering": {
+                "name": "Headlight Pro Adaptif Viraj Farı Hassasiyeti",
+                "desc": "Adaptif viraj farlarının devreye girmesi için gereken motor yatış açısı eşiğini ayarlar."
+            },
+            "bmwmotorrad_keyless_ride_range_extend": {
+                "name": "Keyless Ride Anahtarsız Çalıştırma Algılama Menzili",
+                "desc": "Anahtarsız ateşleme sensörü için transponder sinyal algılama menzilini optimize eder."
+            },
+            "bmwmotorrad_reverse_assist_sensitivity": {
+                "name": "Elektrikli Geri Vites Motoru Hassasiyeti",
+                "desc": "Geri vites marş motoru hızını ve tork limitini ince ayarlar."
+            },
+            "ducati_riding_mode_custom_profile": {
+                "name": "Sürüş Modu Özel Profil Oluşturucu",
+                "desc": "Race, Sport, Touring ve Urban profilleri için özel parametre kombinasyonlarını açar."
+            },
+            "ducati_ohlins_suspension_mapping": {
+                "name": "Öhlins Smart EC 2.0 Yarı Aktif Süspansiyon Haritası",
+                "desc": "Elektronik süspansiyon sönümleme eğrisi ve sertlik ön ayarlarını ince ayarlar."
+            },
+            "ducati_dashboard_lap_timer_gps": {
+                "name": "TFT Gösterge Tur Zamanlayıcı ve GPS Sektör Süreleri",
+                "desc": "Gösterge panelinde pist tur zamanlayıcısı ve sektör süresi ekranını açar."
+            },
+            "ducati_engine_brake_control_ebc": {
+                "name": "Motor Freni Kontrolü (EBC) Seviye Ayarı",
+                "desc": "Sert viraj girişlerinde arka tekerlek kompresyon frenleme torkunu ayarlar."
+            },
+            "ducati_cruise_control_retrofit_enable": {
+                "name": "Hız Sabitleyici Sonradan Montaj (Retrofit) Aktivasyonu",
+                "desc": "Sonradan takılan elektronik hız sabitleme düğmeleri için ECU yazılım bayrağını etkinleştirir."
+            },
+            "ducati_exhaust_valve_sound_map": {
+                "name": "Egzoz Servo Valfi Açılma Devir Haritası",
+                "desc": "Gelişmiş egzoz sesi için akustik egzoz valfi açılma devir eşiğini ayarlar."
+            },
+            "ducati_pit_lane_limiter_config": {
+                "name": "Pit Yolu Hız Sınırlayıcı Eşiği",
+                "desc": "Gidonda yer alan 60 km/s pit yolu hız sınırlayıcı anahtarını etkinleştirir."
+            },
+            "ducati_desmo_service_light_reset": {
+                "name": "Yağ ve Desmo Supap Servis Işığı Sıfırlama",
+                "desc": "Gösterge panelindeki Desmodromik supap bakımı hatırlatıcı uyarısını temizler."
+            },
+            "ktm_quickshifter_plus_delay_tuning": {
+                "name": "Quickshifter+ Vites Kesme Süresi ve Gecikme Ayarı",
+                "desc": "Kesintisiz vites geçişleri için vites bazında ateşleme kesme süresini özelleştirir."
+            },
+            "ktm_rally_offroad_abs_tc_unlock": {
+                "name": "Rally / Arazi ABS ve TC Modu Kilidi Açma",
+                "desc": "Rally modunda arka tekerlek ABS'sini kapatır ve 9 kademeli patinaj ayarını açar."
+            },
+            "ktm_my_ktm_connectivity_unlock": {
+                "name": "My KTM / Husqvarna Bağlantı Modülü Aktivasyonu",
+                "desc": "TFT ekranda Bluetooth navigasyon ve adım adım rota yönlendirmesini açar."
+            },
+            "ktm_cruise_control_retrofit_enable": {
+                "name": "Hız Sabitleyici Sonradan Takım Yazılım Kilidi",
+                "desc": "Gidon düğme kiti takıldıktan sonra hız sabitleme fonksiyonunu aktifleştirir."
+            },
+            "ktm_clutch_pull_map_switch_gesture": {
+                "name": "Debriyaj Çekme Hareketiyle Harita Değiştirme",
+                "desc": "Çalıştırmada debriyaj kolu hareketi yaparak hızlı harita geçişini etkinleştirir."
+            },
+            "yamaha_quickshifter_cut_time_adjust": {
+                "name": "Quickshifter Ateşleme Kesme Süresi ve Hassasiyeti",
+                "desc": "Quickshifter sensör yük eşiğini ve buji ateşleme kesinti gecikmesini ayarlar."
+            },
+            "yamaha_ride_by_wire_throttle_map": {
+                "name": "Elektronik Gaz Kolu Harita Ön Ayar Seçici",
+                "desc": "A-Modu (Agresif), STD ve B-Modu (Yumuşak) gaz haritaları arasında geçiş yapar."
+            },
+            "yamaha_tft_track_theme_unlock": {
+                "name": "TFT Pist Ekran Tasarımı ve Vites Işığı Kilidi",
+                "desc": "R1/MT-09 SP pist kadran düzenini ve programlanabilir vites devir ışıklarını açar."
+            },
+            "yamaha_launch_control_sensitivity": {
+                "name": "Kalkış Kontrol Sistemi (LCS) Devir Tavanı",
+                "desc": "Kalkış kontrolü tutma devrini (8.000 - 10.000 RPM aralığı) yapılandırır."
+            },
+            "yamaha_heated_grips_accessory_enable": {
+                "name": "Orijinal Isıtmalı Elcik TFT Menü Entegrasyonu",
+                "desc": "TFT ekranda ısıtmalı elcik kontrollerini ve sıcaklık göstergesini etkinleştirir."
+            },
+            "honda_hstc_wheelie_control_fine_tune": {
+                "name": "HSTC Çekiş ve Ön Tekerlek Kaldırma Kontrolü İnce Ayarı",
+                "desc": "Honda Çekiş Kontrolü kayma oranını ve ön tekerlek kalkış toleransını ayarlar."
+            },
+            "honda_bi_directional_quickshifter_enable": {
+                "name": "Çift Yönlü Quickshifter Retrofit Aktivasyonu",
+                "desc": "ECU belleğinde auto-blipper ve alt/üst quickshifter kodlamasını etkinleştirir."
+            },
+            "honda_service_reminder_custom_interval": {
+                "name": "Yağ Bakım Hatırlatıcı Mesafe Özelleştirici",
+                "desc": "Dijital göstergede özel yağ değişim kilometresi aralığını ayarlar."
+            },
+            "honda_track_abs_rear_disable": {
+                "name": "Pist Kullanımı Arka Tekerlek ABS İptali",
+                "desc": "Pist günlerinde ön viraj ABS'sini korurken arka tekerlek ABS kanalını devre dışı bırakır."
+            },
+            "honda_cold_start_idle_enrichment": {
+                "name": "Soğuk Çalıştırma Yakıt Zenginleştirmesi ve Rölanti Devri",
+                "desc": "Performans egzoz sistemleri için ilk ısınma rölanti devrini ayarlar."
+            },
+            "harley_custom_throttle_curve_editor": {
+                "name": "Özel Gaz Tepkisi Eğri Düzenleyici",
+                "desc": "Milwaukee-Eight / Revolution Max elektronik gaz kolu ilerlemesini ayarlar."
+            },
+            "harley_security_alarm_sensitivity": {
+                "name": "Akıllı Güvenlik Sistemi Hareket ve Eğim Hassasiyeti",
+                "desc": "Hareket sensörü hassasiyetini ve eller serbest anahtar kurma gecikmesini ayarlar."
+            },
+            "harley_boom_box_gts_hidden_diagnostics": {
+                "name": "Boom! Box GTS Multimedya Gizli Teşhis Menüsü",
+                "desc": "Mühendislik telemetri ekranlarını, motor sıcaklığı ve yağ basıncı göstergelerini açar."
+            },
+            "harley_rdrs_defensive_system_tune": {
+                "name": "RDRS Motor Freni Kayma Kontrolü Hassasiyeti",
+                "desc": "Vites küçültmede RDRS arka tekerlek kayma önleme müdahalesini ince ayarlar."
+            },
+            "byd_avas_low_speed_siren_mute": {
+                "name": "AVAS Düşük Hız EV Yaya Uyarı Siren Sesi İptali",
+                "desc": "30 km/s altında dışarıya ses yayan yaya ikaz sirenini sessize alır veya sesini düşürür."
+            },
+            "byd_ev_battery_preheat_manual_switch": {
+                "name": "Manuel EV Batarya Ön Isıtma Düğmesi",
+                "desc": "DC hızlı şarj öncesinde batarya termal şartlandırmasını manuel olarak başlatır."
+            },
+            "byd_v2l_220v_outlet_power_expansion": {
+                "name": "V2L (Araçtan Yüke) 220V Priz Güç Genişletme (3.6 kW)",
+                "desc": "Harici V2L deşarj güç tavanını 2.2 kW'tan maksimum 3.6 kW'a çıkarır."
+            },
+            "byd_one_pedal_regen_default_max": {
+                "name": "Tek Pedal Sürüş Rejeneratif Frenleme Varsayılan Maksimum",
+                "desc": "Yüksek rejeneratif frenlemeyi araç çalıştırıldığında varsayılan olarak kilitler."
+            },
+            "mg_ismart_connectivity_unlock": {
+                "name": "i-SMART Bağlantı ve Uzaktan Telemetri Kilidi",
+                "desc": "Uzaktan klima kontrolü ve araç durum takip özelliklerini aktifleştirir."
+            },
+            "mg_mg4_xpower_launch_control_enable": {
+                "name": "MG4 XPower Çift Motorlu Kalkış Kontrolü (Launch Control)",
+                "desc": "3.8 saniyelik 0-100 km/s kalkış kontrolü hızlanma modunu açar."
+            },
+            "mg_battery_preheat_manual_trigger": {
+                "name": "Manuel Hızlı Şarj Batarya Ön Şartlandırma",
+                "desc": "Maksimum DC şarj hızları için yüksek voltajlı batarya ısıtıcı elemanlarını zorla AÇIK konuma getirir."
+            },
+            "xpeng_xngp_adas_region_unlock": {
+                "name": "XNGP Otonom Sürüş Asistanı Bölge Kilidi Açma",
+                "desc": "Desteklenen bölgelerde navigasyon destekli gelişmiş otonom sürüş asistanını açar."
+            },
+            "xpeng_ambient_lighting_music_sync": {
+                "name": "Müziğe Duyarlı Ritimli Ambiyans Aydınlatma",
+                "desc": "Kabin LED ambiyans aydınlatma ritmini ses sisteminin bas vuruşlarıyla senkronize eder."
+            },
+            "xpeng_rear_camera_trailer_hitch_view": {
+                "name": "360° Kamera Römork Çeki Demiri ve Zemin Çizgileri",
+                "desc": "Geri görüş kamerasına yüksek çözünürlüklü çeki demiri hizalama kılavuz çizgileri ekler."
+            },
+            "nio_battery_swap_interval_reminder": {
+                "name": "Batarya Değişim İstasyonu Ön Hazırlık Modu",
+                "desc": "Değişim öncesinde batarya kilit pinlerini otomatik gevşetir ve bataryayı iklimlendirir."
+            },
+            "nio_nomi_assistant_custom_voice_phrases": {
+                "name": "NOMI AI Sesli Asistan Kişiselleştirme ve Animasyonlar",
+                "desc": "NOMI için özel avatar animasyonlarını ve kişiselleştirilmiş karşılama cümlelerini açar."
+            },
+            "nio_sentry_watchdog_continuous_recording": {
+                "name": "NIO Nöbetçi Modu (Sentry) 4K Kamera Kaydı",
+                "desc": "Park halindeyken USB belleğe yüksek kaliteli çevre kamera kaydı yapılmasını sağlar."
+            },
+            "xiaomi_su7_hyperos_driver_profile_sync": {
+                "name": "Xiaomi SU7 HyperOS Sürücü Profili Ekosistem Senkronizasyonu",
+                "desc": "Koltuk, ayna ve klima ayarlarını Xiaomi telefon Bluetooth bağlantısıyla otomatik senkronize eder."
+            },
+            "xiaomi_su7_boost_mode_throttle_curve": {
+                "name": "Boost Modu 20 Saniyelik Aşırı Güç (Overboost) Kilidi",
+                "desc": "Tam gaz hızlanmada maksimum elektrik motoru overboost süresini uzatır."
+            },
+            "xiaomi_su7_drift_mode_torque_vectoring": {
+                "name": "Drift Modu Arka Tekerlek Tork Dağılımı",
+                "desc": "Çekiş kontrolü devre dışıyken motor torkunun %100'ünü arka aksa aktarır."
+            },
+            "chery_isa_overspeed_warning_chime_off": {
+                "name": "ISA Akıllı Hız Asistanı Aşırı Hız Uyarı Sesini Kapatma",
+                "desc": "Tespit edilen hız sınırı aşıldığında çalan sürekli sesli ikazı devre dışı bırakır."
+            },
+            "chery_driver_monitoring_camera_sensitivity": {
+                "name": "DMS Sürücü Yorgunluk İzleme Kamerası Hassasiyeti",
+                "desc": "İç izleme kamerasından kaynaklanan yanlış pozitif dikkat dağılımı uyarılarını azaltır."
+            },
+            "retrofit_parking_sensor_coding": {
+                "name": "Retrofit Ön/Arka Park Sensörü (PDC) Kodlaması",
+                "desc": "Sonradan takılan park sensörü modülünü Canbus Gateway montaj listesine kaydeder."
+            },
+            "retrofit_360_camera_activation": {
+                "name": "Retrofit 360° Çevre Görüş Kamera Sistemi",
+                "desc": "Çevre görüş kamera kontrolcüsünü etkinleştirir ve multimedyaya kamera görünümünü ekler."
+            },
+            "retrofit_led_license_plate_light_coding": {
+                "name": "Retrofit LED Plaka ve Stop Lambası Arıza İptali",
+                "desc": "LED ampullerde ampul patlak uyarısı vermesini önlemek için soğuk ampul kontrolünü kapatır."
+            },
+            "retrofit_dash_cam_sentry_integration": {
+                "name": "Retrofit Araç Kamerası Sürekli Güç ve Park Kaydı Entegrasyonu",
+                "desc": "Park halinde sürekli kayıt için Gövde Kontrol Modülü Klips 30 güç hattını yapılandırır."
+            },
+            "retrofit_heated_windshield_activation": {
+                "name": "Retrofit Ön Cam Rezistansı Isıtma Kodlaması",
+                "desc": "Ön cam buz çözücü rezistans röle çıkışını ve klima ekranı düğmesini etkinleştirir."
+            },
+            "retrofit_wireless_charger_module_coding": {
+                "name": "Retrofit Qi Kablosuz Telefon Şarj Ped Entegrasyonu",
+                "desc": "Kablosuz şarj durum LED'ini ve telefonda unutma hatırlatıcı uyarısını etkinleştirir."
+            },
+            "retrofit_acc_radar_module_coding": {
+                "name": "Retrofit Adaptif Hız Sabitleyici (ACC) Ön Radar Modülü",
+                "desc": "Sonradan takılan ön mesafe radar ünitesini CAN bus araç ağına kodlar."
+            },
+            "retrofit_traffic_sign_camera_activation": {
+                "name": "Retrofit Tabela Okuma Ön Cam Kamerası Kodlaması",
+                "desc": "Sonradan takılan cam kamerasında VZE trafik işareti tanıma işlemesini etkinleştirir."
+            },
+            "retrofit_heated_steering_wheel_coding": {
+                "name": "Retrofit Isıtmalı Direksiyon Modülü Aktivasyonu",
+                "desc": "Direksiyon ısıtma elemanı çıkışını ve otomatik açılma sıcaklık tetikleyicilerini açar."
+            },
+            "retrofit_fatigue_camera_calibration": {
+                "name": "Retrofit Sürücü Yorgunluk İzleme Kamerası Entegrasyonu",
+                "desc": "Direksiyon kolonu montajı sonrasında kızılötesi sürücü izleme sensörünü kalibre eder."
+            },
+            "retrofit_trailer_hitch_module_coding": {
+                "name": "Retrofit Çeki Demiri ve Römork Elektrik Modülü Kodlaması",
+                "desc": "Römork savrulma önleme için römork modülünü ESP stabilite sistemine kodlar."
+            },
+            "retrofit_power_tailgate_trunk_kit_coding": {
+                "name": "Retrofit Elektrikli Bagaj ve Ayakla Açma Sensörü Entegrasyonu",
+                "desc": "Elektrikli bagaj kapağı motorlarını ve tampon altı ayak sensörü kodlamasını açar."
+            },
+            "easteregg_urban_joke_light_show": {
+                "name": "Urban Joke Çapraz Flaşör Işık Şovu",
+                "desc": "Araç kilitlenirken stop lambaları ve sinyallerin sırayla çapraz yanıp sönmesini sağlar."
+            },
+            "easteregg_custom_boot_greeting_text": {
+                "name": "Dijital Gösterge Özel Karşılama Yazısı",
+                "desc": "Kontak açıldığında gösterge ekranında kişiselleştirilmiş karşılama mesajı gösterir."
+            },
+            "easteregg_cluster_mini_game_mode": {
+                "name": "Gösterge Paneli Gizli Mini Oyun Menüsü",
+                "desc": "Park halindeyken direksiyon düğmeleriyle oynanan nostaljik mini oyunu açar."
+            },
+            "easteregg_custom_horn_melody_package": {
+                "name": "Özel Akustik Korna Karşılama Melodisi",
+                "desc": "Aracın kilidi açıldığında korna ile kısa ritmik ikaz sesi çıkarır."
+            },
+            "easteregg_welcome_lighting_door_sequence": {
+                "name": "Kayan LED Kapı Kolu Karşılama Işıkları",
+                "desc": "Dış kapı kollarında kayan LED karşılama animasyonunu çalıştırır."
+            },
+            "easteregg_developer_service_menu_shortcut": {
+                "name": "Geliştirici ve Servis Teşhis Ekranı Kısayolu",
+                "desc": "Gizli mühendislik ve teşhis ekranlarına erişmek için hızlı düğme kısayolunu açar."
+            },
+            "easteregg_seasonal_cluster_theme_effect": {
+                "name": "Mevsimsel Hava Teması Gösterge Efekti (Kar/Yağmur)",
+                "desc": "Kış aylarında kadran arka planına hareketli kar tanesi veya yağmur efekti ekler."
+            },
+            "easteregg_valet_mode_prank_warning_message": {
+                "name": "Valet Modu Şaka Hız Limiti Uyarı Mesajı",
+                "desc": "Vale modu hız sınırı aşıldığında ekranda esprili uyarı mesajı gösterir."
+            },
+            "adas_lane_keep_assist_gentle_curve": {
+                "name": "Şerit Takip Asistanı (LKA) Yumuşak Direksiyon Müdahalesi",
+                "desc": "Kademeli tork müdahalesi uygulayarak ani direksiyon müdahalelerini yumuşatır."
+            },
+            "adas_lka_last_state_memory_mode": {
+                "name": "Şerit Takip Asistanı Son Durum Hafıza Kilidi",
+                "desc": "LKA'nın kontak her açıldığında otomatik olarak tekrar devreye girmesini engeller."
+            },
+            "adas_acc_default_follow_distance": {
+                "name": "Adaptif Hız Sabitleyici (ACC) Varsayılan Takip Mesafesi",
+                "desc": "ACC her açıldığında varsayılan takip mesafesini (1-4 kademe) kilitler."
+            },
+            "adas_acc_speed_step_adjustment": {
+                "name": "ACC Hız Artırma Adım Seçici (+5 / +10 km/s)",
+                "desc": "Direksiyondaki hız düğmesine kısa basış adımını 1 km/s'den 5 km/s'ye çıkarır."
+            },
+            "adas_matrix_led_glare_free_high_beam_unlock": {
+                "name": "Matrix LED Göz Almayan Adaptif Uzun Far Kilidi",
+                "desc": "Kuzey Amerika araçlarında Avrupa spek adaptif gölgelemeli uzun farları açar."
+            },
+            "adas_traffic_jam_assist_follow_fine_tune": {
+                "name": "Trafik Sıkışıklığı Asistanı Dur-Kalk Yeniden Başlama Süresi",
+                "desc": "Otomatik dur-kalk yeniden başlama süresini 3 saniyeden 15 saniyeye uzatır."
+            },
+            "adas_rear_radar_blind_spot_zero_point_reset": {
+                "name": "Arka Kör Nokta Radar Sıfır Noktası Açı Kalibrasyonu",
+                "desc": "Tampon onarımı veya sökümü sonrasında arka radar açı yönünü yeniden kalibre eder."
+            },
+            "adas_surround_camera_stitching_recalib": {
+                "name": "Çevre Görüş Kamerası Dinamik Görüntü Birleştirme Hizalaması",
+                "desc": "Sürüş esnasında kameralar arası görüntü birleştirme çizgi kalibrasyonunu çalıştırır."
+            },
+            "adas_steering_angle_sensor_zero_point_reset": {
+                "name": "Direksiyon Açı Sensörü (SAS) Sıfır Noktası Kalibrasyonu",
+                "desc": "Ön düzen / rot ayarı sonrasında direksiyon merkez açısını 0.0° seviyesine sıfırlar."
+            },
+            "adas_cross_traffic_alert_sensitivity_adjust": {
+                "name": "Arka Çapraz Trafik Uyarı (RCTA) Algılama Menzili",
+                "desc": "Geri çıkarken yaklaşan araçlar için yan radar algılama mesafesini artırır."
+            },
+            "adas_aeb_emergency_braking_threshold_preview": {
+                "name": "Otomatik Acil Fren (AEB) Uyarı Erkenlik Derecesi",
+                "desc": "Önden çarpışma uyarıları için ikaz sesi zamanlamasını ince ayarlar."
+            },
+            "adas_night_vision_camera_alignment": {
+                "name": "Kızılötesi Gece Görüş Termal Kamera Hizalaması",
+                "desc": "Kızılötesi gece görüş kamerası hedef hizalama doğrulama dizisini başlatır."
+            },
+            "adas_dms_driver_monitoring_ir_threshold": {
+                "name": "DMS Sürücü Dikkat Kamerası Kızılötesi Hassasiyeti",
+                "desc": "Koyu renk polarize güneş gözlüğü takan sürücüler için göz takip hassasiyetini ayarlar."
+            },
+            "toyota_soft_close_door_retrofit_coding": {
+                "name": "Vakum Kapı (Soft-Close) Aktüatör Kodlaması",
+                "desc": "Gövde kontrol modülünde elektrikli vakum kapı kilitlerini etkinleştirir."
+            },
+            "toyota_digital_speedometer_display_enable": {
+                "name": "Dijital Hız Göstergesi Ekranı",
+                "desc": "Analog kadran LCD ekranına büyük dijital hız okuması ekler."
+            },
+            "toyota_walk_away_auto_lock_sensitivity": {
+                "name": "Uzaklaşınca Otomatik Kapı Kilitleme Hassasiyeti",
+                "desc": "Anahtarla araçtan uzaklaşırken otomatik kilitleme mesafesini ayarlar."
+            },
+            "toyota_jbl_3d_eq_audio_profile_unlock": {
+                "name": "JBL Premium 3D Konser Ekolayzır Profilleri",
+                "desc": "JBL ses sisteminde 3D konser salonu ekolayzır profillerini açar."
+            },
+            "toyota_ev_mode_throttle_override_suppression": {
+                "name": "EV Modu Elektrikli Sürüş Gaz Limiti Bastırma",
+                "desc": "Orta derece gaz basımlarında benzinli motorun devreye girmesini engeller."
+            },
+            "ford_sync3_engineering_diagnostics_page": {
+                "name": "SYNC3 / SYNC4 Dokunmatik Ekran Mühendislik Teşhis Sayfaları",
+                "desc": "SYNC ekranında ham GPS, APIM test ve ses frekans teşhis ekranlarını açar."
+            },
+            "ford_rear_seat_entertainment_unlock": {
+                "name": "Arka Koltuk HDMI / Video Eğlence Ses Aktarımı",
+                "desc": "Arka koltuk ekranları için kabin kulaklık ses akışını etkinleştirir."
+            },
+            "ford_bambi_mode_fog_light_expansion": {
+                "name": "Bambi Modu Uzun Far + Sis Farı Eşzamanlı Aydınlatma",
+                "desc": "Uzun farlar yakıldığında ön sis farlarının sönmesini engeller."
+            },
+            "ford_auto_engine_idle_shutdown_30min_override": {
+                "name": "30 Dakika Rölanti Otomatik Motor Kapanma İptali",
+                "desc": "Park halindeyken motorun 30 dakika sonra otomatik stop etmesini engeller."
+            },
+            "hyundai_n_grin_shift_retrofit_enable": {
+                "name": "N Grin Shift (NGS) 20 Saniyelik Overboost Aktivasyonu",
+                "desc": "ECU'da direksiyon NGS düğmesi overboost fonksiyonunu aktifleştirir."
+            },
+            "hyundai_smart_tailgate_approach_distance": {
+                "name": "Akıllı Bagaj Kapağı Yaklaşma Mesafe Sensörü",
+                "desc": "Akıllı bagajın açılması için gereken bekleme süresini (3sn -> 1sn) düşürür."
+            },
+            "hyundai_digital_cluster_n_performance_theme": {
+                "name": "N Performance Dijital Gösterge Paneli Tasarımı",
+                "desc": "Standart LCD kadrana N-Performance kırmızı vites ışıklı düzenini uygular."
+            },
+            "stellantis_scr_adblue_warning_threshold_adjust": {
+                "name": "SCR AdBlue Uyarı Mesafe Eşiği Ayarı",
+                "desc": "İlk AdBlue dolum ikaz mesafesini 2400 km'den 1000 km'ye düşürür."
+            },
+            "stellantis_jeep_trail_rated_offroad_pages": {
+                "name": "Jeep Uconnect Off-Road Arazi Telemetri Sayfaları",
+                "desc": "Uconnect ekranında eğim, yatış, tekerlek açıları ve hararet sayfalarını açar."
+            },
+            "stellantis_peugeot_icockpit_3d_color_schemes": {
+                "name": "Peugeot 3D i-Cockpit Özel Renk Paletleri",
+                "desc": "3D holografik gösterge paneli için Bakır ve Kuvars renk temalarını açar."
+            },
+            "gm_super_cruise_follow_distance_adjust": {
+                "name": "Super Cruise Hands-Free Takip Mesafesi Ofseti",
+                "desc": "Otonom Super Cruise otoyol sürüşü esnasında güvenli takip mesafesini ayarlar."
+            },
+            "gm_instrument_hud_calibration_reset": {
+                "name": "Head-Up Display (HUD) Pozisyon ve Eğim Sıfırlaması",
+                "desc": "Ön cam HUD projektörünün görüntü açısını ve ufkunu sıfır seviyesine kalibre eder."
+            },
+            "gm_afm_v8_cylinder_lock_no_v4_drop": {
+                "name": "AFM / DFM Silindir İptali (Sürekli V8 Modu)",
+                "desc": "Motorun V4 moduna geçmesini engelleyerek sürekli 8 silindir çalışmasını sağlar."
+            },
+            "dodge_ram_truck_fog_lights_with_high_beam": {
+                "name": "RAM Truck Uzun Far ile Sis Farı Kombinasyonu",
+                "desc": "Uzun farlar yakıldığında sis farlarının otomatik sönmesini engeller."
             }
         },
         "codeBtn": "KODLA",

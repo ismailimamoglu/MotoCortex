@@ -397,6 +397,17 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     async write(data: string): Promise<void> {
+        const cleanCmd = data.replace(/[\r\n]/g, '').trim();
+        if (cleanCmd.length > 0) {
+            const { assertHardwareGate } = require('../core/security/CommandClassificationRegistry');
+            const { useAppStore } = require('../store/useAppStore');
+            const { useBluetoothStore } = require('../store/useBluetoothStore');
+            const isPro = useAppStore.getState().isPro;
+            const btState = useBluetoothStore.getState();
+            const isMoving = (btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0;
+            assertHardwareGate(cleanCmd, isPro, isMoving);
+        }
+
         const command = data.endsWith('\r') ? data : data + '\r';
         if (this.bleConnectedDevice && this.bleWriteCharacteristic) {
             Logger.log('BLE_WRITE', command);

@@ -141,7 +141,8 @@ jest.mock('../../core/queue/CommandScheduler', () => {
             }),
             clear: jest.fn(),
             setExecutionFunction: jest.fn(),
-            setLockGuard: jest.fn()
+            setLockGuard: jest.fn(),
+            setAdHocInterruptHandler: jest.fn()
         }
     };
 });

@@ -189,6 +189,10 @@ export class OBD2ProtocolEngine {
        CommandScheduler.setExecutionFunction((command: string, timeoutMs?: number) => this.executeCommand(command, timeoutMs));
 
        CommandScheduler.setLockGuard(() => this.isQueueBusy());
+       CommandScheduler.setAdHocInterruptHandler(() => {
+           this.flushRxBuffer();
+           this.elmParser.startCommand();
+       });
 
        AppLifecycleCoordinator.onBackground(() => {  
            useBluetoothStore.getState().addLog("LIFECYCLE: App backgrounded. Flushing queue.");  

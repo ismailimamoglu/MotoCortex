@@ -9,8 +9,6 @@ import {
   TextInput,
   Platform,
   Alert,
-  Linking,
-  Share,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '../hooks/useResponsive';
@@ -544,104 +542,7 @@ export default function AboutView({
           width: '100%',
           maxWidth: 600,
         }}
-        showsVerticalScrollIndicator={false}
       >
-        {/* Support Center & Share App Quick Actions */}
-        <View style={{ flexDirection: 'row', gap: scaleMod(10), marginBottom: scaleHeight(8) }}>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              backgroundColor: `${tc.cyan}1A`,
-              borderWidth: 1.5,
-              borderColor: tc.cyan,
-              borderRadius: scaleMod(12),
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(10),
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              gap: scaleMod(6),
-            }}
-            onPress={async () => {
-              const state = useAppStore.getState();
-              const appUserId = state.appUserId || 'N/A';
-              const deviceUuid = state.deviceUuid || 'N/A';
-              const isProStatus = state.isPro ? 'PRO (PREMIUM)' : 'FREE';
-              const activeLang = state.language || i18n.language || 'en';
-              const platformInfo = `${Platform.OS} (${Platform.Version})`;
-
-              const subject = encodeURIComponent(t('info.supportSubject', 'Cortex OBD2 Diagnostic Scanner Support Ticket'));
-              const body = encodeURIComponent(
-                `Hi Cortex OBD2 Support Team,\n\n` +
-                `Please write your message or issue description below:\n` +
-                `--------------------------------------------------\n\n\n` +
-                `--------------------------------------------------\n` +
-                `--- System & Diagnostics Credentials ---\n` +
-                `User ID: ${appUserId}\n` +
-                `Device UUID: ${deviceUuid}\n` +
-                `Platform: ${platformInfo}\n` +
-                `App Version: 1.2.0\n` +
-                `Active Language: ${activeLang}\n` +
-                `License Status: ${isProStatus}\n`
-              );
-
-              const mailtoUrl = `mailto:ismailimamoglu610@gmail.com?subject=${subject}&body=${body}`;
-
-              try {
-                const canOpen = await Linking.canOpenURL(mailtoUrl);
-                if (canOpen) {
-                  await Linking.openURL(mailtoUrl);
-                } else {
-                  // Fallback for iOS Simulator or devices without configured email app
-                  const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserId}&lang=${activeLang}#support`;
-                  await Linking.openURL(siteUrl);
-                }
-              } catch (err) {
-                const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserId}&lang=${activeLang}#support`;
-                Linking.openURL(siteUrl).catch(() => {});
-              }
-            }}
-            activeOpacity={0.6}
-          >
-            <Text style={{ color: tc.textPri, fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: tc.mono }}>
-              {t('info.support', 'SUPPORT CENTER').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              backgroundColor: `${tc.purple}1A`,
-              borderWidth: 1.5,
-              borderColor: tc.purple,
-              borderRadius: scaleMod(12),
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(10),
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              gap: scaleMod(6),
-            }}
-            onPress={async () => {
-              try {
-                await Share.share({
-                  message: t(
-                    'info.shareMessageText',
-                    'Discover vehicle ECU & live sensor telemetry with Cortex OBD2 Diagnostic Scanner!\n\nDownload Now:\n🍏 iOS (App Store): https://apps.apple.com/app/id6742882583\n🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2'
-                  ),
-                  title: 'Cortex OBD2 Diagnostic Scanner'
-                });
-              } catch (e) {
-                console.error('Share action error:', e);
-              }
-            }}
-            activeOpacity={0.6}
-          >
-            <Text style={{ color: tc.textPri, fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: tc.mono }}>
-              {t('info.shareWithFriend', 'SHARE WITH A FRIEND').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-        </View>
 
         <Text style={{
           color: tc.textSec,

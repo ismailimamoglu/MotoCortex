@@ -3,6 +3,7 @@
 
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 import CommandRateLimiter from './CommandRateLimiter';
+import { Mutex } from '../transport/Mutex';
 
 export enum SchedulerMode {
     NORMAL,
@@ -31,6 +32,8 @@ export class CommandSchedulerClass {
     private executionFn: ((command: string, timeoutMs?: number) => Promise<string>) | null;
     private activeItem: QueueItem | null;
     private checkLockFn: (() => boolean) | null = null;
+    private writeMutex: Mutex = new Mutex();
+    private onAdHocInterruptFn: (() => void) | null = null;
 
     // Weighted Fair Queuing (WFQ): Telemetri akışının arıza kodu/VIN işlemlerini boğmasını engeller
     private highRunCount = 0;
@@ -45,6 +48,10 @@ export class CommandSchedulerClass {
         this.consecutiveSuccessCount = 0;
         this.executionFn = null;
         this.activeItem = null;
+    }
+
+    public setAdHocInterruptHandler(fn: () => void) {
+        this.onAdHocInterruptFn = fn;
     }
 
     setExecutionFunction(fn: (command: string, timeoutMs?: number) => Promise<string>) {
@@ -158,7 +165,16 @@ export class CommandSchedulerClass {
             if (!item) break;
             this.activeItem = item;
 
+            if (item.priority === 'HIGH_PRIORITY_AD_HOC' && this.onAdHocInterruptFn) {
+                try {
+                    this.onAdHocInterruptFn();
+                } catch (e) {
+                    console.warn('[CommandScheduler] Ad-hoc interrupt handler error:', e);
+                }
+            }
+
             if (this.executionFn) {
+                const releaseLock = await this.writeMutex.acquire();
                 try {
                     await CommandRateLimiter.pace();
                     if (!this.activeItem) throw new Error('SESSION_CANCELLED');
@@ -170,6 +186,7 @@ export class CommandSchedulerClass {
                     this.handleFailure(err);
                     if (this.activeItem) item.reject(err);
                 } finally {
+                    releaseLock();
                     this.activeItem = null;
                 }
             } else {

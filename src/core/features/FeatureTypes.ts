@@ -134,8 +134,8 @@ export interface FeatureDefinition {
     id: string;                  // e.g. "vag_mqb_needle_sweep"
     name: string;                // Human readable name
     description: string;
-    category: 'COMFORT' | 'LIGHTING' | 'INSTRUMENT' | 'SAFETY' | 'PERFORMANCE' | 'SERVICE';
-    oem: 'VOLKSWAGEN' | 'AUDI' | 'SEAT' | 'SKODA' | 'BMW' | 'MERCEDES' | 'FORD' | 'TOYOTA' | 'RENAULT' | 'DACIA' | 'HYUNDAI' | 'KIA' | 'FIAT' | 'BYD' | 'CHERY' | 'VOLVO' | 'TESLA' | 'DODGE' | 'CHEVROLET' | 'GENERIC';
+    category: 'COMFORT' | 'LIGHTING' | 'INSTRUMENT' | 'SAFETY' | 'PERFORMANCE' | 'SERVICE' | 'MOTORCYCLE' | 'RETROFIT' | 'ENTERTAINMENT' | 'EV' | 'ADAS';
+    oem: 'VOLKSWAGEN' | 'AUDI' | 'SEAT' | 'SKODA' | 'BMW' | 'MERCEDES' | 'FORD' | 'TOYOTA' | 'RENAULT' | 'DACIA' | 'HYUNDAI' | 'KIA' | 'FIAT' | 'BYD' | 'CHERY' | 'VOLVO' | 'TESLA' | 'DODGE' | 'CHEVROLET' | 'MOTORRAD' | 'DUCATI' | 'KTM' | 'YAMAHA' | 'HONDA' | 'HARLEY' | 'MG' | 'XPENG' | 'NIO' | 'XIAOMI' | 'GENERIC';
     platform: string;            // e.g. "MQB", "F30", "G20", "C2"
     targetEcuAddress: string;    // e.g. "0x17"
     identificationDids: string[];// DIDs required for fingerprint verification

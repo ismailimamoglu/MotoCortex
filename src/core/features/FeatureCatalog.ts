@@ -10,7 +10,7 @@ import { oemDatabaseProvider, OEMFeatureDefinition } from '../database/OemDataba
 
 export interface FeatureCatalogItem {
   id: string;
-  category: 'VAG' | 'BMW' | 'MERCEDES' | 'RENAULT_DACIA' | 'FORD' | 'STELLANTIS' | 'ASIAN';
+  category: 'VAG' | 'BMW' | 'MERCEDES' | 'RENAULT_DACIA' | 'FORD' | 'STELLANTIS' | 'ASIAN' | 'MOTORCYCLE' | 'RETROFIT' | 'EASTER_EGG' | 'EV' | 'ADAS';
   nameKey: string;
   descriptionKey: string;
   targetModule: 'ECM' | 'TCM' | 'ABS' | 'BODY' | 'INSTRUMENT';
@@ -21,8 +21,16 @@ export interface FeatureCatalogItem {
   minBatteryVoltage: number;
 }
 
-function mapMakeToLegacyCategory(make: string): FeatureCatalogItem['category'] {
+function mapMakeToLegacyCategory(make: string, featureCat?: string): FeatureCatalogItem['category'] {
+  if (featureCat === 'MOTORCYCLE_ECU') return 'MOTORCYCLE';
+  if (featureCat === 'RETROFIT_INTEGRATION') return 'RETROFIT';
+  if (featureCat === 'EASTER_EGG_FUN') return 'EASTER_EGG';
+  if (featureCat === 'EV_BATTERY_CHARGING') return 'EV';
+  if (featureCat === 'ADAS_CALIBRATION') return 'ADAS';
+
   const m = (make || '').toUpperCase();
+  if (m.includes('MOTORRAD') || m.includes('DUCATI') || m.includes('KTM') || m.includes('YAMAHA') || m.includes('HARLEY') || m.includes('INDIAN')) return 'MOTORCYCLE';
+  if (m.includes('BYD') || m.includes('MG') || m.includes('XPENG') || m.includes('NIO') || m.includes('XIAOMI') || m.includes('TESLA') || m.includes('RIVIAN') || m.includes('LUCID')) return 'EV';
   if (m.includes('VOLKSWAGEN') || m.includes('AUDI') || m.includes('SEAT') || m.includes('SKODA')) return 'VAG';
   if (m.includes('BMW') || m.includes('MINI')) return 'BMW';
   if (m.includes('MERCEDES')) return 'MERCEDES';
@@ -37,7 +45,7 @@ function mapMakeToLegacyCategory(make: string): FeatureCatalogItem['category'] {
  */
 const dynamicCatalog: FeatureCatalogItem[] = oemDatabaseProvider.getFeaturesForMake().map((feat: OEMFeatureDefinition) => ({
   id: feat.id,
-  category: mapMakeToLegacyCategory(feat.make),
+  category: mapMakeToLegacyCategory(feat.make, feat.category),
   nameKey: feat.nameKey,
   descriptionKey: feat.descKey,
   targetModule: feat.category === 'DISPLAY_INSTRUMENT' ? 'INSTRUMENT' : 'BODY',

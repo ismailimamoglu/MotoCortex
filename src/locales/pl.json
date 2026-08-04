@@ -1388,6 +1388,422 @@
             "tesla_cabin_overheat_threshold_30c": {
                 "name": "Tesla Cabin Overheat Protection Temperature Threshold (30°C)",
                 "desc": "Lowers cabin overheat protection climate trigger temperature from 40°C to 30°C for interior preservation."
+            },
+            "bmwmotorrad_quickshifter_pro_readapt": {
+                "name": "Shift Assistant Pro Re-Adaptation",
+                "desc": "Resets shift sensor learning parameters and initiates quickshifter recalibration."
+            },
+            "bmwmotorrad_esa_zero_point_calib": {
+                "name": "Dynamic ESA Suspension Zero-Point Calibration",
+                "desc": "Calibrates electronic suspension load and travel sensors to factory zero."
+            },
+            "bmwmotorrad_abs_pro_cornering_toggle": {
+                "name": "ABS Pro Cornering Mode Intervention Threshold",
+                "desc": "Adjusts lean-angle dependent ABS intervention sensitivity for track use."
+            },
+            "bmwmotorrad_service_interval_reset": {
+                "name": "Annual & Distance Service Reminder Reset",
+                "desc": "Resets instrument cluster service indicator and sets custom interval."
+            },
+            "bmwmotorrad_headlight_pro_cornering": {
+                "name": "Headlight Pro Adaptive Cornering Light Sensitivity",
+                "desc": "Adjusts lean angle threshold for adaptive cornering headlight activation."
+            },
+            "bmwmotorrad_keyless_ride_range_extend": {
+                "name": "Keyless Ride Fob Detection Range Extension",
+                "desc": "Optimizes transponder signal range for keyless ignition sensing."
+            },
+            "bmwmotorrad_reverse_assist_sensitivity": {
+                "name": "Electric Reverse Assist Motor Sensitivity",
+                "desc": "Fine-tunes reverse drive electric starter motor speed and torque limit."
+            },
+            "ducati_riding_mode_custom_profile": {
+                "name": "Riding Mode Custom Profile Creator",
+                "desc": "Unlocks custom combinations for Race, Sport, Touring, and Urban profiles."
+            },
+            "ducati_ohlins_suspension_mapping": {
+                "name": "Öhlins Smart EC 2.0 Semi-Active Suspension Mapping",
+                "desc": "Fine-tunes damping curve and stiffness presets for electronic suspension."
+            },
+            "ducati_dashboard_lap_timer_gps": {
+                "name": "TFT Dashboard Lap Timer & GPS Sector Splits",
+                "desc": "Unlocks track lap timer and sector split display on instrument cluster."
+            },
+            "ducati_engine_brake_control_ebc": {
+                "name": "Engine Brake Control (EBC) Level Adjustment",
+                "desc": "Adjusts rear wheel deceleration torque during hard corner entry braking."
+            },
+            "ducati_cruise_control_retrofit_enable": {
+                "name": "Cruise Control Retrofit Activation",
+                "desc": "Enables ECU software flag for retrofitted electronic cruise control switches."
+            },
+            "ducati_exhaust_valve_sound_map": {
+                "name": "Exhaust Servo Valve Opening RPM Map",
+                "desc": "Adjusts acoustic exhaust valve opening threshold for enhanced exhaust note."
+            },
+            "ducati_pit_lane_limiter_config": {
+                "name": "Pit Lane Speed Limiter Threshold",
+                "desc": "Enables 60 km/h pit lane speed limiter toggle on handlebar switches."
+            },
+            "ducati_desmo_service_light_reset": {
+                "name": "Oil & Desmo Valve Service Light Reset",
+                "desc": "Clears Desmodromic valve service reminder warning on instrument cluster."
+            },
+            "ktm_quickshifter_plus_delay_tuning": {
+                "name": "Quickshifter+ Shift Cut Time & Delay Fine-Tuning",
+                "desc": "Customizes ignition cut duration per gear for seamless up/down shifts."
+            },
+            "ktm_rally_offroad_abs_tc_unlock": {
+                "name": "Rally / Off-Road ABS & TC Mode Unlock",
+                "desc": "Disables rear ABS and unlocks 9-stage slip adjustment in Rally mode."
+            },
+            "ktm_my_ktm_connectivity_unlock": {
+                "name": "My KTM / Husqvarna Connectivity Module Activation",
+                "desc": "Enables Bluetooth navigation and turn-by-turn routing on TFT display."
+            },
+            "ktm_cruise_control_retrofit_enable": {
+                "name": "Cruise Control Retrofit Software Unlock",
+                "desc": "Activates cruise control function after installing handlebar switch kit."
+            },
+            "ktm_clutch_pull_map_switch_gesture": {
+                "name": "Clutch-Pull Gesture Map Switching",
+                "desc": "Enables rapid map switching by executing clutch lever gesture on startup."
+            },
+            "yamaha_quickshifter_cut_time_adjust": {
+                "name": "Quickshifter Ignition Cut-Time & Sensitivity",
+                "desc": "Adjusts quickshifter sensor load threshold and spark interruption delay."
+            },
+            "yamaha_ride_by_wire_throttle_map": {
+                "name": "Ride-by-Wire Throttle Map Preset Selector",
+                "desc": "Switches between A-Mode (Aggressive), STD, and B-Mode (Smooth) throttle maps."
+            },
+            "yamaha_tft_track_theme_unlock": {
+                "name": "TFT Track Display Layout & Shift Light Unlock",
+                "desc": "Unlocks R1/MT-09 SP track cluster layout and programmable shift RPM lights."
+            },
+            "yamaha_launch_control_sensitivity": {
+                "name": "Launch Control System (LCS) Rev Ceiling",
+                "desc": "Configures launch control holding RPM (8,000 to 10,000 RPM range)."
+            },
+            "yamaha_heated_grips_accessory_enable": {
+                "name": "Genuine Heated Grips TFT Menu Integration",
+                "desc": "Enables heated grip controls and temperature gauge on TFT screen."
+            },
+            "honda_hstc_wheelie_control_fine_tune": {
+                "name": "HSTC Traction & Wheelie Control Fine-Tuning",
+                "desc": "Adjusts Honda Selectable Torque Control slip ratio and front wheel lift tolerance."
+            },
+            "honda_bi_directional_quickshifter_enable": {
+                "name": "Bi-Directional Quickshifter Retrofit Unlock",
+                "desc": "Enables auto-blipper and up/down quickshifter coding in ECU memory."
+            },
+            "honda_service_reminder_custom_interval": {
+                "name": "Oil Service Reminder Distance Customizer",
+                "desc": "Sets custom oil change mileage interval on digital dash."
+            },
+            "honda_track_abs_rear_disable": {
+                "name": "Track ABS Rear-Wheel Deactivation",
+                "desc": "Disables rear wheel ABS channel while retaining front cornering ABS for track days."
+            },
+            "honda_cold_start_idle_enrichment": {
+                "name": "Cold-Start Fuel Enrichment & Idle Target RPM",
+                "desc": "Adjusts initial warm-up idle speed for aftermarket exhaust systems."
+            },
+            "harley_custom_throttle_curve_editor": {
+                "name": "Custom Throttle Response Curve Editor",
+                "desc": "Adjusts Milwaukee-Eight / Revolution Max ride-by-wire throttle progression."
+            },
+            "harley_security_alarm_sensitivity": {
+                "name": "Smart Security System Proximity & Tilt Sensitivity",
+                "desc": "Adjusts motion sensor sensitivity and hands-free fob arming delay."
+            },
+            "harley_boom_box_gts_hidden_diagnostics": {
+                "name": "Boom! Box GTS Infotainment Hidden Diagnostic Menu",
+                "desc": "Unlocks engineering telemetry displays, engine temp, and oil pressure gauges."
+            },
+            "harley_rdrs_defensive_system_tune": {
+                "name": "RDRS Drag-Torque Slip Control Sensitivity",
+                "desc": "Fine-tunes Reflex Defensive Rider System rear-wheel slip mitigation during downshifts."
+            },
+            "byd_avas_low_speed_siren_mute": {
+                "name": "AVAS Low-Speed EV Pedestrian Warning Siren Mute",
+                "desc": "Mutes or lowers external acoustic vehicle alerting system siren under 30 km/h."
+            },
+            "byd_ev_battery_preheat_manual_switch": {
+                "name": "Manual EV Battery Pre-Heating Toggle",
+                "desc": "Enables manual battery thermal conditioning prior to DC fast charging."
+            },
+            "byd_v2l_220v_outlet_power_expansion": {
+                "name": "V2L (Vehicle-to-Load) 220V Outlet Power Expansion (3.6 kW)",
+                "desc": "Expands external V2L discharge power ceiling from 2.2 kW to 3.6 kW maximum."
+            },
+            "byd_one_pedal_regen_default_max": {
+                "name": "One-Pedal Drive Regenerative Braking Default Max",
+                "desc": "Locks high regenerative braking as persistent default upon vehicle startup."
+            },
+            "mg_ismart_connectivity_unlock": {
+                "name": "i-SMART Connectivity & Remote Telemetry Unlock",
+                "desc": "Enables remote climate control and vehicle status tracking features."
+            },
+            "mg_mg4_xpower_launch_control_enable": {
+                "name": "MG4 XPower Dual-Motor Launch Control Mode",
+                "desc": "Unlocks 3.8s 0-100 km/h launch control acceleration mode."
+            },
+            "mg_battery_preheat_manual_trigger": {
+                "name": "Manual Fast-Charge Battery Pre-Conditioning",
+                "desc": "Forces high-voltage battery heating elements ON for peak DC charge rates."
+            },
+            "xpeng_xngp_adas_region_unlock": {
+                "name": "XNGP Autonomous Driving Assistant Region Unlock",
+                "desc": "Enables advanced navigation-guided pilot assistance in unlocked regions."
+            },
+            "xpeng_ambient_lighting_music_sync": {
+                "name": "Music-Reactive Rhythm Ambient Lighting",
+                "desc": "Synchronizes cabin LED ambient lighting pulses with audio system bass beats."
+            },
+            "xpeng_rear_camera_trailer_hitch_view": {
+                "name": "360° Camera Hitch & Ground Overlay Mode",
+                "desc": "Adds high-resolution hitch alignment grid overlay to backup camera."
+            },
+            "nio_battery_swap_interval_reminder": {
+                "name": "Power Swap Station Pre-Conditioning Mode",
+                "desc": "Automatically lowers battery lock pins and pre-conditions packs prior to swap."
+            },
+            "nio_nomi_assistant_custom_voice_phrases": {
+                "name": "NOMI AI Companion Personalization & Wake Words",
+                "desc": "Unlocks custom avatar animations and personalized greeting phrases for NOMI."
+            },
+            "nio_sentry_watchdog_continuous_recording": {
+                "name": "NIO Sentry Mode 4K Camera Buffer Recording",
+                "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
+            },
+            "xiaomi_su7_hyperos_driver_profile_sync": {
+                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
+                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
+            },
+            "xiaomi_su7_boost_mode_throttle_curve": {
+                "name": "Boost Mode 20-Second Overboost Power Unlock",
+                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
+            },
+            "xiaomi_su7_drift_mode_torque_vectoring": {
+                "name": "Drift Mode RWD Torque Vectoring Allocation",
+                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
+            },
+            "chery_isa_overspeed_warning_chime_off": {
+                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
+                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
+            },
+            "chery_driver_monitoring_camera_sensitivity": {
+                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
+                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
+            },
+            "retrofit_parking_sensor_coding": {
+                "name": "Retrofit Front/Rear Parking Distance Control (PDC) Coding",
+                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
+            },
+            "retrofit_360_camera_activation": {
+                "name": "Retrofit 360° Area View Surround Camera System",
+                "desc": "Activates surround view camera controller and adds camera view to infotainment."
+            },
+            "retrofit_led_license_plate_light_coding": {
+                "name": "Retrofit LED License Plate & Tail Light Error Cancel",
+                "desc": "Disables cold bulb check monitoring to prevent false lamp out warnings with LEDs."
+            },
+            "retrofit_dash_cam_sentry_integration": {
+                "name": "Retrofit Dash Cam Continuous Ignition Power & Sentry Mode",
+                "desc": "Configures Body Control Module terminal 30 power line for continuous parking recording."
+            },
+            "retrofit_heated_windshield_activation": {
+                "name": "Retrofit Heated Windshield Element Coding",
+                "desc": "Enables windshield defrost heater relay output and climatronic screen button."
+            },
+            "retrofit_wireless_charger_module_coding": {
+                "name": "Retrofit Qi Wireless Smartphone Charging Pad Integration",
+                "desc": "Enables wireless charger status LED and phone left behind reminder popup."
+            },
+            "retrofit_acc_radar_module_coding": {
+                "name": "Retrofit Adaptive Cruise Control (ACC) Front Radar Module",
+                "desc": "Encodes retrofitted front distance radar unit into CAN bus vehicle network."
+            },
+            "retrofit_traffic_sign_camera_activation": {
+                "name": "Retrofit Traffic Sign Recognition Windshield Camera Coding",
+                "desc": "Enables VZE sign recognition processing on retrofitted windshield camera."
+            },
+            "retrofit_heated_steering_wheel_coding": {
+                "name": "Retrofit Heated Steering Wheel Module Activation",
+                "desc": "Enables steering wheel heating element output and auto-on temperature triggers."
+            },
+            "retrofit_fatigue_camera_calibration": {
+                "name": "Retrofit Driver Fatigue Monitoring Camera Integration",
+                "desc": "Calibrates driver monitoring infrared camera sensor after steering column install."
+            },
+            "retrofit_trailer_hitch_module_coding": {
+                "name": "Retrofit Tow Bar & Trailer Electrical Module Integration",
+                "desc": "Encodes trailer module into ESP stability system for trailer sway mitigation."
+            },
+            "retrofit_power_tailgate_trunk_kit_coding": {
+                "name": "Retrofit Power Tailgate & Foot Gesture Sensor Integration",
+                "desc": "Enables electric trunk drive motors and bumper kick sensor coding."
+            },
+            "easteregg_urban_joke_light_show": {
+                "name": "Urban Joke Alternating Rear Light Show",
+                "desc": "Configures tail lights and turn signals to flash alternately when locking vehicle."
+            },
+            "easteregg_custom_boot_greeting_text": {
+                "name": "Custom Boot Greeting Text on Digital Cluster",
+                "desc": "Displays custom welcome message on instrument cluster screen upon ignition on."
+            },
+            "easteregg_cluster_mini_game_mode": {
+                "name": "Instrument Cluster Hidden Mini-Game Menu",
+                "desc": "Unlocks steering-wheel button controlled retro mini-game on display when parked."
+            },
+            "easteregg_custom_horn_melody_package": {
+                "name": "Custom Acoustic Horn Welcome Melody",
+                "desc": "Plays short rhythm chirp pattern on horn when unlocking car."
+            },
+            "easteregg_welcome_lighting_door_sequence": {
+                "name": "Chasing LED Welcome Light Door Sequence",
+                "desc": "Executes progressive LED chasing animation on exterior door handles."
+            },
+            "easteregg_developer_service_menu_shortcut": {
+                "name": "Developer & Service Diagnostic Screen Shortcut",
+                "desc": "Enables quick gesture shortcut to access hidden engineering diagnostic screens."
+            },
+            "easteregg_seasonal_cluster_theme_effect": {
+                "name": "Seasonal Weather Cluster Theme Overlay (Snowflake/Rain)",
+                "desc": "Adds animated snowflake or rain particle background to gauge cluster in winter."
+            },
+            "easteregg_valet_mode_prank_warning_message": {
+                "name": "Valet Mode Prank Speed Limit Popup Warning",
+                "desc": "Displays humorously strict warning message on dashboard if valet mode is exceeded."
+            },
+            "adas_lane_keep_assist_gentle_curve": {
+                "name": "Lane Keep Assist (LKA) Gentle Steering Intervention Curve",
+                "desc": "Softens sudden steering wheel tugs by applying progressive torque intervention."
+            },
+            "adas_lka_last_state_memory_mode": {
+                "name": "Lane Keep Assist Last State Memory Lock",
+                "desc": "Prevents LKA from automatically turning back ON every time ignition is restarted."
+            },
+            "adas_acc_default_follow_distance": {
+                "name": "Adaptive Cruise Control (ACC) Default Distance Preset",
+                "desc": "Sets default gap setting (1 to 4 bars) whenever ACC is powered on."
+            },
+            "adas_acc_speed_step_adjustment": {
+                "name": "ACC Cruise Speed Increment Step Selector (+5 / +10 km/h)",
+                "desc": "Changes short-press steering wheel speed button step from 1 km/h to 5 km/h."
+            },
+            "adas_matrix_led_glare_free_high_beam_unlock": {
+                "name": "Matrix LED Glare-Free Adaptive High-Beam Glare Shield",
+                "desc": "Unlocks European-spec adaptive beam-forming high beams on North American cars."
+            },
+            "adas_traffic_jam_assist_follow_fine_tune": {
+                "name": "Traffic Jam Assist Stop-and-Go Resume Delay",
+                "desc": "Extends automatic stop-and-go restart window from 3 seconds to 15 seconds."
+            },
+            "adas_rear_radar_blind_spot_zero_point_reset": {
+                "name": "Rear Blind Spot Radar Zero-Point Angle Calibration",
+                "desc": "Recalibrates rear bumper radar azimuth angle after bumper removal or repair."
+            },
+            "adas_surround_camera_stitching_recalib": {
+                "name": "Surround View Camera Dynamic Image Stitching Alignment",
+                "desc": "Executes dynamic camera image stitching calibration while driving on road."
+            },
+            "adas_steering_angle_sensor_zero_point_reset": {
+                "name": "Steering Angle Sensor (SAS) Zero-Point Calibration",
+                "desc": "Resets steering center angle to 0.0° following wheel alignment service."
+            },
+            "adas_cross_traffic_alert_sensitivity_adjust": {
+                "name": "Rear Cross-Traffic Alert (RCTA) Detection Range",
+                "desc": "Increases side radar detection distance for vehicles approaching while backing out."
+            },
+            "adas_aeb_emergency_braking_threshold_preview": {
+                "name": "Automatic Emergency Braking (AEB) Warning Efficacy",
+                "desc": "Adjusts early vs late warning chime timing for forward collision alerts."
+            },
+            "adas_night_vision_camera_alignment": {
+                "name": "Infrared Night Vision Thermal Camera Target Alignment",
+                "desc": "Initiates infrared camera pedestal alignment verification sequence."
+            },
+            "adas_dms_driver_monitoring_ir_threshold": {
+                "name": "DMS Driver Attention Camera Infrared Sensitivity",
+                "desc": "Adjusts eye tracking threshold for drivers wearing dark polarized sunglasses."
+            },
+            "toyota_soft_close_door_retrofit_coding": {
+                "name": "Power Soft-Close Door Vacuum Actuator Coding",
+                "desc": "Enables power door latch pull-in actuators in body control module."
+            },
+            "toyota_digital_speedometer_display_enable": {
+                "name": "Digital Speedometer Center Gauge Display",
+                "desc": "Adds large digital speed readout to analog instrument cluster LCD."
+            },
+            "toyota_walk_away_auto_lock_sensitivity": {
+                "name": "Walk-Away Smart Key Auto Door Locking Sensitivity",
+                "desc": "Adjusts distance threshold before doors automatically lock when walking away."
+            },
+            "toyota_jbl_3d_eq_audio_profile_unlock": {
+                "name": "JBL Premium Surround Sound Equalizer Curves",
+                "desc": "Unlocks 3D concert hall equalizer profiles in JBL audio head unit."
+            },
+            "toyota_ev_mode_throttle_override_suppression": {
+                "name": "EV Mode Pure Electric Throttle Limit Suppression",
+                "desc": "Prevents gasoline engine from kicking ON during moderate EV acceleration."
+            },
+            "ford_sync3_engineering_diagnostics_page": {
+                "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostic Screen",
+                "desc": "Enables raw GPS, APIM test, and audio frequency diagnostic screens on SYNC."
+            },
+            "ford_rear_seat_entertainment_unlock": {
+                "name": "Rear Seat HDMI / Video Entertainment Audio Pass-Through",
+                "desc": "Enables cabin headphone audio streaming for rear seat entertainment screens."
+            },
+            "ford_bambi_mode_fog_light_expansion": {
+                "name": "Bambi Mode High Beam + Fog Light Simultaneous Illumination",
+                "desc": "Keeps front fog lights powered ON even when high beam headlights are activated."
+            },
+            "ford_auto_engine_idle_shutdown_30min_override": {
+                "name": "30-Minute Idle Auto Engine Shutdown Disable",
+                "desc": "Prevents engine from shutting OFF automatically after 30 minutes in Park."
+            },
+            "hyundai_n_grin_shift_retrofit_enable": {
+                "name": "N Grin Shift (NGS) 20-Second Overboost Retrofit Unlock",
+                "desc": "Enables steering wheel NGS button overboost function in ECU."
+            },
+            "hyundai_smart_tailgate_approach_distance": {
+                "name": "Smart Hands-Free Tailgate Approach Proximity Sensing",
+                "desc": "Adjusts standing delay time (3s to 1s) before smart tailgate automatically opens."
+            },
+            "hyundai_digital_cluster_n_performance_theme": {
+                "name": "N Performance Digital Instrument Cluster Gauge Layout",
+                "desc": "Applies N-Performance red shift-indicator cluster layout to standard LCD dash."
+            },
+            "stellantis_scr_adblue_warning_threshold_adjust": {
+                "name": "SCR AdBlue Warning Distance Threshold Adjustment",
+                "desc": "Adjusts first AdBlue refill reminder warning distance from 2400 km to 1000 km."
+            },
+            "stellantis_jeep_trail_rated_offroad_pages": {
+                "name": "Jeep Uconnect Trail-Rated Off-Road Telemetry Pages",
+                "desc": "Unlocks drivetrain pitch, roll, wheel articulation, and coolant temp pages on Uconnect."
+            },
+            "stellantis_peugeot_icockpit_3d_color_schemes": {
+                "name": "Peugeot 3D i-Cockpit Custom Color Scheme Palette",
+                "desc": "Unlocks Copper and Quartz color themes for 3D holographic digital instrument cluster."
+            },
+            "gm_super_cruise_follow_distance_adjust": {
+                "name": "Super Cruise Hands-Free Following Distance Offset",
+                "desc": "Customizes gap spacing during autonomous Super Cruise highway driving."
+            },
+            "gm_instrument_hud_calibration_reset": {
+                "name": "Head-Up Display (HUD) Position & Tilt Zero-Point Calibration",
+                "desc": "Resets wind-shield HUD projector image angle and zero-level horizon alignment."
+            },
+            "gm_afm_v8_cylinder_lock_no_v4_drop": {
+                "name": "AFM / DFM Cylinder Deactivation Override (Always V8 Mode)",
+                "desc": "Disables Active Fuel Management cylinder drop to keep engine operating in 8-cylinder mode."
+            },
+            "dodge_ram_truck_fog_lights_with_high_beam": {
+                "name": "RAM Truck Fog Lights with High Beam (High-Low-Fog Combo)",
+                "desc": "Prevents fog lights from turning OFF automatically when high beams are switched ON."
             }
         },
         "codeBtn": "KODUJ",

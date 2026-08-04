@@ -1,8 +1,5 @@
-I've gathered enough competitive intel. Let me do a couple more targeted searches on AI-doctor style chat diagnostics and Turkish/local market apps, then compile the report.
+En kritik bulgu: 103 özelliğin tamamı otomobil — motosiklet tarafında gizli özellik/kodlama kütüphaneniz sıfır. Bu, "hem motosiklet hem otomobil" konumlandırmanızın en zayıf noktası ve pazarda hiçbir rakip (Carly, OBDeleven, TuneECU dahil) mobil-öncelikli bir motosiklet coding deneyimi sunmadığından, en net rakipsiz fırsat alanınız.
 
-Searched the web, ran a command, created a file
-Searched the web, ran a command, created a file
+Rapor bunun dışında üç ek boşluk daha buluyor: retrofit/donanım entegrasyonu kodlaması (OBDeleven'in en sık kullanılan işlevi), eğlence/easter-egg kategorisi (düşük maliyetli viral büyüme aracı) ve büyüyen Çin/Kuzey Amerika EV markaları (MG, NIO, XPeng, Rivian vb.) — hiçbiri şu an kapsanmıyor.
 
-Raporun özeti: MotoCortex'in özellik seti, OBD/UDS teşhisi + AI Doktor + dyno/DPF/fuel-trim + garaj yönetimini tek çatı altında birleştiren bir konumda — bu kombinasyona sahip doğrudan bir rakip yok. Ama iki net açık var: (1) motosiklet tarafında yatış açısı/G-kuvveti telemetrisi eksik, oysa bu segmentte tüm rakiplerin (Angle, ThrottleX, RaceChrono) çekirdek özelliği; (2) yeni nesil AI teşhis uygulamaları (OBDAI, MECH AI, AI Car Doctor) artık fotoğraf/ses tabanlı teşhis ve teşhis-sonrası parça/servis yönlendirmesi sunuyor, MotoCortex'in AI Doctor'ı hâlâ metin sohbetiyle sınırlı.
-
-Rapor içinde detaylı özellik matrisi, 5 rakip kategorisi analizi ve 7 stratejik öneri var — dosyayı yukarıdan indirebilirsin. İstersen bunu Word (.docx) formatında da hazırlayabilirim.
+Somut öneri: 103 özellikten ~222 özelliğe çıkış planı — marka bazlı yeni liste, risk seviyeleri (LOW/MEDIUM/HIGH) ve etki/efor önceliklendirme matrisiyle birlikte. En düşük efor/en yüksek getiri sırası: motosiklet konfor özellikleri → easter egg → retrofit → mevcut marka derinleştirme → yüksek riskli motosiklet ECU özellikleri → yeni EV markaları.

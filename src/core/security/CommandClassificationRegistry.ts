@@ -57,6 +57,7 @@ export function classifyCommand(rawCmd: string, isMoving: boolean = false): Comm
     if (cmd.startsWith('11')) return CommandClass.DANGEROUS;
     if (cmd.startsWith('33')) return CommandClass.DANGEROUS;
     if (cmd.includes('1002')) return CommandClass.DANGEROUS;
+    if (cmd === '300000') return CommandClass.READ_ONLY; // ISO-TP Flow Control frame
     if (cmd.includes('300000')) return CommandClass.DANGEROUS;
 
     // 2. HARD_MUTATION checks
