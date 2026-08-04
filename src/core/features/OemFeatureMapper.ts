@@ -24,6 +24,16 @@ function mapCategory(cat: FeatureCategory): FeatureDefinition['category'] {
             return 'COMFORT';
         case 'SECURITY_SAFETY':
             return 'SAFETY';
+        case 'MOTORCYCLE_ECU':
+            return 'MOTORCYCLE';
+        case 'RETROFIT_INTEGRATION':
+            return 'RETROFIT';
+        case 'EASTER_EGG_FUN':
+            return 'ENTERTAINMENT';
+        case 'EV_BATTERY_CHARGING':
+            return 'EV';
+        case 'ADAS_CALIBRATION':
+            return 'ADAS';
         default:
             return 'COMFORT';
     }
@@ -38,7 +48,13 @@ function mapOemBrand(make: string): FeatureDefinition['oem'] {
     if (clean.includes('AUDI')) return 'AUDI';
     if (clean.includes('SEAT') || clean.includes('CUPRA')) return 'SEAT';
     if (clean.includes('SKODA')) return 'SKODA';
+    if (clean.includes('MOTORRAD')) return 'MOTORRAD';
     if (clean.includes('BMW') || clean.includes('MINI')) return 'BMW';
+    if (clean.includes('DUCATI')) return 'DUCATI';
+    if (clean.includes('KTM') || clean.includes('HUSQVARNA')) return 'KTM';
+    if (clean.includes('YAMAHA')) return 'YAMAHA';
+    if (clean.includes('HONDA')) return 'HONDA';
+    if (clean.includes('HARLEY') || clean.includes('INDIAN')) return 'HARLEY';
     if (clean.includes('MERCEDES')) return 'MERCEDES';
     if (clean.includes('FORD')) return 'FORD';
     if (clean.includes('TOYOTA') || clean.includes('LEXUS')) return 'TOYOTA';
@@ -48,7 +64,11 @@ function mapOemBrand(make: string): FeatureDefinition['oem'] {
     if (clean.includes('KIA')) return 'KIA';
     if (clean.includes('FIAT') || clean.includes('STELLANTIS')) return 'FIAT';
     if (clean.includes('BYD')) return 'BYD';
-    if (clean.includes('CHERY') || clean.includes('GEELY') || clean.includes('MG')) return 'CHERY';
+    if (clean.includes('MG')) return 'MG';
+    if (clean.includes('XPENG')) return 'XPENG';
+    if (clean.includes('NIO')) return 'NIO';
+    if (clean.includes('XIAOMI')) return 'XIAOMI';
+    if (clean.includes('CHERY') || clean.includes('GEELY')) return 'CHERY';
     if (clean.includes('VOLVO') || clean.includes('POLESTAR')) return 'VOLVO';
     if (clean.includes('TESLA')) return 'TESLA';
     if (clean.includes('DODGE') || clean.includes('RAM') || clean.includes('CHRYSLER') || clean.includes('JEEP')) return 'DODGE';

@@ -9,8 +9,6 @@ import {
   TextInput,
   Platform,
   Alert,
-  Linking,
-  Share,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '../hooks/useResponsive';
@@ -544,67 +542,7 @@ export default function AboutView({
           width: '100%',
           maxWidth: 600,
         }}
-        showsVerticalScrollIndicator={false}
       >
-        {/* Support Center & Share App Quick Actions */}
-        <View style={{ flexDirection: 'row', gap: scaleMod(10), marginBottom: scaleHeight(8) }}>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              backgroundColor: `${tc.cyan}1A`,
-              borderWidth: 1.5,
-              borderColor: tc.cyan,
-              borderRadius: scaleMod(12),
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(10),
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              gap: scaleMod(6),
-            }}
-            onPress={() => {
-              const language = useAppStore.getState().language;
-              const siteUrl = `https://motocortex-telemetry.vercel.app/?lang=${language}`;
-              Linking.openURL(siteUrl).catch((e) => console.error('Error opening support website:', e));
-            }}
-            activeOpacity={0.6}
-          >
-
-            <Text style={{ color: tc.textPri, fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: tc.mono }}>
-              {t('info.support', 'SUPPORT CENTER').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              backgroundColor: `${tc.purple}1A`,
-              borderWidth: 1.5,
-              borderColor: tc.purple,
-              borderRadius: scaleMod(12),
-              paddingVertical: scaleHeight(12),
-              paddingHorizontal: scaleWidth(10),
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              gap: scaleMod(6),
-            }}
-            onPress={async () => {
-              try {
-                await Share.share({
-                  message: t('report.shareMessage', 'Check out MotoCortex - The ultimate motorcycle diagnostics tool! https://motocortex.app'),
-                  title: 'MotoCortex'
-                });
-              } catch (e) { console.error(e); }
-            }}
-            activeOpacity={0.6}
-          >
-
-            <Text style={{ color: tc.textPri, fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: tc.mono }}>
-              {t('expertise.share', 'SHARE').toUpperCase()}
-            </Text>
-          </TouchableOpacity>
-        </View>
 
         <Text style={{
           color: tc.textSec,

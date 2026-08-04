@@ -96,62 +96,6 @@ export class AiDoctorService {
       } catch (edgeErr) {
         console.warn('[AiDoctorService] Supabase Edge Function call bypassed/failed:', edgeErr);
       }
-
-      // 2. Direct client key fallback (development/legacy fallback if EXPO_PUBLIC_GEMINI_API_KEY is defined)
-      const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY;
-      if (apiKey) {
-        try {
-          const prompt = `You are MotoCortex AI Mechanic. Analyze vehicle diagnostic data and output strict JSON in language code '${lang}'.
-Vehicle: ${context.vehicleYear || ''} ${context.vehicleMake || 'Motorcycle/Car'} ${context.vehicleModel || ''}
-DTC Codes: ${context.dtcCodes.join(', ')}
-Voltage: ${context.engineVoltage || 'N/A'}V, Coolant Temp: ${context.coolantTemp || 'N/A'}°C
-Freeze Frame: ${JSON.stringify(context.freezeFrameData || {})}
-
-Return JSON structure:
-{
-  "title": "Short title",
-  "summary": "2 sentence diagnostic summary",
-  "causes": ["cause 1", "cause 2"],
-  "recommendedSteps": ["step 1", "step 2"],
-  "estimatedCostRange": "$50 - $150",
-  "canDriveSafetyText": "Advice on whether driving to repair shop is safe"
-}`;
-
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 1500);
-
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-              generationConfig: { responseMimeType: "application/json" }
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          if (res.ok) {
-            const data = await res.json();
-            const textResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (textResponse) {
-              const parsed = JSON.parse(textResponse);
-              return {
-                riskLevel,
-                riskScore,
-                title: parsed.title || `DTC Analysis (${context.dtcCodes.join(', ')})`,
-                summary: parsed.summary || 'Diagnostic analysis completed.',
-                causes: Array.isArray(parsed.causes) ? parsed.causes : [],
-                recommendedSteps: Array.isArray(parsed.recommendedSteps) ? parsed.recommendedSteps : [],
-                estimatedCostRange: parsed.estimatedCostRange || 'Variable',
-                canDriveSafetyText: parsed.canDriveSafetyText || 'Drive with caution to nearest service center.'
-              };
-            }
-          }
-        } catch (err) {
-          console.warn('[AiDoctorService] Remote AI API call failed or timed out. Falling back to local offline engine:', err);
-        }
-      }
     }
 
     // Offline Intelligent Fallback Rule Engine

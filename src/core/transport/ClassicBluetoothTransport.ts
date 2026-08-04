@@ -46,6 +46,17 @@ export class ClassicBluetoothTransport implements TransportAdapter {
     }
 
     async write(data: string): Promise<void> {
+        const cleanCmd = data.replace(/[\r\n]/g, '').trim();
+        if (cleanCmd.length > 0) {
+            const { assertHardwareGate } = require('../security/CommandClassificationRegistry');
+            const { useAppStore } = require('../../store/useAppStore');
+            const { useBluetoothStore } = require('../../store/useBluetoothStore');
+            const isPro = useAppStore.getState().isPro;
+            const btState = useBluetoothStore.getState();
+            const isMoving = (btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0;
+            assertHardwareGate(cleanCmd, isPro, isMoving);
+        }
+
         if (!this.connectedDevice) {
             throw new Error('ClassicBluetoothTransport: Not connected');
         }

@@ -1,381 +1,482 @@
-Dosyayı inceledim. MotoCortex'un kapsamı klasik bir OBD uygulamasından çok daha geniş. Donanım iletişimi, gerçek zamanlı telemetri, AI destekli teşhis, bakım yönetimi, offline senkronizasyon ve performans analizi gibi modülleri tek platformda toplamayı hedefliyor.
+İnceledim. Mevcut raporunuzda 103 adet gizli özellik bulunuyor ve bunlar 14 üretici grubuna yayılmış durumda. Dağılımın büyük kısmı gösterge, konfor ve aydınlatma odaklı.
 
-Ancak küresel pazarda başarıyı belirleyen şey özellik sayısı değil, hangi özelliklerin gerçekten rakiplerden farklı olduğu ve hangi araçlarda güvenilir çalıştığıdır.
+Ancak global pazarı düşündüğümüzde, bence burada büyük bir fırsat kaçırılıyor.
 
-Aşağıda global pazardaki en güçlü rakiplerle çapraz analizimi sunuyorum.
+Asıl problem
 
-Global Rakipler
+Rakipler (özellikle Carly, OBDeleven, BimmerCode) yüzlerce kodlama sunsalar da bunların büyük kısmı:
 
-En güçlü rakipler:
+Needle Sweep
+Mirror Folding
+DRL
+Seatbelt Chime
+Lock Chirp
 
-Carly
-OBDeleven
-FIXD
-BlueDriver
-Car Scanner ELM OBD2
-Torque Pro
-BimmerCode
-BimmerLink
-OBD Fusion
-Özellik Karşılaştırması
-Özellik	MotoCortex	Carly	OBDeleven	BlueDriver	Car Scanner
-OBD-II	✅	✅	✅	✅	✅
-BLE + Classic	✅	✅	❌	✅	✅
-Offline çalışma	✅	Kısmen	❌	❌	✅
-AI Arıza Analizi	✅	Kısmen	❌	❌	❌
-Çoklu ECU	✅	✅	✅	Kısmen	Kısmen
-Telemetri Dashboard	✅	Orta	Zayıf	Orta	Çok Güçlü
-Dyno HP Hesabı	✅	❌	❌	❌	Kısmen
-GPX Kayıt	✅	❌	❌	❌	Kısmen
-Garaj Yönetimi	✅	Orta	Zayıf	Zayıf	Yok
-Bakım Takibi	✅	✅	Kısmen	❌	❌
-UDS Aktüatör	✅	Kısmen	✅	❌	❌
-DTC Açıklama	✅	✅	✅	✅	✅
-MotoCortex'un Güçlü Yanları
+gibi kozmetik özellikler.
 
-Dosyadaki özelliklere göre MotoCortex'un en büyük avantajları şunlar olacaktır.
+Bu pazar artık doygun.
 
-1. AI Doctor
+Kullanıcıların forumlarda ve topluluklarda en çok istediği şey ise:
 
-Bu, pazarda gerçekten dikkat çekecek özellik.
+"Aracın fabrikada var olan ama ülkemde veya donanım paketimde kapalı bırakılmış özelliklerini açabilmek."
 
-Rakiplerin çoğu
+Yani konfor, EV yönetimi, ADAS kişiselleştirmesi, bakım optimizasyonu ve akıllı otomasyon tarafı hızla büyüyor.
 
-P0300
-Random Misfire
+Ben olsam özellikleri 100'den yaklaşık 350-450 seviyesine çıkarırken şu kategorileri eklerdim.
+1. ADAS (Sürücü Destek Sistemleri)
 
-yazar.
+Bu alan neredeyse tüm üreticilerde büyüyor.
 
-MotoCortex ise
+Yeni kategori:
 
-neden oluştuğunu
-ne kadar ciddi olduğunu
-yola devam edilip edilmeyeceğini
-hangi parçaların kontrol edilmesi gerektiğini
+Lane Keep Assist varsayılan durumu
+Lane Centering hassasiyeti
+Direksiyon müdahale gücü
+Şerit uyarı titreşim seviyesi
+ACC takip mesafesi varsayılanı
+ACC hız artış basamağı
+Viraj hız azaltma
+Trafik işareti uyarısı
+Sürücü dikkat sistemi hassasiyeti
+Şerit değiştirirken direksiyon desteği
+Kör nokta uyarı seviyesi
+Arka çapraz trafik hassasiyeti
+Ön çarpışma uyarı mesafesi
+Yaya algılama hassasiyeti
+Bisiklet algılama modu
+Otoyol sürüş asistanı varsayılanı
 
-anlatıyor.
+≈40 yeni özellik
 
-Bu gerçekten farklı.
+2. Elektrikli Araçlar (En hızlı büyüyen segment)
 
-2. Offline First
+BYD
 
-Rakiplerin çoğu internet bağımlı.
+Tesla
 
-MotoCortex
+Hyundai
 
-SQLite
-Queue
-Sync Manager
+Kia
 
-kullanıyor.
+Volvo
 
-Bu özellikle motosiklet kullanıcıları için çok önemli.
+Polestar
 
-3. GPX + Telemetri
+BMW
 
-Bu özellik neredeyse yalnızca pist uygulamalarında var.
+Mercedes EQ
 
-Normal OBD uygulamalarında yok.
-
-4. Dyno
-
-Gerçek zamanlı HP/Torque
-
-çok ilgi çeker.
-
-Özellikle
-
-tunerlar
-modifiye araç sahipleri
+VW ID
 
 için.
 
-5. AI Chat
+Yeni özellikler
 
-Burası geleceğin özelliği.
+Batarya
 
-Kullanıcı
+günlük şarj limiti
+hafta sonu limiti
+sıcaklık hedefi
+DC hedef sıcaklığı
+AC hedef sıcaklığı
 
-"Motor tekliyor"
+Şarj
 
-yazacak.
+otomatik gece şarjı
+ucuz elektrik saatleri
+maksimum AC amper
+minimum SOC
+otomatik preconditioning
+
+Rejenerasyon
+
+varsayılan seviye
+tek pedal
+Auto regen
+coast mode
+
+Kabin
+
+uzaktan klima
+direksiyon ısıtma
+koltuk ısıtma
+batarya koruma
+
+≈60 yeni özellik
+
+3. Otomatik Senaryolar (Rakiplerde neredeyse yok)
+
+Bu bence MotoCortex'u farklılaştıracak.
+
+IF
+
+Akü <12V
+
+THEN
+
+Start Stop kapansın
+
+IF
+
+Yağ sıcaklığı >120
+
+THEN
+
+Kırmızı uyarı
+
+IF
+
+DPF %90
+
+THEN
+
+Bildirim
+
+IF
+
+Yakıt <50 km
+
+THEN
+
+Yakındaki istasyonlar
+
+IF
+
+Lastik basıncı düşük
+
+THEN
+
+Hız limiti öner
+
+IF
+
+Hararet
+
+THEN
+
+Klima kapansın
+
+Fan açılsın
+
+≈50 özellik
+
+4. Premium Dashboard
+
+Rakiplerde eksik.
+
+Yeni sayfalar
+
+Turbo
+
+Track
+
+Drag
+
+Dyno
+
+Hybrid
+
+EV
+
+Off-road
+
+Towing
+
+Camping
+
+Racing
+
+Police Mode
+
+Winter Mode
+
+≈25 özellik
+
+5. Akıllı Kodlama (AI Coding)
+
+Bu hiçbir rakipte tam anlamıyla yok.
 
 AI
 
-O2 sensörü
-Bobin
-Buji
-Yakıt pompası
+VIN okur
 
-olasılıklarını sıralayacak.
+↓
 
-6. Motosiklet Desteği
+ECU okur
 
-Rakiplerin çoğu otomobile odaklı.
+↓
 
-MotoCortex burada büyük avantaj yakalayabilir.
+Aracı tanır
 
-Zayıf Noktalar
+↓
 
-Şimdi en kritik eksiklere gelelim.
+Şunu önerir
 
-1. ECU Coding
+"Aracınızda 42 adet gizli özellik destekleniyor."
 
-Global pazarda insanlar en çok bunu seviyor.
+↓
 
-Örneğin
+Tek dokunuş
 
-Carly
+↓
 
-Coming Home
+Kodlar
+
+Daha sonra
+
+"Kış Paketi"
+
+ayna ısıtma
+koltuk ısıtma
+direksiyon ısıtma
+
+hepsini aç.
+
+"Sport Pack"
+
 Needle Sweep
-Mirror Fold
-Start/Stop Memory
+Sport Display
+Sport+
+Egzoz
 
-açabiliyor.
+tek tuş.
 
-OBDeleven
+6. Maintenance Coding
 
-çok daha ileri.
-
-Sizde bu alan henüz başlangıç seviyesinde görünüyor.
-
-2. Marka Bazlı Kodlama
-
-Global pazarda insanlar şunu arıyor
-
-BMW Coding
-
-VW Coding
-
-Audi Coding
-
-Mercedes Coding
-
-Toyota Coding
-
-Hyundai Coding
-
-...
-
-Her markaya özel özellik gerekiyor.
-
-3. Service Functions
-
-Rakiplerde bulunan örnekler
-
-ABS Bleeding
-
-Battery Registration
-
-Injector Coding
-
-DPF Reset
-
-Oil Reset
-
-EPB Reset
-
-Steering Angle
-
-SAS Calibration
-
-Throttle Adaptation
-
-Turbo Learn
-
-Transmission Learn
-
-Sizde bunların yalnızca küçük kısmı bulunuyor.
-
-4. Live Graph
-
-Car Scanner'ın en güçlü tarafı.
-
-Grafikler mükemmel.
-
-MotoCortex'da mutlaka olmalı.
-
-5. CSV Analiz
-
-Profesyoneller
-
-Excel
-
-MATLAB
-
-Python
-
-kullanıyor.
-
-Ham veri export edilmeli.
-
-6. Widget
-
-Android Widget
-
-iOS Widget
-
-Rakiplerde yeni yaygınlaşıyor.
-
-7. WearOS / Apple Watch
-
-Harika olur.
-
-RPM
-
-Coolant
-
-Boost
-
-anlık izlenebilir.
-
-Global Pazarda Eksik Olan Büyük Fırsatlar
-
-Bence en büyük fırsatlar bunlar.
-
-AI Predictive Maintenance
-
-Sadece
-
-P0420
-
-demeyecek.
-
-Şunu söyleyecek
-
-"Yaklaşık 2500 km sonra O2 sensörünüz arızalanabilir."
-
-Rakiplerde yok denecek kadar az.
-
-ECU Health Score
-
-100 üzerinden puan.
+Rakiplerde eksik.
 
 Örneğin
 
-Engine Health
+Servis sonrası
 
-Transmission Health
+Oil reset
+Brake reset
+Gearbox reset
+DPF reset
+Battery reset
+TPMS reset
 
-ABS Health
+bunlar zaten var.
 
-Battery Health
+Ama
 
-Turbo Health
+bunlara ek olarak
 
-Driver Score
+yağ tipi değiştir
+bakım kilometresi değiştir
+servis tarihi değiştir
+filtre değişimi
+bakım planı
 
-Agresif kullanım
+≈30 özellik
 
-Yakıt ekonomisi
+7. Kamera Özellikleri
 
-Fren kullanımı
+Çok isteniyor.
 
-Motor koruma puanı
+Reverse Camera Delay
+360 Camera Always Available
+Trailer View
+Hitch View
+Dynamic Parking Line
+Camera Brightness
+Camera HDR
+Recording Quality
 
-Fleet
+≈20 özellik
 
-Birden fazla araç.
+8. Ses Sistemi
+
+Rakiplerde az.
+
+Harman Kardon
+Bose
+Burmester
+JBL
+Sony
+Bang&Olufsen
+
+için
+
+DSP
+EQ
+Loudness
+Bass Boost
+Speed Volume
+Startup Volume
+
+≈25 özellik
+
+9. Off-road
+
+Jeep
+
+Toyota
+
+Ford
+
+Land Rover
+
+Suzuki
+
+Isuzu
+
+çok büyük pazar.
+
+Crawl Mode
+Off-road ekranı
+Lastik basıncı
+Pitch
+Roll
+Diff Lock ekranı
+Su sıcaklığı
+Altitude
+Compass
+
+≈25 özellik
+
+10. Fleet
 
 Şirketler için.
 
-Community
+hız limiti
+sürücü profili
+bakım planı
+kilometre
+yakıt
+sürüş puanı
 
-Kullanıcılar
+≈20 özellik
 
-aynı DTC'nin çözümünü paylaşabilir.
+11. Motosiklet (Bence en büyük fırsat)
 
-AI Voice
+Rakiplerin çoğu bu pazarı ihmal ediyor.
 
-"Motorum neden titriyor?"
+MotoCortex burada lider olabilir.
 
-diye soracak.
+Örneğin
 
-AI cevap verecek.
+Yamaha
 
-VIN Cloud
+Honda
 
-VIN okununca
+Kawasaki
 
-servis geçmişi
+BMW Motorrad
 
-geri çağırmalar
+KTM
 
-yaygın kronik sorunlar
+Ducati
 
-otomatik gelsin.
+Triumph
 
-ECU Snapshot
+Aprilia
 
-Servise göndermek için
+için
 
-tek tıkla
+Quickshifter
+Launch Control
+Wheelie Control
+Engine Brake
+ABS Level
+Traction Level
+Ride Mode
+Suspension
+TFT Theme
+Shift Light
+Pit Limiter
+Fan Override
+Race Telemetry
+Lean Angle
+Lap Timer
 
-PDF
+≈60 özellik
 
-oluşturma.
+12. AI Diagnostic Coding
 
-Smart Diagnostics
+En sevdiğim fikir.
 
 AI
 
-10 PID'i birlikte yorumlayacak.
+DTC okuyor.
 
-Mesela
+↓
 
-LTFT
-STFT
-MAP
-O2
-RPM
+Şunu söylüyor.
 
-beraber analiz edilip
+"Bu arızadan dolayı aşağıdaki gizli özellik devre dışı."
 
-"Vakum kaçağı olasılığı %78"
+↓
 
-diyecek.
+İstersen
 
-Bu rakiplerde oldukça sınırlı.
+tek tuşla
 
-En Büyük Risk
+yeniden kodlayayım.
 
-Benim gördüğüm en büyük risk teknik değil.
+13. Smart Package Installer
 
-Araç uyumluluğu.
+Bu özellik MotoCortex'u çok öne çıkarır.
 
-Global pazarda kullanıcılar özellik sayısından önce şunu ister:
+Tek tek özellik seçmek yerine kullanıcıya hazır paketler sunulur:
 
-"Benim aracımda çalışıyor mu?"
+Sport Pack
+Needle Sweep
+Sport Display
+Sport+
+Lap Timer
+Shift Light
+Egzoz sesi
+Comfort Pack
+Mirror Fold
+Walk Away Lock
+Coming Home
+Welcome Lights
+Rain Closing
+Winter Pack
+Koltuk ısıtma
+Direksiyon ısıtma
+Cam rezistansı
+Ayna rezistansı
+EV Pack
+%80 şarj limiti
+Batarya ön ısıtma
+One Pedal
+Rejenerasyon
+Track Pack
+Lap Timer
+G Meter
+HP
+Torque
+Dyno
+Camping Pack
+Utility Mode
+12V Saver
+Klima
+V2L
+İç aydınlatma
+Önceliklendirme
 
-Eğer:
+Bence geliştirme önceliği şu sırada olmalı:
 
-Toyota Corolla 2008
-BMW F30
-Audi A4 B9
-Ford F150
-Hyundai Tucson
-Honda Civic
-Tesla (uygun olduğu ölçüde)
-KTM
-Yamaha
-Harley-Davidson
+Öncelik	Alan	Ticari Değer
+⭐⭐⭐⭐⭐	AI Smart Coding + Paket Kurulumu	Çok yüksek
+⭐⭐⭐⭐⭐	EV Kodlama ve Batarya Yönetimi	Çok yüksek
+⭐⭐⭐⭐⭐	Motosiklet Kodlama	Çok yüksek (rekabet düşük)
+⭐⭐⭐⭐☆	ADAS Kişiselleştirme	Yüksek
+⭐⭐⭐⭐☆	Akıllı Otomasyon (IF/THEN)	Yüksek
+⭐⭐⭐⭐☆	Kamera ve Multimedya	Yüksek
+⭐⭐⭐⭐☆	Bakım ve Servis Fonksiyonları	Yüksek
+⭐⭐⭐☆☆	Off-road Özellikleri	Orta-Yüksek
+⭐⭐⭐☆☆	Premium Ses Sistemi	Orta
+Stratejik değerlendirme
 
-gibi popüler modellerde güvenilir şekilde çalışıyorsa, uygulamanın benimsenme ihtimali ciddi şekilde artar.
+Mevcut 103 özellik, global rakiplerle aynı seviyede temel bir başlangıç sunuyor. Ancak MotoCortex'u gerçekten farklılaştıracak olan şey, özellik sayısını artırmaktan ziyade bunları "akıllı", "paketlenebilir" ve "AI destekli" hale getirmek olacaktır.
 
-Genel Değerlendirme
+Özellikle şu üç eksen birlikte uygulanırsa güçlü bir rekabet avantajı oluşur:
 
-Şu anki dokümana göre MotoCortex'u küresel pazarda şu şekilde konumlandırırım:
+AI destekli otomatik kodlama önerileri (araca özel, tek dokunuşla).
+Elektrikli araç ve motosiklet odaklı gelişmiş kodlama (rekabetin daha zayıf olduğu alanlar).
+Hazır özellik paketleri (Sport, Comfort, Winter, Track, EV vb.) ile tek tek kodlama yerine kullanıcıya doğrudan değer sunan deneyim.
 
-Kategori	Puan (10 üzerinden)
-Özellik Zenginliği	9.6
-AI Yenilikçiliği	9.8
-Kullanıcı Deneyimi Potansiyeli	8.8
-OBD Temel Fonksiyonları	9.3
-ECU Coding	5.5
-Servis Fonksiyonları	6.5
-Motosiklet Desteği	9.7
-Ticari Potansiyel	9.4
-Mevcut Rakiplerden Ayrışma	9.5
-
-Sonuç: Eğer daha önce konuştuğumuz küresel ECU veritabanı, marka bazlı kodlama, kapsamlı servis fonksiyonları ve yüksek araç uyumluluğu hedefleri de başarıyla tamamlanırsa, MotoCortex yalnızca bir "OBD okuyucu" değil; AI destekli araç teşhis ve yönetim platformu olarak Carly, Car Scanner ve BlueDriver ile aynı ligde rekabet edebilir. Özellikle AI Doctor, motosiklet desteği ve offline-first mimarisi, doğru uygulanırsa pazarda belirgin bir farklılaşma sağlayabilecek en güçlü yönlerinizdir.
+Bu yaklaşım, MotoCortex'u yalnızca "gizli özellik açan" bir uygulama olmaktan çıkarıp, araç kişiselleştirme ve ECU konfigürasyon platformu olarak konumlandırabilir.

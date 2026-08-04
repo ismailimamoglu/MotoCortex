@@ -259,6 +259,16 @@ export class BluetoothManager {
       this.fail(BluetoothErrorCode.WRITE_FAILED, 'Write attempted with no active transport');
       throw new Error(BluetoothErrorCode.WRITE_FAILED);
     }
+    const cleanCmd = command.replace(/[\r\n]/g, '').trim();
+    if (cleanCmd.length > 0) {
+      const { assertHardwareGate } = require('../core/security/CommandClassificationRegistry');
+      const { useAppStore } = require('../store/useAppStore');
+      const { useBluetoothStore } = require('../store/useBluetoothStore');
+      const isPro = useAppStore.getState().isPro;
+      const btState = useBluetoothStore.getState();
+      const isMoving = (btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0;
+      assertHardwareGate(cleanCmd, isPro, isMoving);
+    }
     const payload = command.endsWith('\r') ? command : `${command}\r`;
     try {
       await this.transport.write(payload, 'utf-8');

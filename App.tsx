@@ -1197,18 +1197,57 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
   const toggleSimulationMode = useAppStore((state) => state.toggleSimulationMode);
 
-  const handleSupportEmail = () => {
-    const siteUrl = `https://motocortex-telemetry.vercel.app/?lang=${language}`;
-    Linking.openURL(siteUrl).catch((e) => console.error('Error opening support website:', e));
+  const handleSupportEmail = async () => {
+    const state = useAppStore.getState();
+    const appUserIdVal = state.appUserId || 'N/A';
+    const deviceUuidVal = state.deviceUuid || 'N/A';
+    const isProStatus = state.isPro ? 'PRO (PREMIUM)' : 'FREE';
+    const activeLang = state.language || i18n.language || 'en';
+    const platformInfo = `${Platform.OS} (${Platform.Version})`;
+
+    const subject = encodeURIComponent(t('info.supportSubject', 'Cortex OBD2 Diagnostic Scanner Support Ticket'));
+    const body = encodeURIComponent(
+      `Hi Cortex OBD2 Support Team,\n\n` +
+      `Please write your message or issue description below:\n` +
+      `--------------------------------------------------\n\n\n` +
+      `--------------------------------------------------\n` +
+      `--- System & Diagnostics Credentials ---\n` +
+      `User ID: ${appUserIdVal}\n` +
+      `Device UUID: ${deviceUuidVal}\n` +
+      `Platform: ${platformInfo}\n` +
+      `App Version: 1.2.0\n` +
+      `Active Language: ${activeLang}\n` +
+      `License Status: ${isProStatus}\n`
+    );
+
+    const mailtoUrl = `mailto:ismailimamoglu610@gmail.com?subject=${subject}&body=${body}`;
+
+    try {
+      const canOpen = await Linking.canOpenURL(mailtoUrl);
+      if (canOpen) {
+        await Linking.openURL(mailtoUrl);
+      } else {
+        const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserIdVal}&lang=${activeLang}#support`;
+        await Linking.openURL(siteUrl);
+      }
+    } catch (err) {
+      const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserIdVal}&lang=${activeLang}#support`;
+      Linking.openURL(siteUrl).catch(() => {});
+    }
   };
 
   const handleShareApp = async () => {
     try {
       await Share.share({
-        message: t('report.shareMessage', 'Check out MotoCortex - The ultimate motorcycle diagnostics tool! https://motocortex.app'),
-        title: 'MotoCortex'
+        message: t(
+          'info.shareMessageText',
+          'Discover vehicle ECU & live sensor telemetry with Cortex OBD2 Diagnostic Scanner!\n\nDownload Now:\n🍏 iOS (App Store): https://apps.apple.com/app/id6742882583\n🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n🌐 Web Portal: https://motocortex-telemetry.vercel.app/'
+        ),
+        title: 'Cortex OBD2 Diagnostic Scanner'
       });
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error('Share action error:', e);
+    }
   };
 
   const copyToClipboard = async () => {
@@ -1716,18 +1755,57 @@ function MainApp() {
 
 
 
-  const handleSupportEmail = () => {
-    const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserId || ''}&lang=${language}`;
-    Linking.openURL(siteUrl).catch((e) => console.error('Error opening support website:', e));
+  const handleSupportEmail = async () => {
+    const state = useAppStore.getState();
+    const appUserIdVal = state.appUserId || 'N/A';
+    const deviceUuidVal = state.deviceUuid || 'N/A';
+    const isProStatus = state.isPro ? 'PRO (PREMIUM)' : 'FREE';
+    const activeLang = state.language || i18n.language || 'en';
+    const platformInfo = `${Platform.OS} (${Platform.Version})`;
+
+    const subject = encodeURIComponent(t('info.supportSubject', 'Cortex OBD2 Diagnostic Scanner Support Ticket'));
+    const body = encodeURIComponent(
+      `Hi Cortex OBD2 Support Team,\n\n` +
+      `Please write your message or issue description below:\n` +
+      `--------------------------------------------------\n\n\n` +
+      `--------------------------------------------------\n` +
+      `--- System & Diagnostics Credentials ---\n` +
+      `User ID: ${appUserIdVal}\n` +
+      `Device UUID: ${deviceUuidVal}\n` +
+      `Platform: ${platformInfo}\n` +
+      `App Version: 1.2.0\n` +
+      `Active Language: ${activeLang}\n` +
+      `License Status: ${isProStatus}\n`
+    );
+
+    const mailtoUrl = `mailto:ismailimamoglu610@gmail.com?subject=${subject}&body=${body}`;
+
+    try {
+      const canOpen = await Linking.canOpenURL(mailtoUrl);
+      if (canOpen) {
+        await Linking.openURL(mailtoUrl);
+      } else {
+        const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserIdVal}&lang=${activeLang}#support`;
+        await Linking.openURL(siteUrl);
+      }
+    } catch (err) {
+      const siteUrl = `https://motocortex-telemetry.vercel.app/?userId=${appUserIdVal}&lang=${activeLang}#support`;
+      Linking.openURL(siteUrl).catch(() => {});
+    }
   };
 
   const handleShareApp = async () => {
     try {
       await Share.share({
-        message: t('report.shareMessage', 'Check out Cortex OBD2 Diagnostic Scanner! https://cortexobd2.app'),
+        message: t(
+          'info.shareMessageText',
+          'Discover vehicle ECU & live sensor telemetry with Cortex OBD2 Diagnostic Scanner!\n\nDownload Now:\n🍏 iOS (App Store): https://apps.apple.com/app/id6742882583\n🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n🌐 Web Portal: https://motocortex-telemetry.vercel.app/'
+        ),
         title: 'Cortex OBD2 Diagnostic Scanner'
       });
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error('Share action error:', e);
+    }
   };
 
   const colors = useThemeColors();
