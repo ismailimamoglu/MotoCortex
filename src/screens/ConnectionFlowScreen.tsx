@@ -13,7 +13,8 @@ import {
   Alert,
   Linking,
   Clipboard,
-  Animated
+  Animated,
+  TextInput
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useBluetooth } from '../hooks/useBluetooth';
@@ -35,6 +36,8 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
   const { fs, ms, vs } = useResponsive();
 
   const [selectedType, setSelectedType] = useState<'BLUETOOTH' | 'WIFI' | null>('BLUETOOTH');
+  const [wifiIp, setWifiIp] = useState('192.168.0.10');
+  const [wifiPort, setWifiPort] = useState('35000');
   const [scannedDevices, setScannedDevices] = useState<any[]>([]);
   const [isScanning, setIsScanning] = useState(false);
   const [showPairingOverlay, setShowPairingOverlay] = useState(false);
@@ -156,21 +159,12 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
   // Connect via Wi-Fi (IP/Port)
   const handleConnectWifi = async () => {
     triggerHaptic();
+    const wifiId = `WIFI:${wifiIp.trim() || '192.168.0.10'}:${wifiPort.trim() || '35000'}`;
     const store = useBluetoothStore.getState();
-    store.setSensorData({ connectionType: 'WIFI', deviceId: '192.168.0.10:35000', deviceName: 'Wi-Fi OBDII' });
+    store.setSensorData({ connectionType: 'WIFI', deviceId: wifiId, deviceName: 'Wi-Fi OBDII' });
     
     // Delegate connection to single source of truth: useBluetooth hook
-    proceedWithConnection('192.168.0.10:35000', 'Wi-Fi OBDII');
-  };
-
-  const MotoCortexOBDModuleConnect = async (type: 'bluetooth' | 'ble' | 'wifi', target: string): Promise<boolean> => {
-    try {
-      const { connectDevice } = require('motocortex-obd');
-      return await connectDevice(type, target);
-    } catch (e) {
-      // Fallback if native module call fails
-      return false;
-    }
+    proceedWithConnection(wifiId, 'Wi-Fi OBDII');
   };
 
   // 7-Tier Diagnostic Error Troubleshooting Advice mapper
@@ -409,6 +403,37 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             <Text style={[styles.infoBannerText, { color: colors.textSec, fontSize: fs(11.5) }]}>
               {t('connection.wifiGuide', 'To connect to your Wi-Fi adapter, go to your phone\'s Wi-Fi settings and choose the OBD adapter network (e.g. OBDII, V-LINK). Then return here.')}
             </Text>
+          </View>
+
+          <View style={styles.wifiIpRow}>
+            <View style={{ flex: 3, marginRight: ms(8) }}>
+              <Text style={[styles.wifiInputLabel, { color: colors.textSec, fontSize: fs(10) }]}>
+                {t('connection.wifiIpLabel', 'IP ADDRESS')}
+              </Text>
+              <TextInput
+                value={wifiIp}
+                onChangeText={setWifiIp}
+                placeholder="192.168.0.10"
+                placeholderTextColor={colors.textSec}
+                keyboardType="numbers-and-punctuation"
+                autoCapitalize="none"
+                autoCorrect={false}
+                style={[styles.wifiInput, { color: colors.textPri, borderColor: colors.border, fontFamily: colors.mono }]}
+              />
+            </View>
+            <View style={{ flex: 2 }}>
+              <Text style={[styles.wifiInputLabel, { color: colors.textSec, fontSize: fs(10) }]}>
+                {t('connection.wifiPortLabel', 'PORT')}
+              </Text>
+              <TextInput
+                value={wifiPort}
+                onChangeText={setWifiPort}
+                placeholder="35000"
+                placeholderTextColor={colors.textSec}
+                keyboardType="number-pad"
+                style={[styles.wifiInput, { color: colors.textPri, borderColor: colors.border, fontFamily: colors.mono }]}
+              />
+            </View>
           </View>
 
           <View style={styles.wifiActions}>
@@ -849,6 +874,23 @@ const styles = StyleSheet.create({
   wifiActions: {
     flexDirection: 'row',
     gap: 12,
+  },
+  wifiIpRow: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  wifiInputLabel: {
+    fontWeight: '700',
+    marginBottom: 6,
+    letterSpacing: 0.5,
+  },
+  wifiInput: {
+    borderWidth: 1.5,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    fontSize: 14,
+    fontWeight: '700',
   },
   settingsBtn: {
     flex: 1,

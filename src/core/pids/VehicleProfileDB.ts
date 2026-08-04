@@ -101,6 +101,93 @@ export class VehicleProfileDB {
             description: "Toyota CAN 11-bit with Hybrid control module queries supported"
         },
         {
+            id: "vag_meb_mqb_can",
+            make: "Volkswagen",
+            model: "MQB/MEB Platform (Audi/SEAT/Skoda/Cupra)",
+            year: 2018,
+            protocol: "6", // ISO 15765-4 CAN 11bit 500k
+            initCommands: [
+                "AT Z",
+                "AT E0",
+                "AT SP 6",
+                "AT H1",       // Headers on — VAG gateway (0x17FE) fans out to sub-ECUs (0x714 engine, 0x713 ABS, etc.)
+                "AT CAF 1",    // Auto flow-control — required for VAG's multi-frame UDS (0x22/0x19) responses
+                "AT AT 1"      // Adaptive timing — VAG central gateway response latency varies by module
+            ],
+            settleDelayMs: 80,
+            supportsManualFlowControl: true,
+            description: "VAG Group (VW/Audi/SEAT/Skoda/Cupra) CAN profile — routes through central gateway, UDS mode 22/19 aware"
+        },
+        {
+            id: "bmw_fseries_can",
+            make: "BMW",
+            model: "F/G-Series (incl. MINI)",
+            year: 2015,
+            protocol: "6",
+            initCommands: [
+                "AT Z",
+                "AT E0",
+                "AT SP 6",
+                "AT H1",
+                "AT CAF 1",
+                "AT AT 1"      // BMW DS2/D-CAN gateway can be slow on cold boot; adaptive timing avoids false timeouts
+            ],
+            settleDelayMs: 80,
+            supportsManualFlowControl: true,
+            description: "BMW/MINI F/G-Series CAN profile via central gateway (ZGW), UDS mode 22/2E aware"
+        },
+        {
+            id: "mercedes_can",
+            make: "Mercedes-Benz",
+            model: "W205/W213/C257 Platform",
+            year: 2015,
+            protocol: "6",
+            initCommands: [
+                "AT Z",
+                "AT E0",
+                "AT SP 6",
+                "AT H1",
+                "AT CAF 1"
+            ],
+            settleDelayMs: 60,
+            supportsManualFlowControl: true,
+            description: "Mercedes-Benz CAN 11-bit profile for post-2014 SPC/HU-Nav gateway platforms"
+        },
+        {
+            id: "ford_sync_can",
+            make: "Ford",
+            model: "Sync 3 / Sync 4 Platform",
+            year: 2016,
+            protocol: "6",
+            initCommands: [
+                "AT Z",
+                "AT E0",
+                "AT SP 6",
+                "AT H1",
+                "AT CAF 1"
+            ],
+            settleDelayMs: 60,
+            supportsManualFlowControl: true,
+            description: "Ford CAN 11-bit profile for Sync 3/4 (MS-CAN + HS-CAN) equipped models"
+        },
+        {
+            id: "stellantis_can",
+            make: "Stellantis",
+            model: "PSA/Fiat/Jeep EMP2/CMP Platform",
+            year: 2017,
+            protocol: "6",
+            initCommands: [
+                "AT Z",
+                "AT E0",
+                "AT SP 6",
+                "AT H1",
+                "AT CAF 1"
+            ],
+            settleDelayMs: 60,
+            supportsManualFlowControl: true,
+            description: "Stellantis (Peugeot/Citroen/Fiat/Jeep) BSI-gateway CAN profile"
+        },
+        {
             id: "generic_obd2_auto",
             make: "Generic",
             model: "Auto Protocol",
@@ -188,6 +275,26 @@ export class VehicleProfileDB {
         if (cleanVin.startsWith("JTD") || cleanVin.startsWith("4T1")) {
             // Toyota VIN prefixes
             return this.getProfileById("toyota_hybrid_can");
+        }
+        // [Gap-fix] VAG Group: VW (WVW/WV1/WV2/3VW/1VW), Audi (WAU/TRU), SEAT (VSS), Skoda (TMB)
+        if (["WVW", "WV1", "WV2", "3VW", "1VW", "WAU", "TRU", "VSS", "TMB"].some(p => cleanVin.startsWith(p))) {
+            return this.getProfileById("vag_meb_mqb_can");
+        }
+        // [Gap-fix] BMW / MINI: WBA/WBS/WBY (BMW), 4US/5UX (BMW NA), WMW (MINI)
+        if (["WBA", "WBS", "WBY", "4US", "5UX", "WMW"].some(p => cleanVin.startsWith(p))) {
+            return this.getProfileById("bmw_fseries_can");
+        }
+        // [Gap-fix] Mercedes-Benz: WDD/WDB/WDC/4JG
+        if (["WDD", "WDB", "WDC", "4JG"].some(p => cleanVin.startsWith(p))) {
+            return this.getProfileById("mercedes_can");
+        }
+        // [Gap-fix] Ford: 1FA/1FT/1FM/WF0/3FA
+        if (["1FA", "1FT", "1FM", "WF0", "3FA"].some(p => cleanVin.startsWith(p))) {
+            return this.getProfileById("ford_sync_can");
+        }
+        // [Gap-fix] Stellantis: VF3 (Peugeot), VF7 (Citroen), ZFA (Fiat), 1C4/1C6 (Jeep/RAM)
+        if (["VF3", "VF7", "ZFA", "1C4", "1C6"].some(p => cleanVin.startsWith(p))) {
+            return this.getProfileById("stellantis_can");
         }
         return this.getProfileById("generic_obd2_auto");
     }

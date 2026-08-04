@@ -143,6 +143,12 @@ export const useBluetooth = () => {
         btStore.setSuggestedVehicleProfile(profile);
         btStore.setSensorData({ vehicleMake: profile.make });  
 
+        // [Gap-fix] Probe manufacturer-specific (Mode 22) PIDs now that the make is known.
+        // Fire-and-forget: never allowed to block or fail the main connection flow.
+        if (profile.make) {
+            CapabilityDiscoveryManager.discoverOemPids(profile.make).catch(() => {});
+        }
+
         const telemetryState = useTelemetryStore.getState();  
         if (telemetryState.activeSessionVehicle) {  
             telemetryState.setActiveSessionVehicle({ ...telemetryState.activeSessionVehicle, vin });  
