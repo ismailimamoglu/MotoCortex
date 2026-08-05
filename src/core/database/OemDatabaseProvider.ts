@@ -3793,6 +3793,118 @@ const EXTENDED_OEM_FEATURES: OEMFeatureDefinition[] = [
         safetyLevel: 'LEVEL_2_ADAPTATION',
         riskLevel: 'LOW'
     },
+
+    // ── Toyota / Lexus Group ──
+    {
+        id: 'toyota_keyless_window_down',
+        nameKey: 'features.items.toyota_keyless_window_down.name',
+        descKey: 'features.items.toyota_keyless_window_down.desc',
+        defaultName: 'Toyota Key Fob Window Open (Hold Unlock)',
+        defaultDesc: 'Rolls down all power windows when holding UNLOCK button on remote fob.',
+        make: 'Toyota',
+        category: 'DRIVING_COMFORT',
+        targetEcuHeader: '750',
+        didHex: '2001',
+        byteIndex: 0,
+        bitIndex: 1,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'toyota_seatbelt_chime_disable',
+        nameKey: 'features.items.toyota_seatbelt_chime_disable.name',
+        descKey: 'features.items.toyota_seatbelt_chime_disable.desc',
+        defaultName: 'Toyota Passenger Seatbelt Alarm Mute (Park/Off-Road)',
+        defaultDesc: 'Disables persistent acoustic seatbelt warning chime in passenger seat.',
+        make: 'Toyota',
+        category: 'SOUND_ALERTS',
+        targetEcuHeader: '7C0',
+        didHex: '2005',
+        byteIndex: 1,
+        bitIndex: 0,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+
+    // ── Honda / Acura Group ──
+    {
+        id: 'honda_walkaway_auto_lock',
+        nameKey: 'features.items.honda_walkaway_auto_lock.name',
+        descKey: 'features.items.honda_walkaway_auto_lock.desc',
+        defaultName: 'Honda Walk-Away Auto Door Lock',
+        defaultDesc: 'Automatically locks all doors when Smart Key leaves 2.5m vehicle radius.',
+        make: 'Honda',
+        category: 'SECURITY_SAFETY',
+        targetEcuHeader: '701',
+        didHex: '1002',
+        byteIndex: 0,
+        bitIndex: 3,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+
+    // ── Volvo Cars ──
+    {
+        id: 'volvo_speed_limiter_unlock',
+        nameKey: 'features.items.volvo_speed_limiter_unlock.name',
+        descKey: 'features.items.volvo_speed_limiter_unlock.desc',
+        defaultName: 'Volvo 180 km/h Factory Speed Limiter Extended',
+        defaultDesc: 'Adjusts 180 km/h factory speed cap for Track / Autobahn performance use.',
+        make: 'Volvo',
+        category: 'DRIVING_COMFORT',
+        targetEcuHeader: '7E0',
+        didHex: '22A0',
+        byteIndex: 2,
+        bitIndex: 0,
+        requiresSecurityAccess: true,
+        securityLevel: 1,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'MEDIUM'
+    },
+
+    // ── Chinese EV & Global EV Suite (BYD, NIO, Xiaomi) ──
+    {
+        id: 'byd_v2l_3kw_power_unlock',
+        nameKey: 'features.items.byd_v2l_3kw_power_unlock.name',
+        descKey: 'features.items.byd_v2l_3kw_power_unlock.desc',
+        defaultName: 'BYD Vehicle-to-Load (V2L) 3.6kW AC Output Mode',
+        defaultDesc: 'Enables external 220V/3.6kW V2L AC discharge port for camping appliances.',
+        make: 'BYD',
+        category: 'EV_BATTERY_CHARGING',
+        targetEcuHeader: '7E4',
+        didHex: '3001',
+        byteIndex: 0,
+        bitIndex: 7,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'xiaomi_su7_drift_mode_unlock',
+        nameKey: 'features.items.xiaomi_su7_drift_mode_unlock.name',
+        descKey: 'features.items.xiaomi_su7_drift_mode_unlock.desc',
+        defaultName: 'Xiaomi SU7 Track Drift Mode & Rear-Torque Bias',
+        defaultDesc: 'Activates 100% rear motor torque bias and ESC Track Drift Mode.',
+        make: 'Xiaomi',
+        category: 'DRIVING_COMFORT',
+        targetEcuHeader: '720',
+        didHex: '3010',
+        byteIndex: 1,
+        bitIndex: 2,
+        requiresSecurityAccess: true,
+        securityLevel: 2,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'MEDIUM'
+    }
 ];
 
 export class OemDatabaseProvider {

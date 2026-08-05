@@ -1,8 +1,6 @@
 // supabase/functions/sec-access-calculator/index.ts
 // MotoCortex v10.0 - Cloud UDS 0x27 Security Access Seed-Key Calculation Engine
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
 interface SecAccessRequest {
   brand: string;
   securityLevel: number;
@@ -15,7 +13,8 @@ interface SecAccessResponse {
   message?: string;
 }
 
-serve(async (req) => {
+// @ts-ignore: Deno runtime environment for Supabase Edge Functions
+Deno.serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", {
@@ -80,9 +79,10 @@ serve(async (req) => {
         "Access-Control-Allow-Origin": "*",
       },
     });
-  } catch (err) {
+  } catch (err: any) {
+    const errMsg = err instanceof Error ? err.message : String(err);
     return new Response(
-      JSON.stringify({ success: false, keyHex: "", message: err.message }),
+      JSON.stringify({ success: false, keyHex: "", message: errMsg }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
