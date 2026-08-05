@@ -53,8 +53,9 @@ import MultiEcuScanModal from '../components/MultiEcuScanModal';
 import DctResetModal from '../components/DctResetModal';
 import FeatureActivationModal from '../components/FeatureActivationModal';
 import ObdService from '../services/obdService';
-import { MONO } from '../components/design/constants';
 import { createAppStyles } from '../styles/appStyles';
+
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
 export default function MainApp() {
   const { t, i18n } = useTranslation();
@@ -130,36 +131,11 @@ export default function MainApp() {
       <PermissionGateway>
         {status !== 'connected' ? (
           <ConnectionFlowScreen
-            status={status}
-            adapterStatus={adapterStatus}
-            ecuStatus={ecuStatus}
-            connectionState={connectionState}
-            connectionProgress={connectionProgress}
-            connectionSteps={connectionSteps}
-            connectionStatusTextKey={connectionStatusTextKey}
-            connectionStatusTextParams={connectionStatusTextParams}
-            lastDeviceId={lastDeviceId}
-            lastDeviceName={lastDeviceName}
-            isCloneDevice={isCloneDevice}
-            scanDevices={scanDevices}
-            connect={connect}
-            disconnect={disconnect}
-            enableBluetooth={enableBluetooth}
-            retryEcu={retryEcu}
-            isSimulationMode={isSimulationMode}
-            onToggleSimulationMode={() => useAppStore.getState().toggleSimulationMode()}
+            onBack={() => {}}
+            onNavigateToHealth={() => {}}
           />
         ) : (
-          <DashboardSandbox
-            status={status}
-            adapterStatus={adapterStatus}
-            ecuStatus={ecuStatus}
-            sendCommand={sendCommand}
-            disconnect={disconnect}
-            vin={vin}
-            odometer={odometer}
-            dtcs={dtcs}
-          />
+          <DashboardSandbox />
         )}
       </PermissionGateway>
     </SafeAreaView>
