@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { KNOWN_ECU_MODULES, ModuleDiagnosticResult } from '../services/multiEcuService';
 import { useBluetoothStore } from '../store/useBluetoothStore';
+import { useAppStore } from '../store/useAppStore';
 import { lookupDTC } from '../data/dtcDictionary';
 
 interface MultiEcuScanModalProps {
@@ -19,6 +20,7 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const tc = useThemeColors();
+  const isSimulationMode = useAppStore((state) => state.isSimulationMode);
 
   const [isScanning, setIsScanning] = useState(false);
   const [activeModule, setActiveModule] = useState<string>('');
@@ -72,6 +74,13 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
 
   return (
     <View style={{ flex: 1, backgroundColor: tc.bg, padding: 16 }}>
+      {(!onScanModule || isSimulationMode) && (
+        <View style={[styles.simBadge, { backgroundColor: `${tc.cyan}20`, borderColor: tc.cyan }]}>
+          <Text style={[styles.simBadgeText, { color: tc.cyan }]}>
+            🧪 {t('common.sampleSimData', 'Örnek Simülasyon Verisi (Araç Bağlı Değil)')}
+          </Text>
+        </View>
+      )}
 
           {/* Scan Action */}
           <TouchableOpacity
@@ -279,6 +288,18 @@ const styles = StyleSheet.create({
   dtcChipText: {
     fontSize: 12,
     fontWeight: '800',
+  },
+  simBadge: {
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  simBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: 'monospace',
   },
 });
 

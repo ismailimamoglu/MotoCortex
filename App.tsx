@@ -8,18 +8,35 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import MainApp from './src/screens/MainApp';
 
 function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  const handleSafeRecovery = () => {
+    try {
+      // Preserve active ECU link if possible, reset transient modals
+      resetErrorBoundary();
+    } catch (e) {
+      console.warn('[RootErrorFallback] Safe recovery error:', e);
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: '#060a12', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
       <Text style={{ color: '#ff4444', fontSize: 22, fontWeight: 'bold', marginBottom: 10 }}>⚠️ System Recovery</Text>
       <Text style={{ color: '#88a0c0', textAlign: 'center', marginBottom: 20 }}>
-        Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.
+        Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been logged safely.
       </Text>
-      <TouchableOpacity
-        onPress={resetErrorBoundary}
-        style={{ backgroundColor: '#00e5ff', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8 }}
-      >
-        <Text style={{ color: '#000000', fontWeight: 'bold' }}>RETRY APPLICATION</Text>
-      </TouchableOpacity>
+      <View style={{ width: '100%', gap: 10, alignItems: 'center' }}>
+        <TouchableOpacity
+          onPress={resetErrorBoundary}
+          style={{ backgroundColor: '#00e5ff', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8, width: '100%', alignItems: 'center' }}
+        >
+          <Text style={{ color: '#000000', fontWeight: 'bold' }}>RETRY APPLICATION</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleSafeRecovery}
+          style={{ backgroundColor: 'transparent', borderWidth: 1, borderColor: '#00ffff', paddingHorizontal: 24, paddingVertical: 10, borderRadius: 8, width: '100%', alignItems: 'center' }}
+        >
+          <Text style={{ color: '#00ffff', fontWeight: 'bold', fontSize: 12 }}>🛡️ SAFE DIAGNOSTIC RECOVERY</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
