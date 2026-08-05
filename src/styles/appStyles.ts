@@ -1,5 +1,6 @@
 import { StyleSheet, Platform, StatusBar } from 'react-native';
-import { MONO } from '../components/design/constants';
+
+const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
 interface AppStyleParams {
   tc: any;

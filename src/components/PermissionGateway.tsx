@@ -37,14 +37,23 @@ const LANGUAGES = [
   { code: 'zh', label: '中文', sub: 'Chinese Diagnostics Hub', emoji: '[ZH]' }
 ];
 
-export default function PermissionGateway() {
+interface PermissionGatewayProps {
+  children?: React.ReactNode;
+}
+
+export default function PermissionGateway({ children }: PermissionGatewayProps) {
   const { t, i18n } = useTranslation();
+  const hasOnboarded = useAppStore((state) => state.hasOnboarded);
   const setHasOnboarded = useAppStore((state) => state.setHasOnboarded);
   const setLanguage = useAppStore((state) => state.setLanguage);
   const isTelemetryOptedIn = useAppStore((state) => state.isTelemetryOptedIn);
   const setIsTelemetryOptedIn = useAppStore((state) => state.setIsTelemetryOptedIn);
   const colors = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isLargeTablet } = useResponsive();
+
+  if (hasOnboarded) {
+    return <>{children}</>;
+  }
 
   const [step, setStep] = useState<'language' | 'permissions'>('language');
   const [isLoading, setIsLoading] = useState(false);
