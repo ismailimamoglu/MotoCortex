@@ -112,6 +112,42 @@ export class SgwBypassEngine {
     }
 
     /**
+     * Emergency offline fallback token unlocking for field technicians without internet access.
+     */
+    public static unlockOfflineFallback(vin: string, vendor: SgwVendor, overrideCodeHex: string): { success: boolean; message: string } {
+        if (!overrideCodeHex || overrideCodeHex.length < 8) {
+            return { success: false, message: 'Invalid offline bypass code.' };
+        }
+
+        const now = Date.now();
+        this.activeStatus = {
+            isLocked: false,
+            vendor,
+            securityLevel: 1,
+            unlockedAt: now,
+            expiresAt: now + (15 * 60 * 1000) // 15 Minute temporary offline validity
+        };
+
+        return {
+            success: true,
+            message: `Offline SGW temporary bypass activated for ${vendor} (Valid for 15m).`
+        };
+    }
+
+    /**
+     * Checks if active session expired and performs auto-relock.
+     */
+    public static checkAutoRelock(): boolean {
+        if (!this.activeStatus.isLocked && this.activeStatus.expiresAt) {
+            if (Date.now() > this.activeStatus.expiresAt) {
+                this.relock();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Resets SGW state back to locked upon session termination or adapter disconnect.
      */
     public static relock(): void {
@@ -123,6 +159,7 @@ export class SgwBypassEngine {
     }
 
     public static getStatus(): SgwStatus {
+        this.checkAutoRelock();
         return this.activeStatus;
     }
 }
