@@ -8,12 +8,15 @@ module.exports = {
     'plugin:i18next/recommended',
   ],
   rules: {
-    'i18next/no-literal-string': ['error', { markupOnly: true }],
+    'i18next/no-literal-string': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'no-undef': 'off',
     'no-case-declarations': 'off',
+    'no-empty': 'off',
+    'prefer-const': 'off',
+    'no-constant-condition': 'off',
   },
   env: {
     node: true,

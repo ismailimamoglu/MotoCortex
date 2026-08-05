@@ -127,11 +127,42 @@ const oemPidsList: OemPidDefinition[] = [
         decode: (bytes) => Number((((bytes[0] || 0) - 128) / 10).toFixed(1))
     },
 
-    // ── Tesla ────────────────────────────────────────────────────────────
+    // ── Tesla Motors ───────────────────────────────────────────────────
     {
-        make: "Tesla", mode: "22", pid: "0202", ecuHeader: "7E4",
-        name: "TESLA_HV_PACK_VOLTAGE", description: "High Voltage Battery Pack Total Voltage", min: 200, max: 500, unit: "V",
-        decode: (bytes) => Number((((bytes[0] || 0) << 8 | (bytes[1] || 0)) / 10).toFixed(1))
+        make: "Tesla", mode: "22", pid: "4001", ecuHeader: "7E4",
+        name: "TESLA_HV_PACK_VOLTAGE", description: "High-voltage main battery pack voltage", min: 0, max: 500, unit: "V",
+        decode: (bytes) => Number((((bytes[0] || 0) << 8 | (bytes[1] || 0)) * 0.1).toFixed(1))
+    },
+    {
+        make: "Tesla", mode: "22", pid: "4002", ecuHeader: "7E4",
+        name: "TESLA_REAR_DRIVE_UNIT_RPM", description: "Rear drive unit e-motor RPM", min: 0, max: 20000, unit: "rpm",
+        decode: (bytes) => ((bytes[0] || 0) << 8 | (bytes[1] || 0))
+    },
+
+    // ── Nissan / Infiniti (Consult III) ────────────────────────────────
+    {
+        make: "Nissan", mode: "22", pid: "2010", ecuHeader: "7E0",
+        name: "NISSAN_CVT_FLUID_DETERIORATION", description: "CVT transmission fluid degradation index", min: 0, max: 210000, unit: "Index",
+        decode: (bytes) => ((bytes[0] || 0) << 8 | (bytes[1] || 0))
+    },
+
+    // ── Subaru (Select Monitor) ────────────────────────────────────────
+    {
+        make: "Subaru", mode: "22", pid: "1205", ecuHeader: "7E0",
+        name: "SUBARU_AWD_CLUTCH_DUTY", description: "Symmetrical AWD coupling clutch duty cycle", min: 0, max: 100, unit: "%",
+        decode: (bytes) => Math.round(((bytes[0] || 0) * 100) / 255)
+    },
+
+    // ── Chinese EV Group (BYD / Xiaomi) ───────────────────────────────
+    {
+        make: "BYD", mode: "22", pid: "3001", ecuHeader: "7E4",
+        name: "BYD_BLADE_BATTERY_SOH", description: "Blade Battery State of Health", min: 0, max: 100, unit: "%",
+        decode: (bytes) => bytes[0] || 0
+    },
+    {
+        make: "Xiaomi", mode: "22", pid: "3010", ecuHeader: "720",
+        name: "XIAOMI_REAR_MOTOR_TEMP", description: "Xiaomi SU7 rear silicon carbide motor temperature", min: -40, max: 200, unit: "°C",
+        decode: (bytes) => (bytes[0] || 0) - 40
     }
 ];
 
