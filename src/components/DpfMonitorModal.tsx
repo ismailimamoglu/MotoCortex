@@ -3,6 +3,7 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { DpfService, DpfAnalysisResult } from '../services/dpfService';
+import { useAppStore } from '../store/useAppStore';
 
 interface DpfMonitorModalProps {
   visible: boolean;
@@ -25,6 +26,7 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const tc = useThemeColors();
+  const isSimulationMode = useAppStore((state) => state.isSimulationMode);
 
   const analysis: DpfAnalysisResult = DpfService.analyze({
     sootMassGrams,
@@ -39,6 +41,15 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
   return (
     <View style={{ flex: 1, backgroundColor: tc.bg, padding: 16 }}>
       <ScrollView contentContainerStyle={styles.content}>
+            {/* Simulation / Live Indicator Badge */}
+            {isSimulationMode && (
+              <View style={[styles.simBadge, { backgroundColor: `${tc.cyan}20`, borderColor: tc.cyan }]}>
+                <Text style={[styles.simBadgeText, { color: tc.cyan }]}>
+                  🧪 {t('common.sampleSimData', 'Örnek Simülasyon Verisi (Araç Bağlı Değil)')}
+                </Text>
+              </View>
+            )}
+
             {/* Status Card */}
             <View style={[styles.statusCard, { backgroundColor: tc.elevated, borderColor: analysis.statusColor }]}>
               <Text style={[styles.statusTitle, { color: analysis.statusColor }]}>
@@ -218,6 +229,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '500',
+  },
+  simBadge: {
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  simBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: 'monospace',
   },
 });
 

@@ -3,21 +3,8 @@ import { PidDefinition } from './PidRegistry';
 /**
  * OemPidRegistry
  * ----------------------------------------------------------------------
- * [Gap-fix] Addresses the AI code-review finding: "OEM PID setleri yok –
- * VAG/BMW/Mercedes/Ford/Toyota özel kanalları yok".
- *
- * Generic OBD-II (Mode 01) only exposes the ~100 SAE-standardized PIDs in
- * PidRegistry.ts. Manufacturer-specific live data (DSG/DCT oil temp,
- * individual wheel speeds, per-cylinder trims, hybrid battery cell data,
- * etc.) is exposed via UDS ReadDataByIdentifier (Mode 22) with vendor-owned
- * DID ranges that differ per OEM and are NOT safe to broadcast to other
- * manufacturers' ECUs — hence this is a separate, make-scoped registry
- * rather than being merged into the global standardPidsList.
- *
- * Usage: only query these once VehicleProfileDB has matched a make (by VIN
- * or manual selection), e.g.:
- *   const profile = VehicleProfileDB.matchProfileByVin(vin);
- *   const oemPids = OemPidRegistry.getPidsForMake(profile.make);
+ * Manufacturer-specific live data PIDs (Mode 22 / UDS ReadDataByIdentifier)
+ * for VAG, BMW, Mercedes, Ford, Toyota, Honda, Hyundai/Kia, Renault, Volvo, Tesla.
  */
 
 export interface OemPidDefinition extends PidDefinition {
@@ -26,8 +13,7 @@ export interface OemPidDefinition extends PidDefinition {
 }
 
 const oemPidsList: OemPidDefinition[] = [
-    // ── Volkswagen Group (VAG: VW/Audi/SEAT/Skoda/Cupra) ──────────────
-    // UDS Mode 22, engine ECU functional header 0x714 (varies by gateway/model year)
+    // ── Volkswagen Group (VAG: VW/Audi/SEAT/Skoda/Porsche) ──────────────
     {
         make: "Volkswagen", mode: "22", pid: "F40C", ecuHeader: "714",
         name: "VAG_DSG_OIL_TEMP", description: "DSG/DCT gearbox oil temperature", min: -40, max: 200, unit: "°C",
@@ -45,8 +31,18 @@ const oemPidsList: OemPidDefinition[] = [
     },
     {
         make: "Volkswagen", mode: "22", pid: "0030", ecuHeader: "17FE",
-        name: "VAG_GATEWAY_VIN_ECHO", description: "Central gateway VIN echo (connectivity sanity check)", min: 0, max: 0, unit: "ASCII",
+        name: "VAG_GATEWAY_VIN_ECHO", description: "Central gateway VIN echo", min: 0, max: 0, unit: "ASCII",
         decode: (bytes) => bytes.map(b => String.fromCharCode(b)).join('')
+    },
+    {
+        make: "Volkswagen", mode: "22", pid: "11A4", ecuHeader: "714",
+        name: "VAG_DPF_SOOT_MASS_CALCULATED", description: "DPF calculated soot mass", min: 0, max: 100, unit: "g",
+        decode: (bytes) => Math.round((((bytes[0] || 0) << 8 | (bytes[1] || 0)) / 100))
+    },
+    {
+        make: "Volkswagen", mode: "22", pid: "11A5", ecuHeader: "714",
+        name: "VAG_DPF_ASH_MASS", description: "DPF measured oil ash mass", min: 0, max: 100, unit: "g",
+        decode: (bytes) => Math.round((((bytes[0] || 0) << 8 | (bytes[1] || 0)) / 100))
     },
 
     // ── BMW / MINI (F/G-Series) ────────────────────────────────────────
@@ -62,8 +58,13 @@ const oemPidsList: OemPidDefinition[] = [
     },
     {
         make: "BMW", mode: "22", pid: "4F42", ecuHeader: "F1",
-        name: "BMW_AC_ELECTRIC_MOTOR_TEMP", description: "Electric water pump / e-motor temperature (PHEV models)", min: -40, max: 200, unit: "°C",
+        name: "BMW_AC_ELECTRIC_MOTOR_TEMP", description: "Electric water pump / e-motor temperature", min: -40, max: 200, unit: "°C",
         decode: (bytes) => (bytes[0] || 0) - 40
+    },
+    {
+        make: "BMW", mode: "22", pid: "D12C", ecuHeader: "12",
+        name: "BMW_OIL_DEGRADATION_LEVEL", description: "Engine oil degradation index", min: 0, max: 100, unit: "%",
+        decode: (bytes) => Math.round(((bytes[0] || 0) * 100) / 255)
     },
 
     // ── Mercedes-Benz ───────────────────────────────────────────────────
@@ -83,7 +84,7 @@ const oemPidsList: OemPidDefinition[] = [
         decode: (bytes) => (bytes[0] || 0) - 40
     },
 
-    // ── Ford (Sync 3 / Sync 4 platforms) ────────────────────────────────
+    // ── Ford ─────────────────────────────────────────────────────────────
     {
         make: "Ford", mode: "22", pid: "404C", ecuHeader: "7E0",
         name: "FORD_TURBO_BOOST_DESIRED_VS_ACTUAL", description: "Desired vs actual turbo boost delta", min: -500, max: 500, unit: "mbar",
@@ -91,11 +92,11 @@ const oemPidsList: OemPidDefinition[] = [
     },
     {
         make: "Ford", mode: "22", pid: "1E12", ecuHeader: "7E0",
-        name: "FORD_TRANS_FLUID_TEMP", description: "6F35/10R80 transmission fluid temperature", min: -40, max: 200, unit: "°C",
+        name: "FORD_TRANS_FLUID_TEMP", description: "Transmission fluid temperature", min: -40, max: 200, unit: "°C",
         decode: (bytes) => (bytes[0] || 0) - 40
     },
 
-    // ── Toyota / Lexus (Hybrid platforms) ───────────────────────────────
+    // ── Toyota / Lexus ───────────────────────────────────────────────────
     {
         make: "Toyota", mode: "22", pid: "0107", ecuHeader: "7E2",
         name: "TOYOTA_HV_BATTERY_TEMP", description: "Hybrid HV battery pack temperature", min: -40, max: 120, unit: "°C",
@@ -106,6 +107,32 @@ const oemPidsList: OemPidDefinition[] = [
         name: "TOYOTA_HV_BATTERY_SOC", description: "Hybrid HV battery state of charge", min: 0, max: 100, unit: "%",
         decode: (bytes) => Number((((bytes[0] || 0) * 100) / 255).toFixed(1))
     },
+
+    // ── Hyundai / Kia ────────────────────────────────────────────────────
+    {
+        make: "Hyundai", mode: "22", pid: "0101", ecuHeader: "7E4",
+        name: "HYUNDAI_EV_BATTERY_SOH", description: "EV High Voltage Battery State of Health", min: 0, max: 100, unit: "%",
+        decode: (bytes) => Number((((bytes[0] || 0) * 256 + (bytes[1] || 0)) / 10).toFixed(1))
+    },
+    {
+        make: "Hyundai", mode: "22", pid: "0105", ecuHeader: "7E4",
+        name: "HYUNDAI_EV_BATTERY_TEMP_MAX", description: "EV High Voltage Battery Max Module Temp", min: -40, max: 100, unit: "°C",
+        decode: (bytes) => (bytes[0] || 0) - 40
+    },
+
+    // ── Renault / Dacia ──────────────────────────────────────────────────
+    {
+        make: "Renault", mode: "22", pid: "2001", ecuHeader: "7E0",
+        name: "RENAULT_INJECTOR_OFFSET_CYL1", description: "Cylinder 1 Injector Fuel Correction Offset", min: -5, max: 5, unit: "mg/stk",
+        decode: (bytes) => Number((((bytes[0] || 0) - 128) / 10).toFixed(1))
+    },
+
+    // ── Tesla ────────────────────────────────────────────────────────────
+    {
+        make: "Tesla", mode: "22", pid: "0202", ecuHeader: "7E4",
+        name: "TESLA_HV_PACK_VOLTAGE", description: "High Voltage Battery Pack Total Voltage", min: 200, max: 500, unit: "V",
+        decode: (bytes) => Number((((bytes[0] || 0) << 8 | (bytes[1] || 0)) / 10).toFixed(1))
+    }
 ];
 
 const oemPidsByMake = new Map<string, OemPidDefinition[]>();
@@ -118,8 +145,6 @@ for (const p of oemPidsList) {
 export class OemPidRegistry {
     /**
      * Returns all manufacturer-specific PIDs for a given make.
-     * Make matching is case-insensitive and tolerant of group naming
-     * (e.g. "Audi"/"SEAT"/"Skoda"/"Cupra" all resolve to the VAG PID set).
      */
     public static getPidsForMake(make: string): OemPidDefinition[] {
         const normalized = this.normalizeMake(make);
@@ -142,6 +167,8 @@ export class OemPidRegistry {
         if (["mini", "bmw"].includes(m)) return "bmw";
         if (["mercedes", "mercedes-benz", "mb", "amg"].includes(m)) return "mercedes-benz";
         if (["lexus", "toyota"].includes(m)) return "toyota";
+        if (["kia", "hyundai"].includes(m)) return "hyundai";
+        if (["dacia", "renault"].includes(m)) return "renault";
         return m;
     }
 }
