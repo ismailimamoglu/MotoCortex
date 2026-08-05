@@ -1,0 +1,35 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Run unit tests and typecheck before deployment"
+  lane :test do
+    sh("npm test -- --passWithNoTests")
+  end
+
+  desc "Build iOS release binary and upload to TestFlight"
+  lane :beta do
+    test
+    increment_build_number(xcodeproj: "ios/MotoCortex.xcodeproj")
+    build_app(workspace: "ios/MotoCortex.xcworkspace", scheme: "MotoCortex")
+    upload_to_testflight
+  end
+
+  desc "Deploy 26-language metadata and screenshots to App Store Connect"
+  lane :release do
+    test
+    deliver(
+      force: true,
+      skip_screenshots: false,
+      submit_for_review: false
+    )
+  end
+end
+
+platform :android do
+  desc "Build Android App Bundle (AAB) and deploy to Google Play Internal Testing"
+  lane :beta do
+    sh("npm test -- --passWithNoTests")
+    gradle(task: "bundle", build_type: "Release")
+    upload_to_play_store(track: "internal")
+  end
+end
