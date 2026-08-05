@@ -637,18 +637,24 @@ export const useBluetooth = () => {
     }, [setLastDevice]);
 
     useEffect(() => {
-        OBDCommandQueue.onKLineFallback(() => {
+        const fallbackCb = () => {
             useBluetoothStore.getState().addLog(`FALLBACK: OBD engine requested K-Line fallback. Blacklisting ATSP6/7 and re-initializing.`);
             ProtocolCircuitBreaker.recordFailure("AT SP 6");
             ProtocolCircuitBreaker.recordFailure("AT SP 7");
             initializeAndCheckEcu();
-        });
-        OBDCommandQueue.onVoltageReceived((voltage) => {
+        };
+        const voltageCb = (voltage: string) => {
             useBluetoothStore.getState().setSensorData({ voltage });
-        });
+        };
+        OBDCommandQueue.onKLineFallback(fallbackCb);
+        OBDCommandQueue.onVoltageReceived(voltageCb);
         return () => {
-            OBDCommandQueue.onKLineFallback(null);
-            OBDCommandQueue.onVoltageReceived(null);
+            if (OBDCommandQueue.getKLineFallbackCallback() === fallbackCb) {
+                OBDCommandQueue.onKLineFallback(null);
+            }
+            if (OBDCommandQueue.getVoltageCallback() === voltageCb) {
+                OBDCommandQueue.onVoltageReceived(null);
+            }
         };
     }, []);
 

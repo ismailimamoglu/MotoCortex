@@ -70,9 +70,9 @@ class SQLiteStorage {
     private enforceQueueLimit(): void {
         try {
             const countResult = this.db.getFirstSync<{ count: number }>('SELECT COUNT(*) as count FROM telemetry_queue');
-            const count = countResult ? countResult.count : 0;
+            const count = countResult ? Math.max(0, Math.floor(Number(countResult.count))) : 0;
             if (count > 2000) {
-                const excess = count - 2000;
+                const excess = Math.max(0, Math.floor(Number(count - 2000)));
                 // Delete synced items first
                 const deleteSynced = this.db.runSync(
                     `DELETE FROM telemetry_queue WHERE id IN (
@@ -80,8 +80,8 @@ class SQLiteStorage {
                     )`,
                     [excess]
                 );
-                const deletedSyncedCount = deleteSynced.changes;
-                const remainingExcess = excess - deletedSyncedCount;
+                const deletedSyncedCount = deleteSynced.changes ? Math.max(0, Math.floor(Number(deleteSynced.changes))) : 0;
+                const remainingExcess = Math.max(0, Math.floor(Number(excess - deletedSyncedCount)));
                 if (remainingExcess > 0) {
                     // Get hashes of unsynced items we are about to drop for logging
                     const toDrop = this.db.getAllSync<{ id: string, session_hash: string }>(
@@ -111,9 +111,10 @@ class SQLiteStorage {
 
     public getUnsyncedTelemetry(limit: number): TelemetryItem[] {
         try {
+            const safeLimit = Math.max(1, Math.floor(Number(limit) || 50));
             const rows = this.db.getAllSync<any>(
                 'SELECT * FROM telemetry_queue WHERE success = 0 ORDER BY created_at ASC LIMIT ?',
-                [limit]
+                [safeLimit]
             );
             return rows.map((row: any) => ({
                 id: row.id,

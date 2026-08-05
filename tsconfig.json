@@ -3,5 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "moduleSuffixes": [".ios", ".android", ""]
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "supabase/functions"
+  ]
 }

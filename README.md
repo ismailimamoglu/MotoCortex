@@ -2,7 +2,7 @@
 
 [![React Native](https://img.shields.io/badge/React_Native-Expo_v51-61DAFB?logo=react&logoColor=black)](https://reactnative.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-v5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tests](https://img.shields.io/badge/Tests-40_Suites_|_365_Passed-2EA44F?logo=jest&logoColor=white)](https://jestjs.io/)
+[![Tests](https://img.shields.io/badge/Tests-40_Suites_|_368_Passed-2EA44F?logo=jest&logoColor=white)](https://jestjs.io/)
 [![UDS ISO-14229](https://img.shields.io/badge/Protocol-ISO_14229_UDS_|_KWP2000-FF6F00)](https://www.iso.org/standard/72439.html)
 [![Offline-First](https://img.shields.io/badge/Architecture-Offline--First_Engine-4A154B)](https://motocortex.app)
 [![Locales](https://img.shields.io/badge/Locales-26_Languages_Matrix-8E44AD)](src/locales/)
@@ -95,9 +95,9 @@ npm test
 Current Test Coverage:
 ```text
 Test Suites: 40 passed, 40 total
-Tests:       365 passed, 365 total
+Tests:       368 passed, 368 total
 Snapshots:   0 total
-Time:        1.97 s
+Time:        1.93 s
 ```
 
 ---
@@ -119,7 +119,7 @@ MotoCortex/
 │   ├── services/              # AI Doctor Service (Supabase Edge Function Proxy)
 │   └── store/                 # Zustand App & Telemetry Stores
 ├── supabase/
-│   └── functions/             # Deno Edge Functions (ai-doctor)
+│   └── functions/             # Deno Edge Functions (ai-doctor, verify-entitlement)
 ├── görevler/                  # Technical Audit & Global Feature Reports
 └── package.json
 ```
