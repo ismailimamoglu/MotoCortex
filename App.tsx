@@ -2099,20 +2099,22 @@ function MainApp() {
     const listener = async (customerInfo: any) => {
       try {
         const isSimulationMode = useAppStore.getState().isSimulationMode;
-        const bypass = await AsyncStorage.getItem('bypass_pro');
-        if (bypass === 'true') {
-          const expiryStr = await AsyncStorage.getItem('bypass_pro_expiry');
-          if (expiryStr) {
-            const expiryTime = parseInt(expiryStr, 10);
-            if (!isNaN(expiryTime) && Date.now() < expiryTime) {
+        if (__DEV__) {
+          const bypass = await AsyncStorage.getItem('bypass_pro');
+          if (bypass === 'true') {
+            const expiryStr = await AsyncStorage.getItem('bypass_pro_expiry');
+            if (expiryStr) {
+              const expiryTime = parseInt(expiryStr, 10);
+              if (!isNaN(expiryTime) && Date.now() < expiryTime) {
+                wasProRef.current = true;
+                useAppStore.getState().setIsPro(true);
+                return;
+              }
+            } else {
               wasProRef.current = true;
               useAppStore.getState().setIsPro(true);
               return;
             }
-          } else {
-            wasProRef.current = true;
-            useAppStore.getState().setIsPro(true);
-            return;
           }
         }
 
@@ -2241,9 +2243,14 @@ function MainApp() {
 
       let btGranted = false;
       if (Platform.OS === 'android') {
-        const scan = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN);
-        const connect = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT);
-        btGranted = scan && connect;
+        const androidVersion = typeof Platform.Version === 'number' ? Platform.Version : parseInt(String(Platform.Version), 10);
+        if (androidVersion >= 31) {
+          const scan = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN);
+          const connect = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT);
+          btGranted = scan && connect;
+        } else {
+          btGranted = locGranted;
+        }
       } else {
         try {
           const bleState = await BLEBridge.getHardwareState();
@@ -2368,11 +2375,12 @@ function MainApp() {
   const checkPermissions = async () => {
     if (Platform.OS === 'android') {
       try {
-        const granted = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-        ]);
+        const androidVersion = typeof Platform.Version === 'number' ? Platform.Version : parseInt(String(Platform.Version), 10);
+        const perms: any[] = [PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION];
+        if (androidVersion >= 31) {
+          perms.push(PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN, PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT);
+        }
+        const granted = await PermissionsAndroid.requestMultiple(perms);
         setPermissionGranted(Object.values(granted).every(s => s === PermissionsAndroid.RESULTS.GRANTED));
       } catch (err) { console.warn(err); }
     } else { setPermissionGranted(true); }

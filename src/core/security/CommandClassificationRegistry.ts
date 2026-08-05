@@ -123,3 +123,13 @@ export function assertHardwareGate(rawCmd: string, isPro: boolean, isMoving: boo
     }
 }
 
+/**
+ * Returns true if the command is classified as DANGEROUS or HARD_MUTATION
+ * and requires explicit user confirmation modal before execution.
+ */
+export function requiresConfirmationModal(rawCmd: string): boolean {
+    const cls = classifyCommand(rawCmd, false);
+    return cls === CommandClass.DANGEROUS || cls === CommandClass.HARD_MUTATION;
+}
+
+

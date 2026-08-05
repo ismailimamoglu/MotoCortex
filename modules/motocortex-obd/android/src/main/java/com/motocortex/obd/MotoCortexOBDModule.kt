@@ -7,9 +7,23 @@ import java.nio.ByteBuffer
 import kotlinx.coroutines.runBlocking
 
 class MotoCortexOBDModule : Module() {
-    private val sessionManager: OBDSessionManager by lazy {
-        OBDSessionManager(appContext.reactContext!!)
-    }
+    private var _sessionManager: OBDSessionManager? = null
+
+    private val sessionManager: OBDSessionManager
+        get() {
+            if (_sessionManager == null) {
+                val ctx = appContext.reactContext ?: throw IllegalStateException("OBD Module: ReactContext not ready")
+                val manager = OBDSessionManager(ctx)
+                manager.setOnStateChangedListener { state ->
+                    sendEvent("onConnectionStateChanged", mapOf("state" to state))
+                }
+                manager.setTelemetryListener { data ->
+                    parseAndMutateTelemetry(data)
+                }
+                _sessionManager = manager
+            }
+            return _sessionManager!!
+        }
 
     // Direct ByteBuffer for Zero-Allocation JSI Ring Buffer
     // RPM (Int, 4 bytes) at 0
@@ -25,13 +39,7 @@ class MotoCortexOBDModule : Module() {
         Events("onConnectionStateChanged")
 
         OnCreate {
-            sessionManager.setOnStateChangedListener { state ->
-                sendEvent("onConnectionStateChanged", mapOf("state" to state))
-            }
-
-            sessionManager.setTelemetryListener { data ->
-                parseAndMutateTelemetry(data)
-            }
+            // Deferred initialization to avoid accessing ReactContext during initial module registration
         }
 
         AsyncFunction("connectDeviceAsync") { type: String, target: String ->

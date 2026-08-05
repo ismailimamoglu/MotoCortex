@@ -175,10 +175,18 @@ export class OBD2ProtocolEngine {
         this.kLineFallbackCallback = cb;
     }
 
+    public getKLineFallbackCallback(): (() => void) | null {
+        return this.kLineFallbackCallback;
+    }
+
     private voltageCallback: ((voltage: string) => void) | null = null;
 
     public onVoltageReceived(cb: ((voltage: string) => void) | null): void {
         this.voltageCallback = cb;
+    }
+
+    public getVoltageCallback(): ((voltage: string) => void) | null {
+        return this.voltageCallback;
     }
 
    constructor() {  

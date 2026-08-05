@@ -34,7 +34,7 @@ function anonymizeSensitiveData(msg: string): string {
     // 17-character VIN regex (excluding letters I, O, Q)
     const vinRegex = /\b[A-HJ-NPR-Z0-9]{17}\b/gi;
     return msg.replace(vinRegex, (vin) => {
-        return `${vin.substring(0, 8)}******${vin.substring(14)}`;
+        return `${vin.substring(0, 3)}**************`;
     });
 }
 

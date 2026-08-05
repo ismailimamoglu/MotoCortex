@@ -482,8 +482,8 @@ class BluetoothServiceIOS implements IBluetoothService {
             const { assertHardwareGate } = require('../core/security/CommandClassificationRegistry');
             const { useAppStore } = require('../store/useAppStore');
             const { useBluetoothStore } = require('../store/useBluetoothStore');
-            const isPro = useAppStore.getState().isPro;
-            const btState = useBluetoothStore.getState();
+            const isPro = useAppStore?.getState?.()?.isPro ?? false;
+            const btState = useBluetoothStore?.getState?.() ?? {};
             const isMoving = (btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0;
             assertHardwareGate(cleanCmd, isPro, isMoving);
         }
@@ -503,14 +503,18 @@ class BluetoothServiceIOS implements IBluetoothService {
 
     onDataReceived(listener: DataListener) {
         this.dataListener = listener;
-        const { useBluetoothStore } = require('../store/useBluetoothStore');
-        useBluetoothStore.getState().addLog(`RX_LISTENER_REGISTERED. Active count: 1`);
+        try {
+            const { useBluetoothStore } = require('../store/useBluetoothStore');
+            useBluetoothStore?.getState?.()?.addLog?.(`RX_LISTENER_REGISTERED. Active count: 1`);
+        } catch (e) {}
     }
     removeListener(listener: DataListener) {
         if (this.dataListener === listener) {
             this.dataListener = null;
-            const { useBluetoothStore } = require('../store/useBluetoothStore');
-            useBluetoothStore.getState().addLog(`RX_LISTENER_REMOVED. Active count: 0`);
+            try {
+                const { useBluetoothStore } = require('../store/useBluetoothStore');
+                useBluetoothStore?.getState?.()?.addLog?.(`RX_LISTENER_REMOVED. Active count: 0`);
+            } catch (e) {}
         }
     }
     clearBuffer() {
