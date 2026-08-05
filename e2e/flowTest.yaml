@@ -1,0 +1,24 @@
+appId: com.ismail.motocortexv2
+---
+# MotoCortex E2E Diagnostic & Entitlement Flow Test
+- launchApp:
+    clearState: true
+
+# 1. Verify Permission Gateway Screen
+- assertVisible: "Cortex OBD2 Diagnostic Scanner"
+
+# 2. Start Simulation Mode Scan
+- tapOn: "DEMO MODE"
+- assertVisible: "Simülasyon Modu Aktif"
+
+# 3. Read DTC Fault Codes
+- tapOn: "ARIZA KODLARI"
+- assertVisible: "DTC Arıza Kodları"
+
+# 4. Check Pro Paywall Entitlement Guard
+- tapOn: "UDS KODLAMA"
+- assertVisible: "PRO UNLOCK"
+
+# 5. Open AI Doctor Diagnostics
+- tapOn: "AI DOCTOR"
+- assertVisible: "AI Teşhis Asistanı"
