@@ -27,8 +27,21 @@ CREATE INDEX IF NOT EXISTS idx_fault_codes_code ON fault_codes (code);
 CREATE INDEX IF NOT EXISTS idx_vehicle_models_brand ON vehicle_models (brand);
 CREATE INDEX IF NOT EXISTS idx_vehicle_models_model ON vehicle_models (model);
 
--- 4. RLS (Row-Level Security) Korumasını Kaldırma
--- Bu tablolar kullanıcı verisi içermeyen genel referans tablolarıdır (Read-Only/Reference).
--- Anonim anahtarın veri yazabilmesi ve okuyabilmesi için RLS'i kapatıyoruz.
-ALTER TABLE fault_codes DISABLE ROW LEVEL SECURITY;
-ALTER TABLE vehicle_models DISABLE ROW LEVEL SECURITY;
+-- 4. RLS (Row-Level Security) ve Salt-Okunur İzin Yapılandırması
+ALTER TABLE fault_codes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE vehicle_models ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public read-only for fault_codes" ON fault_codes;
+CREATE POLICY "Public read-only for fault_codes"
+    ON fault_codes FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Public read-only for vehicle_models" ON vehicle_models;
+CREATE POLICY "Public read-only for vehicle_models"
+    ON vehicle_models FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
+REVOKE INSERT, UPDATE, DELETE ON fault_codes FROM anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE ON vehicle_models FROM anon, authenticated;

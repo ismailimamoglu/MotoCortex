@@ -110,6 +110,12 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
         if (crankingIntervalRef.current) clearInterval(crankingIntervalRef.current);
     };
 
+    React.useEffect(() => {
+        return () => {
+            if (crankingIntervalRef.current) clearInterval(crankingIntervalRef.current);
+        };
+    }, []);
+
     const getVerdict = () => {
         const isPro = useAppStore.getState().isPro;
         if (!isPro) {

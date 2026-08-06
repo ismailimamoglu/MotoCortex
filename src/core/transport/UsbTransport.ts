@@ -76,6 +76,19 @@ export class UsbTransport {
 
   public async write(cmd: string): Promise<void> {
     if (!this.isConnected) throw new Error('[UsbTransport] Cannot write: USB device not connected');
+    const cleanCmd = cmd.replace(/[\r\n]/g, '').trim();
+    if (cleanCmd.length > 0) {
+      const { assertHardwareGate } = require('../security/CommandClassificationRegistry');
+      const { useAppStore } = require('../../store/useAppStore');
+      const { useBluetoothStore } = require('../../store/useBluetoothStore');
+      const isPro = useAppStore.getState().isPro;
+      const appState = useAppStore.getState();
+      const btState = useBluetoothStore.getState();
+      const speed = appState.speed ?? btState.speed ?? 0;
+      const rpm = appState.rpm ?? btState.rpm ?? 0;
+      const isMoving = speed > 0 || rpm > 0;
+      assertHardwareGate(cleanCmd, isPro, isMoving);
+    }
     console.log(`[UsbTransport TX]: ${cmd}`);
   }
 

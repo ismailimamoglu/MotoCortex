@@ -165,17 +165,16 @@ export class CommandSchedulerClass {
             if (!item) break;
             this.activeItem = item;
 
-            if (item.priority === 'HIGH_PRIORITY_AD_HOC' && this.onAdHocInterruptFn) {
-                try {
-                    this.onAdHocInterruptFn();
-                } catch (e) {
-                    console.warn('[CommandScheduler] Ad-hoc interrupt handler error:', e);
-                }
-            }
-
             if (this.executionFn) {
                 const releaseLock = await this.writeMutex.acquire();
                 try {
+                    if (item.priority === 'HIGH_PRIORITY_AD_HOC' && this.onAdHocInterruptFn) {
+                        try {
+                            this.onAdHocInterruptFn();
+                        } catch (e) {
+                            console.warn('[CommandScheduler] Ad-hoc interrupt handler error:', e);
+                        }
+                    }
                     await CommandRateLimiter.pace();
                     if (!this.activeItem) throw new Error('SESSION_CANCELLED');
                     

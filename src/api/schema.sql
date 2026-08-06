@@ -18,9 +18,22 @@ CREATE TABLE IF NOT EXISTS anonymous_diagnostic_telemetry (
 -- 2. Create Unique Index on session_hash
 CREATE UNIQUE INDEX IF NOT EXISTS idx_telemetry_session_hash ON anonymous_diagnostic_telemetry(session_hash);
 
+-- Enable RLS and insert-only policy for telemetry table
+ALTER TABLE anonymous_diagnostic_telemetry ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anon telemetry insert only" ON anonymous_diagnostic_telemetry;
+CREATE POLICY "Anon telemetry insert only"
+    ON anonymous_diagnostic_telemetry
+    FOR INSERT
+    TO anon, authenticated
+    WITH CHECK (true);
+
 -- 3. Create RPC function to handle upsert with hit_count incrementation
 CREATE OR REPLACE FUNCTION upsert_telemetry(payload JSONB)
-RETURNS VOID AS $$
+RETURNS VOID 
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
   INSERT INTO anonymous_diagnostic_telemetry (
     created_at,

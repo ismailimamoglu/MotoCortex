@@ -21,7 +21,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.1.0</string>
+    <string>1.2.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -40,7 +40,7 @@
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>41</string>
+    <string>53</string>
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
     <key>LSMinimumSystemVersion</key>
@@ -58,12 +58,8 @@
     <string>MotoCortex uses Bluetooth to maintain a constant diagnostic link with your vehicle's ECU for live performance monitoring.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>
     <string>MotoCortex requires access to discover and connect to your vehicle's diagnostic adapter.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your location</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your location</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>iOS requires Location access to perform Bluetooth Low Energy (BLE) device scanning. MotoCortex does NOT track, store, or share your movement data.</string>
+    <string>MotoCortex uses location services when active for GPS telemetry and speed sensor fusion.</string>
     <key>UIBackgroundModes</key>
     <array>
       <string>bluetooth-central</string>

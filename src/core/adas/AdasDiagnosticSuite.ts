@@ -17,11 +17,11 @@ export interface AdasAuditReport {
 }
 
 export class AdasDiagnosticSuite {
-  // Known ADAS ECU Headers
+  // Standard OEM ADAS ECU Headers (e.g. Front Camera 0x7C6, Blind Spot 0x7C0, Radar 0x710)
   public static readonly ADAS_ECU_HEADERS = {
-    FRONT_CAMERA: '7D0',
-    BLIND_SPOT_RADAR: '770',
-    LONG_RANGE_RADAR: '7D2',
+    FRONT_CAMERA: '7C6',
+    BLIND_SPOT_RADAR: '7C0',
+    LONG_RANGE_RADAR: '710',
     ULTRASONIC_PARK: '7B0',
   };
 

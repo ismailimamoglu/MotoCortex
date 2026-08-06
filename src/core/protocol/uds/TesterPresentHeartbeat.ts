@@ -8,6 +8,8 @@ export class TesterPresentHeartbeat {
   private sendCommandFn: ((cmd: string) => Promise<string | undefined>) | null = null;
   private intervalMs: number = 2000;
 
+  private isExecuting: boolean = false;
+
   private constructor() {}
 
   public static getInstance(): TesterPresentHeartbeat {
@@ -24,6 +26,26 @@ export class TesterPresentHeartbeat {
     this.sendCommandFn = sendCommandFn;
   }
 
+  private scheduleNextTick() {
+    if (!this.isRunning) return;
+    this.timer = setTimeout(async () => {
+      if (!this.isRunning || !this.sendCommandFn || this.isExecuting) {
+        this.scheduleNextTick();
+        return;
+      }
+      this.isExecuting = true;
+      try {
+        // Send UDS 0x3E 0x80 (TesterPresent with suppressPosRspMsgIndicationBit)
+        await this.sendCommandFn('3E80');
+      } catch (error) {
+        console.warn('[TesterPresentHeartbeat] Failed to send 0x3E heartbeat:', error);
+      } finally {
+        this.isExecuting = false;
+        this.scheduleNextTick();
+      }
+    }, this.intervalMs);
+  }
+
   /**
    * Start auto TesterPresent (0x3E 0x80 - Suppress Positive Response) loop.
    */
@@ -31,17 +53,7 @@ export class TesterPresentHeartbeat {
     if (this.isRunning) return;
     this.intervalMs = intervalMs;
     this.isRunning = true;
-
-    this.timer = setInterval(async () => {
-      if (!this.isRunning || !this.sendCommandFn) return;
-      try {
-        // Send UDS 0x3E 0x80 (TesterPresent with suppressPosRspMsgIndicationBit)
-        await this.sendCommandFn('3E80');
-      } catch (error) {
-        console.warn('[TesterPresentHeartbeat] Failed to send 0x3E heartbeat:', error);
-      }
-    }, this.intervalMs);
-
+    this.scheduleNextTick();
     console.log(`[TesterPresentHeartbeat] Started active UDS 0x3E heartbeat loop (${intervalMs}ms)`);
   }
 
@@ -50,10 +62,11 @@ export class TesterPresentHeartbeat {
    */
   public stop() {
     if (this.timer) {
-      clearInterval(this.timer);
+      clearTimeout(this.timer);
       this.timer = null;
     }
     this.isRunning = false;
+    this.isExecuting = false;
     console.log('[TesterPresentHeartbeat] Stopped UDS 0x3E heartbeat loop');
   }
 

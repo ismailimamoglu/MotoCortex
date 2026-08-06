@@ -16,6 +16,14 @@ serve(async (req: Request) => {
   }
 
   try {
+    const authHeader = req.headers.get("authorization") || req.headers.get("apikey");
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ valid: false, error: "Unauthorized access: Missing Authorization header" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const { userId, entitlementId = "pro" } = await req.json();
 
     if (!userId) {

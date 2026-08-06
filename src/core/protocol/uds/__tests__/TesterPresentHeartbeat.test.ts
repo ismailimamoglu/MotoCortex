@@ -18,10 +18,10 @@ describe('UDS TesterPresentHeartbeat Engine', () => {
     TesterPresentHeartbeat.start(1000);
     expect(TesterPresentHeartbeat.isActive()).toBe(true);
 
-    jest.advanceTimersByTime(1000);
+    await jest.advanceTimersByTimeAsync(1000);
     expect(mockSend).toHaveBeenCalledWith('3E80');
 
-    jest.advanceTimersByTime(2000);
+    await jest.advanceTimersByTimeAsync(2000);
     expect(mockSend).toHaveBeenCalledTimes(3);
 
     TesterPresentHeartbeat.stop();

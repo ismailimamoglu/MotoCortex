@@ -115,8 +115,15 @@ export class SgwBypassEngine {
      * Emergency offline fallback token unlocking for field technicians without internet access.
      */
     public static unlockOfflineFallback(vin: string, vendor: SgwVendor, overrideCodeHex: string): { success: boolean; message: string } {
-        if (!overrideCodeHex || overrideCodeHex.length < 8) {
-            return { success: false, message: 'Invalid offline bypass code.' };
+        if (!overrideCodeHex || !overrideCodeHex.startsWith('OFF_') || overrideCodeHex.length < 12) {
+            return { success: false, message: 'Invalid offline bypass code format (Expected OFF_XXXXXXXX).' };
+        }
+
+        const codeVinPart = overrideCodeHex.substring(4, 8).toUpperCase();
+        const vinPart = (vin || '').toUpperCase().substring(0, 4);
+
+        if (vinPart && !overrideCodeHex.toUpperCase().includes(vinPart) && !codeVinPart.includes(vinPart.substring(0, 2))) {
+            return { success: false, message: 'Offline bypass code does not match current vehicle VIN.' };
         }
 
         const now = Date.now();

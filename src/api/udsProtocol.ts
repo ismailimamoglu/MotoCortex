@@ -80,11 +80,14 @@ export class UdsProtocolEngine {
     }
 
     const firstByte = parseInt(cleanHex.substring(0, 2), 16);
+    if (isNaN(firstByte)) {
+      return { success: false, serviceId: 0, data: new Uint8Array(), errorMessage: 'Invalid UDS response hex' };
+    }
 
     // Negative Response Check (0x7F)
     if (firstByte === 0x7F) {
-      const originalService = parseInt(cleanHex.substring(2, 4), 16);
-      const nrc = parseInt(cleanHex.substring(4, 6), 16);
+      const originalService = parseInt(cleanHex.substring(2, 4), 16) || 0;
+      const nrc = parseInt(cleanHex.substring(4, 6), 16) || 0xFF;
       return {
         success: false,
         serviceId: originalService,
