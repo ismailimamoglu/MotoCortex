@@ -23,7 +23,7 @@ export class PrivacyService {
         let queuedRecords: any[] = [];
         try {
             queueCount = SQLiteStorage.getQueueLength();
-            queuedRecords = await SQLiteStorage.peekBatch(50);
+            queuedRecords = SQLiteStorage.getUnsyncedTelemetry(50);
         } catch (_) {}
 
         let storedProfiles: any = null;

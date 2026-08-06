@@ -56,12 +56,14 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
             if (speed >= 100 && !reached100Ref.current) {
                 reached100Ref.current = true;
                 setTime100((Date.now() - startTimeRef.current) / 1000);
-                setState('done');
                 if (timerRef.current) clearInterval(timerRef.current);
             }
         }
-<<<<<<< HEAD
-    }, [speed, visible]);
+
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [speed, state, visible]);
 
     const armTimer = async () => {
         const isPro = useAppStore.getState().isPro;
@@ -95,13 +97,6 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 console.warn('[PerformanceModal] SecureStore read failed:', err);
             }
         }
-=======
-
-        return () => {
-            if (timerRef.current) clearInterval(timerRef.current);
-        };
-    }, [speed, state, visible]);
->>>>>>> origin/qa-audit-fixes-10740167972496654534
 
         setState('armed');
         setElapsed(0);
