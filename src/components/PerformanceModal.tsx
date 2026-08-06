@@ -60,6 +60,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 if (timerRef.current) clearInterval(timerRef.current);
             }
         }
+<<<<<<< HEAD
     }, [speed, visible]);
 
     const armTimer = async () => {
@@ -94,6 +95,13 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 console.warn('[PerformanceModal] SecureStore read failed:', err);
             }
         }
+=======
+
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [speed, state, visible]);
+>>>>>>> origin/qa-audit-fixes-10740167972496654534
 
         setState('armed');
         setElapsed(0);

@@ -26,7 +26,10 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { brand, securityLevel, seedHex }: SecAccessRequest = await req.json();
+    const body = await req.json();
+    const brand = body.brand || body.vehicleMake || "GENERIC";
+    const securityLevel = body.securityLevel || 1;
+    const seedHex = body.seedHex;
 
     if (!seedHex || seedHex.length === 0) {
       return new Response(
@@ -39,11 +42,13 @@ Deno.serve(async (req: Request) => {
     const seedVal = parseInt(cleanSeed, 16);
 
     let keyVal = 0;
+    const effectiveBrand = (brand || "GENERIC").toUpperCase();
 
     // Secure Cloud OEM Challenge-Response Transformation Algorithm
-    switch (brand.toUpperCase()) {
+    switch (effectiveBrand) {
       case "VAG":
       case "VW":
+      case "VOLKSWAGEN":
       case "AUDI":
         // SFD Level 1 Security Key Masking
         keyVal = (seedVal ^ 0x4D4F544F) + (securityLevel * 0x1337);
@@ -56,6 +61,7 @@ Deno.serve(async (req: Request) => {
 
       case "FCA":
       case "FIAT":
+      case "CHRYSLER":
       case "JEEP":
         keyVal = (seedVal ^ 0x53475730) + 0x07D0;
         break;

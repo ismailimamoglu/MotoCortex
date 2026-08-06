@@ -30,5 +30,8 @@ jobs:
       - name: Run ESLint
         run: npm run lint --if-present
 
-      - name: Run Unit Tests
-        run: npm test -- --passWithNoTests
+      - name: Run i18n Strict Validation
+        run: npm run i18n:strict-build --if-present
+
+      - name: Run Unit Tests with Coverage
+        run: npm test -- --coverage --passWithNoTests

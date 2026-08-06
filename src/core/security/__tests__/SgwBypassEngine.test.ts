@@ -32,7 +32,7 @@ describe('SgwBypassEngine', () => {
     });
 
     test('should support offline fallback unlock', () => {
-        const offlineRes = SgwBypassEngine.unlockOfflineFallback('1J4GZ58B98C123456', 'FCA', 'OFF_12345678');
+        const offlineRes = SgwBypassEngine.unlockOfflineFallback('1J4GZ58B98C123456', 'FCA', 'OFF_1J4G_12345678');
         expect(offlineRes.success).toBe(true);
         expect(SgwBypassEngine.getStatus().isLocked).toBe(false);
     });

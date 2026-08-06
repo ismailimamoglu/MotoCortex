@@ -20,20 +20,31 @@ export class PrivacyService {
      */
     public static async exportUserData(userId?: string): Promise<{ exportDate: string; data: any }> {
         let queueCount = 0;
+        let queuedRecords: any[] = [];
         try {
             queueCount = SQLiteStorage.getQueueLength();
+            queuedRecords = await SQLiteStorage.peekBatch(50);
+        } catch (_) {}
+
+        let storedProfiles: any = null;
+        try {
+            const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+            const rawProfiles = await AsyncStorage.getItem('@motocortex_vehicle_profiles');
+            if (rawProfiles) storedProfiles = JSON.parse(rawProfiles);
         } catch (_) {}
 
         const dataDump = {
             userId: userId || 'LOCAL_USER',
             exportedAt: new Date().toISOString(),
             telemetryRecordsCount: queueCount,
+            telemetrySampleBatch: queuedRecords,
+            savedVehicleProfiles: storedProfiles || [],
             privacySettings: {
                 analyticsConsent: true,
                 crashReportConsent: true,
                 marketingConsent: false,
             },
-            appVersion: 'v8.x',
+            appVersion: 'v10.0',
         };
 
         return {

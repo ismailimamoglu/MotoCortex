@@ -122,11 +122,14 @@ export const initializeTelemetryQueue = async () => {
 };
 
 // Listen to App state to flush telemetry queue before background/termination
-AppState.addEventListener('change', (nextAppState) => {
-  if (nextAppState.match(/inactive|background/)) {
-    flushQueueToDisk().catch(() => {});
-  }
-});
+let appStateSubscription: any = null;
+if (!appStateSubscription) {
+  appStateSubscription = AppState.addEventListener('change', (nextAppState) => {
+    if (nextAppState.match(/inactive|background/)) {
+      flushQueueToDisk().catch((e) => console.warn('[TelemetryStore] AppState flush error:', e));
+    }
+  });
+}
 
 export const useTelemetryStore = create<TelemetryState>()(
   persist(

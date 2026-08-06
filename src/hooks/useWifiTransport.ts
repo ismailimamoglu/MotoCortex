@@ -27,12 +27,29 @@ export class WifiTransport implements TransportAdapter {
       }
 
       return new Promise((resolve) => {
+        let isSettled = false;
+        const timeoutTimer = setTimeout(() => {
+          if (!isSettled) {
+            isSettled = true;
+            Logger.log('WIFI_TIMEOUT', `TCP connection to ${ip}:${port} timed out after 8s`);
+            if (this.socket) {
+              try { this.socket.destroy(); } catch (_) {}
+            }
+            this.disconnect();
+            resolve(false);
+          }
+        }, 8000);
+
         this.socket = TcpSocket.createConnection(
           { port, host: ip, localAddress: '127.0.0.1', reuseAddress: true },
           () => {
-            this.isConnectedDevice = true;
-            Logger.log('WIFI_CONNECTED', 'TCP Socket connected successfully.');
-            resolve(true);
+            if (!isSettled) {
+              isSettled = true;
+              clearTimeout(timeoutTimer);
+              this.isConnectedDevice = true;
+              Logger.log('WIFI_CONNECTED', 'TCP Socket connected successfully.');
+              resolve(true);
+            }
           }
         );
 
@@ -46,13 +63,22 @@ export class WifiTransport implements TransportAdapter {
 
         this.socket.on('error', (error: any) => {
           Logger.log('WIFI_ERROR', error.message);
-          this.disconnect();
-          resolve(false);
+          if (!isSettled) {
+            isSettled = true;
+            clearTimeout(timeoutTimer);
+            this.disconnect();
+            resolve(false);
+          }
         });
 
         this.socket.on('close', () => {
           Logger.log('WIFI_CLOSED', 'Socket closed');
-          this.disconnect();
+          if (!isSettled) {
+            isSettled = true;
+            clearTimeout(timeoutTimer);
+            this.disconnect();
+            resolve(false);
+          }
         });
       });
     } catch (err) {
@@ -128,16 +154,14 @@ export class WifiTransport implements TransportAdapter {
   }
 }
 
+const wifiTransportSingleton = new WifiTransport();
+
 export const useWifiTransport = () => {
   const [wifiIp, setWifiIp] = useState('192.168.0.10');
   const [wifiPort, setWifiPort] = useState(35000);
-  const wifiTransportRef = useRef<WifiTransport | null>(null);
 
   const getWifiTransport = useCallback(() => {
-    if (!wifiTransportRef.current) {
-      wifiTransportRef.current = new WifiTransport();
-    }
-    return wifiTransportRef.current;
+    return wifiTransportSingleton;
   }, []);
 
   const connectWifi = useCallback(async (ip: string = '192.168.0.10', port: number = 35000) => {
@@ -171,3 +195,5 @@ export const useWifiTransport = () => {
     getWifiTransport,
   };
 };
+
+export default wifiTransportSingleton;

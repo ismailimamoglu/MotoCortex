@@ -63,10 +63,14 @@ export class RemoteCloudSecurityProvider implements ISecurityAccessProvider {
 
     public async calculateKey(request: SecurityAccessRequest): Promise<SecurityAccessResponse> {
         try {
+            const payload = {
+                ...request,
+                brand: request.vehicleMake || 'GENERIC',
+            };
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(request),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {

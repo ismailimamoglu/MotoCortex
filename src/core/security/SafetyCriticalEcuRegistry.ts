@@ -61,7 +61,8 @@ export function classifySafetyModule(
 ): SafetyModuleClass {
     // 1. Check curated exact header match
     const rawHeader = (header || '').toUpperCase().trim();
-    const cleanHeader = rawHeader.startsWith('0X') ? rawHeader.slice(2) : rawHeader;
+    let cleanHeader = rawHeader.startsWith('0X') ? rawHeader.slice(2) : rawHeader;
+    cleanHeader = cleanHeader.replace(/^0+/, ''); // Strip leading zeros (e.g. 07D0 -> 7D0)
     if (cleanHeader && CURATED_SAFETY_HEADERS[cleanHeader]) {
         return CURATED_SAFETY_HEADERS[cleanHeader];
     }
