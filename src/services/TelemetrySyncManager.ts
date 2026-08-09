@@ -153,8 +153,22 @@ export class TelemetrySyncManager {
   }
 
   public async syncQueue(): Promise<void> {
-    // Evicts simulated/demo items based on protocol, ECU ID, or sensor signature.
+    if (this.isSyncing) return;
+
     const allQueue = useTelemetryStore.getState().telemetry_queue;
+    if (allQueue.length === 0) return;
+
+    if (!__DEV__ && !useAppStore.getState().isTelemetryOptedIn) {
+      return;
+    }
+
+    if (useAppStore.getState().isSimulationMode) {
+      return;
+    }
+
+    this.isSyncing = true;
+
+    // Evicts simulated/demo items based on protocol, ECU ID, or sensor signature.
     const simItems = allQueue.filter((item: TelemetryItem) => {
       const isSimulatorEcu = item.ecu_id === 'SIM-ECU-001';
       const isSimulatorProtocol = item.protocol === 'SIMULATED_OBD';
@@ -186,19 +200,6 @@ export class TelemetrySyncManager {
         `GUARD: Evicted ${simItems.length} simulated item(s) from queue. ${realCount} real item(s) preserved.`
       );
     }
-
-    if (!__DEV__ && !useAppStore.getState().isTelemetryOptedIn) {
-      Logger.log('TELEMETRY_SYNC', 'GUARD: Telemetry Opt-In is disabled by user — skipping sync.');
-      return;
-    }
-
-    if (useAppStore.getState().isSimulationMode) {
-      Logger.log('TELEMETRY_SYNC', 'GUARD: Sim mode active — skipping sync.');
-      return;
-    }
-
-    if (this.isSyncing) return;
-    this.isSyncing = true;
     
     if (this.syncTimeout) {
       clearTimeout(this.syncTimeout);
