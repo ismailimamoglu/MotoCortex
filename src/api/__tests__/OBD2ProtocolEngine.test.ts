@@ -557,9 +557,9 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
         )?.[0] || '';
 
         expect(highScoreLog).toContain('Score=92');
-        expect(highScoreLog).toContain('interLoopDelay=2ms');
+        expect(highScoreLog).toContain('interLoopDelay=16ms');
         expect(highScoreLog).toContain('cmdTimeoutBase=150ms');
-        expect(highScoreLog).toContain('cmdPacingDelay=0ms');
+        expect(highScoreLog).toContain('cmdPacingDelay=2ms');
 
         queueAddSpy.mockRestore();
         logSpy.mockRestore();

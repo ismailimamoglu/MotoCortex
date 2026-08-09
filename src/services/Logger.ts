@@ -48,7 +48,7 @@ export function log(tag: string, message: string): void {
     const logLine = `[${timestamp}] [${tag}] ${cleanMessage}`;
     logBuffer.push(logLine);
 
-    if (logBuffer.length >= 200) {
+    if (logBuffer.length >= 50) {
         if (flushTimeout) {
             clearTimeout(flushTimeout);
             flushTimeout = null;
@@ -59,7 +59,7 @@ export function log(tag: string, message: string): void {
         flushTimeout = setTimeout(() => {
             flushTimeout = null;
             flush().catch((err) => console.error('[Logger] Interval flush failed:', err));
-        }, 2000);
+        }, 1000);
     }
 }
 
@@ -112,13 +112,13 @@ export async function flush(): Promise<void> {
     } finally {
         isFlushing = false;
         // Check if more items accumulated during flush
-        if (logBuffer.length >= 200) {
+        if (logBuffer.length >= 50) {
             await flush();
         } else if (logBuffer.length > 0 && !flushTimeout) {
             flushTimeout = setTimeout(() => {
                 flushTimeout = null;
                 flush().catch((err) => console.error('[Logger] Post-flush interval failed:', err));
-            }, 2000);
+            }, 1000);
         }
     }
 }

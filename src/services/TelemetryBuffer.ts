@@ -63,6 +63,12 @@ class TelemetryBuffer {
     }, 300);
   }
 
+  public clear() {
+    this.pendingUpdates = {};
+    this.pendingPidUpdateTimes = {};
+    this.hasPendingData = false;
+  }
+
   public stopFlushLoop() {
     if (this.flushTimer) {
       clearInterval(this.flushTimer);

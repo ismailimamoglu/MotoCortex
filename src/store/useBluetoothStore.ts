@@ -330,27 +330,25 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setSuggestedVehicleProfile: (suggestedVehicleProfile) => set({ suggestedVehicleProfile }),
     flushPendingRevocation: () => set({ pendingProRevocation: false }),
     triggerPendingRevocation: () => set({ pendingProRevocation: true }),
-    addLog: (entry) => set((state) => {
-        state.logs.unshift(`[${new Date().toLocaleTimeString()}] ${entry}`);
-        if (state.logs.length > 100) state.logs.pop();
-        return { logs: state.logs };
-    }),
+    addLog: (entry) => set((state) => ({
+        logs: [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs.slice(0, 49)]
+    })),
     clearLogs: () => set({ logs: [] }),
     setProtocol: (protocol) => set({ protocol }),
 
     addDiagnosticLog: (log) => set((state) => {
         const timestamp = new Date().toLocaleTimeString('tr-TR', { hour12: false });
         const entry = `[${timestamp}] ${log}`;
-        state.diagnosticLogs.unshift(entry);
-        if (state.diagnosticLogs.length > 100) state.diagnosticLogs.pop();
-        return { diagnosticLogs: state.diagnosticLogs };
+        return {
+            diagnosticLogs: [entry, ...state.diagnosticLogs.slice(0, 49)]
+        };
     }),
     clearDiagnosticLogs: () => set({ diagnosticLogs: [] }),
     addStructuredLog: (log) => set((state) => {
         const entry = typeof log === 'string' ? log : JSON.stringify(log);
-        state.structuredLogs.unshift(entry);
-        if (state.structuredLogs.length > 100) state.structuredLogs.pop();
-        return { structuredLogs: state.structuredLogs };
+        return {
+            structuredLogs: [entry, ...state.structuredLogs.slice(0, 49)]
+        };
     }),
     clearStructuredLogs: () => set({ structuredLogs: [] }),
     resetRecoveryAttempts: () => set({ recoveryAttempts: 0 }),
@@ -367,6 +365,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         deviceId: null,
         lastResponse: null,
         error: null,
+        logs: [],
         rpm: null,
         coolant: null,
         speed: null,

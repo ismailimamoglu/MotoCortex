@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Modal,
     TouchableOpacity,
+    ScrollView,
     FlatList,
     TextInput,
     Platform,
@@ -47,15 +48,35 @@ const BRAND_FILTERS = [
     { id: 'Fiat', labelKey: 'brands.stellantis', defaultLabel: 'Stellantis / Fiat' },
     { id: 'Hyundai', labelKey: 'brands.hyundai', defaultLabel: 'Hyundai / Kia' },
     { id: 'Volvo', labelKey: 'brands.volvo', defaultLabel: 'Volvo / Polestar' },
+    { id: 'BMW Motorrad', labelKey: 'brands.bmwMotorrad', defaultLabel: 'BMW Motorrad' },
+    { id: 'Ducati', labelKey: 'brands.ducati', defaultLabel: 'Ducati' },
+    { id: 'KTM', labelKey: 'brands.ktm', defaultLabel: 'KTM' },
 ];
 
-const CATEGORY_FILTERS: { id: FeatureCategory | 'ALL'; labelKey: string; defaultLabel: string }[] = [
-    { id: 'ALL', labelKey: 'features.categoryAll', defaultLabel: 'ALL CATEGORIES' },
-    { id: 'LIGHTING', labelKey: 'features.lighting', defaultLabel: 'LIGHTING' },
-    { id: 'SOUND_ALERTS', labelKey: 'features.soundAlerts', defaultLabel: 'SOUND ALERTS' },
-    { id: 'DISPLAY_INSTRUMENT', labelKey: 'features.displayInstrument', defaultLabel: 'DISPLAY / CLUSTER' },
-    { id: 'DRIVING_COMFORT', labelKey: 'features.drivingComfort', defaultLabel: 'DRIVING COMFORT' },
-    { id: 'SECURITY_SAFETY', labelKey: 'features.securitySafety', defaultLabel: 'SECURITY & SAFETY' },
+const BRAND_SEGMENTS = [
+    { id: 'ALL', labelKey: 'features.segmentAll', defaultLabel: '🌐 TÜM MARKALAR', brands: [] },
+    { id: 'EUROPEAN_PREMIUM', labelKey: 'features.segmentEuroPremium', defaultLabel: '🇪🇺 Avrupa Premium', brands: ['Volkswagen', 'VW', 'Audi', 'SEAT', 'Skoda', 'BMW', 'Mercedes-Benz', 'Porsche', 'Volvo'] },
+    { id: 'EUROPEAN_VOLUME', labelKey: 'features.segmentEuroVolume', defaultLabel: '🇪🇺 Avrupa Volume', brands: ['Renault', 'Dacia', 'Ford', 'Fiat', 'Peugeot', 'Opel'] },
+    { id: 'ASIAN', labelKey: 'features.segmentAsian', defaultLabel: '🌏 Asya', brands: ['Toyota', 'Lexus', 'Honda', 'Nissan', 'Mazda', 'Hyundai', 'Kia'] },
+    { id: 'AMERICAN', labelKey: 'features.segmentAmerican', defaultLabel: '🇺🇸 Amerika', brands: ['Chevrolet', 'GM', 'GMC', 'Dodge', 'RAM', 'Jeep', 'Tesla'] },
+    { id: 'CHINESE_EV', labelKey: 'features.segmentChineseEv', defaultLabel: '🇨🇳 Çin EV', brands: ['BYD', 'NIO', 'XPeng', 'Xiaomi', 'Chery', 'MG'] },
+    { id: 'MOTORCYCLE', labelKey: 'features.segmentMotorcycle', defaultLabel: '🏍️ Motosiklet', brands: ['BMW Motorrad', 'Ducati', 'KTM', 'Yamaha', 'Honda', 'Harley'] },
+];
+
+const CATEGORY_FILTERS: { id: FeatureCategory | 'ALL'; icon: string; labelKey: string; defaultLabel: string }[] = [
+    { id: 'ALL', icon: '🌐', labelKey: 'features.categoryAll', defaultLabel: 'TÜM KATEGORİLER' },
+    { id: 'LIGHTING', icon: '💡', labelKey: 'features.catLighting', defaultLabel: 'AYDINLATMA' },
+    { id: 'SOUND_ALERTS', icon: '🔔', labelKey: 'features.catSound', defaultLabel: 'SES & UYARILAR' },
+    { id: 'DISPLAY_INSTRUMENT', icon: '📊', labelKey: 'features.catDisplay', defaultLabel: 'GÖSTERGE PANELİ' },
+    { id: 'DRIVING_COMFORT', icon: '🚗', labelKey: 'features.catComfort', defaultLabel: 'SÜRÜŞ KONFORU' },
+    { id: 'SECURITY_SAFETY', icon: '🛡️', labelKey: 'features.catSafety', defaultLabel: 'GÜVENLİK' },
+    { id: 'MOTORCYCLE_ECU', icon: '🏍️', labelKey: 'features.catMotorcycle', defaultLabel: 'MOTOSİKLET ECU' },
+    { id: 'RETROFIT_INTEGRATION', icon: '🔧', labelKey: 'features.catRetrofit', defaultLabel: 'DONANIM' },
+    { id: 'EV_BATTERY_CHARGING', icon: '🔋', labelKey: 'features.catEv', defaultLabel: 'EV & BATARYA' },
+    { id: 'ADAS_CALIBRATION', icon: '📡', labelKey: 'features.catAdas', defaultLabel: 'ADAS' },
+    { id: 'EASTER_EGG_FUN', icon: '🎮', labelKey: 'features.catEasterEgg', defaultLabel: 'GİZLİ ÖZELLİKLER' },
+    { id: 'SERVICE_MAINTENANCE', icon: '🛠️', labelKey: 'features.catService', defaultLabel: 'SERVİS & BAKIM' },
+    { id: 'PERFORMANCE', icon: '⚡', labelKey: 'features.catPerformance', defaultLabel: 'PERFORMANS' },
 ];
 
 const FeatureActivationModalComponent = ({
@@ -79,7 +100,6 @@ const FeatureActivationModalComponent = ({
 
     const [selectedBrand, setSelectedBrand] = useState<string>(() => {
         if (connectedVehicleMake) return connectedVehicleMake;
-        if (isSimulationMode) return 'Volkswagen';
         return 'ALL';
     });
 
@@ -90,9 +110,19 @@ const FeatureActivationModalComponent = ({
     }, [connectedVehicleMake]);
 
     const [selectedCategory, setSelectedCategory] = useState<FeatureCategory | 'ALL'>('ALL');
+    const [selectedSegment, setSelectedSegment] = useState<string>('ALL');
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [activeCodingId, setActiveCodingId] = useState<string | null>(null);
     const [codingLogs, setCodingLogs] = useState<string[]>([]);
+    
+    // One-Click Feature Detail Sheet State
+    const [selectedDetailFeature, setSelectedDetailFeature] = useState<OEMFeatureDefinition | null>(null);
+    const [selectedOptionHex, setSelectedOptionHex] = useState<string | null>(null);
+
+    // Expert Mode State
+    const [isExpertMode, setIsExpertMode] = useState<boolean>(false);
+    const [customDidInput, setCustomDidInput] = useState<string>('');
+    const [customValueInput, setCustomValueInput] = useState<string>('');
     
     const storeEnabledFeatures = useAppStore((s) => s.enabledFeatures) || {};
     const setFeatureEnabledInStore = useAppStore((s) => s.setFeatureEnabled);
@@ -111,7 +141,7 @@ const FeatureActivationModalComponent = ({
 
     const [codingToastMessage, setCodingToastMessage] = useState<string | null>(null);
 
-    const executeToggleFeature = async (feature: OEMFeatureDefinition) => {
+    const executeToggleFeature = async (feature: OEMFeatureDefinition, customPayloadHex?: string) => {
         if (activeCodingId !== null) return;
         const currentlyEnabled = !!storeEnabledFeatures[feature.id];
         const newTargetState = !currentlyEnabled;
@@ -124,16 +154,17 @@ const FeatureActivationModalComponent = ({
         try {
             // Start UDS Coding Sequence
             setActiveCodingId(feature.id);
+            const payload = customPayloadHex || (newTargetState ? '01' : '00');
             setCodingLogs([
                 `[1/6] Safety Check Passed (${effectiveVoltage.toFixed(1)}V >= 12.2V)`,
                 `[2/6] Backup Created: DID 0x${feature.didHex} (Initial Bit ${feature.bitIndex})`,
                 `[3/6] UDS Extended Session: ${udsClient.buildSessionControlCmd(UdsSessionType.EXTENDED)}`,
-                `[4/6] Bitmask Updated (Byte ${feature.byteIndex}, Bit ${feature.bitIndex})`,
-                `[5/6] UDS Write: ${udsClient.buildWriteDataByIdentifierCmd(feature.didHex, newTargetState ? '01' : '00')}`,
+                `[4/6] Payload Prepared: 0x${payload}`,
+                `[5/6] UDS Write: ${udsClient.buildWriteDataByIdentifierCmd(feature.didHex, payload)}`,
                 `[6/6] Read-Back Verification: SUCCESS`
             ]);
 
-            await new Promise((res) => setTimeout(res, 400));
+            await new Promise((res) => setTimeout(res, 450));
             setFeatureEnabledInStore(feature.id, newTargetState);
             const featureName = t(feature.nameKey, feature.defaultName);
             const statusStr = newTargetState ? t('bento.enabled', 'ENABLED') : t('bento.disabled', 'DISABLED');
@@ -150,7 +181,7 @@ const FeatureActivationModalComponent = ({
         }
     };
 
-    const handleToggleFeature = async (feature: OEMFeatureDefinition) => {
+    const handleToggleFeature = async (feature: OEMFeatureDefinition, customPayloadHex?: string) => {
         const inSim = isSimulationMode || useAppStore.getState().isSimulationMode;
 
         // 0. Clone Adapter Safety Gate Check (Bypassed in Demo Mode)
@@ -215,12 +246,23 @@ const FeatureActivationModalComponent = ({
             return;
         }
 
-        await executeToggleFeature(feature);
+        await executeToggleFeature(feature, customPayloadHex);
     };
 
-    // Filter features based on brand, category, and search query
+    // Filter features based on brand, segment, category, and search query
     const filteredFeatures = useMemo(() => {
         return rawList.filter(feature => {
+            // Segment filter
+            if (selectedSegment !== 'ALL') {
+                const seg = BRAND_SEGMENTS.find(s => s.id === selectedSegment);
+                if (seg && seg.brands.length > 0) {
+                    const matchesSeg = seg.brands.some(b => 
+                        feature.make.toUpperCase().includes(b.toUpperCase()) || b.toUpperCase().includes(feature.make.toUpperCase())
+                    );
+                    if (!matchesSeg) return false;
+                }
+            }
+
             // Brand filter with alias matching
             if (selectedBrand !== 'ALL') {
                 const cleanSelected = selectedBrand.toUpperCase();
@@ -262,7 +304,7 @@ const FeatureActivationModalComponent = ({
 
             return true;
         });
-    }, [rawList, selectedBrand, selectedCategory, searchQuery]);
+    }, [rawList, selectedBrand, selectedSegment, selectedCategory, searchQuery]);
 
     const handleRestoreFactoryState = (feature: OEMFeatureDefinition) => {
         if (isCloneDevice && !isSimulationMode) {
@@ -299,6 +341,24 @@ const FeatureActivationModalComponent = ({
         }
     };
 
+    const getCategoryLabel = (cat: FeatureCategory): string => {
+        switch (cat) {
+            case 'LIGHTING': return t('features.catLighting', 'LIGHTING');
+            case 'SOUND_ALERTS': return t('features.catSoundAlerts', 'SOUND & ALERTS');
+            case 'DISPLAY_INSTRUMENT': return t('features.catDisplayInstrument', 'INSTRUMENT CLUSTER');
+            case 'DRIVING_COMFORT': return t('features.catDrivingComfort', 'DRIVING COMFORT');
+            case 'SECURITY_SAFETY': return t('features.catSecuritySafety', 'SECURITY & SAFETY');
+            case 'MOTORCYCLE_ECU': return t('features.catMotorcycleEcu', 'MOTORCYCLE ECU');
+            case 'RETROFIT_INTEGRATION': return t('features.catRetrofit', 'RETROFIT & HARDWARE');
+            case 'EV_BATTERY_CHARGING': return t('features.catEv', 'EV & BATTERY');
+            case 'ADAS_CALIBRATION': return t('features.catAdas', 'ADAS');
+            case 'EASTER_EGG_FUN': return t('features.catEasterEgg', 'EASTER EGG');
+            case 'SERVICE_MAINTENANCE': return t('features.catService', 'SERVICE & MAINTENANCE');
+            case 'PERFORMANCE': return t('features.catPerformance', 'PERFORMANCE');
+            default: return String(cat);
+        }
+    };
+
     if (visible === false) {
         return null;
     }
@@ -320,9 +380,8 @@ const FeatureActivationModalComponent = ({
                         alignItems: 'center',
                         gap: scaleMod(8)
                     }}>
-                        <Text style={{ fontSize: scaleFont(14) }}>⚠️</Text>
                         <Text style={{ color: colors.red, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, flex: 1 }}>
-                            {t('features.cloneLockedBanner', '⚠️ Clone Adapter Detected — Coding Locked (Read-Only Mode)').toUpperCase()}
+                            {t('features.cloneLockedBanner', 'Clone Adapter Detected — Coding Locked (Read-Only Mode)').toUpperCase()}
                         </Text>
                     </View>
                 )}
@@ -361,7 +420,7 @@ const FeatureActivationModalComponent = ({
                             {connectedVehicleMake 
                                 ? String(t('features.vehicleMatched', { make: connectedVehicleMake.toUpperCase(), defaultValue: `${connectedVehicleMake.toUpperCase()} — MATCHED` }))
                                 : isSimulationMode 
-                                ? String(t('features.demoModeVehicle', { make: 'VOLKSWAGEN', defaultValue: 'DEMO MODE: VOLKSWAGEN' })) 
+                                ? String(t('features.demoModeVehicle', { make: selectedBrand === 'ALL' ? t('features.allMakes', 'ALL MAKES') : selectedBrand.toUpperCase(), defaultValue: `DEMO MODE: ${selectedBrand === 'ALL' ? 'ALL MAKES & ECUs' : selectedBrand.toUpperCase()}` })) 
                                 : String(t('features.waitingVehicle', 'WAITING FOR CONNECTED VEHICLE'))}
                         </Text>
                         <Text numberOfLines={1} style={{ color: colors.textSec, fontSize: scaleFont(9), fontFamily: MONO, marginTop: 2 }}>
@@ -386,6 +445,222 @@ const FeatureActivationModalComponent = ({
                     </View>
                 </View>
 
+                {/* Search Input Bar & Expert Mode Toggle */}
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: scaleWidth(8),
+                    marginBottom: scaleHeight(10)
+                }}>
+                    <View style={{
+                        flex: 1,
+                        backgroundColor: colors.card,
+                        borderColor: colors.border,
+                        borderWidth: 1,
+                        borderRadius: scaleMod(8),
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingHorizontal: scaleWidth(12),
+                        height: scaleHeight(38)
+                    }}>
+                        <TextInput
+                            placeholder={t('features.searchPlaceholder', 'Search feature, DID, or target ECU...')}
+                            placeholderTextColor={colors.textSec}
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                            style={{
+                                flex: 1,
+                                color: colors.textPri,
+                                fontSize: scaleFont(11),
+                                fontFamily: MONO,
+                                padding: 0
+                            }}
+                        />
+                        {searchQuery.length > 0 && (
+                            <TouchableOpacity onPress={() => setSearchQuery('')}>
+                                <Text style={{ color: colors.textSec, fontSize: scaleFont(12) }}>✕</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+
+                    {/* Expert Mode Toggle Button */}
+                    <TouchableOpacity
+                        onPress={() => setIsExpertMode(!isExpertMode)}
+                        style={{
+                            backgroundColor: isExpertMode ? `${colors.amber}25` : colors.card,
+                            borderColor: isExpertMode ? colors.amber : colors.border,
+                            borderWidth: 1,
+                            borderRadius: scaleMod(8),
+                            paddingHorizontal: scaleWidth(10),
+                            height: scaleHeight(38),
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Text style={{
+                            color: isExpertMode ? colors.amber : colors.textSec,
+                            fontSize: scaleFont(9.5),
+                            fontWeight: '900',
+                            fontFamily: MONO
+                        }}>
+                            {isExpertMode ? 'EXPERT ON' : 'EXPERT'}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Expert Mode Raw DID Editor View */}
+                {isExpertMode && (
+                    <View style={{
+                        backgroundColor: '#111827',
+                        borderColor: colors.amber,
+                        borderWidth: 1.2,
+                        borderRadius: scaleMod(10),
+                        padding: scaleMod(12),
+                        marginBottom: scaleHeight(10)
+                    }}>
+                        <Text style={{ color: colors.amber, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, marginBottom: scaleHeight(4) }}>
+                            {t('features.expertModeTitle', 'Expert Mode (Raw DID Hex Editor)').toUpperCase()}
+                        </Text>
+                        <Text style={{ color: '#94a3b8', fontSize: scaleFont(9.5), fontFamily: MONO, lineHeight: scaleHeight(13), marginBottom: scaleHeight(8) }}>
+                            {t('features.expertSafetyNote', 'For advanced users only. In case of incorrect coding, use "Restore Factory Settings" below to revert to original state.')}
+                        </Text>
+                        <View style={{ flexDirection: 'row', gap: scaleWidth(8), marginBottom: scaleHeight(8) }}>
+                            <TextInput
+                                placeholder={t('features.expertDidPlaceholder', 'DID Hex (e.g. 0501)')}
+                                placeholderTextColor="#64748b"
+                                value={customDidInput}
+                                onChangeText={setCustomDidInput}
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: '#0f172a',
+                                    borderColor: '#334155',
+                                    borderWidth: 1,
+                                    borderRadius: scaleMod(6),
+                                    color: '#f8fafc',
+                                    paddingHorizontal: scaleWidth(8),
+                                    paddingVertical: scaleHeight(6),
+                                    fontFamily: MONO,
+                                    fontSize: scaleFont(10)
+                                }}
+                            />
+                            <TextInput
+                                placeholder={t('features.expertValPlaceholder', 'Value Hex (e.g. 01)')}
+                                placeholderTextColor="#64748b"
+                                value={customValueInput}
+                                onChangeText={setCustomValueInput}
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: '#0f172a',
+                                    borderColor: '#334155',
+                                    borderWidth: 1,
+                                    borderRadius: scaleMod(6),
+                                    color: '#f8fafc',
+                                    paddingHorizontal: scaleWidth(8),
+                                    paddingVertical: scaleHeight(6),
+                                    fontFamily: MONO,
+                                    fontSize: scaleFont(10)
+                                }}
+                            />
+                        </View>
+                        <View style={{ flexDirection: 'row', gap: scaleWidth(8) }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    if (!customDidInput || !customValueInput) {
+                                        Alert.alert(
+                                            t('common.error', 'Error'),
+                                            t('features.enterValidHex', 'Please enter valid DID and Value Hex strings.')
+                                        );
+                                        return;
+                                    }
+                                    executeToggleFeature({
+                                        id: `expert_${customDidInput}`,
+                                        nameKey: 'Expert Write',
+                                        descKey: 'Raw DID Write',
+                                        defaultName: `Raw DID Write 0x${customDidInput}`,
+                                        defaultDesc: `Direct write payload 0x${customValueInput} to DID 0x${customDidInput}`,
+                                        make: connectedVehicleMake || 'Generic',
+                                        category: 'SERVICE_MAINTENANCE',
+                                        targetEcuHeader: '09',
+                                        didHex: customDidInput,
+                                        byteIndex: 0,
+                                        bitIndex: 0,
+                                        requiresSecurityAccess: true,
+                                        requiresExtendedSession: true,
+                                        safetyLevel: 'LEVEL_2_ADAPTATION',
+                                        riskLevel: 'HIGH'
+                                    }, customValueInput);
+                                }}
+                                style={{
+                                    flex: 1.2,
+                                    backgroundColor: colors.amber,
+                                    paddingVertical: scaleHeight(9),
+                                    borderRadius: scaleMod(6),
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text style={{ color: '#000000', fontWeight: '900', fontSize: scaleFont(9.5), fontFamily: MONO }}>
+                                    {t('features.writeRawPayload', 'WRITE RAW UDS PAYLOAD').toUpperCase()} (2E {customDidInput || 'xxxx'} {customValueInput || 'xx'})
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    if (!customDidInput) {
+                                        Alert.alert(
+                                            t('features.restoreFactoryTitle', 'RESTORE FACTORY SETTINGS'),
+                                            t('features.enterDidFirst', 'Please enter the DID Hex code to restore (e.g. 0501).')
+                                        );
+                                        return;
+                                    }
+                                    Alert.alert(
+                                        t('features.restoreFactoryTitle', 'RESTORE FACTORY SETTINGS'),
+                                        t('features.restoreConfirmMsg', `Revert to original factory state for DID 0x${customDidInput}?`, { didHex: customDidInput }),
+                                        [
+                                            { text: t('common.cancel', 'CANCEL'), style: 'cancel' },
+                                            {
+                                                text: t('features.restoreAction', 'RESTORE FACTORY'),
+                                                style: 'destructive',
+                                                onPress: () => {
+                                                    handleRestoreFactoryState({
+                                                        id: `expert_${customDidInput}`,
+                                                        nameKey: 'Expert Write',
+                                                        descKey: 'Raw DID Write',
+                                                        defaultName: `Raw DID 0x${customDidInput}`,
+                                                        defaultDesc: `DID 0x${customDidInput}`,
+                                                        make: connectedVehicleMake || 'Generic',
+                                                        category: 'SERVICE_MAINTENANCE',
+                                                        targetEcuHeader: '09',
+                                                        didHex: customDidInput,
+                                                        byteIndex: 0,
+                                                        bitIndex: 0,
+                                                        requiresSecurityAccess: true,
+                                                        requiresExtendedSession: true,
+                                                        safetyLevel: 'LEVEL_2_ADAPTATION',
+                                                        riskLevel: 'HIGH'
+                                                    });
+                                                }
+                                            }
+                                        ]
+                                    );
+                                }}
+                                style={{
+                                    flex: 0.9,
+                                    backgroundColor: '#0284c7',
+                                    paddingVertical: scaleHeight(9),
+                                    borderRadius: scaleMod(6),
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(9.5), fontFamily: MONO, textAlign: 'center' }}>
+                                    {t('features.restoreFactoryBtn', 'RESTORE FACTORY SETTINGS').toUpperCase()}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                )}
+
                 {/* Filtered Features List */}
                 <FlatList
                     data={filteredFeatures}
@@ -409,14 +684,25 @@ const FeatureActivationModalComponent = ({
                         const translatedDesc = t(item.descKey, item.defaultDesc);
 
                         return (
-                            <View style={{
-                                backgroundColor: colors.card,
-                                borderColor: isEnabled ? colors.cyan : colors.border,
-                                borderWidth: isEnabled ? 1.8 : 1.2,
-                                borderRadius: scaleMod(12),
-                                padding: scaleMod(14),
-                                marginBottom: scaleHeight(12),
-                            }}>
+                            <TouchableOpacity
+                                activeOpacity={0.85}
+                                onPress={() => {
+                                    setSelectedDetailFeature(item);
+                                    if (item.options && item.options.length > 0) {
+                                        setSelectedOptionHex(item.options[0].valueHex);
+                                    } else {
+                                        setSelectedOptionHex(null);
+                                    }
+                                }}
+                                style={{
+                                    backgroundColor: colors.card,
+                                    borderColor: isEnabled ? colors.cyan : colors.border,
+                                    borderWidth: isEnabled ? 1.8 : 1.2,
+                                    borderRadius: scaleMod(12),
+                                    padding: scaleMod(14),
+                                    marginBottom: scaleHeight(12),
+                                }}
+                            >
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <View style={{ flex: 1, paddingRight: scaleWidth(12) }}>
                                         {/* Brand & Risk Badges */}
@@ -454,6 +740,15 @@ const FeatureActivationModalComponent = ({
                                                     </Text>
                                                 </View>
                                             )}
+
+                                            {/* Options Indicator Pill */}
+                                            {item.options && item.options.length > 0 && (
+                                                <View style={{ backgroundColor: `${colors.purple || '#9c27b0'}25`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4) }}>
+                                                    <Text style={{ color: colors.purple || '#ab47bc', fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
+                                                        {item.options.length} OPTIONS
+                                                    </Text>
+                                                </View>
+                                            )}
                                         </View>
 
                                         {/* Title & Description */}
@@ -475,15 +770,18 @@ const FeatureActivationModalComponent = ({
                                     {/* Action Buttons */}
                                     <View style={{ gap: scaleHeight(6), alignItems: 'flex-end' }}>
                                         <TouchableOpacity
-                                             onPress={() => handleToggleFeature(item)}
+                                             onPress={() => {
+                                                 setSelectedDetailFeature(item);
+                                                 if (item.options && item.options.length > 0) {
+                                                     setSelectedOptionHex(item.options[0].valueHex);
+                                                 }
+                                             }}
                                              disabled={isCodingThis}
                                              activeOpacity={0.75}
-                                             delayPressIn={0}
-                                             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                                              style={{
                                                  backgroundColor: (isCloneDevice && !isSimulationMode) ? colors.textSec : (isEnabled ? colors.red : colors.cyan),
-                                                 paddingHorizontal: scaleWidth(16),
-                                                 paddingVertical: scaleHeight(10),
+                                                 paddingHorizontal: scaleWidth(14),
+                                                 paddingVertical: scaleHeight(8),
                                                  borderRadius: scaleMod(8),
                                                  minWidth: scaleWidth(84),
                                                  alignItems: 'center',
@@ -494,7 +792,7 @@ const FeatureActivationModalComponent = ({
                                              {isCodingThis ? (
                                                  <ActivityIndicator size="small" color="#ffffff" />
                                              ) : (
-                                                 <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, letterSpacing: 0.5 }}>
+                                                 <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: MONO, letterSpacing: 0.5 }}>
                                                      {(isCloneDevice && !isSimulationMode) ? t('features.codeBtn', 'KODLA') : (isEnabled ? t('features.removeBtn', 'KALDIR') : t('features.codeBtn', 'KODLA'))}
                                                  </Text>
                                              )}
@@ -521,11 +819,172 @@ const FeatureActivationModalComponent = ({
                                         )}
                                     </View>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         );
                     }}
                 />
             </View>
+
+            {/* One-Click Feature Detail Sheet Modal */}
+            {selectedDetailFeature && (
+                <Modal
+                    visible={true}
+                    animationType="slide"
+                    transparent={true}
+                    onRequestClose={() => setSelectedDetailFeature(null)}
+                >
+                    <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'flex-end' }}>
+                        <View style={{
+                            backgroundColor: colors.card || '#111723',
+                            borderTopLeftRadius: scaleMod(20),
+                            borderTopRightRadius: scaleMod(20),
+                            padding: scaleMod(20),
+                            maxHeight: '85%',
+                            borderColor: colors.border,
+                            borderWidth: 1
+                        }}>
+                            {/* Sheet Header */}
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: scaleHeight(12) }}>
+                                <View style={{ flex: 1, paddingRight: scaleWidth(12) }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(6), marginBottom: scaleHeight(4) }}>
+                                        <Text style={{ color: colors.cyan, fontWeight: '900', fontSize: scaleFont(10), fontFamily: MONO }}>
+                                            {selectedDetailFeature.make.toUpperCase()} • {getCategoryLabel(selectedDetailFeature.category)}
+                                        </Text>
+                                    </View>
+                                    <Text style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(16), fontFamily: MONO }}>
+                                        {t(selectedDetailFeature.nameKey, selectedDetailFeature.defaultName)}
+                                    </Text>
+                                </View>
+                                <TouchableOpacity
+                                    onPress={() => setSelectedDetailFeature(null)}
+                                    style={{
+                                        backgroundColor: colors.bg,
+                                        width: scaleMod(32),
+                                        height: scaleMod(32),
+                                        borderRadius: scaleMod(16),
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                >
+                                    <Text style={{ color: colors.textPri, fontWeight: 'bold' }}>✕</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                {/* Description */}
+                                <Text style={{ color: colors.textSec, fontSize: scaleFont(12), fontFamily: MONO, lineHeight: scaleFont(18), marginBottom: scaleHeight(14) }}>
+                                    {t(selectedDetailFeature.descKey, selectedDetailFeature.defaultDesc)}
+                                </Text>
+
+                                {/* Technical ECU Info & Pre/Post Preview Box */}
+                                <View style={{
+                                    backgroundColor: colors.bg || '#090d16',
+                                    borderColor: colors.border,
+                                    borderWidth: 1,
+                                    borderRadius: scaleMod(10),
+                                    padding: scaleMod(12),
+                                    marginBottom: scaleHeight(14)
+                                }}>
+                                    <Text style={{ color: colors.cyan, fontWeight: '900', fontSize: scaleFont(10), fontFamily: MONO, marginBottom: scaleHeight(6) }}>
+                                        {t('features.techEcuSpecs', 'TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW')}
+                                    </Text>
+                                    <View style={{ gap: scaleHeight(4) }}>
+                                        <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
+                                            • {t('features.targetEcuHeaderLabel', 'Target ECU Header:')} <Text style={{ fontWeight: '900', color: colors.cyan }}>{selectedDetailFeature.targetEcuHeader}</Text>
+                                        </Text>
+                                        <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
+                                            • {t('features.udsDidLabel', 'UDS Data Identifier (DID):')} <Text style={{ fontWeight: '900', color: colors.cyan }}>0x{selectedDetailFeature.didHex}</Text>
+                                        </Text>
+                                        <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
+                                            • {t('features.bitPositionLabel', 'Bit Position:')} {t('features.byteBitValue', { byte: selectedDetailFeature.byteIndex, bit: selectedDetailFeature.bitIndex, defaultValue: `Byte ${selectedDetailFeature.byteIndex}, Bit ${selectedDetailFeature.bitIndex}` })}
+                                        </Text>
+                                        <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
+                                            • {t('features.targetPayloadLabel', 'Target UDS Payload:')} <Text style={{ fontWeight: '900', color: colors.green }}>2E {selectedDetailFeature.didHex} {selectedOptionHex || (storeEnabledFeatures[selectedDetailFeature.id] ? '00' : '01')}</Text>
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                {/* Multi-Option Selector if present */}
+                                {selectedDetailFeature.options && selectedDetailFeature.options.length > 0 && (
+                                    <View style={{ marginBottom: scaleHeight(16) }}>
+                                        <Text style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, marginBottom: scaleHeight(8) }}>
+                                            {t('features.selectOption', 'Select Coding Option:')}
+                                        </Text>
+                                        <View style={{ gap: scaleHeight(6) }}>
+                                            {selectedDetailFeature.options.map(opt => {
+                                                const isOptSelected = selectedOptionHex === opt.valueHex;
+                                                return (
+                                                    <TouchableOpacity
+                                                        key={opt.valueHex}
+                                                        onPress={() => setSelectedOptionHex(opt.valueHex)}
+                                                        style={{
+                                                            backgroundColor: isOptSelected ? `${colors.cyan}25` : colors.bg,
+                                                            borderColor: isOptSelected ? colors.cyan : colors.border,
+                                                            borderWidth: isOptSelected ? 1.8 : 1,
+                                                            borderRadius: scaleMod(8),
+                                                            padding: scaleMod(10),
+                                                            flexDirection: 'row',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center'
+                                                        }}
+                                                    >
+                                                        <Text style={{ color: isOptSelected ? colors.cyan : colors.textPri, fontWeight: 'bold', fontSize: scaleFont(11), fontFamily: MONO }}>
+                                                            {t(opt.labelKey, opt.defaultLabel)}
+                                                        </Text>
+                                                        <Text style={{ color: colors.textSec, fontSize: scaleFont(10), fontFamily: MONO }}>
+                                                            Payload: 0x{opt.valueHex}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                );
+                                            })}
+                                        </View>
+                                    </View>
+                                )}
+
+                                {/* Coding Logs Display during activation */}
+                                {activeCodingId === selectedDetailFeature.id && codingLogs.length > 0 && (
+                                    <View style={{
+                                        backgroundColor: '#000000',
+                                        borderColor: colors.cyan,
+                                        borderWidth: 1,
+                                        borderRadius: scaleMod(8),
+                                        padding: scaleMod(10),
+                                        marginBottom: scaleHeight(14)
+                                    }}>
+                                        {codingLogs.map((log, idx) => (
+                                            <Text key={idx} style={{ color: colors.cyan, fontSize: scaleFont(9.5), fontFamily: MONO }}>
+                                                {log}
+                                            </Text>
+                                        ))}
+                                    </View>
+                                )}
+
+                                {/* Prominent One-Click Activate Button */}
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        const feat = selectedDetailFeature;
+                                        await handleToggleFeature(feat, selectedOptionHex || undefined);
+                                        setSelectedDetailFeature(null);
+                                    }}
+                                    disabled={activeCodingId !== null}
+                                    style={{
+                                        backgroundColor: storeEnabledFeatures[selectedDetailFeature.id] ? colors.red : colors.cyan,
+                                        paddingVertical: scaleHeight(14),
+                                        borderRadius: scaleMod(12),
+                                        alignItems: 'center',
+                                        marginTop: scaleHeight(8),
+                                        marginBottom: scaleHeight(12)
+                                    }}
+                                >
+                                    <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(13), fontFamily: MONO, letterSpacing: 0.5 }}>
+                                        {storeEnabledFeatures[selectedDetailFeature.id] ? t('features.removeBtn', 'DEACTIVATE FEATURE') : t('features.oneClickActivate', 'ONE-CLICK ACTIVATE')}
+                                    </Text>
+                                </TouchableOpacity>
+                            </ScrollView>
+                        </View>
+                    </View>
+                </Modal>
+            )}
 
             {/* Mandatory Safety Disclaimer Modal */}
             <DisclaimersModal

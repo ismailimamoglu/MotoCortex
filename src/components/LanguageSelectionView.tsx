@@ -28,32 +28,32 @@ export default function LanguageSelectionView({
   const [searchQuery, setSearchQuery] = useState('');
 
   const languagesList = [
-    { label: 'English', value: 'en', flag: '[EN]' },
-    { label: 'Deutsch', value: 'de', flag: '[DE]' },
-    { label: 'Español', value: 'es', flag: '[ES]' },
-    { label: 'Türkçe', value: 'tr', flag: '[TR]' },
-    { label: 'Indonesia', value: 'id', flag: '[ID]' },
-    { label: 'Italiano', value: 'it', flag: '[IT]' },
-    { label: 'العربية', value: 'ar', flag: '[AR]' },
-    { label: '简体中文', value: 'zh', flag: '[ZH]' },
-    { label: 'Dansk', value: 'da', flag: '[DA]' },
-    { label: 'Suomi', value: 'fi', flag: '[FI]' },
-    { label: 'Français', value: 'fr', flag: '[FR]' },
-    { label: 'हिन्दी', value: 'hi', flag: '[HI]' },
-    { label: 'Nederlands', value: 'nl', flag: '[NL]' },
-    { label: '日本語', value: 'ja', flag: '[JA]' },
-    { label: '한국어', value: 'ko', flag: '[KO]' },
-    { label: 'Polski', value: 'pl', flag: '[PL]' },
-    { label: 'Magyar', value: 'hu', flag: '[HU]' },
-    { label: 'Norsk', value: 'no', flag: '[NO]' },
-    { label: 'Português', value: 'pt', flag: '[PT]' },
-    { label: 'Română', value: 'ro', flag: '[RO]' },
-    { label: 'Русский', value: 'ru', flag: '[RU]' },
-    { label: 'ไทย', value: 'th', flag: '[TH]' },
-    { label: 'Українська', value: 'uk', flag: '[UK]' },
-    { label: 'Ελληνικά', value: 'el', flag: '[EL]' },
-    { label: 'Čeština', value: 'cs', flag: '[CS]' },
-    { label: 'Svenska', value: 'sv', flag: '[SV]' },
+    { label: 'English', value: 'en', flag: 'EN' },
+    { label: 'Deutsch', value: 'de', flag: 'DE' },
+    { label: 'Español', value: 'es', flag: 'ES' },
+    { label: 'Türkçe', value: 'tr', flag: 'TR' },
+    { label: 'Indonesia', value: 'id', flag: 'ID' },
+    { label: 'Italiano', value: 'it', flag: 'IT' },
+    { label: 'العربية', value: 'ar', flag: 'AR' },
+    { label: '简体中文', value: 'zh', flag: 'ZH' },
+    { label: 'Dansk', value: 'da', flag: 'DA' },
+    { label: 'Suomi', value: 'fi', flag: 'FI' },
+    { label: 'Français', value: 'fr', flag: 'FR' },
+    { label: 'हिन्दी', value: 'hi', flag: 'HI' },
+    { label: 'Nederlands', value: 'nl', flag: 'NL' },
+    { label: '日本語', value: 'ja', flag: 'JA' },
+    { label: '한국어', value: 'ko', flag: 'KO' },
+    { label: 'Polski', value: 'pl', flag: 'PL' },
+    { label: 'Magyar', value: 'hu', flag: 'HU' },
+    { label: 'Norsk', value: 'no', flag: 'NO' },
+    { label: 'Português', value: 'pt', flag: 'PT' },
+    { label: 'Română', value: 'ro', flag: 'RO' },
+    { label: 'Русский', value: 'ru', flag: 'RU' },
+    { label: 'ไทย', value: 'th', flag: 'TH' },
+    { label: 'Українська', value: 'uk', flag: 'UK' },
+    { label: 'Ελληνικά', value: 'el', flag: 'EL' },
+    { label: 'Čeština', value: 'cs', flag: 'CS' },
+    { label: 'Svenska', value: 'sv', flag: 'SV' },
   ];
 
   const sortedLanguages = useMemo(() => {
@@ -85,7 +85,7 @@ export default function LanguageSelectionView({
         }}
         activeOpacity={0.4}
       >
-        <Text style={{ fontSize: scaleFont(11), fontFamily: MONO, color: colors.cyan, marginRight: scaleWidth(8) }}>{item.flag}</Text>
+        <Text style={{ fontSize: scaleFont(11), fontFamily: MONO, color: colors.cyan, marginRight: scaleWidth(8), fontWeight: 'bold' }}>{item.flag}</Text>
         <Text
           style={{
             fontSize: scaleFont(12),
@@ -98,7 +98,7 @@ export default function LanguageSelectionView({
         </Text>
         {isSelected && (
           <Text style={{ fontSize: scaleFont(11), fontFamily: MONO, color: colors.cyan, fontWeight: '900', marginLeft: 'auto' }}>
-            [{t('common.selected', 'SELECTED').toUpperCase()}]
+            {t('common.selected', 'SELECTED').toUpperCase()}
           </Text>
         )}
       </TouchableOpacity>
