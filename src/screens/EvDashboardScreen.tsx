@@ -127,13 +127,6 @@ export const EvDashboardScreen: React.FC<EvDashboardScreenProps> = ({
         </ScrollView>
     );
 };
-                <Text style={styles.passportText}>Toplam Şarj Döngüsü: {passport.totalChargeCycles}</Text>
-                <Text style={styles.passportText}>Termal Risk: {passport.thermalRunawayRisk}</Text>
-                <Text style={styles.passportText}>Karbon Ayak İzi: {passport.carbonFootprintKgCo2} kg CO2</Text>
-            </View>
-        </ScrollView>
-    );
-};
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#0F0F1A' },
