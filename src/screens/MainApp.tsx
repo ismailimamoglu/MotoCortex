@@ -425,10 +425,10 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
         <View style={{ width: scaleMod(8), height: scaleMod(8), borderRadius: scaleMod(4), backgroundColor: statusColor(ecuStatus) }} />
         <View style={{ flex: 1 }}>
           <Text style={{ color: tc.textPri, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>
-            {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('bento.settings.noConnection', 'Bağlantı Yok')}
+            {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('bento.settings.noConnection')}
           </Text>
           <Text numberOfLines={1} style={{ color: tc.textSec, fontSize: scaleFont(9.5), fontFamily: MONO, marginTop: scaleHeight(2) }}>
-            {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : t('bento.settings.deviceNotConnected', 'Cihaz Bağlı Değil')}
+            {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : t('bento.settings.deviceNotConnected')}
           </Text>
         </View>
       </View>
@@ -942,7 +942,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
                       {t(sensor.nameKey, sensor.defaultName)}
                     </Text>
                     <Text style={{ fontSize: scaleFont(8.5), color: tc.textSec, fontFamily: MONO, marginTop: 1 }}>
-                      {t('bento.realtimeData', 'CANLI VERİ AKIŞI')}
+                      {t('bento.realtimeData')}
                     </Text>
                   </View>
                 </View>
@@ -1018,7 +1018,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
       onPress={onOpenCustomize}
     >
       <Text numberOfLines={1} style={{ color: tc.purple, fontSize: isTablet ? scaleFont(12.5) : scaleFont(10.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.8 }}>
-        {t('dashboard.customizeButton', 'GÖSTERGELERİ DÜZENLE').toUpperCase()}
+        {t('dashboard.customizeButton').toUpperCase()}
       </Text>
     </TouchableOpacity>
   );
@@ -1167,7 +1167,7 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
     const activeLang = state.language || i18n.language || 'en';
     const platformInfo = `${Platform.OS} (${Platform.Version})`;
 
-    const subject = encodeURIComponent(t('info.supportSubject', 'Cortex OBD2 Diagnostic Scanner Support Ticket'));
+    const subject = encodeURIComponent(t('info.supportSubject'));
     const body = encodeURIComponent(
       `Hi Cortex OBD2 Support Team,\n\n` +
       `Please write your message or issue description below:\n` +
@@ -1201,10 +1201,7 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
   const handleShareApp = async () => {
     try {
       await Share.share({
-        message: t(
-          'info.shareMessageText',
-          'Discover vehicle ECU & live sensor telemetry with Cortex OBD2 Diagnostic Scanner!\n\nDownload Now:\n🍏 iOS (App Store): https://apps.apple.com/app/id6742882583\n🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n🌐 Web Portal: https://motocortex-telemetry.vercel.app/'
-        ),
+        message: t('info.shareMessageText'),
         title: 'Cortex OBD2 Diagnostic Scanner'
       });
     } catch (e) {
@@ -1216,9 +1213,9 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
     if (appUserId) {
       await Clipboard.setStringAsync(appUserId);
       Alert.alert(
-        t('common.success', 'Success'),
-        t('bento.settings.idCopied', 'User ID copied to clipboard.'),
-        [{ text: t('common.ok', 'OK') }]
+        t('common.success'),
+        t('bento.settings.idCopied'),
+        [{ text: t('common.ok') }]
       );
     }
   };
@@ -1263,7 +1260,7 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
     <View style={{ flex: isCompact ? undefined : 1, gap: scaleHeight(12) }}>
       {/* Language Selector Section */}
       <View style={[s.panel, { flex: 1, minHeight: 400 }]}>
-        <Text style={s.panelTitle}>🌐 {t('bento.languageSelect', 'DİL SEÇİMİ').toUpperCase()}</Text>
+        <Text style={s.panelTitle}>🌐 {t('bento.languageSelect').toUpperCase()}</Text>
         <View style={{ flex: 1, marginTop: scaleHeight(8) }}>
           <LanguageSelectionView
             currentLanguage={language}
@@ -1281,7 +1278,7 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
       {/* Disconnect Button */}
       {connectionStatus === 'connected' && (
         <View style={s.panel}>
-          <Text style={s.panelTitle}>{t('connection.disconnect', 'BAĞLANTIYI KES').toUpperCase()}</Text>
+          <Text style={s.panelTitle}>{t('connection.disconnect').toUpperCase()}</Text>
           <View style={{ gap: scaleMod(8) }}>
             <TouchableOpacity
               style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1.2, borderRadius: 12, paddingVertical: scaleHeight(10), paddingHorizontal: scaleWidth(14), backgroundColor: `${tc.red}0D`, borderColor: tc.red }}
@@ -1291,7 +1288,7 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
               }}
               activeOpacity={0.8}
             >
-              <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.red }}>{t('connection.disconnect', 'BAĞLANTIYI KES')}</Text>
+              <Text style={{ fontSize: scaleFont(12), fontWeight: '700', fontFamily: MONO, color: tc.red }}>{t('connection.disconnect')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1318,11 +1315,11 @@ const SettingsView = ({ disconnect, setActiveHubView, s }: SettingsViewProps) =>
         }}>
           <TouchableOpacity onPress={() => setIsLangModalOpen(false)} style={{ padding: scaleMod(8) }}>
             <Text allowFontScaling={false} style={{ color: tc.cyan, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>
-              {`← ${t('common.back', 'GERİ').toUpperCase()}`}
+              {`← ${t('common.back').toUpperCase()}`}
             </Text>
           </TouchableOpacity>
           <Text allowFontScaling={false} style={{ fontSize: scaleFont(13), fontWeight: '800', fontFamily: MONO, color: tc.textPri }}>
-            {t('bento.settings.language', 'Language').toUpperCase()}
+            {t('bento.settings.language').toUpperCase()}
           </Text>
           <View style={{ width: scaleWidth(60) }} />
         </View>
@@ -1449,20 +1446,20 @@ export default function MainApp() {
   const renderDtcDetailModal = () => {
     if (!selectedDtcDetail) return null;
     const code = selectedDtcDetail.toUpperCase();
-    const desc = lookupDTC(code) || t('dtc.generalFault', 'Sistem Arızası');
+    const desc = lookupDTC(code) || t('dtc.generalFault');
     const prefix = code.charAt(0);
 
-    let categoryName = t('dtcCategory.powertrain', 'MOTOR / GÜÇ AKTARMA');
+    let categoryName = t('dtcCategory.powertrain');
     let categoryColor = tc.red;
 
     if (prefix === 'C') {
-      categoryName = t('dtcCategory.chassis', 'ŞASİ / FREN SİSTEMİ');
+      categoryName = t('dtcCategory.chassis');
       categoryColor = tc.amber;
     } else if (prefix === 'B') {
-      categoryName = t('dtcCategory.body', 'GÖVDE ELEKTRONİĞİ');
+      categoryName = t('dtcCategory.body');
       categoryColor = tc.cyan;
     } else if (prefix === 'U') {
-      categoryName = t('dtcCategory.network', 'İLETİŞİM / AĞ SİSTEMİ');
+      categoryName = t('dtcCategory.network');
       categoryColor = tc.purple;
     }
 
@@ -1490,7 +1487,7 @@ export default function MainApp() {
                   <View style={{ backgroundColor: `${tc.cyan}20`, borderWidth: 1, borderColor: tc.cyan, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
                     <Text style={{ color: tc.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>AI DOCTOR</Text>
                   </View>
-                  <Text style={{ color: tc.textPri, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>{code} {t('aiDoctor.reportTitle', 'Arıza Kodu Analizi')}</Text>
+                  <Text style={{ color: tc.textPri, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>{code} {t('aiDoctor.reportTitle')}</Text>
                 </View>
                 <TouchableOpacity onPress={() => setIsDtcModalOpen(false)} style={{ padding: scaleMod(6) }}>
                   <Text style={{ color: tc.textSec, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO }}>✕</Text>
@@ -1501,7 +1498,7 @@ export default function MainApp() {
                 {/* Health Score Impact Card */}
                 <View style={{ backgroundColor: '#0d331e', borderWidth: 1, borderColor: '#00cc66', borderRadius: 12, padding: scaleMod(12), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Text style={{ color: '#00ee77', fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
-                    {t('aiDoctor.healthImpactTitle', 'MOTOR SAĞLIK ETKİ SKORU').toUpperCase()}
+                    {t('aiDoctor.healthImpactTitle').toUpperCase()}
                   </Text>
                   <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO }}>75 / 100</Text>
                 </View>
@@ -1509,17 +1506,17 @@ export default function MainApp() {
                 {/* Driving Safety Guidance */}
                 <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(6) }}>
                   <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
-                    {t('aiDoctor.drivingSafety', 'SÜRÜŞ EMNİYETİ REHBERİ').toUpperCase()}
+                    {t('aiDoctor.drivingSafety').toUpperCase()}
                   </Text>
                   <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
-                    {t('aiDoctor.warningDrive', 'Düşük hızda servise kadar sürülmesi emniyetlidir. Yüksek devirde zorlamayın.')}
+                    {t('aiDoctor.warningDrive')}
                   </Text>
                 </View>
 
                 {/* Probable Causes */}
                 <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
                   <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
-                    {t('aiDoctor.causes', 'OLASI KÖK NEDENLER').toUpperCase()}
+                    {t('aiDoctor.causes').toUpperCase()}
                   </Text>
                   {guided.probableCauses.map((pc, idx) => (
                     <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1532,13 +1529,13 @@ export default function MainApp() {
                 {/* Mechanical Steps */}
                 <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
                   <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
-                    {t('aiDoctor.recommendedAction', 'TAVSİYE EDİLEN MEKANİK İŞLEMLER').toUpperCase()}
+                    {t('aiDoctor.recommendedAction').toUpperCase()}
                   </Text>
                   <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
                     1. {guided.recommendedAction}
                   </Text>
                   <Text style={{ fontSize: scaleFont(11), color: tc.textSec, fontFamily: MONO, lineHeight: scaleFont(16) }}>
-                    2. {t('aiDoctor.stepGeneric2', 'Multimetre ile tesisat voltajını ölçün ve konnektör oksitlenmelerini temizleyin.')}
+                    2. {t('aiDoctor.stepGeneric2')}
                   </Text>
                 </View>
 
@@ -1548,7 +1545,7 @@ export default function MainApp() {
                     onPress={() => setIsAiDoctorAnalysisActive(false)}
                   >
                     <Text style={{ color: tc.cyan, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, letterSpacing: 1 }}>
-                      {t('dtcDetail.backToDetail', 'ARIZA DETAYLARINA DÖN').toUpperCase()}
+                      {t('dtcDetail.backToDetail').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
 
@@ -1560,7 +1557,7 @@ export default function MainApp() {
                     }}
                   >
                     <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
-                      {t('service.clearCodes', 'ARIZA KODUNU HIZLICA SİL').toUpperCase()}
+                      {t('service.clearCodes').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -1603,7 +1600,7 @@ export default function MainApp() {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleHeight(16), paddingBottom: scaleHeight(20) }}>
               <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border }}>
                 <Text style={{ fontSize: scaleFont(10), color: tc.textSec, fontFamily: MONO, fontWeight: '800', letterSpacing: 1, marginBottom: scaleHeight(6) }}>
-                  {t('dtcDetail.descTitle', 'ARIZA KODU AÇIKLAMASI').toUpperCase()}
+                  {t('dtcDetail.descTitle').toUpperCase()}
                 </Text>
                 <Text style={{ fontSize: scaleFont(13), color: tc.textPri, fontFamily: MONO, fontWeight: '700', lineHeight: scaleFont(18) }}>
                   {desc}
@@ -1612,11 +1609,11 @@ export default function MainApp() {
 
               {/* Smart Driving Safety Risk Assessment */}
               {(() => {
-                let riskBadge = { color: tc.green, title: t('dtcRisk.safeTitle', '🟢 SÜRÜŞ İÇİN GÜVENLİ'), desc: t('dtcRisk.safeDesc', 'Bu arıza sürüş emniyetini doğrudan tehdit etmez. Aracı servise götürene kadar düşük hızda sürebilirsiniz.') };
+                let riskBadge = { color: tc.green, title: t('dtcRisk.safeTitle'), desc: t('dtcRisk.safeDesc') };
                 if (['P0300', 'P0700', 'C0110', 'B0001', 'P0AA6', 'P0562', 'P0115'].includes(code)) {
-                  riskBadge = { color: tc.red, title: t('dtcRisk.criticalTitle', '🔴 ACİL: SÜRÜŞÜ DURDURUN / SERVİSE BAŞVURUN'), desc: t('dtcRisk.criticalDesc', 'Kritik mekanik/elektriksel risk! Motor veya güvenlik sistemleri hasar görebilir. Aracı derhal emniyetli alana çekin.') };
+                  riskBadge = { color: tc.red, title: t('dtcRisk.criticalTitle'), desc: t('dtcRisk.criticalDesc') };
                 } else if (prefix === 'P' || prefix === 'C' || prefix === 'B') {
-                  riskBadge = { color: tc.amber, title: t('dtcRisk.warningTitle', '🟡 DİKKAT: SERVİS KONTROLÜ GEREKLİ'), desc: t('dtcRisk.warningDesc', 'Performans kayıpları ve emisyon yüksekliği oluşabilir. En kısa sürede yetkili servise başvurun.') };
+                  riskBadge = { color: tc.amber, title: t('dtcRisk.warningTitle'), desc: t('dtcRisk.warningDesc') };
                 }
                 return (
                   <View style={{ backgroundColor: `${riskBadge.color}15`, borderRadius: 12, padding: scaleMod(12), borderWidth: 1, borderColor: riskBadge.color }}>
@@ -1636,7 +1633,7 @@ export default function MainApp() {
                   <View style={{ gap: scaleHeight(12) }}>
                     <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
                       <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', letterSpacing: 1 }}>
-                        {t('dtcDetail.possibleCausesTitle', 'MUHTEMEL KÖK NEDENLER & TAMİR TALİMATLARI').toUpperCase()}
+                        {t('dtcDetail.possibleCausesTitle').toUpperCase()}
                       </Text>
                       {guided.probableCauses.map((pc, idx) => (
                         <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1645,14 +1642,14 @@ export default function MainApp() {
                         </View>
                       ))}
                       <Text style={{ fontSize: scaleFont(10), color: tc.textSec, fontFamily: MONO, marginTop: scaleHeight(4), fontStyle: 'italic' }}>
-                        💡 {t('dtcDetail.recommendedAction', 'Tavsiye Edilen Adım')}: {guided.recommendedAction}
+                        💡 {t('dtcDetail.recommendedAction')}: {guided.recommendedAction}
                       </Text>
                     </View>
 
                     {guided.tsbSummary && (
                       <View style={{ backgroundColor: `${tc.purple}15`, borderWidth: 1, borderColor: tc.purple, borderRadius: 12, padding: scaleMod(12) }}>
                         <Text style={{ fontSize: scaleFont(10), color: tc.purple, fontFamily: MONO, fontWeight: '900', letterSpacing: 1, marginBottom: scaleHeight(4) }}>
-                          📋 {t('dtcDetail.tsbTitle', 'TEKNİK SERVİS BÜLTENİ (TSB)')}
+                          📋 {t('dtcDetail.tsbTitle')}
                         </Text>
                         <Text style={{ fontSize: scaleFont(10), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(14) }}>
                           {guided.tsbSummary}
@@ -1669,7 +1666,7 @@ export default function MainApp() {
                   onPress={() => setIsAiDoctorAnalysisActive(true)}
                 >
                   <Text style={{ color: tc.card, fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO, letterSpacing: 1 }}>
-                    {t('dtcDetail.aiDoctorBtn', 'AI DOCTOR UZMAN ANALİZİ BAŞLAT').toUpperCase()}
+                    {t('dtcDetail.aiDoctorBtn').toUpperCase()}
                   </Text>
                 </TouchableOpacity>
 
@@ -1681,7 +1678,7 @@ export default function MainApp() {
                   }}
                 >
                   <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
-                    {t('service.clearCodes', 'ARIZA KODUNU HIZLICA SİL').toUpperCase()}
+                    {t('service.clearCodes').toUpperCase()}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1725,7 +1722,7 @@ export default function MainApp() {
     const activeLang = state.language || i18n.language || 'en';
     const platformInfo = `${Platform.OS} (${Platform.Version})`;
 
-    const subject = encodeURIComponent(t('info.supportSubject', 'Cortex OBD2 Diagnostic Scanner Support Ticket'));
+    const subject = encodeURIComponent(t('info.supportSubject'));
     const body = encodeURIComponent(
       `Hi Cortex OBD2 Support Team,\n\n` +
       `Please write your message or issue description below:\n` +
@@ -1759,10 +1756,7 @@ export default function MainApp() {
   const handleShareApp = async () => {
     try {
       await Share.share({
-        message: t(
-          'info.shareMessageText',
-          'Discover vehicle ECU & live sensor telemetry with Cortex OBD2 Diagnostic Scanner!\n\nDownload Now:\n🍏 iOS (App Store): https://apps.apple.com/app/id6742882583\n🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n🌐 Web Portal: https://motocortex-telemetry.vercel.app/'
-        ),
+        message: t('info.shareMessageText'),
         title: 'Cortex OBD2 Diagnostic Scanner'
       });
     } catch (e) {
@@ -2048,8 +2042,8 @@ export default function MainApp() {
     if (!isCodingAllowed && isDiagVisible) {
       setIsDiagVisible(false);
       Alert.alert(
-        t('common.securityAlert', 'GÜVENLİK UYARISI'),
-        t('common.cloneSafetyRedirect', 'Klon cihaz veya donanım yetersizliği nedeniyle kodlama/teşhis ekranından güvenli bölgeye yönlendirildiniz.')
+        t('common.securityAlert'),
+        t('common.cloneSafetyRedirect')
       );
     }
   }, [isCodingAllowed, isDiagVisible]);
@@ -2099,8 +2093,8 @@ export default function MainApp() {
             // Do NOT alert on fresh app launch, non-PRO users, or in Demo/Simulation Mode
             if (hadActiveSubscription && !isSimulationMode) {
               Alert.alert(
-                t('common.revocationTitle', 'Abonelik Sonlandırıldı'),
-                t('common.revocationMsg', 'Aboneliğiniz iptal edildiği veya iade edildiği için PRO özelliklerine erişiminiz sonlandırılmıştır.')
+                t('common.revocationTitle'),
+                t('common.revocationMsg')
               );
             }
           }
@@ -2307,8 +2301,8 @@ export default function MainApp() {
     if (isSimulationMode) {
       setIsSaveModalVisible(false);
       Alert.alert(
-        t('common.simMode', 'Simülatör Modu'),
-        t('expertise.simSaveBlocked', 'Simülatör oturumları garaja kaydedilemez. Gerçek bir araç bağlayın.')
+        t('common.simMode'),
+        t('expertise.simSaveBlocked')
       );
       return;
     }
@@ -2519,7 +2513,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
 
           <TouchableOpacity style={s.btEnableBtn} onPress={() => {
             if (Platform.OS === 'ios') {
-              Alert.alert(t('common.warning', 'Warning'), t('connection.iosBtManual'));
+              Alert.alert(t('common.warning'), t('connection.iosBtManual'));
             } else {
               enableBluetooth();
             }
@@ -2607,7 +2601,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               {/* Progress Bar Header */}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(2) }}>
                 <Text style={{ color: tc.textPri, fontFamily: MONO, fontSize: scaleFont(12), fontWeight: '900', letterSpacing: 0.5 }}>
-                  {t('connection.connectingECU', 'ECU BAĞLANTISI').toUpperCase()}
+                  {t('connection.connectingECU').toUpperCase()}
                 </Text>
                 <Text style={{ color: tc.cyan, fontFamily: MONO, fontSize: scaleFont(14), fontWeight: '900' }}>
                   %{connectionProgress}
@@ -2670,7 +2664,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                 {adapterCapabilityScore < 55 ? (
                   t('connection.lowQualityAdapterWarning', 'Düşük Kaliteli Adaptör (Skor: {{score}}/100): Kullandığınız cihaz düşük kaliteli bir klondur. Eski nesil araç protokollerinin (Dacia, Renault, Fiat, Lada vb. K-Line hatları) gerektirdiği hassas zamanlama kararlılığına sahip değildir. Sorunsuz bağlantı için kaliteli bir OBD2 adaptörü (v1.5 veya orijinal OBDLink/vLinker) kullanmanızı öneririz.', { score: adapterCapabilityScore }) as string
                 ) : (
-                  t('connection.ecuNoResponse', 'ECU yanıt vermedi. Kontak açık mı?') as string
+                  t('connection.ecuNoResponse') as string
                 )}
               </Text>
               
@@ -2693,7 +2687,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                   setActiveHubView('hub');
                 }}
               >
-                <Text style={s.retryBtnText}>🎮 {t('common.demoMode', 'SİMÜLASYON MODUNDA İNCELE').toUpperCase()}</Text>
+                <Text style={s.retryBtnText}>🎮 {t('common.demoMode').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -2728,17 +2722,17 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
         const subGroup = upper.substring(1, 3);
         switch (prefix) {
           case 'P':
-            if (subGroup === '01') return t('dtcContext.cooling', 'Critical cooling hazard detected. View detailed repair steps →');
-            if (subGroup === '03') return t('dtcContext.ignition', 'Ignition system issue detected. View detailed repair steps →');
-            return t('dtcContext.powertrain', 'This fault may affect fuel economy and engine performance. Unlock full diagnosis →');
+            if (subGroup === '01') return t('dtcContext.cooling');
+            if (subGroup === '03') return t('dtcContext.ignition');
+            return t('dtcContext.powertrain');
           case 'C':
-            return t('dtcContext.chassis', 'Chassis safety system alert. Unlock PRO for full analysis →');
+            return t('dtcContext.chassis');
           case 'B':
-            return t('dtcContext.body', 'Body electronics fault found. Upgrade for complete diagnostics →');
+            return t('dtcContext.body');
           case 'U':
-            return t('dtcContext.network', 'Communication network error. PRO unlocks full troubleshooting →');
+            return t('dtcContext.network');
           default:
-            return t('dtcContext.fallback', 'Unlock detailed fault analysis, repair costs & risk assessment →');
+            return t('dtcContext.fallback');
         }
       };
       
@@ -2820,14 +2814,14 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     <Text style={[s.cleanBadgeText, { fontSize: scaleFont(12) }]}>✓  {t('expertise.dtcClean')}</Text>
                   </View>
                   <Text style={{ fontSize: scaleFont(9.5), fontWeight: '800', color: tc.textSec, letterSpacing: 1.5, marginBottom: scaleHeight(4), fontFamily: MONO }}>
-                    {t('expertise.scannedModules', 'TARANAN SİSTEMLER').toUpperCase()}
+                    {t('expertise.scannedModules').toUpperCase()}
                   </Text>
                   <View style={{ gap: scaleHeight(6), backgroundColor: `${tc.green}0A`, borderWidth: 1, borderColor: `${tc.green}26`, borderRadius: 8, padding: scaleMod(10) }}>
                     {[
-                      { name: t('expertise.moduleEngine', 'Motor Kontrol Ünitesi (ECU)'), status: 'OK' },
-                      { name: t('expertise.moduleAbs', 'Fren Sistemi (ABS)'), status: 'OK' },
-                      { name: t('expertise.moduleTcm', 'Şanzıman Kontrolü (TCU)'), status: 'OK' },
-                      { name: t('expertise.moduleBcm', 'Gövde Elektroniği (BCM)'), status: 'OK' },
+                      { name: t('expertise.moduleEngine'), status: 'OK' },
+                      { name: t('expertise.moduleAbs'), status: 'OK' },
+                      { name: t('expertise.moduleTcm'), status: 'OK' },
+                      { name: t('expertise.moduleBcm'), status: 'OK' },
                     ].map((mod, index) => (
                       <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={{ fontSize: scaleFont(9.5), color: tc.textPri, fontFamily: MONO }}>• {mod.name}</Text>
@@ -3108,7 +3102,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               letterSpacing: 1,
             }}
           >
-            {t('vehicleSelect.connectDevice', 'OBD2 CİHAZINA BAĞLAN').toUpperCase()}
+            {t('vehicleSelect.connectDevice').toUpperCase()}
           </Text>
         </TouchableOpacity>
 
@@ -3145,7 +3139,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               letterSpacing: 1,
             }}
           >
-            {t('vehicleSelect.registeredVehiclesButton', 'KAYITLI ARAÇLARIM').toUpperCase()}
+            {t('vehicleSelect.registeredVehiclesButton').toUpperCase()}
           </Text>
         </TouchableOpacity>
 
@@ -3172,7 +3166,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           }}>
             <View style={{ width: scaleMod(6), height: scaleMod(6), borderRadius: scaleMod(3), backgroundColor: isConnected ? colors.green : colors.red }} />
             <Text allowFontScaling={false} numberOfLines={1} style={{ color: isConnected ? colors.green : colors.red, fontSize: scaleFont(9.5), fontFamily: MONO, fontWeight: '800' }}>
-              {isConnected ? t('dashboard.connectedDevice', 'BAĞLI') : t('common.disconnected', 'BAĞLI DEĞİL')}
+              {isConnected ? t('dashboard.connectedDevice') : t('common.disconnected')}
             </Text>
           </View>
 
@@ -3205,7 +3199,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               paddingVertical: scaleHeight(5),
             }}>
               <Text allowFontScaling={false} numberOfLines={1} style={{ color: dtcs.length > 0 ? colors.red : colors.green, fontSize: scaleFont(9.5), fontFamily: MONO, fontWeight: '800' }}>
-                {dtcs.length > 0 ? `${dtcs.length} DTC` : t('bento.noDtc', 'TEMİZ')}
+                {dtcs.length > 0 ? `${dtcs.length} DTC` : t('bento.noDtc')}
               </Text>
             </View>
           )}
@@ -3320,7 +3314,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                   activeOpacity={0.6}
                 >
                   <Text style={[s.topDisconnect, { color: colors.red, fontFamily: MONO, fontWeight: '900', fontSize: scaleFont(9.5) }]}>
-                    {t('bento.safeDisconnect', 'GÜVENLİ ÇIKIŞ').toUpperCase()}
+                    {t('bento.safeDisconnect').toUpperCase()}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -3506,13 +3500,13 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
                     {activeHubView === 'sensors' ? t('hub.liveSensorsView') 
                      : activeHubView === 'expertise' ? t('hub.diagnosticsView') 
                      : activeHubView === 'settings' ? t('bento.quickSettings') 
-                     : activeHubView === 'vehicle' ? t('vehicleSelect.titleMenu', 'Araç & Bağlantı') 
-                     : activeHubView === 'hp_gauge' ? t('bento.hpGauge', 'Beygir & Tork Analizi') 
-                     : activeHubView === 'fuel_trim' ? t('bento.fuelTrim', 'Yakıt Trimi & STFT/LTFT') 
-                     : activeHubView === 'dpf' ? t('bento.dpfFilter', 'DPF Filtre & Rejenerasyon') 
-                     : activeHubView === 'multi_ecu' ? t('bento.multiEcu', 'Multi-ECU Modül Taraması') 
-                     : activeHubView === 'dct' ? t('bento.dctAdapt', 'DCT & Şanzıman Adaptasyonu') 
-                     : activeHubView === 'feature_coding' ? t('bento.featureActivation', 'Gizli Özellik Açma & ECU Kodlama')
+                     : activeHubView === 'vehicle' ? t('vehicleSelect.titleMenu') 
+                     : activeHubView === 'hp_gauge' ? t('bento.hpGauge') 
+                     : activeHubView === 'fuel_trim' ? t('bento.fuelTrim') 
+                     : activeHubView === 'dpf' ? t('bento.dpfFilter') 
+                     : activeHubView === 'multi_ecu' ? t('bento.multiEcu') 
+                     : activeHubView === 'dct' ? t('bento.dctAdapt') 
+                     : activeHubView === 'feature_coding' ? t('bento.featureActivation')
                      : t('hub.vehicleProfileView')}
                   </Text>
                 </TouchableOpacity>

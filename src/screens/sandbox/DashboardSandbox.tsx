@@ -94,13 +94,13 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'connected':
-        return t('sandbox.connected', 'Connected');
+        return t('sandbox.connected');
       case 'connecting':
-        return t('sandbox.connecting', 'Connecting...');
+        return t('sandbox.connecting');
       case 'error':
-        return t('sandbox.error', 'Error');
+        return t('sandbox.error');
       default:
-        return t('sandbox.notConnected', 'Not Connected');
+        return t('sandbox.notConnected');
     }
   };
 
@@ -564,13 +564,13 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
         {/* Header */}
         <View style={sDyn.header}>
           <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.headerTitle, { flex: 1 }]}>
-            ⚡ {t('sandbox.title', 'Sandbox Telemetry Control').toUpperCase()}
+            ⚡ {t('sandbox.title').toUpperCase()}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(8) }}>
             <Text style={sDyn.fpsText}>{t('sandbox.fps', { fps })}</Text>
             {onClose && (
               <TouchableOpacity style={sDyn.closeBtn} onPress={onClose}>
-                <Text style={sDyn.closeBtnText}>{t('common.close', 'CLOSE').toUpperCase()}</Text>
+                <Text style={sDyn.closeBtnText}>{t('common.close').toUpperCase()}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -581,13 +581,13 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
           {/* Connection Status Card */}
           <View style={sDyn.statusCard}>
             <View style={sDyn.statusRow}>
-              <Text style={sDyn.statusLabel}>{t('sandbox.connectionStatus', 'Connection Status:')}</Text>
+              <Text style={sDyn.statusLabel}>{t('sandbox.connectionStatus')}</Text>
               <Text style={[sDyn.statusValue, { color: getStatusColor(connectionStatus) }]}>
                 {getStatusText(connectionStatus).toUpperCase()}
               </Text>
             </View>
             <View style={sDyn.statusRow}>
-              <Text style={sDyn.statusLabel}>{t('sandbox.ecuStatus', 'ECU Status:')}</Text>
+              <Text style={sDyn.statusLabel}>{t('sandbox.ecuStatus')}</Text>
               <Text style={[sDyn.statusValue, { color: getStatusColor(ecuStatus) }]}>
                 {getStatusText(ecuStatus).toUpperCase()}
               </Text>
@@ -598,7 +598,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
                 onPress={disconnect}
               >
                 <Text style={sDyn.cancelConnectBtnText}>
-                  {t('connection.cancel', 'CANCEL').toUpperCase()}
+                  {t('connection.cancel').toUpperCase()}
                 </Text>
               </TouchableOpacity>
             )}
@@ -608,7 +608,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
                 onPress={performTeardown}
               >
                 <Text style={[sDyn.cancelConnectBtnText, { color: colors.red }]}>
-                  🔌 {t('sandbox.stopDisconnect', 'Stop / Disconnect').toUpperCase()}
+                  🔌 {t('sandbox.stopDisconnect').toUpperCase()}
                 </Text>
               </TouchableOpacity>
             )}
@@ -616,27 +616,27 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
 
           {/* OBD Health Statistics Card */}
           <View style={sDyn.statusCard}>
-            <Text style={[sDyn.sectionTitle, { color: colors.amber }]}>📊 {t('obdTerminal.statsTitle', 'OBD HEALTH STATISTICS')}</Text>
+            <Text style={[sDyn.sectionTitle, { color: colors.amber }]}>📊 {t('obdTerminal.statsTitle')}</Text>
             <View style={{ gap: scaleHeight(4) }}>
               <View style={sDyn.statusRow}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                  {t('obdTerminal.connectionProtocol', 'Connection Protocol:')}
+                  {t('obdTerminal.connectionProtocol')}
                 </Text>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
-                  {protocol || t('obdTerminal.none', 'None')}
+                  {protocol || t('obdTerminal.none')}
                 </Text>
               </View>
               <View style={sDyn.statusRow}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                  {t('obdTerminal.hardwareQualityScore', 'Hardware Quality Score:')}
+                  {t('obdTerminal.hardwareQualityScore')}
                 </Text>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: adapterCapabilityScore > 70 ? colors.green : colors.red }]}>
-                  {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? t('obdTerminal.original', 'Original') : t('obdTerminal.clone', 'Clone')})
+                  {adapterCapabilityScore}/100 ({adapterCapabilityScore > 70 ? t('obdTerminal.original') : t('obdTerminal.clone')})
                 </Text>
               </View>
               <View style={sDyn.statusRow}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                  {t('obdTerminal.requestResponseCount', 'Request / Response Count:')}
+                  {t('obdTerminal.requestResponseCount')}
                 </Text>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: colors.textPri }]}>
                   {telemetryStats.requestsSent} / {telemetryStats.responsesReceived}
@@ -644,7 +644,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
               </View>
               <View style={sDyn.statusRow}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                  {t('obdTerminal.timeoutCount', 'Timeout Count:')}
+                  {t('obdTerminal.timeoutCount')}
                 </Text>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.timeoutCount > 0 ? colors.amber : colors.textPri }]}>
                   {telemetryStats.timeoutCount}
@@ -652,7 +652,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
               </View>
               <View style={sDyn.statusRow}>
                 <Text numberOfLines={1} ellipsizeMode="tail" style={[sDyn.statusLabel, { flexShrink: 1, marginRight: scaleWidth(4) }]}>
-                  {t('obdTerminal.recoveryCount', 'Error Recovery (Recovery):')}
+                  {t('obdTerminal.recoveryCount')}
                 </Text>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true} style={[sDyn.statusValue, { color: telemetryStats.recoveryCount > 0 ? colors.red : colors.textPri }]}>
                   {telemetryStats.recoveryCount}
@@ -663,12 +663,12 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
 
           {/* DTC (Diagnostic Trouble Codes) Card */}
           <View style={sDyn.statusCard}>
-            <Text style={[sDyn.sectionTitle, { color: colors.red }]}>⚠️ {t('sandbox.dtcTitle', 'DTC DIAGNOSTICS & FAULT CODES')}</Text>
+            <Text style={[sDyn.sectionTitle, { color: colors.red }]}>⚠️ {t('sandbox.dtcTitle')}</Text>
             
             <View style={{ marginBottom: scaleHeight(12) }}>
               {dtcs.length === 0 ? (
                 <Text style={{ color: colors.green, fontSize: scaleFont(11), fontWeight: '700', fontFamily: MONO }}>
-                  ✅ {t('sandbox.noDtcs', 'NO DTC CODES FOUND IN ECU')}
+                  ✅ {t('sandbox.noDtcs')}
                 </Text>
               ) : (
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleWidth(6), marginVertical: scaleHeight(6) }}>
@@ -687,7 +687,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
                 onPress={runDiagnostics}
               >
                 <Text style={{ color: colors.cyan, fontWeight: '800', fontSize: scaleFont(10.5), fontFamily: MONO }}>
-                  {t('sandbox.readDtcs', 'READ DTC')}
+                  {t('sandbox.readDtcs')}
                 </Text>
               </TouchableOpacity>
               
@@ -696,7 +696,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
                 onPress={clearDiagnostics}
               >
                 <Text style={{ color: colors.red, fontWeight: '800', fontSize: scaleFont(10.5), fontFamily: MONO }}>
-                  {t('sandbox.clearDtcs', 'CLEAR DTC')}
+                  {t('sandbox.clearDtcs')}
                 </Text>
               </TouchableOpacity>
 
@@ -709,7 +709,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
                 disabled={dtcs.length === 0}
               >
                 <Text style={{ color: dtcs.length === 0 ? colors.textSec : '#000000', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: MONO }}>
-                  🚀 {t('sandbox.sendDtcs', 'SEND')}
+                  🚀 {t('sandbox.sendDtcs')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -721,13 +721,13 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
           {/* Full height raw terminal with docked custom command TextInput */}
           <View style={[sDyn.terminalCard, { flex: 1 }]}>
             <View style={sDyn.terminalHeader}>
-              <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle', 'Live Terminal & Bus Monitor').toUpperCase()}</Text>
+              <Text style={sDyn.terminalTitle}>🛰️ {t('sandbox.terminalTitle').toUpperCase()}</Text>
               <TouchableOpacity
                 style={sDyn.pauseBtn}
                 onPress={() => setIsPaused(!isPaused)}
               >
                 <Text style={sDyn.pauseBtnText}>
-                  {isPaused ? t('sandbox.resume', 'RESUME') : t('sandbox.pause', 'PAUSE')}
+                  {isPaused ? t('sandbox.resume') : t('sandbox.pause')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -760,7 +760,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
             <View style={sDyn.inputArea}>
               <TextInput
                 style={sDyn.textInput}
-                placeholder={t('obdTerminal.inputPlaceholder', 'Enter command...')}
+                placeholder={t('obdTerminal.inputPlaceholder')}
                 placeholderTextColor={colors.textSec}
                 value={inputCommand}
                 onChangeText={setInputCommand}
@@ -777,7 +777,7 @@ export default function DashboardSandbox({ onClose }: DashboardSandboxProps) {
                 {isSending ? (
                   <ActivityIndicator size="small" color="#000000" />
                 ) : (
-                  <Text style={sDyn.sendBtnText}>{t('obdTerminal.sendButton', 'SEND')}</Text>
+                  <Text style={sDyn.sendBtnText}>{t('obdTerminal.sendButton')}</Text>
                 )}
               </TouchableOpacity>
             </View>
