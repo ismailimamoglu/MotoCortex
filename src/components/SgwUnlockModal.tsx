@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { SgwBypassEngine, SgwVendor } from '../core/security/SgwBypassEngine';
 
 interface SgwUnlockModalProps {
@@ -17,6 +18,7 @@ export const SgwUnlockModal: React.FC<SgwUnlockModalProps> = ({
     onClose,
     onUnlocked,
 }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [isOfflineMode, setIsOfflineMode] = useState(false);
     const [offlineCode, setOfflineCode] = useState('');
@@ -24,7 +26,7 @@ export const SgwUnlockModal: React.FC<SgwUnlockModalProps> = ({
 
     const handleCloudUnlock = async () => {
         if (!disclaimerAccepted) {
-            Alert.alert('Uyarı', 'Devam etmek için lütfen yasal uyarıyı onaylayın.');
+            Alert.alert(t('sgw.warning'), t('sgw.acceptWarning'));
             return;
         }
 
@@ -39,14 +41,14 @@ export const SgwUnlockModal: React.FC<SgwUnlockModalProps> = ({
             });
 
             if (result.success) {
-                Alert.alert('Başarılı', result.message);
+                Alert.alert(t('sgw.success'), result.message);
                 onUnlocked();
                 onClose();
             } else {
-                Alert.alert('Hata', result.message);
+                Alert.alert(t('sgw.error'), result.message);
             }
         } catch (error: any) {
-            Alert.alert('Token Hatası', error?.message || 'SGW kilidi açılamadı.');
+            Alert.alert(t('sgw.tokenError'), error?.message || t('sgw.tokenErrorMsg'));
         } finally {
             setLoading(false);
         }
@@ -54,17 +56,17 @@ export const SgwUnlockModal: React.FC<SgwUnlockModalProps> = ({
 
     const handleOfflineUnlock = () => {
         if (!disclaimerAccepted) {
-            Alert.alert('Uyarı', 'Devam etmek için lütfen yasal uyarıyı onaylayın.');
+            Alert.alert(t('sgw.warning'), t('sgw.acceptWarning'));
             return;
         }
 
         const result = SgwBypassEngine.unlockOfflineFallback(vin, vendor, offlineCode);
         if (result.success) {
-            Alert.alert('Offline Bypass Aktif', result.message);
+            Alert.alert(t('sgw.offlineActive'), result.message);
             onUnlocked();
             onClose();
         } else {
-            Alert.alert('Hata', result.message);
+            Alert.alert(t('sgw.error'), result.message);
         }
     };
 
@@ -72,38 +74,34 @@ export const SgwUnlockModal: React.FC<SgwUnlockModalProps> = ({
         <Modal visible={visible} transparent animationType="slide">
             <View style={styles.overlay}>
                 <View style={styles.container}>
-                    <Text style={styles.title}>Security Gateway (SGW) Kilit Açma</Text>
-                    <Text style={styles.subtitle}>Marka/Üretici: {vendor} | VIN: {vin || 'Bilinmiyor'}</Text>
+                    <Text style={styles.title}>{t('sgw.title')}</Text>
+                    <Text style={styles.subtitle}>{t('sgw.subtitle', { vendor, vin: vin || 'Bilinmiyor' })}</Text>
 
                     <View style={styles.disclaimerBox}>
-                        <Text style={styles.disclaimerTitle}>⚠️ Yasal Sorumluluk Reddi</Text>
-                        <Text style={styles.disclaimerText}>
-                            SGW kilidinin açılması araç beyinlerine (ECU) yazma erişimi sağlar. 
-                            Yetkisiz kodlama veya hatalı parametre değiştirme işlemleri garantiyi etkileyebilir 
-                            veya güvenlik sistemlerini devre dışı bırakabilir. Sorumluluk kullanıcıya aittir.
-                        </Text>
+                        <Text style={styles.disclaimerTitle}>{t('sgw.disclaimerTitle')}</Text>
+                        <Text style={styles.disclaimerText}>{t('sgw.disclaimerText')}</Text>
                         <TouchableOpacity
                             style={styles.checkboxContainer}
                             onPress={() => setDisclaimerAccepted(!disclaimerAccepted)}
                         >
                             <Text style={styles.checkboxText}>
-                                {disclaimerAccepted ? '☑️ Sorumluluk uyarısını kabul ediyorum' : '☐ Sorumluluk uyarısını kabul ediyorum'}
+                                {disclaimerAccepted ? t('sgw.checkboxAccepted') : t('sgw.checkboxUnaccepted')}
                             </Text>
                         </TouchableOpacity>
                     </View>
 
                     {isOfflineMode ? (
                         <View style={styles.offlineBox}>
-                            <Text style={styles.label}>Saha Teknisyeni Offline Bypass Kodu:</Text>
+                            <Text style={styles.label}>{t('sgw.offlineLabel')}</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Örn: OFF_89A2BF10"
+                                placeholder={t('sgw.offlinePlaceholder')}
                                 placeholderTextColor="#666"
                                 value={offlineCode}
                                 onChangeText={setOfflineCode}
                             />
                             <TouchableOpacity style={styles.actionBtn} onPress={handleOfflineUnlock}>
-                                <Text style={styles.actionBtnText}>Offline Kilidi Aç (15dk)</Text>
+                                <Text style={styles.actionBtnText}>{t('sgw.offlineUnlockBtn')}</Text>
                             </TouchableOpacity>
                         </View>
                     ) : (
@@ -115,7 +113,7 @@ export const SgwUnlockModal: React.FC<SgwUnlockModalProps> = ({
                             {loading ? (
                                 <ActivityIndicator color="#FFF" />
                             ) : (
-                                <Text style={styles.actionBtnText}>Bulut Token ile Kilidi Aç (60dk)</Text>
+                                <Text style={styles.actionBtnText}>{t('sgw.cloudUnlockBtn')}</Text>
                             )}
                         </TouchableOpacity>
                     )}
@@ -125,12 +123,12 @@ export const SgwUnlockModal: React.FC<SgwUnlockModalProps> = ({
                         onPress={() => setIsOfflineMode(!isOfflineMode)}
                     >
                         <Text style={styles.toggleOfflineText}>
-                            {isOfflineMode ? '← Bulut Doğrulamasına Dön' : '⚡ Offline Saha Bypass Modu'}
+                            {isOfflineMode ? t('sgw.toggleToCloud') : t('sgw.toggleToOffline')}
                         </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
-                        <Text style={styles.cancelBtnText}>İptal</Text>
+                        <Text style={styles.cancelBtnText}>{t('sgw.cancel')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

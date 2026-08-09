@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { EvDiagnosticSuite, EvDiagnosticReport } from '../core/ev/EvDiagnosticSuite';
 import { EvBatteryPassport, EvBatteryPassportData } from '../core/ev/EvBatteryPassport';
 
@@ -12,6 +13,7 @@ export const EvDashboardScreen: React.FC<EvDashboardScreenProps> = ({
     vin,
     onBack,
 }) => {
+    const { t } = useTranslation();
     const [report, setReport] = useState<EvDiagnosticReport | null>(null);
     const [passport, setPassport] = useState<EvBatteryPassportData | null>(null);
     const [noDataAvailable, setNoDataAvailable] = useState<boolean>(false);
@@ -49,7 +51,7 @@ export const EvDashboardScreen: React.FC<EvDashboardScreenProps> = ({
     if (!report || !passport) {
         return (
             <View style={styles.center}>
-                <Text style={styles.loadingText}>EV Teşhis Verileri Yükleniyor...</Text>
+                <Text style={styles.loadingText}>{t('ev.loading')}</Text>
             </View>
         );
     }
@@ -58,43 +60,43 @@ export const EvDashboardScreen: React.FC<EvDashboardScreenProps> = ({
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
             {onBack && (
                 <TouchableOpacity style={styles.backBtn} onPress={onBack}>
-                    <Text style={styles.backBtnText}>← Geri</Text>
+                    <Text style={styles.backBtnText}>{t('ev.back')}</Text>
                 </TouchableOpacity>
             )}
 
-            <Text style={styles.headerTitle}>⚡ EV & Batarya Teşhis Paneli</Text>
+            <Text style={styles.headerTitle}>{t('ev.title')}</Text>
             <Text style={styles.subtitle}>VIN: {vin}</Text>
 
             {/* Health Score Overview */}
             <View style={styles.card}>
-                <Text style={styles.cardTitle}>Batarya Sağlık Durumu (SOH)</Text>
+                <Text style={styles.cardTitle}>{t('ev.sohTitle')}</Text>
                 <View style={styles.row}>
                     <Text style={styles.bigScore}>{report.sohPercentage}%</Text>
                     <View style={[styles.badge, report.healthStatus === 'OPTIMAL' ? styles.badgeGreen : styles.badgeOrange]}>
                         <Text style={styles.badgeText}>{report.healthStatus}</Text>
                     </View>
                 </View>
-                <Text style={styles.infoText}>Şarj Durumu (SoC): {report.socPercentage}% | Paket Voltajı: {report.packVoltageV} V</Text>
+                <Text style={styles.infoText}>{t('ev.socAndPack', { soc: report.socPercentage, voltage: report.packVoltageV })}</Text>
             </View>
 
             {/* Insulation & Thermal */}
             <View style={styles.card}>
-                <Text style={styles.cardTitle}>İzolasyon ve Termal Güvenlik</Text>
+                <Text style={styles.cardTitle}>{t('ev.insulationTitle')}</Text>
                 <View style={styles.grid}>
                     <View style={styles.gridItem}>
-                        <Text style={styles.gridLabel}>İzolasyon Direnci</Text>
+                        <Text style={styles.gridLabel}>{t('ev.insulationResistance')}</Text>
                         <Text style={styles.gridVal}>{report.isolationResistanceKohm} kΩ</Text>
                     </View>
                     <View style={styles.gridItem}>
-                        <Text style={styles.gridLabel}>Hücre Voltaj Farkı</Text>
+                        <Text style={styles.gridLabel}>{t('ev.cellDeltaVoltage')}</Text>
                         <Text style={styles.gridVal}>{report.cellDeltaVoltageMv} mV</Text>
                     </View>
                     <View style={styles.gridItem}>
-                        <Text style={styles.gridLabel}>Max Hücre Sıcaklığı</Text>
+                        <Text style={styles.gridLabel}>{t('ev.maxCellTemp')}</Text>
                         <Text style={styles.gridVal}>{report.maxCellTempC} °C</Text>
                     </View>
                     <View style={styles.gridItem}>
-                        <Text style={styles.gridLabel}>Min Hücre Sıcaklığı</Text>
+                        <Text style={styles.gridLabel}>{t('ev.minCellTemp')}</Text>
                         <Text style={styles.gridVal}>{report.minCellTempC} °C</Text>
                     </View>
                 </View>
@@ -102,22 +104,29 @@ export const EvDashboardScreen: React.FC<EvDashboardScreenProps> = ({
 
             {/* Cell Voltages */}
             <View style={styles.card}>
-                <Text style={styles.cardTitle}>Hücre Voltaj Dağılımı</Text>
+                <Text style={styles.cardTitle}>{t('ev.cellDistribution')}</Text>
                 {report.cells.map((cell) => (
                     <View key={cell.cellId} style={styles.cellRow}>
-                        <Text style={styles.cellLabel}>Hücre #{cell.cellId}</Text>
+                        <Text style={styles.cellLabel}>{t('ev.cellIndex', { id: cell.cellId })}</Text>
                         <Text style={styles.cellVal}>{cell.voltageV} V</Text>
-                        {cell.isDeviationHigh && <Text style={styles.warnText}>⚠️ Sapma Var</Text>}
+                        {cell.isDeviationHigh && <Text style={styles.warnText}>{t('ev.deviationWarning')}</Text>}
                     </View>
                 ))}
             </View>
 
             {/* EU Battery Passport */}
             <View style={[styles.card, styles.passportCard]}>
-                <Text style={styles.passportTitle}>🇪🇺 AB Dijital Batarya Pasaportu</Text>
-                <Text style={styles.passportId}>Pasaport ID: {passport.passportId}</Text>
-                <Text style={styles.passportText}>Nominal Kapasite: {passport.nominalCapacityKwh} kWh</Text>
-                <Text style={styles.passportText}>Kalan Kapasite: {passport.remainingCapacityKwh} kWh</Text>
+                <Text style={styles.passportTitle}>{t('ev.passportTitle')}</Text>
+                <Text style={styles.passportId}>{t('ev.passportId', { id: passport.passportId })}</Text>
+                <Text style={styles.passportText}>{t('ev.nominalCapacity', { val: passport.nominalCapacityKwh })}</Text>
+                <Text style={styles.passportText}>{t('ev.remainingCapacity', { val: passport.remainingCapacityKwh })}</Text>
+                <Text style={styles.passportText}>{t('ev.totalCycles', { val: passport.totalChargeCycles })}</Text>
+                <Text style={styles.passportText}>{t('ev.thermalRisk', { val: passport.thermalRunawayRisk })}</Text>
+                <Text style={styles.passportText}>{t('ev.carbonFootprint', { val: passport.carbonFootprintKgCo2 })}</Text>
+            </View>
+        </ScrollView>
+    );
+};
                 <Text style={styles.passportText}>Toplam Şarj Döngüsü: {passport.totalChargeCycles}</Text>
                 <Text style={styles.passportText}>Termal Risk: {passport.thermalRunawayRisk}</Text>
                 <Text style={styles.passportText}>Karbon Ayak İzi: {passport.carbonFootprintKgCo2} kg CO2</Text>
