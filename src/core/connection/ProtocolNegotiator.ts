@@ -13,6 +13,7 @@ export class ProtocolNegotiator {
         store.addLog('CLEAN_INIT: Initializing adapter UART line...');
 
         try {
+            OBDCommandQueue.resetStallCounter();
             await OBDCommandQueue.add('AT Z', 1000).catch(() => {});
             OBDCommandQueue.flushRxBuffer();
             await preciseSleep(200);

@@ -3,6 +3,7 @@
 
 import BluetoothService from './BluetoothService';  
 import { useBluetoothStore } from '../store/useBluetoothStore';  
+import { useAppStore } from '../store/useAppStore';
 import * as Logger from '../services/Logger';  
 import CommandScheduler from '../core/queue/CommandScheduler';  
 import { RxState, ELMParser } from '../core/parser/ELMParser';  
@@ -66,26 +67,7 @@ export function wrapError(error: any, command: string): Error {
 }
 
 export function preciseSleep(ms: number): Promise<void> {  
-   const start = typeof performance !== 'undefined' ? performance.now() : Date.now();  
-   return new Promise((resolve) => {  
-       const check = () => {  
-           const now = typeof performance !== 'undefined' ? performance.now() : Date.now();  
-           const elapsed = now - start;  
-           if (elapsed >= ms) {  
-               resolve();  
-           } else {  
-               const remaining = ms - elapsed;  
-               if (remaining > 10) {  
-                   setTimeout(check, remaining - 4);  
-               } else if (typeof setImmediate !== 'undefined') {  
-                   setImmediate(check);  
-               } else {  
-                   setTimeout(check, 1);  
-               }  
-           }  
-       };  
-       check();  
-   });  
+   return new Promise((resolve) => setTimeout(resolve, Math.max(0, ms)));  
 }
 
 export function waitForELMPrompt(maxWaitMs: number = 1000, pollIntervalMs: number = 50): Promise<void> {  
@@ -183,6 +165,10 @@ export class OBD2ProtocolEngine {
 
     public onVoltageReceived(cb: ((voltage: string) => void) | null): void {
         this.voltageCallback = cb;
+    }
+
+    public resetStallCounter(): void {
+        this.stallCounter = 0;
     }
 
     public getVoltageCallback(): ((voltage: string) => void) | null {
@@ -289,7 +275,6 @@ export class OBD2ProtocolEngine {
     private async executeCommand(command: string, timeoutMs?: number): Promise<string> {  
         const isMoving = this.currentSpeed > 0 || this.currentRpm > 0;
         try {  
-            const { useAppStore } = require('../store/useAppStore');  
             const isPro = useAppStore.getState().isPro;  
             assertHardwareGate(command, isPro, isMoving);  
         } catch (gateErr: any) {  

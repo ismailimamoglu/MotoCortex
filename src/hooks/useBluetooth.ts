@@ -204,6 +204,7 @@ export const useBluetooth = () => {
                if (ProtocolCircuitBreaker.isBlacklisted("0")) throw new Error("BLACKLISTED");  
                useBluetoothStore.getState().addLog('DIAG: Trying Auto Protocol (AT SP 0)...');  
                await OBDCommandQueue.add("AT SP 0", 2000);
+               OBDCommandQueue.resetStallCounter();
 
                const testCommand = "01 00";  
                const initRes = await OBDCommandQueue.add(testCommand, 6000);  
@@ -235,6 +236,7 @@ export const useBluetooth = () => {
                     if (ecuConnected) break;
                     try {
                         useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Trying ${item.sp} [${item.name}]...`);
+                        OBDCommandQueue.resetStallCounter();
                         await OBDCommandQueue.add("AT PC", 800).catch(() => {});
                         await preciseSleep(100);
                         await OBDCommandQueue.add(item.sp, 1500);
@@ -382,14 +384,6 @@ export const useBluetooth = () => {
         if (connected) {  
             setDevice(selectedName, selectedId); setLastDevice(selectedName, selectedId);  
             ConnectionStateMachine.transitionTo(ConnectionState.ADAPTER_CONNECTING);
-
-            // Send ATZ and AT0 reset sequence to guarantee adapter start state
-            try {
-                await OBDCommandQueue.add('ATZ', 1500, 'HIGH_PRIORITY_AD_HOC');
-                await OBDCommandQueue.add('AT0', 500, 'HIGH_PRIORITY_AD_HOC');
-            } catch (e) {
-                useBluetoothStore.getState().addLog(`CONNECT_RESET: Initial reset commands timed out/failed. Proceeding anyway: ${e}`);
-            }
 
             BluetoothService.onDisconnect(async () => {  
                 try {

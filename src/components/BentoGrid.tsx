@@ -85,13 +85,13 @@ export default function BentoGrid({
   const isClean = dtcCount === 0;
 
   const LANGUAGE_CODES: Record<string, string> = {
-    en: '[EN]', de: '[DE]', es: '[ES]', tr: '[TR]', id: '[ID]', it: '[IT]',
-    ar: '[AR]', zh: '[ZH]', da: '[DA]', fi: '[FI]', fr: '[FR]', hi: '[HI]',
-    nl: '[NL]', ja: '[JA]', ko: '[KO]', pl: '[PL]', hu: '[HU]', no: '[NO]',
-    pt: '[PT]', ro: '[RO]', ru: '[RU]', th: '[TH]', uk: '[UK]', el: '[EL]',
-    cs: '[CS]', sv: '[SV]'
+    en: 'EN', de: 'DE', es: 'ES', tr: 'TR', id: 'ID', it: 'IT',
+    ar: 'AR', zh: 'ZH', da: 'DA', fi: 'FI', fr: 'FR', hi: 'HI',
+    nl: 'NL', ja: 'JA', ko: 'KO', pl: 'PL', hu: 'HU', no: 'NO',
+    pt: 'PT', ro: 'RO', ru: 'RU', th: 'TH', uk: 'UK', el: 'EL',
+    cs: 'CS', sv: 'SV'
   };
-  const langBadge = LANGUAGE_CODES[language] || '[EN]';
+  const langBadge = LANGUAGE_CODES[language] || 'EN';
 
   const handleProPress = () => {
     if (isPro || isSimulationMode) {

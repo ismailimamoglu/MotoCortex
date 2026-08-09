@@ -1771,6 +1771,594 @@
       "xiaomi_su7_drift_mode_unlock": {
         "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
         "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
+      },
+      "vag_oil_service_reset": {
+        "name": "Oil Change Service Reset (Flexible Interval)",
+        "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
+      },
+      "vag_epb_service_mode": {
+        "name": "Electronic Parking Brake (EPB) Brake Pad Service Mode",
+        "desc": "Retracts rear EPB caliper pistons for rear brake pad and rotor replacement."
+      },
+      "bmw_bms_battery_registration": {
+        "name": "Intelligent Battery Sensor (IBS) Battery Registration",
+        "desc": "Registers new 12V AGM/Lead-acid battery replacement in DME/DDE engine management."
+      },
+      "bmw_motorrad_service_indicator_reset": {
+        "name": "BMW Motorrad Annual Service & Oil Indicator Reset",
+        "desc": "Clears annual service date and 10,000 km distance reminder on TFT instrument cluster."
+      },
+      "ducati_desmo_service_reset": {
+        "name": "Ducati Desmo Valve Service Reminder Clear",
+        "desc": "Clears Desmoservice wrench icon on dashboard after 15,000 / 30,000 km service."
+      },
+      "byd_bms_isolation_self_test": {
+        "name": "BYD Blade Battery High-Voltage Isolation Self-Test",
+        "desc": "Executes high-voltage system (400V/800V) leakage & resistance diagnostics in BMS."
+      },
+      "vag_drl_brightness_multi": {
+        "name": "Daytime Running Lights (DRL) Brightness Adjustment",
+        "desc": "Adjust LED DRL intensity level for low-beam / parking mode."
+      },
+      "bmw_comfort_turn_signal_cycles": {
+        "name": "One-Touch Comfort Turn Signal Pulse Count",
+        "desc": "Select how many blinks occur on quick tap of turn indicator lever."
+      },
+      "bmw_oil_service_reset": {
+        "name": "CBS Engine Oil Reset (BMW)",
+        "desc": "Resets Condition Based Service (CBS) oil life percentage back to 100%."
+      },
+      "generic_oil_service_reset": {
+        "name": "Universal Oil Maintenance Indicator Reset",
+        "desc": "Clears dashboard oil maintenance warning light across supported OBD2/UDS ECUs."
+      },
+      "vag_epb_pad_change": {
+        "name": "EPB Brake Pad Replacement Mode (VAG)",
+        "desc": "Retracts electronic parking brake calipers for rear brake pad servicing."
+      },
+      "bmw_epb_pad_change": {
+        "name": "EPB Brake Service Mode (BMW)",
+        "desc": "Opens parking brake actuator to service position for rear pad replacement."
+      },
+      "mb_epb_pad_change": {
+        "name": "EPB Pad Fitting Mode (Mercedes-Benz)",
+        "desc": "Releases parking brake spindle to workshop position for brake service."
+      },
+      "vag_dpf_regen": {
+        "name": "DPF Service Regeneration Trigger (VAG)",
+        "desc": "Initiates stationary Diesel Particulate Filter (DPF) soot burn-off cycle."
+      },
+      "bmw_dpf_regen": {
+        "name": "DPF Forced Regeneration Trigger (BMW)",
+        "desc": "Requests DDE ECU to start active particulate filter regeneration routine."
+      },
+      "psa_dpf_regen": {
+        "name": "DPF Regeneration Request (Peugeot/Citroën)",
+        "desc": "Triggers stationary DPF regeneration for HDi diesel engine ECUs."
+      },
+      "bmw_bms_battery_register": {
+        "name": "BMS Battery Replacement Registration (BMW)",
+        "desc": "Registers new battery replacement with DME/DDE Intelligent Battery Sensor."
+      },
+      "mb_bms_battery_register": {
+        "name": "Battery Registration & Reset (Mercedes-Benz)",
+        "desc": "Resets battery aging counter in SAM module after new battery installation."
+      },
+      "vag_sas_calibrate": {
+        "name": "Steering Angle Sensor (SAS) Calibration (VAG)",
+        "desc": "Calibrates G85 steering angle sensor zero-point position for ABS/ESP ECU."
+      },
+      "toyota_sas_calibrate": {
+        "name": "Steering Angle Zero Point Calibration (Toyota)",
+        "desc": "Performs zero point calibration of steering angle sensor in Skid Control ECU."
+      },
+      "generic_tba_adapt": {
+        "name": "Throttle Body Alignment & Adaptation",
+        "desc": "Executes electronic throttle body stop learning routine in engine ECU."
+      },
+      "epb_service_reset": {
+        "name": "Universal EPB Maintenance Reset",
+        "desc": "Resets electronic park brake caliper wear counter and calibrates air gap."
+      },
+      "vag_dsg_reset": {
+        "name": "DSG Transmission Basic Settings Reset (VAG)",
+        "desc": "Resets clutch engagement points and shift valve adaptations for DSG/S-Tronic."
+      },
+      "bmw_zf_reset": {
+        "name": "ZF 8HP Transmission Adaptation Reset (BMW)",
+        "desc": "Clears EGS transmission shift time and pressure adaptation values."
+      },
+      "bmw_brake_fluid_reset": {
+        "name": "Brake Fluid Service Interval Reset (BMW)",
+        "desc": "Resets Condition Based Service (CBS) 2-year brake fluid change timer."
+      },
+      "ford_injector_code": {
+        "name": "Injector Correction Factor Coding (Ford)",
+        "desc": "Programs 16-character IQA codes for diesel injectors into PCM."
+      },
+      "bmw_injector_code": {
+        "name": "Fuel Injector Flow Rate Coding (BMW)",
+        "desc": "Writes energy calibration values for replaced fuel injectors into DME."
+      },
+      "generic_headlight_aim": {
+        "name": "Headlight Auto-Leveling Calibration",
+        "desc": "Sets reference zero position for adaptive auto-leveling headlight motors."
+      },
+      "bmw_12v_battery_reg": {
+        "name": "12V Auxiliary Battery Registration (BMW)",
+        "desc": "Registers auxiliary AGM starter/support battery replacement in PCU."
+      },
+      "vag_comfort_turn_signal": {
+        "name": "Comfort Turn Signal Blink Count (VAG)",
+        "desc": "Adjusts lane change blinker cycle count between 3, 4, and 5 flashes."
+      },
+      "vag_coming_home_duration": {
+        "name": "Coming/Leaving Home Light Duration (VAG)",
+        "desc": "Configures headlight illumination timer after vehicle locking (10s - 60s)."
+      },
+      "vag_remote_windows": {
+        "name": "Remote Convenience Window Control (VAG)",
+        "desc": "Enables opening and closing power windows via remote key fob long press."
+      },
+      "vag_auto_lock_15kmh": {
+        "name": "Auto Door Lock at 15 km/h (VAG)",
+        "desc": "Automatically locks all doors when vehicle speed reaches 15 km/h."
+      },
+      "vag_sfd_unlock_prep": {
+        "name": "SFD Gateway Protection Status Prep (VAG 2020+)",
+        "desc": "Prepares MQB-evo SFD gateway token session for writing protected DIDs."
+      },
+      "bmw_asd_deactivate": {
+        "name": "Active Sound Design (ASD) Deactivation (BMW)",
+        "desc": "Mutes synthetic engine sound played through cabin speakers."
+      },
+      "bmw_comfort_turn_signal": {
+        "name": "Comfort Turn Signal Count (BMW)",
+        "desc": "Sets one-touch indicator pulse count (1 to 5 blinks)."
+      },
+      "bmw_mirror_fold_lock": {
+        "name": "Comfort Access Mirror Fold on Lock (BMW)",
+        "desc": "Automatically folds side mirrors immediately upon locking vehicle."
+      },
+      "toyota_coming_home_duration": {
+        "name": "Headlight Courtesy Delay / Coming-Home (Toyota)",
+        "desc": "Configures headlight off delay timer after ignition shutdown (30s-120s)."
+      },
+      "toyota_lane_change_flash": {
+        "name": "Lane-Change Turn Signal Flash Count (Toyota)",
+        "desc": "Adjusts one-touch lane change blinker cycle count."
+      },
+      "toyota_remote_window_close": {
+        "name": "Remote Power Window Closure (Toyota)",
+        "desc": "Allows closing all power windows by holding remote lock button."
+      },
+      "toyota_autolock_behavior": {
+        "name": "Auto Door Lock/Unlock Customization (Toyota)",
+        "desc": "Sets door locking trigger (Shift out of P vs Vehicle Speed > 20 km/h)."
+      },
+      "toyota_approach_welcome_lights": {
+        "name": "Smart Key Approach Welcome Lights (Toyota)",
+        "desc": "Turns on interior puddle/cabin lights when smart key approaches vehicle."
+      },
+      "hyundai_autolock_behavior": {
+        "name": "Auto Door Lock/Unlock Behavior (Hyundai/Kia)",
+        "desc": "Automatically locks doors on shift or speed and unlocks on P or Ignition Off."
+      },
+      "hyundai_window_remote": {
+        "name": "Remote Window Open/Close (Hyundai/Kia)",
+        "desc": "Enables rolling windows up/down using smart key fob buttons."
+      },
+      "hyundai_sport_mode_memory": {
+        "name": "Drive Mode Select Memory (Hyundai/Kia)",
+        "desc": "Remembers last selected Drive Mode (Sport/Eco) after engine restart."
+      },
+      "tesla_charge_limit_custom": {
+        "name": "Battery Charge Limit Customization (Tesla)",
+        "desc": "Sets default HV battery charge limit percentage (80% Daily / 100% Trip)."
+      },
+      "tesla_mirror_fold_lock": {
+        "name": "Mirror Auto-Fold on Walk-Away Lock (Tesla)",
+        "desc": "Automatically folds side mirrors when phone key walk-away lock triggers."
+      },
+      "nissan_coming_home": {
+        "name": "Courtesy Headlight Off Delay (Nissan)",
+        "desc": "Keeps headlights illuminated for 30 seconds after exiting Nissan vehicle."
+      },
+      "nissan_lane_change_flash": {
+        "name": "Tap-to-Pass Lane Change Flash Count (Nissan)",
+        "desc": "Sets turn signal indicator pulse count on light stalk tap."
+      },
+      "nissan_autolock_behavior": {
+        "name": "Speed-Dependent Automatic Door Lock (Nissan)",
+        "desc": "Locks all doors automatically when vehicle reaches 24 km/h."
+      },
+      "nissan_window_remote": {
+        "name": "Remote Key Fob Power Window Control (Nissan)",
+        "desc": "Opens/closes front windows via key fob unlock button long press."
+      },
+      "nissan_seatbelt_chime_mute": {
+        "name": "Seatbelt Warning Audio Chime Suppress (Nissan)",
+        "desc": "Mutes repetitive seatbelt warning chime while keeping cluster icon."
+      },
+      "porsche_sport_chrono_launch": {
+        "name": "Sport Chrono Launch Control Response Profile (Porsche)",
+        "desc": "Optimizes PDK transmission launch control RPM threshold & clutch bite."
+      },
+      "porsche_pasm_default": {
+        "name": "PASM Suspension Mode Startup Preset (Porsche)",
+        "desc": "Sets PASM adaptive suspension default stiffness on ignition start."
+      },
+      "porsche_exhaust_flap": {
+        "name": "Sport Exhaust Flap Constant Open Override (Porsche)",
+        "desc": "Forces active exhaust valves to stay 100% open across all RPM ranges."
+      },
+      "audi_drive_select_memory": {
+        "name": "Audi Drive Select Mode Memory Retention (Audi)",
+        "desc": "Retains last active Drive Select profile (Dynamic/Individual) upon restart."
+      },
+      "audi_virtual_cockpit_themes": {
+        "name": "Audi Virtual Cockpit S/RS Sport Graphic Layout (Audi)",
+        "desc": "Unlocks S/RS central tachometer layout options on Virtual Cockpit."
+      },
+      "vag_scandinavian_drl": {
+        "name": "Scandinavian DRL Mode (VAG)",
+        "desc": "Keeps rear tail lights illuminated continuously alongside front DRLs."
+      },
+      "vag_mirror_dip_reverse": {
+        "name": "Passenger Mirror Dip in Reverse (VAG)",
+        "desc": "Tills passenger side mirror downward when reverse gear is engaged."
+      },
+      "vag_dynamic_turn_signal": {
+        "name": "Dynamic / Sequential Turn Signal Mode (VAG)",
+        "desc": "Enables sweeping dynamic LED blinker pattern on compatible rear light modules."
+      },
+      "vag_seatbelt_warning_duration": {
+        "name": "Seatbelt Warning Chime Duration Adjustment (VAG)",
+        "desc": "Shortens or suppresses repetitive seatbelt warning chime timer."
+      },
+      "vag_sunroof_remote": {
+        "name": "Sunroof Remote Comfort Control (VAG)",
+        "desc": "Allows opening and tilting panoramic sunroof via remote key fob hold."
+      },
+      "vag_acc_distance_preset": {
+        "name": "ACC Adaptive Cruise Default Following Distance (VAG)",
+        "desc": "Sets default radar following distance profile on ignition start."
+      },
+      "vag_infotainment_startup_logo": {
+        "name": "Infotainment Boot Graphic Logo (VAG)",
+        "desc": "Customizes infotainment startup splash screen logo (R-Line, GTI, RS)."
+      },
+      "vag_ambient_color_cycle": {
+        "name": "Interior Ambient Light Color Spectrum Unlock (VAG)",
+        "desc": "Expands ambient lighting palette options in vehicle settings menu."
+      },
+      "vag_service_interval_custom": {
+        "name": "Custom Inspection & Service Distance Threshold (VAG)",
+        "desc": "Configures custom km and day targets for next service warning."
+      },
+      "vag_door_handle_lights_reverse": {
+        "name": "Exterior Door Handle Lights ON in Reverse (VAG)",
+        "desc": "Illuminates door handle LED puddle lights when reversing for ground visibility."
+      },
+      "bmw_msport_exhaust_burble": {
+        "name": "M-Sport Exhaust Burble & Pop Intensity (BMW)",
+        "desc": "Adjusts overrun burble sound aggressiveness in Sport mode."
+      },
+      "bmw_welcome_light_sequence": {
+        "name": "Welcome Light Sequence Animation (BMW)",
+        "desc": "Customizes LED headlight and Angel Eyes welcome greeting sequence."
+      },
+      "bmw_service_history_menu": {
+        "name": "Digital Service History Menu Enable (BMW)",
+        "desc": "Unlocks iDrive digital service record book menu on central display."
+      },
+      "bmw_hud_speed_display": {
+        "name": "Head-Up Display Digital Speedometer Overlay (BMW)",
+        "desc": "Projects real-time digital speed readout onto Head-Up Display."
+      },
+      "bmw_cornering_lights_fog": {
+        "name": "Fog Lamp Cornering Illumination (BMW)",
+        "desc": "Turns on front fog light on turn signal or low-speed steering angle."
+      },
+      "bmw_easy_entry_steering": {
+        "name": "Easy Entry Auto-Retracting Steering Column (BMW)",
+        "desc": "Retracts electric steering wheel upward upon engine shutdown for easy exit."
+      },
+      "bmw_bluetooth_audio_enable": {
+        "name": "Enhanced Bluetooth Audio Streaming Unlock (BMW)",
+        "desc": "Enables A2DP Bluetooth wireless music streaming in iDrive HU_ENTRYNAV."
+      },
+      "bmw_door_handle_lights_reverse": {
+        "name": "Exterior Door Handle Puddle Lights in Reverse (BMW)",
+        "desc": "Illuminates door handle LEDs when reverse gear is engaged."
+      },
+      "toyota_auto_headlight_threshold": {
+        "name": "Auto Headlight Ambient Light Sensor Sensitivity (Toyota)",
+        "desc": "Adjusts twilight dusk threshold for automatic headlight activation."
+      },
+      "toyota_turn_signal_click_volume": {
+        "name": "Turn Signal Audio Clicker Speaker Volume (Toyota)",
+        "desc": "Configures turn signal relay click chime volume (Low, Medium, High)."
+      },
+      "toyota_smart_key_approach_lights": {
+        "name": "Smart Key Proximity Welcome Puddle Lights (Toyota)",
+        "desc": "Turns on mirror puddle lights when smart key approaches vehicle."
+      },
+      "toyota_rear_hatch_behavior": {
+        "name": "Power Tailgate Liftgate Open/Close Operation Logic (Toyota)",
+        "desc": "Configures remote and dashboard power hatch button press duration."
+      },
+      "toyota_open_windows_smart_key": {
+        "name": "Smart Key Remote Window Roll-Down Long Press (Toyota)",
+        "desc": "Allows opening all windows by holding remote unlock button."
+      },
+      "toyota_interior_light_dim_timer": {
+        "name": "Interior Cabin Light Auto-Dimming Off Delay (Toyota)",
+        "desc": "Adjusts interior dome light shutdown timer after door closure."
+      },
+      "toyota_panic_alarm_remote": {
+        "name": "Remote Key Fob Panic Alarm Siren Function (Toyota)",
+        "desc": "Enables or disables vehicle horn panic alarm via remote key hold."
+      },
+      "toyota_eco_drive_indicator": {
+        "name": "ECO Drive Cluster Zone Indicator Light (Toyota)",
+        "desc": "Shows eco-friendly acceleration bar and indicator light on cluster."
+      },
+      "hyundai_coming_home_duration": {
+        "name": "Escort Headlight Off Delay Timer (Hyundai/Kia)",
+        "desc": "Keeps low beam headlights illuminated after vehicle exit."
+      },
+      "hyundai_drl_menu_toggle": {
+        "name": "Daytime Running Lights Menu Control (Hyundai/Kia)",
+        "desc": "Adds DRL ON/OFF setting to instrument cluster user options."
+      },
+      "hyundai_welcome_sequence": {
+        "name": "Smart Key Proximity Welcome Light & Mirror Unfold (Hyundai/Kia)",
+        "desc": "Unfolds power mirrors and lights up door handles upon approach."
+      },
+      "hyundai_interior_light_delay": {
+        "name": "Cabin Interior Room Lamp Auto-Cut Delay (Hyundai/Kia)",
+        "desc": "Sets timer before interior lights automatically turn off to save battery."
+      },
+      "hyundai_heat_pump_efficiency": {
+        "name": "EV Climate Heat Pump Thermal Efficiency Mode (Hyundai/Kia)",
+        "desc": "Optimizes EV heat pump energy consumption in cold winter weather."
+      },
+      "tesla_track_mode_params": {
+        "name": "Track Mode Stability & Torque Bias Profile (Tesla)",
+        "desc": "Configures front/rear motor drive bias and stability intervention."
+      },
+      "tesla_regen_brake_strength": {
+        "name": "Regenerative Braking Power Profile (Tesla)",
+        "desc": "Adjusts accelerator pedal lift-off energy recovery intensity."
+      },
+      "tesla_walkaway_door_lock": {
+        "name": "Walk-Away Phone Key Auto Door Lock (Tesla)",
+        "desc": "Locks doors and confirms with horn chirp when phone key moves away."
+      },
+      "tesla_acceleration_boost_unlock": {
+        "name": "Powertrain Acceleration Boost Drive Profile (Tesla)",
+        "desc": "Sharpens electric motor inverter response for faster 0-100 km/h times."
+      },
+      "tesla_interior_ambient_color": {
+        "name": "Cabin Footwell Ambient Lighting Color Preset (Tesla)",
+        "desc": "Customizes LED footwell ambient light RGB color palette."
+      },
+      "audi_matrix_led_animation": {
+        "name": "Matrix LED Headlight Dynamic Welcome Light Dance (Audi)",
+        "desc": "Plays dynamic light choreography upon vehicle unlocking."
+      },
+      "audi_mmi_startup_screen": {
+        "name": "MMI Touch Screen Boot Graphic Theme (Audi)",
+        "desc": "Customizes MMI central screen boot animation (S / RS / e-tron)."
+      },
+      "audi_drive_select_efficiency": {
+        "name": "Efficiency Driving Profile in Audi Drive Select (Audi)",
+        "desc": "Enables fuel-saving Efficiency mode in Drive Select options."
+      },
+      "audi_laptimer_boost_display": {
+        "name": "Lap Timer & Turbo Bar Pressure Gauge Overlay (Audi)",
+        "desc": "Displays track lap timer and real-time turbo boost gauge on Virtual Cockpit."
+      },
+      "audi_needle_sweep_gauge": {
+        "name": "Sport Gauge Needle Sweep Verification (Audi)",
+        "desc": "Performs full tachometer and speedometer needle sweep test on start."
+      },
+      "skoda_coming_home_lights": {
+        "name": "Leaving Home / Coming Home Lighting Timer (Skoda)",
+        "desc": "Configures headlight illumination timer after vehicle exit."
+      },
+      "skoda_comfort_turn_signal": {
+        "name": "Comfort Indicator Pulse Count Adjustment (Skoda)",
+        "desc": "Sets one-touch turn signal blink count between 3 and 5 flashes."
+      },
+      "cupra_sport_display_menu": {
+        "name": "Cupra Performance Instrument & G-Meter Menu (Cupra)",
+        "desc": "Unlocks G-force meter, kW power gauge, and oil temp display."
+      },
+      "cupra_virtual_cockpit_copper": {
+        "name": "Copper Theme Dashboard Accent Graphics (Cupra)",
+        "desc": "Applies signature Cupra copper metallic accent theme to gauge cluster."
+      },
+      "vag_brake_disc_drying": {
+        "name": "Brake Disc Wiping / Drying Function in Rain (VAG)",
+        "desc": "Periodically applies minimal pad pressure in wet weather to dry rotors."
+      },
+      "vag_tourist_mode_lights": {
+        "name": "Tourist Mode Headlight Beam Pattern (VAG)",
+        "desc": "Switches headlight beam pattern between LHD and RHD for driving abroad."
+      },
+      "vag_hood_warning_mute": {
+        "name": "Bonnet Open Instrument Chime Mute (VAG)",
+        "desc": "Suppresses persistent instrument warning chime when hood is unlatched."
+      },
+      "vag_emergency_brake_hazard": {
+        "name": "Emergency Braking Automatic Hazard Flasher (VAG)",
+        "desc": "Flashes hazard lights rapidly during hard ABS emergency stops."
+      },
+      "vag_sunroof_comfort_open": {
+        "name": "Sunroof Tilt / Open Remote Comfort Key Fob Logic (VAG)",
+        "desc": "Configures remote key hold action to either tilt or fully open sunroof."
+      },
+      "bmw_ecopro_display_variant": {
+        "name": "ECO PRO Instrument Cluster Gauge Styling (BMW)",
+        "desc": "Customizes blue ECO PRO efficiency gauge graphic theme."
+      },
+      "bmw_volume_bar_hud": {
+        "name": "Head-Up Display Audio Volume Level Bar Overlay (BMW)",
+        "desc": "Shows volume change bar directly on HUD projection."
+      },
+      "bmw_anti_dazzle_mirror": {
+        "name": "Electrochromic Anti-Dazzle Mirror Dimming Sensitivity (BMW)",
+        "desc": "Adjusts automatic rearview mirror dimming photo-sensor threshold."
+      },
+      "bmw_camera_pdc_warning_mute": {
+        "name": "PDC & Surround View Speed Cut-off Speed Adjustment (BMW)",
+        "desc": "Adjusts vehicle speed threshold at which parking cameras turn off."
+      },
+      "toyota_pcs_distance_preset": {
+        "name": "Pre-Collision System (PCS) Default Alert Distance (Toyota)",
+        "desc": "Sets initial radar forward collision warning distance sensitivity."
+      },
+      "toyota_bsm_timing": {
+        "name": "Blind Spot Monitor (BSM) Warning Warning Timing (Toyota)",
+        "desc": "Adjusts blind spot side mirror warning light illumination timing."
+      },
+      "toyota_ac_noise_reduction": {
+        "name": "A/C Compressor Blower Noise Reduction Mode (Toyota)",
+        "desc": "Limits maximum air conditioning blower fan speed for cabin quietness."
+      },
+      "toyota_sflow_control": {
+        "name": "S-Flow Smart Climate Single-Occupant Mode (Toyota)",
+        "desc": "Directs A/C airflow exclusively to occupied seats based on weight sensors."
+      },
+      "toyota_relock_timeout": {
+        "name": "Automatic Re-Lock Delay Timer after Remote Unlock (Toyota)",
+        "desc": "Adjusts seconds before doors auto-relock if no door is opened (30s-120s)."
+      },
+      "lexus_mark_levinson_audio_profile": {
+        "name": "Mark Levinson Surround Sound DSP Audio Profile (Lexus)",
+        "desc": "Optimizes 3D spatial acoustic tuning for Mark Levinson premium speakers."
+      },
+      "lexus_ev_mode_beeper_mute": {
+        "name": "Low-Speed Pedestrian EV Acoustic Alert Beeper Mute (Lexus)",
+        "desc": "Suppresses low speed electric mode synthetic exterior chime."
+      },
+      "lexus_easy_access_seat": {
+        "name": "Easy Access Steering Wheel & Power Seat Slide-Back (Lexus)",
+        "desc": "Slides driver seat back and tilts steering wheel away for easy entry/exit."
+      },
+      "nissan_epower_regen_mode": {
+        "name": "e-POWER One-Pedal Regenerative Braking Mode (Nissan)",
+        "desc": "Sets default e-Pedal regenerative braking deceleration level."
+      },
+      "nissan_propilot_assist_timing": {
+        "name": "ProPILOT Lane Centering Assist Steering Sensitivity (Nissan)",
+        "desc": "Configures ProPILOT steering intervention sharpness."
+      },
+      "nissan_intelligent_around_view": {
+        "name": "Around View Monitor Auto-Pop-Up at Low Speed (Nissan)",
+        "desc": "Triggers 360-degree camera display when front parking sensors detect obstacles."
+      },
+      "mazda_g_vectoring_display": {
+        "name": "G-Vectoring Control Plus Dynamic Visualizer (Mazda)",
+        "desc": "Displays real-time GVC+ cornering torque vectoring graph on instrument panel."
+      },
+      "mazda_ieloop_capacitor_monitor": {
+        "name": "i-ELOOP Brake Energy Recovery Capacitor Meter (Mazda)",
+        "desc": "Shows electric capacitor charge & discharge status on central screen."
+      },
+      "mazda_smart_city_brake_sens": {
+        "name": "Smart City Brake Support (SCBS) Sensitivity (Mazda)",
+        "desc": "Sets low-speed automatic emergency braking sensor range."
+      },
+      "subaru_eyesight_distance_preset": {
+        "name": "EyeSight Adaptive Cruise Control Default Distance (Subaru)",
+        "desc": "Configures stereo camera default cruise gap profile on startup."
+      },
+      "subaru_xmode_auto_engage": {
+        "name": "X-Mode Off-Road Traction Auto-Engage Threshold (Subaru)",
+        "desc": "Sets wheel slip threshold for automatic dual-function X-Mode activation."
+      },
+      "subaru_steering_responsive_headlights": {
+        "name": "Steering Responsive Headlights (SRH) Toggle (Subaru)",
+        "desc": "Enables or disables directional adaptive headlight swivel."
+      },
+      "genesis_sport_plus_mode": {
+        "name": "Sport+ Powertrain & Electronic Suspension Mode (Genesis)",
+        "desc": "Unlocks track-oriented ESC OFF and stiffened damper mapping."
+      },
+      "genesis_ambient_active_light": {
+        "name": "Active Ambient Lighting Drive Mode Sync (Genesis)",
+        "desc": "Changes interior ambient lighting color dynamically based on drive mode."
+      },
+      "volvo_city_safety_warning": {
+        "name": "City Safety Autonomous Emergency Warning Sensitivity (Volvo)",
+        "desc": "Configures radar and lidar collision warning alert timing (Early/Normal)."
+      },
+      "chery_ar_navigation_hud": {
+        "name": "AR Navigation Projection Overlay on HUD (Chery)",
+        "desc": "Projects 3D augmented reality navigation arrows onto windshield."
+      },
+      "jlr_terrain_response_preset": {
+        "name": "Terrain Response Auto Off-Road Mode Preset (JLR)",
+        "desc": "Remembers last Terrain Response surface profile (Grass/Gravel/Snow)."
+      },
+      "jlr_adaptive_dynamics_firm": {
+        "name": "Adaptive Dynamics Damper Firmness Profile (JLR)",
+        "desc": "Sets default electronic shock absorber damping stiffness."
+      },
+      "jlr_wading_sensor_alert": {
+        "name": "Wade Sensing Depth Warning Chime Threshold (JLR)",
+        "desc": "Configures ultrasonic water depth warning chime sensitivity."
+      },
+      "alfa_dna_dynamic_memory": {
+        "name": "Alfa DNA Selector Dynamic Mode Startup Memory (Alfa Romeo)",
+        "desc": "Retains Dynamic mode throttle response after restart."
+      },
+      "alfa_q4_torque_split": {
+        "name": "Q4 All-Wheel Drive Real-Time Torque Split Graph (Alfa Romeo)",
+        "desc": "Shows AWD front/rear power split percentage on instrument display."
+      },
+      "li_auto_range_extender_mode": {
+        "name": "REV Generator Battery Charge Retention Level (Li Auto)",
+        "desc": "Adjusts internal combustion engine generator start threshold."
+      },
+      "li_auto_cinema_seat_position": {
+        "name": "Theater / Cinema Mode Ergonomic Seat Position (Li Auto)",
+        "desc": "Reclines rear seats and unfolds leg rests when cinema mode is active."
+      },
+      "zeekr_drift_mode_torque": {
+        "name": "Dual Motor Performance Drift Mode Rear Bias (Zeekr)",
+        "desc": "Sends 100% torque to rear electric motor for controlled drifting."
+      },
+      "zeekr_ambient_beat_sync": {
+        "name": "Ambient Lighting Music Rhythm Beat Sync (Zeekr)",
+        "desc": "Pulsates interior cabin lighting in sync with played music beats."
+      },
+      "tata_drive_mode_voice": {
+        "name": "Drive Mode Switch Voice Announcement (Tata)",
+        "desc": "Enables audio voice confirmation when switching drive modes (City/Sport/Eco)."
+      },
+      "mahindra_zip_zap_zoom_custom": {
+        "name": "Zip/Zap/Zoom Powertrain Throttle Response Profile (Mahindra)",
+        "desc": "Customizes acceleration curve for Zip, Zap, and Zoom driving modes."
+      },
+      "fun_cyberpunk_cluster_theme": {
+        "name": "Cyberpunk 2077 Neon Graphic Cockpit Theme",
+        "desc": "Applies futuristic neon cyan & amber digital dashboard gauge styling."
+      },
+      "fun_exhaust_flame_sound_effect": {
+        "name": "Stereo System Pop & Bang Exhaust Sound FX",
+        "desc": "Plays realistic V8 exhaust pop & bang audio effects through cabin speakers."
+      },
+      "fun_matrix_light_show_welcome": {
+        "name": "Custom Headlight Matrix LED Dance Welcome",
+        "desc": "Plays rhythmic Light Show choreography using headlights & indicators."
+      },
+      "fun_stealth_fighter_display": {
+        "name": "Stealth Fighter Night Driving Minimalist Cluster Mode",
+        "desc": "Turns off all cluster lights except speedometer for pitch-black night driving."
       }
     },
     "codeBtn": "CODIEREN",
@@ -1818,7 +2406,43 @@
     "motionAlertTitle": "🚨 Fahrzeug in Bewegung",
     "noMatchingFeatures": "Keine passenden Funktionen für die gewählten Filter gefunden.",
     "unsafeModuleMsg": "ECU-Schreibvorgänge an ABS/ESP und Airbag/SRS-Modulen sind zu 100% gesperrt.",
-    "unsafeModuleTitle": "🚫 Geschütztes Sicherheitsmodul"
+    "unsafeModuleTitle": "🚫 Geschütztes Sicherheitsmodul",
+    "catMotorcycle": "MOTORCYCLE ECU",
+    "catRetrofit": "RETROFIT & HARDWARE",
+    "catEv": "EV & BATTERY",
+    "catAdas": "ADAS CALIBRATION",
+    "catEasterEgg": "EASTER EGGS",
+    "catService": "SERVICE & MAINTENANCE",
+    "catPerformance": "PERFORMANCE",
+    "segmentAll": "ALL MAKES",
+    "segmentEuroPremium": "🇪🇺 European Premium",
+    "segmentEuroVolume": "🇪🇺 European Volume",
+    "segmentAsian": "🌏 Asian",
+    "segmentAmerican": "🇺🇸 American",
+    "segmentChineseEv": "🇨🇳 Chinese EV",
+    "segmentMotorcycle": "🏍️ Motorcycle",
+    "detailTitle": "Feature Details & One-Click Coding",
+    "prePostValues": "Pre / Post Payload Preview",
+    "selectOption": "Select Coding Option:",
+    "oneClickActivate": "ONE-CLICK ACTIVATE",
+    "expertModeTitle": "Expert Mode (Raw DID Hex Editor)",
+    "allMakes": "ALL MAKES",
+    "techEcuSpecs": "TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW",
+    "targetEcuHeaderLabel": "Target ECU Header:",
+    "udsDidLabel": "UDS Data Identifier (DID):",
+    "bitPositionLabel": "Bit Position:",
+    "targetPayloadLabel": "Target UDS Payload:",
+    "byteBitValue": "Byte {{byte}}, Bit {{bit}}",
+    "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
+    "restoreFactoryBtn": "RESTORE FACTORY SETTINGS",
+    "restoreFactoryTitle": "RESTORE FACTORY SETTINGS",
+    "enterDidFirst": "Please enter the DID Hex code to restore (e.g. 0501).",
+    "restoreConfirmMsg": "Revert to original factory state for DID 0x{{didHex}}?",
+    "restoreAction": "RESTORE FACTORY",
+    "expertDidPlaceholder": "DID Hex (e.g. 0501)",
+    "expertValPlaceholder": "Value Hex (e.g. 01)",
+    "writeRawPayload": "WRITE RAW UDS PAYLOAD",
+    "enterValidHex": "Please enter valid DID and Value Hex strings."
   },
   "ignition": {
     "title": "Ignition Status Warning",

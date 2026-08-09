@@ -48,18 +48,23 @@ export function log(tag: string, message: string): void {
     const logLine = `[${timestamp}] [${tag}] ${cleanMessage}`;
     logBuffer.push(logLine);
 
-    if (logBuffer.length >= 200) {
+    // Hard memory cap on logBuffer: never allow more than 500 lines in RAM
+    if (logBuffer.length > 500) {
+        logBuffer.splice(0, logBuffer.length - 500);
+    }
+
+    if (logBuffer.length >= 50) {
         if (flushTimeout) {
             clearTimeout(flushTimeout);
             flushTimeout = null;
         }
         // Run flush asynchronously
         flush().catch((err) => console.error('[Logger] Async flush failed:', err));
-    } else if (!flushTimeout) {
+    } else if (!flushTimeout && !isFlushing) {
         flushTimeout = setTimeout(() => {
             flushTimeout = null;
             flush().catch((err) => console.error('[Logger] Interval flush failed:', err));
-        }, 2000);
+        }, 1000);
     }
 }
 
@@ -93,33 +98,28 @@ async function writeLogsToFile(newLogsStr: string) {
 }
 
 /**
- * Flushes the current buffer to the file system.
+ * Flushes the current buffer to the file system non-recursively.
  */
 export async function flush(): Promise<void> {
     if (logBuffer.length === 0 || isFlushing) return;
 
     isFlushing = true;
-    const itemsToWrite = [...logBuffer];
-    logBuffer = [];
 
     try {
-        const newLogsStr = itemsToWrite.join('\n');
-        await writeLogsToFile(newLogsStr);
+        while (logBuffer.length > 0) {
+            if (logBuffer.length > 500) {
+                logBuffer = logBuffer.slice(-500);
+            }
+            const itemsToWrite = [...logBuffer];
+            logBuffer = [];
+
+            const newLogsStr = itemsToWrite.join('\n');
+            await writeLogsToFile(newLogsStr);
+        }
     } catch (error) {
         console.error('[Logger] Error in flush:', error);
-        // Put items back at the beginning, capped to 300 items to prevent Hermes memory leak on disk failure
-        logBuffer = [...itemsToWrite, ...logBuffer].slice(-300);
     } finally {
         isFlushing = false;
-        // Check if more items accumulated during flush
-        if (logBuffer.length >= 200) {
-            await flush();
-        } else if (logBuffer.length > 0 && !flushTimeout) {
-            flushTimeout = setTimeout(() => {
-                flushTimeout = null;
-                flush().catch((err) => console.error('[Logger] Post-flush interval failed:', err));
-            }, 2000);
-        }
     }
 }
 

@@ -47,10 +47,10 @@ export class PollingOrchestrator {
         let cmdPacingDelay = 5;
 
         if (score >= 75) {
-            // Yüksek kaliteli / orijinal adaptörler: Maksimum hız, minimum bekleme
-            interLoopDelay = 2; 
+            // Yüksek kaliteli / orijinal adaptörler: Yüksek hız, JS Event Loop ve Hermes HadesGC için 16ms güvenli ara
+            interLoopDelay = 16; 
             cmdTimeoutBase = 150;
-            cmdPacingDelay = 0;
+            cmdPacingDelay = 2;
         } else if (score < 60) {
             // Düşük kaliteli / klon adaptörler: Güvenli yavaş akış, tampon taşmasını engeller
             interLoopDelay = 50;

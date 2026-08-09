@@ -916,6 +916,35 @@
     "catDisplay": "GÖSTERGE PANELİ",
     "catComfort": "KONFOR",
     "catSafety": "GÜVENLİK",
+    "catMotorcycle": "MOTOSİKLET ECU",
+    "catRetrofit": "DONANIM ENTEGRASYONU",
+    "catEv": "EV & BATARYA",
+    "catAdas": "ADAS KALİBRASYON",
+    "catEasterEgg": "GİZLİ ÖZELLİKLER",
+    "catService": "SERVİS & BAKIM",
+    "catPerformance": "PERFORMANS",
+    "segmentAll": "TÜM MARKALAR",
+    "segmentEuroPremium": "🇪🇺 Avrupa Premium",
+    "segmentEuroVolume": "🇪🇺 Avrupa Volume",
+    "segmentAsian": "🌏 Asya",
+    "segmentAmerican": "🇺🇸 Amerika",
+    "segmentChineseEv": "🇨🇳 Çin EV",
+    "segmentMotorcycle": "🏍️ Motosiklet",
+    "detailTitle": "Özellik Detayı & Tek Tıkla Kodlama",
+    "prePostValues": "Değer Değişim Önizlemesi",
+    "selectOption": "Kodlama Seçeneğini Belirleyin:",
+    "oneClickActivate": "TEK TIKLA KODLA",
+    "expertModeTitle": "Expert Mod (Ham DID Hex Düzenleyici)",
+    "expertSafetyNote": "Gelişmiş kullanıcılar içindir. Hatalı kodlama durumunda aşağıdaki 'Fabrika Ayarlarına Dön' butonunu kullanarak orijinal duruma dönebilirsiniz.",
+    "expertDidPlaceholder": "DID Hex (ör. 0501)",
+    "expertValPlaceholder": "Değer Hex (ör. 01)",
+    "writeRawPayload": "HAM UDS VERİSİ YAZ",
+    "restoreFactoryBtn": "FABRİKA AYARLARINA DÖN",
+    "restoreFactoryTitle": "FABRİKA AYARLARINA DÖN",
+    "enterDidFirst": "Lütfen fabrika ayarlarına dönülecek DID Hex kodunu giriniz (ör. 0501).",
+    "restoreConfirmMsg": "DID 0x{{didHex}} için orijinal fabrika değerine dönülsün mü?",
+    "restoreAction": "FABRİKAYA DÖN",
+    "enterValidHex": "Lütfen geçerli DID ve Değer Hex kodlarını giriniz.",
     "cloneLockedBanner": "⚠️ Klon Adaptör Tespit Edildi — Kodlama Kilitli (İnceleme Modu)",
     "cloneAlertTitle": "⚠️ Klon OBD2 Adaptör Tespit Edildi",
     "cloneAlertMsg": "Bağlı OBD2 cihazınız, ECU yazma işlemi için gerekli zamanlama hassasiyetine sahip olmayan klon/sahte adaptör olarak işaretlenmiştir.\n\nAraç sağlığınızı korumak için özellikleri arayabilir ve inceleyebilirsiniz fakat yazma işlemi kilitlenmiştir. Kodlama yapmak için lütfen orijinal ELM327 v2.1+ veya vLinker adaptör kullanın.",
@@ -926,8 +955,242 @@
     "legalDisclaimerUsLights": "⚠️ Not: Sürekli Amerikan park lambaları bazı Avrupa ülkelerinde muayene standartlarına takılabilir (TÜV).",
     "legalDisclaimerVim": "⚠️ Not: Sürüş esnasında video oynatma yalnızca yolcular içindir. Sürücünün dikkatinin yolda olması zorunludur.",
     "safetyAlertTitle": "⚠️ Düşük Akü Voltaj Uyarısı",
-    "safetyAlertMsg": "Kodlama için minimum 12.2V akü voltajı gereklidir.\nLütfen şarj cihazı bağlayın veya motoru çalıştırın.",
+    "allMakes": "TÜM MARKALAR",
+    "techEcuSpecs": "TEKNİK ECU ÖZELLİKLERİ VE PAYLOAD ÖNİZLEMESİ",
+    "targetEcuHeaderLabel": "Hedef ECU Adresi:",
+    "udsDidLabel": "UDS Veri Kimliği (DID):",
+    "bitPositionLabel": "Bit Pozisyonu:",
+    "targetPayloadLabel": "Hedef UDS Payload:",
+    "byteBitValue": "Bayt {{byte}}, Bit {{bit}}",
     "items": {
+      "vag_oil_service_reset": {
+        "name": "Yağ Değişim Servis Sıfırlama (Esnek Aralık)",
+        "desc": "Gösterge panelindeki yağ değişim sayacını fabrika çıkışı 15.000 km / 365 güne sıfırlar."
+      },
+      "bmw_oil_service_reset": {
+        "name": "CBS Motor Yağ Servisi Sıfırlama (BMW)",
+        "desc": "Condition Based Service (CBS) motor yağ ömrünü fabrika değeri %100'e getirir."
+      },
+      "generic_oil_service_reset": {
+        "name": "Evrensel Yağ Bakım Göstergesi Sıfırlama",
+        "desc": "Desteklenen OBD2/UDS modüllerinde gösterge paneli yağ bakım uyarısını siler."
+      },
+      "vag_epb_pad_change": {
+        "name": "EPB Fren Balata Değişim Servis Modu (VAG)",
+        "desc": "Arka fren balatası değişimi için elektronik park freni kaliperlerini geri çeker."
+      },
+      "bmw_epb_pad_change": {
+        "name": "EPB Fren Servis Konumu (BMW)",
+        "desc": "Arka balata değişimi için park freni motorlarını servis konumuna getirir."
+      },
+      "mb_epb_pad_change": {
+        "name": "EPB Balata Takma Servis Modu (Mercedes-Benz)",
+        "desc": "Fren servisi için park freni milini atölye konumuna serbest bırakır."
+      },
+      "vag_dpf_regen": {
+        "name": "DPF Servis Rejenerasyon Tetikleme (VAG)",
+        "desc": "Sabit konumda Dizel Partikül Filtresi (DPF) kurum yakma sürecini başlatır."
+      },
+      "bmw_dpf_regen": {
+        "name": "DPF Zorunlu Rejenerasyon Tetikleme (BMW)",
+        "desc": "DDE motor beynine aktif partikül filtre temizlik rutinini başlatma isteği gönderir."
+      },
+      "psa_dpf_regen": {
+        "name": "DPF Rejenerasyon İsteği (Peugeot/Citroën)",
+        "desc": "HDi dizel araçlarda araç durur halde DPF rejenerasyonunu başlatır."
+      },
+      "bmw_bms_battery_register": {
+        "name": "BMS Akü Değişimi Kaydı (BMW)",
+        "desc": "Yeni takılan aküyü Akıllı Akü Sensörü (IBS) ve DME/DDE beynine tanımlar."
+      },
+      "mb_bms_battery_register": {
+        "name": "Akü Kaydı ve Yaşlanma Sayacı Sıfırlama (Mercedes-Benz)",
+        "desc": "Akü değişimi sonrası SAM modülündeki akü yaşlanma sayacını sıfırlar."
+      },
+      "vag_sas_calibrate": {
+        "name": "Direksiyon Açısı Sensörü (SAS) Kalibrasyonu (VAG)",
+        "desc": "ABS/ESP beyni için G85 direksiyon açı sensörünün sıfır noktasını kalibre eder."
+      },
+      "toyota_sas_calibrate": {
+        "name": "Direksiyon Açı Sensörü Sıfırlama (Toyota)",
+        "desc": "Kayma Kontrol ECU'sunda direksiyon açı sensörü sıfır nokta kalibrasyonunu yapar."
+      },
+      "generic_tba_adapt": {
+        "name": "Gaz Kelebeği Hizalama ve Adaptasyonu",
+        "desc": "Motor beyninde elektronik gaz kelebeği durma noktası öğrenme rutinini çalıştırır."
+      },
+      "epb_service_reset": {
+        "name": "Evrensel EPB Bakım Sıfırlama",
+        "desc": "Elektronik park freni balata aşınma sayacını ve hava aralığını sıfırlar."
+      },
+      "vag_dsg_reset": {
+        "name": "DSG Şanzıman Temel Ayar Sıfırlama (VAG)",
+        "desc": "DSG/S-Tronic şanzımanda debriyaj kavrama ve valf adaptasyonlarını sıfırlar."
+      },
+      "bmw_zf_reset": {
+        "name": "ZF 8HP Şanzıman Adaptasyon Sıfırlama (BMW)",
+        "desc": "EGS şanzıman vites geçiş süreleri ve basınç adaptasyon değerlerini temizler."
+      },
+      "bmw_brake_fluid_reset": {
+        "name": "Fren Hidrolik Servis Sayacı Sıfırlama (BMW)",
+        "desc": "Condition Based Service (CBS) 2 yıllık fren hidroliği değişim zamanlayıcısını sıfırlar."
+      },
+      "ford_injector_code": {
+        "name": "Enjektör Düzeltme Faktörü Kodlama (Ford)",
+        "desc": "Dizel enjektörler için 16 haneli IQA kodlarını PCM motor beynine kaydeder."
+      },
+      "bmw_injector_code": {
+        "name": "Yakıt Enjektörü Debisi Kodlama (BMW)",
+        "desc": "Değiştirilen yakıt enjektörlerinin kalibrasyon kodlarını DME beynine yazar."
+      },
+      "generic_headlight_aim": {
+        "name": "Otomatik Far Seviye Kalibrasyonu",
+        "desc": "Adaptif far yükseklik motorları için referans sıfır noktasını ayarlar."
+      },
+      "bmw_12v_battery_reg": {
+        "name": "12V Yedek Akü Kaydı (BMW)",
+        "desc": "PCU ünitesine yedek AGM marş/destek aküsü değişimini tanımlar."
+      },
+      "vag_comfort_turn_signal": {
+        "name": "Konfor Sinyal Flaş Sayısı (VAG)",
+        "desc": "Şerit değiştirme sinyali vuruş sayısını 3, 4 veya 5 olarak ayarlar."
+      },
+      "vag_coming_home_duration": {
+        "name": "Coming/Leaving Home Far Süresi (VAG)",
+        "desc": "Aracı kilitledikten sonra farların açık kalma süresini belirler (10s - 60s)."
+      },
+      "vag_remote_windows": {
+        "name": "Kumandadan Konfor Cam Açma/Kapatma (VAG)",
+        "desc": "Uzaktan kumanda tuşuna uzun basarak camların açılıp kapanmasını sağlar."
+      },
+      "vag_auto_lock_15kmh": {
+        "name": "15 km/h Hızda Otomatik Kapı Kilitleme (VAG)",
+        "desc": "Araç hızı 15 km/saate ulaştığında tüm kapıları otomatik kilitler."
+      },
+      "vag_sfd_unlock_prep": {
+        "name": "SFD Gateway Kilit Durumu Hazırlığı (VAG 2020+)",
+        "desc": "MQB-evo platformunda SFD korumalı ECU'lara yazma yapmak için oturum açar."
+      },
+      "bmw_asd_deactivate": {
+        "name": "Active Sound Design (ASD) Motor Sesi İptali (BMW)",
+        "desc": "Hoparlörlerden içeri verilen yapay motor sesini tamamen kapatır."
+      },
+      "bmw_comfort_turn_signal": {
+        "name": "Konfor Sinyal Vuruş Sayısı (BMW)",
+        "desc": "Tek dokunuşta sinyal lambasının yanıp sönme sayısını ayarlar (1 - 5 flaş)."
+      },
+      "bmw_mirror_fold_lock": {
+        "name": "Kilitlemede Yan Aynaları Otomatik Katlama (BMW)",
+        "desc": "Araç kilitlendiğinde katlanır aynaların anında kapanmasını sağlar."
+      },
+      "toyota_coming_home_duration": {
+        "name": "Gecikmeli Far Kapanma / Refakat Aydınlatması (Toyota)",
+        "desc": "Kontak kapatıldıktan sonra farların açık kalma süresini ayarlar (30s-120s)."
+      },
+      "toyota_lane_change_flash": {
+        "name": "Şerit Değiştirme Sinyal Sayısı (Toyota)",
+        "desc": "Sinyal koluna dokunulduğunda lambanın yanma sayısını belirler."
+      },
+      "toyota_remote_window_close": {
+        "name": "Kumandadan Cam Kapatma (Toyota)",
+        "desc": "Uzaktan kumanda kilit tuşuna uzun basarak tüm camları kapatmayı aktif eder."
+      },
+      "toyota_autolock_behavior": {
+        "name": "Otomatik Kapı Kilitleme/Kilit Açma Ayarları (Toyota)",
+        "desc": "Kapı kilitleme tetikleyicisini belirler (Vites P'den çıkınca vs Hız > 20 km/s)."
+      },
+      "toyota_approach_welcome_lights": {
+        "name": "Akıllı Anahtar Yaklaşma Karşılama Işıkları (Toyota)",
+        "desc": "Akıllı anahtar araca yaklaştığında taban ve kabin aydınlatmalarını otomatik yakar."
+      },
+      "hyundai_autolock_behavior": {
+        "name": "Otomatik Kapı Kilitlenme Modu (Hyundai/Kia)",
+        "desc": "Vitese takınca veya hıza bağlı otomatik kilitlenme ve P'ye alınca açılma modunu ayarlar."
+      },
+      "hyundai_window_remote": {
+        "name": "Kumandadan Uzaktan Cam Kontrolü (Hyundai/Kia)",
+        "desc": "Akıllı anahtar tuşlarıyla camların uzaktan açılıp kapanmasını sağlar."
+      },
+      "hyundai_sport_mode_memory": {
+        "name": "Sürüş Modu Seçim Hafızası (Hyundai/Kia)",
+        "desc": "Araç çalıştırıldığında son seçilen sürüş modunu (Sport/Eco) hafızada tutar."
+      },
+      "tesla_charge_limit_custom": {
+        "name": "Batarya Şarj Limiti Özelleştirme (Tesla)",
+        "desc": "Varsayılan yüksek voltaj batarya şarj üst sınırını ayarlar (%80 Günlük / %100 Yolculuk)."
+      },
+      "tesla_mirror_fold_lock": {
+        "name": "Uzaklaşınca Otomatik Ayna Katlama (Tesla)",
+        "desc": "Telefon anahtarla araçtan uzaklaşınca kilitlenmede aynaları otomatik katlar."
+      },
+      "nissan_coming_home": {
+        "name": "Refakat Far Aydınlatması (Nissan)",
+        "desc": "Araçtan indikten sonra farların 30 saniye boyunca açık kalmasını sağlar."
+      },
+      "nissan_lane_change_flash": {
+        "name": "Dokunmatik Şerit Değiştirme Sinyal Sayısı (Nissan)",
+        "desc": "Sinyal koluna hafiftçe dokunulduğundaflaşörün kaç kez yanacağını belirler."
+      },
+      "nissan_autolock_behavior": {
+        "name": "Hıza Duyarlı Otomatik Kapı Kilitleme (Nissan)",
+        "desc": "Araç hızı 24 km/saate ulaştığında tüm kapıları otomatik kilitler."
+      },
+      "nissan_window_remote": {
+        "name": "Kumandadan Elektrikli Cam Açma/Kapama (Nissan)",
+        "desc": "Kilit tuşuna uzun basarak ön camların kumandadan kontrol edilmesini açar."
+      },
+      "nissan_seatbelt_chime_mute": {
+        "name": "Emniyet Kemeri Sesli Uyarı Sesi Kapatma (Nissan)",
+        "desc": "Gösterge ikonunu koruyarak sesli emniyet kemeri ikaz biplerini kapatır."
+      },
+      "porsche_sport_chrono_launch": {
+        "name": "Sport Chrono Launch Control Yanıt Profili (Porsche)",
+        "desc": "PDK şanzıman kalkış kontrolü (Launch Control) devir ve kavramasını optimize eder."
+      },
+      "porsche_pasm_default": {
+        "name": "PASM Süspansiyon Modu Başlangıç Ayarı (Porsche)",
+        "desc": "PASM adaptif süspansiyonun kontak açılışındaki varsayılan sertliğini belirler."
+      },
+      "porsche_exhaust_flap": {
+        "name": "Spor Egzoz Valfi Sürekli Açık Override (Porsche)",
+        "desc": "Aktif egzoz valflerinin tüm devirlerde %100 açık kalmasını sağlar."
+      },
+      "audi_drive_select_memory": {
+        "name": "Audi Drive Select Mod Hafızası (Audi)",
+        "desc": "Kontak yeniden açıldığında son aktif Sürüş Profilini (Dynamic/Individual) korur."
+      },
+      "audi_virtual_cockpit_themes": {
+        "name": "Audi Virtual Cockpit S/RS Spor Tasarım Teması (Audi)",
+        "desc": "Dijital gösterge panelinde S/RS merkezi devir saati spor grafik temasını açar."
+      },
+      "vag_epb_service_mode": {
+        "name": "Elektronik Park Freni (EPB) Balata Değişim Modu",
+        "desc": "Arka fren balata ve disk değişimi için EPB kaliper pistonlarını geriye çeker."
+      },
+      "bmw_bms_battery_registration": {
+        "name": "Akıllı Akü Sensörü (IBS) Akü Tanıtma",
+        "desc": "Yeni 12V AGM/Sulu akü değişimini motor kontrol ünitesine (DME/DDE) kaydeder."
+      },
+      "bmw_motorrad_service_indicator_reset": {
+        "name": "BMW Motorrad Yıllık Bakım & Yağ Sıfırlama",
+        "desc": "TFT gösterge ekranındaki yıllık bakım tarihi ve 10.000 km servis uyarısını siler."
+      },
+      "ducati_desmo_service_reset": {
+        "name": "Ducati Desmo Supap Bakım Uyarısı Sıfırlama",
+        "desc": "15.000 / 30.000 km Desmoservice anahtar ikonu uyarısını göstergeden temizler."
+      },
+      "byd_bms_isolation_self_test": {
+        "name": "BYD Blade Batarya Yüksek Gerilim İzolasyon Testi",
+        "desc": "BMS ünitesinde 400V/800V yüksek voltaj sistemi kaçak ve direnç teşhisini çalıştırır."
+      },
+      "vag_drl_brightness_multi": {
+        "name": "Gündüz Farı (DRL) Parlaklık Ayarı",
+        "desc": "Park ve kısa far modunda LED gündüz sürüş farı yoğunluk seviyesini ayarlar."
+      },
+      "bmw_comfort_turn_signal_cycles": {
+        "name": "Tek Dokunuş Konfor Sinyali Yanıp Sönme Sayısı",
+        "desc": "Sinyal koluna dokunulduğunda lambanın kaç kez konfor sinyali vereceğini belirler."
+      },
       "vag_staging_needle_sweep": {
         "name": "Kadran Selamlama (Staging / Needle Sweep)",
         "desc": "Kontak açıldığında gösterge ibrelerinin sona vurup geri gelmesini sağlar."
@@ -1787,6 +2050,366 @@
       "xiaomi_su7_drift_mode_unlock": {
         "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
         "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
+      },
+      "vag_scandinavian_drl": {
+        "name": "İskandinav DRL Gündüz Farı Modu (VAG)",
+        "desc": "Ön gündüz farlarıyla birlikte arka stop lambalarının da sürekli yanmasını sağlar."
+      },
+      "vag_mirror_dip_reverse": {
+        "name": "Geri Vites Kademesinde Sağ Ayna İndirme (VAG)",
+        "desc": "Geri vitese takıldığında sağ dış dikiz aynasını otomatik olarak aşağı eğer."
+      },
+      "vag_dynamic_turn_signal": {
+        "name": "Dinamik Kayar Sinyal Modu (VAG)",
+        "desc": "Uyumlu LED stoplarda kayar dinamik sinyal efektini etkinleştirir."
+      },
+      "vag_seatbelt_warning_duration": {
+        "name": "Emniyet Kemeri Uyarısı Süre Ayarı (VAG)",
+        "desc": "Sesli emniyet kemeri ikaz biplerinin süresini kısaltır veya kapatır."
+      },
+      "vag_sunroof_remote": {
+        "name": "Kumandadan Sunroof Konfor Açma/Kapama (VAG)",
+        "desc": "Anahtar tuşuna uzun basarak panoramik sunroofun uzaktan kontrolünü sağlar."
+      },
+      "vag_acc_distance_preset": {
+        "name": "ACC Adaptif Hız Sabitleyici Varsayılan Takip Mesafesi (VAG)",
+        "desc": "Kontak açıldığında varsayılan ACC radar takip mesafesi profilini ayarlar."
+      },
+      "vag_infotainment_startup_logo": {
+        "name": "Multimedya Ekranı Başlangıç Logosu (VAG)",
+        "desc": "Multimedya ekran açılış görselini R-Line, GTI veya RS logosuna çevirir."
+      },
+      "vag_ambient_color_cycle": {
+        "name": "İç Ambiyans Aydınlatma Renk Yelpazesi (VAG)",
+        "desc": "Araç ayarlar menüsünde iç ambiyans aydınlatma için 30 renk seçeneği açar."
+      },
+      "vag_service_interval_custom": {
+        "name": "Özel Bakım Periyodu ve Mesafe Eşiği (VAG)",
+        "desc": "Bir sonraki servis uyarısı için özel km ve gün hedeflerini tanımlar."
+      },
+      "vag_door_handle_lights_reverse": {
+        "name": "Geri Vites Kademesinde Kapı Kolu Aydınlatmaları (VAG)",
+        "desc": "Geri vitese takıldığında zemin görüşü için dış kapı kolu LEDlerini yakar."
+      },
+      "bmw_msport_exhaust_burble": {
+        "name": "M-Sport Egzoz Patlatma ve Çatlama Yoğunluğu (BMW)",
+        "desc": "Sport modda gaz kesmedeki egzoz patlatma ve burble sesinin agresifliğini ayarlar."
+      },
+      "bmw_welcome_light_sequence": {
+        "name": "Karşılama Far Animasyonu ve Melek Gözler (BMW)",
+        "desc": "Kilit açıldığında LED far ve Angel Eyes karşılama seremonisini özelleştirir."
+      },
+      "bmw_service_history_menu": {
+        "name": "Dijital Servis Geçmişi Menüsü (BMW)",
+        "desc": "iDrive multimedya ekranında dijital bakım defteri menüsünü aktif eder."
+      },
+      "bmw_hud_speed_display": {
+        "name": "Head-Up Display Dijital Hız Göstergesi (BMW)",
+        "desc": "Ön cama yansıtılan HUD ekranına anlık dijital hız verisini ekler."
+      },
+      "bmw_cornering_lights_fog": {
+        "name": "Sis Farları ile Dönüş Aydınlatması (BMW)",
+        "desc": "Direksiyon çevrildiğinde veya sinyal verildiğinde ilgili ön sis farını yakar."
+      },
+      "bmw_easy_entry_steering": {
+        "name": "Easy Entry Konforlu Biniş/İniş Direksiyon Hareketi (BMW)",
+        "desc": "Motor kapatıldığında elektrikli direksiyonu yukarı çekerek kolay iniş sağlar."
+      },
+      "bmw_bluetooth_audio_enable": {
+        "name": "Gelişmiş Bluetooth Kablosuz Müzik Akışı (BMW)",
+        "desc": "iDrive multimedya ünitesinde A2DP kablosuz Bluetooth müzik çalmayı açar."
+      },
+      "bmw_door_handle_lights_reverse": {
+        "name": "Geri Vites Kademesinde Dış Kapı Kolu Aydınlatması (BMW)",
+        "desc": "Geri vitese takıldığında çevre görüşü için dış kapı kolları LED ışıklarını yakar."
+      },
+      "toyota_auto_headlight_threshold": {
+        "name": "Otomatik Far Işık Sensörü Hassasiyeti (Toyota)",
+        "desc": "Otomatik farların hava kararırken devreye girme ışık hassasiyetini ayarlar."
+      },
+      "toyota_turn_signal_click_volume": {
+        "name": "Sinyal Sesi Hoparlör Ses Seviyesi (Toyota)",
+        "desc": "Sinyal verildiğinde çıkan klik uyarısının ses seviyesini ayarlar."
+      },
+      "toyota_smart_key_approach_lights": {
+        "name": "Akıllı Anahtar Yaklaşma Karşılama Aydınlatması (Toyota)",
+        "desc": "Anahtar ile araca yaklaşıldığında dikiz ayna altı karşılama ışıklarını yakar."
+      },
+      "toyota_rear_hatch_behavior": {
+        "name": "Elektrikli Bagaj Kapağı Açma/Kapama Mantığı (Toyota)",
+        "desc": "Uzaktan kumanda bagaj tuşunun çalışma ve açılma yüksekliği mantığını düzenler."
+      },
+      "toyota_open_windows_smart_key": {
+        "name": "Kumandadan Uzaktan Cam İndirme (Toyota)",
+        "desc": "Kilit açma tuşuna uzun basarak tüm camların indirilebilmesini aktif eder."
+      },
+      "toyota_interior_light_dim_timer": {
+        "name": "Kabin İç Aydınlatma Kapanma Gecikmesi (Toyota)",
+        "desc": "Kapılar kapatıldıktan sonra tavan lambalarının yavaşça sönme süresini ayarlar."
+      },
+      "toyota_panic_alarm_remote": {
+        "name": "Uzaktan Kumanda Panik Alarmı Fonksiyonu (Toyota)",
+        "desc": "Kumanda tuşu ile araç korna panik alarmının tetiklenmesini açar/kapatır."
+      },
+      "toyota_eco_drive_indicator": {
+        "name": "ECO Sürüş Gösterge Işığı ve Grafiği (Toyota)",
+        "desc": "Ekonomik sürüş yapıldığında gösterge panelinde yeşil ECO ışığını yakar."
+      },
+      "hyundai_coming_home_duration": {
+        "name": "Refakat Farları Aydınlatma Gecikmesi (Hyundai/Kia)",
+        "desc": "Araçtan indikten sonra ön kısa farların 30 saniye yolu aydınlatmasını sağlar."
+      },
+      "hyundai_drl_menu_toggle": {
+        "name": "Gündüz Farları Gösterge Menü Kontrolü (Hyundai/Kia)",
+        "desc": "Gösterge paneli ayarlar menüsüne gündüz farı açma/kapama seçeneği ekler."
+      },
+      "hyundai_welcome_sequence": {
+        "name": "Akıllı Anahtar Yaklaşma Karşılama & Ayna Açma (Hyundai/Kia)",
+        "desc": "Araca yaklaşıldığında yan aynaları açar ve kapı kolu ışıklarını yakar."
+      },
+      "hyundai_interior_light_delay": {
+        "name": "Kabin İç Lambaları Otomatik Kapanma Süresi (Hyundai/Kia)",
+        "desc": "Akü tasarrufu için iç aydınlatmaların otomatik kesilme süresini ayarlar."
+      },
+      "hyundai_heat_pump_efficiency": {
+        "name": "EV Isı Pompası Termal Verimlilik Modu (Hyundai/Kia)",
+        "desc": "Soğuk havalarda elektrikli araç ısı pompasının enerji verimliliğini optimize eder."
+      },
+      "tesla_track_mode_params": {
+        "name": "Pist Modu Tork Dağılımı ve Stratejisi (Tesla)",
+        "desc": "Ön/arka motor güç dağılımını ve stabilite kontrol müdahalesini ayarlar."
+      },
+      "tesla_regen_brake_strength": {
+        "name": "Rejeneratif Frenleme Güç Profili (Tesla)",
+        "desc": "Gaz pedalından ayak çekildiğinde bataryaya dönen şarj şiddetini ayarlar."
+      },
+      "tesla_walkaway_door_lock": {
+        "name": "Uzaklaşınca Telefon Anahtar ile Otomatik Kilit (Tesla)",
+        "desc": "Telefon anahtarla araçtan uzaklaşılınca kapıları kilitler ve korna ile onaylar."
+      },
+      "tesla_acceleration_boost_unlock": {
+        "name": "Hızlanma Takviyesi Motor Sürücü Yanıtı (Tesla)",
+        "desc": "0-100 km/s hızlanmasını iyileştirmek için inverter gaz yanıtını keskinleştirir."
+      },
+      "tesla_interior_ambient_color": {
+        "name": "Kabin Ayak Aydınlatması Ambiyans Rengi (Tesla)",
+        "desc": "Ayak altı LED ambiyans ışıklarının RGB renk paletini özelleştirir."
+      },
+      "audi_matrix_led_animation": {
+        "name": "Matrix LED Far Dinamik Karşılama Dansı (Audi)",
+        "desc": "Kilit açıldığında Matrix LED farlarda dinamik ışık koreografisini başlatır."
+      },
+      "audi_mmi_startup_screen": {
+        "name": "MMI Dokunmatik Ekran Başlangıç Teması (Audi)",
+        "desc": "MMI orta ekran açılış animasyonunu S, RS veya e-tron temasına çevirir."
+      },
+      "audi_drive_select_efficiency": {
+        "name": "Audi Drive Select Verimlilik (Efficiency) Modu (Audi)",
+        "desc": "Sürüş Seçimi menüsüne yakıt tasarrufu sağlayan Efficiency modunu ekler."
+      },
+      "audi_laptimer_boost_display": {
+        "name": "Tur Zamanlayıcı & Turbo Basınç Göstergesi (Audi)",
+        "desc": "Dijital gösterge ekranına tur zaman ölçer ve anlık turbo bar basıncını ekler."
+      },
+      "audi_needle_sweep_gauge": {
+        "name": "Spor Gösterge İbre Selamlama Testi (Audi)",
+        "desc": "Kontak açılışında kadran ibrelerinin sona vurup geri gelmesini sağlar."
+      },
+      "skoda_coming_home_lights": {
+        "name": "Refakat Far Aydınlatma Zamanlayıcısı (Skoda)",
+        "desc": "Araçtan indikten sonra farların yolu aydınlatma süresini belirler."
+      },
+      "skoda_comfort_turn_signal": {
+        "name": "Konfor Sinyal Vuruş Sayısı Ayarı (Skoda)",
+        "desc": "Şerit değiştirme sinyal vuruş sayısını 3 ila 5 arasında ayarlar."
+      },
+      "cupra_sport_display_menu": {
+        "name": "Cupra Performans Göstergesi & G-Metre Menüsü (Cupra)",
+        "desc": "Gösterge ekranında G-kuvveti ölçer, kW güç ve yağ sıcaklık menüsünü açar."
+      },
+      "cupra_virtual_cockpit_copper": {
+        "name": "Bakır Temalı Gösterge Grafik Detayları (Cupra)",
+        "desc": "Dijital gösterge paneline özel Cupra bakır rengi vurgu temasını uygular."
+      },
+      "vag_brake_disc_drying": {
+        "name": "Yağmurda Fren Diski Kurutma Fonksiyonu (VAG)",
+        "desc": "Yağmurlu havalarda diskteki suyu temizlemek için fren balatalarını hafifçe yakınlaştırır."
+      },
+      "vag_tourist_mode_lights": {
+        "name": "Turist Modu Far Işık Deseni (VAG)",
+        "desc": "Yurt dışı sürüşlerde far hüzmesini sol/sağ direksiyon trafiğine göre ayarlar."
+      },
+      "vag_hood_warning_mute": {
+        "name": "Kaput Açık İkaz Sesini Kapatma (VAG)",
+        "desc": "Kaput mandalı açıkken göstergede çalan sürekli sesli ikazı susturur."
+      },
+      "vag_emergency_brake_hazard": {
+        "name": "Ani Frenlemede Otomatik Dörtlü Flaşör (VAG)",
+        "desc": "Sert fren yapıldığında arkadaki araçları uyarmak için dörtlüleri hızlıca yakar."
+      },
+      "vag_sunroof_comfort_open": {
+        "name": "Sunroof Uzaktan Kumanda Açılma Pozisyonu (VAG)",
+        "desc": "Kumandadan cam açma basıldığında sunroofun devrilme mi yoksa tam mı açılacağını seçer."
+      },
+      "bmw_ecopro_display_variant": {
+        "name": "ECO PRO Gösterge Paneli Grafik Teması (BMW)",
+        "desc": "ECO PRO modundaki mavi tasarruf göstergesi grafik stilini özelleştirir."
+      },
+      "bmw_volume_bar_hud": {
+        "name": "Head-Up Display Ses Seviyesi Çubuğu (BMW)",
+        "desc": "Direksiyondan ses ayarlandığında seviye çubuğunu ön cama yansıtır."
+      },
+      "bmw_anti_dazzle_mirror": {
+        "name": "Otomatik Kararan Dikiz Aynası Hassasiyeti (BMW)",
+        "desc": "Arkadaki araç farlarına göre dikiz aynasının otomatik kararma hassasiyetini ayarlar."
+      },
+      "bmw_camera_pdc_warning_mute": {
+        "name": "PDC Park Sensörü ve Kamera Kapanma Hızı (BMW)",
+        "desc": "Park kameraları ve sensörlerin sürüşe başlarken kapanacağı hız eşiğini yükseltir."
+      },
+      "toyota_pcs_distance_preset": {
+        "name": "Çarpışma Önleyici Sistem (PCS) Uyarısı Mesafesi (Toyota)",
+        "desc": "Olası çarpışma uyarı radarının varsayılan ikaz mesafesini tanımlar."
+      },
+      "toyota_bsm_timing": {
+        "name": "Kör Nokta Uyarı Sistemi (BSM) İkaz Zamanlaması (Toyota)",
+        "desc": "Aynadaki kör nokta uyarı ışığının yanma zamanlama hassasiyetini ayarlar."
+      },
+      "toyota_ac_noise_reduction": {
+        "name": "Klima Kompresörü Sessiz Çalışma Modu (Toyota)",
+        "desc": "Kabin sessizliği için klima üfleme fanının maksimum gürültü seviyesini sınırlar."
+      },
+      "toyota_sflow_control": {
+        "name": "S-Flow Akıllı İklimlendirme Tek Yolcu Modu (Toyota)",
+        "desc": "Klimayı koltuk sensörlerine göre yalnızca araç içindeki yolculara yönlendirir."
+      },
+      "toyota_relock_timeout": {
+        "name": "Kapı Kilitlenmeme Durumunda Otomatik Yeniden Kilitleme (Toyota)",
+        "desc": "Uzaktan kilit açıldıktan sonra kapı açılmazsa yeniden kilitlenme süresini ayarlar."
+      },
+      "lexus_mark_levinson_audio_profile": {
+        "name": "Mark Levinson Surround Ses Akustik Profili (Lexus)",
+        "desc": "Mark Levinson hoparlörler için 3 boyutlu mekanik ses profilini optimize eder."
+      },
+      "lexus_ev_mode_beeper_mute": {
+        "name": "Düşük Hız Sessiz EV Elektrikli Sürüş İkaz Bipi (Lexus)",
+        "desc": "Elektrikli modda giderken dışarıya verilen yaya ikaz sesini kapatır."
+      },
+      "lexus_easy_access_seat": {
+        "name": "Kolay Giriş/Çıkış Koltuk ve Direksiyon Geri Çekme (Lexus)",
+        "desc": "İniş ve binişlerde sürücü koltuğunu otomatik geriye sürer."
+      },
+      "nissan_epower_regen_mode": {
+        "name": "e-POWER Tek Pedal Rejeneratif Frenleme Modu (Nissan)",
+        "desc": "e-Pedal tek pedalla sürüşteki rejeneratif şarj ve yavaşlama seviyesini ayarlar."
+      },
+      "nissan_propilot_assist_timing": {
+        "name": "ProPILOT Şerit Takip Direksiyon Müdahale Hassasiyeti (Nissan)",
+        "desc": "ProPILOT otonom şerit merkezleme direksiyon müdahale derecesini ayarlar."
+      },
+      "nissan_intelligent_around_view": {
+        "name": "Çevre Görüş Kamera Sisteminin Otomatik Açılması (Nissan)",
+        "desc": "Ön sensörler engel algıladığında 360 derece kamerayı ekrana getirir."
+      },
+      "mazda_g_vectoring_display": {
+        "name": "G-Vectoring Control Dinamik Viraj Grafiği (Mazda)",
+        "desc": "Virajlarda G-Vectoring tork dağılımı grafiğini göstergeye yansıtır."
+      },
+      "mazda_ieloop_capacitor_monitor": {
+        "name": "i-ELOOP Fren Enerjisi Kapasitör Göstergesi (Mazda)",
+        "desc": "Frenleme esnasında kapasitörde toplanan enerjiyi ekranda canlı gösterir."
+      },
+      "mazda_smart_city_brake_sens": {
+        "name": "Şehir İçi Akıllı Fren Desteği (SCBS) Hassasiyeti (Mazda)",
+        "desc": "Düşük hızlarda çalışan otomatik şehir içi acil fren sensör mesafesini ayarlar."
+      },
+      "subaru_eyesight_distance_preset": {
+        "name": "EyeSight Adaptif Hız Kontrolü Varsayılan Takip Mesafesi (Subaru)",
+        "desc": "EyeSight stereo kamerasının açılıştaki takip mesafesi ayarını tanımlar."
+      },
+      "subaru_xmode_auto_engage": {
+        "name": "X-Mode Arazi Çekiş Sistemi Otomatik Devreye Girme (Subaru)",
+        "desc": "Kaygan zeminde X-Mode arazi çekiş modunun otomatik açılma kayma eşiğini ayarlar."
+      },
+      "subaru_steering_responsive_headlights": {
+        "name": "Direksiyona Duyarlı Adaptif Far Sistemi (SRH) (Subaru)",
+        "desc": "Viraja göre dönen adaptif farların açılıp kapatılmasını sağlar."
+      },
+      "genesis_sport_plus_mode": {
+        "name": "Sport+ Performans ve Elektronik Süspansiyon Modu (Genesis)",
+        "desc": "ESC İptalli ve sertleştirilmiş amortisörlü Sport+ pist modunu açar."
+      },
+      "genesis_ambient_active_light": {
+        "name": "Sürüş Moduyla Senkronize Aktif Ambiyans Işığı (Genesis)",
+        "desc": "Ambiyans aydınlatma rengini seçilen sürüş moduna göre otomatik değiştirir."
+      },
+      "volvo_city_safety_warning": {
+        "name": "City Safety Acil Fren İkaz Hassasiyeti (Volvo)",
+        "desc": "City Safety acil fren sisteminin çarpışma uyarı zamanlamasını ayarlar."
+      },
+      "chery_ar_navigation_hud": {
+        "name": "AR Artırılmış Gerçeklik Navigasyon Yansıtma (Chery)",
+        "desc": "Ön cama yansıtılan HUD üzerine 3 boyutlu oklarla navigasyon çizgisini ekler."
+      },
+      "jlr_terrain_response_preset": {
+        "name": "Terrain Response Arazi Modu Hafızası (Jaguar Land Rover)",
+        "desc": "Son seçilen Terrain Response arazi modunu kontak açılışında hatırlar."
+      },
+      "jlr_adaptive_dynamics_firm": {
+        "name": "Adaptive Dynamics Amortisör Sertlik Profili (Jaguar Land Rover)",
+        "desc": "Elektronik amortisörlerin varsayılan sertlik profilini tanımlar."
+      },
+      "jlr_wading_sensor_alert": {
+        "name": "Derin Sudan Geçme Derinlik İkaz Uyarı Eşiği (Jaguar Land Rover)",
+        "desc": "Sudan geçerken ultrasonik derinlik uyarısının öttüğü su seviyesini ayarlar."
+      },
+      "alfa_dna_dynamic_memory": {
+        "name": "Alfa DNA Seçici Dynamic Modu Hafızası (Alfa Romeo)",
+        "desc": "Kontak yeniden açıldığında DNA anahtarının Dynamic modunu korur."
+      },
+      "alfa_q4_torque_split": {
+        "name": "Q4 Dört Çeker Tork Dağılım Grafiği (Alfa Romeo)",
+        "desc": "Dört çeker sisteminin ön ve arka aksa anlık tork dağılımını göstergede sergiler."
+      },
+      "li_auto_range_extender_mode": {
+        "name": "REV Jeneratör Şarj Koruma Seviyesi (Li Auto)",
+        "desc": "Menzil uzatıcı jeneratör motorun devreye gireceği batarya seviyesini ayarlar."
+      },
+      "li_auto_cinema_seat_position": {
+        "name": "Sinema / Tiyatro Modu Koltuk Ergonomi Konumu (Li Auto)",
+        "desc": "Sinema modu açıldığında arka koltukları yatırır ve ayak dinlendirmeyi açar."
+      },
+      "zeekr_drift_mode_torque": {
+        "name": "Performans Yanlama (Drift) Modu Arka Tork Aktarımı (Zeekr)",
+        "desc": "Kontrollü drift için gücün %100'ünü arka elektrik motoruna yönlendirir."
+      },
+      "zeekr_ambient_beat_sync": {
+        "name": "Müzik Ritmiyle Senkronize Ambiyans Işığı Dansı (Zeekr)",
+        "desc": "Çalan müziğin bas ve ritmine göre iç aydınlatma renklerini dans ettirir."
+      },
+      "tata_drive_mode_voice": {
+        "name": "Sürüş Modu Geçişinde Sesli Anons Uyarısı (Tata)",
+        "desc": "Sürüş modu değiştirildiğinde hoparlörden Türkçe/İngilizce sesli anons yapar."
+      },
+      "mahindra_zip_zap_zoom_custom": {
+        "name": "Zip/Zap/Zoom Gaz Tepkisi Sürüş Eğrisi (Mahindra)",
+        "desc": "Zip, Zap ve Zoom sürüş modlarındaki gaz pedalı tepki eğrisini özelleştirir."
+      },
+      "fun_cyberpunk_cluster_theme": {
+        "name": "Cyberpunk Neon Grafikli Gösterge Tasarım Teması",
+        "desc": "Gösterge paneline siber neon turkuaz ve turuncu dijital spor temayı uygular."
+      },
+      "fun_exhaust_flame_sound_effect": {
+        "name": "Kablosuz Müzik Sisteminde V8 Egzoz Patlatma FX",
+        "desc": "Vites geçişlerinde kabin içi hoparlörlerden V8 egzoz patlatma efekti çalar."
+      },
+      "fun_matrix_light_show_welcome": {
+        "name": "Müzikli Adaptif Far Işık Dansı Şovu (Light Show)",
+        "desc": "Kilit açılışında farlar ve sinyallerle ritmik ışık şovu sergiler."
+      },
+      "fun_stealth_fighter_display": {
+        "name": "Hayalet Avcı Uçağı Gece Sürüşü Gösterge Modu",
+        "desc": "Gece göz yormaması için hız kadranı hariç tüm gösterge ışıklarını söndürür."
       }
     },
     "codeBtn": "KODLA",
