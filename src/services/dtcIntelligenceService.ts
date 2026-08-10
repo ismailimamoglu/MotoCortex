@@ -118,35 +118,35 @@ export function getGuidedDiagnostics(code: string): GuidedDiagnostic {
       return {
         relatedPids: ['MAF', 'RPM', 'ENGINE_LOAD'],
         probableCauses: [
-          { cause: i18n.t('guidedDiag.p0102_cause1', 'Dirty or Faulty MAF Sensor'), probability: 65 },
-          { cause: i18n.t('guidedDiag.p0102_cause2', 'Intake Leak / Vacuum Leak'), probability: 25 },
-          { cause: i18n.t('guidedDiag.p0102_cause3', 'Wiring Harness Damage'), probability: 10 },
+          { cause: i18n.t('guidedDiag.p0102_cause1', { defaultValue: 'Dirty or Faulty MAF Sensor' }), probability: 65 },
+          { cause: i18n.t('guidedDiag.p0102_cause2', { defaultValue: 'Intake Leak / Vacuum Leak' }), probability: 25 },
+          { cause: i18n.t('guidedDiag.p0102_cause3', { defaultValue: 'Wiring Harness Damage' }), probability: 10 },
         ],
-        recommendedAction: i18n.t('guidedDiag.p0102_action', 'Clean MAF sensor with contact cleaner or inspect air filter housing for leaks.'),
-        tsbSummary: i18n.t('guidedDiag.p0102_tsb', 'TSB-2023-09: Inspect air intake hose clamp torque before replacing MAF.'),
+        recommendedAction: i18n.t('guidedDiag.p0102_action', { defaultValue: 'Clean MAF sensor with contact cleaner or inspect air filter housing for leaks.' }),
+        tsbSummary: i18n.t('guidedDiag.p0102_tsb', { defaultValue: 'TSB-2023-09: Inspect air intake hose clamp torque before replacing MAF.' }),
       };
 
     case 'P0171':
       return {
         relatedPids: ['STFT1', 'LTFT1', 'MAF', 'O2_VOLTAGE'],
         probableCauses: [
-          { cause: i18n.t('guidedDiag.p0171_cause1', 'Vacuum Hose Leak / Intake Leak'), probability: 50 },
-          { cause: i18n.t('guidedDiag.p0171_cause2', 'Weak Fuel Pump / Low Pressure'), probability: 30 },
-          { cause: i18n.t('guidedDiag.p0171_cause3', 'Fouled O2 Sensor 1'), probability: 20 },
+          { cause: i18n.t('guidedDiag.p0171_cause1', { defaultValue: 'Vacuum Hose Leak / Intake Leak' }), probability: 50 },
+          { cause: i18n.t('guidedDiag.p0171_cause2', { defaultValue: 'Weak Fuel Pump / Low Pressure' }), probability: 30 },
+          { cause: i18n.t('guidedDiag.p0171_cause3', { defaultValue: 'Fouled O2 Sensor 1' }), probability: 20 },
         ],
-        recommendedAction: i18n.t('guidedDiag.p0171_action', 'Perform smoke test on intake manifold and check long-term fuel trim (LTFT).'),
-        tsbSummary: i18n.t('guidedDiag.p0171_tsb', 'TSB-2022-14: Check PCV valve diaphragm for tears.'),
+        recommendedAction: i18n.t('guidedDiag.p0171_action', { defaultValue: 'Perform smoke test on intake manifold and check long-term fuel trim (LTFT).' }),
+        tsbSummary: i18n.t('guidedDiag.p0171_tsb', { defaultValue: 'TSB-2022-14: Check PCV valve diaphragm for tears.' }),
       };
 
     case 'P0420':
       return {
         relatedPids: ['O2_B1S1', 'O2_B1S2', 'CAT_TEMP'],
         probableCauses: [
-          { cause: i18n.t('guidedDiag.p0420_cause1', 'Catalytic Converter Efficiency Degradation'), probability: 70 },
-          { cause: i18n.t('guidedDiag.p0420_cause2', 'Rear Downstream O2 Sensor Fault'), probability: 20 },
-          { cause: i18n.t('guidedDiag.p0420_cause3', 'Exhaust Leak Before Converter'), probability: 10 },
+          { cause: i18n.t('guidedDiag.p0420_cause1', { defaultValue: 'Catalytic Converter Efficiency Degradation' }), probability: 70 },
+          { cause: i18n.t('guidedDiag.p0420_cause2', { defaultValue: 'Rear Downstream O2 Sensor Fault' }), probability: 20 },
+          { cause: i18n.t('guidedDiag.p0420_cause3', { defaultValue: 'Exhaust Leak Before Converter' }), probability: 10 },
         ],
-        recommendedAction: i18n.t('guidedDiag.p0420_action', 'Compare upstream vs downstream O2 sensor waveforms or check catalytic converter temperature.'),
+        recommendedAction: i18n.t('guidedDiag.p0420_action', { defaultValue: 'Compare upstream vs downstream O2 sensor waveforms or check catalytic converter temperature.' }),
       };
 
     case 'P0300':
@@ -155,11 +155,11 @@ export function getGuidedDiagnostics(code: string): GuidedDiagnostic {
       return {
         relatedPids: ['RPM', 'MISFIRE_COUNT', 'COOLANT_TEMP'],
         probableCauses: [
-          { cause: i18n.t('guidedDiag.p0300_cause1', 'Worn Spark Plug / Ignition Coil'), probability: 60 },
-          { cause: i18n.t('guidedDiag.p0300_cause2', 'Clogged Fuel Injector'), probability: 30 },
-          { cause: i18n.t('guidedDiag.p0300_cause3', 'Low Engine Cylinder Compression'), probability: 10 },
+          { cause: i18n.t('guidedDiag.p0300_cause1', { defaultValue: 'Worn Spark Plug / Ignition Coil' }), probability: 60 },
+          { cause: i18n.t('guidedDiag.p0300_cause2', { defaultValue: 'Clogged Fuel Injector' }), probability: 30 },
+          { cause: i18n.t('guidedDiag.p0300_cause3', { defaultValue: 'Low Engine Cylinder Compression' }), probability: 10 },
         ],
-        recommendedAction: i18n.t('guidedDiag.p0300_action', 'Swap ignition coil to adjacent cylinder and monitor if misfire follows.'),
+        recommendedAction: i18n.t('guidedDiag.p0300_action', { defaultValue: 'Swap ignition coil to adjacent cylinder and monitor if misfire follows.' }),
       };
 
     case 'P17BF':
@@ -167,22 +167,22 @@ export function getGuidedDiagnostics(code: string): GuidedDiagnostic {
       return {
         relatedPids: ['TRANSMISSION_SPEED', 'HYDRAULIC_PRESSURE', 'GEAR_RATIO'],
         probableCauses: [
-          { cause: i18n.t('guidedDiag.p17bf_cause1', 'Mechatronic Hydraulic Pressure Accumulator Leak'), probability: 75 },
-          { cause: i18n.t('guidedDiag.p17bf_cause2', 'Solenoid Valve Circuit Fault'), probability: 15 },
-          { cause: i18n.t('guidedDiag.p17bf_cause3', 'Low Fluid Level / Fluid Degradation'), probability: 10 },
+          { cause: i18n.t('guidedDiag.p17bf_cause1', { defaultValue: 'Mechatronic Hydraulic Pressure Accumulator Leak' }), probability: 75 },
+          { cause: i18n.t('guidedDiag.p17bf_cause2', { defaultValue: 'Solenoid Valve Circuit Fault' }), probability: 15 },
+          { cause: i18n.t('guidedDiag.p17bf_cause3', { defaultValue: 'Low Fluid Level / Fluid Degradation' }), probability: 10 },
         ],
-        recommendedAction: i18n.t('guidedDiag.p17bf_action', 'Perform DCT Mechatronic pressure test and inspect accumulator housing.'),
-        tsbSummary: i18n.t('guidedDiag.p17bf_tsb', 'TSB-VAG-DSG: Replace mechatronic pressure housing or reinforced accumulator plate.'),
+        recommendedAction: i18n.t('guidedDiag.p17bf_action', { defaultValue: 'Perform DCT Mechatronic pressure test and inspect accumulator housing.' }),
+        tsbSummary: i18n.t('guidedDiag.p17bf_tsb', { defaultValue: 'TSB-VAG-DSG: Replace mechatronic pressure housing or reinforced accumulator plate.' }),
       };
 
     default:
       return {
         relatedPids: ['RPM', 'SPEED', 'COOLANT_TEMP', 'VOLTAGE'],
         probableCauses: [
-          { cause: i18n.t('guidedDiag.default_cause1', 'Component Circuit / Wiring Resistance Fault'), probability: 50 },
-          { cause: i18n.t('guidedDiag.default_cause2', 'Mechanical Wear or Sensor Degradation'), probability: 50 },
+          { cause: i18n.t('guidedDiag.default_cause1', { defaultValue: 'Component Circuit / Wiring Resistance Fault' }), probability: 50 },
+          { cause: i18n.t('guidedDiag.default_cause2', { defaultValue: 'Mechanical Wear or Sensor Degradation' }), probability: 50 },
         ],
-        recommendedAction: i18n.t('guidedDiag.default_action', 'Perform voltage drop & continuity check using multimeter.'),
+        recommendedAction: i18n.t('guidedDiag.default_action', { defaultValue: 'Perform voltage drop & continuity check using multimeter.' }),
       };
   }
 }

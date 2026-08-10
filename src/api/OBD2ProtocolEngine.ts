@@ -830,7 +830,6 @@ export class OBD2ProtocolEngine {
        this.isProcessingFlow = false;
 
        // Replace micro-task scheduling with macro-task boundaries (setImmediate or setTimeout polyfill)
-       // We use process.env.NODE_ENV === 'test' check to execute synchronously under Jest fake timers.
        const macroYield = (cb: () => void) => {
            if (process.env.NODE_ENV === 'test') {
                cb();

@@ -6,8 +6,15 @@ import { useBluetoothStore } from '../../store/useBluetoothStore';
 
 export class PollingOrchestrator {
     private static isPollingActive = false;
+    private static isPerformanceMode = false;
     private static currentActiveHeader = '7E8';
     private static blacklistedPids = new Set<string>();
+
+    public static setPerformanceModePriority(active: boolean): void {
+        this.isPerformanceMode = active;
+        const store = useBluetoothStore.getState();
+        store.addLog(`POLLING_ORCHESTRATOR: Performance Mode Priority ${active ? 'ENABLED (Speed PID 010D high-frequency 15Hz)' : 'DISABLED'}`);
+    }
 
     /**
      * Start high-frequency multiplexed node-batched telemetry loop with Routing-Drift Guards.
@@ -65,6 +72,21 @@ export class PollingOrchestrator {
 
         while (this.isPollingActive) {
             try {
+                // ============================================================
+                // PERFORMANCE MODE: High-frequency 010D (Speed) polling for 0-100 km/h measurement
+                // Suspends all other PIDs to achieve 15+ Hz sampling on Speed PID
+                // ============================================================
+                if (this.isPerformanceMode) {
+                    try {
+                        await OBDCommandQueue.add('01 0D', cmdTimeoutBase);
+                    } catch (e) {
+                        // Don't blacklist speed PID in performance mode — keep retrying
+                    }
+                    // Minimal pacing delay for maximum refresh rate (~15-20 Hz on Tier 1 adapters)
+                    await preciseSleep(2);
+                    continue; // Skip normal batch processing entirely
+                }
+
                 // Periodically query battery voltage via ATRV (every 5 seconds)
                 const now = Date.now();
                 if (now - lastVoltageReadTime > 5000) {

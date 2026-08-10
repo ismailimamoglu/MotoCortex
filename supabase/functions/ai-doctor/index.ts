@@ -26,6 +26,14 @@ serve(async (req: Request) => {
   }
 
   try {
+    const authHeader = req.headers.get("Authorization") || req.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized access: Bearer token required" }),
+        { status: 401, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+      );
+    }
+
     const apiKey = Deno.env.get("GEMINI_API_KEY");
     if (!apiKey) {
       return new Response(
@@ -35,14 +43,26 @@ serve(async (req: Request) => {
     }
 
     const payload: AiDoctorRequest = await req.json();
-    const lang = payload.lang || "en";
-    const dtcCodes = Array.isArray(payload.dtcCodes) ? payload.dtcCodes : [];
+    const lang = (payload.lang || "en").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 10);
+    const rawDtcs = Array.isArray(payload.dtcCodes) ? payload.dtcCodes : [];
+    
+    // Cap DTC array length (max 20) and sanitize individual DTC codes
+    const dtcCodes = rawDtcs
+      .slice(0, 20)
+      .map(c => String(c).replace(/[^a-zA-Z0-9]/g, "").slice(0, 10))
+      .filter(Boolean);
+
+    // Sanitize string inputs to prevent prompt injection attacks
+    const sanitizeStr = (str?: string) => String(str || "").replace(/[\r\n"'{}[\]]/g, "").slice(0, 50);
+    const cleanMake = sanitizeStr(payload.vehicleMake) || "Motorcycle/Car";
+    const cleanModel = sanitizeStr(payload.vehicleModel);
+    const cleanYear = Math.max(1900, Math.min(2100, Number(payload.vehicleYear) || 0)) || "";
 
     const prompt = `You are MotoCortex AI Mechanic. Analyze vehicle diagnostic data and output strict JSON in language code '${lang}'.
-Vehicle: ${payload.vehicleYear || ''} ${payload.vehicleMake || 'Motorcycle/Car'} ${payload.vehicleModel || ''}
+Vehicle: ${cleanYear} ${cleanMake} ${cleanModel}
 DTC Codes: ${dtcCodes.join(', ')}
-Voltage: ${payload.engineVoltage || 'N/A'}V, Coolant Temp: ${payload.coolantTemp || 'N/A'}°C
-Freeze Frame: ${JSON.stringify(payload.freezeFrameData || {})}
+Voltage: ${Number(payload.engineVoltage) || 'N/A'}V, Coolant Temp: ${Number(payload.coolantTemp) || 'N/A'}°C
+Freeze Frame: ${JSON.stringify(payload.freezeFrameData || {}).slice(0, 500)}
 
 Return JSON structure:
 {

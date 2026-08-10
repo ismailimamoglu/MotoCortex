@@ -75,18 +75,27 @@ jest.mock('expo-sqlite', () => {
       if (clean.includes('SELECT COUNT(*)')) {
         return { count: rows.length };
       }
+      if (clean.includes('SELECT SUM(')) {
+        const totalBytes = rows.reduce((sum, item) => sum + 120 + (item.brand || '').length + (item.model || '').length, 0);
+        return { totalBytes };
+      }
       return null;
     }),
     getAllSync: jest.fn((query, params) => {
       const clean = query.replace(/\s+/g, ' ').toUpperCase();
+      if (clean.includes('SELECT * FROM TELEMETRY_QUEUE ORDER BY CREATED_AT ASC LIMIT ?')) {
+        const limit = params ? params[0] : 100;
+        const sorted = [...rows].sort((a, b) => (a.created_at || '').localeCompare(b.created_at || ''));
+        return sorted.slice(-limit);
+      }
       if (clean.includes('SELECT * FROM TELEMETRY_QUEUE WHERE SUCCESS = 0')) {
-        const limit = params[0];
+        const limit = params ? params[0] : 50;
         return rows.filter(r => r.success === 0)
                    .sort((a, b) => (a.created_at || '').localeCompare(b.created_at || ''))
                    .slice(0, limit);
       }
       if (clean.includes('SELECT ID, SESSION_HASH FROM TELEMETRY_QUEUE WHERE SUCCESS = 0')) {
-        const limit = params[0];
+        const limit = params ? params[0] : 50;
         return rows.filter(r => r.success === 0)
                    .sort((a, b) => (a.created_at || '').localeCompare(b.created_at || ''))
                    .slice(0, limit)

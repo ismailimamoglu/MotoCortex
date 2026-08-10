@@ -1,14 +1,26 @@
 import React from 'react';
 import { Animated } from 'react-native';
+import { useThemeColors } from '../theme';
+import { useResponsive } from '../hooks/useResponsive';
 
 export interface ShimmerSensorCardProps {
-  width: string | number;
-  height: number;
-  tc: any;
-  scaleMod: (n: number) => number;
+  width?: string | number;
+  height?: number;
+  tc?: any;
+  scaleMod?: (n: number) => number;
 }
 
-export const ShimmerSensorCard = React.memo(({ width, height, tc, scaleMod }: ShimmerSensorCardProps) => {
+export const ShimmerSensorCard = React.memo(({
+  width = '48.5%',
+  height = 60,
+  tc: providedTc,
+  scaleMod: providedScaleMod,
+}: ShimmerSensorCardProps) => {
+  const themeColors = useThemeColors();
+  const { ms } = useResponsive();
+  const tc = providedTc || themeColors;
+  const scaleMod = providedScaleMod || ms;
+
   const shimmerOpacity = React.useRef(new Animated.Value(0.25)).current;
   React.useEffect(() => {
     const anim = Animated.loop(

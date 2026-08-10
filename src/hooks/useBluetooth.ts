@@ -43,7 +43,7 @@ export const useBluetooth = () => {
    const connectionState = useBluetoothStore(s => s.connectionState);  
    const deviceName = useBluetoothStore(s => s.deviceName);  
    const deviceId = useBluetoothStore(s => s.deviceId);  
-   const lastResponse = useBluetoothStore(s => s.lastResponse);  
+   const getLastResponse = useCallback(() => useBluetoothStore.getState().lastResponse, []);
    const error = useBluetoothStore(s => s.error);  
    const setStatus = useBluetoothStore(s => s.setStatus);  
    const setAdapterStatus = useBluetoothStore(s => s.setAdapterStatus);  
@@ -51,7 +51,7 @@ export const useBluetooth = () => {
    const setDevice = useBluetoothStore(s => s.setDevice);  
    const setLastResponse = useBluetoothStore(s => s.setLastResponse);  
    const setError = useBluetoothStore(s => s.setError);  
-   const logs = useBluetoothStore(s => s.logs);  
+   const getLogs = useCallback(() => useBluetoothStore.getState().logs, []);
    const clearLogs = useBluetoothStore(s => s.clearLogs);  
    const reset = useBluetoothStore(s => s.reset);  
    const lastDeviceId = useBluetoothStore(s => s.lastDeviceId);  
@@ -421,8 +421,34 @@ export const useBluetooth = () => {
     }, []);
 
    const runDiagnostics = useCallback(async () => {  
-       if (status !== 'connected') return;  
-       useBluetoothStore.getState().setDiagnosticMode(true);         const wasPollingActive = useBluetoothStore.getState().isPollingActive;  
+       const isSim = useAppStore.getState().isSimulationMode;
+       if (status !== 'connected' && !isSim) return;  
+       useBluetoothStore.getState().setDiagnosticMode(true);
+
+       if (isSim) {
+         try {
+           await preciseSleep(1200);
+           const currentDtcs = useBluetoothStore.getState().dtcs;
+           const simDtcs = currentDtcs.length > 0 ? currentDtcs : ['P0113', 'P0102'];
+           const simVin = useBluetoothStore.getState().vin || 'WVWZZZ1KZAW123456';
+
+           useBluetoothStore.getState().setSensorData({
+             vin: simVin,
+             odometer: 124566,
+             dtcs: simDtcs,
+             distanceSinceCleared: 342,
+             distanceMilOn: 45,
+           });
+           await handleVinReceived(simVin);
+         } catch (e) {
+           console.warn('[runDiagnostics] Simulation scan failed:', e);
+         } finally {
+           useBluetoothStore.getState().setDiagnosticMode(false);
+         }
+         return;
+       }
+
+       const wasPollingActive = useBluetoothStore.getState().isPollingActive;  
        stopPolling();  
        OBDCommandQueue.clear(new Error('DIAGNOSTICS_START'));
 
@@ -480,6 +506,19 @@ export const useBluetooth = () => {
    const clearDiagnostics = useCallback(async () => {  
        const isSim = useAppStore.getState().isSimulationMode;
        if (status !== 'connected' && !isSim) return;  
+
+       const btState = useBluetoothStore.getState();
+       const currentRpm = btState.rpm ?? 0;
+       const currentSpeed = btState.speed ?? 0;
+
+       if (currentRpm > 0 || currentSpeed > 0) {
+           Alert.alert(
+               t('safety.engineRunningTitle', { defaultValue: 'Engine Running Safety Gate' }),
+               t('safety.engineRunningDesc', { defaultValue: 'For safety reasons, diagnostic trouble codes can only be cleared when ignition is ON but the engine is OFF (RPM = 0).' })
+           );
+           return;
+       }
+
        try { proGuardAction(() => { }); } catch { return; }  
        useBluetoothStore.getState().setDiagnosticMode(true);  
        if (!isSim) stopPolling();  
@@ -496,7 +535,7 @@ export const useBluetooth = () => {
            useBluetoothStore.getState().setDiagnosticMode(false);  
            if (!isSim) startPolling();  
        }  
-   }, [status, sendCommand, startPolling, stopPolling, proGuardAction]);
+   }, [status, sendCommand, startPolling, stopPolling, proGuardAction, t]);
 
    const runAdaptationRoutine = useCallback(async (type: 'fuel' | 'ecu') => {  
        if (status !== 'connected') return;  
@@ -637,6 +676,8 @@ export const useBluetooth = () => {
         });  
     }, [setLastDevice]);
 
+    const crankingRecoveryRef = useRef(false);
+
     useEffect(() => {
         const fallbackCb = () => {
             useBluetoothStore.getState().addLog(`FALLBACK: OBD engine requested K-Line fallback. Blacklisting ATSP6/7 and re-initializing.`);
@@ -646,6 +687,36 @@ export const useBluetooth = () => {
         };
         const voltageCb = (voltage: string) => {
             useBluetoothStore.getState().setSensorData({ voltage });
+
+            // Cranking Voltage Drop Detection (8.5V - 9.5V)
+            // During engine cranking, starter motor draws high current causing OBD port voltage to drop.
+            // Cheap BLE adapters (clone ELM327 v1.5/v2.1) may reset or disconnect at these levels.
+            // Instead of treating this as a fatal error, flag it as expected cranking behavior.
+            const volts = parseFloat(voltage);
+            if (!isNaN(volts) && volts >= 8.0 && volts <= 9.5) {
+                const store = useBluetoothStore.getState();
+                store.addLog(`CRANKING_DETECT: Voltage drop to ${volts}V detected — starter motor cranking. BLE adapter may reset. Auto-recovery armed.`);
+                crankingRecoveryRef.current = true;
+
+                // Arm aggressive auto-reconnect cycle (2 seconds)
+                // If BLE disconnects within the next 2 seconds, treat it as cranking-related
+                setTimeout(async () => {
+                    if (crankingRecoveryRef.current) {
+                        crankingRecoveryRef.current = false;
+                        const currentStatus = useBluetoothStore.getState().status;
+                        if (currentStatus === 'disconnected') {
+                            store.addLog(`CRANKING_RECOVERY: BLE disconnected during cranking window. Initiating aggressive 2-second reconnect cycle.`);
+                            const savedDevice = await BluetoothService.getLastDevice();
+                            if (savedDevice?.id) {
+                                connect(savedDevice.id, savedDevice.name);
+                            }
+                        }
+                    }
+                }, 2000);
+            } else if (crankingRecoveryRef.current && !isNaN(volts) && volts > 11.0) {
+                // Voltage recovered above cranking threshold — disarm recovery
+                crankingRecoveryRef.current = false;
+            }
         };
         OBDCommandQueue.onKLineFallback(fallbackCb);
         OBDCommandQueue.onVoltageReceived(voltageCb);
@@ -667,7 +738,7 @@ export const useBluetooth = () => {
     }, [stopPolling]);
 
     return {  
-        status, adapterStatus, ecuStatus, connectionState, deviceName, deviceId, error, enableBluetooth, scanDevices, connect, disconnect, sendCommand, retryEcu, logs, clearLogs, startPolling, stopPolling, runDiagnostics, clearDiagnostics, runAdaptationRoutine, proGuardAction,  
+        status, adapterStatus, ecuStatus, connectionState, deviceName, deviceId, error, enableBluetooth, scanDevices, connect, disconnect, sendCommand, retryEcu, getLogs, clearLogs, startPolling, stopPolling, runDiagnostics, clearDiagnostics, runAdaptationRoutine, proGuardAction,  
         dtcs, vin, odometer, distanceSinceCleared, distanceMilOn, isDiagnosticMode, isAdaptationRunning, lastDeviceId, lastDeviceName, isCloneDevice, protocol, adapterCapabilityScore,
         isBatchQuerySupported: true  
     };  

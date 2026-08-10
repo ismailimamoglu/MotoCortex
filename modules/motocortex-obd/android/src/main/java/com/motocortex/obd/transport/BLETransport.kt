@@ -16,9 +16,13 @@ class BLETransport(private val context: Context) : OBDTransport {
     private var dataListener: ((String) -> Unit)? = null
     private var isConnectedPromise = CompletableDeferred<Boolean>()
 
-    // Standard SPP-over-BLE UUIDs (Commonly used by ELM327 BLE)
-    private val SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
-    private val CHARACTERISTIC_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
+    // Standard SPP-over-BLE candidate UUIDs (ELM327, Veepeak, Vgate, STN2120, OBDLink)
+    private val CANDIDATE_SERVICE_UUIDS = listOf(
+        UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"),
+        UUID.fromString("0000fff0-0000-1000-8000-00805f9b34fb"),
+        UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb"),
+        UUID.fromString("e7810001-4415-4641-a544-a5c3ed6f6345")
+    )
     private val CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
 
     private val gattCallback = object : BluetoothGattCallback() {
@@ -48,21 +52,54 @@ class BLETransport(private val context: Context) : OBDTransport {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                val service = gatt.getService(SERVICE_UUID)
-                val characteristic = service?.getCharacteristic(CHARACTERISTIC_UUID)
-                if (characteristic != null) {
-                    writeCharacteristic = characteristic
+                var foundChar: BluetoothGattCharacteristic? = null
+                
+                // Dynamic candidate discovery
+                for (serviceUuid in CANDIDATE_SERVICE_UUIDS) {
+                    val service = gatt.getService(serviceUuid)
+                    if (service != null) {
+                        for (ch in service.characteristics) {
+                            val props = ch.properties
+                            val isWritable = (props and (BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0
+                            val isNotifiable = (props and (BluetoothGattCharacteristic.PROPERTY_NOTIFY or BluetoothGattCharacteristic.PROPERTY_INDICATE)) != 0
+                            if (isWritable || isNotifiable) {
+                                foundChar = ch
+                                break
+                            }
+                        }
+                    }
+                    if (foundChar != null) break
+                }
+
+                // Fallback: search all discovered GATT services for writable/notify characteristic
+                if (foundChar == null) {
+                    for (service in gatt.services) {
+                        for (ch in service.characteristics) {
+                            val props = ch.properties
+                            val isWritable = (props and (BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0
+                            val isNotifiable = (props and (BluetoothGattCharacteristic.PROPERTY_NOTIFY or BluetoothGattCharacteristic.PROPERTY_INDICATE)) != 0
+                            if (isWritable && isNotifiable) {
+                                foundChar = ch
+                                break
+                            }
+                        }
+                        if (foundChar != null) break
+                    }
+                }
+
+                if (foundChar != null) {
+                    writeCharacteristic = foundChar
                     // Step 3: Enable notification
-                    gatt.setCharacteristicNotification(characteristic, true)
-                    val descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG)
+                    gatt.setCharacteristicNotification(foundChar, true)
+                    val descriptor = foundChar.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG)
                     descriptor?.let {
                         it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                         gatt.writeDescriptor(it)
                     }
-                    System.out.println("[BLETransport] GATT service and notification configured.")
+                    System.out.println("[BLETransport] GATT service and characteristic configured: ${foundChar.uuid}")
                     isConnectedPromise.complete(true)
                 } else {
-                    System.err.println("[BLETransport] Target characteristic not found.")
+                    System.err.println("[BLETransport] Target characteristic not found in any service.")
                     isConnectedPromise.complete(false)
                 }
             } else {
@@ -72,7 +109,7 @@ class BLETransport(private val context: Context) : OBDTransport {
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-            if (characteristic.uuid == CHARACTERISTIC_UUID) {
+            if (writeCharacteristic != null && characteristic.uuid == writeCharacteristic?.uuid) {
                 val rawData = characteristic.value
                 val dataString = String(rawData, Charsets.UTF_8)
                 dataListener?.invoke(dataString)
