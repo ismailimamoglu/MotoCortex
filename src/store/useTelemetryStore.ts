@@ -56,6 +56,7 @@ interface TelemetryState {
   dequeueTelemetry: (count: number) => void;
   incrementRetryCount: (id: string) => void;
   removeTelemetryItem: (id: string) => void;
+  removeTelemetryItems: (ids: string[]) => void;
   setActiveSessionVehicle: (vehicle: SelectedVehicle | null) => void;
   clearActiveSessionVehicle: () => void;
   fetchChronicFaults: (brand: string) => Promise<void>;
@@ -106,16 +107,17 @@ export const initializeTelemetryQueue = async () => {
       console.log(`[Telemetry Store] Migrated ${diskQueue.length} items from AsyncStorage to SQLite.`);
     }
 
-    const items = SQLiteStorage.getAllItems();
-    const bytes = estimateQueueBytes(items);
-
     const MAX_IN_MEMORY_TELEMETRY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
+    const items = SQLiteStorage.getRecentItems(MAX_IN_MEMORY_TELEMETRY_WINDOW);
+    const bytes = SQLiteStorage.getQueueBytes();
+    const diskCount = SQLiteStorage.getQueueLength();
+
     useTelemetryStore.setState({
-      telemetry_queue: items.slice(-MAX_IN_MEMORY_TELEMETRY_WINDOW),
+      telemetry_queue: items,
       telemetryQueueBytes: bytes,
       isQueueLoaded: true
     });
-    console.log(`[Telemetry Store] Lazy-loaded queue completed from SQLite. Total disk items: ${items.length}, In-memory window: ${Math.min(items.length, MAX_IN_MEMORY_TELEMETRY_WINDOW)}`);
+    console.log(`[Telemetry Store] Lazy-loaded queue completed from SQLite. Total disk items: ${diskCount}, In-memory window: ${items.length}`);
   } catch (err) {
     console.error('[Telemetry Store] Failed to lazy load telemetry queue from SQLite:', err);
     useTelemetryStore.setState({ isQueueLoaded: true });
@@ -201,43 +203,35 @@ export const useTelemetryStore = create<TelemetryState>()(
         }
 
         SQLiteStorage.enqueueTelemetry(newItem);
-        let updatedQueue = SQLiteStorage.getAllItems();
 
-        // Single ring-buffer cap: max 2000 items to prevent Hermes JS heap OOM during extended offline driving
-        // Test override: (global as any).__TEST_MAX_TELEMETRY_ITEMS__ allows reducing this in jest to prevent worker OOM
         const MAX_OFFLINE_TELEMETRY_ITEMS = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 2000;
-        if (updatedQueue.length > MAX_OFFLINE_TELEMETRY_ITEMS) {
-          const excess = updatedQueue.length - MAX_OFFLINE_TELEMETRY_ITEMS;
-          // Priority pruning: remove already-synced (success:true) items first,
-          // then fall back to oldest unsynced items to preserve unsynced data longer
-          const syncedItems = updatedQueue.filter((item: any) => item.success === 1 || item.success === true);
-          const unsyncedItems = updatedQueue.filter((item: any) => !item.success || item.success === 0);
+        const totalCount = SQLiteStorage.getQueueLength();
+        if (totalCount > MAX_OFFLINE_TELEMETRY_ITEMS) {
+          const excess = totalCount - MAX_OFFLINE_TELEMETRY_ITEMS;
+          const allQueue = SQLiteStorage.getAllItems();
+          const syncedItems = allQueue.filter((item: any) => item.success === 1 || item.success === true);
+          const unsyncedItems = allQueue.filter((item: any) => !item.success || item.success === 0);
           const overflowItems = [...syncedItems, ...unsyncedItems].slice(0, excess);
 
           if (overflowItems.length === 0 && excess > 0) {
-            // Fallback: all items are unsynced, drop oldest FIFO
-            const fallbackItems = updatedQueue.slice(0, excess);
-            for (const item of fallbackItems) {
-              SQLiteStorage.removeTelemetryItem(item.id);
-            }
+            const fallbackItems = allQueue.slice(0, excess);
+            SQLiteStorage.removeTelemetryItems(fallbackItems.map((i: any) => i.id));
             try {
               const DSR = require('../core/monitor/DiagnosticSessionRecorder').default;
               DSR.recordErr('QUEUE_OVERFLOW_DATA_DROPPED',
                 `All ${excess} pruned items were unsynced — possible extended offline session`);
             } catch { /* noop if DSR unavailable */ }
           } else {
-            for (const item of overflowItems) {
-              SQLiteStorage.removeTelemetryItem(item.id);
-            }
+            SQLiteStorage.removeTelemetryItems(overflowItems.map((i: any) => i.id));
           }
-          updatedQueue = SQLiteStorage.getAllItems();
         }
 
+        const MAX_IN_MEMORY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
+        const updatedQueue = SQLiteStorage.getRecentItems(MAX_IN_MEMORY_WINDOW);
         const newBytes = estimateQueueBytes(updatedQueue);
 
-        const MAX_IN_MEMORY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
         return {
-          telemetry_queue: updatedQueue.slice(-MAX_IN_MEMORY_WINDOW),
+          telemetry_queue: updatedQueue,
           telemetryQueueBytes: newBytes
         };
       }),
@@ -245,10 +239,11 @@ export const useTelemetryStore = create<TelemetryState>()(
       dequeueTelemetry: (count) => set((state) => {
         if (!state.isQueueLoaded) return state;
         const dequeued = state.telemetry_queue.slice(0, count);
-        for (const item of dequeued) {
-          SQLiteStorage.removeTelemetryItem(item.id);
+        if (dequeued.length > 0) {
+          SQLiteStorage.removeTelemetryItems(dequeued.map(item => item.id));
         }
-        const updatedQueue = SQLiteStorage.getAllItems();
+        const MAX_IN_MEMORY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
+        const updatedQueue = SQLiteStorage.getRecentItems(MAX_IN_MEMORY_WINDOW);
         return {
           telemetry_queue: updatedQueue,
           telemetryQueueBytes: estimateQueueBytes(updatedQueue)
@@ -258,14 +253,27 @@ export const useTelemetryStore = create<TelemetryState>()(
       incrementRetryCount: (id) => set((state) => {
         if (!state.isQueueLoaded) return state;
         SQLiteStorage.incrementRetryCount(id);
-        const updatedQueue = SQLiteStorage.getAllItems();
+        const MAX_IN_MEMORY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
+        const updatedQueue = SQLiteStorage.getRecentItems(MAX_IN_MEMORY_WINDOW);
         return { telemetry_queue: updatedQueue };
       }),
 
       removeTelemetryItem: (id) => set((state) => {
         if (!state.isQueueLoaded) return state;
         SQLiteStorage.removeTelemetryItem(id);
-        const updatedQueue = SQLiteStorage.getAllItems();
+        const MAX_IN_MEMORY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
+        const updatedQueue = SQLiteStorage.getRecentItems(MAX_IN_MEMORY_WINDOW);
+        return {
+          telemetry_queue: updatedQueue,
+          telemetryQueueBytes: estimateQueueBytes(updatedQueue)
+        };
+      }),
+
+      removeTelemetryItems: (ids) => set((state) => {
+        if (!state.isQueueLoaded || !ids || ids.length === 0) return state;
+        SQLiteStorage.removeTelemetryItems(ids);
+        const MAX_IN_MEMORY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
+        const updatedQueue = SQLiteStorage.getRecentItems(MAX_IN_MEMORY_WINDOW);
         return {
           telemetry_queue: updatedQueue,
           telemetryQueueBytes: estimateQueueBytes(updatedQueue)

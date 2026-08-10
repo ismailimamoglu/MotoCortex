@@ -203,11 +203,9 @@ export class TelemetrySyncManager {
 
     if (simItems.length > 0) {
       const realCount = allQueue.length - simItems.length;
-      simItems.forEach(item => {
-        if (useTelemetryStore.getState().isQueueLoaded) {
-          useTelemetryStore.getState().removeTelemetryItem(item.id);
-        }
-      });
+      if (useTelemetryStore.getState().isQueueLoaded) {
+        useTelemetryStore.getState().removeTelemetryItems(simItems.map(item => item.id));
+      }
       Logger.log(
         'TELEMETRY_SYNC',
         `GUARD: Evicted ${simItems.length} simulated item(s) from queue. ${realCount} real item(s) preserved.`
@@ -249,11 +247,9 @@ export class TelemetrySyncManager {
             return isSimulatorEcu || isSimulatorProtocol || isSimulatorSignature;
           });
           const realCount = allQueue.length - simItems.length;
-          simItems.forEach(item => {
-            if (useTelemetryStore.getState().isQueueLoaded) {
-              useTelemetryStore.getState().removeTelemetryItem(item.id);
-            }
-          });
+          if (simItems.length > 0 && useTelemetryStore.getState().isQueueLoaded) {
+            useTelemetryStore.getState().removeTelemetryItems(simItems.map(item => item.id));
+          }
           Logger.log(
             'TELEMETRY_SYNC',
             `GUARD: Mid-sync sim mode detected — evicted ${simItems.length} simulated item(s). ${realCount} real item(s) preserved.`

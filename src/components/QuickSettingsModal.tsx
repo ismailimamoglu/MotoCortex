@@ -7,6 +7,7 @@ import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import LanguageSelectionView from './LanguageSelectionView';
+import { ALL_26_LANGUAGES } from '../constants/languages';
 
 interface QuickSettingsModalProps {
   visible: boolean;
@@ -55,36 +56,7 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
 
 
 
-  const languagesList = [
-    { label: 'English', value: 'en', flag: '🇬🇧' },
-    { label: 'Deutsch', value: 'de', flag: '🇩🇪' },
-    { label: 'Español', value: 'es', flag: '🇪🇸' },
-    { label: 'Türkçe', value: 'tr', flag: '🇹🇷' },
-    { label: 'Indonesia', value: 'id', flag: '🇮🇩' },
-    { label: 'Italiano', value: 'it', flag: '🇮🇹' },
-    { label: 'العربية', value: 'ar', flag: '🇸🇦' },
-    { label: '简体中文', value: 'zh', flag: '🇨🇳' },
-    { label: 'Dansk', value: 'da', flag: '🇩🇰' },
-    { label: 'Suomi', value: 'fi', flag: '🇫🇮' },
-    { label: 'Français', value: 'fr', flag: '🇫🇷' },
-    { label: 'हिन्दी', value: 'hi', flag: '🇮🇳' },
-    { label: 'Nederlands', value: 'nl', flag: '🇳🇱' },
-    { label: '日本語', value: 'ja', flag: '🇯🇵' },
-    { label: '한국어', value: 'ko', flag: '🇰🇷' },
-    { label: 'Polski', value: 'pl', flag: '🇵🇱' },
-    { label: 'Magyar', value: 'hu', flag: '🇭🇺' },
-    { label: 'Norsk', value: 'no', flag: '🇳🇴' },
-    { label: 'Português', value: 'pt', flag: '🇵🇹' },
-    { label: 'Română', value: 'ro', flag: '🇷🇴' },
-    { label: 'Русский', value: 'ru', flag: '🇷🇺' },
-    { label: 'ไทย', value: 'th', flag: '🇹🇭' },
-    { label: 'Українська', value: 'uk', flag: '🇺🇦' },
-    { label: 'Ελληνικά', value: 'el', flag: '🇬🇷' },
-    { label: 'Čeština', value: 'cs', flag: '🇨🇿' },
-    { label: 'Svenska', value: 'sv', flag: '🇸🇪' },
-  ];
-
-  const currentLanguageObj = languagesList.find((l) => l.value === language) || languagesList[0];
+  const currentLanguageObj = ALL_26_LANGUAGES.find((l) => l.code === language) || ALL_26_LANGUAGES[0];
 
   const sDyn = React.useMemo(() => {
     const modalWidth = isTablet ? (isLargeTablet ? 650 : 520) : '100%';

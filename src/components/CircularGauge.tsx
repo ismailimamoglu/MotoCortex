@@ -1,19 +1,41 @@
 import React from 'react';
 import { View, Text, Platform } from 'react-native';
 import { useResponsive } from '../hooks/useResponsive';
+import { useThemeColors } from '../theme';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
+const TICK_ANGLES = [-135, -105, -75, -45, -15, 15, 45, 75, 105, 135];
 
 export interface CircularGaugeProps {
-  sensor: any;
+  sensor?: any;
   value: any;
+  maxValue?: number;
+  label?: string;
+  unit?: string;
   size?: number;
-  tc: any;
+  tc?: any;
 }
 
-export const CircularGauge: React.FC<CircularGaugeProps> = ({ sensor, value, size = 100, tc }) => {
+export const CircularGauge: React.FC<CircularGaugeProps> = ({
+  sensor: providedSensor,
+  value,
+  maxValue,
+  label,
+  unit,
+  size = 100,
+  tc: providedTc,
+}) => {
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont } = useResponsive();
-  
+  const themeColors = useThemeColors();
+  const tc = providedTc || themeColors;
+
+  const sensor = providedSensor || {
+    key: 'speed',
+    name: label || 'SPEED',
+    unit: unit || 'km/h',
+    color: tc.cyan || '#00F0FF',
+  };
+
   // Parse numeric value
   const numVal = value !== null && value !== undefined ? parseFloat(String(value).replace(/[^0-9.]/g, '')) : 0;
 
@@ -37,7 +59,9 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({ sensor, value, siz
   // Define ranges for standard sensors
   let min = 0;
   let max = 100;
-  if (sensor.key === 'rpm') { min = 0; max = 8000; }
+  if (maxValue !== undefined) {
+    max = maxValue;
+  } else if (sensor.key === 'rpm') { min = 0; max = 8000; }
   else if (sensor.key === 'speed') { min = 0; max = 220; }
   else if (sensor.key === 'coolant') { min = -20; max = 120; }
   else if (sensor.key === 'voltage') { min = 9; max = 16; }
@@ -63,9 +87,6 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({ sensor, value, siz
   if (sensor.key === 'rpm' && value !== null && value !== undefined) {
     displayVal = String(Math.round(displayNumVal));
   }
-  
-  // Generate tick marks at 30 degree intervals (total of 10 ticks: -135, -105, -75, -45, -15, 15, 45, 75, 105, 135)
-  const tickAngles = [-135, -105, -75, -45, -15, 15, 45, 75, 105, 135];
   
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
@@ -93,7 +114,7 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({ sensor, value, siz
       }} />
 
       {/* Tick Marks */}
-      {tickAngles.map((tickAngle, idx) => {
+      {TICK_ANGLES.map((tickAngle, idx) => {
         const tickPct = (tickAngle + 135) / 270;
         const tickVal = min + tickPct * (max - min);
         const isLit = numVal >= tickVal;

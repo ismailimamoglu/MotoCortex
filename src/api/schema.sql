@@ -213,3 +213,13 @@ DO $$ BEGIN
     END IF;
 END $$;
 
+-- 5. Explicit RPC Permission Hardening for SECURITY DEFINER Functions
+REVOKE EXECUTE ON FUNCTION upsert_telemetry(JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION upsert_telemetry(JSONB) TO anon, authenticated, service_role;
+
+REVOKE EXECUTE ON FUNCTION get_chronic_faults(TEXT, INTEGER) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION get_chronic_faults(TEXT, INTEGER) TO anon, authenticated, service_role;
+
+REVOKE EXECUTE ON FUNCTION upsert_connection_telemetry(JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION upsert_connection_telemetry(JSONB) TO anon, authenticated, service_role;
+

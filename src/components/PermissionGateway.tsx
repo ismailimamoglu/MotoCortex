@@ -7,35 +7,7 @@ import { useThemeColors } from '../theme';
 import BLEBridge from '../api/BLEBridge';
 import { State } from 'react-native-ble-plx';
 import { useResponsive } from '../hooks/useResponsive';
-
-const LANGUAGES = [
-  { code: 'ar', label: 'العربية', sub: 'Arabic Diagnostics Hub', emoji: 'AR' },
-  { code: 'cs', label: 'Čeština', sub: 'Czech Diagnostics Hub', emoji: 'CS' },
-  { code: 'da', label: 'Dansk', sub: 'Danish Diagnostics Hub', emoji: 'DA' },
-  { code: 'de', label: 'Deutsch', sub: 'German Diagnostics Hub', emoji: 'DE' },
-  { code: 'el', label: 'Ελληνικά', sub: 'Greek Diagnostics Hub', emoji: 'EL' },
-  { code: 'en', label: 'English', sub: 'English Diagnostics Hub', emoji: 'EN' },
-  { code: 'es', label: 'Español', sub: 'Spanish Diagnostics Hub', emoji: 'ES' },
-  { code: 'fi', label: 'Suomi', sub: 'Finnish Diagnostics Hub', emoji: 'FI' },
-  { code: 'fr', label: 'Français', sub: 'French Diagnostics Hub', emoji: 'FR' },
-  { code: 'hi', label: 'हिन्दी', sub: 'Hindi Diagnostics Hub', emoji: 'HI' },
-  { code: 'hu', label: 'Magyar', sub: 'Hungarian Diagnostics Hub', emoji: 'HU' },
-  { code: 'id', label: 'Bahasa Indonesia', sub: 'Indonesian Diagnostics Hub', emoji: 'ID' },
-  { code: 'it', label: 'Italiano', sub: 'Italian Diagnostics Hub', emoji: 'IT' },
-  { code: 'ja', label: '日本語', sub: 'Japanese Diagnostics Hub', emoji: 'JA' },
-  { code: 'ko', label: '한국어', sub: 'Korean Diagnostics Hub', emoji: 'KO' },
-  { code: 'nl', label: 'Nederlands', sub: 'Dutch Diagnostics Hub', emoji: 'NL' },
-  { code: 'no', label: 'Norsk', sub: 'Norwegian Diagnostics Hub', emoji: 'NO' },
-  { code: 'pl', label: 'Polski', sub: 'Polish Diagnostics Hub', emoji: 'PL' },
-  { code: 'pt', label: 'Português', sub: 'Portuguese Diagnostics Hub', emoji: 'PT' },
-  { code: 'ro', label: 'Română', sub: 'Romanian Diagnostics Hub', emoji: 'RO' },
-  { code: 'ru', label: 'Русский', sub: 'Russian Diagnostics Hub', emoji: 'RU' },
-  { code: 'sv', label: 'Svenska', sub: 'Swedish Diagnostics Hub', emoji: 'SV' },
-  { code: 'th', label: 'ไทย', sub: 'Thai Diagnostics Hub', emoji: 'TH' },
-  { code: 'tr', label: 'Türkçe', sub: 'Türkçe Teşhis Arayüzü', emoji: 'TR' },
-  { code: 'uk', label: 'Українська', sub: 'Ukrainian Diagnostics Hub', emoji: 'UK' },
-  { code: 'zh', label: '中文', sub: 'Chinese Diagnostics Hub', emoji: 'ZH' }
-];
+import { ALL_26_LANGUAGES } from '../constants/languages';
 
 interface PermissionGatewayProps {
   children?: React.ReactNode;
@@ -49,11 +21,15 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
   const isTelemetryOptedIn = useAppStore((state) => state.isTelemetryOptedIn);
   const setIsTelemetryOptedIn = useAppStore((state) => state.setIsTelemetryOptedIn);
   const colors = useThemeColors();
+  const language = useAppStore((state) => state.language);
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isLargeTablet } = useResponsive();
 
-  if (hasOnboarded) {
-    return <>{children}</>;
-  }
+  React.useEffect(() => {
+    // Default to English ('en') for global first-time onboarding
+    if (!hasOnboarded) {
+      setLanguage('en');
+    }
+  }, [hasOnboarded]);
 
   const [step, setStep] = useState<'language' | 'permissions'>('language');
   const [isLoading, setIsLoading] = useState(false);
@@ -157,16 +133,7 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
     }
   };
 
-  const activeLang = i18n.language || 'en';
-
-  const sortedLanguages = React.useMemo(() => {
-    const devicePrefix = activeLang.split('-')[0].toLowerCase();
-    return [...LANGUAGES].sort((a, b) => {
-      if (a.code === devicePrefix) return -1;
-      if (b.code === devicePrefix) return 1;
-      return a.label.localeCompare(b.label);
-    });
-  }, [activeLang]);
+  const activeLang = language || 'en';
 
   const selectLanguage = (lang: string) => {
     setLanguage(lang as AppLanguage);
@@ -324,6 +291,10 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
     };
   }, [scaleWidth, scaleHeight, scaleMod, scaleFont, isLargeTablet]) as any;
 
+  if (hasOnboarded) {
+    return <>{children}</>;
+  }
+
   return (
     <SafeAreaView style={[sDyn.root, { backgroundColor: colors.bg }]}>
       <View style={sDyn.container}>
@@ -349,12 +320,12 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
               </Text>
 
               <ScrollView 
-                style={{ maxHeight: scaleHeight(260) }}
+                style={{ maxHeight: scaleHeight(280) }}
                 contentContainerStyle={{ paddingBottom: scaleHeight(4) }}
                 showsVerticalScrollIndicator={true}
                 nestedScrollEnabled={true}
               >
-                {sortedLanguages.map((lang) => {
+                {ALL_26_LANGUAGES.map((lang) => {
                   const isSelected = activeLang.startsWith(lang.code);
                   return (
                     <TouchableOpacity
@@ -370,9 +341,9 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
                       onPress={() => selectLanguage(lang.code)}
                       activeOpacity={0.6}
                     >
-                      <Text style={sDyn.langEmoji}>{lang.emoji}</Text>
+                      <Text style={sDyn.langEmoji}>{lang.flag}</Text>
                       <View style={sDyn.langTextContainer}>
-                        <Text style={[sDyn.langTitle, { color: colors.textPri }]}>{lang.label}</Text>
+                        <Text style={[sDyn.langTitle, { color: colors.textPri }]}>{lang.name}</Text>
                         <Text style={[sDyn.langSub, { color: colors.textSec }]}>{lang.sub}</Text>
                       </View>
                       {isSelected && <Text style={[sDyn.langCheck, { color: colors.cyan }]}>✓</Text>}
@@ -451,9 +422,25 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
                     {t('permissions.telemetrySub', 'Share anonymous protocol and error logs to improve vehicle compatibility.')}
                   </Text>
                 </View>
-                <Text style={[sDyn.statusIcon, { color: isTelemetryOptedIn ? colors.cyan : colors.textSec }]}>
-                  {isTelemetryOptedIn ? '☑' : '☐'}
-                </Text>
+                <View
+                  style={{
+                    width: scaleMod(24),
+                    height: scaleMod(24),
+                    borderRadius: scaleMod(6),
+                    borderWidth: 2,
+                    borderColor: isTelemetryOptedIn ? colors.cyan : colors.textTertiary,
+                    backgroundColor: isTelemetryOptedIn ? colors.cyan : 'transparent',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginLeft: scaleWidth(10),
+                  }}
+                >
+                  {isTelemetryOptedIn && (
+                    <Text style={{ color: colors.card, fontWeight: '900', fontSize: scaleFont(14), fontFamily: MONO }}>
+                      ✓
+                    </Text>
+                  )}
+                </View>
               </TouchableOpacity>
             </View>
 

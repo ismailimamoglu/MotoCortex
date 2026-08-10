@@ -172,6 +172,19 @@ class SQLiteStorage {
         }
     }
 
+    public removeTelemetryItems(ids: string[]): void {
+        if (!ids || ids.length === 0) return;
+        try {
+            const placeholders = ids.map(() => '?').join(',');
+            this.db.runSync(
+                `DELETE FROM telemetry_queue WHERE id IN (${placeholders})`,
+                ids
+            );
+        } catch (err) {
+            console.error('[SQLiteStorage] removeTelemetryItems failed:', err);
+        }
+    }
+
     public getQueueLength(): number {
         try {
             const res = this.db.getFirstSync<{ count: number }>('SELECT COUNT(*) as count FROM telemetry_queue');
@@ -179,6 +192,56 @@ class SQLiteStorage {
         } catch (err) {
             console.error('[SQLiteStorage] getQueueLength failed:', err);
             return 0;
+        }
+    }
+
+    public getQueueBytes(): number {
+        try {
+            const res = this.db.getFirstSync<{ totalBytes: number }>(`
+                SELECT SUM(
+                    120 + 
+                    LENGTH(COALESCE(brand, '')) + 
+                    LENGTH(COALESCE(model, '')) + 
+                    LENGTH(COALESCE(protocol, '')) + 
+                    LENGTH(COALESCE(ecu_id, '')) + 
+                    LENGTH(COALESCE(dtc_codes, '')) + 
+                    LENGTH(COALESCE(session_hash, ''))
+                ) as totalBytes FROM telemetry_queue
+            `);
+            return res && res.totalBytes ? Number(res.totalBytes) : 0;
+        } catch (err) {
+            console.error('[SQLiteStorage] getQueueBytes failed:', err);
+            return 0;
+        }
+    }
+
+    public getRecentItems(limit: number = 100): TelemetryItem[] {
+        try {
+            const safeLimit = Math.max(1, Math.floor(Number(limit) || 100));
+            const rows = this.db.getAllSync<any>(
+                'SELECT * FROM telemetry_queue ORDER BY created_at ASC LIMIT ?',
+                [safeLimit]
+            );
+            return rows.map((row: any) => ({
+                id: row.id,
+                brand: row.brand,
+                model: row.model,
+                year: row.year,
+                protocol: row.protocol,
+                ecu_id: row.ecu_id,
+                dtc_codes: JSON.parse(row.dtc_codes || '[]'),
+                session_hash: row.session_hash,
+                retry_count: row.retry_count,
+                engine_rpm: row.engine_rpm,
+                coolant_temp: row.coolant_temp,
+                throttle_pos: row.throttle_pos,
+                success: row.success === 1,
+                is_simulated: row.is_simulated === 1,
+                created_at: row.created_at
+            }));
+        } catch (err) {
+            console.error('[SQLiteStorage] getRecentItems failed:', err);
+            return [];
         }
     }
 

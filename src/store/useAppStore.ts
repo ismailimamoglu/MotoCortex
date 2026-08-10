@@ -180,6 +180,7 @@ export function startSimulation() {
   btStore.addLog('FSM_TRANSITION: DISCONNECTED ---> TELEMETRY_ACTIVE (Reason: SIMULATION)');
   btStore.addLog('POLLING_ORCHESTRATOR: Commencing Simulated Telemetry Pipeline.');
 
+  const { telemetryBuffer } = require('../services/TelemetryBuffer');
   let step = 0;
   simulationInterval = setInterval(() => {
     const currentStore = useBluetoothStore.getState();
@@ -203,7 +204,6 @@ export function startSimulation() {
     simulationOdometer += 0.01;
     const odometerRounded = Math.round(simulationOdometer);
 
-    const { telemetryBuffer } = require('../services/TelemetryBuffer');
     telemetryBuffer.pushTelemetry({
       rpm,
       speed,

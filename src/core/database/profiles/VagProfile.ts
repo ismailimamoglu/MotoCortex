@@ -1,0 +1,83 @@
+import { OEMFeatureDefinition } from '../types';
+
+export const VAG_OEM_FEATURES: OEMFeatureDefinition[] = [
+    {
+        id: 'vag_oil_service_reset',
+        nameKey: 'features.items.vag_oil_service_reset.name',
+        descKey: 'features.items.vag_oil_service_reset.desc',
+        defaultName: 'Oil Service Interval Reset (VAG)',
+        defaultDesc: 'Resets oil change service counter and inspection interval for VAG vehicles.',
+        make: 'Volkswagen',
+        category: 'SERVICE_MAINTENANCE',
+        targetEcuHeader: '7C0',
+        didHex: '0200',
+        byteIndex: 0,
+        bitIndex: 0,
+        requiresSecurityAccess: true,
+        securityLevel: 1,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'vag_staging_needle_sweep',
+        nameKey: 'features.items.vag_staging_needle_sweep.name',
+        descKey: 'features.items.vag_staging_needle_sweep.desc',
+        defaultName: 'Gauge Staging / Needle Sweep',
+        defaultDesc: 'Sweeps instrument needles to maximum upon ignition start.',
+        make: 'Volkswagen',
+        category: 'DISPLAY_INSTRUMENT',
+        targetEcuHeader: '7C0',
+        didHex: '0D04',
+        byteIndex: 0,
+        bitIndex: 0,
+        requiresSecurityAccess: true,
+        securityLevel: 1,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'vag_acoustic_lock_confirmation',
+        nameKey: 'features.items.vag_acoustic_lock_confirmation.name',
+        descKey: 'features.items.vag_acoustic_lock_confirmation.desc',
+        defaultName: 'Acoustic Lock Confirmation Chirp',
+        defaultDesc: 'Emits a short horn confirmation chirp upon key fob locking.',
+        make: 'Volkswagen',
+        category: 'SOUND_ALERTS',
+        targetEcuHeader: '709',
+        didHex: '0620',
+        byteIndex: 1,
+        bitIndex: 3,
+        requiresSecurityAccess: true,
+        securityLevel: 1,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'vag_drl_brightness_multi',
+        nameKey: 'features.items.vag_drl_brightness_multi.name',
+        descKey: 'features.items.vag_drl_brightness_multi.desc',
+        defaultName: 'Daytime Running Lights (DRL) Brightness Adjustment',
+        defaultDesc: 'Adjust LED DRL intensity level for low-beam / parking mode.',
+        make: 'Volkswagen',
+        category: 'LIGHTING',
+        targetEcuHeader: '09',
+        didHex: '0A12',
+        byteIndex: 2,
+        bitIndex: 0,
+        bitWidth: 8,
+        options: [
+            { labelKey: 'features.options.drl25', defaultLabel: '25% Dimmed', valueHex: '19' },
+            { labelKey: 'features.options.drl50', defaultLabel: '50% Medium', valueHex: '32' },
+            { labelKey: 'features.options.drl75', defaultLabel: '75% Bright', valueHex: '4B' },
+            { labelKey: 'features.options.drl100', defaultLabel: '100% Full Power', valueHex: '64' }
+        ],
+        requiresSecurityAccess: true,
+        securityLevel: 1,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    }
+];
