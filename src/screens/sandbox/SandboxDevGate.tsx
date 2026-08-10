@@ -19,8 +19,8 @@ export default function SandboxDevGate() {
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont } = useResponsive();
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Forced true to bypass __DEV__ restrictions in release builds
-  const shouldShowGate = true;
+  // Gated behind __DEV__ so floating DIAG button only appears in development builds
+  const shouldShowGate = __DEV__;
 
   if (!shouldShowGate) return null;
 

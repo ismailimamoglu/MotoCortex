@@ -247,6 +247,8 @@ export const useBluetooth = () => {
                             // CAN Engine Header Scoping to avoid Multi-ECU response collisions
                             await OBDCommandQueue.add("AT SH 7E0", 1000).catch(() => {});
                         } else if (item.isKLine) {
+                            // K-Line Bus Quiet Time: ISO 14230 / ISO 9141 requires minimum 300ms idle bus state before init
+                            await preciseSleep(300);
                             // Inject K-Line Init Byte (AT IB 10) for motorcycle / legacy ECU baud rate alignment
                             await OBDCommandQueue.add("AT IB 10", 1000).catch(() => {});
                         }

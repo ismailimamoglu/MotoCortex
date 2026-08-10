@@ -1,52 +1,58 @@
-# Privacy Policy — MotoCortex
+# MotoCortex — Privacy Policy & Data Handling
 
-**Last Updated:** August 5, 2026
+**Effective Date:** August 10, 2026  
+**Last Updated:** August 10, 2026  
 
-At **MotoCortex**, we prioritize user privacy, data security, and transparency. This Privacy Policy outlines how your personal data, diagnostic telemetry, and device information are collected, processed, and protected in compliance with the **General Data Protection Regulation (GDPR)**, **California Consumer Privacy Act (CCPA)**, and **KVKK (Kanun No. 6698)**.
+At **MotoCortex**, we take your privacy and data security seriously. MotoCortex is an advanced vehicular diagnostic and telemetry platform designed for automotive and motorcycle enthusiasts, mechanics, and engineers. This Privacy Policy outlines how our application collects, uses, stores, and protects your information.
 
 ---
 
 ## 1. Information We Collect
 
-### A. Vehicle Diagnostic & Telemetry Data (Local-First)
-- Diagnostic Trouble Codes (DTCs), sensor measurements (Engine RPM, Coolant Temperature, Battery Voltage, Speed), and Vehicle Identification Numbers (VINs).
-- **Anonymization:** VINs are strictly anonymized at the application layer (`WMI**************`) to protect vehicle ownership identity.
+### A. Local Device & Diagnostic Data
+- **OBD-II & ECU Diagnostic Data:** Live telemetry parameters (e.g., Engine RPM, Vehicle Speed, Coolant Temperature, Battery Voltage), Diagnostic Trouble Codes (DTCs), ECU Header Identifiers, and Calibration IDs.
+- **Vehicle Profile Information:** User-configured vehicle specs (Make, Model, Year, Fuel/EV Battery status).
 
-### B. Device & Connection Information
-- Bluetooth device identifiers (MAC address/UUID), adapter chipset tier (`TIER_1_PRO`, `TIER_2_STANDARD`), operating system version, and app version for hardware diagnostic compatibility.
-
-### C. Analytics & Crash Reporting (Privacy-First)
-- Anonymized crash logs via **Firebase Crashlytics**.
-- IDFA (Identifier for Advertisers) collection is **disabled** by default. We do NOT track users across third-party websites or apps.
+### B. Hardware Connection & Device Permissions
+- **Bluetooth & BLE Permissions:** Required solely to discover, pair, and exchange serial OBD-II packets with compatible wireless adapters (e.g., OBDLink, vLinker, ELM327 clones).
+- **Coarse/Fine Location Permissions:** Required by Android OS (Android 11 and lower) solely for Bluetooth Low Energy (BLE) peripheral scanning. MotoCortex **does not** track, log, or export your GPS position or location history.
+- **Local Storage Permissions:** Required to store telemetry snapshots, offline DTC definitions, and user settings locally on your device.
 
 ---
 
-## 2. How We Use Your Data
+## 2. How We Use Your Information
 
-- **Diagnostic Performance:** To render live telemetry, read fault codes, and execute requested UDS ECU coding commands.
-- **App Reliability:** To diagnose crashes and improve OBD-II/UDS adapter connection stability.
-- **Entitlement Verification:** Server-side verification of RevenueCat Pro subscriptions via secure Supabase Edge Functions.
-
----
-
-## 3. Data Storage & Security
-
-- **Offline-First:** All diagnostic sessions, fault logs, and garage records are stored locally on your device via encrypted SQLite storage (`SQLiteStorage`).
-- **Cloud Sync:** Telemetry queue items synced to Supabase are encrypted in transit via TLS 1.3 and hardened API headers (`X-MotoCortex-Signature`).
+- **Real-Time Telemetry & Diagnostics:** To render live dashboards, gauge clusters, and diagnostic error reports within the app.
+- **ECU Protection Shield:** To perform local safety checks (e.g., verifying battery voltage exceeds 11.8V prior to executing dangerous UDS commands).
+- **AI Vehicle Doctor:** To analyze local DTCs and sensor data against offline AI models and generate contextual maintenance insights.
 
 ---
 
-## 4. Your Privacy Rights (GDPR / CCPA / KVKK)
+## 3. Data Storage & Sharing
 
-You hold full rights regarding your data:
-- **Right to Access & Export:** You may request an export of your stored vehicle diagnostic history at any time.
-- **Right to Erasure (Right to be Forgotten):** You may clear local logs directly within app settings or submit a request to purge cloud telemetry backups.
-- **Opt-Out of Analytics:** You may disable Firebase crash collection in app settings.
+- **Offline-First Architecture:** All diagnostic sessions, logs, and ECU data remain **100% stored locally** on your mobile device unless you explicitly choose to export or sync a diagnostic report.
+- **No Third-Party Tracking:** MotoCortex does **not** sell, rent, or monetize your vehicle diagnostic data or personal information.
+- **Cloud Synchronization (Optional):** If logged in via Supabase/Firebase, account profile preferences are synchronized securely over HTTPS/TLS encryption.
 
 ---
 
-## 5. Contact Us
+## 4. Security Measures
 
-For privacy inquiries or data rights requests:
-- **Email:** `privacy@motocortex.app`
-- **Website:** `https://motocortex.app/privacy`
+- **Voltaj Kalkanı & Command Classification:** Advanced safety engines restrict write/mutation commands during unsafe vehicle states.
+- **End-to-End Encryption:** Any optional telemetry exports or cloud synchronization use industry-standard TLS 1.3 encryption.
+
+---
+
+## 5. Compliance & User Rights (GDPR / KVKK / CCPA)
+
+Under applicable data protection laws (GDPR, KVKK, CCPA), you have the right to:
+- Access, view, or export your locally stored diagnostic logs.
+- Erase all app cache and stored vehicle telemetry via app settings or by clearing application storage.
+
+---
+
+## 6. Contact Us
+
+If you have any questions, concerns, or requests regarding this Privacy Policy, please contact our support team at:
+- **Email:** support@motocortex.app  
+- **Repository:** [GitHub Issue Tracker](https://github.com/ismailimamoglu/MotoCortex)
