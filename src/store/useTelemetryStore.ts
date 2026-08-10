@@ -203,12 +203,31 @@ export const useTelemetryStore = create<TelemetryState>()(
         let updatedQueue = SQLiteStorage.getAllItems();
 
         // Single ring-buffer cap: max 2000 items to prevent Hermes JS heap OOM during extended offline driving
-        const MAX_OFFLINE_TELEMETRY_ITEMS = 2000;
+        // Test override: (global as any).__TEST_MAX_TELEMETRY_ITEMS__ allows reducing this in jest to prevent worker OOM
+        const MAX_OFFLINE_TELEMETRY_ITEMS = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 2000;
         if (updatedQueue.length > MAX_OFFLINE_TELEMETRY_ITEMS) {
           const excess = updatedQueue.length - MAX_OFFLINE_TELEMETRY_ITEMS;
-          const overflowItems = updatedQueue.slice(0, excess);
-          for (const item of overflowItems) {
-            SQLiteStorage.removeTelemetryItem(item.id);
+          // Priority pruning: remove already-synced (success:true) items first,
+          // then fall back to oldest unsynced items to preserve unsynced data longer
+          const syncedItems = updatedQueue.filter((item: any) => item.success === 1 || item.success === true);
+          const unsyncedItems = updatedQueue.filter((item: any) => !item.success || item.success === 0);
+          const overflowItems = [...syncedItems, ...unsyncedItems].slice(0, excess);
+
+          if (overflowItems.length === 0 && excess > 0) {
+            // Fallback: all items are unsynced, drop oldest FIFO
+            const fallbackItems = updatedQueue.slice(0, excess);
+            for (const item of fallbackItems) {
+              SQLiteStorage.removeTelemetryItem(item.id);
+            }
+            try {
+              const DSR = require('../core/monitor/DiagnosticSessionRecorder').default;
+              DSR.recordErr('QUEUE_OVERFLOW_DATA_DROPPED',
+                `All ${excess} pruned items were unsynced — possible extended offline session`);
+            } catch { /* noop if DSR unavailable */ }
+          } else {
+            for (const item of overflowItems) {
+              SQLiteStorage.removeTelemetryItem(item.id);
+            }
           }
           updatedQueue = SQLiteStorage.getAllItems();
         }

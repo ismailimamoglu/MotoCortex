@@ -88,6 +88,26 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
     }
   }, [isScanning]);
 
+  // Sort scanned devices by RSSI descending (strongest signal first)
+  const sortedDevices = React.useMemo(() => {
+    return [...scannedDevices].sort((a, b) => {
+      const rssiA = typeof a.rssi === 'number' ? a.rssi : -999;
+      const rssiB = typeof b.rssi === 'number' ? b.rssi : -999;
+      return rssiB - rssiA;
+    });
+  }, [scannedDevices]);
+
+  // Helper for 4-bar RSSI signal badge
+  const getSignalInfo = useCallback((rssi?: number) => {
+    if (typeof rssi !== 'number') {
+      return { color: colors.textSec, level: 0, label: '' };
+    }
+    if (rssi >= -60) return { color: colors.green, level: 4, label: t('connection.signalStrong', 'Güçlü Sinyal') };
+    if (rssi >= -75) return { color: colors.cyan, level: 3, label: t('connection.signalGood', 'İyi Sinyal') };
+    if (rssi >= -88) return { color: colors.amber, level: 2, label: t('connection.signalFair', 'Orta Sinyal') };
+    return { color: colors.red, level: 1, label: t('connection.signalWeak', 'Zayıf Sinyal') };
+  }, [colors, t]);
+
   // Scan OBD2 devices
   const handleScan = async () => {
     triggerHaptic();
@@ -271,6 +291,31 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         )}
       </View>
 
+      {/* Auto-Connect Quick Action Banner for Last Connected Device */}
+      {status === 'disconnected' && Boolean(lastDeviceId) && (
+        <View style={[styles.quickConnectCard, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan }]}>
+          <View style={{ flex: 1, marginRight: ms(10) }}>
+            <Text style={[styles.quickConnectTitle, { color: colors.cyan, fontSize: fs(12), fontFamily: colors.mono, fontWeight: '800' }]}>
+              {t('connection.quickConnectTitle', 'Last Adapter Detected')}
+            </Text>
+            <Text style={[styles.quickConnectDesc, { color: colors.textPri, fontSize: fs(11.5), marginTop: vs(2) }]}>
+              {t('connection.quickConnectDesc', { name: lastDeviceName || 'OBDII', defaultValue: `Quick connect to your last used adapter '${lastDeviceName || 'OBDII'}'?` })}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.quickConnectBtn, { backgroundColor: colors.cyan }]}
+            onPress={() => {
+              triggerHaptic();
+              proceedWithConnection(lastDeviceId!, lastDeviceName || 'OBD2 Adapter');
+            }}
+          >
+            <Text style={[styles.quickConnectBtnText, { fontSize: fs(11), fontFamily: colors.mono, color: '#ffffff', fontWeight: '900' }]}>
+              {t('connection.quickConnectBtn', 'CONNECT NOW')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Connection Mode Selection (Bluetooth / Wi-Fi) */}
       {status === 'disconnected' && !selectedType && (
         <View style={styles.selectionGrid}>
@@ -325,6 +370,14 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             </TouchableOpacity>
           </View>
 
+          {Platform.OS === 'ios' && (
+            <View style={[styles.warningBanner, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan, marginVertical: vs(8) }]}>
+              <Text style={[styles.warningText, { color: colors.cyan, fontSize: fs(11) }]}>
+                {t('connection.iosClassicWarning', 'iOS Notice: Legacy Bluetooth 2.0/3.0 (SPP/Classic) adapters are unsupported on iOS due to Apple MFi policies. Please use Bluetooth 4.0+ (BLE) or Wi-Fi OBD2 adapters.')}
+              </Text>
+            </View>
+          )}
+
           <View style={styles.scanActionRow}>
             <TouchableOpacity 
               style={[styles.scanBtn, { backgroundColor: colors.cyan }]}
@@ -346,8 +399,8 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               <ActivityIndicator size="large" color={colors.cyan} style={{ marginBottom: vs(8) }} />
               <Text style={[styles.radarLabel, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '600', marginTop: vs(6) }]}>
                 {isScanning 
-                  ? t('connection.scanningDevices', '🔍 Scanning OBD2 Bluetooth Devices...') 
-                  : t('connection.scanningAdapter', '🔄 Scanning Adapter (Awaiting Response)...')}
+                  ? t('connection.scanningDevices', 'Scanning OBD2 Bluetooth Devices...') 
+                  : t('connection.scanningAdapter', 'Scanning Adapter (Awaiting Response)...')}
               </Text>
               <Text style={[{ color: colors.textSec, fontSize: fs(11), textAlign: 'center', marginTop: vs(4) }]}>
                 {Platform.OS === 'ios'
@@ -359,32 +412,57 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           )}
 
           {/* List Scanned Devices */}
-          {!isScanning && scannedDevices.length > 0 && (
+          {!isScanning && sortedDevices.length > 0 && (
             <View style={styles.listContainer}>
               <Text style={[styles.listHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-                {t('connection.foundDevices', 'FOUND OBD2 DEVICES')}
+                {t('connection.foundDevices', 'FOUND OBD2 DEVICES')} ({sortedDevices.length})
               </Text>
-              {scannedDevices.map((dev, idx) => (
-                <TouchableOpacity 
-                  key={dev.address + idx}
-                  style={[styles.deviceRow, { backgroundColor: colors.card, borderColor: colors.border }]}
-                  onPress={() => handleConnectDevice(dev.address, dev.name)}
-                >
-                  <View style={styles.deviceInfo}>
-                    <Text style={[styles.deviceName, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
-                      {dev.name || 'Unknown OBD2'}
-                    </Text>
-                    <Text style={[styles.deviceAddr, { color: colors.textSec, fontSize: fs(10) }]}>
-                      {dev.address}
-                    </Text>
-                  </View>
-                  <View style={styles.rssiContainer}>
-                    <Text style={[styles.rssiText, { color: colors.textSec, fontSize: fs(10) }]}>
-                      {dev.rssi ? `${dev.rssi} dBm` : ''}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+              {sortedDevices.map((dev, idx) => {
+                const signal = getSignalInfo(dev.rssi);
+                return (
+                  <TouchableOpacity 
+                    key={(dev.address || dev.id || 'dev') + idx}
+                    style={[styles.deviceRow, { backgroundColor: colors.card, borderColor: colors.border }]}
+                    onPress={() => handleConnectDevice(dev.address || dev.id, dev.name)}
+                  >
+                    <View style={styles.deviceInfo}>
+                      <Text style={[styles.deviceName, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
+                        {dev.name || 'Unknown OBD2'}
+                      </Text>
+                      <Text style={[styles.deviceAddr, { color: colors.textSec, fontSize: fs(10) }]}>
+                        {dev.address || dev.id}
+                      </Text>
+                    </View>
+                    <View style={styles.rssiContainer}>
+                      {typeof dev.rssi === 'number' ? (
+                        <View style={{ alignItems: 'flex-end' }}>
+                          <View style={{ flexDirection: 'row', alignItems: 'flex-end', height: vs(14) }}>
+                            {[1, 2, 3, 4].map(barIdx => (
+                              <View
+                                key={barIdx}
+                                style={{
+                                  width: ms(3),
+                                  height: vs(3 + barIdx * 2.5),
+                                  borderRadius: 1.5,
+                                  marginLeft: ms(2),
+                                  backgroundColor: barIdx <= signal.level ? signal.color : `${colors.border}80`
+                                }}
+                              />
+                            ))}
+                          </View>
+                          <Text style={[styles.rssiText, { color: signal.color, fontSize: fs(9), marginTop: vs(2), fontFamily: colors.mono }]}>
+                            {signal.label} ({dev.rssi} dBm)
+                          </Text>
+                        </View>
+                      ) : (
+                        <Text style={[styles.rssiText, { color: colors.textSec, fontSize: fs(10) }]}>
+                          --
+                        </Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           )}
         </View>
@@ -1062,6 +1140,32 @@ const styles = StyleSheet.create({
   },
   overlayConfirmText: {
     color: '#ffffff',
+    fontWeight: '900',
+  },
+  quickConnectCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    padding: 14,
+    marginBottom: 16,
+  },
+  quickConnectTitle: {
+    letterSpacing: 0.5,
+  },
+  quickConnectDesc: {
+    fontWeight: '500',
+    lineHeight: 16,
+  },
+  quickConnectBtn: {
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quickConnectBtnText: {
     fontWeight: '900',
   }
 });

@@ -225,6 +225,7 @@ export const useBluetooth = () => {
                     { sp: 'AT SP 7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, timeout: 3500 },
                     { sp: 'AT SP 8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 3500 },
                     { sp: 'AT SP 9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 3500 },
+                    { sp: 'AT SP A', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 3500 },
                     { sp: 'AT SP 5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 4500, isKLine: true },
                     { sp: 'AT SP 4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 4500, isKLine: true },
                     { sp: 'AT SP 3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 4500, isKLine: true },
@@ -245,6 +246,9 @@ export const useBluetooth = () => {
                         if (item.isCan) {
                             // CAN Engine Header Scoping to avoid Multi-ECU response collisions
                             await OBDCommandQueue.add("AT SH 7E0", 1000).catch(() => {});
+                        } else if (item.isKLine) {
+                            // Inject K-Line Init Byte (AT IB 10) for motorcycle / legacy ECU baud rate alignment
+                            await OBDCommandQueue.add("AT IB 10", 1000).catch(() => {});
                         }
 
                         let initRes = await OBDCommandQueue.add("01 00", item.timeout);
@@ -252,7 +256,8 @@ export const useBluetooth = () => {
 
                         // K-Line Latch-up Physical Recovery & Retry if BUS INIT ERROR occurs
                         if (!ecuConnected && item.isKLine && (initRes || '').toUpperCase().includes('BUS INIT')) {
-                            useBluetoothStore.getState().addLog(`KLINE_RECOVERY: Bus init stall detected on ${item.sp}. Executing AT BI line reset...`);
+                            useBluetoothStore.getState().addLog(`KLINE_RECOVERY: Bus init stall detected on ${item.sp}. Executing AT IIA 11 & AT BI line reset...`);
+                            await OBDCommandQueue.add("AT IIA 11", 1000).catch(() => {});
                             await OBDCommandQueue.add("AT BI", 1000).catch(() => {});
                             await preciseSleep(500);
                             initRes = await OBDCommandQueue.add("01 00", item.timeout);

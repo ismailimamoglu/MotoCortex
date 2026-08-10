@@ -1,4 +1,4 @@
-import { runIdentifierTest } from '../ELMIdentifierGate';
+import { runIdentifierTest, clearIdentifierCache } from '../ELMIdentifierGate';
 import OBDCommandQueue from '../OBDCommandQueue';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 
@@ -41,6 +41,7 @@ jest.mock('expo-constants', () => ({
 describe('ELMIdentifierGate Compatibility & Clone Test', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    clearIdentifierCache();
     useBluetoothStore.getState().reset();
   });
 
@@ -94,5 +95,22 @@ describe('ELMIdentifierGate Compatibility & Clone Test', () => {
     const storeState = useBluetoothStore.getState();
     expect(storeState.isCloneDevice).toBe(false);
     expect(storeState.isCodingAllowed).toBe(false);
+  });
+
+  test('should use 2000ms timeout for ATZ and cache scan results for subsequent calls', async () => {
+    (OBDCommandQueue.add as jest.Mock).mockResolvedValue('OK');
+
+    const firstResult = await runIdentifierTest('DEV_123');
+    expect(firstResult.capabilityScore).toBe(100);
+
+    // ATZ command should be called with 2000ms timeout
+    expect(OBDCommandQueue.add).toHaveBeenCalledWith('ATZ', 2000, 'HIGH_PRIORITY_AD_HOC');
+
+    const callCountAfterFirstRun = (OBDCommandQueue.add as jest.Mock).mock.calls.length;
+
+    // Second call for same deviceId should hit cache without issuing new commands
+    const secondResult = await runIdentifierTest('DEV_123');
+    expect(secondResult.capabilityScore).toBe(100);
+    expect((OBDCommandQueue.add as jest.Mock).mock.calls.length).toBe(callCountAfterFirstRun);
   });
 });

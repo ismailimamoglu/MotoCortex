@@ -228,5 +228,34 @@ export class CapabilityDiscoveryManager {
         store.addLog(`CAPABILITY_DISCOVERY: OEM PID map (${make}): ${JSON.stringify(result)}`);
         return result;
     }
+
+    /**
+     * Broadcasts functional request (7DF / 18DB33F1) to discover all responding ECUs on the bus.
+     */
+    public static async broadcastEcuDiscovery(is29BitCan: boolean = false): Promise<string[]> {
+        const store = useBluetoothStore.getState();
+        const discoveredEcus: Set<string> = new Set();
+        const headerCmd = is29BitCan ? 'AT SH 18DB33F1' : 'AT SH 7DF';
+
+        try {
+            store.addLog(`CAPABILITY_DISCOVERY: Broadcasting functional request [${headerCmd}]...`);
+            await OBDCommandQueue.add(headerCmd, 800).catch(() => {});
+            const res = await OBDCommandQueue.add('01 00', 3000).catch(() => '');
+            const lines = res.toUpperCase().split(/[\r\n]+/).map(l => l.trim().replace(/\s+/g, ''));
+            for (const line of lines) {
+                if (line.startsWith('7E') || line.startsWith('7C') || line.startsWith('7A')) {
+                    discoveredEcus.add(line.substring(0, 3));
+                } else if (line.startsWith('18DAF1')) {
+                    discoveredEcus.add(line.substring(0, 8));
+                }
+            }
+        } catch (e) {
+            store.addLog(`CAPABILITY_DISCOVERY_WARN: Broadcast discovery exception: ${e}`);
+        }
+
+        const ecuList = Array.from(discoveredEcus);
+        store.addLog(`CAPABILITY_DISCOVERY: Functional broadcast discovered ECUs: ${ecuList.join(', ') || 'None (Fallback to 7E8)'}`);
+        return ecuList;
+    }
 }
 export default CapabilityDiscoveryManager;

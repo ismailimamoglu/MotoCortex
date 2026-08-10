@@ -10,6 +10,7 @@
     "postinstall": "patch-package",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:heavy": "NODE_OPTIONS='--max-old-space-size=8192' jest src/api/__tests__/OBDCommandQueue.fakeTimers.test.ts --verbose --forceExit",
     "coverage": "jest --coverage",
     "i18n:sync": "node scripts/sync-i18n.js",
     "i18n:strict-build": "node scripts/sync-i18n.js && node scripts/qa-i18n-audit.js && npx tsc --noEmit",

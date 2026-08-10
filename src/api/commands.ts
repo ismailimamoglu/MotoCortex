@@ -9,7 +9,14 @@ export const ADAPTER_COMMANDS = {
     HEADERS_OFF: 'ATH0',      // Disable headers
     SPACES_OFF: 'ATS0',       // Disable spaces (compact responses)
     PROTOCOL_AUTO: 'ATSP0',   // Auto-detect protocol
+    PROTOCOL_J1850_PWM: 'ATSP1', // SAE J1850 PWM (41.6 kbaud - Ford)
+    PROTOCOL_J1850_VPW: 'ATSP2', // SAE J1850 VPW (10.4 kbaud - GM)
+    PROTOCOL_ISO9141: 'ATSP3',   // ISO 9141-2 (5 baud init)
+    PROTOCOL_KWP_5BAUD: 'ATSP4', // ISO 14230-4 KWP (5 baud init)
+    PROTOCOL_KWP_FAST: 'ATSP5',  // ISO 14230-4 KWP (fast init)
     PROTOCOL_CAN_11: 'ATSP6', // ISO 15765-4 CAN (11 bit ID, 500 kbaud)
+    INIT_BYTE: 'ATIB10',      // K-Line Baud Rate / Init Byte setup
+    INIT_ADDRESS: 'ATIIA11',   // K-Line Init Target ECU Address
     DEVICE_INFO: 'ATI',       // Adapter info (e.g., "ELM327 v2.1")
     VOLTAGE: 'ATRV',          // Read battery voltage
     ADAPTIVE_TIMING: 'AT AT1',  // Adaptive Timing On

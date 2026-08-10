@@ -361,7 +361,7 @@ const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onGoToExpe
         throttle,
         voltage: `${voltage.toFixed(1)}V`
       });
-    }, 100); // 10 Hz refresh for local gauges
+    }, 500); // 2 Hz refresh for local gauges to eliminate memory churn
     return () => clearInterval(interval);
   }, [ecuStatus, telemetryRef]);
 

@@ -4,7 +4,7 @@ import { UdsNrcHandler } from '../UdsNrcHandler';
 describe('UdsNrcHandler', () => {
     beforeEach(() => {
         // Reset any lockouts
-        (UdsNrcHandler as any).lockoutEndTime = 0;
+        UdsNrcHandler.clearLockouts();
     });
 
     test('should return null when parsing non-NRC response', () => {
@@ -20,14 +20,15 @@ describe('UdsNrcHandler', () => {
         expect(result?.isLockoutTriggered).toBe(false);
     });
 
-    test('should parse NRC 0x36 (ExceededNumberOfAttempts) and trigger lockout timer', () => {
-        const result = UdsNrcHandler.analyzeResponse('7F 27 36');
+    test('should parse NRC 0x36 (ExceededNumberOfAttempts) and trigger lockout timer per ECU header', () => {
+        const result = UdsNrcHandler.analyzeResponse('7F 27 36', '7E8');
         expect(result).not.toBeNull();
         expect(result?.nrcCode).toBe(0x36);
         expect(result?.isLockoutTriggered).toBe(true);
         expect(result?.lockoutDurationSeconds).toBe(600);
-        expect(UdsNrcHandler.isLockoutActive()).toBe(true);
-        expect(UdsNrcHandler.getRemainingLockoutSeconds()).toBeGreaterThan(0);
+        expect(UdsNrcHandler.isLockoutActive('7E8')).toBe(true);
+        expect(UdsNrcHandler.isLockoutActive('7E9')).toBe(false); // TCM remains unlocked!
+        expect(UdsNrcHandler.getRemainingLockoutSeconds('7E8')).toBeGreaterThan(0);
     });
 
     test('should parse NRC 0x33 (SecurityAccessDenied)', () => {

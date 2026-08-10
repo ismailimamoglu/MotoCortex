@@ -3,6 +3,18 @@ if (!(global as any).mockWriteTrace) {
     (global as any).mockWriteTrace = [];
 }
 (global as any).mockSessionId = 0;
+(global as any).__TEST_MAX_TELEMETRY_ITEMS__ = 50;
+
+jest.mock('react-native-fs', () => ({
+    stat: jest.fn().mockResolvedValue({ size: 0 }),
+    exists: jest.fn().mockResolvedValue(false),
+    writeFile: jest.fn().mockResolvedValue(undefined),
+    appendFile: jest.fn().mockResolvedValue(undefined),
+    readFile: jest.fn().mockResolvedValue(''),
+    unlink: jest.fn().mockResolvedValue(undefined),
+    DocumentDirectoryPath: '/mock/documents',
+    CachesDirectoryPath: '/mock/caches',
+}));
 
 jest.mock('react-native', () => ({
     AppState: {
@@ -173,7 +185,9 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
     });
 
     afterEach(() => {
+        jest.clearAllTimers();
         jest.useRealTimers();
+        OBDCommandQueue.clear();
     });
 
     test('1. Command execution timeout triggers LineState.INTERRUPTING and writes carriage return', async () => {
@@ -390,9 +404,9 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
             expect(mockRemove).not.toHaveBeenCalled();
         });
 
-        test('11. Priority FIFO pruning: success: true items are pruned first when queue exceeds 2000', async () => {
+        test('11. Priority FIFO pruning: success: true items are pruned first when queue exceeds limit', async () => {
             const initialQueue: any[] = [];
-            for (let i = 0; i < 1999; i++) {
+            for (let i = 0; i < 49; i++) {
                 initialQueue.push({
                     id: `disk-${i}`,
                     brand: 'renault',
@@ -561,7 +575,7 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
             const recordErrSpy = jest.spyOn(DiagnosticSessionRecorder, 'recordErr');
 
             const initialQueue: any[] = [];
-            for (let i = 0; i < 2000; i++) {
+            for (let i = 0; i < 50; i++) {
                 initialQueue.push({
                     id: `id-${i}`,
                     brand: 'renault',
@@ -592,13 +606,15 @@ describe('OBDCommandQueue FakeTimers Watchdog and Timeout Tests', () => {
                 brand: 'Renault', model: 'Scenic', year: 2022, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'hash-2001', engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false
             });
 
-            expect(useTelemetryStore.getState().telemetry_queue.length).toBe(2000);
+            expect(useTelemetryStore.getState().telemetry_queue.length).toBe(50);
             expect(recordErrSpy).toHaveBeenCalledWith('QUEUE_OVERFLOW_DATA_DROPPED', expect.any(String));
         });
     });
 
     afterAll(() => {
-        jest.useRealTimers();
         jest.clearAllTimers();
+        jest.useRealTimers();
+        (global as any).mockWriteTrace = [];
+        (global as any).mockDataListener = null;
     });
 });

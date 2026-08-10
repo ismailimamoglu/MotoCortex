@@ -65,7 +65,27 @@ export const IDENTIFIER_TEST_SUITE: VersionCommands[] = [
   }
 ];
 
-export async function runIdentifierTest(): Promise<{
+interface IdentifierCacheEntry {
+  isCloneDevice: boolean;
+  isCodingAllowed: boolean;
+  capabilityScore: number;
+  elmVersionTested: string;
+  multiframeIsotpSupported: boolean;
+  timestamp: number;
+}
+
+const identifierCache = new Map<string, IdentifierCacheEntry>();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+export function clearIdentifierCache(deviceId?: string): void {
+  if (deviceId) {
+    identifierCache.delete(deviceId);
+  } else {
+    identifierCache.clear();
+  }
+}
+
+export async function runIdentifierTest(deviceId?: string, forceRefresh: boolean = false): Promise<{
   isCloneDevice: boolean;
   isCodingAllowed: boolean;
   capabilityScore: number;
@@ -73,6 +93,31 @@ export async function runIdentifierTest(): Promise<{
   multiframeIsotpSupported: boolean;
 }> {
   const store = useBluetoothStore.getState();
+  const targetId = deviceId || store.deviceId || store.connectingDeviceId || store.lastDeviceId || 'DEFAULT_DEVICE';
+
+  if (!forceRefresh && identifierCache.has(targetId)) {
+    const cached = identifierCache.get(targetId)!;
+    if (Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      store.addLog(`ELM_IDENTIFIER: Using cached device profile for [${targetId}]. Version: ${cached.elmVersionTested}, Score: ${cached.capabilityScore}%`);
+      store.setIsCloneDevice(cached.isCloneDevice);
+      store.setIsCodingAllowed(cached.isCodingAllowed);
+      store.setSensorData({
+        isCloneDevice: cached.isCloneDevice,
+        isCodingAllowed: cached.isCodingAllowed,
+        adapterCapabilityScore: cached.capabilityScore,
+        elmVersionTested: cached.elmVersionTested,
+        multiframeIsotpSupported: cached.multiframeIsotpSupported,
+      });
+      return {
+        isCloneDevice: cached.isCloneDevice,
+        isCodingAllowed: cached.isCodingAllowed,
+        capabilityScore: cached.capabilityScore,
+        elmVersionTested: cached.elmVersionTested,
+        multiframeIsotpSupported: cached.multiframeIsotpSupported,
+      };
+    }
+  }
+
   store.addLog('ELM_IDENTIFIER: Starting ELM327 compatibility & clone scan.');
   
   let passedCount = 0;
@@ -93,7 +138,9 @@ export async function runIdentifierTest(): Promise<{
 
     for (const cmd of suite.commands) {
       try {
-        const response = await OBDCommandQueue.add(cmd, 500, 'HIGH_PRIORITY_AD_HOC');
+        // ATZ requires up to 2000ms for hardware reset; other commands use 800ms
+        const timeoutMs = cmd === 'ATZ' ? 2000 : 800;
+        const response = await OBDCommandQueue.add(cmd, timeoutMs, 'HIGH_PRIORITY_AD_HOC');
         const cleanResponse = response.replace(/\s+/g, '').toUpperCase();
         
         const isUnsupported = cleanResponse.includes('?') || cleanResponse.includes('ERR');
@@ -118,17 +165,19 @@ export async function runIdentifierTest(): Promise<{
               adapterCapabilityScore: finalScore,
               elmVersionTested: 'Clone v1.5',
             });
-            
-            return {
+
+            const result = {
               isCloneDevice: true,
               isCodingAllowed: false,
               capabilityScore: finalScore,
               elmVersionTested: 'Clone v1.5',
               multiframeIsotpSupported: false
             };
+            identifierCache.set(targetId, { ...result, timestamp: Date.now() });
+            
+            return result;
           } else {
             // Non-core command (beyond v1.4b) failed.
-            // As per state-architecture rule: "If the hardware responds with '?' (unknown) to commands beyond v1.4b, the coding state (isCodingAllowed) MUST be explicitly locked to false"
             isCodingAllowed = false;
             store.setIsCodingAllowed(false);
             store.addLog(`ELM_IDENTIFIER: Command beyond v1.4b failed [${cmd}]. Locking coding functionality to false.`);
@@ -157,13 +206,16 @@ export async function runIdentifierTest(): Promise<{
             multiframeIsotpSupported: false
           });
 
-          return {
+          const result = {
             isCloneDevice: true,
             isCodingAllowed: false,
             capabilityScore: finalScore,
             elmVersionTested: 'Clone v1.5',
             multiframeIsotpSupported: false
           };
+          identifierCache.set(targetId, { ...result, timestamp: Date.now() });
+
+          return result;
         } else {
           isCodingAllowed = false;
           store.setIsCodingAllowed(false);
@@ -199,11 +251,15 @@ export async function runIdentifierTest(): Promise<{
 
   store.addLog(`ELM_IDENTIFIER: Scan finished. Version: ${detectedMaxVersion}, Capability: ${finalScore}%, Clone: ${isCloneDevice}, Multi-Frame ISO-TP: ${multiframeIsotpSupported}`);
 
-  return {
+  const finalResult = {
     isCloneDevice,
     isCodingAllowed,
     capabilityScore: finalScore,
     elmVersionTested: detectedMaxVersion,
     multiframeIsotpSupported,
   };
+  identifierCache.set(targetId, { ...finalResult, timestamp: Date.now() });
+
+  return finalResult;
 }
+
