@@ -61,6 +61,7 @@ export class PollingOrchestrator {
         store.addLog(`POLLING_ORCHESTRATOR: Target pacing parameters computed. Score=${score}, interLoopDelay=${interLoopDelay}ms, cmdTimeoutBase=${cmdTimeoutBase}ms, cmdPacingDelay=${cmdPacingDelay}ms`);
 
         let lastVoltageReadTime = 0;
+        const batchEntries = Array.from(batchedQueue.entries());
 
         while (this.isPollingActive) {
             try {
@@ -75,7 +76,7 @@ export class PollingOrchestrator {
                     }
                 }
 
-                for (const [ecuHeader, pids] of batchedQueue.entries()) {
+                for (const [ecuHeader, pids] of batchEntries) {
                     if (!this.isPollingActive) break;
 
                     // --- KADEMELİ FİLTRE 1: DONANIM SEVİYESİ ACK-CHECK ---
