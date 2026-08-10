@@ -115,9 +115,22 @@ export class TelemetrySyncManager {
         const connState = state.connectionState;
         const activeVehicle = useTelemetryStore.getState().activeSessionVehicle;
 
+        const isConnectionStateUnchanged = connState === prevConnectionState;
+        const isVehicleUnchanged = activeVehicle === prevVehicle || (
+          activeVehicle && prevVehicle &&
+          activeVehicle.brand === prevVehicle.brand &&
+          activeVehicle.model === prevVehicle.model &&
+          activeVehicle.year === prevVehicle.year &&
+          activeVehicle.vin === prevVehicle.vin
+        );
+
+        if (isConnectionStateUnchanged && isVehicleUnchanged) {
+          return;
+        }
+
         const isRecovery = connState === 'RECOVERY';
         const isSessionEnded = connState === 'DISCONNECTED' && prevConnectionState !== 'DISCONNECTED';
-        const isProfileChanged = JSON.stringify(activeVehicle) !== JSON.stringify(prevVehicle);
+        const isProfileChanged = !isVehicleUnchanged;
 
         if (isRecovery || isSessionEnded || isProfileChanged) {
           Logger.log('TELEMETRY_SYNC', `Subscription cleanup triggered. Recovery: ${isRecovery}, Session Ended: ${isSessionEnded}, Profile Changed: ${isProfileChanged}`);
