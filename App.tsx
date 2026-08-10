@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './global.css';
-import { View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, Text, TouchableOpacity, Platform } from 'react-native';
 import i18n from './src/i18n';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -20,9 +20,16 @@ function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <View style={{ flex: 1, backgroundColor: '#060a12', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
       <Text style={{ color: '#ff4444', fontSize: 22, fontWeight: 'bold', marginBottom: 10 }}>⚠️ System Recovery</Text>
-      <Text style={{ color: '#88a0c0', textAlign: 'center', marginBottom: 20 }}>
+      <Text style={{ color: '#88a0c0', textAlign: 'center', marginBottom: 12 }}>
         Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been logged safely.
       </Text>
+      {error?.message && (
+        <View style={{ width: '100%', backgroundColor: '#111827', padding: 12, borderRadius: 8, marginBottom: 16, borderWidth: 1, borderColor: '#1f2937' }}>
+          <Text style={{ color: '#f87171', fontSize: 12, fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' }}>
+            {error.message}
+          </Text>
+        </View>
+      )}
       <View style={{ width: '100%', gap: 10, alignItems: 'center' }}>
         <TouchableOpacity
           onPress={resetErrorBoundary}

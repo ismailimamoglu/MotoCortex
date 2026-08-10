@@ -3804,9 +3804,16 @@ function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <View style={{ flex: 1, backgroundColor: '#090d16', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
       <Text style={{ color: '#ff4444', fontSize: 22, fontWeight: 'bold', marginBottom: 10 }}>⚠️ System Recovery</Text>
-      <Text style={{ color: '#88a0c0', textAlign: 'center', marginBottom: 20 }}>
+      <Text style={{ color: '#88a0c0', textAlign: 'center', marginBottom: 12 }}>
         Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.
       </Text>
+      {error?.message && (
+        <View style={{ width: '100%', backgroundColor: '#111827', padding: 12, borderRadius: 8, marginBottom: 16, borderWidth: 1, borderColor: '#1f2937' }}>
+          <Text style={{ color: '#f87171', fontSize: 12, fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' }}>
+            {error.message}
+          </Text>
+        </View>
+      )}
       <TouchableOpacity
         onPress={resetErrorBoundary}
         style={{ backgroundColor: '#00e5ff', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8 }}
