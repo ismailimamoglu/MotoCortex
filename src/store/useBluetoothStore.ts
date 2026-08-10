@@ -298,7 +298,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
                 nextData.adapterStatus = 'error';
             }
         }
-        if (data.pidLastUpdateTimes) {
+        if (data.pidLastUpdateTimes && Object.keys(data.pidLastUpdateTimes).length > 0) {
             if (!hasModified) { nextData = { ...data }; hasModified = true; }
             nextData.pidLastUpdateTimes = { ...state.pidLastUpdateTimes, ...data.pidLastUpdateTimes };
         }
@@ -335,7 +335,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     flushPendingRevocation: () => set({ pendingProRevocation: false }),
     triggerPendingRevocation: () => set({ pendingProRevocation: true }),
     addLog: (entry) => set((state) => ({
-        logs: [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs.slice(0, 49)]
+        logs: [`[${new Date().toLocaleTimeString()}] ${entry}`, ...state.logs.slice(0, 29)]
     })),
     clearLogs: () => set({ logs: [] }),
     setProtocol: (protocol) => set({ protocol }),
@@ -344,14 +344,14 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         const timestamp = new Date().toLocaleTimeString('tr-TR', { hour12: false });
         const entry = `[${timestamp}] ${log}`;
         return {
-            diagnosticLogs: [entry, ...state.diagnosticLogs.slice(0, 49)]
+            diagnosticLogs: [entry, ...state.diagnosticLogs.slice(0, 29)]
         };
     }),
     clearDiagnosticLogs: () => set({ diagnosticLogs: [] }),
     addStructuredLog: (log) => set((state) => {
         const entry = typeof log === 'string' ? log : JSON.stringify(log);
         return {
-            structuredLogs: [entry, ...state.structuredLogs.slice(0, 49)]
+            structuredLogs: [entry, ...state.structuredLogs.slice(0, 29)]
         };
     }),
     clearStructuredLogs: () => set({ structuredLogs: [] }),

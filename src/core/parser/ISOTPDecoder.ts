@@ -35,10 +35,10 @@ export class ISOTPDecoder {
 
             if (cleanLine.length < 2) continue;
 
-            // --- CLONE ADAPTER UART OVERFLOW / MERGE GUARD ---
-            // After removing header and prefix, the payload (PCI + Data bytes) 
-            // should not exceed 8 bytes (16 hex characters) for a standard CAN frame.
-            if (cleanLine.length > 16) {
+            // --- CLONE ADAPTER UART OVERFLOW / MERGE GUARD & CAN FD SUPPORT ---
+            // After removing header and prefix, PCI + Data payload should not exceed
+            // 8 bytes (16 hex chars) for Classic CAN, or up to 64 bytes (128 hex chars) for CAN FD.
+            if (cleanLine.length > 128) {
                 continue;
             }
 
@@ -46,9 +46,17 @@ export class ISOTPDecoder {
 
             if (pciType === 0) {
                 // Single Frame (SF)
-                const length = parseInt(cleanLine.substring(1, 2), 16);
-                if (length > 0 && cleanLine.length >= 2 + (length * 2)) {
-                    stablePayloads.push(cleanLine.substring(2, 2 + (length * 2)));
+                // Standard CAN SF: 0N (N <= 7)
+                // CAN FD SF: 00 NN (NN > 7, up to 62 bytes payload)
+                let length = parseInt(cleanLine.substring(1, 2), 16);
+                let dataStart = 2;
+                if (length === 0 && cleanLine.length >= 4) {
+                    // CAN FD Extended SF format: '00' PCI + 1 byte length
+                    length = parseInt(cleanLine.substring(2, 4), 16);
+                    dataStart = 4;
+                }
+                if (length > 0 && cleanLine.length >= dataStart + (length * 2)) {
+                    stablePayloads.push(cleanLine.substring(dataStart, dataStart + (length * 2)));
                 }
             } else if (pciType === 1) {
                 // First Frame (FF)

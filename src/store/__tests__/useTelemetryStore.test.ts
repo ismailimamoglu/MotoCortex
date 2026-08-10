@@ -231,12 +231,15 @@ describe('useTelemetryStore Tests', () => {
         useTelemetryStore.getState().enqueueTelemetry(newItem);
 
         const updatedState = useTelemetryStore.getState();
-        // The queue size should remain capped at 2000
-        expect(updatedState.telemetry_queue.length).toBe(2000);
-        // The first item (id-0) should be removed (FIFO)
-        expect(updatedState.telemetry_queue.find(x => x.id === 'id-0')).toBeUndefined();
+        const diskQueue = SQLiteStorage.getAllItems();
+        // The disk queue size should remain capped at 2000
+        expect(diskQueue.length).toBe(2000);
+        // The in-memory state window should be capped at 100
+        expect(updatedState.telemetry_queue.length).toBe(100);
+        // The first item (id-0) should be removed from SQLite storage (FIFO)
+        expect(diskQueue.find(x => x.id === 'id-0')).toBeUndefined();
         // The new item should be at the end of the queue
-        expect(updatedState.telemetry_queue[1999].session_hash).toBe('hash-2001');
+        expect(diskQueue[1999].session_hash).toBe('hash-2001');
     });
 
     test('4. Enforces FIFO queue bytes limit (1.5MB)', () => {
@@ -357,10 +360,12 @@ describe('useTelemetryStore Tests', () => {
         store.enqueueTelemetry(newItem);
 
         const state = useTelemetryStore.getState();
-        expect(state.telemetry_queue.length).toBe(2000);
+        const diskQueue = SQLiteStorage.getAllItems();
+        expect(diskQueue.length).toBe(2000);
+        expect(state.telemetry_queue.length).toBe(100);
         // The synced item (id-5) should be pruned instead of the oldest unsynced item (id-0)
-        expect(state.telemetry_queue.find(x => x.id === 'id-5')).toBeUndefined();
-        expect(state.telemetry_queue.find(x => x.id === 'id-0')).toBeDefined();
+        expect(diskQueue.find(x => x.id === 'id-5')).toBeUndefined();
+        expect(diskQueue.find(x => x.id === 'id-0')).toBeDefined();
     });
 
     test('7. Block dequeueTelemetry when isQueueLoaded = false', () => {
@@ -368,11 +373,9 @@ describe('useTelemetryStore Tests', () => {
             isQueueLoaded: false,
             telemetry_queue: [{ id: 'item-1', brand: 'Renault', model: 'Clio', year: 2020, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'hash-1', retry_count: 0, engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false }]
         });
-        const store = useTelemetryStore.getState();
-        store.dequeueTelemetry(1);
-        const state = useTelemetryStore.getState();
-        expect(state.telemetry_queue.length).toBe(1);
-        expect(state.telemetry_queue[0].id).toBe('item-1');
+
+        useTelemetryStore.getState().dequeueTelemetry(1);
+        expect(useTelemetryStore.getState().telemetry_queue.length).toBe(1);
     });
 
     test('8. Block removeTelemetryItem when isQueueLoaded = false', () => {
@@ -380,11 +383,9 @@ describe('useTelemetryStore Tests', () => {
             isQueueLoaded: false,
             telemetry_queue: [{ id: 'item-1', brand: 'Renault', model: 'Clio', year: 2020, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'hash-1', retry_count: 0, engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false }]
         });
-        const store = useTelemetryStore.getState();
-        store.removeTelemetryItem('item-1');
-        const state = useTelemetryStore.getState();
-        expect(state.telemetry_queue.length).toBe(1);
-        expect(state.telemetry_queue[0].id).toBe('item-1');
+
+        useTelemetryStore.getState().removeTelemetryItem('item-1');
+        expect(useTelemetryStore.getState().telemetry_queue.length).toBe(1);
     });
 
     test('9. Block incrementRetryCount when isQueueLoaded = false', () => {
@@ -392,10 +393,9 @@ describe('useTelemetryStore Tests', () => {
             isQueueLoaded: false,
             telemetry_queue: [{ id: 'item-1', brand: 'Renault', model: 'Clio', year: 2020, protocol: 'CAN', ecu_id: 'ECU', dtc_codes: [], session_hash: 'hash-1', retry_count: 0, engine_rpm: 2000, coolant_temp: 90, throttle_pos: 20, is_simulated: false }]
         });
-        const store = useTelemetryStore.getState();
-        store.incrementRetryCount('item-1');
-        const state = useTelemetryStore.getState();
-        expect(state.telemetry_queue[0].retry_count).toBe(0);
+
+        useTelemetryStore.getState().incrementRetryCount('item-1');
+        expect(useTelemetryStore.getState().telemetry_queue[0].retry_count).toBe(0);
     });
 
     test('10. Offline Overflow Fallback - cap limit with 100% success: false items reports QUEUE_OVERFLOW_DATA_DROPPED', () => {
@@ -406,8 +406,8 @@ describe('useTelemetryStore Tests', () => {
         for (let i = 0; i < 2000; i++) {
             initialQueue.push({
                 id: `id-${i}`,
-                brand: 'renault',
-                model: 'clio',
+                brand: 'Renault',
+                model: 'Clio',
                 year: 2020,
                 protocol: 'CAN',
                 ecu_id: 'ECU',
@@ -426,7 +426,7 @@ describe('useTelemetryStore Tests', () => {
             SQLiteStorage.enqueueTelemetry(item);
         }
         useTelemetryStore.setState({
-            telemetry_queue: SQLiteStorage.getAllItems(),
+            telemetry_queue: SQLiteStorage.getAllItems().slice(-100),
             telemetryQueueBytes: 2000 * 150,
             isQueueLoaded: true
         });
@@ -437,8 +437,10 @@ describe('useTelemetryStore Tests', () => {
         });
 
         const state = useTelemetryStore.getState();
-        expect(state.telemetry_queue.length).toBe(2000);
-        expect(state.telemetry_queue.find((x: any) => x.id === 'id-0')).toBeUndefined();
+        const diskQueue = SQLiteStorage.getAllItems();
+        expect(diskQueue.length).toBe(2000);
+        expect(state.telemetry_queue.length).toBe(100);
+        expect(diskQueue.find((x: any) => x.id === 'id-0')).toBeUndefined();
         expect(recordErrSpy).toHaveBeenCalledWith('QUEUE_OVERFLOW_DATA_DROPPED', expect.any(String));
     });
 

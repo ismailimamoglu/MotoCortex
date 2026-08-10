@@ -109,12 +109,13 @@ export const initializeTelemetryQueue = async () => {
     const items = SQLiteStorage.getAllItems();
     const bytes = estimateQueueBytes(items);
 
+    const MAX_IN_MEMORY_TELEMETRY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
     useTelemetryStore.setState({
-      telemetry_queue: items,
+      telemetry_queue: items.slice(-MAX_IN_MEMORY_TELEMETRY_WINDOW),
       telemetryQueueBytes: bytes,
       isQueueLoaded: true
     });
-    console.log(`[Telemetry Store] Lazy-loaded queue completed from SQLite. Total items: ${items.length}`);
+    console.log(`[Telemetry Store] Lazy-loaded queue completed from SQLite. Total disk items: ${items.length}, In-memory window: ${Math.min(items.length, MAX_IN_MEMORY_TELEMETRY_WINDOW)}`);
   } catch (err) {
     console.error('[Telemetry Store] Failed to lazy load telemetry queue from SQLite:', err);
     useTelemetryStore.setState({ isQueueLoaded: true });
@@ -234,8 +235,9 @@ export const useTelemetryStore = create<TelemetryState>()(
 
         const newBytes = estimateQueueBytes(updatedQueue);
 
+        const MAX_IN_MEMORY_WINDOW = (global as any).__TEST_MAX_TELEMETRY_ITEMS__ || 100;
         return {
-          telemetry_queue: updatedQueue,
+          telemetry_queue: updatedQueue.slice(-MAX_IN_MEMORY_WINDOW),
           telemetryQueueBytes: newBytes
         };
       }),

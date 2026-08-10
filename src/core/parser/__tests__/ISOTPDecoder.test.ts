@@ -102,5 +102,18 @@ describe('ISOTPDecoder Unit Tests', () => {
         expect(response).not.toBe('');
         expect(response.startsWith('41 0C')).toBe(true);
     });
+
+    test('14. Accepts long CAN FD single frame payloads (> 16 hex chars, up to 128 hex chars)', () => {
+        // CAN FD payload exceeding classic CAN 8-byte limit
+        const response = ISOTPDecoder.decode(['7E8 00 10 41 0C 11 22 33 44 55 66 77 88 99 AA BB CC DD EE']);
+        expect(response).toBe('41 0C 11 22 33 44 55 66 77 88 99 AA BB CC DD EE');
+    });
+
+    test('15. Ignores lines exceeding 128 hex chars to guard against corrupt UART merges', () => {
+        const corruptHugeLine = '7E8 ' + 'AA'.repeat(70); // 140 hex chars > 128
+        const response = ISOTPDecoder.decode([corruptHugeLine, '7E8 03 41 0D AA']);
+        expect(response).toBe('41 0D AA');
+    });
 });
+
 
