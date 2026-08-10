@@ -2,6 +2,7 @@ module.exports = {
   roots: ['<rootDir>/src'],
   preset: 'react-native',
   setupFiles: ['<rootDir>/jest.setup.js'],
+  workerIdleMemoryLimit: '512MB',
   moduleFileExtensions: [
     'android.ts',
     'ios.ts',

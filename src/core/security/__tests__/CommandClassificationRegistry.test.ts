@@ -209,6 +209,13 @@ describe('CommandClassificationRegistry', () => {
             expect(classifyCommand('AT1002')).toBe(CommandClass.DANGEROUS);
             expect(classifyCommand('AT300000')).toBe(CommandClass.DANGEROUS);
         });
+
+        it('blocks HARD_MUTATION and DANGEROUS commands when battery voltage is below 11.8V', () => {
+            expect(() => assertHardwareGate('2E0102', true, false, '11.5V')).toThrow('BATTERY_VOLTAGE_LOW');
+            expect(() => assertHardwareGate('ATZ', true, false, '11.2V')).toThrow('BATTERY_VOLTAGE_LOW');
+            expect(() => assertHardwareGate('2E0102', true, false, '12.4V')).not.toThrow();
+            expect(() => assertHardwareGate('010C', true, false, '11.0V')).not.toThrow(); // READ_ONLY is allowed even on low voltage
+        });
     });
 });
 

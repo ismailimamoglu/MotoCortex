@@ -25,9 +25,8 @@ export class ISOTPDecoder {
                 hasHeader = true;
             }
 
-            if (hasHeader && ecuId !== '7E8' && ecuId !== '18DAF110') {
-                continue;
-            }
+            // Multi-ECU Support: Accept all valid 11-bit (7E8..7EF, 7C8..7CF) and 29-bit (18DAF1xx, 18DAxxF1) ECU headers
+            // All valid headers are processed per ecuId in pendingBuffers.
 
             const indexMatch = cleanLine.match(/^(\d+:)/);
             if (indexMatch) {

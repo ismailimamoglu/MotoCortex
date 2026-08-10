@@ -217,24 +217,24 @@ export function startSimulation() {
       lastSuccessfulResponseAt: Date.now(),
     });
 
-    // Add simulated OBD traffic logs
+    // Add simulated OBD traffic logs periodically
     const timestamp = new Date().toLocaleTimeString();
-    if (step % 4 === 0) {
+    if (step % 40 === 0) {
       const rpmA = Math.floor((rpm * 4) / 256);
       const rpmB = Math.floor((rpm * 4) % 256);
       const rpmHexA = rpmA.toString(16).toUpperCase().padStart(2, '0');
       const rpmHexB = rpmB.toString(16).toUpperCase().padStart(2, '0');
       currentStore.addLog(`[${timestamp}] TX: 01 0C`);
       currentStore.addLog(`[${timestamp}] RX: 7E8 04 41 0C ${rpmHexA} ${rpmHexB}`);
-    } else if (step % 4 === 1) {
+    } else if (step % 40 === 10) {
       const speedHex = speed.toString(16).toUpperCase().padStart(2, '0');
       currentStore.addLog(`[${timestamp}] TX: 01 0D`);
       currentStore.addLog(`[${timestamp}] RX: 7E8 03 41 0D ${speedHex}`);
-    } else if (step % 4 === 2) {
+    } else if (step % 40 === 20) {
       const coolantHex = (coolant + 40).toString(16).toUpperCase().padStart(2, '0');
       currentStore.addLog(`[${timestamp}] TX: 01 05`);
       currentStore.addLog(`[${timestamp}] RX: 7E8 03 41 05 ${coolantHex}`);
-    } else {
+    } else if (step % 40 === 30) {
       const throttleHex = Math.round((throttle * 255) / 100).toString(16).toUpperCase().padStart(2, '0');
       currentStore.addLog(`[${timestamp}] TX: 01 11`);
       currentStore.addLog(`[${timestamp}] RX: 7E8 03 41 11 ${throttleHex}`);

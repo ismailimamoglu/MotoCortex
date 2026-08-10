@@ -116,10 +116,32 @@ export function requiresProAccess(cls: CommandClass): boolean {
  * This is the Layer 3 (hardware) security gate — the last line of defense
  * before bytes hit the OBD transport wire.
  */
-export function assertHardwareGate(rawCmd: string, isPro: boolean, isMoving: boolean = false): void {
+export function assertHardwareGate(rawCmd: string, isPro: boolean, isMoving: boolean = false, customVoltageStr?: string): void {
     const cls = classifyCommand(rawCmd, isMoving);
     if (requiresProAccess(cls) && !isPro) {
         throw new Error('HARDWARE_GATE_VIOLATION');
+    }
+
+    if (cls === CommandClass.HARD_MUTATION || cls === CommandClass.DANGEROUS) {
+        let voltageVal: number | null = null;
+
+        if (customVoltageStr) {
+            const parsed = parseFloat(customVoltageStr.replace(/[^\d.]/g, ''));
+            if (!isNaN(parsed)) voltageVal = parsed;
+        } else {
+            try {
+                const { useBluetoothStore } = require('../../store/useBluetoothStore');
+                const storeVoltage = useBluetoothStore.getState().voltage;
+                if (storeVoltage) {
+                    const parsed = parseFloat(storeVoltage.replace(/[^\d.]/g, ''));
+                    if (!isNaN(parsed)) voltageVal = parsed;
+                }
+            } catch (e) {}
+        }
+
+        if (voltageVal !== null && voltageVal < 11.8 && voltageVal > 0) {
+            throw new Error('BATTERY_VOLTAGE_LOW');
+        }
     }
 }
 

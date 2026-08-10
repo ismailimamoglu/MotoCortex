@@ -14,40 +14,53 @@ export interface NrcAnalysisResult {
 }
 
 export class UdsNrcHandler {
-    private static lockoutEndTime: number = 0;
+    private static lockoutEndTimesMap: Map<string, number> = new Map();
 
     /**
-     * Checks whether an ECU lockout timer is currently active (e.g. from NRC 0x36).
+     * Checks whether an ECU lockout timer is currently active for a specific ECU (or globally).
      */
-    public static isLockoutActive(): boolean {
-        return Date.now() < this.lockoutEndTime;
+    public static isLockoutActive(ecuHeader: string = 'GLOBAL'): boolean {
+        const endTime = this.lockoutEndTimesMap.get(ecuHeader) || this.lockoutEndTimesMap.get('GLOBAL') || 0;
+        return Date.now() < endTime;
     }
 
     /**
-     * Returns remaining lockout duration in seconds.
+     * Returns remaining lockout duration in seconds for a specific ECU (or globally).
      */
-    public static getRemainingLockoutSeconds(): number {
-        if (!this.isLockoutActive()) return 0;
-        return Math.ceil((this.lockoutEndTime - Date.now()) / 1000);
+    public static getRemainingLockoutSeconds(ecuHeader: string = 'GLOBAL'): number {
+        if (!this.isLockoutActive(ecuHeader)) return 0;
+        const endTime = this.lockoutEndTimesMap.get(ecuHeader) || this.lockoutEndTimesMap.get('GLOBAL') || 0;
+        return Math.ceil((endTime - Date.now()) / 1000);
+    }
+
+    /**
+     * Clears all lockout timers (used for unit tests or manual override).
+     */
+    public static clearLockouts(ecuHeader?: string): void {
+        if (ecuHeader) {
+            this.lockoutEndTimesMap.delete(ecuHeader);
+        } else {
+            this.lockoutEndTimesMap.clear();
+        }
     }
 
     /**
      * Parses raw ECU response and generates humanized NrcAnalysisResult.
      */
-    public static analyzeResponse(rawResponse: string): NrcAnalysisResult | null {
+    public static analyzeResponse(rawResponse: string, ecuHeader: string = 'GLOBAL'): NrcAnalysisResult | null {
         const clean = rawResponse.replace(/[\r\n\s>]/g, '').toUpperCase();
         const nrcMatch = clean.match(/7F([0-9A-F]{2})([0-9A-F]{2})/);
 
         if (!nrcMatch) return null;
 
         const nrcHex = parseInt(nrcMatch[2], 16);
-        return this.analyzeCode(nrcHex, clean);
+        return this.analyzeCode(nrcHex, clean, ecuHeader);
     }
 
     /**
      * Evaluates UDS NRC code into structured analysis with localized keys and safety guidance.
      */
-    public static analyzeCode(nrcCode: number, rawHex: string = ''): NrcAnalysisResult {
+    public static analyzeCode(nrcCode: number, rawHex: string = '', ecuHeader: string = 'GLOBAL'): NrcAnalysisResult {
         let isLockout = false;
         let lockoutDuration = 0;
         let titleKey = 'nrc.genericTitle';
@@ -112,7 +125,7 @@ export class UdsNrcHandler {
             case UdsNrcCode.ExceededNumberOfAttempts: // 0x36
                 isLockout = true;
                 lockoutDuration = 600; // 10 minutes mandatory lockout
-                this.lockoutEndTime = Date.now() + lockoutDuration * 1000;
+                this.lockoutEndTimesMap.set(ecuHeader, Date.now() + lockoutDuration * 1000);
                 titleKey = 'nrc.exceededAttemptsTitle';
                 messageKey = 'nrc.exceededAttemptsDesc';
                 defaultMessage = 'Security lockout: Maximum security unlock attempts exceeded. ECU is locked for 10 minutes.';
@@ -121,7 +134,7 @@ export class UdsNrcHandler {
             case UdsNrcCode.RequiredTimeDelayNotExpired: // 0x37
                 isLockout = true;
                 lockoutDuration = 300; // 5 minutes cooldown
-                this.lockoutEndTime = Date.now() + lockoutDuration * 1000;
+                this.lockoutEndTimesMap.set(ecuHeader, Date.now() + lockoutDuration * 1000);
                 titleKey = 'nrc.timeDelayTitle';
                 messageKey = 'nrc.timeDelayDesc';
                 defaultMessage = 'Time delay required: ECU security cooldown in progress. Please wait before retrying.';

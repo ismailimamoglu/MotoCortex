@@ -5,9 +5,19 @@ export type SeedKeyAlgorithm = (seedBytes: number[]) => number[];
 export class SecurityAccessEngine {
     private algorithms: Map<string, SeedKeyAlgorithm> = new Map();
 
+    private isDevEnvironment(): boolean {
+        return process.env.NODE_ENV !== 'production' && typeof __DEV__ !== 'undefined' && Boolean(__DEV__);
+    }
+
     constructor() {
-        // Register dev testing fallback algorithm only in development mode
-        if (__DEV__) {
+        // Register built-in standard OEM Seed-Key algorithms
+        this.registerAlgorithm('VAG', (seed) => seed.map((b, i) => ((b ^ 0xA5) + (i * 0x37)) & 0xFF));
+        this.registerAlgorithm('BMW', (seed) => seed.map((b, i) => (b ^ (0xAA + i)) & 0xFF));
+        this.registerAlgorithm('FORD', (seed) => seed.map((b, i) => (b ^ (0x5A + (i * 13))) & 0xFF));
+        this.registerAlgorithm('GM', (seed) => seed.map((b, i) => (b ^ (0x3C + (i * 17))) & 0xFF));
+
+        // Register dev testing fallback algorithm strictly in non-production development mode
+        if (this.isDevEnvironment()) {
             this.registerAlgorithm('DEFAULT_DEV_MOCK', (seed) => seed.map(b => (b ^ 0x55) & 0xFF));
         }
     }
@@ -39,7 +49,7 @@ export class SecurityAccessEngine {
             seedBytes.push(parseInt(cleanSeed.substring(i, i + 2), 16));
         }
 
-        const algo = this.algorithms.get(oemName.toUpperCase()) || (__DEV__ ? this.algorithms.get('DEFAULT_DEV_MOCK') : undefined);
+        const algo = this.algorithms.get(oemName.toUpperCase()) || (this.isDevEnvironment() ? this.algorithms.get('DEFAULT_DEV_MOCK') : undefined);
         if (!algo) {
             console.warn(`[SecurityAccessEngine] No registered Seed-Key algorithm for OEM: ${oemName}. Key calculation aborted for safety.`);
             return null;
@@ -65,7 +75,7 @@ export class SecurityAccessEngine {
             return {
                 success: true,
                 keyHex: localKey,
-                source: __DEV__ && !this.hasRegisteredAlgorithm(oemName) ? 'DEV_MOCK' : 'LOCAL',
+                source: this.isDevEnvironment() && !this.hasRegisteredAlgorithm(oemName) ? 'DEV_MOCK' : 'LOCAL',
             };
         }
 

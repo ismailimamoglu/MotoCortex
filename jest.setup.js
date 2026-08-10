@@ -106,10 +106,13 @@ jest.mock('expo-sqlite', () => {
 jest.mock('react-native-fs', () => ({
   CachesDirectoryPath: '/mock/caches',
   DocumentDirectoryPath: '/mock/documents',
+  stat: jest.fn().mockResolvedValue({ size: 0, isFile: () => true, isDirectory: () => false }),
   exists: jest.fn().mockResolvedValue(true),
   readFile: jest.fn().mockResolvedValue('{}'),
   writeFile: jest.fn().mockResolvedValue(true),
+  appendFile: jest.fn().mockResolvedValue(true),
   unlink: jest.fn().mockResolvedValue(true),
+  mkdir: jest.fn().mockResolvedValue(true),
 }));
 
 jest.mock('@react-native-async-storage/async-storage', () =>

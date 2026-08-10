@@ -70,6 +70,7 @@ export class BLETransport implements TransportAdapter {
     private bleSubscription: any | null;
     private dataCallback: ((data: string) => void) | null;
     private writeLock: Mutex;
+    private negotiatedMtu: number;
 
     constructor() {
         this.bleConnectedDevice = null;
@@ -77,6 +78,7 @@ export class BLETransport implements TransportAdapter {
         this.bleSubscription = null;
         this.dataCallback = null;
         this.writeLock = new Mutex();
+        this.negotiatedMtu = 185;
     }
 
     async connect(deviceId: string): Promise<boolean> {
@@ -89,10 +91,12 @@ export class BLETransport implements TransportAdapter {
             const device = await manager.connectToDevice(deviceId);
             try {
                 Logger.log('BLE_CONNECT', 'Requesting MTU 512...');
-                await device.requestMTU(512);
-                Logger.log('BLE_CONNECT', 'MTU 512 set successfully.');
+                const mtuDevice = await device.requestMTU(512);
+                this.negotiatedMtu = mtuDevice?.mtu || 512;
+                Logger.log('BLE_CONNECT', `MTU ${this.negotiatedMtu} set successfully.`);
             } catch (mtuErr) {
-                Logger.log('BLE_CONNECT_ERR', `MTU 512 failed: ${mtuErr}`);
+                this.negotiatedMtu = device?.mtu || 185;
+                Logger.log('BLE_CONNECT_ERR', `MTU request fallback to ${this.negotiatedMtu}: ${mtuErr}`);
             }
             await device.discoverAllServicesAndCharacteristics();
             const services = await device.services();

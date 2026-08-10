@@ -90,6 +90,16 @@ export class UsbTransport {
       assertHardwareGate(cleanCmd, isPro, isMoving);
     }
     console.log(`[UsbTransport TX]: ${cmd}`);
+    if (Platform.OS === 'android') {
+      try {
+        const { MotoCortexObd } = NativeModules;
+        if (MotoCortexObd && typeof MotoCortexObd.writeUsb === 'function') {
+          await MotoCortexObd.writeUsb(cmd.endsWith('\r') ? cmd : cmd + '\r');
+        }
+      } catch (e) {
+        console.warn('[UsbTransport] Native writeUsb failed:', e);
+      }
+    }
   }
 
   public getIsConnected(): boolean {

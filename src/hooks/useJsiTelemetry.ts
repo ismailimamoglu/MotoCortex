@@ -45,7 +45,11 @@ export const useJsiTelemetry = () => {
         const throttle = dataView.getInt32(12, true);
         const voltage = dataView.getFloat64(16, true);
 
-        telemetryRef.current = { rpm, speed, coolant, throttle, voltage };
+        telemetryRef.current.rpm = rpm;
+        telemetryRef.current.speed = speed;
+        telemetryRef.current.coolant = coolant;
+        telemetryRef.current.throttle = throttle;
+        telemetryRef.current.voltage = voltage;
       } catch (err) {
         // Suppress bounds check issues during module warm-up or hot reloading
       }

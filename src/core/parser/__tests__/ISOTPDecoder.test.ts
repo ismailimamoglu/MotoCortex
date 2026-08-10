@@ -11,12 +11,12 @@ describe('ISOTPDecoder Unit Tests', () => {
         expect(response).toBe('41 0C 1A 2B');
     });
 
-    test('3. Ignores 11-bit non-engine CAN frames (7E9 - 7EF)', () => {
+    test('3. Decodes 11-bit non-engine CAN frames (7E9 - 7EF) for multi-ECU support', () => {
         const response = ISOTPDecoder.decode([
-            '7E9 04 41 0C 1A 2B', // ignored
-            '7E8 03 41 0D AA'     // processed
+            '7E9 04 41 0C 1A 2B', // TCM response
+            '7E8 03 41 0D AA'     // ECM response
         ]);
-        expect(response).toBe('41 0D AA');
+        expect(response).toBe('41 0C 1A 2B 41 0D AA');
     });
 
     test('4. Strips 29-bit CAN header (18DAF110) before decoding', () => {
@@ -24,12 +24,12 @@ describe('ISOTPDecoder Unit Tests', () => {
         expect(response).toBe('41 0C 1A 2B');
     });
 
-    test('5. Discards other 29-bit CAN headers (starting with 18DAF1 but not 18DAF110)', () => {
+    test('5. Decodes other 29-bit CAN headers (e.g. 18DAF120) for multi-ECU support', () => {
         const response = ISOTPDecoder.decode([
-            '18DAF120 04 41 0C 1A 2B', // ignored
-            '18DAF110 03 41 0D AA'     // processed
+            '18DAF120 04 41 0C 1A 2B', // ABS response
+            '18DAF110 03 41 0D AA'     // ECM response
         ]);
-        expect(response).toBe('41 0D AA');
+        expect(response).toBe('41 0C 1A 2B 41 0D AA');
     });
 
     test('6. Strips line prefixes (like "0:") commonly sent by ELM scanners', () => {

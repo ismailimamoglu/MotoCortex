@@ -60,7 +60,7 @@ class TelemetryBuffer {
         ...updatesToFlush,
         pidLastUpdateTimes: Object.keys(pidTimesToFlush).length > 0 ? pidTimesToFlush : undefined,
       });
-    }, 300);
+    }, 500);
   }
 
   public clear() {

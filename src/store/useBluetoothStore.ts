@@ -267,36 +267,40 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setConnectionStatusText: (key, params = null) => set({ connectionStatusTextKey: key, connectionStatusTextParams: params }),
     setRpm: (rpm) => set({ rpm }),
     setSensorData: (data) => set((state) => {
-        const nextData = { ...data };
-        if (nextData.connectionState) {
-            if (['TELEMETRY_ACTIVE', 'DEGRADED'].includes(nextData.connectionState)) {
+        let nextData: any = data;
+        let hasModified = false;
+
+        if (data.connectionState) {
+            if (!hasModified) { nextData = { ...data }; hasModified = true; }
+            if (['TELEMETRY_ACTIVE', 'DEGRADED'].includes(data.connectionState)) {
                 nextData.status = 'connected';
                 nextData.ecuStatus = 'connected';
                 nextData.adapterStatus = 'connected';
-            } else if (nextData.connectionState === 'DISCONNECTED') {
+            } else if (data.connectionState === 'DISCONNECTED') {
                 nextData.status = 'disconnected';
                 nextData.ecuStatus = 'disconnected';
                 nextData.adapterStatus = 'disconnected';
-            } else if (['ADAPTER_CONNECTING', 'ADAPTER_CONNECTED', 'INITIALIZING', 'PROTOCOL_SCANNING'].includes(nextData.connectionState)) {
+            } else if (['ADAPTER_CONNECTING', 'ADAPTER_CONNECTED', 'INITIALIZING', 'PROTOCOL_SCANNING'].includes(data.connectionState)) {
                 nextData.status = 'connecting';
                 nextData.adapterStatus = 'connecting';
                 nextData.ecuStatus = 'disconnected';
-            } else if (nextData.connectionState === 'ECU_HANDSHAKE') {
+            } else if (data.connectionState === 'ECU_HANDSHAKE') {
                 nextData.status = 'connecting';
                 nextData.adapterStatus = 'connected';
                 nextData.ecuStatus = 'connecting';
-            } else if (nextData.connectionState === 'RECOVERY') {
+            } else if (data.connectionState === 'RECOVERY') {
                 nextData.status = 'connecting';
                 nextData.ecuStatus = 'connecting';
                 nextData.adapterStatus = 'connected';
-            } else if (nextData.connectionState === 'HARDWARE_FATAL') {
+            } else if (data.connectionState === 'HARDWARE_FATAL') {
                 nextData.status = 'error';
                 nextData.ecuStatus = 'error';
                 nextData.adapterStatus = 'error';
             }
         }
         if (data.pidLastUpdateTimes) {
-            nextData.pidLastUpdateTimes = Object.assign({}, state.pidLastUpdateTimes, data.pidLastUpdateTimes);
+            if (!hasModified) { nextData = { ...data }; hasModified = true; }
+            nextData.pidLastUpdateTimes = { ...state.pidLastUpdateTimes, ...data.pidLastUpdateTimes };
         }
         return nextData;
     }),
