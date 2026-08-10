@@ -353,6 +353,12 @@ class BluetoothServiceIOS implements IBluetoothService {
                     }
                 );
             }
+            device.onDisconnected((error, disconnectedDevice) => {
+                Logger.log('BLE_DISCONNECTED', `iOS BLE peripheral disconnected: ${disconnectedDevice.id}, error: ${error?.message || 'None'}`);
+                if (!this.isManualDisconnect) {
+                    this.handleDroppedConnection();
+                }
+            });
             this.reconnectAttempts = 0;
             this.startConnectionMonitor();
             return true;

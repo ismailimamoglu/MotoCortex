@@ -116,4 +116,21 @@ export class ELMParser {
 
         return filteredLines.join('\n');
     }
+
+    /**
+     * Safely identifies Service ID response (e.g. 0x41 for Mode 01, 0x62 for Mode 22)
+     * strictly at the start of the line (offset < 6 hex chars) to prevent false matches
+     * when payload data bytes match header bytes (e.g. RPM 0x41).
+     */
+    static findServiceResponseStart(rawHex: string, expectedServiceResponse: string): number {
+        const clean = rawHex.replace(/[\r\n\s>]/g, '').toUpperCase();
+        const target = expectedServiceResponse.toUpperCase();
+        const index = clean.indexOf(target);
+        
+        // Strictly require Service ID match to occur within the leading header offset (index < 6)
+        if (index !== -1 && index <= 6) {
+            return index;
+        }
+        return -1;
+    }
 }

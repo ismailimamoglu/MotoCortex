@@ -45,6 +45,14 @@ export class UdsNrcHandler {
     }
 
     /**
+     * Checks if the response is UDS NRC 0x78 (Request Correctly Received - Response Pending).
+     */
+    public static isResponsePending(rawResponse: string): boolean {
+        const clean = rawResponse.replace(/[\r\n\s>]/g, '').toUpperCase();
+        return /7F[0-9A-F]{2}78/.test(clean);
+    }
+
+    /**
      * Parses raw ECU response and generates humanized NrcAnalysisResult.
      */
     public static analyzeResponse(rawResponse: string, ecuHeader: string = 'GLOBAL'): NrcAnalysisResult | null {

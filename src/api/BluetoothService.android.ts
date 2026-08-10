@@ -420,11 +420,60 @@ class BluetoothServiceAndroid implements IBluetoothService {
             const services = await device.services();
             let notifyChar: Characteristic | null = null;
             let writeChar: Characteristic | null = null;
+
+            const TARGET_OBD2_SERVICES = [
+                '0000ffe0-0000-1000-8000-00805f9b34fb',
+                '0000fff0-0000-1000-8000-00805f9b34fb',
+                '000018f0-0000-1000-8000-00805f9b34fb',
+                'e7810a71-73ae-499d-8c15-faa9aef0c3f2',
+            ];
+
             for (const service of services) {
-                const characteristics = await service.characteristics();
-                for (const c of characteristics) {
-                    if (c.isNotifiable || c.isIndicatable) notifyChar = c;
-                    if (c.isWritableWithResponse || c.isWritableWithoutResponse) writeChar = c;
+                const serviceUuid = service.uuid.toLowerCase();
+                if (TARGET_OBD2_SERVICES.includes(serviceUuid)) {
+                    const characteristics = await service.characteristics();
+                    for (const c of characteristics) {
+                        const hasWrite = c.isWritableWithResponse || c.isWritableWithoutResponse;
+                        const hasNotify = c.isNotifiable || c.isIndicatable;
+                        if (hasWrite && hasNotify) {
+                            writeChar = c;
+                            notifyChar = c;
+                            break;
+                        }
+                    }
+                    if (!writeChar || !notifyChar) {
+                        for (const c of characteristics) {
+                            if (!notifyChar && (c.isNotifiable || c.isIndicatable)) notifyChar = c;
+                            if (!writeChar && (c.isWritableWithResponse || c.isWritableWithoutResponse)) writeChar = c;
+                        }
+                    }
+                }
+                if (writeChar && notifyChar) break;
+            }
+
+            if (!writeChar || !notifyChar) {
+                for (const service of services) {
+                    const serviceUuid = service.uuid.toLowerCase();
+                    if (serviceUuid.includes('1800') || serviceUuid.includes('1801') || serviceUuid.includes('180a') || serviceUuid.includes('180f')) {
+                        continue;
+                    }
+                    const characteristics = await service.characteristics();
+                    for (const c of characteristics) {
+                        const hasWrite = c.isWritableWithResponse || c.isWritableWithoutResponse;
+                        const hasNotify = c.isNotifiable || c.isIndicatable;
+                        if (hasWrite && hasNotify) {
+                            writeChar = c;
+                            notifyChar = c;
+                            break;
+                        }
+                    }
+                    if (!writeChar || !notifyChar) {
+                        for (const c of characteristics) {
+                            if (!notifyChar && (c.isNotifiable || c.isIndicatable)) notifyChar = c;
+                            if (!writeChar && (c.isWritableWithResponse || c.isWritableWithoutResponse)) writeChar = c;
+                        }
+                    }
+                    if (writeChar && notifyChar) break;
                 }
             }
             if (!writeChar) throw new Error('No writable characteristic found');

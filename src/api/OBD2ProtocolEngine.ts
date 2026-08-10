@@ -233,8 +233,9 @@ export class OBD2ProtocolEngine {
            else if (nrc === '12') humanReadableError = 'SubFunction Not Supported';  
            else if (nrc === '22') humanReadableError = 'Conditions Not Correct';  
            else if (nrc === '33') humanReadableError = 'Security Access Denied (Gateway Locked)';
+           else if (nrc === '78') humanReadableError = 'Request Correctly Received - Response Pending (ECU Processing)';
 
-           store.addLog(`🚨 GLOBAL_UDS_ALERT: Service 0x${service} Rejected with NRC 0x${nrc} (${humanReadableError}).`);  
+           store.addLog(`🚨 GLOBAL_UDS_ALERT: Service 0x${service} Response: NRC 0x${nrc} (${humanReadableError}).`);  
 
            if (nrc === '33' || nrc === '7E' || nrc === '35') {
                if (this.sgwNotificationCallback) {
