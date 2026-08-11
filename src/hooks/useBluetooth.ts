@@ -221,16 +221,16 @@ export const useBluetooth = () => {
                 useBluetoothStore.getState().addLog('GLOBAL_PROTOCOL_ENGINE: AT SP 0 unconfirmed. Executing dynamic fallback matrix (AT SP 6/7/8/9/5/4/3/1/2)...');
 
                 const fallbackProtocols = [
-                    { sp: 'AT SP 6', name: 'ISO 15765-4 (CAN 11b/500k)', isCan: true, timeout: 3500 },
-                    { sp: 'AT SP 7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, timeout: 3500 },
-                    { sp: 'AT SP 8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 3500 },
-                    { sp: 'AT SP 9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 3500 },
-                    { sp: 'AT SP A', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 3500 },
-                    { sp: 'AT SP 5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 4500, isKLine: true },
-                    { sp: 'AT SP 4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 4500, isKLine: true },
-                    { sp: 'AT SP 3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 4500, isKLine: true },
-                    { sp: 'AT SP 1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 3500 },
-                    { sp: 'AT SP 2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 3500 },
+                    { sp: 'AT SP 6', name: 'ISO 15765-4 (CAN 11b/500k)', isCan: true, timeout: 5000 },
+                    { sp: 'AT SP 7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, timeout: 5000 },
+                    { sp: 'AT SP 8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 5000 },
+                    { sp: 'AT SP 9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 5000 },
+                    { sp: 'AT SP A', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 5000 },
+                    { sp: 'AT SP 5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 5500, isKLine: true },
+                    { sp: 'AT SP 4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 5500, isKLine: true },
+                    { sp: 'AT SP 3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 5500, isKLine: true },
+                    { sp: 'AT SP 1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 4500 },
+                    { sp: 'AT SP 2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 4500 },
                 ];
 
                 for (const item of fallbackProtocols) {
@@ -240,8 +240,8 @@ export const useBluetooth = () => {
                         OBDCommandQueue.resetStallCounter();
                         await OBDCommandQueue.add("AT PC", 800).catch(() => {});
                         await preciseSleep(100);
-                        await OBDCommandQueue.add(item.sp, 1500);
-                        await preciseSleep(100);
+                        await OBDCommandQueue.add(item.sp, item.timeout);
+                        await preciseSleep(150);
 
                         if (item.isCan) {
                             // CAN Engine Header Scoping to avoid Multi-ECU response collisions

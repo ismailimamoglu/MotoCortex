@@ -2478,13 +2478,11 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
           </View>
         </Modal>
 
-        {/* Secret Admin & OBD Terminal Modal (Gated to __DEV__ builds) */}
-        {__DEV__ && (
-          <AdminSecretModal
-            visible={isAdminModalVisible}
-            onClose={() => setIsAdminModalVisible(false)}
-          />
-        )}
+        {/* Secret Admin & OBD Terminal Modal */}
+        <AdminSecretModal
+          visible={isAdminModalVisible}
+          onClose={() => setIsAdminModalVisible(false)}
+        />
 
         {/* 1. Ignition Warning Modal */}
         <IgnitionWarningModal

@@ -14,14 +14,14 @@ export class ProtocolNegotiator {
 
         try {
             OBDCommandQueue.resetStallCounter();
-            await OBDCommandQueue.add('AT Z', 1000).catch(() => {});
+            await OBDCommandQueue.add('AT Z', 3500).catch(() => {});
             OBDCommandQueue.flushRxBuffer();
-            await preciseSleep(200);
+            await preciseSleep(400);
 
             const t0 = Date.now();
-            const atiRes = await OBDCommandQueue.add('ATI', 1000).catch(() => 'ELM327 v1.5');
-            const rvRes = await OBDCommandQueue.add('AT RV', 800).catch(() => '12.0V');
-            const dpRes = await OBDCommandQueue.add('AT DP', 800).catch(() => 'AUTO');
+            const atiRes = await OBDCommandQueue.add('ATI', 2500).catch(() => 'ELM327 v1.5');
+            const rvRes = await OBDCommandQueue.add('AT RV', 2000).catch(() => '12.0V');
+            const dpRes = await OBDCommandQueue.add('AT DP', 2000).catch(() => 'AUTO');
             const rtt = Math.max(10, Math.round((Date.now() - t0) / 3));
 
             const cleanFirmware = (atiRes || 'ELM327 v1.5').replace(/[\r\n>]/g, '').trim();
