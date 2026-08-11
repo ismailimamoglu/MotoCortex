@@ -252,7 +252,7 @@ export default function VehicleConfirmationModal({
             {/* Header with Language Selector */}
             <View style={s.header}>
               <Text numberOfLines={1} ellipsizeMode="tail" style={s.title}>
-                {isEditing ? t('vehicle.editTitle', 'EDIT VEHICLE').toUpperCase() : t('vehicle.detectTitle', 'VEHICLE IDENTIFIED').toUpperCase()}
+                {isEditing ? t('vehicle.editTitle').toUpperCase() : t('vehicle.detectTitle').toUpperCase()}
               </Text>
               <TouchableOpacity style={s.langBtn} onPress={toggleLanguage}>
                 <Text style={s.langBtnText}>
@@ -270,24 +270,24 @@ export default function VehicleConfirmationModal({
                 
                 <View style={s.infoGrid}>
                   <View style={s.infoRow}>
-                    <Text style={s.infoLabel}>{t('vehicle.brand', 'Brand:')}</Text>
+                    <Text style={s.infoLabel}>{t('vehicle.brand')}</Text>
                     <Text style={s.infoValue}>{profile.make}</Text>
                   </View>
                   <View style={s.infoRow}>
-                    <Text style={s.infoLabel}>{t('vehicle.model', 'Model:')}</Text>
+                    <Text style={s.infoLabel}>{t('vehicle.model')}</Text>
                     <Text style={s.infoValue}>{profile.model}</Text>
                   </View>
                   <View style={s.infoRow}>
-                    <Text style={s.infoLabel}>{t('vehicle.year', 'Year:')}</Text>
+                    <Text style={s.infoLabel}>{t('vehicle.year')}</Text>
                     <Text style={s.infoValue}>{profile.year}</Text>
                   </View>
                   <View style={s.infoRow}>
-                    <Text style={s.infoLabel}>{t('vehicle.fuelType', 'Fuel Type:')}</Text>
-                    <Text style={s.infoValue}>{profile.fuelType ? t(`vehicle.fuel.${profile.fuelType.toLowerCase()}`, profile.fuelType) : t('vehicle.unknown', 'Unknown')}</Text>
+                    <Text style={s.infoLabel}>{t('vehicle.fuelType')}</Text>
+                    <Text style={s.infoValue}>{profile.fuelType ? t(`vehicle.fuel.${profile.fuelType.toLowerCase()}`, profile.fuelType) : t('vehicle.unknown')}</Text>
                   </View>
                   <View style={s.infoRow}>
-                    <Text style={s.infoLabel}>{t('vehicle.transmission', 'Transmission:')}</Text>
-                    <Text style={s.infoValue}>{profile.transmission ? t(`vehicle.transmission.${profile.transmission.toLowerCase()}`, profile.transmission) : t('vehicle.unknown', 'Unknown')}</Text>
+                    <Text style={s.infoLabel}>{t('vehicle.transmission')}</Text>
+                    <Text style={s.infoValue}>{profile.transmission ? t(`vehicle.transmission.${profile.transmission.toLowerCase()}`, profile.transmission) : t('vehicle.unknown')}</Text>
                   </View>
                 </View>
               </View>
@@ -295,7 +295,7 @@ export default function VehicleConfirmationModal({
               // Edit mode
               <ScrollView style={s.formScroll} showsVerticalScrollIndicator={false}>
                 <View style={s.inputGroup}>
-                  <Text style={s.inputLabel}>{t('vehicle.brand', 'Brand:')}</Text>
+                  <Text style={s.inputLabel}>{t('vehicle.brand')}</Text>
                   <TextInput
                     style={s.textInput}
                     value={make}
@@ -306,7 +306,7 @@ export default function VehicleConfirmationModal({
                   />
                 </View>
                 <View style={s.inputGroup}>
-                  <Text style={s.inputLabel}>{t('vehicle.model', 'Model:')}</Text>
+                  <Text style={s.inputLabel}>{t('vehicle.model')}</Text>
                   <TextInput
                     style={s.textInput}
                     value={model}
@@ -317,7 +317,7 @@ export default function VehicleConfirmationModal({
                   />
                 </View>
                 <View style={s.inputGroup}>
-                  <Text style={s.inputLabel}>{t('vehicle.year', 'Year:')}</Text>
+                  <Text style={s.inputLabel}>{t('vehicle.year')}</Text>
                   <TextInput
                     style={s.textInput}
                     value={year}
@@ -329,14 +329,14 @@ export default function VehicleConfirmationModal({
                   />
                 </View>
                 <View style={s.inputGroup}>
-                  <Text style={s.inputLabel}>{t('vehicle.fuelType', 'Fuel Type:')}</Text>
+                  <Text style={s.inputLabel}>{t('vehicle.fuelType')}</Text>
                   <View style={s.optionContainer}>
                     <TouchableOpacity
                       style={[s.optionBtn, fuelType === 'GASOLINE' && s.optionBtnActive]}
                       onPress={() => setFuelType('GASOLINE')}
                     >
                       <Text style={[s.optionBtnText, fuelType === 'GASOLINE' && s.optionBtnTextActive]}>
-                        {t('vehicle.fuel.gasoline', 'GASOLINE')}
+                        {t('vehicle.fuel.gasoline')}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -344,20 +344,20 @@ export default function VehicleConfirmationModal({
                       onPress={() => setFuelType('DIESEL')}
                     >
                       <Text style={[s.optionBtnText, fuelType === 'DIESEL' && s.optionBtnTextActive]}>
-                        {t('vehicle.fuel.diesel', 'DIESEL')}
+                        {t('vehicle.fuel.diesel')}
                       </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
                 <View style={s.inputGroup}>
-                  <Text style={s.inputLabel}>{t('vehicle.transmission', 'Transmission:')}</Text>
+                  <Text style={s.inputLabel}>{t('vehicle.transmission')}</Text>
                   <View style={s.optionContainer}>
                     <TouchableOpacity
                       style={[s.optionBtn, transmission === 'MANUAL' && s.optionBtnActive]}
                       onPress={() => setTransmission('MANUAL')}
                     >
                       <Text style={[s.optionBtnText, transmission === 'MANUAL' && s.optionBtnTextActive]}>
-                        {t('vehicle.transmission.manual', 'MANUAL')}
+                        {t('vehicle.transmission.manual')}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -365,7 +365,7 @@ export default function VehicleConfirmationModal({
                       onPress={() => setTransmission('AUTOMATIC')}
                     >
                       <Text style={[s.optionBtnText, transmission === 'AUTOMATIC' && s.optionBtnTextActive]}>
-                        {t('vehicle.transmission.automatic', 'AUTOMATIC')}
+                        {t('vehicle.transmission.automatic')}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -386,7 +386,7 @@ export default function VehicleConfirmationModal({
                 }}
               >
                 <Text style={s.btnEditText}>
-                  {isEditing ? t('common.back', 'BACK') : t('common.edit', 'EDIT')}
+                  {isEditing ? t('common.back') : t('common.edit')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -394,7 +394,7 @@ export default function VehicleConfirmationModal({
                 onPress={handleConfirmAction}
               >
                 <Text style={s.btnConfirmText}>
-                  {isEditing ? t('common.save', 'SAVE').toUpperCase() : t('common.confirm', 'YES, CORRECT').toUpperCase()}
+                  {isEditing ? t('common.save').toUpperCase() : t('common.confirm').toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>

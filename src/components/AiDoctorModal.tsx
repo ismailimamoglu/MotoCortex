@@ -105,8 +105,8 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
       <SafeAreaView style={[styles.container, { backgroundColor: colors.bg || '#090d16' }]}>
         <View style={styles.header}>
           <View>
-            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>{t('aiDoctor.modalTitle', 'MotoCortex AI Doctor')}</Text>
-            <Text style={styles.headerSubtitle}>{t('aiDoctor.modalSubtitle', '26-Language Intelligent DTC Diagnostic Specialist')}</Text>
+            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>{t('aiDoctor.modalTitle')}</Text>
+            <Text style={styles.headerSubtitle}>{t('aiDoctor.modalSubtitle')}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>
@@ -116,7 +116,7 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#00e5ff" />
-            <Text style={styles.loadingText}>{t('aiDoctor.analyzing', 'Analyzing DTC codes & engine telemetry with AI Doctor...')}</Text>
+            <Text style={styles.loadingText}>{t('aiDoctor.analyzing')}</Text>
           </View>
         ) : result ? (
           <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -124,7 +124,7 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
             {isFreeTrial && (
               <View style={styles.freeTrialBanner}>
                 <Text style={styles.freeTrialBadgeText}>
-                  {t('aiDoctor.freeTrialBadge', '🎁 YOU ARE USING YOUR 1 FREE AI DIAGNOSTIC TRIAL')}
+                  {t('aiDoctor.freeTrialBadge')}
                 </Text>
               </View>
             )}
@@ -132,7 +132,7 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
             {/* Risk Badge Banner */}
             <View style={[styles.riskBanner, { backgroundColor: badge.bg, borderColor: badge.border }]}>
               <Text style={[styles.riskBadgeText, { color: badge.text }]}>{badge.label.replace('🔴 ', '').replace('🟡 ', '').replace('🟢 ', '')}</Text>
-              <Text style={styles.riskScoreText}>{t('aiDoctor.healthImpact', `Health Score Impact: ${result.riskScore}/100`, { score: result.riskScore })}</Text>
+              <Text style={styles.riskScoreText}>{t('aiDoctor.healthImpact', { score: result.riskScore })}</Text>
             </View>
 
             {/* Analysis Title & Summary */}
@@ -143,14 +143,14 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
 
             {/* Driving Safety Advice */}
             <View style={[styles.card, { backgroundColor: '#1a1928', borderColor: '#3a3858' }]}>
-              <Text style={styles.sectionHeader}>{t('aiDoctor.drivingSafety', 'Driving Safety Guidance')}</Text>
+              <Text style={styles.sectionHeader}>{t('aiDoctor.drivingSafety')}</Text>
               <Text style={styles.safetyText}>{result.canDriveSafetyText}</Text>
             </View>
 
             {/* Potential Causes */}
             {result.causes.length > 0 && (
               <View style={[styles.card, { backgroundColor: '#131b2e', borderColor: '#1f2d4a' }]}>
-                <Text style={styles.sectionHeader}>{t('aiDoctor.causes', 'Probable Causes')}</Text>
+                <Text style={styles.sectionHeader}>{t('aiDoctor.causes')}</Text>
                 {result.causes.map((cause, idx) => (
                   <View key={idx} style={styles.bulletItem}>
                     <Text style={styles.bulletSymbol}>•</Text>
@@ -163,7 +163,7 @@ export default function AiDoctorModal({ visible, onClose, context }: AiDoctorMod
             {/* Actionable Repair Steps */}
             {result.recommendedSteps.length > 0 && (
               <View style={[styles.card, { backgroundColor: '#131b2e', borderColor: '#1f2d4a' }]}>
-                <Text style={styles.sectionHeader}>{t('aiDoctor.recommendedAction', 'Recommended Mechanical Action')}</Text>
+                <Text style={styles.sectionHeader}>{t('aiDoctor.recommendedAction')}</Text>
                 {result.recommendedSteps.map((step, idx) => (
                   <View key={idx} style={styles.bulletItem}>
                     <Text style={styles.stepNumber}>{idx + 1}.</Text>

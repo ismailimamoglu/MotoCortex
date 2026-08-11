@@ -30,33 +30,33 @@ export default function HardwareHealthCard({
   return (
     <View style={sDyn.healthSection}>
       <Text style={sDyn.sectionTitle}>
-        {t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO').toUpperCase()}
+        {t('bento.settings.hardwareHealth').toUpperCase()}
       </Text>
       <View style={sDyn.healthCard}>
         <View style={sDyn.healthRow}>
-          <Text style={sDyn.healthLabel}>{t('bento.settings.connectionType', 'Connection Type:')}</Text>
+          <Text style={sDyn.healthLabel}>{t('bento.settings.connectionType')}</Text>
           <Text style={sDyn.healthValue}>BLE</Text>
         </View>
         <View style={sDyn.healthRow}>
-          <Text style={sDyn.healthLabel}>{t('bento.settings.deviceName', 'Device Name:')}</Text>
+          <Text style={sDyn.healthLabel}>{t('bento.settings.deviceName')}</Text>
           <Text style={sDyn.healthValue}>{lastDeviceName || 'OBDII'}</Text>
         </View>
         <View style={sDyn.healthRow}>
-          <Text style={sDyn.healthLabel}>{t('bento.settings.protocol', 'Protocol:')}</Text>
+          <Text style={sDyn.healthLabel}>{t('bento.settings.protocol')}</Text>
           <Text style={sDyn.healthValue}>
-            {isSimulationMode ? t('bento.settings.simulationObd', 'Simulation OBD') : 'CAN Bus (ISO-15765)'}
+            {isSimulationMode ? t('bento.settings.simulationObd') : 'CAN Bus (ISO-15765)'}
           </Text>
         </View>
         <View style={sDyn.healthRow}>
-          <Text style={sDyn.healthLabel}>{t('bento.settings.deviceStatus', 'Device Status:')}</Text>
+          <Text style={sDyn.healthLabel}>{t('bento.settings.deviceStatus')}</Text>
           <Text style={[sDyn.healthValue, { color: isCloneDevice ? colors.red : colors.green }]}>
-            {isCloneDevice ? t('bento.settings.safeMode', 'Safe Mode / Clone Adapter') : t('bento.settings.original', 'Original')}
+            {isCloneDevice ? t('bento.settings.safeMode') : t('bento.settings.original')}
           </Text>
         </View>
         <View style={sDyn.healthRow}>
-          <Text style={sDyn.healthLabel}>{t('bento.settings.pollingRate', 'Polling Rate:')}</Text>
+          <Text style={sDyn.healthLabel}>{t('bento.settings.pollingRate')}</Text>
           <Text style={sDyn.healthValue}>
-            {isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Low)') : t('bento.settings.pollingHigh', '4 Hz (High)')}
+            {isCloneDevice ? t('bento.settings.pollingLow') : t('bento.settings.pollingHigh')}
           </Text>
         </View>
       </View>

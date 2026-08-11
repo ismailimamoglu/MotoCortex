@@ -75,7 +75,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
     try {
       const isAvailable = await Sharing.isAvailableAsync();
       if (!isAvailable) {
-        Alert.alert(t('common.unsupported', 'Unsupported'), t('obdTerminal.noShareSupport', 'Sharing features are not available on this device.'));
+        Alert.alert(t('common.unsupported'), t('obdTerminal.noShareSupport'));
         return;
       }
       
@@ -84,11 +84,11 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
       
       await Sharing.shareAsync(fileUri, {
         mimeType: 'text/plain',
-        dialogTitle: t('obdTerminal.diagnosticLogTitle', 'DIAGNOSTIC LOG'),
+        dialogTitle: t('obdTerminal.diagnosticLogTitle'),
         UTI: 'public.plain-text',
       });
     } catch (e: any) {
-      Alert.alert(t('bento.settings.shareError', 'Sharing Error'), e.message || t('bento.settings.noLogsToShare', 'There are no diagnostic logs to share.'));
+      Alert.alert(t('bento.settings.shareError'), e.message || t('bento.settings.noLogsToShare'));
     }
   };
 
@@ -270,40 +270,40 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
             {/* Glow Accent Header */}
             <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
               <View>
-                <Text style={[sDyn.title, { color: colors.cyan }]}>{t('secretDebug.title', '⚡ CORTEX OBD2 DEV PANEL')}</Text>
-                <Text style={[sDyn.subtitle, { color: colors.textSec }]}>{t('secretDebug.logFileSize', 'Black Box / File Size:')} {fileSize}</Text>
+                <Text style={[sDyn.title, { color: colors.cyan }]}>{t('secretDebug.title')}</Text>
+                <Text style={[sDyn.subtitle, { color: colors.textSec }]}>{t('secretDebug.logFileSize')} {fileSize}</Text>
               </View>
               <TouchableOpacity 
                 onPress={onClose} 
                 style={[sDyn.closeBtn, { backgroundColor: `${colors.cyan}18` }]}
               >
-                <Text style={[sDyn.closeBtnText, { color: colors.cyan }]}>{t('common.close', 'Close').toUpperCase()}</Text>
+                <Text style={[sDyn.closeBtnText, { color: colors.cyan }]}>{t('common.close').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
 
             {/* DTC Sync Card */}
             <View style={[sDyn.syncCard, { backgroundColor: `${colors.cyan}0b`, borderColor: colors.border }]}>
-              <Text style={[sDyn.sectionTitle, { color: colors.cyan, fontFamily: colors.mono }]}>{t('secretDebug.dtcCloudSync', '🛰️ DTC CLOUD SYNCHRONIZATION')}</Text>
+              <Text style={[sDyn.sectionTitle, { color: colors.cyan, fontFamily: colors.mono }]}>{t('secretDebug.dtcCloudSync')}</Text>
               
               <View style={sDyn.syncRow}>
                 <View style={sDyn.syncCol}>
-                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('common.brand', 'Brand')}</Text>
-                  <Text style={[sDyn.syncValue, { color: colors.textPri, fontWeight: 'bold' }]}>{vehicleMake || t('common.unknown', 'Unknown').toUpperCase()}</Text>
+                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('common.brand')}</Text>
+                  <Text style={[sDyn.syncValue, { color: colors.textPri, fontWeight: 'bold' }]}>{vehicleMake || t('common.unknown').toUpperCase()}</Text>
                 </View>
                 
                 <View style={sDyn.syncCol}>
-                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('common.status', 'Status')}</Text>
+                  <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('common.status')}</Text>
                   <Text style={[sDyn.syncValue, { 
                     color: dtcSyncStatus === 'success' ? colors.green : dtcSyncStatus === 'error' ? colors.red : colors.cyan,
                     fontWeight: 'bold'
                   }]}>
-                    {dtcSyncStatus === 'syncing' ? t('common.syncing', 'Syncing...') : dtcSyncStatus === 'success' ? t('common.success', 'Success') : dtcSyncStatus === 'error' ? t('common.error', 'Error') : t('common.pending', 'Pending')}
+                    {dtcSyncStatus === 'syncing' ? t('common.syncing') : dtcSyncStatus === 'success' ? t('common.success') : dtcSyncStatus === 'error' ? t('common.error') : t('common.pending')}
                   </Text>
                 </View>
 
                 {lastDtcSyncTime && (
                   <View style={sDyn.syncCol}>
-                    <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('secretDebug.lastSync', 'Last Sync')}</Text>
+                    <Text style={[sDyn.syncLabel, { color: colors.textSec }]}>{t('secretDebug.lastSync')}</Text>
                     <Text style={[sDyn.syncValue, { color: colors.textPri }]}>{lastDtcSyncTime}</Text>
                   </View>
                 )}
@@ -319,14 +319,14 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 }}
               >
                 <Text style={[sDyn.syncBtnText, { fontFamily: colors.mono }]}>
-                  {dtcSyncStatus === 'syncing' ? t('common.syncing', 'Syncing...').toUpperCase() : t('secretDebug.syncNow', 'Sync Now').toUpperCase()}
+                  {dtcSyncStatus === 'syncing' ? t('common.syncing').toUpperCase() : t('secretDebug.syncNow').toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>
 
             {/* Developer Settings Card */}
             <View style={[sDyn.syncCard, { backgroundColor: `${colors.purple}0b`, borderColor: colors.border, marginBottom: scaleHeight(12) }]}>
-              <Text style={[sDyn.sectionTitle, { color: colors.purple, fontFamily: colors.mono }]}>{t('secretDebug.developerTools', 'DEVELOPER TOOLS')}</Text>
+              <Text style={[sDyn.sectionTitle, { color: colors.purple, fontFamily: colors.mono }]}>{t('secretDebug.developerTools')}</Text>
               
               <View style={{ flexDirection: 'row', gap: scaleMod(8), marginBottom: scaleHeight(8) }}>
                 {/* Reset Trial */}
@@ -341,12 +341,12 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                   ]}
                   onPress={() => {
                     resetFreeUsage();
-                    Alert.alert(t('common.success', 'Success'), t('secretDebug.trialResetSuccess', 'Free Trial counter reset successfully!'));
+                    Alert.alert(t('common.success'), t('secretDebug.trialResetSuccess'));
                   }}
                   activeOpacity={0.4}
                 >
                   <Text style={[sDyn.actionBtnText, { color: colors.amber, fontFamily: colors.mono }]}>
-                    🔄 {t('common.reset', 'Reset').toUpperCase()} ({freeUsageCount}/3)
+                    🔄 {t('common.reset').toUpperCase()} ({freeUsageCount}/3)
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -364,12 +364,12 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                   ]}
                   onPress={() => {
                     Alert.alert(
-                      t('secretDebug.crashTestTitle', 'Crash Test'),
-                      t('secretDebug.crashTestDesc', 'The application will now crash intentionally. Confirm to verify Crashlytics integration.'),
+                      t('secretDebug.crashTestTitle'),
+                      t('secretDebug.crashTestDesc'),
                       [
-                        { text: t('common.cancel', 'Cancel'), style: "cancel" },
+                        { text: t('common.cancel'), style: "cancel" },
                         {
-                          text: t('secretDebug.crashButton', 'Crash'),
+                          text: t('secretDebug.crashButton'),
                           style: "destructive",
                           onPress: () => {
                             crashlytics().log("Test crash triggered by developer");
@@ -382,7 +382,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                   activeOpacity={0.4}
                 >
                   <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>
-                    💥 {t('secretDebug.crashTest', 'Crash Test').toUpperCase()} (CRASHLYTICS)
+                    💥 {t('secretDebug.crashTest').toUpperCase()} (CRASHLYTICS)
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -410,7 +410,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 onPress={handleClear}
                 activeOpacity={0.4}
               >
-                <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>{t('common.clear', 'Clear').toUpperCase()}</Text>
+                <Text style={[sDyn.actionBtnText, { color: colors.red, fontFamily: colors.mono }]}>{t('common.clear').toUpperCase()}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
@@ -418,7 +418,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 onPress={loadLogsAndInfo}
                 activeOpacity={0.4}
               >
-                <Text style={[sDyn.actionBtnText, { color: colors.cyan, fontFamily: colors.mono }]}>{t('common.refresh', 'Refresh').toUpperCase()}</Text>
+                <Text style={[sDyn.actionBtnText, { color: colors.cyan, fontFamily: colors.mono }]}>{t('common.refresh').toUpperCase()}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
@@ -426,7 +426,7 @@ export default function SecretDebugModal({ visible, onClose }: SecretDebugModalP
                 onPress={handleShare}
                 activeOpacity={0.4}
               >
-                <Text style={[sDyn.actionBtnText, { color: '#000000', fontWeight: '900', fontFamily: colors.mono }]}>{t('common.share', 'Share').toUpperCase()}</Text>
+                <Text style={[sDyn.actionBtnText, { color: '#000000', fontWeight: '900', fontFamily: colors.mono }]}>{t('common.share').toUpperCase()}</Text>
               </TouchableOpacity>
             </View>
           </View>

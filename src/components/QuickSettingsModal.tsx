@@ -169,13 +169,13 @@ function QuickSettingsModalContent({ visible, onClose, onTriggerDebug, onDisconn
         <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
           <TouchableOpacity activeOpacity={0.4} onPress={handleTitleTap}>
             <Text allowFontScaling={false} style={[sDyn.headerTitle, { color: colors.textPri }]}>
-              🌐 {t('bento.languageSelect', 'LANGUAGE').toUpperCase()}
+              🌐 {t('bento.languageSelect').toUpperCase()}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
             <Text allowFontScaling={false} style={[sDyn.cancelText, { color: colors.cyan }]}>
-              {t('bento.settings.done', 'DONE').toUpperCase()}
+              {t('bento.settings.done').toUpperCase()}
             </Text>
           </TouchableOpacity>
         </View>

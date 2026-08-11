@@ -35,13 +35,13 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
   // Quality rating calculation
   const rating = useMemo(() => {
-    if (!isConnected) return { text: t('common.unknown', 'Unknown'), color: colors.textSec, badge: '' };
+    if (!isConnected) return { text: t('common.unknown'), color: colors.textSec, badge: '' };
     if (adapterCapabilityScore >= 80) {
-      return { text: t('health.excellent', 'EXCELLENT (ORIGINAL)'), color: colors.green, badge: '' };
+      return { text: t('health.excellent'), color: colors.green, badge: '' };
     } else if (adapterCapabilityScore >= 60) {
-      return { text: t('health.good', 'GOOD (STANDARD)'), color: colors.amber, badge: '' };
+      return { text: t('health.good'), color: colors.amber, badge: '' };
     } else {
-      return { text: t('health.clone', 'UYUMSUZ / KLON'), color: colors.red, badge: '' };
+      return { text: t('health.clone'), color: colors.red, badge: '' };
     }
   }, [isConnected, adapterCapabilityScore, t, colors]);
 
@@ -65,16 +65,16 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
   // Define PIDs to list in the Vehicle Support Checklist
   const monitoredPids = useMemo(() => [
-    { name: t('sensor.rpm', 'Engine RPM (RPM)'), pid: '0C' },
-    { name: t('sensor.speed', 'Vehicle Speed (Speed)'), pid: '0D' },
-    { name: t('sensor.coolant', 'Engine Coolant Temp'), pid: '05' },
-    { name: t('sensor.throttle', 'Throttle Position (Throttle Pos)'), pid: '11' },
-    { name: t('sensor.voltage', 'Control Module Voltage (Voltage)'), pid: '42' },
-    { name: t('sensor.maf', 'MAF Air Flow Rate (MAF Flow)'), pid: '10' },
-    { name: t('sensor.iat', 'Intake Air Temp'), pid: '0F' },
-    { name: t('sensor.load', 'Calculated Engine Load (Engine Load)'), pid: '04' },
-    { name: t('sensor.fuel', 'Fuel Level Input (Fuel Level)'), pid: '2F' },
-    { name: t('sensor.oilTemp', 'Engine Oil Temp (Oil Temp)'), pid: '5C' }
+    { name: t('sensor.rpm'), pid: '0C' },
+    { name: t('sensor.speed'), pid: '0D' },
+    { name: t('sensor.coolant'), pid: '05' },
+    { name: t('sensor.throttle'), pid: '11' },
+    { name: t('sensor.voltage'), pid: '42' },
+    { name: t('sensor.maf'), pid: '10' },
+    { name: t('sensor.iat'), pid: '0F' },
+    { name: t('sensor.load'), pid: '04' },
+    { name: t('sensor.fuel'), pid: '2F' },
+    { name: t('sensor.oilTemp'), pid: '5C' }
   ], [t]);
 
   return (
@@ -82,7 +82,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 1. Quality & Performance Badge */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.adapterQuality', 'ADAPTER QUALITY & PERFORMANCE')}
+          {t('health.adapterQuality')}
         </Text>
 
         <View style={styles.ratingRow}>
@@ -91,7 +91,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               {rating.text}
             </Text>
             <Text style={[styles.firmwareLabel, { color: colors.textSec, fontSize: fs(11) }]}>
-              {t('health.firmware', 'Firmware Version:')} {adapterFirmware}
+              {t('health.firmware')} {adapterFirmware}
             </Text>
           </View>
         </View>
@@ -104,7 +104,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               {isConnected ? `${adapterCapabilityScore}/100` : '—'}
             </Text>
             <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(9.5) }]} numberOfLines={1}>
-              {t('health.capScore', 'Yetenek Skoru')}
+              {t('health.capScore')}
             </Text>
           </View>
 
@@ -113,7 +113,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               {isConnected ? `${avgRtt || 22} ms` : '—'}
             </Text>
             <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(9.5) }]} numberOfLines={1}>
-              {t('health.latency', 'Latency (Response Time)')}
+              {t('health.latency')}
             </Text>
           </View>
 
@@ -127,7 +127,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               {protocolDisplay}
             </Text>
             <Text style={[styles.metricLabel, { color: colors.textSec, fontSize: fs(9.5) }]} numberOfLines={1}>
-              {t('health.protocol', 'Aktif Protokol')}
+              {t('health.protocol')}
             </Text>
           </View>
         </View>
@@ -136,40 +136,40 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 2. Feature Support Matrix (App Capabilities) */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.featureSupport', 'APPLICATION FEATURE MATRIX')}
+          {t('health.featureSupport')}
         </Text>
 
         <View style={styles.matrixContainer}>
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixReadCodes', 'DTC Read & Clear')}
+              {t('health.matrixReadCodes')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              {t('common.supported', 'SUPPORTED')}
+              {t('common.supported')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixLiveSensors', 'Live Sensor Monitoring (Basic)')}
+              {t('health.matrixLiveSensors')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              {t('common.supported', 'SUPPORTED')}
+              {t('common.supported')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixBattery', 'Battery / Voltage Test')}
+              {t('health.matrixBattery')}
             </Text>
             <Text style={[styles.matrixStatus, { color: colors.green, fontSize: fs(12), fontFamily: colors.mono }]}>
-              {t('common.supported', 'SUPPORTED')}
+              {t('common.supported')}
             </Text>
           </View>
 
           <View style={styles.matrixRow}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixHighSpeed', 'High-Speed Telemetry (20Hz)')}
+              {t('health.matrixHighSpeed')}
             </Text>
             <Text style={[
               styles.matrixStatus, 
@@ -177,8 +177,8 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             ]}>
               {isConnected 
                 ? avgRtt < 120 
-                  ? t('health.active', 'ACTIVE')
-                  : t('health.degraded', 'DEGRADED (Slow Response)')
+                  ? t('health.active')
+                  : t('health.degraded')
                 : '—'
               }
             </Text>
@@ -186,7 +186,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
           <View style={[styles.matrixRow, { borderBottomWidth: 0, paddingBottom: 0 }]}>
             <Text style={[styles.matrixLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-              {t('health.matrixCoding', 'ECU Coding & Adaptation')}
+              {t('health.matrixCoding')}
             </Text>
             <Text style={[
               styles.matrixStatus, 
@@ -194,8 +194,8 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             ]}>
               {isConnected 
                 ? !isCloneDevice 
-                  ? t('common.supported', 'SUPPORTED')
-                  : t('health.locked', 'LOCKED (Safe Mode)')
+                  ? t('common.supported')
+                  : t('health.locked')
                 : '—'
               }
             </Text>
@@ -204,7 +204,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
           {isConnected && isCloneDevice && (
             <View style={[styles.lockWarningBlock, { backgroundColor: `${colors.red}0F`, borderColor: colors.red }]}>
               <Text style={[styles.lockWarningText, { color: colors.textSec, fontSize: fs(10.5) }]}>
-                <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning', 'SAFETY LOCK:')}</Text> {t('health.lockExplain', 'Your adapter has been identified as a clone chip. Please use an original vLinker or ELM327 adapter for safe coding.')}
+                <Text style={{ color: colors.red, fontWeight: '800' }}>{t('health.warning')}</Text> {t('health.lockExplain')}
               </Text>
             </View>
           )}
@@ -214,7 +214,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
       {/* 3. Vehicle Sensor Checklist (PID Support) */}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.cardHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-          {t('health.vehiclePids', 'VEHICLE SENSOR CHECKLIST')}
+          {t('health.vehiclePids')}
         </Text>
 
         <Text style={[styles.checklistDesc, { color: colors.textSec, fontSize: fs(11) }]}>
@@ -237,7 +237,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
                     styles.checkBadgeText, 
                     { color: isSupported ? colors.green : colors.red, fontSize: fs(10), fontFamily: colors.mono }
                   ]}>
-                    {isSupported ? t('health.supportedBadge', 'SUPPORTED') : t('health.unsupportedBadge', 'UNSUPPORTED')}
+                    {isSupported ? t('health.supportedBadge') : t('health.unsupportedBadge')}
                   </Text>
                 </View>
               </View>

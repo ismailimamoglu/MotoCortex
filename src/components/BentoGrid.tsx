@@ -96,8 +96,8 @@ export default function BentoGrid({
   const handleProPress = () => {
     if (isPro || isSimulationMode) {
       Alert.alert(
-        t('common.proActiveTitle', 'PRO STATUS ACTIVE'),
-        t('common.proActiveDesc', 'You have full access to all OBD2 UDS diagnostic features.')
+        t('common.proActiveTitle'),
+        t('common.proActiveDesc')
       );
     } else {
       onOpenPaywall();
@@ -110,29 +110,29 @@ export default function BentoGrid({
       actionCallback();
     } else if (isDisconnectAction) {
       Alert.alert(
-        t('connection.noActiveTitle', 'No Active Connection'),
-        t('connection.noActiveDesc', 'There is no active OBD2 connection to disconnect from.')
+        t('connection.noActiveTitle'),
+        t('connection.noActiveDesc')
       );
     } else {
       Alert.alert(
-        t('connection.requiredTitle', 'Connection Required'),
-        t('connection.requiredDesc', 'To use this feature, please connect to an OBD2 device or enable Demo Mode.'),
+        t('connection.requiredTitle'),
+        t('connection.requiredDesc'),
         [
           {
-            text: t('common.enableDemoMode', 'ENABLE DEMO MODE'),
+            text: t('common.enableDemoMode'),
             onPress: () => {
               toggleSimulationMode();
               actionCallback();
             },
           },
           {
-            text: t('connection.connectBtn', 'CONNECT DEVICE'),
+            text: t('connection.connectBtn'),
             onPress: () => {
               onOpenConnect && onOpenConnect();
             },
           },
           {
-            text: t('common.cancel', 'Cancel'),
+            text: t('common.cancel'),
             style: 'cancel',
           },
         ]
@@ -237,8 +237,8 @@ export default function BentoGrid({
               {isConnected 
                 ? (isClean ? t('bento.cleanFaults') : t('bento.dtcDetected', { count: dtcCount }))
                 : isSimulationMode
-                ? t('common.demoMode', 'DEMO MODE')
-                : t('bento.settings.noConnection', 'No Connection')}
+                ? t('common.demoMode')
+                : t('bento.settings.noConnection')}
             </Text>
           </View>
         </BentoButton>
@@ -257,8 +257,8 @@ export default function BentoGrid({
               {isConnected 
                 ? t('bento.realtimeData')
                 : isSimulationMode
-                ? t('common.demoMode', 'DEMO MODE')
-                : t('bento.settings.noConnection', 'No Connection')}
+                ? t('common.demoMode')
+                : t('bento.settings.noConnection')}
             </Text>
           </View>
         </BentoButton>
@@ -282,30 +282,30 @@ export default function BentoGrid({
           adjustsFontSizeToFit
           style={[sDyn.cardTitleSecondary, { color: colors.textPri }]}
         >
-          {t('bento.featureActivation', 'UNLOCK HIDDEN FEATURES / ECU CODING').toUpperCase()}
+          {t('bento.featureActivation').toUpperCase()}
         </Text>
       </BentoButton>
 
       {/* Advanced Telematics & Diagnostic Quick Action Tiles (2x3 Grid) */}
       <View style={sDyn.toolsGrid}>
         <BentoButton style={sDyn.toolTile} onPress={() => executeActiveAction(onOpenHpGauge)}>
-          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.hpGauge', 'HORSEPOWER / HP')}</Text>
+          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.hpGauge')}</Text>
         </BentoButton>
 
         <BentoButton style={sDyn.toolTile} onPress={() => executeActiveAction(onOpenFuelTrim)}>
-          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.fuelTrim', 'FUEL TRIM')}</Text>
+          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.fuelTrim')}</Text>
         </BentoButton>
 
         <BentoButton style={sDyn.toolTile} onPress={() => executeActiveAction(onOpenDpf)}>
-          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.dpfFilter', 'DPF FILTER')}</Text>
+          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.dpfFilter')}</Text>
         </BentoButton>
 
         <BentoButton style={sDyn.toolTile} onPress={() => executeActiveAction(onOpenMultiEcu)}>
-          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.multiEcu', 'MULTI-ECU')}</Text>
+          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.multiEcu')}</Text>
         </BentoButton>
 
         <BentoButton style={sDyn.toolTile} onPress={() => executeActiveAction(onOpenDct)}>
-          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.dctAdapt', 'DCT ADAPT')}</Text>
+          <Text numberOfLines={1} style={sDyn.toolTileText}>{t('bento.dctAdapt')}</Text>
         </BentoButton>
 
         <BentoButton
@@ -322,7 +322,7 @@ export default function BentoGrid({
               isSimulationMode && { color: colors.green }
             ]}
           >
-            {isSimulationMode ? `• ${t('common.demoMode', 'DEMO MODU').toUpperCase()}` : t('common.demoMode', 'DEMO MODU').toUpperCase()}
+            {isSimulationMode ? `• ${t('common.demoMode').toUpperCase()}` : t('common.demoMode').toUpperCase()}
           </Text>
         </BentoButton>
       </View>
@@ -336,7 +336,7 @@ export default function BentoGrid({
           activeOpacity={0.4}
         >
           <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
-            {t('bento.vehicleProfile', 'ABOUT').toUpperCase()}
+            {t('bento.vehicleProfile').toUpperCase()}
           </Text>
         </BentoButton>
 
@@ -348,7 +348,7 @@ export default function BentoGrid({
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri, marginTop: 0 }]}>
-              {t('bento.languageSelect', 'LANG').toUpperCase()}
+              {t('bento.languageSelect').toUpperCase()}
             </Text>
             <Text style={{ fontSize: scaleFont(9), fontFamily: MONO, color: colors.cyan, marginStart: 2 }}>{langBadge}</Text>
           </View>
@@ -361,7 +361,7 @@ export default function BentoGrid({
           activeOpacity={0.4}
         >
           <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
-            {t('info.support', 'SUPPORT').toUpperCase()}
+            {t('info.support').toUpperCase()}
           </Text>
         </BentoButton>
 
@@ -372,7 +372,7 @@ export default function BentoGrid({
           activeOpacity={0.4}
         >
           <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
-            {t('info.shareWithFriend', 'SHARE').toUpperCase()}
+            {t('info.shareWithFriend').toUpperCase()}
           </Text>
         </BentoButton>
       </View>

@@ -40,7 +40,7 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
 
   const handleStartReset = async () => {
     if (!preconditionResult.allPassed) {
-      Alert.alert(t('common.warning'), t('dct.ensurePreconditions', 'Please ensure all safety preconditions are met.'));
+      Alert.alert(t('common.warning'), t('dct.ensurePreconditions'));
       return;
     }
 
@@ -83,10 +83,10 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
                 <ActivityIndicator size="large" color={tc.cyan} />
                 <Text style={[styles.execTitle, { color: tc.cyan }]}>
                   {progressStep === 1
-                    ? t('dct.step1', '1/3: Hydraulic Pressure Equalization...')
+                    ? t('dct.step1')
                     : progressStep === 2
-                    ? t('dct.step2', '2/3: Clutch 1 (C1) Basic Settings...')
-                    : t('dct.step3', '3/3: Clutch 2 (C2) Gear Shift Adaptation...')}
+                    ? t('dct.step2')
+                    : t('dct.step3')}
                 </Text>
                 <Text style={[styles.execWarning, { color: tc.red }]}>{t('dct.inProgress')}</Text>
               </View>

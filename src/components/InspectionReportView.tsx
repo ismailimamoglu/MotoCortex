@@ -41,7 +41,7 @@ export default function InspectionReportView({ visible, onClose, report }: Inspe
         <View style={[styles.container, { backgroundColor: colors.card, borderColor: colors.border }]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, { color: colors.cyan }]}>📋 {t('inspection.reportTitle', 'VEHICLE INSPECTION REPORT')}</Text>
+            <Text style={[styles.title, { color: colors.cyan }]}>📋 {t('inspection.reportTitle')}</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
               <Text style={{ color: colors.textSec, fontSize: scaleFont(16), fontWeight: '900' }}>✕</Text>
             </TouchableOpacity>
@@ -50,13 +50,13 @@ export default function InspectionReportView({ visible, onClose, report }: Inspe
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             {/* Hash Badge */}
             <View style={[styles.hashBox, { backgroundColor: `${colors.cyan}1A`, borderColor: colors.cyan }]}>
-              <Text style={[styles.hashLabel, { color: colors.cyan }]}>🔒 VERIFICATION HASH:</Text>
+              <Text style={[styles.hashLabel, { color: colors.cyan }]}>{t('inspectionReport.verificationHash')}</Text>
               <Text style={[styles.hashValue, { color: colors.textPri }]}>{report.verificationHash}</Text>
             </View>
 
             {/* Vehicle Info Card */}
             <View style={[styles.sectionCard, { backgroundColor: `${colors.textPri}08`, borderColor: `${colors.textPri}10` }]}>
-              <Text style={[styles.sectionTitle, { color: colors.textSec }]}>🚗 {t('inspection.vehicleDetails', 'VEHICLE DETAILS')}</Text>
+              <Text style={[styles.sectionTitle, { color: colors.textSec }]}>🚗 {t('inspection.vehicleDetails')}</Text>
               <Text style={[styles.infoLine, { color: colors.textPri }]}>VIN: <Text style={{ color: colors.cyan }}>{report.vehicle.vin}</Text></Text>
               <Text style={[styles.infoLine, { color: colors.textPri }]}>MAKE / MODEL: {report.vehicle.make} {report.vehicle.model} ({report.vehicle.year})</Text>
               <Text style={[styles.infoLine, { color: colors.textPri }]}>ODOMETER: {report.vehicle.odometerKm.toLocaleString()} KM</Text>
@@ -64,7 +64,7 @@ export default function InspectionReportView({ visible, onClose, report }: Inspe
 
             {/* Health Score & Diagnostics */}
             <View style={[styles.sectionCard, { backgroundColor: `${colors.textPri}08`, borderColor: `${colors.textPri}10` }]}>
-              <Text style={[styles.sectionTitle, { color: colors.textSec }]}>🧪 {t('inspection.diagnosticSummary', 'DIAGNOSTIC SUMMARY')}</Text>
+              <Text style={[styles.sectionTitle, { color: colors.textSec }]}>🧪 {t('inspection.diagnosticSummary')}</Text>
               <Text style={[styles.infoLine, { color: colors.textPri }]}>HEALTH SCORE: <Text style={{ color: report.summary.healthScore > 80 ? colors.green : colors.amber, fontWeight: '900' }}>{report.summary.healthScore}%</Text></Text>
               <Text style={[styles.infoLine, { color: colors.textPri }]}>ACTIVE DTCs: {report.summary.totalDtcCount}</Text>
               <Text style={[styles.infoLine, { color: colors.textPri }]}>DRIVE SAFETY: {report.summary.isSafeToDrive ? '✅ SAFE' : '⚠️ ATTENTION REQUIRED'}</Text>
@@ -78,7 +78,7 @@ export default function InspectionReportView({ visible, onClose, report }: Inspe
 
           {/* Action Buttons */}
           <TouchableOpacity style={[styles.actionBtn, { backgroundColor: colors.cyan }]} onPress={handleShareJson}>
-            <Text style={[styles.actionBtnText, { color: colors.card }]}>📤 {t('inspection.shareReport', 'EXPORT & SHARE REPORT')}</Text>
+            <Text style={[styles.actionBtnText, { color: colors.card }]}>📤 {t('inspection.shareReport')}</Text>
           </TouchableOpacity>
         </View>
       </View>

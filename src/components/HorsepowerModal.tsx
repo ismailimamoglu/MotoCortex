@@ -112,7 +112,7 @@ export const HorsepowerModal: React.FC<HorsepowerModalProps> = ({
 
             {/* Calculation Method Selector */}
             <Text style={[styles.sectionTitle, { color: tc.textPri }]}>
-              {t('hpGauge.calcMethod', 'HESAPLAMA METODU')}
+              {t('hpGauge.calcMethod')}
             </Text>
             <View style={styles.methodSelector}>
               {(['maf', 'torque', 'load'] as const).map((m) => (

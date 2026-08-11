@@ -144,7 +144,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, width, height } = useResponsive();
 
   const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
-  const unitText = t('dashboard.unit', 'Unit');
+  const unitText = t('dashboard.unit');
 
   // Dynamic Styles (Memoized & Hardened against Android Release Layout Shift)
   const sDyn = useMemo(() => {
@@ -315,7 +315,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
           {/* Header */}
           <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
             <View style={{ flex: 1, paddingRight: scaleWidth(8) }}>
-              <Text style={[sDyn.title, { color: colors.purple }]}>{t('dashboard.customizeTitle', 'DASHBOARD SETTINGS')}</Text>
+              <Text style={[sDyn.title, { color: colors.purple }]}>{t('dashboard.customizeTitle')}</Text>
               <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
                 {isKLineProtocol 
                   ? t('dashboard.customizeSubtitleKLine', { defaultValue: `K-Line protocol connected. You can select a maximum of ${maxLimit} sensors.`, limit: maxLimit })
@@ -327,7 +327,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
               activeOpacity={0.6}
               style={[sDyn.closeBtn, { backgroundColor: `${colors.purple}18` }]}
             >
-              <Text style={[sDyn.closeBtnText, { color: colors.purple }]}>{t('common.close', 'Close')}</Text>
+              <Text style={[sDyn.closeBtnText, { color: colors.purple }]}>{t('common.close')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -342,15 +342,15 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
 
           {/* Layout Type Selection */}
           <View style={[sDyn.layoutRow, { backgroundColor: `${colors.purple}05`, borderColor: colors.border }]}>
-            <Text style={[sDyn.layoutLabel, { color: colors.textPri }]}>{t('dashboard.layoutType', 'Layout Style')}</Text>
+            <Text style={[sDyn.layoutLabel, { color: colors.textPri }]}>{t('dashboard.layoutType')}</Text>
             <View style={sDyn.layoutButtons}>
               {(['grid', 'list', 'gauge', 'chart'] as const).map((type) => {
                 const isSelected = draftLayout === type;
                 const labelMap = {
-                  grid: t('dashboard.layoutGrid', 'GRID'),
-                  list: t('dashboard.layoutList', 'LIST'),
-                  gauge: t('dashboard.layoutGauge', 'GAUGE'),
-                  chart: t('dashboard.layoutChart', 'CHART'),
+                  grid: t('dashboard.layoutGrid'),
+                  list: t('dashboard.layoutList'),
+                  gauge: t('dashboard.layoutGauge'),
+                  chart: t('dashboard.layoutChart'),
                 };
                 return (
                   <TouchableOpacity
@@ -407,7 +407,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
               onPress={handleReset}
             >
               <Text style={[sDyn.footerBtnText, { color: colors.textPri }]}>
-                {t('common.reset', 'DEFAULT')}
+                {t('common.reset')}
               </Text>
             </TouchableOpacity>
 
@@ -417,7 +417,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
               onPress={handleApply}
             >
               <Text style={[sDyn.footerBtnText, { color: '#ffffff', fontWeight: '900' }]}>
-                {t('common.apply', 'APPLY')}
+                {t('common.apply')}
               </Text>
             </TouchableOpacity>
           </View>

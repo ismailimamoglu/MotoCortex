@@ -39,14 +39,14 @@ export default function RegisteredVehicleList({
   return (
     <View style={{ gap: scaleHeight(12) }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: scaleHeight(4) }}>
-        <Text style={sDyn.vehicleLabel}>{t('vehicleSelect.registeredVehicles', 'REGISTERED VEHICLES').toUpperCase()}</Text>
+        <Text style={sDyn.vehicleLabel}>{t('vehicleSelect.registeredVehicles').toUpperCase()}</Text>
         <TouchableOpacity 
           onPress={onBack}
           style={{ paddingHorizontal: 12, paddingVertical: 6, backgroundColor: `${colors.textPri}14`, borderRadius: 6 }}
           activeOpacity={0.4}
         >
           <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(10), fontWeight: 'bold' }}>
-            ← {t('common.back', 'Back').toUpperCase()}
+            ← {t('common.back').toUpperCase()}
           </Text>
         </TouchableOpacity>
       </View>
@@ -55,7 +55,7 @@ export default function RegisteredVehicleList({
         {registeredVehicles.length === 0 ? (
           <View style={{ padding: scaleMod(20), alignItems: 'center', justifyContent: 'center' }}>
             <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11), textAlign: 'center' }}>
-              {t('vehicleSelect.noRegisteredVehicles', 'No registered vehicles found.')}
+              {t('vehicleSelect.noRegisteredVehicles')}
             </Text>
           </View>
         ) : (
@@ -86,7 +86,7 @@ export default function RegisteredVehicleList({
                   </Text>
                   {v.vin && (
                     <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(9.5), marginTop: 2 }}>
-                      {t('common.chassis', 'Chassis')}: {v.vin}
+                      {t('common.chassis')}: {v.vin}
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -104,7 +104,7 @@ export default function RegisteredVehicleList({
                   activeOpacity={0.4}
                 >
                   <Text style={{ color: colors.red, fontFamily: MONO, fontSize: scaleFont(9.5), fontWeight: '900' }}>
-                    🗑️ {t('common.delete', 'DELETE').toUpperCase()}
+                    🗑️ {t('common.delete').toUpperCase()}
                   </Text>
                 </TouchableOpacity>
               </View>

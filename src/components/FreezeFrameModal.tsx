@@ -321,19 +321,19 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
                                 {(data.throttle !== null || data.map !== null || data.stft !== null) && (
                                     <View style={{ flexDirection: 'row', gap: scaleMod(8), marginBottom: scaleHeight(8) }}>
                                         <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.throttle', 'THROTTLE')}</Text>
+                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.throttle')}</Text>
                                             <Text style={[sDyn.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.throttle !== null ? `${data.throttle}%` : '--'}</Text>
                                             <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>%</Text>
                                         </View>
                                         <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.mapPressure', 'MAP PRESSURE')}</Text>
+                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.mapPressure')}</Text>
                                             <Text style={[sDyn.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.map !== null ? data.map : '--'}</Text>
                                             <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>kPa</Text>
                                         </View>
                                         <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.stft', 'STFT')}</Text>
+                                            <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.stft')}</Text>
                                             <Text style={[sDyn.resultValue, { color: colors.textPri, fontFamily: MONO }]}>{data.stft !== null ? `${data.stft}%` : '--'}</Text>
-                                            <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.trimUnit', 'Trim')}</Text>
+                                            <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.trimUnit')}</Text>
                                         </View>
                                     </View>
                                 )}

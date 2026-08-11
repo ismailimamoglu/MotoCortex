@@ -128,24 +128,24 @@ export default function LiveEngineHero({
   useEffect(() => {
     if (isConnected && !wasConnected) {
       const statusText = isCloneDevice 
-        ? t('bento.settings.safeMode', 'Safe Mode / Clone Adapter') 
-        : t('bento.settings.original', 'Original');
+        ? t('bento.settings.safeMode') 
+        : t('bento.settings.original');
       const rateText = isCloneDevice 
-        ? t('bento.settings.pollingLow', '2 Hz (Low)') 
-        : t('bento.settings.pollingHigh', '4 Hz (High)');
+        ? t('bento.settings.pollingLow') 
+        : t('bento.settings.pollingHigh');
       const protoText = isSimulationMode 
-        ? t('bento.settings.simulationObd', 'Simulation OBD') 
+        ? t('bento.settings.simulationObd') 
         : 'CAN Bus (ISO-15765)';
 
       Alert.alert(
-        t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO').toUpperCase(),
-        `${t('common.success', 'Success')}! ${t('common.connected', 'CONNECTED')}\n\n` +
-        `• ${t('bento.settings.connectionType', 'Connection Type:')} BLE\n` +
-        `• ${t('bento.settings.deviceName', 'Device Name:')} ${lastDeviceName || 'OBDII'}\n` +
-        `• ${t('bento.settings.protocol', 'Protocol:')} ${protoText}\n` +
-        `• ${t('bento.settings.deviceStatus', 'Device Status:')} ${statusText}\n` +
-        `• ${t('bento.settings.pollingRate', 'Polling Rate:')} ${rateText}`,
-        [{ text: t('common.ok', 'OK') }]
+        t('bento.settings.hardwareHealth').toUpperCase(),
+        `${t('common.success')}! ${t('common.connected')}\n\n` +
+        `• ${t('bento.settings.connectionType')} BLE\n` +
+        `• ${t('bento.settings.deviceName')} ${lastDeviceName || 'OBDII'}\n` +
+        `• ${t('bento.settings.protocol')} ${protoText}\n` +
+        `• ${t('bento.settings.deviceStatus')} ${statusText}\n` +
+        `• ${t('bento.settings.pollingRate')} ${rateText}`,
+        [{ text: t('common.ok') }]
       );
     }
     setWasConnected(isConnected);
@@ -168,7 +168,7 @@ export default function LiveEngineHero({
 
   const yearOptions = React.useMemo(() => {
     return YEARS.map((yr) => ({
-      label: yr === 'other' ? t('brands.other', 'Other') : yr,
+      label: yr === 'other' ? t('brands.other') : yr,
       value: yr
     }));
   }, [t]);
@@ -179,7 +179,7 @@ export default function LiveEngineHero({
     const rawModels = MODELS_BY_BRAND[selectedBrand] || ['other'];
     return rawModels.map((m) => {
       if (m === 'other') {
-        return { label: t('brands.other', 'Other'), value: 'other' };
+        return { label: t('brands.other'), value: 'other' };
       }
       return { label: m, value: m.toLowerCase().replace(/[^a-z0-9]/g, '_') };
     });
@@ -187,12 +187,12 @@ export default function LiveEngineHero({
 
   const handleDeleteRegistered = (v: SelectedVehicle) => {
     Alert.alert(
-      t('common.confirm', 'Confirm'),
-      t('vehicleSelect.deleteConfirm', 'Are you sure you want to delete this vehicle from registered vehicles?'),
+      t('common.confirm'),
+      t('vehicleSelect.deleteConfirm'),
       [
-        { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { 
-          text: t('common.delete', 'Delete'), 
+          text: t('common.delete'), 
           style: 'destructive',
           onPress: async () => {
             await deleteRegisteredVehicle(v);
@@ -379,9 +379,9 @@ export default function LiveEngineHero({
       ? t('hub.scanningHardware')
       : isPressable
         ? (isSimulationMode 
-            ? t('common.exitDemoMode', 'EXIT DEMO MODE') 
-            : t('common.enableDemoMode', 'ENABLE DEMO MODE'))
-        : t('vehicleSelect.selectVehiclePrompt', 'PLEASE SELECT VEHICLE FIRST');
+            ? t('common.exitDemoMode') 
+            : t('common.enableDemoMode'))
+        : t('vehicleSelect.selectVehiclePrompt');
 
   const localeMap: Record<string, string> = {
     tr: 'tr-TR', en: 'en-US', pt: 'pt-PT', es: 'es-ES', de: 'de-DE', fr: 'fr-FR',
@@ -485,7 +485,7 @@ export default function LiveEngineHero({
                       fontWeight: '800',
                       letterSpacing: 0.5,
                     }}>
-                      {t('sandbox.advancedTerminal', 'Advanced Connection Terminal (DIAG)')}
+                      {t('sandbox.advancedTerminal')}
                     </Text>
                   </View>
                   <Text style={{
@@ -499,9 +499,9 @@ export default function LiveEngineHero({
             </View>
           ) : (
             <View style={{ gap: scaleHeight(12), paddingVertical: scaleHeight(8) }}>
-              <Text style={sDyn.vehicleLabel}>{t('vehicleSelect.noVehicleTitle', 'VEHICLE DETECTION REQUIRED')}</Text>
+              <Text style={sDyn.vehicleLabel}>{t('vehicleSelect.noVehicleTitle')}</Text>
               <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11), lineHeight: scaleHeight(15) }}>
-                {t('vehicleSelect.noVehicleDesc', 'Vehicle identity will be automatically discovered via OBD-II connection. Please pair and connect to your device below.')}
+                {t('vehicleSelect.noVehicleDesc')}
               </Text>
               
               <BluetoothConnectionPanel
@@ -568,7 +568,7 @@ export default function LiveEngineHero({
           activeOpacity={0.4}
         >
           <Text style={[sDyn.dropdownTriggerText, { color: colors.cyan, fontSize: scaleFont(11.5) }]} numberOfLines={1}>
-            {t('vehicleSelect.viewRegisteredList', 'View Registered Vehicles')} ({registeredVehicles.length})
+            {t('vehicleSelect.viewRegisteredList')} ({registeredVehicles.length})
           </Text>
         </TouchableOpacity>
       )}
@@ -577,7 +577,7 @@ export default function LiveEngineHero({
       <SelectionModal
         visible={showBrandDropdown}
         onClose={() => setShowBrandDropdown(false)}
-        title={t('vehicleSelect.selectBrand', 'Select Brand')}
+        title={t('vehicleSelect.selectBrand')}
         options={brandOptions}
         selectedValue={selectedBrand}
         onSelect={(val) => {
@@ -585,13 +585,13 @@ export default function LiveEngineHero({
           setShowBrandDropdown(false);
         }}
         showSearch={true}
-        searchPlaceholder={t('vehicleSelect.searchBrand', 'Search Brand...')}
+        searchPlaceholder={t('vehicleSelect.searchBrand')}
       />
 
       <SelectionModal
         visible={showModelDropdown}
         onClose={() => setShowModelDropdown(false)}
-        title={t('vehicleSelect.selectModel', 'Select Model')}
+        title={t('vehicleSelect.selectModel')}
         options={modelOptions}
         selectedValue={selectedModel}
         onSelect={(val) => {
@@ -599,13 +599,13 @@ export default function LiveEngineHero({
           setShowModelDropdown(false);
         }}
         showSearch={true}
-        searchPlaceholder={t('vehicleSelect.searchModel', 'Search Model...')}
+        searchPlaceholder={t('vehicleSelect.searchModel')}
       />
 
       <SelectionModal
         visible={showYearDropdown}
         onClose={() => setShowYearDropdown(false)}
-        title={t('vehicleSelect.selectYear', 'Select Year')}
+        title={t('vehicleSelect.selectYear')}
         options={yearOptions}
         selectedValue={selectedYear}
         onSelect={(val) => {

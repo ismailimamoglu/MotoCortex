@@ -119,7 +119,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
     const getVerdict = () => {
         const isPro = useAppStore.getState().isPro;
         if (!isPro) {
-            return [`🔒 PRO Required - ${t('battery.verdictLocked', 'Upgrade to PRO to view detailed battery assessment report and cranking analysis graph.')}`];
+            return [`🔒 PRO Required - ${t('battery.verdictLocked')}`];
         }
 
         if (!result.restingV || !result.chargingV) return null;

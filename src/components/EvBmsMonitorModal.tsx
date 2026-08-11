@@ -45,8 +45,8 @@ export default function EvBmsMonitorModal({ visible, onClose, evBrand = 'Zero / 
       <SafeAreaView style={[styles.container, { backgroundColor: colors.bg || '#090d16' }]}>
         <View style={styles.header}>
           <View>
-            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>⚡ {t('evBms.title', 'EV BMS Diagnostics')}</Text>
-            <Text style={styles.headerSubtitle}>{t('evBms.subtitle', `Battery Management System & Cell Health (${evBrand})`, { brand: evBrand })}</Text>
+            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>⚡ {t('evBms.title')}</Text>
+            <Text style={styles.headerSubtitle}>{t('evBms.subtitle', { brand: evBrand })}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>
@@ -57,28 +57,28 @@ export default function EvBmsMonitorModal({ visible, onClose, evBrand = 'Zero / 
           {/* SOH / SOC Metrics */}
           <View style={styles.metricsRow}>
             <View style={[styles.metricCard, { backgroundColor: '#0d2d23', borderColor: '#00cc66' }]}>
-              <Text style={styles.metricLabel}>{t('evBms.sohLabel', 'STATE OF HEALTH (SOH)')}</Text>
+              <Text style={styles.metricLabel}>{t('evBms.sohLabel')}</Text>
               <Text style={[styles.metricValue, { color: '#00ffaa' }]}>{sohPercent}%</Text>
-              <Text style={styles.metricSub}>{t('evBms.capacityRetained', 'Capacity Retained')}</Text>
+              <Text style={styles.metricSub}>{t('evBms.capacityRetained')}</Text>
             </View>
 
             <View style={[styles.metricCard, { backgroundColor: '#0d2238', borderColor: '#0088cc' }]}>
-              <Text style={styles.metricLabel}>{t('evBms.socLabel', 'STATE OF CHARGE (SOC)')}</Text>
+              <Text style={styles.metricLabel}>{t('evBms.socLabel')}</Text>
               <Text style={[styles.metricValue, { color: '#00ccff' }]}>{socPercent}%</Text>
-              <Text style={styles.metricSub}>{t('evBms.remainingCharge', 'Remaining Charge')}</Text>
+              <Text style={styles.metricSub}>{t('evBms.remainingCharge')}</Text>
             </View>
           </View>
 
           {/* Cell Imbalance Monitor */}
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>🔋 {t('evBms.cellBalance', 'Cell Voltage Balance (16S Pack)')}</Text>
+              <Text style={styles.cardTitle}>🔋 {t('evBms.cellBalance')}</Text>
               <Text style={[styles.deltaBadge, { color: deltamV < 30 ? '#00ffaa' : '#ffaa00' }]}>
                 Δ {deltamV} mV
               </Text>
             </View>
             <Text style={styles.cardDesc}>
-              {deltamV < 30 ? `🟢 ${t('evBms.optimalBalance', 'Optimal Balance (<30mV delta)')}` : `🟡 ${t('evBms.mildImbalance', 'Mild Imbalance Detected')}`}
+              {deltamV < 30 ? `🟢 ${t('evBms.optimalBalance')}` : `🟡 ${t('evBms.mildImbalance')}`}
             </Text>
 
             {/* 4x4 Grid of Cells */}
@@ -94,18 +94,18 @@ export default function EvBmsMonitorModal({ visible, onClose, evBrand = 'Zero / 
 
           {/* Temperature & Thermal Status */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>🌡️ {t('evBms.thermalStatus', 'Thermal Status & Pack Info')}</Text>
+            <Text style={styles.cardTitle}>🌡️ {t('evBms.thermalStatus')}</Text>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>{t('evBms.packTemp', 'Pack Temperature:')}</Text>
-              <Text style={styles.infoValue}>{batteryTempC}°C ({t('common.normal', 'Normal')})</Text>
+              <Text style={styles.infoLabel}>{t('evBms.packTemp')}</Text>
+              <Text style={styles.infoValue}>{batteryTempC}°C ({t('common.normal')})</Text>
             </View>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>{t('evBms.packVoltage', 'Pack Voltage:')}</Text>
+              <Text style={styles.infoLabel}>{t('evBms.packVoltage')}</Text>
               <Text style={styles.infoValue}>61.4 V</Text>
             </View>
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>{t('evBms.chargeCycles', 'Charge Cycles:')}</Text>
-              <Text style={styles.infoValue}>142 {t('evBms.cycles', 'Cycles')}</Text>
+              <Text style={styles.infoLabel}>{t('evBms.chargeCycles')}</Text>
+              <Text style={styles.infoValue}>142 {t('evBms.cycles')}</Text>
             </View>
           </View>
         </ScrollView>

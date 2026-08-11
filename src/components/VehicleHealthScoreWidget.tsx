@@ -27,9 +27,9 @@ export default function VehicleHealthScoreWidget({
   if (score < 0) score = 0;
 
   const getScoreColor = (val: number) => {
-    if (val >= 85) return { color: '#00ffaa', label: t('healthScore.excellent', 'EXCELLENT') };
-    if (val >= 60) return { color: '#ffaa00', label: t('healthScore.attention', 'ATTENTION NEEDED') };
-    return { color: '#ff3344', label: t('healthScore.critical', 'CRITICAL ATTENTION') };
+    if (val >= 85) return { color: '#00ffaa', label: t('healthScore.excellent') };
+    if (val >= 60) return { color: '#ffaa00', label: t('healthScore.attention') };
+    return { color: '#ff3344', label: t('healthScore.critical') };
   };
 
   const status = getScoreColor(score);
@@ -38,8 +38,8 @@ export default function VehicleHealthScoreWidget({
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <View>
-          <Text style={styles.title}>{t('healthScore.title', 'VEHICLE HEALTH SCORE')}</Text>
-          <Text style={styles.subtitle}>{t('healthScore.subtitle', 'Aggregated ECU & Telemetry Diagnostics')}</Text>
+          <Text style={styles.title}>{t('healthScore.title')}</Text>
+          <Text style={styles.subtitle}>{t('healthScore.subtitle')}</Text>
         </View>
         <View style={styles.scoreBadge}>
           <Text style={[styles.scoreNumber, { color: status.color }]}>{score}</Text>
@@ -57,7 +57,7 @@ export default function VehicleHealthScoreWidget({
 
         {onOpenAiDoctor && (
           <TouchableOpacity style={styles.aiButton} onPress={onOpenAiDoctor}>
-            <Text style={styles.aiButtonText}>{t('healthScore.launchAiDoctor', '🤖 Launch AI Doctor')}</Text>
+            <Text style={styles.aiButtonText}>{t('healthScore.launchAiDoctor')}</Text>
           </TouchableOpacity>
         )}
       </View>

@@ -78,7 +78,7 @@ export default function SandboxDevGate() {
         onPress={() => setModalVisible(true)}
         activeOpacity={0.8}
       >
-        <Text style={sDyn.btnText}>{t('sandbox.openSandbox', 'DIAG')}</Text>
+        <Text style={sDyn.btnText}>{t('sandbox.openSandbox')}</Text>
       </TouchableOpacity>
 
       <Modal
@@ -93,7 +93,7 @@ export default function SandboxDevGate() {
             style={sDyn.closeBtn}
             onPress={() => setModalVisible(false)}
           >
-            <Text style={sDyn.closeText}>{t('common.close', 'CLOSE').toUpperCase()}</Text>
+            <Text style={sDyn.closeText}>{t('common.close').toUpperCase()}</Text>
           </TouchableOpacity>
 
           <DashboardSandbox />

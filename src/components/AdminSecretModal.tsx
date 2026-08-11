@@ -41,8 +41,8 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
   const appUserId = useAppStore((s) => s.appUserId);
   const deviceUuid = useAppStore((s) => s.deviceUuid);
 
-  const [logs, setLogs] = useState<string>('Loglar yükleniyor...');
-  const [fileSize, setFileSize] = useState<string>('Hesaplanıyor...');
+  const [logs, setLogs] = useState<string>(t('admin.logsLoading'));
+  const [fileSize, setFileSize] = useState<string>(t('admin.calculating'));
   const [customCommand, setCustomCommand] = useState<string>('');
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const scrollViewRef = useRef<ScrollView | null>(null);
@@ -54,7 +54,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
 
   const handleProSecretTap = () => {
     if (!__DEV__) {
-      Alert.alert('admin.devModeAlert', 'Secret PRO developer key is disabled in production builds.');
+      Alert.alert('admin.devModeAlert');
       return;
     }
     proTapCountRef.current += 1;
@@ -64,8 +64,8 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
       const nextPro = !isBackdoorPro;
       setIsBackdoorPro(nextPro);
       Alert.alert(
-        'Gizli PRO Anahtarı ⚡ (DEV)',
-        `PRO Lisans Modu Durumu: ${nextPro ? 'AKTİF (AÇIK - Tüm Özellikler Erişilebilir)' : 'PASİF (KAPALI)'}`
+        t('admin.secretProTitle'),
+        nextPro ? t('admin.secretProActive') : t('admin.secretProInactive')
       );
       return;
     }
@@ -81,9 +81,9 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
       await Logger.flush();
       const fullLog = await Logger.getLogContent();
       if (fullLog.length > 50000) {
-        setLogs('... [Loglar Kırpıldı] ...\n' + fullLog.slice(-50000));
+        setLogs(t('admin.logsTruncated') + fullLog.slice(-50000));
       } else {
-        setLogs(fullLog || 'Kayıtlı log bulunmuyor.');
+        setLogs(fullLog || t('admin.noLogsFound'));
       }
 
       const logFilePath = Logger.getLogFileUri();
@@ -97,8 +97,8 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
         setFileSize('0 KB');
       }
     } catch (e) {
-      setLogs('Loglar okunamadı: ' + e);
-      setFileSize('Bilinmiyor');
+      setLogs(t('admin.logsReadErr') + e);
+      setFileSize(t('admin.unknown'));
     }
   };
 
@@ -116,7 +116,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
   const handleSendCommand = async (cmdToSend?: string) => {
     const targetCmd = (cmdToSend || customCommand).trim();
     if (!targetCmd) {
-      Alert.alert('admin.invalidCmdError', 'Please enter a valid OBD command (e.g., 01 0C or AT Z)');
+      Alert.alert('admin.invalidCmdError');
       return;
     }
 
@@ -125,8 +125,8 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
 
     try {
       if (bluetoothStatus !== 'connected') {
-        setLogs((prev) => `${prev}\n[${new Date().toLocaleTimeString()}] TX > ${targetCmd} (UYARI: Cihaz Bağlı Değil)`);
-        Alert.alert('Bilgi', `Cihaz bağlı değil. Komut terminale eklendi: ${targetCmd}`);
+        setLogs((prev) => `${prev}\n[${new Date().toLocaleTimeString()}] TX > ${targetCmd} ${t('admin.deviceNotConnectedWarning')}`);
+        Alert.alert(t('common.info'), `${t('admin.deviceNotConnectedAlert')}${targetCmd}`);
       } else {
         const response = await OBDCommandQueue.add(targetCmd);
         Logger.log('ADMIN_TERMINAL', `RX: ${response}`);
@@ -136,7 +136,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
     } catch (err: any) {
       Logger.log('ADMIN_TERMINAL_ERR', `Error sending ${targetCmd}: ${err?.message || err}`);
       setLogs((prev) => `${prev}\n[${new Date().toLocaleTimeString()}] ERR > ${targetCmd}: ${err?.message || err}`);
-      Alert.alert('Komut Hatası', `ECU Yanıt Vermedi: ${err?.message || err}`);
+      Alert.alert(t('admin.cmdError'), `${t('admin.ecuNoResponse')}${err?.message || err}`);
     } finally {
       setIsExecuting(false);
       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 150);
@@ -147,7 +147,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
     try {
       const isAvailable = await Sharing.isAvailableAsync();
       if (!isAvailable) {
-        Alert.alert('obdTerminal.noShareSupport', 'Sharing features are not available on this device.');
+        Alert.alert('obdTerminal.noShareSupport');
         return;
       }
 
@@ -159,7 +159,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
       const exists = await RNFS.exists(rawPath);
 
       if (!exists) {
-        Alert.alert('admin.noLogsInfo', 'No log records found to share.');
+        Alert.alert('admin.noLogsInfo');
         return;
       }
 
@@ -167,23 +167,23 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
 
       await Sharing.shareAsync(fileUri, {
         mimeType: 'text/plain',
-        dialogTitle: 'CORTEX OBD2 TERMINAL LOGLARI',
+        dialogTitle: t('admin.cortexTerminalLogs'),
         UTI: 'public.plain-text',
       });
     } catch (e: any) {
-      Alert.alert('Paylaşım Hatası', e.message || 'Paylaşılacak log bulunamadı.');
+      Alert.alert(t('admin.shareError'), e.message || t('admin.noLogsToShare'));
     }
   };
 
   const handleClear = () => {
-    Alert.alert('Logları Temizle', 'Tüm yerel OBD terminal logları silinecektir.', [
-      { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+    Alert.alert(t('admin.clearLogsTitle'), t('admin.clearLogsMsg'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Temizle',
+        text: t('admin.clearAction'),
         style: 'destructive',
         onPress: async () => {
           await Logger.clearLogs();
-          setLogs('Terminal logları temizlendi.');
+          setLogs(t('admin.logsCleared'));
           setFileSize('0 KB');
         },
       },
@@ -193,17 +193,17 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
   const copyIdToClipboard = async (label: string, value: string | null) => {
     if (!value) return;
     await Clipboard.setStringAsync(value);
-    Alert.alert('Kopyalandı', `${label} panoya kopyalandı:\n${value}`);
+    Alert.alert(t('admin.copiedTitle'), t('admin.copiedMsg', { label, value }));
   };
 
   const presets = [
-    { label: 'AT Z', cmd: 'AT Z', desc: t('admin.presetReset', 'Reset OBD2 Adapter') },
-    { label: 'AT SP 0', cmd: 'AT SP 0', desc: 'Otomatik Protokol' },
-    { label: '01 00', cmd: '01 00', desc: "Desteklenen PID'ler" },
-    { label: '01 0C', cmd: '01 0C', desc: 'Motor Devri (RPM)' },
-    { label: '01 0D', cmd: '01 0D', desc: t('admin.presetSpeed', 'Vehicle Speed (km/h)') },
-    { label: '03', cmd: '03', desc: t('admin.presetReadDtc', 'Read Fault Codes') },
-    { label: '04', cmd: '04', desc: t('admin.presetClearDtc', 'Clear Fault Codes') },
+    { label: 'AT Z', cmd: 'AT Z', desc: t('admin.presetReset') },
+    { label: 'AT SP 0', cmd: 'AT SP 0', desc: t('admin.presetAutoProtocol') },
+    { label: '01 00', cmd: '01 00', desc: t('admin.presetSupportedPids') },
+    { label: '01 0C', cmd: '01 0C', desc: t('admin.presetEngineRpm') },
+    { label: '01 0D', cmd: '01 0D', desc: t('admin.presetSpeed') },
+    { label: '03', cmd: '03', desc: t('admin.presetReadDtc') },
+    { label: '04', cmd: '04', desc: t('admin.presetClearDtc') },
   ];
 
   const modalWidth = isTablet ? (isLargeTablet ? 680 : 540) : Math.min(width * 0.94, 460);
@@ -261,7 +261,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 }}
               >
                 <Text style={{ color: colors.cyan, fontSize: scaleFont(11), fontWeight: 'bold' }}>
-                  {t('common.close', 'KAPAT').toUpperCase()}
+                  {t('common.close').toUpperCase()}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -288,7 +288,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  {t('admin.userInfo', '🔒 ADMIN USER CREDENTIALS')}
+                  {t('admin.userInfo')}
                 </Text>
 
                 {/* User ID Row */}
@@ -307,15 +307,15 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(4) }}>
                     <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: '800', letterSpacing: 0.5 }}>
-                      {t('admin.userId', 'USER ID')}
+                      {t('admin.userId')}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(4) }}>
-                      <Text style={{ color: colors.cyan, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>{t('admin.copy', 'KOPYALA')}</Text>
+                      <Text style={{ color: colors.cyan, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>{t('admin.copy')}</Text>
                       <Text style={{ color: colors.cyan, fontSize: scaleFont(11) }}>📋</Text>
                     </View>
                   </View>
                   <Text style={{ color: colors.cyan, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode="middle">
-                    {appUserId || 'Bilinmiyor'}
+                    {appUserId || t('admin.unknown')}
                   </Text>
                 </TouchableOpacity>
 
@@ -334,15 +334,15 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 >
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(4) }}>
                     <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: '800', letterSpacing: 0.5 }}>
-                      {t('admin.deviceUuid', 'DEVICE UUID')}
+                      {t('admin.deviceUuid')}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(4) }}>
-                      <Text style={{ color: colors.amber, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>{t('admin.copy', 'KOPYALA')}</Text>
+                      <Text style={{ color: colors.amber, fontSize: scaleFont(9), fontFamily: colors.mono, fontWeight: 'bold' }}>{t('admin.copy')}</Text>
                       <Text style={{ color: colors.amber, fontSize: scaleFont(11) }}>📋</Text>
                     </View>
                   </View>
                   <Text style={{ color: colors.amber, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode="middle">
-                    {deviceUuid || 'Bilinmiyor'}
+                    {deviceUuid || t('admin.unknown')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -368,12 +368,12 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  {t('admin.terminalTitle', '🖥️ CANLI OBD TERMINAL KONSOLU (TX / RX)')}
+                  {t('admin.terminalTitle')}
                 </Text>
 
                 {/* Hazır Komut Butonları (Açıklamalı 2'li Grid Layout) */}
                 <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: colors.mono, fontWeight: 'bold', marginBottom: scaleHeight(6) }}>
-                  {t('admin.presetTitle', '⚡ QUICK COMMAND SET:')}
+                  {t('admin.presetTitle')}
                 </Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleMod(6), marginBottom: scaleHeight(10) }}>
                   {presets.map((p) => (
@@ -417,7 +417,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                       fontSize: scaleFont(11),
                       height: scaleHeight(36),
                     }}
-                    placeholder="Örn: 01 0C veya AT Z"
+                    placeholder={t('admin.inputPlaceholder')}
                     placeholderTextColor="#455a74"
                     value={customCommand}
                     onChangeText={setCustomCommand}
@@ -440,7 +440,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                       <ActivityIndicator size="small" color="#000" />
                     ) : (
                       <Text style={{ color: '#000', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: colors.mono }}>
-                        {t('admin.send', 'SEND')}
+                        {t('admin.send')}
                       </Text>
                     )}
                   </TouchableOpacity>
@@ -481,7 +481,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     fontFamily: colors.mono,
                   }}
                 >
-                  {t('admin.cloudTools', '🛰️ CLOUD & SYSTEM TOOLS')}
+                  {t('admin.cloudTools')}
                 </Text>
 
                 <View style={{ flexDirection: 'row', gap: scaleMod(8) }}>
@@ -504,7 +504,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     activeOpacity={0.7}
                   >
                     <Text style={{ color: '#000', fontSize: scaleFont(10), fontWeight: '900', fontFamily: colors.mono }}>
-                      {dtcSyncStatus === 'syncing' ? 'SENKRONİZE EDİLİYOR...' : 'DTC SÖZLÜĞÜNÜ SENKRONİZE ET'}
+                      {dtcSyncStatus === 'syncing' ? t('admin.syncingDtc') : t('admin.syncDtcBtn')}
                     </Text>
                   </TouchableOpacity>
 
@@ -520,10 +520,10 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                       alignItems: 'center',
                     }}
                     onPress={() => {
-                      Alert.alert('Çökme Testi', 'Firebase Crashlytics entegrasyonu için test çökmesi başlatılacaktır.', [
-                        { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+                      Alert.alert(t('admin.crashTestTitle'), t('admin.crashTestDesc'), [
+                        { text: t('common.cancel'), style: 'cancel' },
                         {
-                          text: t('admin.crashBtn', 'Crash'),
+                          text: t('admin.crashBtn'),
                           style: 'destructive',
                           onPress: () => {
                             crashlytics().log('Test crash triggered by developer in AdminSecretModal');
@@ -535,7 +535,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                     activeOpacity={0.7}
                   >
                     <Text style={{ color: colors.red, fontSize: scaleFont(10), fontWeight: '900', fontFamily: colors.mono }}>
-                      {t('admin.crashTest', '💥 CRASH TEST')}
+                      {t('admin.crashTest')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -559,7 +559,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: colors.red, fontSize: scaleFont(10.5), fontWeight: '800', fontFamily: colors.mono }}>
-                  {t('admin.clear', '🗑️ CLEAR')}
+                  {t('admin.clear')}
                 </Text>
               </TouchableOpacity>
 
@@ -578,7 +578,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: colors.cyan, fontSize: scaleFont(10.5), fontWeight: '800', fontFamily: colors.mono }}>
-                  {t('admin.refresh', '🔄 REFRESH')}
+                  {t('admin.refresh')}
                 </Text>
               </TouchableOpacity>
 
@@ -595,7 +595,7 @@ export default function AdminSecretModal({ visible, onClose }: AdminSecretModalP
                 activeOpacity={0.4}
               >
                 <Text style={{ color: '#000', fontSize: scaleFont(10.5), fontWeight: '900', fontFamily: colors.mono }}>
-                  {t('admin.share', '📤 SHARE')}
+                  {t('admin.share')}
                 </Text>
               </TouchableOpacity>
             </View>

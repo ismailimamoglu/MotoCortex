@@ -82,8 +82,8 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 }
                 if (counter.count >= 3) {
                     Alert.alert(
-                        t('perfTeaser.limitTitle', 'Daily Limit Reached'),
-                        t('perfTeaser.limitDesc', 'You have reached your daily 3 free 0-60 km/h test limit. Upgrade to PRO for unlimited tests and 0-100 km/h measurements.'),
+                        t('perfTeaser.limitTitle'),
+                        t('perfTeaser.limitDesc'),
                         [
                             { text: t('common.cancel'), style: 'cancel' },
                             { text: t('common.upgrade'), onPress: () => {
@@ -268,9 +268,9 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                 <View style={[sDyn.modalContainer, { backgroundColor: colors.bg }]}>
                     {/* Header */}
                     <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
-                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('perf.title', 'PERFORMANCE TEST')}</Text>
+                        <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>{t('perf.title')}</Text>
                         <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
-                            <Text style={[sDyn.cancelText, { color: colors.cyan }]}>{t('common.cancel', 'KAPAT').toUpperCase()}</Text>
+                            <Text style={[sDyn.cancelText, { color: colors.cyan }]}>{t('common.cancel').toUpperCase()}</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -319,14 +319,14 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
                                 <Text style={[sDyn.resultValue, { fontFamily: MONO }, time60 !== null ? { color: colors.green } : { color: colors.textPri }]}>
                                     {time60 !== null ? time60.toFixed(2) : '--'}
                                 </Text>
-                                <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>sn</Text>
+                                <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('perf.sec')}</Text>
                             </View>
                             <View style={[sDyn.resultCard, { backgroundColor: colors.card, borderColor: colors.border }, time100 !== null && { borderColor: colors.cyan }]}>
                                 <Text style={[sDyn.resultLabel, { color: colors.textSec, fontFamily: MONO }]}>0-100 KM/H</Text>
                                 <Text style={[sDyn.resultValue, { fontFamily: MONO }, time100 !== null ? { color: colors.cyan } : { color: colors.textPri }]}>
                                     {time100 !== null ? time100.toFixed(2) : '--'}
                                 </Text>
-                                <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>sn</Text>
+                                <Text style={[sDyn.resultUnit, { color: colors.textSec, fontFamily: MONO }]}>{t('perf.sec')}</Text>
                             </View>
                         </View>
 

@@ -24,17 +24,17 @@ export const SgwStatusNotification: React.FC<Props> = ({ visible, brandName = 'O
 
         <View style={styles.titleContainer}>
           <Text style={[styles.title, { color: colors.amber, fontSize: scaleFont(13) }]}>
-            {t('sgw.title', 'Security Gateway (SGW) Active')}
+            {t('sgw.title')}
           </Text>
 
           <Text style={[styles.subTitle, { color: colors.textSec, fontSize: scaleFont(11) }]}>
-            {t('sgw.subtitle', `${brandName} ECU Security Restriction`, { brandName })}
+            {t('sgw.subtitle', { brandName })}
           </Text>
         </View>
       </View>
 
       <Text style={[styles.description, { color: colors.textPri, fontSize: scaleFont(11) }]}>
-        {t('sgw.description', 'Security Gateway (SGW) protection is active on this vehicle. Standard OBD2 telemetry is readable; however, advanced diagnostic routines and adaptation require OEM authentication.')}
+        {t('sgw.description')}
       </Text>
 
       <TouchableOpacity
@@ -42,7 +42,7 @@ export const SgwStatusNotification: React.FC<Props> = ({ visible, brandName = 'O
         onPress={onDismiss}
       >
         <Text style={[styles.dismissBtnText, { color: colors.textPri, fontSize: scaleFont(11) }]}>
-          {t('common.gotIt', 'Got It')}
+          {t('common.gotIt')}
         </Text>
       </TouchableOpacity>
     </View>

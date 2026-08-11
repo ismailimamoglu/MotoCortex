@@ -72,7 +72,17 @@
             "noTraffic": "No streaming traffic yet...",
             "shareError": "Sharing Error",
             "noLogsToShare": "There are no diagnostic logs to share.",
-            "community": "COMMUNITY & SUPPORT"
+            "community": "COMMUNITY & SUPPORT",
+            "hardwareSimulationTitle": "HARDWARE SIMULATION",
+            "hardwareSimulationDesc": "Simulate live telemetry data and diagnostic cycles when no physical OBD2 adapter is connected.",
+            "enableSimulation": "ENABLE SIMULATION MODE",
+            "disableSimulation": "DISABLE SIMULATION MODE",
+            "appLanguageTitle": "APP LANGUAGE SELECTION",
+            "appLanguageDesc": "Choose your preferred language for the interface and diagnostic terminology.",
+            "supportHeader": "SUPPORT & CONTACT",
+            "supportDesc": "Contact our engineering support team directly for assistance with hardware compatibility or licensing.",
+            "sessionManagement": "SESSION MANAGEMENT",
+            "contactSupport": "CONTACT SUPPORT"
         },
         "aboutAppDesc": "신청안내 및 안내",
         "supportDesc": "지원 및 문의",
@@ -581,7 +591,8 @@
         "stop": "중지",
         "reset": "재설정",
         "howItWorks": "어떻게 작동하나요?",
-        "howDesc": "1. \"테스트 시작\" 버튼을 누르세요. 2. 차량은 정지해 있어야 합니다(속도 = 0). 3. 움직이기 시작하면 크로노가 시작됩니다. 4. 60km/h와 100km/h의 통과 시간이 기록됩니다. ⚠️ 안전한 곳에서 시험을 치르세요!"
+        "howDesc": "1. \"테스트 시작\" 버튼을 누르세요. 2. 차량은 정지해 있어야 합니다(속도 = 0). 3. 움직이기 시작하면 크로노가 시작됩니다. 4. 60km/h와 100km/h의 통과 시간이 기록됩니다. ⚠️ 안전한 곳에서 시험을 치르세요!",
+        "sec": "sec"
     },
     "dtc": {
         "P0102": "MAF(공기 유량 센서) - 낮은 입력",
@@ -738,7 +749,9 @@
         "langTitle": "언어 선택",
         "nextBtn": "계속",
         "langDesc": "원하는 언어를 선택하세요.",
-        "langSelectSub": "언어 게이트웨이"
+        "langSelectSub": "언어 게이트웨이",
+        "telemetryLabel": "Diagnostic Telemetry (Opt-In)",
+        "telemetrySub": "Share anonymous protocol and error logs to improve vehicle compatibility."
     },
     "disclaimer": "모든 제품 이름, 로고 및 브랜드는 해당 소유자의 자산입니다. 본 애플리케이션에 사용된 모든 회사, 제품 및 서비스 이름은 식별 목적으로만 사용됩니다. 이러한 이름, 로고 및 브랜드를 사용한다고 해서 어떠한 보증이나 후원을 의미하는 것은 아닙니다.",
     "hiddenFeatures": {
@@ -886,7 +899,16 @@
         "catalystTemp": "Catalyst Temperature",
         "ethanol": "Ethanol Fuel %",
         "timingAdvance": "Ignition Timing Advance",
-        "baro": "Barometric Pressure"
+        "baro": "Barometric Pressure",
+        "rpm": "엔진 RPM",
+        "speed": "차량 속도",
+        "coolant": "냉각수 온도",
+        "throttle": "스로틀 위치",
+        "voltage": "제어 모듈 전압",
+        "maf": "MAF 공기 유량",
+        "iat": "흡기 온도",
+        "load": "계산된 엔진 부하",
+        "fuel": "연료 수준"
     },
     "secretDebug": {
         "title": "MOTO CORTEX DEV PANEL",
@@ -2553,14 +2575,14 @@
         "bmsName": "배터리 관리 시스템 (BMS / EV)"
     },
     "dct": {
-        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "title": "DCT 듀얼 클러치 어댑테이션 설정",
         "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
-        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningTitle": "DCT 어댑테이션 안전 전제 조건",
         "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
-        "checkGearPark": "Gear selector in 'P' (Park)",
+        "checkGearPark": "✓ P 단 기어 설정 및 주차 브레이크 작동",
         "checkFootBrake": "Foot brake depressed firmly",
         "checkHandBrake": "Handbrake engaged",
-        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "checkOilTemp": "✓ 미션 오일 온도가 30°C ~ 90°C 사이여야 합니다",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
         "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
@@ -2594,8 +2616,38 @@
         "userId": "사용자 ID",
         "userInfo": "🔒 관리자 자격 증명",
         "devModeAlert": "Secret PRO developer key is disabled in production builds.",
-        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
-        "noLogsInfo": "No log records found to share."
+        "invalidCmdError": "올바른 OBD 명령을 입력하세요 (예: 01 0C 또는 AT Z)",
+        "noLogsInfo": "No log records found to share.",
+        "logsLoading": "Loading logs...",
+        "calculating": "Calculating...",
+        "secretProTitle": "시크릿 PRO 키 ⚡ (DEV)",
+        "secretProActive": "PRO 라이센스 모드 상태: 활성화 (모든 기능 개방)",
+        "secretProInactive": "PRO 라이센스 모드 상태: 비활성화 (비활성)",
+        "logsTruncated": "... [Logs Truncated] ...\n",
+        "noLogsFound": "No logs recorded.",
+        "logsReadErr": "Could not read logs: ",
+        "unknown": "Unknown",
+        "deviceNotConnectedWarning": "(경고: 장치 미연결)",
+        "deviceNotConnectedAlert": "Device not connected. Command added to terminal: ",
+        "cmdError": "Command Error",
+        "ecuNoResponse": "ECU Did Not Respond: ",
+        "cortexTerminalLogs": "CORTEX OBD2 TERMINAL LOGS",
+        "shareError": "Sharing Error",
+        "noLogsToShare": "No logs available to share.",
+        "clearLogsTitle": "Clear Logs",
+        "clearLogsMsg": "All local OBD terminal logs will be deleted.",
+        "clearAction": "Clear",
+        "logsCleared": "Terminal logs cleared.",
+        "copiedTitle": "Copied",
+        "copiedMsg": "{{label}} copied to clipboard:\n{{value}}",
+        "presetAutoProtocol": "Auto Protocol",
+        "presetSupportedPids": "Supported PIDs",
+        "presetEngineRpm": "Engine RPM",
+        "inputPlaceholder": "e.g. 01 0C or AT Z",
+        "syncingDtc": "SYNCING...",
+        "syncDtcBtn": "SYNC DTC DICTIONARY",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "A test crash will be triggered for Firebase Crashlytics integration."
     },
     "bridge": {
         "androidAdvice": "앱을 재시작하거나 블루투스 설정을 확인하세요.",
@@ -2631,12 +2683,12 @@
         "year": "연식:"
     },
     "sgw": {
-        "title": "Security Gateway (SGW) Unlock",
+        "title": "시큐리티 게이트웨이(SGW) 잠금 해제",
         "subtitle": "Vendor: {{vendor}} | VIN: {{vin}}",
-        "disclaimerTitle": "⚠️ Legal Disclaimer",
+        "disclaimerTitle": "중요 정비 안전 공지",
         "disclaimerText": "Unlocking the SGW grants write access to vehicle ECUs. Unauthorized coding or improper parameter modifications may affect warranty or disable safety systems. Responsibility belongs to the user.",
-        "checkboxAccepted": "☑️ I accept the liability disclaimer",
-        "checkboxUnaccepted": "☐ I accept the liability disclaimer",
+        "checkboxAccepted": "✓ SGW 잠금 해제 프로토콜 동의",
+        "checkboxUnaccepted": "진행하기 전에 동의해주세요",
         "offlineLabel": "Field Technician Offline Bypass Code:",
         "offlinePlaceholder": "e.g., OFF_89A2BF10",
         "offlineUnlockBtn": "Unlock Offline (15 min)",
@@ -2654,10 +2706,10 @@
     },
     "evBms": {
         "title": "EV BMS Diagnostics",
-        "subtitle": "Battery Management System & Cell Health ({{brand}})",
-        "sohLabel": "STATE OF HEALTH (SOH)",
+        "subtitle": "배터리 건강 상태 및 텔레메트리 (SOH / SOC) ({{brand}})",
+        "sohLabel": "배터리 건강도 (SOH):",
         "capacityRetained": "Capacity Retained",
-        "socLabel": "STATE OF CHARGE (SOC)",
+        "socLabel": "충전 상태 (SOC):",
         "remainingCharge": "Remaining Charge",
         "cellBalance": "Cell Voltage Balance (16S Pack)",
         "optimalBalance": "Optimal Balance (<30mV delta)",
@@ -2669,8 +2721,8 @@
         "cycles": "Cycles"
     },
     "serviceReset": {
-        "title": "Service & Maintenance Reset Wizard",
-        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "title": "서비스 및 정비 주기 리셋",
+        "subtitle": "수행할 정비 항목을 선택하세요 ({{make}})",
         "preCheckTitle": "Pre-Requirement Checklist",
         "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
         "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
@@ -2756,7 +2808,28 @@
         "p0102_cause2": "흡기 누설 / 진공 누설",
         "p0102_cause3": "배선 하네스 손상 또는 부식",
         "p0102_action": "접점 세정제로 MAF 센서를 청소하거나 에어 클리너 하우징의 누설을 점검하세요.",
-        "p0102_tsb": "TSB-2023-09: MAF 교체 전 흡기 호스 클램프 체결 토크를 점검하세요."
+        "p0102_tsb": "TSB-2023-09: MAF 교체 전 흡기 호스 클램프 체결 토크를 점검하세요.",
+        "p0171_cause1": "Vacuum Hose Leak / Intake Leak",
+        "p0171_cause2": "Weak Fuel Pump / Low Pressure",
+        "p0171_cause3": "Fouled O2 Sensor 1",
+        "p0171_action": "Perform smoke test on intake manifold and check long-term fuel trim (LTFT).",
+        "p0171_tsb": "TSB-2022-14: Check PCV valve diaphragm for tears.",
+        "p0420_cause1": "Catalytic Converter Efficiency Degradation",
+        "p0420_cause2": "Rear Downstream O2 Sensor Fault",
+        "p0420_cause3": "Exhaust Leak Before Converter",
+        "p0420_action": "Compare upstream vs downstream O2 sensor waveforms or check catalytic converter temperature.",
+        "p0300_cause1": "Worn Spark Plug / Ignition Coil",
+        "p0300_cause2": "Clogged Fuel Injector",
+        "p0300_cause3": "Low Engine Cylinder Compression",
+        "p0300_action": "Swap ignition coil to adjacent cylinder and monitor if misfire follows.",
+        "p17bf_cause1": "Mechatronic Hydraulic Pressure Accumulator Leak",
+        "p17bf_cause2": "Solenoid Valve Circuit Fault",
+        "p17bf_cause3": "Low Fluid Level / Fluid Degradation",
+        "p17bf_action": "Perform DCT Mechatronic pressure test and inspect accumulator housing.",
+        "p17bf_tsb": "TSB-VAG-DSG: Replace mechatronic pressure housing or reinforced accumulator plate.",
+        "default_cause1": "Component Circuit / Wiring Resistance Fault",
+        "default_cause2": "Mechanical Wear or Sensor Degradation",
+        "default_action": "Perform voltage drop & continuity check using multimeter."
     },
     "ev": {
         "loading": "Loading EV Diagnostic Data...",
@@ -2782,7 +2855,7 @@
     },
     "privacy": {
         "back": "← Back",
-        "title": "🔒 Data Privacy & GDPR / KVKK",
+        "title": "개인정보 보호 및 데이터 관리",
         "subtitle": "Processing of your personal data and control of data rights.",
         "permissionsTitle": "Data Collection Permissions",
         "telemetryLabel": "Anonymous Telemetry & Analytics",
@@ -2790,8 +2863,8 @@
         "crashLabel": "Automatic Crash Reports",
         "crashSub": "Sends anonymous logs for error detection.",
         "rightsTitle": "GDPR & KVKK Data Rights",
-        "downloadBtn": "📥 Download / Export My Data (JSON/PDF)",
-        "purgeBtn": "🗑️ Delete All My Data (Right to be Forgotten)",
+        "downloadBtn": "내 데이터 다운로드 (JSON)",
+        "purgeBtn": "모든 사용자 데이터 삭제",
         "exportSuccessTitle": "Data Ready (GDPR / KVKK)",
         "exportSuccessMsg": "Your data package was created on {{date}}.\n\nContents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Error",
@@ -2804,5 +2877,16 @@
         "purgeDoneMsg": "Your data has been permanently deleted: {{items}}",
         "purgeErrorTitle": "Error",
         "purgeErrorMsg": "Data deletion failed."
+    },
+    "inspectionReport": {
+        "verificationHash": "🔒 VERIFICATION HASH:"
+    },
+    "errorBoundary": {
+        "aiDoctor": "AI DOCTOR",
+        "cortex": "CORTEX",
+        "obdScanner": "OBD2 DIAGNOSTIC SCANNER",
+        "systemRecovery": "⚠️ System Recovery",
+        "unexpectedError": "Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.",
+        "retryApp": "RETRY APPLICATION"
     }
 }

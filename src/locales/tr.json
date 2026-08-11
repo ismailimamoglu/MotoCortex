@@ -628,7 +628,8 @@
         "stop": "DURDUR",
         "reset": "SIFIRLA",
         "howItWorks": "NASIL ÇALIŞIR?",
-        "howDesc": "1. \"Testi Başlat\" butonuna basın\n2. Araç duruyor olmalı (Hız = 0)\n3. Hareket etmeye başladığınızda krono başlar\n4. 60 km/h ve 100 km/h geçiş süreleri kaydedilir\n\n⚠️ Bu testi güvenli bir alanda yapın!"
+        "howDesc": "1. \"Testi Başlat\" butonuna basın\n2. Araç duruyor olmalı (Hız = 0)\n3. Hareket etmeye başladığınızda krono başlar\n4. 60 km/h ve 100 km/h geçiş süreleri kaydedilir\n\n⚠️ Bu testi güvenli bir alanda yapın!",
+        "sec": "sn"
     },
     "dtc": {
         "P0113": "Emme Havası Sıcaklık Sensörü 1 Devresi Yüksek Giriş (IAT)",
@@ -2460,7 +2461,8 @@
         "motionAlertTitle": "🚨 Araç Hareket Halinde",
         "noMatchingFeatures": "Seçilen filtreler için eşleşen özellik bulunamadı.",
         "unsafeModuleMsg": "ABS/ESP ve Hava Yastığı/SRS modüllerine ECU yazma işlemleri, kritik araç güvenlik sistemlerini korumak için %100 engellenir.",
-        "unsafeModuleTitle": "🚫 Korumalı Güvenlik Modülü"
+        "unsafeModuleTitle": "🚫 Korumalı Güvenlik Modülü",
+        "safetyAlertMsg": "Kodlama için en az 12.2V akü voltajı gereklidir.\nLütfen bir şarj cihazı bağlayın veya motoru çalıştırın."
     },
     "ignition": {
         "title": "Kontak Durum Uyarısı",
@@ -2631,7 +2633,37 @@
         "userInfo": "🔒 YÖNETİCİ KULLANICI KİMLİK BİLGİLERİ",
         "devModeAlert": "Gizli PRO geliştirici anahtarı canlı (production) derlemelerinde devre dışıdır.",
         "invalidCmdError": "Lütfen geçerli bir OBD komutu girin (örn: 01 0C veya AT Z)",
-        "noLogsInfo": "Paylaşılacak log kaydı bulunamadı."
+        "noLogsInfo": "Paylaşılacak log kaydı bulunamadı.",
+        "logsLoading": "Loglar yükleniyor...",
+        "calculating": "Hesaplanıyor...",
+        "secretProTitle": "Gizli PRO Anahtarı ⚡ (DEV)",
+        "secretProActive": "PRO Lisans Modu Durumu: AKTİF (AÇIK - Tüm Özellikler Erişilebilir)",
+        "secretProInactive": "PRO Lisans Modu Durumu: PASİF (KAPALI)",
+        "logsTruncated": "... [Loglar Kırpıldı] ...\n",
+        "noLogsFound": "Kayıtlı log bulunmuyor.",
+        "logsReadErr": "Loglar okunamadı: ",
+        "unknown": "Bilinmiyor",
+        "deviceNotConnectedWarning": "(UYARI: Cihaz Bağlı Değil)",
+        "deviceNotConnectedAlert": "Cihaz bağlı değil. Komut terminale eklendi: ",
+        "cmdError": "Komut Hatası",
+        "ecuNoResponse": "ECU Yanıt Vermedi: ",
+        "cortexTerminalLogs": "CORTEX OBD2 TERMINAL LOGLARI",
+        "shareError": "Paylaşım Hatası",
+        "noLogsToShare": "Paylaşılacak log bulunamadı.",
+        "clearLogsTitle": "Logları Temizle",
+        "clearLogsMsg": "Tüm yerel OBD terminal logları silinecektir.",
+        "clearAction": "Temizle",
+        "logsCleared": "Terminal logları temizlendi.",
+        "copiedTitle": "Kopyalandı",
+        "copiedMsg": "{{label}} panoya kopyalandı:\n{{value}}",
+        "presetAutoProtocol": "Otomatik Protokol",
+        "presetSupportedPids": "Desteklenen PID'ler",
+        "presetEngineRpm": "Motor Devri (RPM)",
+        "inputPlaceholder": "Örn: 01 0C veya AT Z",
+        "syncingDtc": "SENKRONİZE EDİLİYOR...",
+        "syncDtcBtn": "DTC SÖZLÜĞÜNÜ SENKRONİZE ET",
+        "crashTestTitle": "Çökme Testi",
+        "crashTestDesc": "Firebase Crashlytics entegrasyonu için test çökmesi başlatılacaktır."
     },
     "bridge": {
         "androidAdvice": "Lütfen uygulamayı yeniden başlatın veya Bluetooth ayarlarını kontrol edin.",
@@ -2836,5 +2868,16 @@
         "purgeDoneMsg": "Verileriniz kalıcı olarak silindi: {{items}}",
         "purgeErrorTitle": "Hata",
         "purgeErrorMsg": "Veri silme işlemi başarısız."
+    },
+    "inspectionReport": {
+        "verificationHash": "🔒 DOĞRULAMA HASH'İ:"
+    },
+    "errorBoundary": {
+        "aiDoctor": "AI DOKTOR",
+        "cortex": "CORTEX",
+        "obdScanner": "OBD2 TEŞHİS TARAYICI",
+        "systemRecovery": "⚠️ Sistem Kurtarma",
+        "unexpectedError": "Cortex OBD2 Teşhis Tarayıcısı beklenmeyen bir UI hatasıyla karşılaştı. Çökme olayı bildirildi.",
+        "retryApp": "UYGULAMAYI YENİDEN DENE"
     }
 }

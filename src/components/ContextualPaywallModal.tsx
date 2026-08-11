@@ -101,12 +101,12 @@ export default function ContextualPaywallModal() {
             const activePro = checkIsProStatus(customerInfo);
             setIsPro(activePro);
             if (activePro) {
-                Alert.alert(t('paywall.congratsTitle', '🎉 Congratulations!'), t('paywall.congratsMsg', 'Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!'));
+                Alert.alert(t('paywall.congratsTitle'), t('paywall.congratsMsg'));
                 clearPaywallContext();
             }
         } catch (error: any) {
             if (!error?.userCancelled) {
-                Alert.alert(t('paywall.errTitle', '❌ Purchase Failed'), error?.message || t('paywall.errMsg'));
+                Alert.alert(t('paywall.errTitle'), error?.message || t('paywall.errMsg'));
             }
         } finally {
             setIsLoading(false);
@@ -219,42 +219,42 @@ export default function ContextualPaywallModal() {
             <TouchableOpacity activeOpacity={1} style={sDyn.overlay} onPress={clearPaywallContext}>
                 <TouchableOpacity activeOpacity={1} style={sDyn.container} onPress={(e) => e.stopPropagation()}>
                     <View style={sDyn.handle} />
-                    <Text style={sDyn.title}>👑 {t('paywall.crownBadge', 'MOTO CORTEX PRO')}</Text>
+                    <Text style={sDyn.title}>👑 {t('paywall.crownBadge')}</Text>
                     <Text style={sDyn.desc}>
                         {paywallContext === 'AI_DOCTOR_LIMIT'
-                            ? t('paywall.aiDoctorLimitDesc', 'You have used your 1 free AI engine diagnostic trial. Upgrade to PRO for unlimited AI analyses.')
-                            : t('paywall.contextualDesc', 'Upgrade to PRO to see critical risks of this trouble code on the engine, potential repair costs, and detailed solution guidelines.')}
+                            ? t('paywall.aiDoctorLimitDesc')
+                            : t('paywall.contextualDesc')}
                     </Text>
                     
                     <View style={sDyn.codeBox}>
                         <Text style={sDyn.codeText}>
                             {paywallContext === 'AI_DOCTOR_LIMIT'
-                                ? '🤖 ' + t('paywall.aiDoctorLimitTitle', 'AI DOCTOR LIMIT REACHED')
+                                ? '🤖 ' + t('paywall.aiDoctorLimitTitle')
                                 : paywallContext === 'ACTION_LOCKED' 
-                                    ? '🔒 ' + t('paywall.actionLocked', 'PRO LOCKED FEATURE')
+                                    ? '🔒 ' + t('paywall.actionLocked')
                                     : paywallContext}
                         </Text>
                     </View>
 
                     <TouchableOpacity style={sDyn.option} onPress={() => handlePurchase('weekly')} disabled={isLoading}>
-                        <Text style={sDyn.optionTitle}>{t('paywall.weekly', 'Weekly Subscription')}</Text>
+                        <Text style={sDyn.optionTitle}>{t('paywall.weekly')}</Text>
                         <Text style={sDyn.optionPrice}>{prices.weekly}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={sDyn.option} onPress={() => handlePurchase('monthly')} disabled={isLoading}>
-                        <Text style={sDyn.optionTitle}>{t('paywall.monthly', 'Monthly Subscription')}</Text>
+                        <Text style={sDyn.optionTitle}>{t('paywall.monthly')}</Text>
                         <Text style={sDyn.optionPrice}>{prices.monthly}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={sDyn.option} onPress={() => handlePurchase('yearly')} disabled={isLoading}>
-                        <Text style={sDyn.optionTitle}>{t('paywall.yearly', 'Yearly Subscription')}</Text>
+                        <Text style={sDyn.optionTitle}>{t('paywall.yearly')}</Text>
                         <Text style={sDyn.optionPrice}>{prices.yearly}</Text>
                     </TouchableOpacity>
 
                     {isLoading && <ActivityIndicator color={colors.purple} style={{ marginTop: 10 }} />}
 
                     <TouchableOpacity style={sDyn.closeBtn} onPress={clearPaywallContext}>
-                        <Text style={sDyn.closeBtnText}>{t('common.cancel', 'Cancel')}</Text>
+                        <Text style={sDyn.closeBtnText}>{t('common.cancel')}</Text>
                     </TouchableOpacity>
                 </TouchableOpacity>
             </TouchableOpacity>

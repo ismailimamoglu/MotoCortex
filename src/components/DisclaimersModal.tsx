@@ -54,13 +54,13 @@ export default function DisclaimersModal({
             {/* Header */}
             <View style={styles.header}>
               <Text style={[styles.warningBadge, { backgroundColor: colors.red + '22', color: colors.red }]}>
-                {t('disclaimers.safetyNotice', '⚠️ CRITICAL SAFETY NOTICE')}
+                {t('disclaimers.safetyNotice')}
               </Text>
               <Text style={[styles.title, { color: colors.textPri, fontSize: fs(18) }]}>
                 {featureTitle}
               </Text>
               <Text style={[styles.subtitle, { color: colors.textSec, fontSize: fs(12) }]}>
-                {t('disclaimer.subtitle', 'Please read and acknowledge vehicle coding safety conditions before proceeding.')}
+                {t('disclaimer.subtitle')}
               </Text>
             </View>
 
@@ -83,7 +83,7 @@ export default function DisclaimersModal({
                   {hasConfirmedVoltage && <Text style={styles.checkmark}>✓</Text>}
                 </View>
                 <Text style={[styles.checkboxLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-                  {t('disclaimer.check1', 'I confirm battery voltage is >= 12.2V, ignition is ON, engine is OFF, and vehicle is stationary.')}
+                  {t('disclaimer.check1')}
                 </Text>
               </TouchableOpacity>
 
@@ -101,7 +101,7 @@ export default function DisclaimersModal({
                   {hasConfirmedRisk && <Text style={styles.checkmark}>✓</Text>}
                 </View>
                 <Text style={[styles.checkboxLabel, { color: colors.textPri, fontSize: fs(12) }]}>
-                  {t('disclaimer.check2', 'I acknowledge that I assume full responsibility for feature activations on my vehicle as permitted by law.')}
+                  {t('disclaimer.check2')}
                 </Text>
               </TouchableOpacity>
             </ScrollView>
@@ -114,7 +114,7 @@ export default function DisclaimersModal({
                 onPress={onDecline}
               >
                 <Text style={[styles.cancelText, { color: colors.textSec, fontSize: fs(14) }]}>
-                  {t('common.cancel', 'Cancel')}
+                  {t('common.cancel')}
                 </Text>
               </TouchableOpacity>
 
@@ -128,7 +128,7 @@ export default function DisclaimersModal({
                 onPress={handleAccept}
               >
                 <Text style={[styles.confirmText, { color: canProceed ? '#FFFFFF' : colors.textSec, fontSize: fs(14) }]}>
-                  {t('disclaimer.proceed', 'I Understand & Proceed')}
+                  {t('disclaimer.proceed')}
                 </Text>
               </TouchableOpacity>
             </View>

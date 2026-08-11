@@ -124,7 +124,7 @@ export default function SearchableVehicleSelect({
     const rawModels = MODELS_BY_BRAND[selectedBrand] || ['other'];
     return rawModels.map((m) => {
       if (m === 'other') {
-        return { label: t('brands.other', 'Other'), value: 'other' };
+        return { label: t('brands.other'), value: 'other' };
       }
       return { label: m, value: toSnakeCase(m) };
     });
@@ -141,7 +141,7 @@ export default function SearchableVehicleSelect({
 
   const selectedModelLabel = React.useMemo(() => {
     if (!selectedModel) return '';
-    if (selectedModel === 'other') return t('brands.other', 'Other');
+    if (selectedModel === 'other') return t('brands.other');
     const matched = modelOptions.find((opt) => opt.value === selectedModel);
     return matched ? matched.label : selectedModel;
   }, [selectedModel, modelOptions, t]);
@@ -161,15 +161,15 @@ export default function SearchableVehicleSelect({
     const finalYear = parseInt(finalYearString, 10);
 
     if (!finalBrand) {
-      Alert.alert(t('common.error', 'Error'), t('vehicleSelect.errorBrand', 'Please select or enter a brand.'));
+      Alert.alert(t('common.error'), t('vehicleSelect.errorBrand'));
       return;
     }
     if (!finalModel) {
-      Alert.alert(t('common.error', 'Error'), t('vehicleSelect.errorModel', 'Please select or enter a model.'));
+      Alert.alert(t('common.error'), t('vehicleSelect.errorModel'));
       return;
     }
     if (isNaN(finalYear) || finalYear < 1900 || finalYear > 2030) {
-      Alert.alert(t('common.error', 'Error'), t('vehicleSelect.errorYear', 'Please select or enter a valid year (e.g. 2018).'));
+      Alert.alert(t('common.error'), t('vehicleSelect.errorYear'));
       return;
     }
 
@@ -185,7 +185,7 @@ export default function SearchableVehicleSelect({
       {/* BRAND SELECTOR */}
       <View style={styles.formGroup}>
         <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
-          {t('vehicleSelect.brand', 'BRAND')}
+          {t('vehicleSelect.brand')}
         </Text>
         <TouchableOpacity 
           style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
@@ -196,7 +196,7 @@ export default function SearchableVehicleSelect({
           }}
         >
           <Text style={[styles.dropdownText, { color: selectedBrand ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {selectedBrand ? t(`brands.${selectedBrand}`, selectedBrand) : t('vehicleSelect.selectBrand', 'Select Brand...')}
+            {selectedBrand ? t(`brands.${selectedBrand}`, selectedBrand) : t('vehicleSelect.selectBrand')}
           </Text>
           <Text style={{ color: colors.textSec }}>{showBrandDropdown ? '▲' : '▼'}</Text>
         </TouchableOpacity>
@@ -205,7 +205,7 @@ export default function SearchableVehicleSelect({
           <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
             <TextInput
               style={[styles.searchInput, { backgroundColor: colors.bg, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11) }]}
-              placeholder={t('vehicleSelect.searchBrand', 'Search Brand...')}
+              placeholder={t('vehicleSelect.searchBrand')}
               placeholderTextColor={colors.textSec}
               value={brandSearchQuery}
               onChangeText={setBrandSearchQuery}
@@ -215,7 +215,7 @@ export default function SearchableVehicleSelect({
               {filteredBrands.length === 0 ? (
                 <View style={{ padding: 14, alignItems: 'center' }}>
                   <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11) }}>
-                    {t('vehicleSelect.noResults', 'No results found')}
+                    {t('vehicleSelect.noResults')}
                   </Text>
                 </View>
               ) : (
@@ -242,7 +242,7 @@ export default function SearchableVehicleSelect({
         {selectedBrand === 'other' && (
           <TextInput
             style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
-            placeholder={t('vehicleSelect.customBrandPlaceholder', 'e.g. Triumph, CFMoto, Kia...')}
+            placeholder={t('vehicleSelect.customBrandPlaceholder')}
             placeholderTextColor={colors.textSec}
             value={customBrand}
             onChangeText={setCustomBrand}
@@ -253,7 +253,7 @@ export default function SearchableVehicleSelect({
       {/* MODEL SELECTOR */}
       <View style={styles.formGroup}>
         <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
-          {t('vehicleSelect.model', 'MODEL')}
+          {t('vehicleSelect.model')}
         </Text>
         <TouchableOpacity 
           style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border, opacity: selectedBrand ? 1 : 0.6 }]}
@@ -265,7 +265,7 @@ export default function SearchableVehicleSelect({
           }}
         >
           <Text style={[styles.dropdownText, { color: selectedModel ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {selectedModel ? selectedModelLabel : t('vehicleSelect.selectModel', 'Select Model...')}
+            {selectedModel ? selectedModelLabel : t('vehicleSelect.selectModel')}
           </Text>
           <Text style={{ color: colors.textSec }}>{showModelDropdown ? '▲' : '▼'}</Text>
         </TouchableOpacity>
@@ -274,7 +274,7 @@ export default function SearchableVehicleSelect({
           <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
             <TextInput
               style={[styles.searchInput, { backgroundColor: colors.bg, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11) }]}
-              placeholder={t('vehicleSelect.searchModel', 'Search Model...')}
+              placeholder={t('vehicleSelect.searchModel')}
               placeholderTextColor={colors.textSec}
               value={modelSearchQuery}
               onChangeText={setModelSearchQuery}
@@ -284,7 +284,7 @@ export default function SearchableVehicleSelect({
               {filteredModels.length === 0 ? (
                 <View style={{ padding: 14, alignItems: 'center' }}>
                   <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11) }}>
-                    {t('vehicleSelect.noResults', 'No results found')}
+                    {t('vehicleSelect.noResults')}
                   </Text>
                 </View>
               ) : (
@@ -311,7 +311,7 @@ export default function SearchableVehicleSelect({
         {selectedModel === 'other' && (
           <TextInput
             style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
-            placeholder={t('vehicleSelect.customModelPlaceholder', 'e.g. CBR600, Golf, Focus...')}
+            placeholder={t('vehicleSelect.customModelPlaceholder')}
             placeholderTextColor={colors.textSec}
             value={customModel}
             onChangeText={setCustomModel}
@@ -322,7 +322,7 @@ export default function SearchableVehicleSelect({
       {/* YEAR SELECTOR */}
       <View style={styles.formGroup}>
         <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
-          {t('vehicleSelect.year', 'MODEL YEAR')}
+          {t('vehicleSelect.year')}
         </Text>
         <TouchableOpacity 
           style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
@@ -333,7 +333,7 @@ export default function SearchableVehicleSelect({
           }}
         >
           <Text style={[styles.dropdownText, { color: selectedYear ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {selectedYear ? (selectedYear === 'other' ? t('brands.other', 'Other') : selectedYear) : t('vehicleSelect.selectYear', 'Select Year...')}
+            {selectedYear ? (selectedYear === 'other' ? t('brands.other') : selectedYear) : t('vehicleSelect.selectYear')}
           </Text>
           <Text style={{ color: colors.textSec }}>{showYearDropdown ? '▲' : '▼'}</Text>
         </TouchableOpacity>
@@ -351,7 +351,7 @@ export default function SearchableVehicleSelect({
                   }}
                 >
                   <Text style={[styles.itemText, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11.5) }]}>
-                    {year === 'other' ? t('brands.other', 'Other') : year}
+                    {year === 'other' ? t('brands.other') : year}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -362,7 +362,7 @@ export default function SearchableVehicleSelect({
         {selectedYear === 'other' && (
           <TextInput
             style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
-            placeholder={t('vehicleSelect.customYearPlaceholder', 'e.g. 2018')}
+            placeholder={t('vehicleSelect.customYearPlaceholder')}
             placeholderTextColor={colors.textSec}
             value={customYear}
             keyboardType="numeric"

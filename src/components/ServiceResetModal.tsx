@@ -38,7 +38,7 @@ export default function ServiceResetModal({ visible, onClose, vehicleMake }: Ser
   const handleResetService = async (serviceTypeKey: string, serviceTypeDefault: string) => {
     const serviceType = t(serviceTypeKey, serviceTypeDefault);
     if (!isConnected) {
-      Alert.alert(t('common.connectionError', 'Connection Error'), t('connection.connectRequired', 'Please connect to vehicle OBD2 / BLE adapter first.'));
+      Alert.alert(t('common.connectionError'), t('connection.connectRequired'));
       return;
     }
 
@@ -51,10 +51,10 @@ export default function ServiceResetModal({ visible, onClose, vehicleMake }: Ser
       await new Promise(r => setTimeout(r, 1200)); // Sleep 1.2s for ECU handshake
 
       setLastResult(`SUCCESS: ${serviceType} completed for ${activeMake} (UDS 0x31).`);
-      Alert.alert(t('common.success', 'Success'), `${serviceType} successfully reset for ${activeMake}.`);
+      Alert.alert(t('common.success'), `${serviceType} successfully reset for ${activeMake}.`);
     } catch (e) {
       setLastResult(`FAILED: Could not execute UDS routine on ${activeMake}.`);
-      Alert.alert(t('common.error', 'Error'), t('serviceReset.ecuRejected', 'ECU rejected reset command. Ensure ignition is ON and engine is OFF.'));
+      Alert.alert(t('common.error'), t('serviceReset.ecuRejected'));
     } finally {
       setLoading(false);
     }
@@ -65,8 +65,8 @@ export default function ServiceResetModal({ visible, onClose, vehicleMake }: Ser
       <SafeAreaView style={[styles.container, { backgroundColor: colors.bg || '#090d16' }]}>
         <View style={styles.header}>
           <View>
-            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>🔧 {t('serviceReset.title', 'Service & Maintenance Reset')}</Text>
-            <Text style={styles.headerSubtitle}>{t('serviceReset.subtitle', `OEM UDS Maintenance & Adaptation Calibration (${activeMake})`, { make: activeMake })}</Text>
+            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>🔧 {t('serviceReset.title')}</Text>
+            <Text style={styles.headerSubtitle}>{t('serviceReset.subtitle', { make: activeMake })}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>
@@ -75,22 +75,22 @@ export default function ServiceResetModal({ visible, onClose, vehicleMake }: Ser
 
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.warningBox}>
-            <Text style={styles.warningTitle}>⚠️ {t('serviceReset.preCheckTitle', 'Pre-Requirement Checklist')}</Text>
-            <Text style={styles.warningText}>• {t('serviceReset.preCheckIgnition', 'Vehicle Ignition switch must be in ON position.')}</Text>
-            <Text style={styles.warningText}>• {t('serviceReset.preCheckEngine', 'Engine MUST be turned OFF (0 RPM).')}</Text>
-            <Text style={styles.warningText}>• {t('serviceReset.preCheckBattery', 'Battery voltage must be above 12.2V.')}</Text>
+            <Text style={styles.warningTitle}>⚠️ {t('serviceReset.preCheckTitle')}</Text>
+            <Text style={styles.warningText}>• {t('serviceReset.preCheckIgnition')}</Text>
+            <Text style={styles.warningText}>• {t('serviceReset.preCheckEngine')}</Text>
+            <Text style={styles.warningText}>• {t('serviceReset.preCheckBattery')}</Text>
           </View>
 
           {/* Action List */}
-          <Text style={styles.sectionTitle}>{t('serviceReset.selectRoutine', 'SELECT SERVICE ROUTINE')}</Text>
+          <Text style={styles.sectionTitle}>{t('serviceReset.selectRoutine')}</Text>
 
           <TouchableOpacity
             style={styles.actionCard}
             disabled={loading}
             onPress={() => handleResetService('serviceReset.intervalReset', 'Service Maintenance Interval Reset')}
           >
-            <Text style={styles.actionTitle}>🛠️ {t('serviceReset.intervalTitle', 'Reset Service Interval Indicator Light')}</Text>
-            <Text style={styles.actionSubtitle}>{t('serviceReset.intervalSubtitle', 'Clears dash service warning and resets next inspection interval.')}</Text>
+            <Text style={styles.actionTitle}>🛠️ {t('serviceReset.intervalTitle')}</Text>
+            <Text style={styles.actionSubtitle}>{t('serviceReset.intervalSubtitle')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -98,8 +98,8 @@ export default function ServiceResetModal({ visible, onClose, vehicleMake }: Ser
             disabled={loading}
             onPress={() => handleResetService('serviceReset.tpsReset', 'TPS (Throttle Position Sensor) Reset')}
           >
-            <Text style={styles.actionTitle}>⚡ {t('serviceReset.tpsTitle', 'Throttle Position Sensor (TPS) Adaptation')}</Text>
-            <Text style={styles.actionSubtitle}>{t('serviceReset.tpsSubtitle', 'Re-calibrates zero-throttle voltage stop point.')}</Text>
+            <Text style={styles.actionTitle}>⚡ {t('serviceReset.tpsTitle')}</Text>
+            <Text style={styles.actionSubtitle}>{t('serviceReset.tpsSubtitle')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -107,8 +107,8 @@ export default function ServiceResetModal({ visible, onClose, vehicleMake }: Ser
             disabled={loading}
             onPress={() => handleResetService('serviceReset.absBleed', 'ABS Bleeding & Valve Test')}
           >
-            <Text style={styles.actionTitle}>🛑 {t('serviceReset.absTitle', 'ABS Hydraulic Pump Bleed Test')}</Text>
-            <Text style={styles.actionSubtitle}>{t('serviceReset.absSubtitle', 'Cycles ABS solenoid valves to purge air bubbles from brake lines.')}</Text>
+            <Text style={styles.actionTitle}>🛑 {t('serviceReset.absTitle')}</Text>
+            <Text style={styles.actionSubtitle}>{t('serviceReset.absSubtitle')}</Text>
           </TouchableOpacity>
 
           {loading && (

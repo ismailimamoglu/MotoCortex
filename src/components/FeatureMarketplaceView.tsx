@@ -76,7 +76,7 @@ export default function FeatureMarketplaceView({ visible, onClose }: FeatureMark
 
   const handleUnlock = (item: MarketplaceItem) => {
     if (item.unlocked) {
-      Alert.alert('Already Unlocked', 'You already own this OEM Feature Pack.');
+      Alert.alert('Already Unlocked');
       return;
     }
 
@@ -89,7 +89,7 @@ export default function FeatureMarketplaceView({ visible, onClose }: FeatureMark
           text: 'Unlock Now',
           onPress: () => {
             setItems(prev => prev.map(i => i.id === item.id ? { ...i, unlocked: true } : i));
-            Alert.alert('Success', `${item.title} successfully unlocked!`);
+            Alert.alert('Success');
           }
         }
       ]
@@ -101,8 +101,8 @@ export default function FeatureMarketplaceView({ visible, onClose }: FeatureMark
       <SafeAreaView style={[styles.container, { backgroundColor: colors.bg || '#090d16' }]}>
         <View style={styles.header}>
           <View>
-            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>{t('marketplace.title', '🛒 One-Click Feature Marketplace')}</Text>
-            <Text style={styles.headerSubtitle}>{t('marketplace.subtitle', 'Community & OEM Feature Packs for MotoCortex')}</Text>
+            <Text style={[styles.headerTitle, { color: colors.textPri || '#ffffff' }]}>{t('marketplace.title')}</Text>
+            <Text style={styles.headerSubtitle}>{t('marketplace.subtitle')}</Text>
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>

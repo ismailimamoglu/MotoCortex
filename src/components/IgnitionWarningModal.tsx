@@ -42,7 +42,7 @@ export const IgnitionWarningModal: React.FC<IgnitionWarningModalProps> = ({
           {voltageV > 0 && (
             <View style={[styles.voltageBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
               <Text style={[styles.voltageLabel, { color: tc.textSec }]}>
-                {t('ignition.batteryVoltage', 'Battery Voltage:')}
+                {t('ignition.batteryVoltage')}
               </Text>
               <Text style={[styles.voltageVal, { color: voltageV < 11.8 ? tc.red : tc.amber }]}>
                 {voltageV.toFixed(1)}V

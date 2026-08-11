@@ -66,7 +66,7 @@ export const ContextualMarketplace: React.FC<ContextualMarketplaceProps> = ({
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: tc.textPri }]}>
-            🛒 {t('marketplace.title', 'MotoCortex Feature Marketplace')}
+            🛒 {t('marketplace.title')}
           </Text>
           {onClose && (
             <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: tc.elevated }]}>
@@ -105,7 +105,7 @@ export const ContextualMarketplace: React.FC<ContextualMarketplaceProps> = ({
                   ]}
                 >
                   <Text style={styles.buyBtnText}>
-                    {item.isUnlocked ? t('marketplace.unlocked', 'UNLOCKED') : t('marketplace.unlock', 'UNLOCK')}
+                    {item.isUnlocked ? t('marketplace.unlocked') : t('marketplace.unlock')}
                   </Text>
                 </TouchableOpacity>
               </View>

@@ -463,7 +463,7 @@ export default function AboutView({
               fontFamily: tc.mono,
               fontWeight: '900' 
             }}>
-              {infoBtStatus === 'checking' ? '...' : (infoBtStatus === 'granted' ? t('common.active', 'ACTIVE') : t('common.disabled', 'DISABLED'))}
+              {infoBtStatus === 'checking' ? '...' : (infoBtStatus === 'granted' ? t('common.active') : t('common.disabled'))}
             </Text>
           </View>
         </View>
@@ -498,7 +498,7 @@ export default function AboutView({
               fontFamily: tc.mono,
               fontWeight: '900' 
             }}>
-              {infoLocStatus === 'checking' ? '...' : (infoLocStatus === 'granted' ? t('common.active', 'ACTIVE') : t('common.disabled', 'DISABLED'))}
+              {infoLocStatus === 'checking' ? '...' : (infoLocStatus === 'granted' ? t('common.active') : t('common.disabled'))}
             </Text>
           </View>
         </View>
