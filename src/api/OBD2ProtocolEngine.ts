@@ -806,8 +806,9 @@ export class OBD2ProtocolEngine {
                this.stallCounter++;
                useBluetoothStore.getState().addLog(`[ResponseInterceptor] Garbage response detected: "${trimmedResult}"`);
            } else {
-               // Geçerli yanıt → stallCounter sıfırla
+               // Geçerli yanıt → stallCounter & stallSkipCount sıfırla
                this.stallCounter = 0;
+               this.stallSkipCount = 0;
            }
        }
 
@@ -830,7 +831,7 @@ export class OBD2ProtocolEngine {
                    useBluetoothStore.getState().addLog(`[ResponseInterceptor] LIVELOCK_DETECTED: Force clearing busy queue for ATWS recovery.`);
                    this.clear(new Error('LIVELOCK_RECOVERY_FORCE_CLEAR'));
                }
-               BluetoothService.write('ATWS\r').catch(() => {});
+               BluetoothService.write('ATWS\r').catch(() => {}).finally(() => { this.stallSkipCount = 0; });
            });
        }
 

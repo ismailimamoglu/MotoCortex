@@ -92,6 +92,7 @@ interface BluetoothState {
     suggestedBrandFromVin: string | null;
     suggestedVehicleProfile: SuggestedVehicleProfile | null;
     protocol: string | null;
+    protocolCacheByDevice: Record<string, string>;
  
     supportedPids: string[];
     guardTime: number;
@@ -144,6 +145,7 @@ interface BluetoothState {
     addLog: (entry: string) => void;
     clearLogs: () => void;
     setProtocol: (protocol: string | null) => void;
+    setProtocolForDevice: (deviceId: string, protocol: string) => void;
     addDiagnosticLog: (log: string) => void;
     clearDiagnosticLogs: () => void;
     addStructuredLog: (log: any) => void;
@@ -219,6 +221,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     suggestedBrandFromVin: null,
     suggestedVehicleProfile: null,
     protocol: null,
+    protocolCacheByDevice: {},
     adapterFirmware: null,
     avgRtt: 0,
 
@@ -339,6 +342,10 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     })),
     clearLogs: () => set({ logs: [] }),
     setProtocol: (protocol) => set({ protocol }),
+    setProtocolForDevice: (deviceId, protocol) => set((state) => ({
+        protocol,
+        protocolCacheByDevice: { ...(state.protocolCacheByDevice || {}), [deviceId]: protocol }
+    })),
 
     addDiagnosticLog: (log) => set((state) => {
         const timestamp = new Date().toLocaleTimeString('tr-TR', { hour12: false });
@@ -416,6 +423,7 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
         pendingProRevocation: false,
         suggestedBrandFromVin: null,
         protocol: null,
+        protocolCacheByDevice: {},
         adapterFirmware: null,
         avgRtt: 0,
 

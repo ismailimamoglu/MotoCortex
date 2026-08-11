@@ -223,7 +223,7 @@ export const useBluetooth = () => {
                      { sp: 'AT SP 7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, timeout: 5000 },
                      { sp: 'AT SP 8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 5000 },
                      { sp: 'AT SP 9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 5000 },
-                     { sp: 'AT SP A', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 5000 },
+                     { sp: 'AT SP A', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 10000 },
                      { sp: 'AT SP 5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 5500, isKLine: true },
                      { sp: 'AT SP 4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 5500, isKLine: true },
                      { sp: 'AT SP 3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 5500, isKLine: true },
@@ -231,13 +231,15 @@ export const useBluetooth = () => {
                      { sp: 'AT SP 2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 4500 },
                  ];
 
-                 const cachedProtocolStr = useBluetoothStore.getState().protocol || '';
+                 const state = useBluetoothStore.getState();
+                 const activeDevId = state.deviceId || state.lastDeviceId || '';
+                 const cachedProtocolStr = (activeDevId && state.protocolCacheByDevice[activeDevId]) || state.protocol || '';
                  if (cachedProtocolStr) {
                      const cachedIdx = fallbackProtocols.findIndex(p => cachedProtocolStr.includes(p.name) || cachedProtocolStr.includes(p.sp));
                      if (cachedIdx > 0) {
                          const [cachedItem] = fallbackProtocols.splice(cachedIdx, 1);
                          fallbackProtocols.unshift(cachedItem);
-                         useBluetoothStore.getState().addLog(`FAST_PATH: Prioritizing cached protocol ${cachedItem.sp} [${cachedItem.name}]`);
+                         useBluetoothStore.getState().addLog(`FAST_PATH: Prioritizing cached protocol ${cachedItem.sp} [${cachedItem.name}] for device ${activeDevId || 'default'}`);
                      }
                  }
 
@@ -279,7 +281,13 @@ export const useBluetooth = () => {
                         if (ecuConnected) {
                             const dpnRes = await OBDCommandQueue.add("AT DPN", 2000).catch(() => '');
                             const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
-                            useBluetoothStore.getState().setProtocol(`${item.name} (DPN ${cleanDpn})`);
+                            const protocolName = `${item.name} (DPN ${cleanDpn})`;
+                            const devId = useBluetoothStore.getState().deviceId || useBluetoothStore.getState().lastDeviceId;
+                            if (devId) {
+                                useBluetoothStore.getState().setProtocolForDevice(devId, protocolName);
+                            } else {
+                                useBluetoothStore.getState().setProtocol(protocolName);
+                            }
                             useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE_SUCCESS: Connected via ${item.name} (DPN: ${cleanDpn})`);
                             break;
                         }
