@@ -200,35 +200,37 @@ export const useBluetooth = () => {
            let ecuConnected = false;  
            let rpmRes = '';
 
-           try {  
-               if (ProtocolCircuitBreaker.isBlacklisted("0")) throw new Error("BLACKLISTED");  
-               useBluetoothStore.getState().addLog('DIAG: Trying Auto Protocol (AT SP 0)...');  
-               await OBDCommandQueue.add("AT SP 0", 2000);
-               OBDCommandQueue.resetStallCounter();
+            try {  
+                if (ProtocolCircuitBreaker.isBlacklisted("0")) throw new Error("BLACKLISTED");  
+                useBluetoothStore.getState().addLog('DIAG: Trying Auto Protocol (ATSP0)...');  
+                await OBDCommandQueue.add("ATSP0", 3500).catch(() => {});
+                OBDCommandQueue.resetStallCounter();
 
-               const testCommand = "01 00";  
-               const initRes = await OBDCommandQueue.add(testCommand, 6000);  
-               ecuConnected = verifyHandshakeResponse(initRes, testCommand);
+                const testCommand = "01 00";  
+                const initRes = await OBDCommandQueue.add(testCommand, 6000);  
+                ecuConnected = verifyHandshakeResponse(initRes, testCommand);
 
-               if (!ecuConnected) {  
-                   useBluetoothStore.getState().addLog(`PROTOCOL=SP0, COMMAND=${testCommand}, RAW=${initRes || 'NULL'}`);  
-                   throw new Error("PROTOCOL_FAILED");  
-               }                const dpnRes = await OBDCommandQueue.add("AT DPN", 2000).catch(() => '');
+                if (!ecuConnected) {  
+                    useBluetoothStore.getState().addLog(`PROTOCOL=SP0, COMMAND=${testCommand}, RAW=${initRes || 'NULL'}`);  
+                    throw new Error("PROTOCOL_FAILED");  
+                }
+                const dpnRes = await OBDCommandQueue.add("ATDPN", 2000).catch(() => '');
                 const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
-                const selectedProtocol = await OBDCommandQueue.add("AT DP", 3000);  
+                const selectedProtocol = await OBDCommandQueue.add("ATDP", 3000);  
                 useBluetoothStore.getState().setProtocol(selectedProtocol ? selectedProtocol.trim() : `AUTO (SP 0 / DPN ${cleanDpn})`);  
             } catch (e) {  
-                useBluetoothStore.getState().addLog('GLOBAL_PROTOCOL_ENGINE: AT SP 0 unconfirmed. Executing dynamic fallback matrix (AT SP 6/7/8/9/5/4/3/1/2)...');                 const fallbackProtocols = [
-                     { sp: 'AT SP 6', name: 'ISO 15765-4 (CAN 11b/500k)', isCan: true, timeout: 5000 },
-                     { sp: 'AT SP 7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, timeout: 5000 },
-                     { sp: 'AT SP 8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 5000 },
-                     { sp: 'AT SP 9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 5000 },
-                     { sp: 'AT SP A', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 10000 },
-                     { sp: 'AT SP 5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 5500, isKLine: true },
-                     { sp: 'AT SP 4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 5500, isKLine: true },
-                     { sp: 'AT SP 3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 5500, isKLine: true },
-                     { sp: 'AT SP 1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 4500 },
-                     { sp: 'AT SP 2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 4500 },
+                useBluetoothStore.getState().addLog('GLOBAL_PROTOCOL_ENGINE: ATSP0 unconfirmed. Executing dynamic fallback matrix (ATSP6/7/8/9/A/5/4/3/1/2)...');
+                const fallbackProtocols = [
+                     { sp: 'ATSP6', name: 'ISO 15765-4 (CAN 11b/500k)', isCan: true, timeout: 8000 },
+                     { sp: 'ATSP7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, timeout: 8000 },
+                     { sp: 'ATSP8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 8000 },
+                     { sp: 'ATSP9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 8000 },
+                     { sp: 'ATSPA', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 10000 },
+                     { sp: 'ATSP5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 9000, isKLine: true },
+                     { sp: 'ATSP4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 9000, isKLine: true },
+                     { sp: 'ATSP3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 9000, isKLine: true },
+                     { sp: 'ATSP1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 7000 },
+                     { sp: 'ATSP2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 7000 },
                  ];
 
                  const state = useBluetoothStore.getState();
@@ -250,19 +252,21 @@ export const useBluetooth = () => {
                          useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningProtocol', { current: i + 1, total: fallbackProtocols.length, name: item.name });
                          useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Trying ${item.sp} [${item.name}] (${i + 1}/${fallbackProtocols.length})...`);
                         OBDCommandQueue.resetStallCounter();
-                        await OBDCommandQueue.add("AT PC", 800).catch(() => {});
+                        await OBDCommandQueue.add("ATPC", 1000).catch(() => {});
                         await preciseSleep(100);
-                        await OBDCommandQueue.add(item.sp, item.timeout);
+                        await OBDCommandQueue.add(item.sp, item.timeout).catch((spErr) => {
+                            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: ${item.sp} unconfirmed/timeout, attempting ECU handshake anyway...`);
+                        });
                         await preciseSleep(150);
 
                         if (item.isCan) {
                             // CAN Engine Header Scoping to avoid Multi-ECU response collisions
-                            await OBDCommandQueue.add("AT SH 7E0", 1000).catch(() => {});
+                            await OBDCommandQueue.add("ATSH7E0", 1000).catch(() => {});
                         } else if (item.isKLine) {
                             // K-Line Bus Quiet Time: ISO 14230 / ISO 9141 requires minimum 300ms idle bus state before init
                             await preciseSleep(300);
-                            // Inject K-Line Init Byte (AT IB 10) for motorcycle / legacy ECU baud rate alignment
-                            await OBDCommandQueue.add("AT IB 10", 1000).catch(() => {});
+                            // Inject K-Line Init Byte (ATIB10) for motorcycle / legacy ECU baud rate alignment
+                            await OBDCommandQueue.add("ATIB10", 1000).catch(() => {});
                         }
 
                         let initRes = await OBDCommandQueue.add("01 00", item.timeout);
@@ -270,16 +274,16 @@ export const useBluetooth = () => {
 
                         // K-Line Latch-up Physical Recovery & Retry if BUS INIT ERROR occurs
                         if (!ecuConnected && item.isKLine && (initRes || '').toUpperCase().includes('BUS INIT')) {
-                            useBluetoothStore.getState().addLog(`KLINE_RECOVERY: Bus init stall detected on ${item.sp}. Executing AT IIA 11 & AT BI line reset...`);
-                            await OBDCommandQueue.add("AT IIA 11", 1000).catch(() => {});
-                            await OBDCommandQueue.add("AT BI", 1000).catch(() => {});
+                            useBluetoothStore.getState().addLog(`KLINE_RECOVERY: Bus init stall detected on ${item.sp}. Executing ATIIA11 & ATBI line reset...`);
+                            await OBDCommandQueue.add("ATIIA11", 1000).catch(() => {});
+                            await OBDCommandQueue.add("ATBI", 1000).catch(() => {});
                             await preciseSleep(500);
                             initRes = await OBDCommandQueue.add("01 00", item.timeout);
                             ecuConnected = verifyHandshakeResponse(initRes, "01 00");
                         }
 
                         if (ecuConnected) {
-                            const dpnRes = await OBDCommandQueue.add("AT DPN", 2000).catch(() => '');
+                            const dpnRes = await OBDCommandQueue.add("ATDPN", 2000).catch(() => '');
                             const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
                             const protocolName = `${item.name} (DPN ${cleanDpn})`;
                             const devId = useBluetoothStore.getState().deviceId || useBluetoothStore.getState().lastDeviceId;

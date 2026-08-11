@@ -14,15 +14,15 @@ export class ProtocolNegotiator {
 
         try {
             OBDCommandQueue.resetStallCounter();
-            await OBDCommandQueue.add('AT Z', 3500).catch(() => {});
+            await OBDCommandQueue.add('ATZ', 5000).catch(() => {});
             OBDCommandQueue.flushRxBuffer();
             await preciseSleep(400);
 
             const t0 = Date.now();
             let unresponsiveCount = 0;
-            const atiRes = await OBDCommandQueue.add('ATI', 2500).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
-            const rvRes = await OBDCommandQueue.add('AT RV', 2000).catch(() => { unresponsiveCount++; return '12.0V'; });
-            const dpRes = await OBDCommandQueue.add('AT DP', 2000).catch(() => { unresponsiveCount++; return 'AUTO'; });
+            const atiRes = await OBDCommandQueue.add('ATI', 5000).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
+            const rvRes = await OBDCommandQueue.add('ATRV', 5000).catch(() => { unresponsiveCount++; return '12.0V'; });
+            const dpRes = await OBDCommandQueue.add('ATDP', 5000).catch(() => { unresponsiveCount++; return 'AUTO'; });
             const rtt = Math.max(10, Math.round((Date.now() - t0) / 3));
 
             const cleanFirmware = (atiRes || 'ELM327 v1.5').replace(/[\r\n>]/g, '').trim();
