@@ -18,6 +18,7 @@ export class ProtocolNegotiator {
             OBDCommandQueue.flushRxBuffer();
             await preciseSleep(400);
 
+            const t0 = Date.now();
             let unresponsiveCount = 0;
             const atiRes = await OBDCommandQueue.add('ATI', 2500).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
             const rvRes = await OBDCommandQueue.add('AT RV', 2000).catch(() => { unresponsiveCount++; return '12.0V'; });
