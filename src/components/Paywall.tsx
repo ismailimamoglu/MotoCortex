@@ -56,8 +56,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       product: {
         price: 2.99,
         priceString: '$2.99',
-        title: t('paywall.weekly', 'Weekly Subscription'),
-        description: t('paywall.weeklyDesc', 'Ideal for a quick check.'),
+        title: t('paywall.weekly'),
+        description: t('paywall.weeklyDesc'),
       },
     },
     {
@@ -66,8 +66,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       product: {
         price: 5.99,
         priceString: '$5.99',
-        title: t('paywall.monthly', 'Monthly Subscription'),
-        description: t('paywall.monthlyDesc', 'Most popular choice.'),
+        title: t('paywall.monthly'),
+        description: t('paywall.monthlyDesc'),
       },
     },
     {
@@ -76,8 +76,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       product: {
         price: 19.99,
         priceString: '$19.99',
-        title: t('paywall.yearly', 'Yearly Subscription'),
-        description: t('paywall.yearlyDesc', 'Best value guaranteed.'),
+        title: t('paywall.yearly'),
+        description: t('paywall.yearlyDesc'),
       },
     },
   ];
@@ -204,8 +204,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           package_id: pkg.identifier,
           is_mock: true
         }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
-        const congratsTitle = t('paywall.congratsTitle', '🎉 Congratulations!');
-        const congratsMsg = t('paywall.congratsMsg', 'Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!');
+        const congratsTitle = t('paywall.congratsTitle');
+        const congratsMsg = t('paywall.congratsMsg');
         Alert.alert(congratsTitle, congratsMsg);
         onClose();
       }, 1200);
@@ -243,8 +243,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           package_id: pkg.identifier,
           is_mock: false
         }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
-        const congratsTitle = t('paywall.congratsTitle', '🎉 Congratulations!');
-        const congratsMsg = t('paywall.congratsMsg', 'Your Cortex OBD2 PRO membership has been successfully activated. Enjoy all professional features!');
+        const congratsTitle = t('paywall.congratsTitle');
+        const congratsMsg = t('paywall.congratsMsg');
         Alert.alert(congratsTitle, congratsMsg);
         onClose();
       }
@@ -256,8 +256,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           package_id: pkg.identifier,
           error_message: error?.message || String(error)
         }).catch(e => console.warn('[Analytics] Failed purchase_failed event:', e));
-        const errTitle = t('paywall.errTitle', '❌ Purchase Failed');
-        const errMsg = error?.message || t('paywall.errMsg', 'An error occurred during the purchase. Please try again.');
+        const errTitle = t('paywall.errTitle');
+        const errMsg = error?.message || t('paywall.errMsg');
         Alert.alert(errTitle, errMsg);
       } else {
         analytics().logEvent('purchase_cancelled', {
@@ -276,8 +276,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         setIsPurchasing(false);
         useAppStore.getState().setIsPro(true);
         analytics().logEvent('purchase_restore_success', { is_pro: true, is_mock: true }).catch(e => console.warn('[Analytics] Failed restore_success event:', e));
-        const successTitle = t('paywall.restoreSuccessTitle', '✅ Purchases Restored');
-        const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using Cortex OBD2 PRO features.');
+        const successTitle = t('paywall.restoreSuccessTitle');
+        const successMsg = t('paywall.restoreSuccessMsg');
         Alert.alert(successTitle, successMsg);
         onClose();
       }, 1200);
@@ -292,15 +292,15 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
 
       analytics().logEvent('purchase_restore_success', { is_pro: activePro, is_mock: false }).catch(e => console.warn('[Analytics] Failed restore_success event:', e));
       if (activePro) {
-        const successTitle = t('paywall.restoreSuccessTitle', '✅ Purchases Restored');
-        const successMsg = t('paywall.restoreSuccessMsg', 'Your premium membership was successfully restored! You can now start using Cortex OBD2 PRO features.');
+        const successTitle = t('paywall.restoreSuccessTitle');
+        const successMsg = t('paywall.restoreSuccessMsg');
         Alert.alert(successTitle, successMsg);
         onClose();
       } else {
-        const infoTitle = t('paywall.noPurchasesTitle', 'ℹ️ No Purchases Found');
+        const infoTitle = t('paywall.noPurchasesTitle');
         const infoMsg = Platform.OS === 'ios'
-          ? t('paywall.noPurchasesMsg', 'No active PRO membership associated with your Apple account was found.')
-          : t('paywall.noPurchasesMsgAndroid', 'No active PRO membership associated with your Google account was found.');
+          ? t('paywall.noPurchasesMsg')
+          : t('paywall.noPurchasesMsgAndroid');
         Alert.alert(infoTitle, infoMsg);
       }
     } catch (error: any) {
@@ -317,15 +317,15 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         // Silently log internal SDK/Simulator errors without exposing them to the user
         console.error('[Paywall] Silently caught StoreKit/RevenueCat internal error:', errorStr);
         // Display the standard "No Purchases Found" UI to maintain Apple UX guidelines
-        const infoTitle = t('paywall.noPurchasesTitle', 'ℹ️ No Purchases Found');
+        const infoTitle = t('paywall.noPurchasesTitle');
         const infoMsg = Platform.OS === 'ios'
-          ? t('paywall.noPurchasesMsg', 'No active PRO membership associated with your Apple account was found.')
-          : t('paywall.noPurchasesMsgAndroid', 'No active PRO membership associated with your Google account was found.');
+          ? t('paywall.noPurchasesMsg')
+          : t('paywall.noPurchasesMsgAndroid');
         Alert.alert(infoTitle, infoMsg);
       } else if (!error?.userCancelled) {
         console.warn('Restore failed:', error);
-        const errTitle = t('paywall.restoreErrorTitle', '⚠️ Restore Error');
-        const errMsg = error?.message ? `An error occurred during restore: ${error.message}` : t('paywall.restoreErrorMsg', 'Please check your internet connection and try again.');
+        const errTitle = t('paywall.restoreErrorTitle');
+        const errMsg = error?.message ? `An error occurred during restore: ${error.message}` : t('paywall.restoreErrorMsg');
         Alert.alert(errTitle, errMsg);
       }
     }
@@ -337,8 +337,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
     if (selectedPkg) {
       handlePurchase(selectedPkg);
     } else {
-      const selectTitle = t('paywall.noPkgTitle', '⚠️ No Package Selected');
-      const selectMsg = t('paywall.noPkgMsg', 'Please select a package to proceed.');
+      const selectTitle = t('paywall.noPkgTitle');
+      const selectMsg = t('paywall.noPkgMsg');
       Alert.alert(selectTitle, selectMsg);
     }
   };
@@ -683,10 +683,10 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
     }
 
     const cardSubtitleText = type === 'weekly'
-      ? t('paywall.weeklyNotice', 'One-time purchase, does not auto-renew')
+      ? t('paywall.weeklyNotice')
       : type === 'monthly'
-      ? t('paywall.monthlyNotice', 'Monthly auto-renewable subscription')
-      : t('paywall.yearlyNotice', 'Yearly auto-renewable subscription');
+      ? t('paywall.monthlyNotice')
+      : t('paywall.yearlyNotice');
 
     return (
       <TouchableOpacity
@@ -783,7 +783,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
                 adjustsFontSizeToFit={true}
                 style={[sDyn.closeBtnText, { color: colors.textPri, fontSize: scaleFont(10), fontWeight: '800' }]}
               >
-                {t('common.close', 'KAPAT').toUpperCase()}
+                {t('common.close').toUpperCase()}
               </Text>
             </TouchableOpacity>
             
@@ -829,7 +829,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
             {isLoadingOfferings ? (
               <View style={sDyn.loadingContainer}>
                 <ActivityIndicator size="small" color={colors.purple} />
-                <Text style={[sDyn.loadingSubText, { color: colors.textSec }]}>{t('paywall.loadingPrices', 'Loading prices...')}</Text>
+                <Text style={[sDyn.loadingSubText, { color: colors.textSec }]}>{t('paywall.loadingPrices')}</Text>
               </View>
             ) : hasLoadedPackages ? (
               <View style={sDyn.packagesList}>
@@ -844,15 +844,15 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
               </View>
             ) : (
               <View style={[sDyn.errorContainer, { borderColor: colors.cardBorder }]}>
-                <Text style={[sDyn.errorTitle, { color: colors.textPri }]}>{t('paywall.errorTitle', 'Failed to Load Offerings')}</Text>
+                <Text style={[sDyn.errorTitle, { color: colors.textPri }]}>{t('paywall.errorTitle')}</Text>
                 <Text style={[sDyn.errorDesc, { color: colors.textSec }]}>
-                  {t('paywall.errorDesc', 'An error occurred while loading products. Please check your connection and try again.')}
+                  {t('paywall.errorDesc')}
                 </Text>
                 <TouchableOpacity
                   style={[sDyn.retryButton, { backgroundColor: colors.purple }]}
                   onPress={fetchOfferings}
                 >
-                  <Text style={sDyn.retryButtonText}>{t('paywall.retryBtn', 'Retry')}</Text>
+                  <Text style={sDyn.retryButtonText}>{t('paywall.retryBtn')}</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -890,8 +890,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           <View style={[sDyn.footer, { backgroundColor: colors.card, borderTopColor: colors.cardBorder }]}>
             <Text style={[sDyn.footerLegalNotice, { color: colors.textSec }]}>
               {Platform.OS === 'ios'
-                ? t('paywall.legalNotice', 'Your subscription auto-renews unless cancelled at least 24 hours before the end of the current period. Renewal fees will be charged to your Apple ID. Subscriptions renew at the end of the period. You can manage them in your Account Settings.')
-                : t('paywall.legalNoticeAndroid', 'Your subscription auto-renews unless cancelled at least 24 hours before the end of the current period. Renewal fees will be charged to your Google account. Subscriptions renew at the end of the period. You can manage them in your Account Settings.')
+                ? t('paywall.legalNotice')
+                : t('paywall.legalNoticeAndroid')
               }
             </Text>
 
@@ -938,7 +938,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
             <View style={[sDyn.loadingOverlay, { backgroundColor: `${colors.bg}E6` }]}>
               <ActivityIndicator size="large" color={colors.green} />
               <Text style={[sDyn.loadingText, { color: colors.green }]}>
-                {t('paywall.purchasingText', 'Securing transaction...')}
+                {t('paywall.purchasingText')}
               </Text>
             </View>
           )}

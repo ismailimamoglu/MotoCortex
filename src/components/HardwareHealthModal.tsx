@@ -119,11 +119,11 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
           {/* Header */}
           <View style={[sDyn.header, { borderBottomColor: colors.border }]}>
             <Text style={[sDyn.headerTitle, { color: colors.textPri }]}>
-              {t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO').toUpperCase()}
+              {t('bento.settings.hardwareHealth').toUpperCase()}
             </Text>
             <TouchableOpacity onPress={onClose} style={sDyn.cancelBtn}>
               <Text style={[sDyn.cancelText, { color: colors.cyan }]}>
-                {t('bento.settings.done', 'DONE').toUpperCase()}
+                {t('bento.settings.done').toUpperCase()}
               </Text>
             </TouchableOpacity>
           </View>
@@ -133,37 +133,37 @@ function HardwareHealthModalContent({ visible, onClose }: HardwareHealthModalPro
             showsVerticalScrollIndicator={false} 
             contentContainerStyle={{ paddingBottom: isTablet ? scaleHeight(24) : (Platform.OS === 'ios' ? insets.bottom + scaleHeight(24) : scaleHeight(24)) }}
           >
-            <Text style={[sDyn.sectionTitle, { color: colors.textSec }]}>{t('bento.settings.hardwareHealth', 'HARDWARE HEALTH INFO')}</Text>
+            <Text style={[sDyn.sectionTitle, { color: colors.textSec }]}>{t('bento.settings.hardwareHealth')}</Text>
             
             <View style={sDyn.card}>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.connectionType', 'Connection Type:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.connectionType')}</Text>
                 <Text style={sDyn.rowValue}>
-                  {isConnected ? 'BLE' : t('bento.settings.noConnection', 'No Connection')}
+                  {isConnected ? 'BLE' : t('bento.settings.noConnection')}
                 </Text>
               </View>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.protocol', 'Protocol:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.protocol')}</Text>
                 <Text style={sDyn.rowValue}>
-                  {isConnected ? 'CAN Bus (ISO-15765)' : t('bento.settings.none', 'None')}
+                  {isConnected ? 'CAN Bus (ISO-15765)' : t('bento.settings.none')}
                 </Text>
               </View>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.deviceStatus', 'Device Status:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.deviceStatus')}</Text>
                 <Text style={[sDyn.rowValue, { 
                   color: isConnected ? (isCloneDevice ? colors.red : colors.green) : colors.textSec, 
                 }]}>
                   {isConnected 
-                    ? (isCloneDevice ? t('bento.settings.safeMode', 'Safe Mode / Clone Adapter') : t('bento.settings.original', 'Original')) 
-                    : t('bento.settings.deviceNotConnected', 'Device Not Connected')}
+                    ? (isCloneDevice ? t('bento.settings.safeMode') : t('bento.settings.original')) 
+                    : t('bento.settings.deviceNotConnected')}
                 </Text>
               </View>
               <View style={sDyn.row}>
-                <Text style={sDyn.rowLabel}>{t('bento.settings.pollingRate', 'Polling Rate:')}</Text>
+                <Text style={sDyn.rowLabel}>{t('bento.settings.pollingRate')}</Text>
                 <Text style={sDyn.rowValue}>
                   {isConnected 
-                    ? (isCloneDevice ? t('bento.settings.pollingLow', '2 Hz (Low)') : t('bento.settings.pollingHigh', '4 Hz (High)')) 
-                    : t('bento.settings.pollingZero', '0 Hz')}
+                    ? (isCloneDevice ? t('bento.settings.pollingLow') : t('bento.settings.pollingHigh')) 
+                    : t('bento.settings.pollingZero')}
                 </Text>
               </View>
 

@@ -52,7 +52,7 @@ export default function BluetoothConnectionPanel({
   return (
     <View style={{ gap: scaleHeight(8) }}>
       <Text style={sDyn.sectionTitle}>
-        {t('vehicleSelect.connectionSection', 'OBD DEVICE CONNECTION').toUpperCase()}
+        {t('vehicleSelect.connectionSection').toUpperCase()}
       </Text>
       
 
@@ -62,7 +62,7 @@ export default function BluetoothConnectionPanel({
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginVertical: scaleHeight(6) }}>
           <ActivityIndicator size="small" color={colors.cyan} />
           <Text style={{ color: colors.cyan, fontFamily: MONO, fontSize: scaleFont(11), fontWeight: 'bold' }}>
-            {t('connection.scanning', 'Scanning devices...')}
+            {t('connection.scanning')}
           </Text>
         </View>
       )}
@@ -71,7 +71,7 @@ export default function BluetoothConnectionPanel({
       {scannedDevices.length > 0 && (
         <View style={{ marginTop: scaleHeight(4) }}>
           <Text style={[sDyn.sectionTitle, { fontSize: scaleFont(8.5), marginBottom: scaleHeight(4) }]}>
-            {t('connection.foundDevices', 'FOUND OBD2 DEVICES')}
+            {t('connection.foundDevices')}
           </Text>
           <ScrollView 
             nestedScrollEnabled={true} 
@@ -117,7 +117,7 @@ export default function BluetoothConnectionPanel({
                   )}
                   <View style={{ flex: 1, marginEnd: 8, zIndex: 1 }}>
                     <Text style={{ color: colors.textPri, fontSize: scaleFont(11), fontFamily: MONO, fontWeight: 'bold' }} numberOfLines={1}>
-                      {d.name || t('connection.unknownDevice', 'Unknown Device')}
+                      {d.name || t('connection.unknownDevice')}
                     </Text>
                     <Text style={{ color: colors.textSec, fontSize: scaleFont(8.5), fontFamily: MONO }} numberOfLines={1}>
                       {d.address}
@@ -127,7 +127,7 @@ export default function BluetoothConnectionPanel({
                     {isThisConnecting ? (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(8) }}>
                         <Text style={{ color: colors.cyan, fontSize: scaleFont(10), fontFamily: MONO, fontWeight: 'bold' }}>
-                          {t('connection.progressFormat', '{{progress}}%').replace('{{progress}}', String(connectionProgress))}
+                          {t('connection.progressFormat').replace('{{progress}}', String(connectionProgress))}
                         </Text>
                         <TouchableOpacity
                           onPress={async () => {
@@ -144,7 +144,7 @@ export default function BluetoothConnectionPanel({
                           }}
                         >
                           <Text style={{ color: colors.red, fontSize: scaleFont(8.5), fontWeight: '900', fontFamily: MONO }}>
-                            {t('connection.cancel', 'CANCEL').toUpperCase()}
+                            {t('connection.cancel').toUpperCase()}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -156,7 +156,7 @@ export default function BluetoothConnectionPanel({
                         paddingVertical: scaleHeight(4),
                       }}>
                         <Text style={{ color: '#000000', fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO }}>
-                          {t('connection.connectLabel', 'CONNECT').toUpperCase()}
+                          {t('connection.connectLabel').toUpperCase()}
                         </Text>
                       </View>
                     )}
@@ -185,7 +185,7 @@ export default function BluetoothConnectionPanel({
           activeOpacity={0.4}
         >
           <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontWeight: '800', fontFamily: MONO }}>
-            ↺ {t('connection.connectLast', 'CONNECT TO LAST DEVICE')} ({lastDeviceName})
+            ↺ {t('connection.connectLast')} ({lastDeviceName})
           </Text>
         </TouchableOpacity>
       )}
@@ -193,7 +193,7 @@ export default function BluetoothConnectionPanel({
       {/* Bluetooth Scan Hint */}
       {scannedDevices.length === 0 && permissionGranted && status !== 'scanning' && (
         <Text style={{ color: colors.textSec, fontSize: scaleFont(9.2), fontFamily: MONO, textAlign: 'center', marginTop: scaleHeight(4), lineHeight: scaleHeight(14) }}>
-          {t('connection.scanHint', 'Ensure your Bluetooth OBD2 adapter is powered on and ready to pair.')}
+          {t('connection.scanHint')}
         </Text>
       )}
     </View>

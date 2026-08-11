@@ -74,7 +74,15 @@
             "shareError": "Sharing Error",
             "original": "Original",
             "noLogsToShare": "There are no diagnostic logs to share.",
-            "community": "COMMUNITY & SUPPORT"
+            "community": "COMMUNITY & SUPPORT",
+            "hardwareSimulationTitle": "HARDWARE SIMULATION",
+            "hardwareSimulationDesc": "Simulate live telemetry data and diagnostic cycles when no physical OBD2 adapter is connected.",
+            "enableSimulation": "ENABLE SIMULATION MODE",
+            "disableSimulation": "DISABLE SIMULATION MODE",
+            "supportHeader": "SUPPORT & CONTACT",
+            "supportDesc": "Contact our engineering support team directly for assistance with hardware compatibility or licensing.",
+            "sessionManagement": "SESSION MANAGEMENT",
+            "contactSupport": "CONTACT SUPPORT"
         },
         "aboutAppDesc": "Informações e Guia de Aplicação",
         "supportDesc": "Suporte e Contato",
@@ -583,7 +591,8 @@
         "stop": "PARAR",
         "reset": "REINICIAR",
         "howItWorks": "COMO FUNCIONA?",
-        "howDesc": "1. Pressione o botão \"Iniciar teste\" 2. O veículo deve estar parado (Velocidade = 0) 3. O cronômetro começa quando você começa a se mover 4. São registrados tempos de ultrapassagem de 60 km/h e 100 km/h ⚠️ Faça este teste em uma área segura!"
+        "howDesc": "1. Pressione o botão \"Iniciar teste\" 2. O veículo deve estar parado (Velocidade = 0) 3. O cronômetro começa quando você começa a se mover 4. São registrados tempos de ultrapassagem de 60 km/h e 100 km/h ⚠️ Faça este teste em uma área segura!",
+        "sec": "sec"
     },
     "dtc": {
         "P0102": "Sensor de Fluxo de Ar (MAF) - Entrada Baixa",
@@ -740,7 +749,9 @@
         "langTitle": "Selecionar idioma",
         "nextBtn": "CONTINUAR",
         "langDesc": "Selecione seu idioma preferido.",
-        "langSelectSub": "PORTAL DE IDIOMA"
+        "langSelectSub": "PORTAL DE IDIOMA",
+        "telemetryLabel": "Diagnostic Telemetry (Opt-In)",
+        "telemetrySub": "Share anonymous protocol and error logs to improve vehicle compatibility."
     },
     "disclaimer": "Todos os nomes de produtos, logotipos e marcas são propriedade de seus respectivos proprietários. Todos os nomes de empresas, produtos e serviços usados ​​neste aplicativo são apenas para fins de identificação. O uso desses nomes, logotipos e marcas não implica qualquer endosso ou patrocínio.",
     "hiddenFeatures": {
@@ -888,7 +899,16 @@
         "catalystTemp": "Catalyst Temperature",
         "ethanol": "Ethanol Fuel %",
         "timingAdvance": "Ignition Timing Advance",
-        "baro": "Barometric Pressure"
+        "baro": "Barometric Pressure",
+        "rpm": "Rotação do motor (RPM)",
+        "speed": "Velocidade do veículo",
+        "coolant": "Temp. do líquido de arrefecimento",
+        "throttle": "Posição do acelerador",
+        "voltage": "Tensão do módulo de controle",
+        "maf": "Fluxo de ar MAF",
+        "iat": "Temp. do ar de admissão",
+        "load": "Carga calculada do motor",
+        "fuel": "Nível de combustível"
     },
     "secretDebug": {
         "title": "MOTO CORTEX DEV PANEL",
@@ -2555,14 +2575,14 @@
         "bmsName": "Gestão da Bateria (BMS / EV)"
     },
     "dct": {
-        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "title": "ADAPTAÇÃO DUPLA EMBREAGEM DCT",
         "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
-        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningTitle": "REQUISITOS DE SEGURANÇA PARA ADAPTAÇÃO DCT",
         "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
-        "checkGearPark": "Gear selector in 'P' (Park)",
+        "checkGearPark": "✓ Engate a Posição P e acione o freio de mão",
         "checkFootBrake": "Foot brake depressed firmly",
         "checkHandBrake": "Handbrake engaged",
-        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "checkOilTemp": "✓ Temperatura do óleo da transmissão entre 30°C e 90°C",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
         "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
@@ -2596,8 +2616,38 @@
         "userId": "ID DO USUÁRIO",
         "userInfo": "🔒 CREDENCIAIS DO ADMINISTRADOR",
         "devModeAlert": "Secret PRO developer key is disabled in production builds.",
-        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
-        "noLogsInfo": "No log records found to share."
+        "invalidCmdError": "Insira um comando OBD válido (ex: 01 0C ou AT Z)",
+        "noLogsInfo": "No log records found to share.",
+        "logsLoading": "Loading logs...",
+        "calculating": "Calculating...",
+        "secretProTitle": "Chave PRO Secreta ⚡ (DEV)",
+        "secretProActive": "Status do Modo Licença PRO: ATIVO (TODAS AS RECURSOS DESBLOQUEADOS)",
+        "secretProInactive": "Status do Modo Licença PRO: INATIVO (FECHADO)",
+        "logsTruncated": "... [Logs Truncated] ...\n",
+        "noLogsFound": "No logs recorded.",
+        "logsReadErr": "Could not read logs: ",
+        "unknown": "Unknown",
+        "deviceNotConnectedWarning": "(AVISO: Dispositivo não conectado)",
+        "deviceNotConnectedAlert": "Device not connected. Command added to terminal: ",
+        "cmdError": "Command Error",
+        "ecuNoResponse": "ECU Did Not Respond: ",
+        "cortexTerminalLogs": "CORTEX OBD2 TERMINAL LOGS",
+        "shareError": "Sharing Error",
+        "noLogsToShare": "No logs available to share.",
+        "clearLogsTitle": "Clear Logs",
+        "clearLogsMsg": "All local OBD terminal logs will be deleted.",
+        "clearAction": "Clear",
+        "logsCleared": "Terminal logs cleared.",
+        "copiedTitle": "Copied",
+        "copiedMsg": "{{label}} copied to clipboard:\n{{value}}",
+        "presetAutoProtocol": "Auto Protocol",
+        "presetSupportedPids": "Supported PIDs",
+        "presetEngineRpm": "Engine RPM",
+        "inputPlaceholder": "e.g. 01 0C or AT Z",
+        "syncingDtc": "SYNCING...",
+        "syncDtcBtn": "SYNC DTC DICTIONARY",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "A test crash will be triggered for Firebase Crashlytics integration."
     },
     "bridge": {
         "androidAdvice": "Reinicie o aplicativo ou verifique as configurações de Bluetooth.",
@@ -2633,12 +2683,12 @@
         "year": "Ano:"
     },
     "sgw": {
-        "title": "Security Gateway (SGW) Unlock",
+        "title": "DESBLOQUEIO SECURITY GATEWAY (SGW)",
         "subtitle": "Vendor: {{vendor}} | VIN: {{vin}}",
-        "disclaimerTitle": "⚠️ Legal Disclaimer",
+        "disclaimerTitle": "AVISO DE SEGURANÇA DA OFICINA",
         "disclaimerText": "Unlocking the SGW grants write access to vehicle ECUs. Unauthorized coding or improper parameter modifications may affect warranty or disable safety systems. Responsibility belongs to the user.",
-        "checkboxAccepted": "☑️ I accept the liability disclaimer",
-        "checkboxUnaccepted": "☐ I accept the liability disclaimer",
+        "checkboxAccepted": "✓ Entendo e aceito o protocolo de desbloqueio SGW",
+        "checkboxUnaccepted": "Aceite o protocolo antes de continuar",
         "offlineLabel": "Field Technician Offline Bypass Code:",
         "offlinePlaceholder": "e.g., OFF_89A2BF10",
         "offlineUnlockBtn": "Unlock Offline (15 min)",
@@ -2656,10 +2706,10 @@
     },
     "evBms": {
         "title": "EV BMS Diagnostics",
-        "subtitle": "Battery Management System & Cell Health ({{brand}})",
-        "sohLabel": "STATE OF HEALTH (SOH)",
+        "subtitle": "Telemetria e Saúde da Bateria (SOH / SOC) ({{brand}})",
+        "sohLabel": "Saúde da Bateria (SOH):",
         "capacityRetained": "Capacity Retained",
-        "socLabel": "STATE OF CHARGE (SOC)",
+        "socLabel": "Nível de Carga (SOC):",
         "remainingCharge": "Remaining Charge",
         "cellBalance": "Cell Voltage Balance (16S Pack)",
         "optimalBalance": "Optimal Balance (<30mV delta)",
@@ -2671,8 +2721,8 @@
         "cycles": "Cycles"
     },
     "serviceReset": {
-        "title": "Service & Maintenance Reset Wizard",
-        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "title": "RESET DE SERVIÇO E REVISÃO",
+        "subtitle": "Selecione a tarefa de manutenção a realizar ({{make}})",
         "preCheckTitle": "Pre-Requirement Checklist",
         "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
         "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
@@ -2758,7 +2808,28 @@
         "p0102_cause2": "Vazamento de admissão / Vazamento de vácuo",
         "p0102_cause3": "Danos no chicote elétrico",
         "p0102_action": "Limpe o sensor MAF com limpa-contatos ou inspecione a caixa do filtro de ar.",
-        "p0102_tsb": "TSB-2023-09: Inspecione o torque das braçadeiras da mangueira de admissão antes de trocar o MAF."
+        "p0102_tsb": "TSB-2023-09: Inspecione o torque das braçadeiras da mangueira de admissão antes de trocar o MAF.",
+        "p0171_cause1": "Vacuum Hose Leak / Intake Leak",
+        "p0171_cause2": "Weak Fuel Pump / Low Pressure",
+        "p0171_cause3": "Fouled O2 Sensor 1",
+        "p0171_action": "Perform smoke test on intake manifold and check long-term fuel trim (LTFT).",
+        "p0171_tsb": "TSB-2022-14: Check PCV valve diaphragm for tears.",
+        "p0420_cause1": "Catalytic Converter Efficiency Degradation",
+        "p0420_cause2": "Rear Downstream O2 Sensor Fault",
+        "p0420_cause3": "Exhaust Leak Before Converter",
+        "p0420_action": "Compare upstream vs downstream O2 sensor waveforms or check catalytic converter temperature.",
+        "p0300_cause1": "Worn Spark Plug / Ignition Coil",
+        "p0300_cause2": "Clogged Fuel Injector",
+        "p0300_cause3": "Low Engine Cylinder Compression",
+        "p0300_action": "Swap ignition coil to adjacent cylinder and monitor if misfire follows.",
+        "p17bf_cause1": "Mechatronic Hydraulic Pressure Accumulator Leak",
+        "p17bf_cause2": "Solenoid Valve Circuit Fault",
+        "p17bf_cause3": "Low Fluid Level / Fluid Degradation",
+        "p17bf_action": "Perform DCT Mechatronic pressure test and inspect accumulator housing.",
+        "p17bf_tsb": "TSB-VAG-DSG: Replace mechatronic pressure housing or reinforced accumulator plate.",
+        "default_cause1": "Component Circuit / Wiring Resistance Fault",
+        "default_cause2": "Mechanical Wear or Sensor Degradation",
+        "default_action": "Perform voltage drop & continuity check using multimeter."
     },
     "ev": {
         "loading": "Loading EV Diagnostic Data...",
@@ -2784,7 +2855,7 @@
     },
     "privacy": {
         "back": "← Back",
-        "title": "🔒 Data Privacy & GDPR / KVKK",
+        "title": "PRIVACIDADE E GESTÃO DE DADOS",
         "subtitle": "Processing of your personal data and control of data rights.",
         "permissionsTitle": "Data Collection Permissions",
         "telemetryLabel": "Anonymous Telemetry & Analytics",
@@ -2792,8 +2863,8 @@
         "crashLabel": "Automatic Crash Reports",
         "crashSub": "Sends anonymous logs for error detection.",
         "rightsTitle": "GDPR & KVKK Data Rights",
-        "downloadBtn": "📥 Download / Export My Data (JSON/PDF)",
-        "purgeBtn": "🗑️ Delete All My Data (Right to be Forgotten)",
+        "downloadBtn": "BAIXAR MEUS DADOS (JSON)",
+        "purgeBtn": "EXCLUIR TODOS OS MEUS DADOS",
         "exportSuccessTitle": "Data Ready (GDPR / KVKK)",
         "exportSuccessMsg": "Your data package was created on {{date}}.\n\nContents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Error",
@@ -2806,5 +2877,16 @@
         "purgeDoneMsg": "Your data has been permanently deleted: {{items}}",
         "purgeErrorTitle": "Error",
         "purgeErrorMsg": "Data deletion failed."
+    },
+    "inspectionReport": {
+        "verificationHash": "🔒 VERIFICATION HASH:"
+    },
+    "errorBoundary": {
+        "aiDoctor": "AI DOCTOR",
+        "cortex": "CORTEX",
+        "obdScanner": "OBD2 DIAGNOSTIC SCANNER",
+        "systemRecovery": "⚠️ System Recovery",
+        "unexpectedError": "Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.",
+        "retryApp": "RETRY APPLICATION"
     }
 }

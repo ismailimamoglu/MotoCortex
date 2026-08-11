@@ -77,7 +77,7 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
       {(!onScanModule || isSimulationMode) && (
         <View style={[styles.simBadge, { backgroundColor: `${tc.cyan}20`, borderColor: tc.cyan }]}>
           <Text style={[styles.simBadgeText, { color: tc.cyan }]}>
-            🧪 {t('common.sampleSimData', 'Örnek Simülasyon Verisi (Araç Bağlı Değil)')}
+            🧪 {t('common.sampleSimData')}
           </Text>
         </View>
       )}
@@ -107,7 +107,7 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
             {results.length === 0 && !isScanning && (
               <View style={[styles.emptyBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
                 <Text style={[styles.emptyText, { color: tc.textSec }]}>
-                  {t('multiEcu.scanHintText', "Tap SCAN ALL MODULES to query diagnostic trouble codes across all vehicle electronic control units.")}
+                  {t('multiEcu.scanHintText')}
                 </Text>
               </View>
             )}

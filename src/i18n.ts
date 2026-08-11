@@ -88,10 +88,7 @@ i18n
          * saveMissing must be true for this handler to fire.
          */
         saveMissing: true,
-        parseMissingKeyHandler: (key, defaultValue) => {
-            if (defaultValue && typeof defaultValue === 'string' && defaultValue !== key) {
-                return defaultValue;
-            }
+        parseMissingKeyHandler: (key) => {
             if (__DEV__) {
                 return `[MISSING: ${key}]`;
             }

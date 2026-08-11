@@ -167,14 +167,14 @@ const FeatureActivationModalComponent = ({
             await new Promise((res) => setTimeout(res, 450));
             setFeatureEnabledInStore(feature.id, newTargetState);
             const featureName = t(feature.nameKey, feature.defaultName);
-            const statusStr = newTargetState ? t('bento.enabled', 'ENABLED') : t('bento.disabled', 'DISABLED');
-            const successTag = t('common.successTag', '[SUCCESS]');
+            const statusStr = newTargetState ? t('bento.enabled') : t('bento.disabled');
+            const successTag = t('common.successTag');
             setCodingToastMessage(`${successTag} "${featureName}" ${statusStr}.`);
             setTimeout(() => setCodingToastMessage(null), 3500);
         } catch (err) {
             console.warn('[FeatureActivationModal] Toggle failed:', err);
-            const errorTag = t('common.errorTag', '[ERROR]');
-            setCodingToastMessage(`${errorTag} ${t('features.codingFailed', 'Coding failed.')}`);
+            const errorTag = t('common.errorTag');
+            setCodingToastMessage(`${errorTag} ${t('features.codingFailed')}`);
             setTimeout(() => setCodingToastMessage(null), 3500);
         } finally {
             setActiveCodingId(null);
@@ -187,9 +187,9 @@ const FeatureActivationModalComponent = ({
         // 0. Clone Adapter Safety Gate Check (Bypassed in Demo Mode)
         if (isCloneDevice && !inSim) {
             Alert.alert(
-                t('features.cloneAlertTitle', '⚠️ Clone OBD2 Adapter Detected'),
-                t('features.cloneAlertMsg', 'Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing.\n\nYou can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.'),
-                [{ text: t('common.ok', 'OK'), style: 'cancel' }]
+                t('features.cloneAlertTitle'),
+                t('features.cloneAlertMsg'),
+                [{ text: t('common.ok'), style: 'cancel' }]
             );
             return;
         }
@@ -199,9 +199,9 @@ const FeatureActivationModalComponent = ({
             const isSupported = featureActivationEngine.checkVehicleSupport(feature.make, connectedVehicleMake);
             if (!isSupported) {
                 Alert.alert(
-                    '🚫 ' + t('features.unsupportedTitle', 'Vehicle Not Supported'),
+                    '🚫 ' + t('features.unsupportedTitle'),
                     t('features.unsupportedMsg', 'This feature is not supported by your vehicle\'s ECU hardware or software version.'),
-                    [{ text: t('common.ok', 'OK'), style: 'cancel' }]
+                    [{ text: t('common.ok'), style: 'cancel' }]
                 );
                 return;
             }
@@ -219,24 +219,24 @@ const FeatureActivationModalComponent = ({
                 }, mappedDefinition);
             } catch (err: any) {
                 const errMsg = err?.message || String(err);
-                let title = t('features.safetyAlertTitle', '⚠️ Safety Gate Alert');
+                let title = t('features.safetyAlertTitle');
                 let message = errMsg;
 
                 if (errMsg.includes('UNSAFE_MODULE_WRITE')) {
-                    title = t('features.unsafeModuleTitle', '🚫 Protected Safety Module');
-                    message = t('features.unsafeModuleMsg', 'ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.');
+                    title = t('features.unsafeModuleTitle');
+                    message = t('features.unsafeModuleMsg');
                 } else if (errMsg.includes('LOW_VOLTAGE')) {
-                    title = t('features.lowVoltageTitle', '⚠️ Low Battery Voltage Alert');
-                    message = t('features.lowVoltageMsg', `Minimum 12.2V battery voltage required for coding.\nCurrent Voltage: ${effectiveVoltage.toFixed(1)}V.\nPlease connect a charger.`);
+                    title = t('features.lowVoltageTitle');
+                    message = t('features.lowVoltageMsg');
                 } else if (errMsg.includes('VEHICLE_IN_MOTION')) {
-                    title = t('features.motionAlertTitle', '🚨 Vehicle in Motion');
-                    message = t('features.motionAlertMsg', 'ECU write operations are blocked while the vehicle is moving. Please park safely before coding.');
+                    title = t('features.motionAlertTitle');
+                    message = t('features.motionAlertMsg');
                 } else if (errMsg.includes('ENGINE_RUNNING')) {
-                    title = t('features.engineRunningTitle', '⚠️ Engine Running');
-                    message = t('features.engineRunningMsg', 'ECU coding requires Ignition ON with Engine OFF (RPM == 0) to prevent alternator voltage spikes.');
+                    title = t('features.engineRunningTitle');
+                    message = t('features.engineRunningMsg');
                 }
 
-                Alert.alert(title, message, [{ text: t('common.ok', 'OK'), style: 'cancel' }]);
+                Alert.alert(title, message, [{ text: t('common.ok'), style: 'cancel' }]);
                 return;
             }
         }
@@ -309,9 +309,9 @@ const FeatureActivationModalComponent = ({
     const handleRestoreFactoryState = (feature: OEMFeatureDefinition) => {
         if (isCloneDevice && !isSimulationMode) {
             Alert.alert(
-                t('features.cloneAlertTitle', '⚠️ Clone OBD2 Adapter Detected'),
-                t('features.cloneAlertMsg', 'Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing.\n\nYou can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.'),
-                [{ text: t('common.ok', 'OK'), style: 'cancel' }]
+                t('features.cloneAlertTitle'),
+                t('features.cloneAlertMsg'),
+                [{ text: t('common.ok'), style: 'cancel' }]
             );
             return;
         }
@@ -329,8 +329,8 @@ const FeatureActivationModalComponent = ({
             setFeatureEnabledInStore(feature.id, initialState);
             setActiveCodingId(null);
             Alert.alert(
-                '🔄 ' + t('features.restoreSuccessTitle', 'Factory State Restored'),
-                t('features.restoreSuccessMsg', 'Selected feature has been reverted back to original DID state.')
+                '🔄 ' + t('features.restoreSuccessTitle'),
+                t('features.restoreSuccessMsg')
             );
         }, 500);
     };
@@ -343,18 +343,18 @@ const FeatureActivationModalComponent = ({
 
     const getCategoryLabel = (cat: FeatureCategory): string => {
         switch (cat) {
-            case 'LIGHTING': return t('features.catLighting', 'LIGHTING');
-            case 'SOUND_ALERTS': return t('features.catSoundAlerts', 'SOUND & ALERTS');
-            case 'DISPLAY_INSTRUMENT': return t('features.catDisplayInstrument', 'INSTRUMENT CLUSTER');
-            case 'DRIVING_COMFORT': return t('features.catDrivingComfort', 'DRIVING COMFORT');
-            case 'SECURITY_SAFETY': return t('features.catSecuritySafety', 'SECURITY & SAFETY');
-            case 'MOTORCYCLE_ECU': return t('features.catMotorcycleEcu', 'MOTORCYCLE ECU');
-            case 'RETROFIT_INTEGRATION': return t('features.catRetrofit', 'RETROFIT & HARDWARE');
-            case 'EV_BATTERY_CHARGING': return t('features.catEv', 'EV & BATTERY');
-            case 'ADAS_CALIBRATION': return t('features.catAdas', 'ADAS');
-            case 'EASTER_EGG_FUN': return t('features.catEasterEgg', 'EASTER EGG');
-            case 'SERVICE_MAINTENANCE': return t('features.catService', 'SERVICE & MAINTENANCE');
-            case 'PERFORMANCE': return t('features.catPerformance', 'PERFORMANCE');
+            case 'LIGHTING': return t('features.catLighting');
+            case 'SOUND_ALERTS': return t('features.catSoundAlerts');
+            case 'DISPLAY_INSTRUMENT': return t('features.catDisplayInstrument');
+            case 'DRIVING_COMFORT': return t('features.catDrivingComfort');
+            case 'SECURITY_SAFETY': return t('features.catSecuritySafety');
+            case 'MOTORCYCLE_ECU': return t('features.catMotorcycleEcu');
+            case 'RETROFIT_INTEGRATION': return t('features.catRetrofit');
+            case 'EV_BATTERY_CHARGING': return t('features.catEv');
+            case 'ADAS_CALIBRATION': return t('features.catAdas');
+            case 'EASTER_EGG_FUN': return t('features.catEasterEgg');
+            case 'SERVICE_MAINTENANCE': return t('features.catService');
+            case 'PERFORMANCE': return t('features.catPerformance');
             default: return String(cat);
         }
     };
@@ -381,7 +381,7 @@ const FeatureActivationModalComponent = ({
                         gap: scaleMod(8)
                     }}>
                         <Text style={{ color: colors.red, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, flex: 1 }}>
-                            {t('features.cloneLockedBanner', 'Clone Adapter Detected — Coding Locked (Read-Only Mode)').toUpperCase()}
+                            {t('features.cloneLockedBanner').toUpperCase()}
                         </Text>
                     </View>
                 )}
@@ -420,15 +420,15 @@ const FeatureActivationModalComponent = ({
                             {connectedVehicleMake 
                                 ? String(t('features.vehicleMatched', { make: connectedVehicleMake.toUpperCase(), defaultValue: `${connectedVehicleMake.toUpperCase()} — MATCHED` }))
                                 : isSimulationMode 
-                                ? String(t('features.demoModeVehicle', { make: selectedBrand === 'ALL' ? t('features.allMakes', 'ALL MAKES') : selectedBrand.toUpperCase(), defaultValue: `DEMO MODE: ${selectedBrand === 'ALL' ? 'ALL MAKES & ECUs' : selectedBrand.toUpperCase()}` })) 
-                                : String(t('features.waitingVehicle', 'WAITING FOR CONNECTED VEHICLE'))}
+                                ? String(t('features.demoModeVehicle', { make: selectedBrand === 'ALL' ? t('features.allMakes') : selectedBrand.toUpperCase(), defaultValue: `DEMO MODE: ${selectedBrand === 'ALL' ? 'ALL MAKES & ECUs' : selectedBrand.toUpperCase()}` })) 
+                                : String(t('features.waitingVehicle'))}
                         </Text>
                         <Text numberOfLines={1} style={{ color: colors.textSec, fontSize: scaleFont(9), fontFamily: MONO, marginTop: 2 }}>
                             {connectedVehicleMake 
                                 ? String(t('features.activeFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} vehicle OEM hidden features active` }))
                                 : isSimulationMode 
                                 ? String(t('features.demoFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} demo features listed` }))
-                                : String(t('features.connectForFeaturesNote', 'Connect to an OBD2 device to list vehicle-specific features'))}
+                                : String(t('features.connectForFeaturesNote'))}
                         </Text>
                     </View>
                     <View style={{
@@ -464,7 +464,7 @@ const FeatureActivationModalComponent = ({
                         height: scaleHeight(38)
                     }}>
                         <TextInput
-                            placeholder={t('features.searchPlaceholder', 'Search feature, DID, or target ECU...')}
+                            placeholder={t('features.searchPlaceholder')}
                             placeholderTextColor={colors.textSec}
                             value={searchQuery}
                             onChangeText={setSearchQuery}
@@ -519,14 +519,14 @@ const FeatureActivationModalComponent = ({
                         marginBottom: scaleHeight(10)
                     }}>
                         <Text style={{ color: colors.amber, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, marginBottom: scaleHeight(4) }}>
-                            {t('features.expertModeTitle', 'Expert Mode (Raw DID Hex Editor)').toUpperCase()}
+                            {t('features.expertModeTitle').toUpperCase()}
                         </Text>
                         <Text style={{ color: '#94a3b8', fontSize: scaleFont(9.5), fontFamily: MONO, lineHeight: scaleHeight(13), marginBottom: scaleHeight(8) }}>
                             {t('features.expertSafetyNote', 'For advanced users only. In case of incorrect coding, use "Restore Factory Settings" below to revert to original state.')}
                         </Text>
                         <View style={{ flexDirection: 'row', gap: scaleWidth(8), marginBottom: scaleHeight(8) }}>
                             <TextInput
-                                placeholder={t('features.expertDidPlaceholder', 'DID Hex (e.g. 0501)')}
+                                placeholder={t('features.expertDidPlaceholder')}
                                 placeholderTextColor="#64748b"
                                 value={customDidInput}
                                 onChangeText={setCustomDidInput}
@@ -544,7 +544,7 @@ const FeatureActivationModalComponent = ({
                                 }}
                             />
                             <TextInput
-                                placeholder={t('features.expertValPlaceholder', 'Value Hex (e.g. 01)')}
+                                placeholder={t('features.expertValPlaceholder')}
                                 placeholderTextColor="#64748b"
                                 value={customValueInput}
                                 onChangeText={setCustomValueInput}
@@ -567,8 +567,8 @@ const FeatureActivationModalComponent = ({
                                 onPress={() => {
                                     if (!customDidInput || !customValueInput) {
                                         Alert.alert(
-                                            t('common.error', 'Error'),
-                                            t('features.enterValidHex', 'Please enter valid DID and Value Hex strings.')
+                                            t('common.error'),
+                                            t('features.enterValidHex')
                                         );
                                         return;
                                     }
@@ -600,7 +600,7 @@ const FeatureActivationModalComponent = ({
                                 }}
                             >
                                 <Text style={{ color: '#000000', fontWeight: '900', fontSize: scaleFont(9.5), fontFamily: MONO }}>
-                                    {t('features.writeRawPayload', 'WRITE RAW UDS PAYLOAD').toUpperCase()} (2E {customDidInput || 'xxxx'} {customValueInput || 'xx'})
+                                    {t('features.writeRawPayload').toUpperCase()} (2E {customDidInput || 'xxxx'} {customValueInput || 'xx'})
                                 </Text>
                             </TouchableOpacity>
 
@@ -608,18 +608,18 @@ const FeatureActivationModalComponent = ({
                                 onPress={() => {
                                     if (!customDidInput) {
                                         Alert.alert(
-                                            t('features.restoreFactoryTitle', 'RESTORE FACTORY SETTINGS'),
-                                            t('features.enterDidFirst', 'Please enter the DID Hex code to restore (e.g. 0501).')
+                                            t('features.restoreFactoryTitle'),
+                                            t('features.enterDidFirst')
                                         );
                                         return;
                                     }
                                     Alert.alert(
-                                        t('features.restoreFactoryTitle', 'RESTORE FACTORY SETTINGS'),
-                                        t('features.restoreConfirmMsg', `Revert to original factory state for DID 0x${customDidInput}?`, { didHex: customDidInput }),
+                                        t('features.restoreFactoryTitle'),
+                                        t('features.restoreConfirmMsg', { didHex: customDidInput }),
                                         [
-                                            { text: t('common.cancel', 'CANCEL'), style: 'cancel' },
+                                            { text: t('common.cancel'), style: 'cancel' },
                                             {
-                                                text: t('features.restoreAction', 'RESTORE FACTORY'),
+                                                text: t('features.restoreAction'),
                                                 style: 'destructive',
                                                 onPress: () => {
                                                     handleRestoreFactoryState({
@@ -654,7 +654,7 @@ const FeatureActivationModalComponent = ({
                                 }}
                             >
                                 <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(9.5), fontFamily: MONO, textAlign: 'center' }}>
-                                    {t('features.restoreFactoryBtn', 'RESTORE FACTORY SETTINGS').toUpperCase()}
+                                    {t('features.restoreFactoryBtn').toUpperCase()}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -672,7 +672,7 @@ const FeatureActivationModalComponent = ({
                     ListEmptyComponent={() => (
                         <View style={{ padding: scaleMod(30), alignItems: 'center' }}>
                             <Text style={{ color: colors.textSec, fontSize: scaleFont(12), fontFamily: MONO, textAlign: 'center' }}>
-                                {t('features.noMatchingFeatures', 'No matching features found for selected filters.')}
+                                {t('features.noMatchingFeatures')}
                             </Text>
                         </View>
                     )}
@@ -728,7 +728,7 @@ const FeatureActivationModalComponent = ({
                                                     fontWeight: '900',
                                                     fontFamily: MONO
                                                 }}>
-                                                    {item.riskLevel === 'HIGH' ? t('features.riskHigh', 'HIGH RISK') : item.riskLevel === 'MEDIUM' ? t('features.riskMedium', 'MEDIUM RISK') : t('features.riskLow', 'LOW RISK')}
+                                                    {item.riskLevel === 'HIGH' ? t('features.riskHigh') : item.riskLevel === 'MEDIUM' ? t('features.riskMedium') : t('features.riskLow')}
                                                 </Text>
                                             </View>
 
@@ -736,7 +736,7 @@ const FeatureActivationModalComponent = ({
                                             {item.sfdProtected && (
                                                 <View style={{ backgroundColor: '#ff990022', paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: colors.amber }}>
                                                     <Text style={{ color: colors.amber, fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
-                                                        {t('features.sfdProtected', 'SFD PROTECTED ECU')}
+                                                        {t('features.sfdProtected')}
                                                     </Text>
                                                 </View>
                                             )}
@@ -793,7 +793,7 @@ const FeatureActivationModalComponent = ({
                                                  <ActivityIndicator size="small" color="#ffffff" />
                                              ) : (
                                                  <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: MONO, letterSpacing: 0.5 }}>
-                                                     {(isCloneDevice && !isSimulationMode) ? t('features.codeBtn', 'KODLA') : (isEnabled ? t('features.removeBtn', 'KALDIR') : t('features.codeBtn', 'KODLA'))}
+                                                     {(isCloneDevice && !isSimulationMode) ? t('features.codeBtn') : (isEnabled ? t('features.removeBtn') : t('features.codeBtn'))}
                                                  </Text>
                                              )}
                                          </TouchableOpacity>
@@ -813,7 +813,7 @@ const FeatureActivationModalComponent = ({
                                                 }}
                                             >
                                                 <Text style={{ color: colors.textSec, fontSize: scaleFont(8.5), fontFamily: MONO }}>
-                                                    {t('features.restoreBtn', 'RESTORE FACTORY')}
+                                                    {t('features.restoreBtn')}
                                                 </Text>
                                             </TouchableOpacity>
                                         )}
@@ -886,20 +886,20 @@ const FeatureActivationModalComponent = ({
                                     marginBottom: scaleHeight(14)
                                 }}>
                                     <Text style={{ color: colors.cyan, fontWeight: '900', fontSize: scaleFont(10), fontFamily: MONO, marginBottom: scaleHeight(6) }}>
-                                        {t('features.techEcuSpecs', 'TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW')}
+                                        {t('features.techEcuSpecs')}
                                     </Text>
                                     <View style={{ gap: scaleHeight(4) }}>
                                         <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
-                                            • {t('features.targetEcuHeaderLabel', 'Target ECU Header:')} <Text style={{ fontWeight: '900', color: colors.cyan }}>{selectedDetailFeature.targetEcuHeader}</Text>
+                                            • {t('features.targetEcuHeaderLabel')} <Text style={{ fontWeight: '900', color: colors.cyan }}>{selectedDetailFeature.targetEcuHeader}</Text>
                                         </Text>
                                         <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
-                                            • {t('features.udsDidLabel', 'UDS Data Identifier (DID):')} <Text style={{ fontWeight: '900', color: colors.cyan }}>0x{selectedDetailFeature.didHex}</Text>
+                                            • {t('features.udsDidLabel')} <Text style={{ fontWeight: '900', color: colors.cyan }}>0x{selectedDetailFeature.didHex}</Text>
                                         </Text>
                                         <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
-                                            • {t('features.bitPositionLabel', 'Bit Position:')} {t('features.byteBitValue', { byte: selectedDetailFeature.byteIndex, bit: selectedDetailFeature.bitIndex, defaultValue: `Byte ${selectedDetailFeature.byteIndex}, Bit ${selectedDetailFeature.bitIndex}` })}
+                                            • {t('features.bitPositionLabel')} {t('features.byteBitValue', { byte: selectedDetailFeature.byteIndex, bit: selectedDetailFeature.bitIndex, defaultValue: `Byte ${selectedDetailFeature.byteIndex}, Bit ${selectedDetailFeature.bitIndex}` })}
                                         </Text>
                                         <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontFamily: MONO }}>
-                                            • {t('features.targetPayloadLabel', 'Target UDS Payload:')} <Text style={{ fontWeight: '900', color: colors.green }}>2E {selectedDetailFeature.didHex} {selectedOptionHex || (storeEnabledFeatures[selectedDetailFeature.id] ? '00' : '01')}</Text>
+                                            • {t('features.targetPayloadLabel')} <Text style={{ fontWeight: '900', color: colors.green }}>2E {selectedDetailFeature.didHex} {selectedOptionHex || (storeEnabledFeatures[selectedDetailFeature.id] ? '00' : '01')}</Text>
                                         </Text>
                                     </View>
                                 </View>
@@ -908,7 +908,7 @@ const FeatureActivationModalComponent = ({
                                 {selectedDetailFeature.options && selectedDetailFeature.options.length > 0 && (
                                     <View style={{ marginBottom: scaleHeight(16) }}>
                                         <Text style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, marginBottom: scaleHeight(8) }}>
-                                            {t('features.selectOption', 'Select Coding Option:')}
+                                            {t('features.selectOption')}
                                         </Text>
                                         <View style={{ gap: scaleHeight(6) }}>
                                             {selectedDetailFeature.options.map(opt => {
@@ -977,7 +977,7 @@ const FeatureActivationModalComponent = ({
                                     }}
                                 >
                                     <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(13), fontFamily: MONO, letterSpacing: 0.5 }}>
-                                        {storeEnabledFeatures[selectedDetailFeature.id] ? t('features.removeBtn', 'DEACTIVATE FEATURE') : t('features.oneClickActivate', 'ONE-CLICK ACTIVATE')}
+                                        {storeEnabledFeatures[selectedDetailFeature.id] ? t('features.removeBtn') : t('features.oneClickActivate')}
                                     </Text>
                                 </TouchableOpacity>
                             </ScrollView>

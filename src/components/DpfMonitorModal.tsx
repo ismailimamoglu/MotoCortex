@@ -45,7 +45,7 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
             {isSimulationMode && (
               <View style={[styles.simBadge, { backgroundColor: `${tc.cyan}20`, borderColor: tc.cyan }]}>
                 <Text style={[styles.simBadgeText, { color: tc.cyan }]}>
-                  🧪 {t('common.sampleSimData', 'Örnek Simülasyon Verisi (Araç Bağlı Değil)')}
+                  🧪 {t('common.sampleSimData')}
                 </Text>
               </View>
             )}

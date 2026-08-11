@@ -62,7 +62,7 @@ export default function VehicleOperationsHistory({
         activeOpacity={0.4}
       >
         <Text style={{ color: colors.cyan, fontSize: scaleFont(9.5), fontFamily: MONO, fontWeight: 'bold' }}>
-          📋 {t('common.operations', 'OPERATIONS').toUpperCase()} ({operations.length})
+          📋 {t('common.operations').toUpperCase()} ({operations.length})
         </Text>
         <Text style={{ color: colors.cyan, fontSize: scaleFont(8.5), fontFamily: MONO, fontWeight: 'bold' }}>
           {isExpanded ? '▲' : '▼'}
@@ -85,10 +85,10 @@ export default function VehicleOperationsHistory({
             }) : op.dateString;
 
             const opName = op.type === 'clear_dtc' 
-              ? t('vehicleSelect.operations.clearDtc', 'Fault Codes Cleared')
+              ? t('vehicleSelect.operations.clearDtc')
               : op.type === 'fuel_adaptation'
-                ? t('vehicleSelect.operations.fuelAdaptation', 'Fuel Adaptation')
-                : t('vehicleSelect.operations.ecuReset', 'ECU Reset');
+                ? t('vehicleSelect.operations.fuelAdaptation')
+                : t('vehicleSelect.operations.ecuReset');
 
             return (
               <Text key={idx} style={{ color: colors.textSec, fontSize: scaleFont(9), fontFamily: MONO, marginTop: 2 }}>

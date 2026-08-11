@@ -24,9 +24,9 @@ export default function LeanAngleCockpitWidget({
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.title}>{t('leanAngle.title', '🏍️ LEAN ANGLE & TELEMETRY STUDIO')}</Text>
+        <Text style={styles.title}>{t('leanAngle.title')}</Text>
         <TouchableOpacity style={styles.resetButton} onPress={resetMaxLean}>
-          <Text style={styles.resetText}>{t('leanAngle.resetMax', 'RESET MAX')}</Text>
+          <Text style={styles.resetText}>{t('leanAngle.resetMax')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -34,7 +34,7 @@ export default function LeanAngleCockpitWidget({
       <View style={styles.gaugeContainer}>
         {/* Left Max */}
         <View style={styles.maxBox}>
-          <Text style={styles.maxLabel}>{t('leanAngle.maxLeft', 'MAX LEFT')}</Text>
+          <Text style={styles.maxLabel}>{t('leanAngle.maxLeft')}</Text>
           <Text style={[styles.maxValue, { color: '#00e5ff' }]}>{maxLeftLean}°</Text>
         </View>
 
@@ -48,7 +48,7 @@ export default function LeanAngleCockpitWidget({
 
         {/* Right Max */}
         <View style={styles.maxBox}>
-          <Text style={styles.maxLabel}>{t('leanAngle.maxRight', 'MAX RIGHT')}</Text>
+          <Text style={styles.maxLabel}>{t('leanAngle.maxRight')}</Text>
           <Text style={[styles.maxValue, { color: '#ff8800' }]}>{maxRightLean}°</Text>
         </View>
       </View>
@@ -76,17 +76,17 @@ export default function LeanAngleCockpitWidget({
       {/* G-Force & Secondary Telemetry Grid */}
       <View style={styles.statsGrid}>
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>{t('leanAngle.lateralG', 'LATERAL G')}</Text>
+          <Text style={styles.statLabel}>{t('leanAngle.lateralG')}</Text>
           <Text style={styles.statValue}>{gForceX} G</Text>
         </View>
 
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>{t('leanAngle.longitudinalG', 'LONGITUDINAL G')}</Text>
+          <Text style={styles.statLabel}>{t('leanAngle.longitudinalG')}</Text>
           <Text style={styles.statValue}>{gForceY} G</Text>
         </View>
 
         <View style={styles.statBox}>
-          <Text style={styles.statLabel}>{t('leanAngle.pitch', 'PITCH')}</Text>
+          <Text style={styles.statLabel}>{t('leanAngle.pitch')}</Text>
           <Text style={styles.statValue}>{pitchAngle}°</Text>
         </View>
       </View>

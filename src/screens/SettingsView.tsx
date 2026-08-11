@@ -32,10 +32,10 @@ export const SettingsView = ({ s }: SettingsViewProps) => {
         {/* Header Panel */}
         <View style={[s.panel, { margin: 0, padding: scaleMod(14) }]}>
           <Text style={s.panelTitle}>
-            🌐 {t('bento.settings.appLanguageTitle', t('bento.languageSelect', 'UYGULAMA DİLİ SEÇİMİ')).toUpperCase()}
+            🌐 {t('bento.settings.appLanguageTitle', t('bento.languageSelect')).toUpperCase()}
           </Text>
           <Text style={s.panelDesc}>
-            {t('bento.settings.appLanguageDesc', 'Uygulama arayüz dili ve teşhis terimlerinin görüntüleneceği dili seçin.')}
+            {t('bento.settings.appLanguageDesc')}
           </Text>
         </View>
 
@@ -73,7 +73,7 @@ export const SettingsView = ({ s }: SettingsViewProps) => {
               {isSelected ? (
                 <View style={{ backgroundColor: tc.cyan, borderRadius: 12, paddingHorizontal: 10, paddingVertical: 4 }}>
                   <Text style={{ color: tc.card, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
-                    ✓ {t('common.selected', 'SEÇİLİ').toUpperCase()}
+                    ✓ {t('common.selected').toUpperCase()}
                   </Text>
                 </View>
               ) : (

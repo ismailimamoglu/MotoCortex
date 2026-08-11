@@ -66,7 +66,7 @@ export default function LanguageSelectionView({
         </Text>
         {isSelected && (
           <Text style={{ fontSize: scaleFont(11), fontFamily: MONO, color: colors.cyan, fontWeight: '900', marginLeft: 'auto' }}>
-            {t('common.selected', 'SELECTED').toUpperCase()}
+            {t('common.selected').toUpperCase()}
           </Text>
         )}
       </TouchableOpacity>
@@ -94,7 +94,7 @@ export default function LanguageSelectionView({
             paddingHorizontal: scaleWidth(12),
             paddingVertical: scaleHeight(8),
           }}
-          placeholder={t('vehicleSelect.searchLanguage', 'Dil Ara...')}
+          placeholder={t('vehicleSelect.searchLanguage')}
           placeholderTextColor={colors.textSec}
           value={searchQuery}
           onChangeText={setSearchQuery}

@@ -74,7 +74,15 @@
             "noTraffic": "No streaming traffic yet...",
             "shareError": "Sharing Error",
             "noLogsToShare": "There are no diagnostic logs to share.",
-            "community": "COMMUNITY & SUPPORT"
+            "community": "COMMUNITY & SUPPORT",
+            "hardwareSimulationTitle": "HARDWARE SIMULATION",
+            "hardwareSimulationDesc": "Simulate live telemetry data and diagnostic cycles when no physical OBD2 adapter is connected.",
+            "enableSimulation": "ENABLE SIMULATION MODE",
+            "disableSimulation": "DISABLE SIMULATION MODE",
+            "supportHeader": "SUPPORT & CONTACT",
+            "supportDesc": "Contact our engineering support team directly for assistance with hardware compatibility or licensing.",
+            "sessionManagement": "SESSION MANAGEMENT",
+            "contactSupport": "CONTACT SUPPORT"
         },
         "aboutAppDesc": "申请信息和指南",
         "supportDesc": "支持与联系",
@@ -583,7 +591,8 @@
         "stop": "停止",
         "reset": "重置",
         "howItWorks": "它是如何运作的？",
-        "howDesc": "1. 按“开始测试”按钮 2. 车辆必须静止（速度 = 0） 3. 当你开始移动时，Chrono 就会启动 4.记录60公里/小时和100公里/小时的通过时间 ⚠️ 在安全区域进行此测试！"
+        "howDesc": "1. 按“开始测试”按钮 2. 车辆必须静止（速度 = 0） 3. 当你开始移动时，Chrono 就会启动 4.记录60公里/小时和100公里/小时的通过时间 ⚠️ 在安全区域进行此测试！",
+        "sec": "sec"
     },
     "dtc": {
         "P0102": "空气流量传感器 (MAF) - 低输入",
@@ -740,7 +749,9 @@
         "langTitle": "选择语言",
         "nextBtn": "继续",
         "langDesc": "请选择您的首选语言。",
-        "langSelectSub": "语言门户"
+        "langSelectSub": "语言门户",
+        "telemetryLabel": "Diagnostic Telemetry (Opt-In)",
+        "telemetrySub": "Share anonymous protocol and error logs to improve vehicle compatibility."
     },
     "disclaimer": "所有产品名称、徽标和品牌均为其各自所有者的财产。本应用程序中使用的所有公司、产品和服务名称仅用于识别目的。使用这些名称、徽标和品牌并不意味着任何认可或赞助。",
     "hiddenFeatures": {
@@ -888,7 +899,16 @@
         "catalystTemp": "Catalyst Temperature",
         "ethanol": "Ethanol Fuel %",
         "timingAdvance": "Ignition Timing Advance",
-        "baro": "Barometric Pressure"
+        "baro": "Barometric Pressure",
+        "rpm": "发动机转速（RPM）",
+        "speed": "车辆速度",
+        "coolant": "发动机冷却液温度",
+        "throttle": "节气门位置",
+        "voltage": "控制模块电压",
+        "maf": "MAF空气流量",
+        "iat": "进气温度",
+        "load": "计算的发动机负荷",
+        "fuel": "燃油液位"
     },
     "secretDebug": {
         "title": "解锁隐藏功能与UDS编码",
@@ -2555,14 +2575,14 @@
         "bmsName": "电池管理系统 (BMS / EV)"
     },
     "dct": {
-        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "title": "DCT 双离合自适应校准",
         "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
-        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningTitle": "DCT 校准安全先决条件",
         "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
-        "checkGearPark": "Gear selector in 'P' (Park)",
+        "checkGearPark": "✓ 挂入 P 档并拉紧手刹",
         "checkFootBrake": "Foot brake depressed firmly",
         "checkHandBrake": "Handbrake engaged",
-        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "checkOilTemp": "✓ 变速箱油温必须在 30°C 至 90°C 之间",
         "startAdaptation": "START ADAPTATION",
         "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
         "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
@@ -2596,8 +2616,38 @@
         "userId": "用户ID",
         "userInfo": "🔒 管理员凭证",
         "devModeAlert": "Secret PRO developer key is disabled in production builds.",
-        "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
-        "noLogsInfo": "No log records found to share."
+        "invalidCmdError": "请输入有效的 OBD 命令（例如 01 0C 或 AT Z）",
+        "noLogsInfo": "No log records found to share.",
+        "logsLoading": "Loading logs...",
+        "calculating": "Calculating...",
+        "secretProTitle": "秘密 PRO 密钥 ⚡ (DEV)",
+        "secretProActive": "PRO 许可证模式状态：已激活（所有功能已解锁）",
+        "secretProInactive": "PRO 许可证模式状态：未激活（关闭）",
+        "logsTruncated": "... [Logs Truncated] ...\n",
+        "noLogsFound": "No logs recorded.",
+        "logsReadErr": "Could not read logs: ",
+        "unknown": "Unknown",
+        "deviceNotConnectedWarning": "（警告：设备未连接）",
+        "deviceNotConnectedAlert": "Device not connected. Command added to terminal: ",
+        "cmdError": "Command Error",
+        "ecuNoResponse": "ECU Did Not Respond: ",
+        "cortexTerminalLogs": "CORTEX OBD2 TERMINAL LOGS",
+        "shareError": "Sharing Error",
+        "noLogsToShare": "No logs available to share.",
+        "clearLogsTitle": "Clear Logs",
+        "clearLogsMsg": "All local OBD terminal logs will be deleted.",
+        "clearAction": "Clear",
+        "logsCleared": "Terminal logs cleared.",
+        "copiedTitle": "Copied",
+        "copiedMsg": "{{label}} copied to clipboard:\n{{value}}",
+        "presetAutoProtocol": "Auto Protocol",
+        "presetSupportedPids": "Supported PIDs",
+        "presetEngineRpm": "Engine RPM",
+        "inputPlaceholder": "e.g. 01 0C or AT Z",
+        "syncingDtc": "SYNCING...",
+        "syncDtcBtn": "SYNC DTC DICTIONARY",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "A test crash will be triggered for Firebase Crashlytics integration."
     },
     "bridge": {
         "androidAdvice": "请重启应用或检查蓝牙设置。",
@@ -2633,12 +2683,12 @@
         "year": "年份："
     },
     "sgw": {
-        "title": "Security Gateway (SGW) Unlock",
+        "title": "安全网关 (SGW) 解锁",
         "subtitle": "Vendor: {{vendor}} | VIN: {{vin}}",
-        "disclaimerTitle": "⚠️ Legal Disclaimer",
+        "disclaimerTitle": "重要车间安全提示",
         "disclaimerText": "Unlocking the SGW grants write access to vehicle ECUs. Unauthorized coding or improper parameter modifications may affect warranty or disable safety systems. Responsibility belongs to the user.",
-        "checkboxAccepted": "☑️ I accept the liability disclaimer",
-        "checkboxUnaccepted": "☐ I accept the liability disclaimer",
+        "checkboxAccepted": "✓ 我理解并接受 SGW 解锁协议",
+        "checkboxUnaccepted": "请先接受协议再继续",
         "offlineLabel": "Field Technician Offline Bypass Code:",
         "offlinePlaceholder": "e.g., OFF_89A2BF10",
         "offlineUnlockBtn": "Unlock Offline (15 min)",
@@ -2656,10 +2706,10 @@
     },
     "evBms": {
         "title": "EV BMS Diagnostics",
-        "subtitle": "Battery Management System & Cell Health ({{brand}})",
-        "sohLabel": "STATE OF HEALTH (SOH)",
+        "subtitle": "遥测与电池健康状态 (SOH / SOC) ({{brand}})",
+        "sohLabel": "电池健康度 (SOH)：",
         "capacityRetained": "Capacity Retained",
-        "socLabel": "STATE OF CHARGE (SOC)",
+        "socLabel": "电池电量 (SOC)：",
         "remainingCharge": "Remaining Charge",
         "cellBalance": "Cell Voltage Balance (16S Pack)",
         "optimalBalance": "Optimal Balance (<30mV delta)",
@@ -2671,8 +2721,8 @@
         "cycles": "Cycles"
     },
     "serviceReset": {
-        "title": "Service & Maintenance Reset Wizard",
-        "subtitle": "OEM UDS Maintenance & Adaptation Calibration ({{make}})",
+        "title": "保养与保养周期复位",
+        "subtitle": "请选择要执行的保养复位项目 ({{make}})",
         "preCheckTitle": "Pre-Requirement Checklist",
         "preCheckIgnition": "Vehicle Ignition switch must be in ON position.",
         "preCheckEngine": "Engine MUST be turned OFF (0 RPM).",
@@ -2758,7 +2808,28 @@
         "p0102_cause2": "进气管道泄漏 / 真空泄漏",
         "p0102_cause3": "线束损坏或腐蚀",
         "p0102_action": "使用触点清洁剂清洗MAF传感器，或检查空气滤清器壳体是否存在泄露。",
-        "p0102_tsb": "TSB-2023-09：在更换MAF之前，请先检查进气软管卡箍的紧固扭矩。"
+        "p0102_tsb": "TSB-2023-09：在更换MAF之前，请先检查进气软管卡箍的紧固扭矩。",
+        "p0171_cause1": "Vacuum Hose Leak / Intake Leak",
+        "p0171_cause2": "Weak Fuel Pump / Low Pressure",
+        "p0171_cause3": "Fouled O2 Sensor 1",
+        "p0171_action": "Perform smoke test on intake manifold and check long-term fuel trim (LTFT).",
+        "p0171_tsb": "TSB-2022-14: Check PCV valve diaphragm for tears.",
+        "p0420_cause1": "Catalytic Converter Efficiency Degradation",
+        "p0420_cause2": "Rear Downstream O2 Sensor Fault",
+        "p0420_cause3": "Exhaust Leak Before Converter",
+        "p0420_action": "Compare upstream vs downstream O2 sensor waveforms or check catalytic converter temperature.",
+        "p0300_cause1": "Worn Spark Plug / Ignition Coil",
+        "p0300_cause2": "Clogged Fuel Injector",
+        "p0300_cause3": "Low Engine Cylinder Compression",
+        "p0300_action": "Swap ignition coil to adjacent cylinder and monitor if misfire follows.",
+        "p17bf_cause1": "Mechatronic Hydraulic Pressure Accumulator Leak",
+        "p17bf_cause2": "Solenoid Valve Circuit Fault",
+        "p17bf_cause3": "Low Fluid Level / Fluid Degradation",
+        "p17bf_action": "Perform DCT Mechatronic pressure test and inspect accumulator housing.",
+        "p17bf_tsb": "TSB-VAG-DSG: Replace mechatronic pressure housing or reinforced accumulator plate.",
+        "default_cause1": "Component Circuit / Wiring Resistance Fault",
+        "default_cause2": "Mechanical Wear or Sensor Degradation",
+        "default_action": "Perform voltage drop & continuity check using multimeter."
     },
     "ev": {
         "loading": "Loading EV Diagnostic Data...",
@@ -2784,7 +2855,7 @@
     },
     "privacy": {
         "back": "← Back",
-        "title": "🔒 Data Privacy & GDPR / KVKK",
+        "title": "隐私与数据管理",
         "subtitle": "Processing of your personal data and control of data rights.",
         "permissionsTitle": "Data Collection Permissions",
         "telemetryLabel": "Anonymous Telemetry & Analytics",
@@ -2792,8 +2863,8 @@
         "crashLabel": "Automatic Crash Reports",
         "crashSub": "Sends anonymous logs for error detection.",
         "rightsTitle": "GDPR & KVKK Data Rights",
-        "downloadBtn": "📥 Download / Export My Data (JSON/PDF)",
-        "purgeBtn": "🗑️ Delete All My Data (Right to be Forgotten)",
+        "downloadBtn": "下载我的数据 (JSON)",
+        "purgeBtn": "清除所有用户数据",
         "exportSuccessTitle": "Data Ready (GDPR / KVKK)",
         "exportSuccessMsg": "Your data package was created on {{date}}.\n\nContents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Error",
@@ -2806,5 +2877,16 @@
         "purgeDoneMsg": "Your data has been permanently deleted: {{items}}",
         "purgeErrorTitle": "Error",
         "purgeErrorMsg": "Data deletion failed."
+    },
+    "inspectionReport": {
+        "verificationHash": "🔒 VERIFICATION HASH:"
+    },
+    "errorBoundary": {
+        "aiDoctor": "AI DOCTOR",
+        "cortex": "CORTEX",
+        "obdScanner": "OBD2 DIAGNOSTIC SCANNER",
+        "systemRecovery": "⚠️ System Recovery",
+        "unexpectedError": "Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.",
+        "retryApp": "RETRY APPLICATION"
     }
 }

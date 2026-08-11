@@ -102,10 +102,10 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
     if (typeof rssi !== 'number') {
       return { color: colors.textSec, level: 0, label: '' };
     }
-    if (rssi >= -60) return { color: colors.green, level: 4, label: t('connection.signalStrong', 'Güçlü Sinyal') };
-    if (rssi >= -75) return { color: colors.cyan, level: 3, label: t('connection.signalGood', 'İyi Sinyal') };
-    if (rssi >= -88) return { color: colors.amber, level: 2, label: t('connection.signalFair', 'Orta Sinyal') };
-    return { color: colors.red, level: 1, label: t('connection.signalWeak', 'Zayıf Sinyal') };
+    if (rssi >= -60) return { color: colors.green, level: 4, label: t('connection.signalStrong') };
+    if (rssi >= -75) return { color: colors.cyan, level: 3, label: t('connection.signalGood') };
+    if (rssi >= -88) return { color: colors.amber, level: 2, label: t('connection.signalFair') };
+    return { color: colors.red, level: 1, label: t('connection.signalWeak') };
   }, [colors, t]);
 
   // Scan OBD2 devices
@@ -119,8 +119,8 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         const enabled = await enableBluetooth();
         if (!enabled) {
           Alert.alert(
-            t('connection.btDisabled', 'Bluetooth Disabled'),
-            t('connection.btDisabledDesc', 'Please enable Bluetooth to scan for OBD2 adapters.')
+            t('connection.btDisabled'),
+            t('connection.btDisabledDesc')
           );
           setIsScanning(false);
           return;
@@ -192,37 +192,37 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
     if (!errorMsg) return null;
     const msg = errorMsg.toUpperCase();
     if (msg.includes('BLUETOOTH_DISABLED') || msg.includes('POWERED_OFF') || msg.includes('LAYER 1')) {
-      return t('connection.errLayer1', 'Troubleshoot: Bluetooth is disabled. Please turn on Bluetooth in your device settings.');
+      return t('connection.errLayer1');
     }
     if (msg.includes('TIMEOUT') || msg.includes('LAYER 2') || msg.includes('CONNECTION_LOST')) {
-      return t('connection.errLayer2', 'Troubleshoot: Connection timed out. Make sure the adapter is plugged firmly into the OBD2 port and its power indicator is lit.');
+      return t('connection.errLayer2');
     }
     if (msg.includes('PROTOCOL_FAILED') || msg.includes('LAYER 5')) {
       return t('connection.errLayer5', 'Troubleshoot: OBD2 Protocol negotiation failed. Ensure your vehicle\'s ignition is switched to the ON position (engine running is recommended).');
     }
     if (msg.includes('ECU_HANDSHAKE') || msg.includes('LAYER 6')) {
-      return t('connection.errLayer6', 'Troubleshoot: Adapter connected, but vehicle ECU is not responding. Please turn the ignition ON or restart the connection.');
+      return t('connection.errLayer6');
     }
-    return t('connection.errGeneric', 'Troubleshoot: Please ensure the adapter has power, ignition is turned ON, and no other OBD app is open.');
+    return t('connection.errGeneric');
   };
 
   const getFormattedErrorReason = (rawMsg: string | null) => {
     if (!rawMsg) return '';
     const code = rawMsg.toUpperCase();
     if (code.includes('BLUETOOTH_UNAVAILABLE') || code.includes('BLUETOOTH_DISABLED') || code.includes('POWERED_OFF')) {
-      return t('connection.errBluetoothUnavailable', 'Bluetooth is unavailable or disabled');
+      return t('connection.errBluetoothUnavailable');
     }
     if (code.includes('DEVICE_NOT_FOUND') || code.includes('NO_DEVICE')) {
-      return t('connection.errDeviceNotFound', 'OBD2 device not found');
+      return t('connection.errDeviceNotFound');
     }
     if (code.includes('TIMEOUT') || code.includes('CONNECTION_LOST')) {
-      return t('connection.errTimeout', 'Connection timeout');
+      return t('connection.errTimeout');
     }
     if (code.includes('PROTOCOL_FAILED')) {
-      return t('connection.errProtocolFailed', 'Protocol negotiation failed');
+      return t('connection.errProtocolFailed');
     }
     if (code.includes('ECU_HANDSHAKE') || code.includes('NO_RESPONSE')) {
-      return t('connection.errEcuHandshake', 'ECU handshake failed');
+      return t('connection.errEcuHandshake');
     }
     return rawMsg
       .replace(/_/g, ' ')
@@ -235,7 +235,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
       {/* Header */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.textPri, fontSize: fs(18), fontFamily: colors.mono }]}>
-          {t('vehicleSelect.titleMenu', 'VEHICLE & CONNECTION')}
+          {t('vehicleSelect.titleMenu')}
         </Text>
       </View>
 
@@ -248,10 +248,10 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           ]} />
           <Text style={[styles.statusTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
             {ecuStatus === 'connected' 
-              ? t('common.connected', 'CONNECTED').toUpperCase() 
+              ? t('common.connected').toUpperCase() 
               : status === 'connecting' 
-                ? t('connection.connecting', 'CONNECTING...').toUpperCase()
-                : t('common.disconnected', 'DISCONNECTED').toUpperCase()
+                ? t('connection.connecting').toUpperCase()
+                : t('common.disconnected').toUpperCase()
             }
           </Text>
         </View>
@@ -259,7 +259,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         {ecuStatus === 'connected' ? (
           <View style={styles.successBlock}>
             <Text style={[styles.successText, { color: colors.textSec, fontSize: fs(12.5) }]}>
-              {t('connection.successVin', 'Connection established. Vehicle profile successfully identified.')}
+              {t('connection.successVin')}
             </Text>
             {vin && (
               <Text style={[styles.vinText, { color: colors.green, fontSize: fs(13), fontFamily: colors.mono }]}>
@@ -270,7 +270,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             {isCloneDevice && (
               <View style={[styles.warningBanner, { backgroundColor: `${colors.amber}15`, borderColor: colors.amber }]}>
                 <Text style={[styles.warningText, { color: colors.amber, fontSize: fs(11) }]}>
-                  {t('connection.cloneWarning', 'Incompatible Clone Adapter Detected. Advanced coding features are locked for your safety.')}
+                  {t('connection.cloneWarning')}
                 </Text>
               </View>
             )}
@@ -280,13 +280,13 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               onPress={onNavigateToHealth}
             >
               <Text style={[styles.healthBtnText, { fontSize: fs(13), fontFamily: colors.mono }]}>
-                {t('connection.viewHealth', 'OBD2 HEALTH & CAPABILITY MENU')}
+                {t('connection.viewHealth')}
               </Text>
             </TouchableOpacity>
           </View>
         ) : (
           <Text style={[styles.statusDesc, { color: colors.textSec, fontSize: fs(12) }]}>
-            {t('connection.statusPrompt', 'Select your preferred OBD2 connection interface below.')}
+            {t('connection.statusPrompt')}
           </Text>
         )}
       </View>
@@ -296,7 +296,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         <View style={[styles.quickConnectCard, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan }]}>
           <View style={{ flex: 1, marginRight: ms(10) }}>
             <Text style={[styles.quickConnectTitle, { color: colors.cyan, fontSize: fs(12), fontFamily: colors.mono, fontWeight: '800' }]}>
-              {t('connection.quickConnectTitle', 'Last Adapter Detected')}
+              {t('connection.quickConnectTitle')}
             </Text>
             <Text style={[styles.quickConnectDesc, { color: colors.textPri, fontSize: fs(11.5), marginTop: vs(2) }]}>
               {t('connection.quickConnectDesc', { name: lastDeviceName || 'OBDII', defaultValue: `Quick connect to your last used adapter '${lastDeviceName || 'OBDII'}'?` })}
@@ -310,7 +310,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             }}
           >
             <Text style={[styles.quickConnectBtnText, { fontSize: fs(11), fontFamily: colors.mono, color: '#ffffff', fontWeight: '900' }]}>
-              {t('connection.quickConnectBtn', 'CONNECT NOW')}
+              {t('connection.quickConnectBtn')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -331,13 +331,13 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             </Text>
             <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11) }]}>
               {Platform.OS === 'ios' 
-                ? t('connection.btDescIos', 'Connect using BLE OBD2 adaptors (Veepeak, vLinker).')
-                : t('connection.btDescAndroid', 'Connect via Classic Bluetooth or BLE adapters.')
+                ? t('connection.btDescIos')
+                : t('connection.btDescAndroid')
               }
             </Text>
             <View style={[styles.recBadge, { backgroundColor: `${colors.green}1A` }]}>
               <Text style={[styles.recText, { color: colors.green, fontSize: fs(9) }]}>
-                {t('common.recommended', 'RECOMMENDED')}
+                {t('common.recommended')}
               </Text>
             </View>
           </TouchableOpacity>
@@ -353,7 +353,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               WI-FI
             </Text>
             <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11) }]}>
-              {t('connection.wifiDesc', 'Connect to Wi-Fi adapters (typically 192.168.0.10).')}
+              {t('connection.wifiDesc')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -365,7 +365,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           <View style={styles.sectionHeader}>
             <TouchableOpacity onPress={() => setSelectedType(null)}>
               <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-                ← {t('common.changeType', 'Change Connection Type')}
+                ← {t('common.changeType')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -373,7 +373,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           {Platform.OS === 'ios' && (
             <View style={[styles.warningBanner, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan, marginVertical: vs(8) }]}>
               <Text style={[styles.warningText, { color: colors.cyan, fontSize: fs(11) }]}>
-                {t('connection.iosClassicWarning', 'iOS Notice: Legacy Bluetooth 2.0/3.0 (SPP/Classic) adapters are unsupported on iOS due to Apple MFi policies. Please use Bluetooth 4.0+ (BLE) or Wi-Fi OBD2 adapters.')}
+                {t('connection.iosClassicWarning')}
               </Text>
             </View>
           )}
@@ -388,7 +388,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 <ActivityIndicator size="small" color="#ffffff" />
               ) : (
                 <Text style={[styles.scanText, { fontSize: fs(13), fontFamily: colors.mono }]}>
-                  {t('connection.scanDevices', 'SCAN DEVICES').toUpperCase()}
+                  {t('connection.scanDevices').toUpperCase()}
                 </Text>
               )}
             </TouchableOpacity>
@@ -399,13 +399,13 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               <ActivityIndicator size="large" color={colors.cyan} style={{ marginBottom: vs(8) }} />
               <Text style={[styles.radarLabel, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '600', marginTop: vs(6) }]}>
                 {isScanning 
-                  ? t('connection.scanningDevices', 'Scanning OBD2 Bluetooth Devices...') 
-                  : t('connection.scanningAdapter', 'Scanning Adapter (Awaiting Response)...')}
+                  ? t('connection.scanningDevices') 
+                  : t('connection.scanningAdapter')}
               </Text>
               <Text style={[{ color: colors.textSec, fontSize: fs(11), textAlign: 'center', marginTop: vs(4) }]}>
                 {Platform.OS === 'ios'
-                  ? t('connection.scanHintIos', 'Ensure your BLE OBD2 adapter is powered on and near your iOS device.')
-                  : t('connection.scanHintAndroid', 'Ensure Bluetooth and location services are active and your adapter is ready to pair.')
+                  ? t('connection.scanHintIos')
+                  : t('connection.scanHintAndroid')
                 }
               </Text>
             </View>
@@ -415,7 +415,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           {!isScanning && sortedDevices.length > 0 && (
             <View style={styles.listContainer}>
               <Text style={[styles.listHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-                {t('connection.foundDevices', 'FOUND OBD2 DEVICES')} ({sortedDevices.length})
+                {t('connection.foundDevices')} ({sortedDevices.length})
               </Text>
               {sortedDevices.map((dev, idx) => {
                 const signal = getSignalInfo(dev.rssi);
@@ -473,7 +473,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         <View style={styles.wifiBlock}>
           <TouchableOpacity onPress={() => setSelectedType(null)} style={{ marginBottom: vs(12) }}>
             <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-              ← {t('common.changeType', 'Change Connection Type')}
+              ← {t('common.changeType')}
             </Text>
           </TouchableOpacity>
 
@@ -486,7 +486,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           <View style={styles.wifiIpRow}>
             <View style={{ flex: 3, marginRight: ms(8) }}>
               <Text style={[styles.wifiInputLabel, { color: colors.textSec, fontSize: fs(10) }]}>
-                {t('connection.wifiIpLabel', 'IP ADDRESS')}
+                {t('connection.wifiIpLabel')}
               </Text>
               <TextInput
                 value={wifiIp}
@@ -501,7 +501,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             </View>
             <View style={{ flex: 2 }}>
               <Text style={[styles.wifiInputLabel, { color: colors.textSec, fontSize: fs(10) }]}>
-                {t('connection.wifiPortLabel', 'PORT')}
+                {t('connection.wifiPortLabel')}
               </Text>
               <TextInput
                 value={wifiPort}
@@ -520,7 +520,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               onPress={handleOpenWifiSettings}
             >
               <Text style={[styles.settingsBtnText, { color: colors.cyan, fontSize: fs(13), fontFamily: colors.mono }]}>
-                {t('connection.openWifiSettings', 'OPEN WI-FI SETTINGS')}
+                {t('connection.openWifiSettings')}
               </Text>
             </TouchableOpacity>
 
@@ -529,7 +529,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               onPress={handleConnectWifi}
             >
               <Text style={[styles.connectWifiBtnText, { fontSize: fs(13), fontFamily: colors.mono }]}>
-                {t('connection.connectWifi', 'CONNECT VIA WI-FI')}
+                {t('connection.connectWifi')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -549,13 +549,13 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             style={{ marginBottom: vs(12) }}
           >
             <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-              ← {t('common.changeType', 'Change Connection Type')}
+              ← {t('common.changeType')}
             </Text>
           </TouchableOpacity>
 
           <View style={[styles.progressBlock, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Text style={[styles.progressHeader, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
-            {t('connection.negotiating', 'NEGOTIATING OBD2 HANDSHAKE')}
+            {t('connection.negotiating')}
           </Text>
           
           <View style={[styles.progressBarBg, { backgroundColor: colors.border }]}>
@@ -603,7 +603,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
       {status === 'error' && (
         <View style={[styles.errorBlock, { backgroundColor: `${colors.red}0F`, borderColor: colors.red }]}>
           <Text style={[styles.errorHeader, { color: colors.red, fontSize: fs(13), fontFamily: colors.mono }]}>
-            {t('connection.failed', 'CONNECTION ATTEMPT FAILED')}
+            {t('connection.failed')}
           </Text>
           
           <Text style={[styles.errorDetail, { color: colors.textPri, fontSize: fs(11.5) }]}>
@@ -626,7 +626,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             }}
           >
             <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              {t('common.retry', 'RETRY CONNECTION')}
+              {t('common.retry')}
             </Text>
           </TouchableOpacity>
 
@@ -642,7 +642,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             }}
           >
             <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              🎮 {t('common.demoMode', 'DEMO MODE').toUpperCase()}
+              🎮 {t('common.demoMode').toUpperCase()}
             </Text>
           </TouchableOpacity>
         </View>
@@ -653,11 +653,11 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
           <View style={[styles.overlayCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <Text style={[styles.overlayTitle, { color: colors.textPri, fontSize: fs(15), fontFamily: colors.mono }]}>
-              {t('connection.pairRequired', 'Pairing OBD2 Device')}
+              {t('connection.pairRequired')}
             </Text>
             
             <Text style={[styles.overlayDesc, { color: colors.textSec, fontSize: fs(12) }]}>
-              {t('connection.pairRequiredDesc', 'Android may request pairing because you are connecting for the first time. The pairing PIN is usually as follows:')}
+              {t('connection.pairRequiredDesc')}
             </Text>
 
             <View style={styles.pinRow}>
@@ -666,7 +666,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 onPress={() => {
                   Clipboard.setString('1234');
                   triggerHaptic();
-                  Alert.alert(t('common.copied', 'Copied'), 'PIN 1234 copied.');
+                  Alert.alert(t('common.copied'), 'PIN 1234 copied.');
                 }}
               >
                 <Text style={[styles.pinBtnText, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
@@ -679,7 +679,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 onPress={() => {
                   Clipboard.setString('0000');
                   triggerHaptic();
-                  Alert.alert(t('common.copied', 'Copied'), 'PIN 0000 copied.');
+                  Alert.alert(t('common.copied'), 'PIN 0000 copied.');
                 }}
               >
                 <Text style={[styles.pinBtnText, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
@@ -694,7 +694,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 onPress={() => setShowPairingOverlay(false)}
               >
                 <Text style={[styles.overlayCancelText, { color: colors.textSec, fontSize: fs(13) }]}>
-                  {t('common.cancelBtn', 'Cancel')}
+                  {t('common.cancelBtn')}
                 </Text>
               </TouchableOpacity>
 
@@ -708,7 +708,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
                 }}
               >
                 <Text style={[styles.overlayConfirmText, { fontSize: fs(13), fontFamily: colors.mono }]}>
-                  {t('connection.pairNow', 'PAIR & CONNECT')}
+                  {t('connection.pairNow')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -725,7 +725,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         proceedWithConnection(id, 'OBDII-Paired');
       })
       .catch((err: any) => {
-        Alert.alert(t('common.error'), t('connection.pairingFailed', 'Pairing failed. Please pair manually in Android settings.'));
+        Alert.alert(t('common.error'), t('connection.pairingFailed'));
       });
   }
 }

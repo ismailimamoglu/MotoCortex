@@ -740,7 +740,7 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
       onPress={onOpenCustomize}
     >
       <Text numberOfLines={1} style={{ color: tc.purple, fontSize: isTablet ? scaleFont(12.5) : scaleFont(10.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.8 }}>
-        {t('dashboard.customizeButton', '⚙️ CUSTOMIZE DASHBOARD SENSORS').toUpperCase()}
+        {t('dashboard.customizeButton').toUpperCase()}
       </Text>
     </TouchableOpacity>
   );

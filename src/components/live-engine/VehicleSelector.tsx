@@ -37,7 +37,7 @@ export default function VehicleSelector({
 
   return (
     <View>
-      <Text style={sDyn.vehicleLabel}>{t('vehicleSelect.selectedVehicle', 'SELECTED VEHICLE')}</Text>
+      <Text style={sDyn.vehicleLabel}>{t('vehicleSelect.selectedVehicle')}</Text>
       <Text style={sDyn.vehicleName} numberOfLines={1}>
         {getLocalizedVehicleBrand(activeSessionVehicle.brand, t)} {getLocalizedVehicleModel(activeSessionVehicle.model)}
       </Text>
@@ -59,7 +59,7 @@ export default function VehicleSelector({
           activeOpacity={0.7}
         >
           <Text style={{ color: colors.purple, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5 }}>
-            {t('vehicleSelect.registeredVehiclesButton', 'MY REGISTERED VEHICLES').toUpperCase()}
+            {t('vehicleSelect.registeredVehiclesButton').toUpperCase()}
           </Text>
         </TouchableOpacity>
 
@@ -83,7 +83,7 @@ export default function VehicleSelector({
               minimumFontScale={0.7}
               style={{ color: colors.red, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO }}
             >
-              🔌 {t('connection.disconnect', 'DISCONNECT').toUpperCase()}
+              🔌 {t('connection.disconnect').toUpperCase()}
             </Text>
           </TouchableOpacity>
         )}

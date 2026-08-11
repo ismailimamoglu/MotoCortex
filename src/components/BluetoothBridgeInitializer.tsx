@@ -42,7 +42,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
           return;
         } else if (state === State.Unauthorized) {
           setBridgeStatus('unauthorized');
-          setErrorDetails(t('bridge.unauthorized', 'Bluetooth permissions are unauthorized.'));
+          setErrorDetails(t('bridge.unauthorized'));
           return;
         }
 
@@ -52,7 +52,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
             setBridgeStatus('ready');
           } else if (newState === State.Unauthorized) {
             setBridgeStatus('unauthorized');
-            setErrorDetails(t('bridge.unauthorized', 'Bluetooth permissions are unauthorized.'));
+            setErrorDetails(t('bridge.unauthorized'));
           }
         }, true);
 
@@ -62,7 +62,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
 
       } catch (err: any) {
         setBridgeStatus('error');
-        setErrorDetails(err?.message || t('bridge.genericError', 'Failed to initialize BLE subsystem.'));
+        setErrorDetails(err?.message || t('bridge.genericError'));
       }
     };
 
@@ -79,20 +79,20 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
       <SafeAreaView style={[s.root, { backgroundColor: colors.bg }]}>
         <View style={s.center}>
           <ActivityIndicator size="large" color={colors.cyan} />
-          <Text style={[s.status, { color: colors.cyan }]}>{t('bridge.initializing', 'INITIALIZING BRIDGE...')}</Text>
+          <Text style={[s.status, { color: colors.cyan }]}>{t('bridge.initializing')}</Text>
           <Text style={[s.subStatus, { color: colors.textSec }]}>
             {Platform.OS === 'ios' 
-              ? t('bridge.verifyingIos', 'Verifying iOS CoreBluetooth Connectivity') 
-              : t('bridge.verifyingAndroid', 'Verifying Android Bluetooth Subsystem')}
+              ? t('bridge.verifyingIos') 
+              : t('bridge.verifyingAndroid')}
           </Text>
-          <Text style={[s.stateLabel, { color: colors.textTertiary }]}>{t('bridge.state', 'STATE')}: {hardwareState}</Text>
+          <Text style={[s.stateLabel, { color: colors.textTertiary }]}>{t('bridge.state')}: {hardwareState}</Text>
 
           {showSkip && (
             <TouchableOpacity 
               style={[s.skipBtn, { borderColor: colors.cyan }]} 
               onPress={() => setBridgeStatus('ready')}
             >
-              <Text style={[s.skipBtnText, { color: colors.cyan }]}>{t('bridge.proceedBypass', 'PROCEED TO DASHBOARD (BYPASS)')}</Text>
+              <Text style={[s.skipBtnText, { color: colors.cyan }]}>{t('bridge.proceedBypass')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -104,9 +104,9 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
     return (
       <SafeAreaView style={[s.root, { backgroundColor: colors.bg }]}>
         <View style={s.errorContainer}>
-          <Text style={s.errorTitle}>{t('bridge.fatalError', 'BRIDGE FATAL ERROR')}</Text>
+          <Text style={s.errorTitle}>{t('bridge.fatalError')}</Text>
           <View style={[s.errorCard, { backgroundColor: `${colors.red}1A`, borderColor: colors.red }]}>
-            <Text style={[s.errorState, { color: colors.red }]}>{t('bridge.nativeState', 'NATIVE_STATE')}: {hardwareState}</Text>
+            <Text style={[s.errorState, { color: colors.red }]}>{t('bridge.nativeState')}: {hardwareState}</Text>
             <Text style={[s.errorMsg, { color: colors.textPri }]}>{errorDetails}</Text>
           </View>
           
@@ -115,7 +115,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
               style={[s.settingsBtn, { backgroundColor: colors.cyan }]}
               onPress={() => Linking.openSettings()}
             >
-              <Text style={[s.settingsBtnText, { color: colors.card }]}>{t('bridge.goToSettings', 'GO TO SETTINGS')}</Text>
+              <Text style={[s.settingsBtnText, { color: colors.card }]}>{t('bridge.goToSettings')}</Text>
             </TouchableOpacity>
           )}
 
@@ -123,13 +123,13 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
             style={[s.bypassBtn, { borderColor: colors.textSec }]}
             onPress={() => setBridgeStatus('ready')}
           >
-            <Text style={[s.bypassBtnText, { color: colors.textSec }]}>{t('bridge.ignoreEnterApp', 'IGNORE & ENTER APP')}</Text>
+            <Text style={[s.bypassBtnText, { color: colors.textSec }]}>{t('bridge.ignoreEnterApp')}</Text>
           </TouchableOpacity>
 
           <Text style={[s.errorAdvice, { color: colors.textSec }]}>
             {Platform.OS === 'ios' 
-              ? t('bridge.iosAdvice', 'Ensure Bluetooth is enabled for Cortex OBD2 in your system settings.') 
-              : t('bridge.androidAdvice', 'Please restart the app or check Bluetooth settings.')}
+              ? t('bridge.iosAdvice') 
+              : t('bridge.androidAdvice')}
           </Text>
         </View>
       </SafeAreaView>

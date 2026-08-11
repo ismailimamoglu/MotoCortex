@@ -181,7 +181,7 @@ function SelectionModalContent({
         >
           {item.label}
         </Text>
-        {isSelected && <Text allowFontScaling={false} style={sDyn.selectedCheck}>[{t('common.selected', 'SELECTED').toUpperCase()}]</Text>}
+        {isSelected && <Text allowFontScaling={false} style={sDyn.selectedCheck}>[{t('common.selected').toUpperCase()}]</Text>}
       </TouchableOpacity>
     );
   };
@@ -197,7 +197,7 @@ function SelectionModalContent({
           <View style={sDyn.header}>
             <TouchableOpacity onPress={onClose} style={sDyn.backBtn} activeOpacity={0.4}>
               <Text allowFontScaling={false} style={sDyn.backBtnText}>
-                {t('common.back', 'BACK').toUpperCase()}
+                {t('common.back').toUpperCase()}
               </Text>
             </TouchableOpacity>
             <Text allowFontScaling={false} style={sDyn.headerTitle}>{title.toUpperCase()}</Text>

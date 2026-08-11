@@ -547,7 +547,7 @@
         "odometer": "Odometer",
         "milDist": "Distance Traveled with MIL ON",
         "distSinceCleared": "Distance Since Codes Cleared",
-        "dtcCount": "DTC Fault Count",
+        "dtcCount": "🔍 FAULT CODES ({{count}} found)",
         "sensorData": "Live Sensor Data",
         "noData": "No Data Available",
         "proApp": "Cortex OBD2 Diagnostic Scanner",
@@ -628,7 +628,8 @@
         "stop": "STOP",
         "reset": "RESET",
         "howItWorks": "HOW IT WORKS?",
-        "howDesc": "1. Press \"Start Test\" button\n2. Vehicle must be stationary (Speed = 0)\n3. Timer starts automatically when you move\n4. 0-60 km/h and 0-100 km/h times are recorded\n\n⚠️ Perform this test in a safe area!"
+        "howDesc": "1. Press \"Start Test\" button\n2. Vehicle must be stationary (Speed = 0)\n3. Timer starts automatically when you move\n4. 0-60 km/h and 0-100 km/h times are recorded\n\n⚠️ Perform this test in a safe area!",
+        "sec": "sec"
     },
     "dtc": {
         "P0113": "Intake Air Temperature Sensor 1 Circuit High Input (IAT)",
@@ -2460,7 +2461,8 @@
         "motionAlertTitle": "🚨 Vehicle in Motion",
         "noMatchingFeatures": "No matching features found for selected filters.",
         "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
-        "unsafeModuleTitle": "🚫 Protected Safety Module"
+        "unsafeModuleTitle": "🚫 Protected Safety Module",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine."
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -2631,7 +2633,37 @@
         "userInfo": "🔒 ADMIN USER CREDENTIALS",
         "devModeAlert": "Secret PRO developer key is disabled in production builds.",
         "invalidCmdError": "Please enter a valid OBD command (e.g., 01 0C or AT Z)",
-        "noLogsInfo": "No log records found to share."
+        "noLogsInfo": "No log records found to share.",
+        "logsLoading": "Loading logs...",
+        "calculating": "Calculating...",
+        "secretProTitle": "Secret PRO Key ⚡ (DEV)",
+        "secretProActive": "PRO License Mode Status: ACTIVE (ALL FEATURES OPEN)",
+        "secretProInactive": "PRO License Mode Status: INACTIVE (CLOSED)",
+        "logsTruncated": "... [Logs Truncated] ...\n",
+        "noLogsFound": "No logs recorded.",
+        "logsReadErr": "Could not read logs: ",
+        "unknown": "Unknown",
+        "deviceNotConnectedWarning": "(WARNING: Device Not Connected)",
+        "deviceNotConnectedAlert": "Device not connected. Command added to terminal: ",
+        "cmdError": "Command Error",
+        "ecuNoResponse": "ECU Did Not Respond: ",
+        "cortexTerminalLogs": "CORTEX OBD2 TERMINAL LOGS",
+        "shareError": "Sharing Error",
+        "noLogsToShare": "No logs available to share.",
+        "clearLogsTitle": "Clear Logs",
+        "clearLogsMsg": "All local OBD terminal logs will be deleted.",
+        "clearAction": "Clear",
+        "logsCleared": "Terminal logs cleared.",
+        "copiedTitle": "Copied",
+        "copiedMsg": "{{label}} copied to clipboard:\n{{value}}",
+        "presetAutoProtocol": "Auto Protocol",
+        "presetSupportedPids": "Supported PIDs",
+        "presetEngineRpm": "Engine RPM",
+        "inputPlaceholder": "e.g. 01 0C or AT Z",
+        "syncingDtc": "SYNCING...",
+        "syncDtcBtn": "SYNC DTC DICTIONARY",
+        "crashTestTitle": "Crash Test",
+        "crashTestDesc": "A test crash will be triggered for Firebase Crashlytics integration."
     },
     "bridge": {
         "androidAdvice": "Please restart the app or check Bluetooth settings.",
@@ -2836,5 +2868,16 @@
         "purgeDoneMsg": "Your data has been permanently deleted: {{items}}",
         "purgeErrorTitle": "Error",
         "purgeErrorMsg": "Data deletion failed."
+    },
+    "inspectionReport": {
+        "verificationHash": "🔒 VERIFICATION HASH:"
+    },
+    "errorBoundary": {
+        "aiDoctor": "AI DOCTOR",
+        "cortex": "CORTEX",
+        "obdScanner": "OBD2 DIAGNOSTIC SCANNER",
+        "systemRecovery": "⚠️ System Recovery",
+        "unexpectedError": "Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.",
+        "retryApp": "RETRY APPLICATION"
     }
 }

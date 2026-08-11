@@ -112,17 +112,17 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
         setHasOnboarded(true);
       } else {
         Alert.alert(
-          t('common.warning', 'Warning'),
-          t('permissions.deniedDesc', 'Some permissions were denied. Cortex OBD2 Diagnostic Scanner may not be able to scan or connect to OBD2 devices successfully.'),
+          t('common.warning'),
+          t('permissions.deniedDesc'),
           [
-            { text: t('permissions.proceedAnyway', 'Proceed Anyway'), onPress: () => setHasOnboarded(true) },
+            { text: t('permissions.proceedAnyway'), onPress: () => setHasOnboarded(true) },
             { 
-              text: t('permissions.openSettings', 'Open Settings'), 
+              text: t('permissions.openSettings'), 
               onPress: () => {
                 Linking.openSettings();
               }
             },
-            { text: t('common.cancel', 'Cancel'), style: 'cancel' }
+            { text: t('common.cancel'), style: 'cancel' }
           ]
         );
       }
@@ -300,11 +300,11 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
       <View style={sDyn.container}>
         {/* Header */}
         <View style={sDyn.header}>
-          <Text style={[sDyn.title, { color: colors.cyan }]}>{t('common.brandName', 'CORTEX OBD2')}</Text>
+          <Text style={[sDyn.title, { color: colors.cyan }]}>{t('common.brandName')}</Text>
           <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
             {step === 'language' 
-              ? t('permissions.langSelectSub', 'LANGUAGE GATEWAY').toUpperCase()
-              : t('permissions.headerSubtitle', 'PERMISSION GATEWAY').toUpperCase()}
+              ? t('permissions.langSelectSub').toUpperCase()
+              : t('permissions.headerSubtitle').toUpperCase()}
           </Text>
         </View>
 
@@ -313,10 +313,10 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
           <View style={{ width: '100%' }}>
             <View style={[sDyn.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
               <Text style={[sDyn.cardTitle, { color: colors.textPri }]}>
-                {t('permissions.langTitle', 'Select Language')}
+                {t('permissions.langTitle')}
               </Text>
               <Text style={[sDyn.cardDesc, { color: colors.textTertiary }]}>
-                {t('permissions.langDesc', 'Please select your preferred language to customize your diagnostics experience.')}
+                {t('permissions.langDesc')}
               </Text>
 
               <ScrollView 
@@ -360,7 +360,7 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
               activeOpacity={0.4}
             >
               <Text style={[sDyn.actionBtnText, { color: colors.card }]}>
-                {t('permissions.nextBtn', 'CONTINUE')}
+                {t('permissions.nextBtn')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -368,9 +368,9 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
           // STEP 2: Permission Request Gateway
           <View style={{ width: '100%' }}>
             <View style={[sDyn.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-              <Text style={[sDyn.cardTitle, { color: colors.textPri }]}>{t('permissions.cardTitle', 'Hardware Access Required')}</Text>
+              <Text style={[sDyn.cardTitle, { color: colors.textPri }]}>{t('permissions.cardTitle')}</Text>
               <Text style={[sDyn.cardDesc, { color: colors.textTertiary }]}>
-                {t('permissions.cardDesc', "To improve application quality and vehicle compatibility, completely anonymized engine parameters and diagnostic trouble codes (excluding personal data and VIN) captured during diagnostics may be analyzed on our secure servers. By proceeding, you agree to these anonymous telemetry terms.")}
+                {t('permissions.cardDesc')}
               </Text>
 
               {/* Perm Item 1: Bluetooth */}
@@ -379,9 +379,9 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
                   <Text style={sDyn.permIcon}>⚡</Text>
                 </View>
                 <View style={sDyn.permTextContainer}>
-                  <Text style={[sDyn.permLabel, { color: colors.textPri }]}>{t('permissions.btLabel', 'Bluetooth (BLE)')}</Text>
+                  <Text style={[sDyn.permLabel, { color: colors.textPri }]}>{t('permissions.btLabel')}</Text>
                   <Text style={[sDyn.permSub, { color: colors.textSec }]}>
-                    {t('permissions.btSub', 'Used exclusively to pair and stream live CAN-bus/K-Line metrics from your ELM327/OBD2 adapter.')}
+                    {t('permissions.btSub')}
                   </Text>
                 </View>
                 {btStatus === 'granted' && <Text style={[sDyn.statusIcon, { color: colors.green }]}>✓</Text>}
@@ -395,9 +395,9 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
                     <Text style={sDyn.permIcon}>📍</Text>
                   </View>
                   <View style={sDyn.permTextContainer}>
-                    <Text style={[sDyn.permLabel, { color: colors.textPri }]}>{t('permissions.locLabel', 'Fine Location')}</Text>
+                    <Text style={[sDyn.permLabel, { color: colors.textPri }]}>{t('permissions.locLabel')}</Text>
                     <Text style={[sDyn.permSub, { color: colors.textSec }]}>
-                      {t('permissions.locSub', 'Required by Android system architecture to discover low-energy Bluetooth beacons nearby. We do not track your drives.')}
+                      {t('permissions.locSub')}
                     </Text>
                   </View>
                   {locStatus === 'granted' && <Text style={[sDyn.statusIcon, { color: colors.green }]}>✓</Text>}
@@ -416,10 +416,10 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
                 </View>
                 <View style={sDyn.permTextContainer}>
                   <Text style={[sDyn.permLabel, { color: colors.textPri }]}>
-                    {t('permissions.telemetryLabel', 'Diagnostic Telemetry (Opt-In)')}
+                    {t('permissions.telemetryLabel')}
                   </Text>
                   <Text style={[sDyn.permSub, { color: colors.textSec }]}>
-                    {t('permissions.telemetrySub', 'Share anonymous protocol and error logs to improve vehicle compatibility.')}
+                    {t('permissions.telemetrySub')}
                   </Text>
                 </View>
                 <View
@@ -454,12 +454,12 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
               {isLoading ? (
                 <ActivityIndicator color={colors.card} size="small" />
               ) : (
-                <Text style={[sDyn.actionBtnText, { color: colors.card }]}>{t('permissions.grantBtn', 'GRANT & CONTINUE')}</Text>
+                <Text style={[sDyn.actionBtnText, { color: colors.card }]}>{t('permissions.grantBtn')}</Text>
               )}
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setHasOnboarded(true)} style={sDyn.skipLink}>
-              <Text style={[sDyn.skipText, { color: colors.textSec }]}>{t('permissions.skipBtn', 'Skip for now (Demo Mode)')}</Text>
+              <Text style={[sDyn.skipText, { color: colors.textSec }]}>{t('permissions.skipBtn')}</Text>
             </TouchableOpacity>
           </View>
         )}

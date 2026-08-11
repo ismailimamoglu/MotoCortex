@@ -193,7 +193,7 @@ export default function MainApp() {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(16) }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
                   <View style={{ backgroundColor: `${tc.cyan}20`, borderWidth: 1, borderColor: tc.cyan, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
-                    <Text style={{ color: tc.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>AI DOCTOR</Text>
+                    <Text style={{ color: tc.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>{t('errorBoundary.aiDoctor')}</Text>
                   </View>
                   <Text style={{ color: tc.textPri, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>{code} {t('aiDoctor.reportTitle')}</Text>
                 </View>
@@ -1185,8 +1185,8 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
     <ScrollView contentContainerStyle={s.connectPage}>
       {/* Logo */}
       <View style={s.logoArea}>
-        <Text style={s.logoText}>CORTEX</Text>
-        <Text style={[s.logoText, { fontSize: scaleFont(14), letterSpacing: 2, marginTop: scaleHeight(2) }]}>OBD2 DIAGNOSTIC SCANNER</Text>
+        <Text style={s.logoText}>{t('errorBoundary.cortex')}</Text>
+        <Text style={[s.logoText, { fontSize: scaleFont(14), letterSpacing: 2, marginTop: scaleHeight(2) }]}>{t('errorBoundary.obdScanner')}</Text>
         <Text style={s.logoSub}>v7 PRO {isSimulationMode ? '(SIM)' : ''}</Text>
       </View>
 
@@ -1371,7 +1371,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
             <View style={{ alignItems: 'center', marginVertical: 12, gap: 10, width: '100%' }}>
               <Text style={{ color: tc.red, fontFamily: MONO, fontSize: 11, fontWeight: 'bold', textAlign: 'center', lineHeight: 15 }}>
                 {adapterCapabilityScore < 55 ? (
-                  t('connection.lowQualityAdapterWarning', 'Düşük Kaliteli Adaptör (Skor: {{score}}/100): Kullandığınız cihaz düşük kaliteli bir klondur. Eski nesil araç protokollerinin (Dacia, Renault, Fiat, Lada vb. K-Line hatları) gerektirdiği hassas zamanlama kararlılığına sahip değildir. Sorunsuz bağlantı için kaliteli bir OBD2 adaptörü (v1.5 veya orijinal OBDLink/vLinker) kullanmanızı öneririz.', { score: adapterCapabilityScore }) as string
+                  t('connection.lowQualityAdapterWarning', { score: adapterCapabilityScore }) as string
                 ) : (
                   t('connection.ecuNoResponse') as string
                 )}
@@ -1379,7 +1379,7 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
               
               {adapterCapabilityScore >= 55 && (
                 <Text style={{ color: tc.textSec, fontFamily: MONO, fontSize: 10, textAlign: 'center' }}>
-                  {t('connection.hardwareCapabilityScore', 'Adaptör Donanım Yetenek Skoru: {{score}}/100', { score: adapterCapabilityScore })}
+                  {t('connection.hardwareCapabilityScore', { score: adapterCapabilityScore })}
                 </Text>
               )}
 
@@ -2514,11 +2514,12 @@ ${sensorLines || `  ${i18n.t('report.noData')}`}
 }
 
 function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  const { t } = useTranslation();
   return (
     <View style={{ flex: 1, backgroundColor: '#090d16', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-      <Text style={{ color: '#ff4444', fontSize: 22, fontWeight: 'bold', marginBottom: 10 }}>⚠️ System Recovery</Text>
+      <Text style={{ color: '#ff4444', fontSize: 22, fontWeight: 'bold', marginBottom: 10 }}>{t('errorBoundary.systemRecovery')}</Text>
       <Text style={{ color: '#88a0c0', textAlign: 'center', marginBottom: 12 }}>
-        Cortex OBD2 Diagnostic Scanner encountered an unexpected UI error. The crash event has been reported.
+        {t('errorBoundary.unexpectedError')}
       </Text>
       {error?.message && (
         <View style={{ width: '100%', backgroundColor: '#111827', padding: 12, borderRadius: 8, marginBottom: 16, borderWidth: 1, borderColor: '#1f2937' }}>
@@ -2531,7 +2532,7 @@ function RootErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
         onPress={resetErrorBoundary}
         style={{ backgroundColor: '#00e5ff', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8 }}
       >
-        <Text style={{ color: '#000000', fontWeight: 'bold' }}>RETRY APPLICATION</Text>
+        <Text style={{ color: '#000000', fontWeight: 'bold' }}>{t('errorBoundary.retryApp')}</Text>
       </TouchableOpacity>
     </View>
   );

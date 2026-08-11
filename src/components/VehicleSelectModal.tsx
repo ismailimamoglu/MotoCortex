@@ -48,15 +48,15 @@ export default function VehicleSelectModal({ visible, onDisconnect }: VehicleSel
           }
         ]}>
           <Text style={[styles.title, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(15) }]}>
-            {t('vehicleSelect.title', 'SELECT YOUR VEHICLE FOR DIAGNOSTIC ACCURACY')}
+            {t('vehicleSelect.title')}
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10.5) }]}>
-            {t('vehicleSelect.subtitle', 'Please specify vehicle details for accurate diagnostics and protocol mapping.')}
+            {t('vehicleSelect.subtitle')}
           </Text>
 
           <SearchableVehicleSelect 
-            confirmText={t('vehicleSelect.confirm', 'CONTINUE')}
-            cancelText={t('vehicleSelect.disconnect', 'DISCONNECT')}
+            confirmText={t('vehicleSelect.confirm')}
+            cancelText={t('vehicleSelect.disconnect')}
             onCancel={onDisconnect}
             onConfirm={handleConfirm}
             initialBrandId={activeSessionVehicle?.brand}
