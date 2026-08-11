@@ -18,21 +18,23 @@ export class ProtocolNegotiator {
             OBDCommandQueue.flushRxBuffer();
             await preciseSleep(400);
 
-            const t0 = Date.now();
-            const atiRes = await OBDCommandQueue.add('ATI', 2500).catch(() => 'ELM327 v1.5');
-            const rvRes = await OBDCommandQueue.add('AT RV', 2000).catch(() => '12.0V');
-            const dpRes = await OBDCommandQueue.add('AT DP', 2000).catch(() => 'AUTO');
+            let unresponsiveCount = 0;
+            const atiRes = await OBDCommandQueue.add('ATI', 2500).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
+            const rvRes = await OBDCommandQueue.add('AT RV', 2000).catch(() => { unresponsiveCount++; return '12.0V'; });
+            const dpRes = await OBDCommandQueue.add('AT DP', 2000).catch(() => { unresponsiveCount++; return 'AUTO'; });
             const rtt = Math.max(10, Math.round((Date.now() - t0) / 3));
 
             const cleanFirmware = (atiRes || 'ELM327 v1.5').replace(/[\r\n>]/g, '').trim();
-            const isV15Clone = cleanFirmware.includes('1.5') || rtt > 120;
+            // Refined clone heuristic: high RTT latency or unresponsive probes indicate clone/low-grade hardware
+            const isV15Clone = (cleanFirmware.includes('1.5') && rtt > 60) || rtt > 120 || unresponsiveCount > 0;
 
-            // Behavioral scoring based on RTT latency and firmware integrity
+            // Behavioral scoring based on RTT latency, probe responsiveness, and firmware integrity
             let score = 98;
             if (isV15Clone) score -= 20;
+            if (unresponsiveCount > 0) score -= (unresponsiveCount * 15);
             if (rtt > 80) score -= 15;
             if (rtt > 150) score -= 15;
-            score = Math.max(40, Math.min(100, score));
+            score = Math.max(30, Math.min(100, score));
 
             store.setSensorData({ 
                 adapterCapabilityScore: score,

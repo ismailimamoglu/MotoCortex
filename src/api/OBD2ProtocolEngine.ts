@@ -146,6 +146,7 @@ export class OBD2ProtocolEngine {
 
    private lastCommandWasReset: boolean = false;
    private stallCounter: number = 0;
+   private stallSkipCount: number = 0;
 
    /**
     * Optional callback injected by useBluetooth.ts to trigger K-Line fallback
@@ -818,9 +819,17 @@ export class OBD2ProtocolEngine {
            // Clear execution queue
            this.clear(new Error('ADAPTER_STALL'));
 
-           // Send recovery reset command after 100ms delay, skipping if a new command is already queued/busy
+           // Send recovery reset command after 100ms delay, enforcing force-clear if skipped multiple times (livelock breaker)
            preciseSleep(100).then(() => {
-               if (this.isQueueBusy()) return;
+               if (this.isQueueBusy() && this.stallSkipCount < 2) {
+                   this.stallSkipCount++;
+                   return;
+               }
+               this.stallSkipCount = 0;
+               if (this.isQueueBusy()) {
+                   useBluetoothStore.getState().addLog(`[ResponseInterceptor] LIVELOCK_DETECTED: Force clearing busy queue for ATWS recovery.`);
+                   this.clear(new Error('LIVELOCK_RECOVERY_FORCE_CLEAR'));
+               }
                BluetoothService.write('ATWS\r').catch(() => {});
            });
        }
