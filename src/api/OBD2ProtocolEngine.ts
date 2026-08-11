@@ -818,8 +818,9 @@ export class OBD2ProtocolEngine {
            // Clear execution queue
            this.clear(new Error('ADAPTER_STALL'));
 
-           // Send recovery reset command
+           // Send recovery reset command after 100ms delay, skipping if a new command is already queued/busy
            preciseSleep(100).then(() => {
+               if (this.isQueueBusy()) return;
                BluetoothService.write('ATWS\r').catch(() => {});
            });
        }
