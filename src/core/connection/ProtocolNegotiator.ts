@@ -37,7 +37,7 @@ export class ProtocolNegotiator {
             // ATE0 must be first — disables echo so ATI/ATRV/ATDP responses aren't polluted
             await OBDCommandQueue.add('ATE0', 1500).catch(() => {});
             await OBDCommandQueue.add('ATL0', 1000).catch(() => {}); // Linefeed off
-            await OBDCommandQueue.add('ATH1', 1000).catch(() => {}); // Headers on (for multi-ECU debugging)
+            await OBDCommandQueue.add('ATH0', 1000).catch(() => {}); // Headers off (Universal OBD2 standard for BLE/Classic/K-Line/CAN)
             await OBDCommandQueue.add('ATS0', 1000).catch(() => {}); // Spaces off (faster parsing)
             await OBDCommandQueue.add('ATSTFF', 1000).catch(() => {}); // Max timeout (clone-tolerant)
 
