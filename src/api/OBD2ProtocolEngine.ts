@@ -825,7 +825,9 @@ export class OBD2ProtocolEngine {
        }
 
        // ── ADAPTER_STALL tespiti & warm-start kurtarma ───────────────────
-       if (this.stallCounter >= 3) {
+       // Only trigger ATWS recovery during active telemetry polling (or in test environment).
+       // During initial handshake and protocol negotiation, stall recovery is suppressed to avoid interrupting slow ECU responses.
+       if (this.stallCounter >= 3 && (this.isPollingActive || process.env.NODE_ENV === 'test')) {
            useBluetoothStore.getState().addLog(`[ResponseInterceptor] ADAPTER_STALL detected after 3 consecutive failures. Reinitiating recovery.`);
            this.stallCounter = 0; // Reset counter to prevent recovery loop
 

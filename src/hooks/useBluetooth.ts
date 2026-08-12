@@ -207,7 +207,7 @@ export const useBluetooth = () => {
                 OBDCommandQueue.resetStallCounter();
 
                 const testCommand = "01 00";  
-                const initRes = await OBDCommandQueue.add(testCommand, 6000);  
+                const initRes = await OBDCommandQueue.add(testCommand, 10000);  
                 ecuConnected = verifyHandshakeResponse(initRes, testCommand);
 
                 if (!ecuConnected) {  
@@ -259,10 +259,7 @@ export const useBluetooth = () => {
                         });
                         await preciseSleep(150);
 
-                        if (item.isCan) {
-                            // CAN Engine Header Scoping to avoid Multi-ECU response collisions
-                            await OBDCommandQueue.add("ATSH7E0", 1000).catch(() => {});
-                        } else if (item.isKLine) {
+                        if (item.isKLine) {
                             // K-Line Bus Quiet Time: ISO 14230 / ISO 9141 requires minimum 300ms idle bus state before init
                             await preciseSleep(300);
                             // Inject K-Line Init Baud Rate (ATIB 10400) for motorcycle / legacy ECU baud rate alignment
