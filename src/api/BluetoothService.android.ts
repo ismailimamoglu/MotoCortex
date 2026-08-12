@@ -167,28 +167,50 @@ class BluetoothServiceAndroid implements IBluetoothService {
         }
     }
 
+    // ── Global OBD Adapter Name Regex ──────────────────────────────────
+    // Covers 25+ vendors including cheap clones, generic adapters, and premium devices.
+    // Reference: Car Scanner, Infocar, python-OBD adapter lists, Amazon/AliExpress top sellers.
+    private static readonly OBD_NAME_REGEX = /(OBD|ELM|V-?LINK(?:ER)?|VEEPEAK|VIECAR|VGATE|KONNWEI|I-?CAR|OBDLINK|PANLONG|ZAKVOOP|LELINK|NEXAS|THINKCAR|KW\d+|MONOFE|CARLY|BIMMER|WIFI327|AUTOSCAN|LAUNCH|MAXIS|OBDII|HC-0[56]|JDY-|BT0[45]|UniCarScan)/i;
+
+    // ── Global OBD BLE Service UUID Set ───────────────────────────────
+    // Secondary filter: any device advertising these UUIDs is likely an OBD adapter,
+    // even if its name is blank or unrecognized.
+    private static readonly OBD_UUID_SET = new Set([
+        '0000ffe0-0000-1000-8000-00805f9b34fb', // HM-10 / Vgate iCar / generic ELM327 BLE
+        '0000fff0-0000-1000-8000-00805f9b34fb', // UniCarScan / standard OBD2 BLE
+        '000018f0-0000-1000-8000-00805f9b34fb', // Veepeak OBDCheck BLE+
+        'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // STN2120 / vLinker MC+ / OBDLink MX+
+        '6e400001-b5a3-f393-e0a9-e50e24dcca9e', // Nordic UART Service (NUS) — OBDLink, vLinker firmware
+        '0000ff00-0000-1000-8000-00805f9b34fb', // KW903 / Autoscan
+    ]);
+
+    private isOBDDevice(name: string, serviceUUIDs?: string[]): boolean {
+        const nameOk = BluetoothServiceAndroid.OBD_NAME_REGEX.test(name);
+        const uuidOk = (serviceUUIDs || []).some(u => BluetoothServiceAndroid.OBD_UUID_SET.has(u.toLowerCase()));
+        return nameOk || uuidOk;
+    }
+
     async scanDevices(): Promise<any[]> {
         // Check Bluetooth state with retry logic
         const isReady = await this.waitForEnabled(5000);
         if (!isReady) throw new BluetoothPermissionError('BLUETOOTH_NOT_POWERED_ON');
 
         const foundMap = new Map<string, any>();
-        const OBD_REGEX = /(OBD|ELM|VLINKER|MONOFE|CARLY|BIMMER)/i;
 
         // STEP 1: Always get bonded devices first — instant and always works
         try {
             const bonded = await RNBluetoothClassic.getBondedDevices();
             bonded.forEach(device => {
                 const name = device.name || '';
-                if (OBD_REGEX.test(name)) {
-                    foundMap.set(device.address, device);
+                if (this.isOBDDevice(name)) {
+                    foundMap.set(device.address, { ...device, address: device.address, name, transport: 'CLASSIC' });
                 }
             });
         } catch (bondedErr) {
             console.warn('[BT Android] getBondedDevices failed:', bondedErr);
         }
 
-        // STEP 2: Attempt active discovery (may fail on some devices/permissions — not fatal)
+        // STEP 2: Attempt Classic active discovery (may fail on some devices/permissions — not fatal)
         try {
             // Race discovery against a 12s hard timeout to prevent UI freezes
             const discovered = await Promise.race([
@@ -198,12 +220,12 @@ class BluetoothServiceAndroid implements IBluetoothService {
             if (Array.isArray(discovered)) {
                 discovered.forEach(device => {
                     const name = device.name || '';
-                    if (OBD_REGEX.test(name)) {
+                    if (this.isOBDDevice(name)) {
                         const existing = foundMap.get(device.address);
                         if (existing) {
                             existing.rssi = device.rssi || existing.rssi;
                         } else {
-                            foundMap.set(device.address, device);
+                            foundMap.set(device.address, { ...device, address: device.address, name, transport: 'CLASSIC' });
                         }
                     }
                 });
@@ -211,6 +233,38 @@ class BluetoothServiceAndroid implements IBluetoothService {
         } catch (discoveryErr) {
             // Discovery failure is non-fatal — bonded devices are still returned
             console.warn('[BT Android] startDiscovery failed (non-fatal):', discoveryErr);
+        }
+
+        // STEP 3: BLE scan via react-native-ble-plx — discovers BLE-only adapters (Vgate, Veepeak, OBDLink MX+, etc.)
+        try {
+            const manager = BLEBridge.getInstance();
+            await new Promise<void>((resolve) => {
+                manager.startDeviceScan(null, { allowDuplicates: false }, (error, device) => {
+                    if (error) return;
+                    if (device && device.id) {
+                        const name = device.name || device.localName || '';
+                        const serviceUUIDs = device.serviceUUIDs || [];
+                        if (this.isOBDDevice(name, serviceUUIDs)) {
+                            if (!foundMap.has(device.id)) {
+                                foundMap.set(device.id, {
+                                    address: device.id,
+                                    name: name || 'BLE OBD Adapter',
+                                    rssi: device.rssi,
+                                    transport: 'BLE',
+                                    serviceUUIDs,
+                                });
+                            }
+                        }
+                    }
+                });
+                // BLE scan for 4 seconds, then stop and resolve
+                setTimeout(() => {
+                    manager.stopDeviceScan();
+                    resolve();
+                }, 4000);
+            });
+        } catch (bleErr) {
+            console.warn('[BT Android] BLE scan failed (non-fatal):', bleErr);
         }
 
         return Array.from(foundMap.values());
@@ -236,9 +290,20 @@ class BluetoothServiceAndroid implements IBluetoothService {
         } catch (e) {
             console.log('[BluetoothService] cancelDiscovery failed/ignored:', e);
         }
-        const isBleOrSim = deviceId.includes('BLE') || deviceId.includes('SIM');
+        // ── Transport Detection ─────────────────────────────────────────
+        // Determine transport from scan metadata or MAC format.
+        // BLE device IDs on Android are standard MAC format but were discovered via BLE scan.
+        // We check stored transport metadata first; if unavailable, try Classic then fall back to BLE.
+        const isMacFormat = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(deviceId);
+        // UUID format (iOS-style) or non-MAC format → definitely BLE
+        const isDefinitelyBle = !isMacFormat && !deviceId.startsWith('WIFI:');
 
         const connectionPromise = (async () => {
+            // If device ID is not a MAC (e.g. iOS UUID), go straight to BLE
+            if (isDefinitelyBle) {
+                return await this.connectBLE(deviceId);
+            }
+
             try {
                 let device: BluetoothDevice | undefined;
                 try { device = await RNBluetoothClassic.getConnectedDevice(deviceId); } catch (e) {}
@@ -247,10 +312,8 @@ class BluetoothServiceAndroid implements IBluetoothService {
                     device = bonded.find(d => d.address === deviceId);
                 }
                 if (!device) {
-                    if (isBleOrSim) {
-                        return await this.connectBLE(deviceId);
-                    }
-                    throw new Error('Device not found or not bonded yet');
+                    // Device not in Classic bonded list → try BLE path
+                    return await this.connectBLE(deviceId);
                 }
                 
                 // Eğer cihaz daha önce bağlı değilse connect çağır (Bu aynı zamanda eşleşme isteği atabilir)
@@ -266,7 +329,7 @@ class BluetoothServiceAndroid implements IBluetoothService {
             } catch (err: any) {
                 console.error('Connection Failed:', err);
                 
-                if (!isBleOrSim) {
+                if (isMacFormat) {
                     console.log(`[Bluetooth Android] Connection/Bonding failed, attempting autonomous pairDevice fallback for ${deviceId}`);
                     try {
                         // Eşleşme Şelalesi: Bağlantı başarısızsa otonom pairDevice tetikle.
@@ -422,10 +485,12 @@ class BluetoothServiceAndroid implements IBluetoothService {
             let writeChar: Characteristic | null = null;
 
             const TARGET_OBD2_SERVICES = [
-                '0000ffe0-0000-1000-8000-00805f9b34fb',
-                '0000fff0-0000-1000-8000-00805f9b34fb',
-                '000018f0-0000-1000-8000-00805f9b34fb',
-                'e7810a71-73ae-499d-8c15-faa9aef0c3f2',
+                '0000ffe0-0000-1000-8000-00805f9b34fb', // HM-10 / Vgate / generic ELM327
+                '0000fff0-0000-1000-8000-00805f9b34fb', // UniCarScan
+                '000018f0-0000-1000-8000-00805f9b34fb', // Veepeak
+                'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // STN2120 / vLinker / OBDLink
+                '6e400001-b5a3-f393-e0a9-e50e24dcca9e', // Nordic UART Service (NUS)
+                '0000ff00-0000-1000-8000-00805f9b34fb', // KW903 / Autoscan
             ];
 
             for (const service of services) {

@@ -365,8 +365,14 @@ export class OBD2ProtocolEngine {
 
            const storeState = useBluetoothStore.getState();  
            this.currentProtocol = storeState.protocol || '';  
-           const isSlowKLine = this.currentProtocol.toUpperCase().includes('KWP') || this.currentProtocol.includes('4') || this.currentProtocol.includes('5');  
-           const dynamicDebounceMs = isSlowKLine ? 400 : 40;
+           const isSlowOrUnknown = !this.currentProtocol || 
+                this.currentProtocol.toUpperCase().includes('KWP') || 
+                this.currentProtocol.includes('4') || 
+                this.currentProtocol.includes('5') || 
+                this.currentProtocol.toUpperCase().includes('J1850') ||
+                this.currentProtocol.includes('1') || 
+                this.currentProtocol.includes('2');
+           const dynamicDebounceMs = isSlowOrUnknown ? 600 : 150;
 
            this.silenceTimeout = setTimeout(() => {  
                if (this.elmParser.getRawResponse().length > 0) this.completeCommandFlow();  
@@ -407,16 +413,21 @@ export class OBD2ProtocolEngine {
        const assemblerState = this.fragmentBuffer.getState();
 
        if (assemblerState === 'COMPLETE' || rxState === RxState.PROMPT_RECEIVED || trimmed.endsWith('>')) {  
-           this.completeCommandFlow();  
-       } else {  
-           const isSlowKLine = this.currentProtocol.toUpperCase().includes('KWP') || this.currentProtocol.includes('4') || this.currentProtocol.includes('5');  
-           const dynamicDebounceMs = isSlowKLine ? 400 : 40;  
-            
-           this.silenceTimeout = setTimeout(() => {  
-               if (this.elmParser.getRawResponse().length > 0) this.completeCommandFlow();  
-           }, dynamicDebounceMs);  
-       }  
-   }
+           this.completeCommandFlow();         } else {  
+            const isSlowOrUnknown = !this.currentProtocol || 
+                this.currentProtocol.toUpperCase().includes('KWP') || 
+                this.currentProtocol.includes('4') || 
+                this.currentProtocol.includes('5') || 
+                this.currentProtocol.toUpperCase().includes('J1850') ||
+                this.currentProtocol.includes('1') || 
+                this.currentProtocol.includes('2');  
+            const dynamicDebounceMs = isSlowOrUnknown ? 600 : 150;  
+             
+            this.silenceTimeout = setTimeout(() => {  
+                if (this.elmParser.getRawResponse().length > 0) this.completeCommandFlow();  
+            }, dynamicDebounceMs);  
+        }  
+    }
 
    public async completeCommandFlow() {  
        if (this.isProcessingFlow) return;  
@@ -797,19 +808,20 @@ export class OBD2ProtocolEngine {
                });
            }
        } else {
-           // ── Garbage / anlamsız hex tespiti ───────────────────────────────
-           const isTest = process.env.NODE_ENV === 'test';
-           const SAFE_RESPONSE_RE = /^[0-9A-Fa-f\s>?:.]+$|^(?:OK|SEARCHING|UNABLE TO CONNECT|ERROR|STOPPED|BUS INIT|BUS BUSY|NO DATA|BUFFER FULL|FB ERROR|RX ERROR|ELM327.*|OBDII.*|Interpreter.*)$/i;
-           const isStartupBanner = /ELM327|OBDII|RS232|Interpreter|^\s*[\uFFFD\s]*\s*$/i.test(trimmedResult);
-           const isGarbage = !isTest && trimmedResult.length > 0 && !isStartupBanner && !SAFE_RESPONSE_RE.test(trimmedResult);
-           if (isGarbage) {
-               this.stallCounter++;
-               useBluetoothStore.getState().addLog(`[ResponseInterceptor] Garbage response detected: "${trimmedResult}"`);
-           } else {
-               // Geçerli yanıt → stallCounter & stallSkipCount sıfırla
-               this.stallCounter = 0;
-               this.stallSkipCount = 0;
-           }
+            // ── Garbage / anlamsız hex tespiti ───────────────────────────────
+            const isTest = process.env.NODE_ENV === 'test';
+            const isAtCmd = cleanCmd.startsWith('AT');
+            const SAFE_RESPONSE_RE = /^[0-9A-Fa-f\s>?:.]+$|^(?:OK|SEARCHING|UNABLE TO CONNECT|ERROR|STOPPED|BUS INIT|BUS BUSY|NO DATA|BUFFER FULL|FB ERROR|RX ERROR|ELM327.*|OBDII.*|Interpreter.*|ISO.*|SAE.*|CAN.*|KWP.*|AUTO.*|\d+\.\d+V.*)$/i;
+            const isStartupBanner = /ELM327|OBDII|RS232|Interpreter|^\s*[\uFFFD\s]*\s*$/i.test(trimmedResult);
+            const isGarbage = !isTest && !isAtCmd && trimmedResult.length > 0 && !isStartupBanner && !SAFE_RESPONSE_RE.test(trimmedResult);
+            if (isGarbage) {
+                this.stallCounter++;
+                useBluetoothStore.getState().addLog(`[ResponseInterceptor] Garbage response detected: "${trimmedResult}"`);
+            } else {
+                // Geçerli yanıt → stallCounter & stallSkipCount sıfırla
+                this.stallCounter = 0;
+                this.stallSkipCount = 0;
+            }
        }
 
        // ── ADAPTER_STALL tespiti & warm-start kurtarma ───────────────────

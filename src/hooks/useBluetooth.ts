@@ -265,8 +265,8 @@ export const useBluetooth = () => {
                         } else if (item.isKLine) {
                             // K-Line Bus Quiet Time: ISO 14230 / ISO 9141 requires minimum 300ms idle bus state before init
                             await preciseSleep(300);
-                            // Inject K-Line Init Byte (ATIB10) for motorcycle / legacy ECU baud rate alignment
-                            await OBDCommandQueue.add("ATIB10", 1000).catch(() => {});
+                            // Inject K-Line Init Baud Rate (ATIB 10400) for motorcycle / legacy ECU baud rate alignment
+                            await OBDCommandQueue.add("ATIB10400", 1000).catch(() => {});
                         }
 
                         let initRes = await OBDCommandQueue.add("01 00", item.timeout);

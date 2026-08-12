@@ -46,6 +46,20 @@ class BLEBridge {
       txCharacteristicUuid: '2af0',
       rxCharacteristicUuid: '2af1',
       vendorName: 'Veepeak OBDCheck BLE+'
+    },
+    {
+      // Nordic UART Service (NUS) — OBDLink MX+, vLinker BLE
+      serviceUuid: '6e400001-b5a3-f393-e0a9-e50e24dcca9e',
+      txCharacteristicUuid: '6e400002-b5a3-f393-e0a9-e50e24dcca9e',
+      rxCharacteristicUuid: '6e400003-b5a3-f393-e0a9-e50e24dcca9e',
+      vendorName: 'Nordic UART / OBDLink MX+ BLE'
+    },
+    {
+      // KW903 / Autoscan BLE
+      serviceUuid: '0000ff00-0000-1000-8000-00805f9b34fb',
+      txCharacteristicUuid: '0000ff01-0000-1000-8000-00805f9b34fb',
+      rxCharacteristicUuid: '0000ff02-0000-1000-8000-00805f9b34fb',
+      vendorName: 'Konnwei KW903 / Autoscan BLE'
     }
   ];
 
@@ -55,6 +69,18 @@ class BLEBridge {
       this.instance = new BleManager();
     }
     return this.instance;
+  }
+
+  /**
+   * Safely checks if a BLE peripheral is currently connected.
+   */
+  static async isDeviceConnected(deviceId: string): Promise<boolean> {
+    try {
+      const manager = this.getInstance();
+      return await manager.isDeviceConnected(deviceId);
+    } catch {
+      return false;
+    }
   }
 
   /**

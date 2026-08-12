@@ -47,19 +47,14 @@ describe('CommandClassificationRegistry', () => {
             expect(classifyCommand(cmd)).toBe(CommandClass.SESSION_CONTROL);
         });
 
-        // SOFT_MUTATION commands
-        it('classifies 04 (Clear DTC) as SOFT_MUTATION', () => {
-            expect(classifyCommand('04')).toBe(CommandClass.SOFT_MUTATION);
-        });
-
-        // HARD_MUTATION commands
-        it('classifies 2E0102AABB (Write Data By Identifier) as HARD_MUTATION', () => {
-            expect(classifyCommand('2E0102AABB')).toBe(CommandClass.HARD_MUTATION);
+        // ADAPTER_CONTROL commands
+        it('classifies ATZ (Adapter reset) as ADAPTER_CONTROL', () => {
+            expect(classifyCommand('ATZ')).toBe(CommandClass.ADAPTER_CONTROL);
+            expect(classifyCommand('ATWS')).toBe(CommandClass.ADAPTER_CONTROL);
         });
 
         // DANGEROUS commands
         it.each([
-            ['ATZ', 'Adapter hard reset'],
             ['11', 'ECU Reset'],
             ['1101', 'ECU Reset with sub-function'],
             ['33', 'Adaptation write'],
@@ -70,8 +65,8 @@ describe('CommandClassificationRegistry', () => {
 
         // Case insensitivity
         it('handles case-insensitive input', () => {
-            expect(classifyCommand('atz')).toBe(CommandClass.DANGEROUS);
-            expect(classifyCommand('Atz')).toBe(CommandClass.DANGEROUS);
+            expect(classifyCommand('atz')).toBe(CommandClass.ADAPTER_CONTROL);
+            expect(classifyCommand('Atz')).toBe(CommandClass.ADAPTER_CONTROL);
             expect(classifyCommand('atrv')).toBe(CommandClass.READ_ONLY);
         });
 
@@ -79,13 +74,17 @@ describe('CommandClassificationRegistry', () => {
         it('handles whitespace in commands', () => {
             expect(classifyCommand('01 0C')).toBe(CommandClass.READ_ONLY);
             expect(classifyCommand(' 04 ')).toBe(CommandClass.SOFT_MUTATION);
-            expect(classifyCommand('AT Z')).toBe(CommandClass.DANGEROUS);
+            expect(classifyCommand('AT Z')).toBe(CommandClass.ADAPTER_CONTROL);
         });
     });
 
     describe('requiresProAccess', () => {
         it('returns false for READ_ONLY', () => {
             expect(requiresProAccess(CommandClass.READ_ONLY)).toBe(false);
+        });
+
+        it('returns false for ADAPTER_CONTROL', () => {
+            expect(requiresProAccess(CommandClass.ADAPTER_CONTROL)).toBe(false);
         });
 
         it('returns false for OEM_READ_ONLY', () => {
@@ -116,6 +115,13 @@ describe('CommandClassificationRegistry', () => {
             expect(() => assertHardwareGate('ATRV', false)).not.toThrow();
         });
 
+        it('allows handshake whitelisted commands (ATZ, ATE0, ATSP, 0100) for non-PRO users', () => {
+            expect(() => assertHardwareGate('ATZ', false)).not.toThrow();
+            expect(() => assertHardwareGate('ATE0', false)).not.toThrow();
+            expect(() => assertHardwareGate('ATSP0', false)).not.toThrow();
+            expect(() => assertHardwareGate('0100', false)).not.toThrow();
+        });
+
         it('allows OEM_READ_ONLY commands for non-PRO users', () => {
             expect(() => assertHardwareGate('22F190', false)).not.toThrow();
             expect(() => assertHardwareGate('2101', false)).not.toThrow();
@@ -135,7 +141,6 @@ describe('CommandClassificationRegistry', () => {
         });
 
         it('blocks DANGEROUS commands for non-PRO users with HARDWARE_GATE_VIOLATION', () => {
-            expect(() => assertHardwareGate('ATZ', false)).toThrow('HARDWARE_GATE_VIOLATION');
             expect(() => assertHardwareGate('11', false)).toThrow('HARDWARE_GATE_VIOLATION');
             expect(() => assertHardwareGate('33', false)).toThrow('HARDWARE_GATE_VIOLATION');
         });
@@ -150,7 +155,7 @@ describe('CommandClassificationRegistry', () => {
         // Bypass attempt: trying to inject whitespace or case tricks
         it('prevents bypass via whitespace injection', () => {
             expect(() => assertHardwareGate('  0 4  ', false)).toThrow('HARDWARE_GATE_VIOLATION');
-            expect(() => assertHardwareGate('a t z', false)).toThrow('HARDWARE_GATE_VIOLATION');
+            expect(() => assertHardwareGate(' 1 1 ', false)).toThrow('HARDWARE_GATE_VIOLATION');
         });
 
         it('handles unknown commands correctly based on isMoving context', () => {
@@ -212,7 +217,7 @@ describe('CommandClassificationRegistry', () => {
 
         it('blocks HARD_MUTATION and DANGEROUS commands when battery voltage is below 11.8V', () => {
             expect(() => assertHardwareGate('2E0102', true, false, '11.5V')).toThrow('BATTERY_VOLTAGE_LOW');
-            expect(() => assertHardwareGate('ATZ', true, false, '11.2V')).toThrow('BATTERY_VOLTAGE_LOW');
+            expect(() => assertHardwareGate('1101', true, false, '11.2V')).toThrow('BATTERY_VOLTAGE_LOW');
             expect(() => assertHardwareGate('2E0102', true, false, '12.4V')).not.toThrow();
             expect(() => assertHardwareGate('010C', true, false, '11.0V')).not.toThrow(); // READ_ONLY is allowed even on low voltage
         });

@@ -6,18 +6,62 @@
  * classified before reaching the hardware transport layer.
  * 
  * Classification tiers:
- *   READ_ONLY  — Telemetry reads, DTC reads, VIN/CalID queries, AT commands
- *   MUTATING   — DTC clearing (Mode 04), ECU write operations (Mode 2E)
- *   DANGEROUS  — ECU Reset (Mode 11), Adaptation routines (Mode 22/33), ATZ
+ *   READ_ONLY       — Telemetry reads, DTC reads, VIN/CalID queries, AT queries
+ *   ADAPTER_CONTROL — Adapter reset/config commands (ATZ, ATWS, ATE0, ATSP, etc.)
+ *   MUTATING        — DTC clearing (Mode 04), ECU write operations (Mode 2E)
+ *   DANGEROUS       — ECU Reset (Mode 11), Adaptation routines (Mode 33)
  */
 
 export enum CommandClass {
     READ_ONLY = 'READ_ONLY',
     OEM_READ_ONLY = 'OEM_READ_ONLY',
+    ADAPTER_CONTROL = 'ADAPTER_CONTROL',
     SESSION_CONTROL = 'SESSION_CONTROL',
     SOFT_MUTATION = 'SOFT_MUTATION',
     HARD_MUTATION = 'HARD_MUTATION',
     DANGEROUS = 'DANGEROUS',
+}
+
+/**
+ * Handshake Whitelist — commands that must NEVER be blocked by PRO gate.
+ * These are adapter-only reset/config commands and initial ECU probes
+ * required to establish any OBD2 connection. None of these write to
+ * or modify the vehicle ECU.
+ * 
+ * Global best practice: ATZ→ATE0→ATL0→ATH1→ATS0→ATSTFF→ATSP0→0100
+ * Reference: ELM327 datasheet, python-OBD, Car Scanner, Infocar
+ */
+const HANDSHAKE_WHITELIST = new Set([
+    // Adapter reset & warm start
+    'ATZ', 'ATWS',
+    // Echo, linefeed, spaces, headers
+    'ATE0', 'ATE1', 'ATL0', 'ATL1', 'ATH0', 'ATH1', 'ATS0', 'ATS1',
+    // Timing & adaptive timing
+    'ATSTFF', 'ATST32', 'ATAT0', 'ATAT1', 'ATAT2',
+    // Protocol selection (all variants)
+    'ATSP0', 'ATSP1', 'ATSP2', 'ATSP3', 'ATSP4', 'ATSP5',
+    'ATSP6', 'ATSP7', 'ATSP8', 'ATSP9', 'ATSPA', 'ATSPB', 'ATSPC',
+    // Protocol query & cancel
+    'ATDP', 'ATDPN', 'ATPC',
+    // Adapter info & voltage
+    'ATI', 'ATRV', 'ATCV', 'AT@1',
+    // CAN header & flow control
+    'ATSH7E0', 'ATSH7DF', 'ATCRA', 'ATCFC0', 'ATCFC1',
+    // K-Line / ISO init helpers
+    'ATBI', 'ATSI',
+    // Initial ECU probes (read-only, never modify vehicle)
+    '0100', '0902',
+]);
+
+/**
+ * Returns true if the normalized command matches the handshake whitelist.
+ * Supports both exact matches and prefix matches for parameterized commands.
+ */
+function isHandshakeWhitelisted(normalizedCmd: string): boolean {
+    if (HANDSHAKE_WHITELIST.has(normalizedCmd)) return true;
+    // Prefix matches for parameterized AT commands (ATSH*, ATSP*, ATST*, ATIB*, ATIIA*, ATCRA*)
+    const HANDSHAKE_PREFIXES = ['ATSH', 'ATSP', 'ATST', 'ATIB', 'ATIIA', 'ATCRA', 'ATFC'];
+    return HANDSHAKE_PREFIXES.some(prefix => normalizedCmd.startsWith(prefix));
 }
 
 /**
@@ -31,8 +75,9 @@ export function normalizeCommand(raw: string): string {
  * Classifies a raw OBD command into its security tier.
  * 
  * Classification rules (evaluated in order of specificity):
+ *   ADAPTER_CONTROL:
+ *     - ATZ, ATWS (Adapter reset — does NOT touch vehicle ECU)
  *   DANGEROUS:
- *     - ATZ (Adapter hard reset)
  *     - Mode 11 (ECU Reset)
  *     - Mode 33 (Adaptation write / routine control)
  *     - Commands containing security access patterns (1002, 300000)
@@ -52,29 +97,31 @@ export function normalizeCommand(raw: string): string {
 export function classifyCommand(rawCmd: string, isMoving: boolean = false): CommandClass {
     const cmd = normalizeCommand(rawCmd);
 
-    // 1. DANGEROUS checks (highest priority)
-    if (cmd === 'ATZ') return CommandClass.DANGEROUS;
+    // 1. ADAPTER_CONTROL — ATZ/ATWS are adapter resets, not ECU commands
+    if (cmd === 'ATZ' || cmd === 'ATWS') return CommandClass.ADAPTER_CONTROL;
+
+    // 2. DANGEROUS checks (ECU-level dangerous operations)
     if (cmd.startsWith('11')) return CommandClass.DANGEROUS;
     if (cmd.startsWith('33')) return CommandClass.DANGEROUS;
     if (cmd.includes('1002')) return CommandClass.DANGEROUS;
     if (cmd === '300000') return CommandClass.READ_ONLY; // ISO-TP Flow Control frame
     if (cmd.includes('300000')) return CommandClass.DANGEROUS;
 
-    // 2. HARD_MUTATION checks
+    // 3. HARD_MUTATION checks
     if (cmd.startsWith('2E')) return CommandClass.HARD_MUTATION;
 
-    // 3. SOFT_MUTATION checks
+    // 4. SOFT_MUTATION checks
     if (cmd === '04') return CommandClass.SOFT_MUTATION;
 
-    // 4. SESSION_CONTROL checks
+    // 5. SESSION_CONTROL checks
     if (cmd.startsWith('10')) return CommandClass.SESSION_CONTROL;
     if (cmd.startsWith('27')) return CommandClass.SESSION_CONTROL;
 
-    // 5. OEM_READ_ONLY checks (prevent false positive hardware violations for reading manufacturer parameters)
+    // 6. OEM_READ_ONLY checks (prevent false positive hardware violations for reading manufacturer parameters)
     if (cmd.startsWith('22')) return CommandClass.OEM_READ_ONLY;
     if (cmd.startsWith('21')) return CommandClass.OEM_READ_ONLY;
 
-    // 6. Whitelist of safe commands when moving
+    // 7. Whitelist of safe commands when moving
     const isStandardSafe = 
         cmd.startsWith('01') || 
         cmd.startsWith('02') || 
@@ -82,13 +129,13 @@ export function classifyCommand(rawCmd: string, isMoving: boolean = false): Comm
         cmd.startsWith('07') || 
         cmd.startsWith('09') || 
         cmd.startsWith('0A') ||
-        (cmd.startsWith('AT') && cmd !== 'ATZ');
+        cmd.startsWith('AT');
 
     if (isStandardSafe) {
         return CommandClass.READ_ONLY;
     }
 
-    // 7. Context-Aware Fallback
+    // 8. Context-Aware Fallback
     if (isMoving) {
         // If vehicle is in motion, any unknown command is treated as DANGEROUS to protect passenger safety!
         return CommandClass.DANGEROUS;
@@ -100,6 +147,7 @@ export function classifyCommand(rawCmd: string, isMoving: boolean = false): Comm
 
 /**
  * Returns true if the given command class requires PRO access.
+ * ADAPTER_CONTROL is explicitly excluded — adapter reset/config must always work.
  */
 export function requiresProAccess(cls: CommandClass): boolean {
     return (
@@ -113,10 +161,19 @@ export function requiresProAccess(cls: CommandClass): boolean {
  * Hardware gate assertion. Throws HARDWARE_GATE_VIOLATION if the command
  * requires PRO access and the user is not PRO.
  * 
+ * Handshake Whitelist: Commands in HANDSHAKE_WHITELIST always pass through
+ * regardless of PRO status. This ensures adapter initialization and basic
+ * ECU probing (0100, 0902) are never blocked.
+ * 
  * This is the Layer 3 (hardware) security gate — the last line of defense
  * before bytes hit the OBD transport wire.
  */
 export function assertHardwareGate(rawCmd: string, isPro: boolean, isMoving: boolean = false, customVoltageStr?: string): void {
+    const normalizedCmd = normalizeCommand(rawCmd);
+
+    // Handshake whitelist bypass — these commands must ALWAYS work for connection
+    if (isHandshakeWhitelisted(normalizedCmd)) return;
+
     const cls = classifyCommand(rawCmd, isMoving);
     if (requiresProAccess(cls) && !isPro) {
         throw new Error('HARDWARE_GATE_VIOLATION');

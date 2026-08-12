@@ -188,10 +188,14 @@ class BluetoothServiceIOS implements IBluetoothService {
                     lastUpdateMap.set(device.id, now);
 
                     const name = device.name || device.localName || '';
-                    // Keskin Nişancı Filtresi (Regex Daraltması)
-                    const hasValidName = /(OBD|ELM|VLINKER|MONOFE|CARLY|BIMMER)/i.test(name);
+                    const OBD_NAME_REGEX = /(OBD|ELM|V-?LINK(?:ER)?|VEEPEAK|VIECAR|VGATE|KONNWEI|I-?CAR|OBDLINK|PANLONG|ZAKVOOP|LELINK|NEXAS|THINKCAR|KW\d+|MONOFE|CARLY|BIMMER|WIFI327|AUTOSCAN|LAUNCH|MAXIS|OBDII|HC-0[56]|JDY-|BT0[45]|UniCarScan)/i;
+                    const OBD_UUID_SET = [
+                        'ffe0', 'fff0', '18f0', 'e7810a71', '6e400001', 'ff00'
+                    ];
+
+                    const hasValidName = OBD_NAME_REGEX.test(name);
                     const hasValidUUID = device.serviceUUIDs?.some(uuid => 
-                        uuid.toLowerCase().includes('ffe0') || uuid.toLowerCase().includes('fff0')
+                        OBD_UUID_SET.some(u => uuid.toLowerCase().includes(u))
                     );
 
                     if (hasValidName || hasValidUUID) {
@@ -245,8 +249,10 @@ class BluetoothServiceIOS implements IBluetoothService {
             const TARGET_OBD2_SERVICES = [
                 '0000ffe0-0000-1000-8000-00805f9b34fb', // FFE0 (Carista, Vgate, generic ELM327)
                 '0000fff0-0000-1000-8000-00805f9b34fb', // FFF0 (standard OBD2 BLE)
-                '000018f0-0000-1000-8000-00805f9b34fb', // LELink
-                'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // vLinker
+                '000018f0-0000-1000-8000-00805f9b34fb', // LELink / Veepeak
+                'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // vLinker / STN2120 / OBDLink
+                '6e400001-b5a3-f393-e0a9-e50e24dcca9e', // Nordic UART Service (NUS)
+                '0000ff00-0000-1000-8000-00805f9b34fb', // KW903 / Autoscan
             ];
 
             // 1. First pass: strict targeting of custom OBD2 service UUIDs
