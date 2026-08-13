@@ -494,7 +494,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           <View style={styles.wifiIpRow}>
             <View style={{ flex: 3, marginRight: ms(8) }}>
               <Text style={[styles.wifiInputLabel, { color: colors.textSec, fontSize: fs(10) }]}>
-                {t('connection.wifiIpLabel')}
+                {t('connection.wifiIpLabel', { defaultValue: 'Wi-Fi IP Adresi' })}
               </Text>
               <TextInput
                 value={wifiIp}
@@ -509,7 +509,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             </View>
             <View style={{ flex: 2 }}>
               <Text style={[styles.wifiInputLabel, { color: colors.textSec, fontSize: fs(10) }]}>
-                {t('connection.wifiPortLabel')}
+                {t('connection.wifiPortLabel', { defaultValue: 'Wi-Fi Port' })}
               </Text>
               <TextInput
                 value={wifiPort}
