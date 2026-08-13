@@ -435,7 +435,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
       )}
 
       {/* Step 3A: Bluetooth Device Scan & Radar View */}
-      {selectedType === 'BLUETOOTH' && selectedCategory && status === 'disconnected' && (
+      {selectedType === 'BLUETOOTH' && selectedCategory && (status === 'disconnected' || status === 'scanning') && (
         <View style={styles.btBlock}>
           <View style={styles.sectionHeader}>
             <TouchableOpacity onPress={() => setSelectedCategory(null)}>
@@ -551,7 +551,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
       )}
 
       {/* Step 3B: Wi-Fi Selection view */}
-      {selectedType === 'WIFI' && selectedCategory && status === 'disconnected' && (
+      {selectedType === 'WIFI' && selectedCategory && (status === 'disconnected' || status === 'scanning') && (
         <View style={styles.wifiBlock}>
           <TouchableOpacity onPress={() => setSelectedCategory(null)} style={{ marginBottom: vs(12) }}>
             <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
