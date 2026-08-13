@@ -66,6 +66,16 @@ interface BluetoothState {
     adblueLevel: number | null;
     egtTemp: number | null;
     noxSensor: number | null;
+    
+    // Category-Specific Sensors (Truck / Motorcycle / Passenger)
+    vehicleCategory: 'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK';
+    selectedCategoryByUser: 'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK' | null;
+    airBrakePressureBar1: number | null;
+    airBrakePressureBar2: number | null;
+    defLevelPercent: number | null;
+    engineHoursTotal: number | null;
+    motorcycleGearCalculated: number | null;
+    leanAngleDeg: number | null;
 
     dtcs: DiagnosticDtcArray;
     vin: string | null;
@@ -153,6 +163,8 @@ interface BluetoothState {
     resetRecoveryAttempts: () => void;
     incrementRecoveryAttempts: () => void;
     updateTelemetryStats: (stats: Partial<TelemetryStats>) => void;
+    setVehicleCategory: (category: 'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK') => void;
+    setSelectedCategoryByUser: (category: 'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK' | null) => void;
     reset: () => void;
 }
 
@@ -196,6 +208,16 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     adblueLevel: null,
     egtTemp: null,
     noxSensor: null,
+
+    vehicleCategory: 'PASSENGER_CAR',
+    selectedCategoryByUser: null,
+    airBrakePressureBar1: null,
+    airBrakePressureBar2: null,
+    defLevelPercent: null,
+    engineHoursTotal: null,
+    motorcycleGearCalculated: null,
+    leanAngleDeg: null,
+
     dtcs: createInitialDtcs(),
     vin: null,
     ecuId: null,
@@ -333,6 +355,8 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     setIsSgwActive: (isSgwActive) => set({ isSgwActive }),
     setIsAtomicOperationRunning: (isAtomicOperationRunning) => set({ isAtomicOperationRunning }),
     setPendingProRevocation: (pendingProRevocation) => set({ pendingProRevocation }),
+    setVehicleCategory: (vehicleCategory) => set({ vehicleCategory }),
+    setSelectedCategoryByUser: (selectedCategoryByUser) => set({ selectedCategoryByUser }),
     setSuggestedBrandFromVin: (suggestedBrandFromVin) => set({ suggestedBrandFromVin }),
     setSuggestedVehicleProfile: (suggestedVehicleProfile) => set({ suggestedVehicleProfile }),
     flushPendingRevocation: () => set({ pendingProRevocation: false }),

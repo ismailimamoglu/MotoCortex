@@ -24,6 +24,7 @@ import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { triggerHaptic } from '../utils/haptics';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import { RadarScannerView } from '../components/RadarScannerView';
 
 interface ConnectionFlowScreenProps {
   onBack: () => void;
@@ -394,13 +395,20 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             </TouchableOpacity>
           </View>
 
-          {(isScanning || scannedDevices.length === 0) && (
+          {isScanning && (
+            <RadarScannerView
+              statusText={t('connection.scanningDevices', { defaultValue: 'OBD2 Cihazları Taranıyor...' })}
+              onCancel={() => {
+                triggerHaptic();
+                setIsScanning(false);
+              }}
+            />
+          )}
+
+          {!isScanning && sortedDevices.length === 0 && (
             <View style={[styles.radarContainer, { backgroundColor: `${colors.cyan}0F`, borderColor: colors.border, borderWidth: 1, borderRadius: 12, padding: ms(16), marginVertical: vs(10), alignItems: 'center' }]}>
-              <ActivityIndicator size="large" color={colors.cyan} style={{ marginBottom: vs(8) }} />
               <Text style={[styles.radarLabel, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '600', marginTop: vs(6) }]}>
-                {isScanning 
-                  ? t('connection.scanningDevices') 
-                  : t('connection.scanningAdapter')}
+                {t('connection.scanHint', { defaultValue: 'Eşleştirilmiş OBD cihazlarını bulmak için Cihaz Tara butonuna basın.' })}
               </Text>
               <Text style={[{ color: colors.textSec, fontSize: fs(11), textAlign: 'center', marginTop: vs(4) }]}>
                 {Platform.OS === 'ios'
@@ -595,6 +603,30 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               {t(connectionStatusTextKey)}
             </Text>
           )}
+
+          <TouchableOpacity
+            style={{
+              marginTop: vs(16),
+              paddingVertical: vs(10),
+              backgroundColor: '#FEF2F2',
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: '#FCA5A5',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              triggerHaptic();
+              disconnect();
+              useBluetoothStore.getState().setSensorData({ status: 'disconnected', adapterStatus: 'disconnected' });
+              setSelectedType(null);
+            }}
+            activeOpacity={0.8}
+            testID="cancel-handshake-button"
+          >
+            <Text style={{ color: '#DC2626', fontSize: fs(12), fontWeight: '700' }}>
+              {t('connection.cancelConnection', { defaultValue: 'BAĞLANTIYI İPTAL ET' })}
+            </Text>
+          </TouchableOpacity>
           </View>
         </View>
       )}

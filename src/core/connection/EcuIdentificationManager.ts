@@ -3,6 +3,7 @@
 
 import OBDCommandQueue from '../../api/OBDCommandQueue';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
+import { CategoryAutoCorrectionEngine } from './CategoryAutoCorrectionEngine';
 
 export interface EcuIdentificationRecord {
     vin?: string;
@@ -23,29 +24,36 @@ export class EcuIdentificationManager {
         const store = useBluetoothStore.getState();
         store.addLog('ECU_ID: Querying VIN via Mode 09 PID 02...');
 
+        let discoveredVin: string | null = null;
+
         try {
             const raw = await OBDCommandQueue.add('09 02', 3000);
             const vin = this.parseVinHex(raw);
             if (vin && vin.length === 17) {
                 store.addLog(`ECU_ID: Discovered VIN = ${vin}`);
-                return vin;
+                discoveredVin = vin;
             }
         } catch (e) {
             store.addLog(`ECU_ID: Mode 09 PID 02 failed, attempting UDS 22 F190 fallback...`);
         }
 
-        try {
-            const rawUds = await OBDCommandQueue.add('22 F1 90', 3000);
-            const vin = this.parseVinHex(rawUds);
-            if (vin && vin.length === 17) {
-                store.addLog(`ECU_ID: UDS Discovered VIN = ${vin}`);
-                return vin;
+        if (!discoveredVin) {
+            try {
+                const rawUds = await OBDCommandQueue.add('22 F1 90', 3000);
+                const vin = this.parseVinHex(rawUds);
+                if (vin && vin.length === 17) {
+                    store.addLog(`ECU_ID: UDS Discovered VIN = ${vin}`);
+                    discoveredVin = vin;
+                }
+            } catch (udsErr) {
+                store.addLog(`ECU_ID: VIN query unavailable.`);
             }
-        } catch (udsErr) {
-            store.addLog(`ECU_ID: VIN query unavailable.`);
         }
 
-        return null;
+        // Trigger autonomous category validation and auto-correction
+        CategoryAutoCorrectionEngine.evaluateAndCorrect(discoveredVin);
+
+        return discoveredVin;
     }
 
     /**
