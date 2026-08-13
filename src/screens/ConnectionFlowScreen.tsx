@@ -70,11 +70,14 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
 
   const radarScale = useRef(new Animated.Value(1)).current;
 
-  // Reset stale error status on screen mount so connection screen always opens with clean scan view
+  // Reset stale error/scan status on screen mount so connection screen always opens cleanly
   useEffect(() => {
     const currentStatus = useBluetoothStore.getState().status;
-    if (currentStatus === 'error') {
+    if (currentStatus !== 'connecting' && currentStatus !== 'connected') {
       useBluetoothStore.getState().setSensorData({ status: 'disconnected', adapterStatus: 'disconnected', error: null });
+      setSelectedType(null);
+      setSelectedCategory(null);
+      setIsScanning(false);
     }
   }, []);
 
@@ -475,6 +478,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               onCancel={() => {
                 triggerHaptic();
                 setIsScanning(false);
+                useBluetoothStore.getState().setSensorData({ status: 'disconnected', adapterStatus: 'disconnected', error: null });
               }}
             />
           )}
