@@ -67,6 +67,14 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
 
   const radarScale = useRef(new Animated.Value(1)).current;
 
+  // Reset stale error status on screen mount so connection screen always opens with clean scan view
+  useEffect(() => {
+    const currentStatus = useBluetoothStore.getState().status;
+    if (currentStatus === 'error') {
+      useBluetoothStore.getState().setSensorData({ status: 'disconnected', adapterStatus: 'disconnected', error: null });
+    }
+  }, []);
+
   // Radar scanning animation
   useEffect(() => {
     if (isScanning) {
@@ -674,7 +682,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             }}
           >
             <Text style={[styles.retryBtnText, { fontSize: fs(12.5), fontFamily: colors.mono }]}>
-              🎮 {t('common.demoMode').toUpperCase()}
+              {t('common.demoMode').toUpperCase()}
             </Text>
           </TouchableOpacity>
         </View>
