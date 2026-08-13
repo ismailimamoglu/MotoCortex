@@ -18,28 +18,38 @@ export const HeavyDutyTruckDashboard: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerBadge}>
-        <Text style={styles.headerTitle}>COMMERCIAL HEAVY-DUTY TELEMETRY (SAE J1939)</Text>
+        <Text style={styles.headerTitle}>
+          {t('categoryDashboards.heavyDutyTitle', { defaultValue: 'COMMERCIAL HEAVY-DUTY TELEMETRY (SAE J1939)' })}
+        </Text>
       </View>
 
       <View style={styles.mainRow}>
         <View style={styles.mainCard}>
-          <Text style={styles.cardLabel}>ENGINE SPEED</Text>
+          <Text style={styles.cardLabel}>
+            {t('categoryDashboards.engineSpeed', { defaultValue: 'ENGINE SPEED' })}
+          </Text>
           <Text style={styles.cardValue}>{rpm} <Text style={styles.unitText}>RPM</Text></Text>
         </View>
 
         <View style={styles.mainCard}>
-          <Text style={styles.cardLabel}>VEHICLE SPEED</Text>
+          <Text style={styles.cardLabel}>
+            {t('categoryDashboards.vehicleSpeed', { defaultValue: 'VEHICLE SPEED' })}
+          </Text>
           <Text style={styles.cardValue}>{speed} <Text style={styles.unitText}>KM/H</Text></Text>
         </View>
       </View>
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>PNEUMATIC AIR BRAKE SYSTEMS</Text>
+        <Text style={styles.sectionTitle}>
+          {t('categoryDashboards.pneumaticAirBrake', { defaultValue: 'PNEUMATIC AIR BRAKE SYSTEMS' })}
+        </Text>
       </View>
 
       <View style={styles.brakeGrid}>
         <View style={styles.brakeCard}>
-          <Text style={styles.brakeLabel}>AIR BRAKE CIRCUIT 1</Text>
+          <Text style={styles.brakeLabel}>
+            {t('categoryDashboards.airBrake1', { defaultValue: 'AIR BRAKE CIRCUIT 1' })}
+          </Text>
           <Text style={styles.brakeValue}>{airBrake1} BAR</Text>
           <View style={styles.statusBarBg}>
             <View style={[styles.statusBarFill, { width: `${Math.min(100, (airBrake1 / 12) * 100)}%` }]} />
@@ -47,7 +57,9 @@ export const HeavyDutyTruckDashboard: React.FC = () => {
         </View>
 
         <View style={styles.brakeCard}>
-          <Text style={styles.brakeLabel}>AIR BRAKE CIRCUIT 2</Text>
+          <Text style={styles.brakeLabel}>
+            {t('categoryDashboards.airBrake2', { defaultValue: 'AIR BRAKE CIRCUIT 2' })}
+          </Text>
           <Text style={styles.brakeValue}>{airBrake2} BAR</Text>
           <View style={styles.statusBarBg}>
             <View style={[styles.statusBarFill, { width: `${Math.min(100, (airBrake2 / 12) * 100)}%` }]} />
@@ -57,12 +69,16 @@ export const HeavyDutyTruckDashboard: React.FC = () => {
 
       <View style={styles.auxGrid}>
         <View style={styles.auxCard}>
-          <Text style={styles.auxLabel}>ADBLUE / DEF LEVEL</Text>
+          <Text style={styles.auxLabel}>
+            {t('categoryDashboards.adBlueDefLevel', { defaultValue: 'ADBLUE / DEF LEVEL' })}
+          </Text>
           <Text style={styles.auxValue}>{defLevel}%</Text>
         </View>
 
         <View style={styles.auxCard}>
-          <Text style={styles.auxLabel}>ENGINE OPERATING HOURS</Text>
+          <Text style={styles.auxLabel}>
+            {t('categoryDashboards.engineOperatingHours', { defaultValue: 'ENGINE OPERATING HOURS' })}
+          </Text>
           <Text style={styles.auxValue}>{engineHours} HR</Text>
         </View>
       </View>

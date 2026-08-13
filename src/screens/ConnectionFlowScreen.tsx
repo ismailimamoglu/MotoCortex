@@ -399,7 +399,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               {t('connection.passengerCar', { defaultValue: 'Otomobil' }).toUpperCase()}
             </Text>
             <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11), marginTop: vs(2) }]}>
-              12V Binek & Hafif Ticari Araçlar (OBD2 / CAN / KWP)
+              {t('connection.passengerCarDesc', { defaultValue: '12V Binek & Hafif Ticari Araçlar (OBD2 / CAN / KWP)' })}
             </Text>
           </TouchableOpacity>
 
@@ -415,7 +415,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               {t('connection.motorcycle', { defaultValue: 'Motosiklet' }).toUpperCase()}
             </Text>
             <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11), marginTop: vs(2) }]}>
-              Euro 5 & High-RPM Motosiklet Telemetrisi
+              {t('connection.motorcycleDesc', { defaultValue: 'Euro 5 & High-RPM Motosiklet Telemetrisi' })}
             </Text>
           </TouchableOpacity>
 
@@ -431,7 +431,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
               {t('connection.heavyDutyTruck', { defaultValue: 'Kamyon & Ağır Ticari' }).toUpperCase()}
             </Text>
             <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11), marginTop: vs(2) }]}>
-              24V Ağır Ticari Araçlar & Otobüs (SAE J1939)
+              {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs (SAE J1939)' })}
             </Text>
           </TouchableOpacity>
         </View>

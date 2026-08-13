@@ -20,7 +20,9 @@ export const MotorcycleDashboard: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerBadge}>
-        <Text style={styles.headerTitle}>MOTORCYCLE TELEMETRY COCKPIT</Text>
+        <Text style={styles.headerTitle}>
+          {t('categoryDashboards.motorcycleTitle', { defaultValue: 'MOTORCYCLE TELEMETRY COCKPIT' })}
+        </Text>
       </View>
 
       <View style={styles.gaugeRow}>
@@ -34,7 +36,9 @@ export const MotorcycleDashboard: React.FC = () => {
         </View>
 
         <View style={styles.centerStatBox}>
-          <Text style={styles.gearLabel}>GEAR</Text>
+          <Text style={styles.gearLabel}>
+            {t('categoryDashboards.gear', { defaultValue: 'GEAR' })}
+          </Text>
           <Text style={styles.gearValue}>{gear}</Text>
           <Text style={styles.speedValue}>{speed} <Text style={styles.unitText}>KM/H</Text></Text>
         </View>
