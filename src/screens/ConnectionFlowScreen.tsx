@@ -374,7 +374,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
           {Platform.OS === 'ios' && (
             <View style={[styles.warningBanner, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan, marginVertical: vs(8) }]}>
               <Text style={[styles.warningText, { color: colors.cyan, fontSize: fs(11) }]}>
-                {t('connection.iosClassicWarning')}
+                {t('connection.iosClassicWarning', { defaultValue: 'Not: iOS cihazlar sadece BLE (Bluetooth Low Energy) destekli OBD2 adaptörleriyle çalışır. Standart (Classic) adaptörler taranamaz.' })}
               </Text>
             </View>
           )}

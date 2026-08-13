@@ -263,7 +263,7 @@
         "permissionDesc": "Bluetooth permission denied. Please grant permission in settings.",
         "safeModeActive": "SAFE MODE ACTIVE: Clone/low quality adapter detected.",
         "iosBtManual": "Please open the Control Center or Settings and turn on Bluetooth. iOS restricts automatic Bluetooth toggling.",
-        "iosBleOnly": "Note: iOS devices only support BLE (Bluetooth Low Energy) adapters. Classic Bluetooth OBD2 adapters will not appear here.",
+        "iosBleOnly": "Note: iOS devices only support BLE (Bluetooth Low Energy) OBD2 adapters. Classic Bluetooth adapters cannot be scanned.",
         "androidClassicHint": "Note: Classic Bluetooth OBD2 adapters must be paired in your Android Bluetooth system settings first, otherwise they may not appear in the scan list.",
         "deviceNotPairedTitle": "Device Not Paired",
         "deviceNotPairedDesc": "Classic Bluetooth OBD2 adapters must be paired in your phone settings first. You are being redirected to settings.",
@@ -331,7 +331,8 @@
         "stepHandshake": "ECU Communication Verification",
         "stepStabilization": "Active Telemetry Loop Stabilization",
         "scanningAdapter": "🔄 Scanning Adapter (Awaiting Response)...",
-        "scanningDevices": "🔍 Scanning OBD2 Bluetooth Devices..."
+        "scanningDevices": "🔍 Scanning OBD2 Bluetooth Devices...",
+        "iosClassicWarning": "Note: iOS devices only support BLE (Bluetooth Low Energy) OBD2 adapters. Classic Bluetooth adapters cannot be scanned."
     },
     "health": {
         "titleMenu": "OBD2 ADAPTER CAPABILITIES & MATRIX",
