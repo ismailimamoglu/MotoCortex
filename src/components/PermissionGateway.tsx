@@ -300,7 +300,7 @@ export default function PermissionGateway({ children }: PermissionGatewayProps) 
       <View style={sDyn.container}>
         {/* Header */}
         <View style={sDyn.header}>
-          <Text style={[sDyn.title, { color: colors.cyan }]}>{t('common.brandName')}</Text>
+          <Text style={[sDyn.title, { color: colors.cyan }]}>{t('common.brandName', { defaultValue: 'CORTEX OBD2' })}</Text>
           <Text style={[sDyn.subtitle, { color: colors.textSec }]}>
             {step === 'language' 
               ? t('permissions.langSelectSub').toUpperCase()
