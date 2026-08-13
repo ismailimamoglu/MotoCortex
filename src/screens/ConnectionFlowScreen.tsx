@@ -36,7 +36,10 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
   const colors = useThemeColors();
   const { fs, ms, vs } = useResponsive();
 
-  const [selectedType, setSelectedType] = useState<'BLUETOOTH' | 'WIFI' | null>('BLUETOOTH');
+  const [selectedType, setSelectedType] = useState<'BLUETOOTH' | 'WIFI' | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK' | null>(
+    useBluetoothStore.getState().selectedCategoryByUser
+  );
   const [wifiIp, setWifiIp] = useState('192.168.0.10');
   const [wifiPort, setWifiPort] = useState('35000');
   const [scannedDevices, setScannedDevices] = useState<any[]>([]);
@@ -368,13 +371,76 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         </View>
       )}
 
-      {/* Bluetooth Selection view */}
-      {selectedType === 'BLUETOOTH' && status === 'disconnected' && (
+      {/* Step 2: Vehicle Category Selection (Passenger Car / Motorcycle / Heavy Duty Truck) */}
+      {status === 'disconnected' && selectedType && !selectedCategory && (
+        <View style={{ width: '100%', marginVertical: vs(8) }}>
+          <TouchableOpacity onPress={() => setSelectedType(null)} style={{ marginBottom: vs(12) }}>
+            <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
+              ← {t('connection.changeType', { defaultValue: 'Bağlantı Türünü Değiştir' })}
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={{ color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '700', marginBottom: vs(10), letterSpacing: 0.5 }}>
+            {t('connection.selectCategory', { defaultValue: 'ARAÇ KATEGORİSİ SEÇİN' })}
+          </Text>
+
+          <TouchableOpacity
+            style={[styles.cardBtn, { backgroundColor: colors.card, borderColor: colors.border, marginBottom: vs(10), flexDirection: 'column', alignItems: 'flex-start' }]}
+            onPress={() => {
+              triggerHaptic();
+              useBluetoothStore.getState().setSelectedCategoryByUser('PASSENGER_CAR');
+              setSelectedCategory('PASSENGER_CAR');
+            }}
+          >
+            <Text style={[styles.cardTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+              {t('connection.passengerCar', { defaultValue: 'Otomobil' }).toUpperCase()}
+            </Text>
+            <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11), marginTop: vs(2) }]}>
+              12V Binek & Hafif Ticari Araçlar (OBD2 / CAN / KWP)
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.cardBtn, { backgroundColor: colors.card, borderColor: colors.border, marginBottom: vs(10), flexDirection: 'column', alignItems: 'flex-start' }]}
+            onPress={() => {
+              triggerHaptic();
+              useBluetoothStore.getState().setSelectedCategoryByUser('MOTORCYCLE');
+              setSelectedCategory('MOTORCYCLE');
+            }}
+          >
+            <Text style={[styles.cardTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+              {t('connection.motorcycle', { defaultValue: 'Motosiklet' }).toUpperCase()}
+            </Text>
+            <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11), marginTop: vs(2) }]}>
+              Euro 5 & High-RPM Motosiklet Telemetrisi
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.cardBtn, { backgroundColor: colors.card, borderColor: colors.border, marginBottom: vs(10), flexDirection: 'column', alignItems: 'flex-start' }]}
+            onPress={() => {
+              triggerHaptic();
+              useBluetoothStore.getState().setSelectedCategoryByUser('HEAVY_DUTY_TRUCK');
+              setSelectedCategory('HEAVY_DUTY_TRUCK');
+            }}
+          >
+            <Text style={[styles.cardTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+              {t('connection.heavyDutyTruck', { defaultValue: 'Kamyon & Ağır Ticari' }).toUpperCase()}
+            </Text>
+            <Text style={[styles.cardDesc, { color: colors.textSec, fontSize: fs(11), marginTop: vs(2) }]}>
+              24V Ağır Ticari Araçlar & Otobüs (SAE J1939)
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Step 3A: Bluetooth Device Scan & Radar View */}
+      {selectedType === 'BLUETOOTH' && selectedCategory && status === 'disconnected' && (
         <View style={styles.btBlock}>
           <View style={styles.sectionHeader}>
-            <TouchableOpacity onPress={() => setSelectedType(null)}>
+            <TouchableOpacity onPress={() => setSelectedCategory(null)}>
               <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-                ← {t('common.changeType')}
+                ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
               </Text>
             </TouchableOpacity>
           </View>
@@ -484,12 +550,12 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         </View>
       )}
 
-      {/* Wi-Fi Selection view */}
-      {selectedType === 'WIFI' && status === 'disconnected' && (
+      {/* Step 3B: Wi-Fi Selection view */}
+      {selectedType === 'WIFI' && selectedCategory && status === 'disconnected' && (
         <View style={styles.wifiBlock}>
-          <TouchableOpacity onPress={() => setSelectedType(null)} style={{ marginBottom: vs(12) }}>
+          <TouchableOpacity onPress={() => setSelectedCategory(null)} style={{ marginBottom: vs(12) }}>
             <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-              ← {t('common.changeType')}
+              ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
             </Text>
           </TouchableOpacity>
 
