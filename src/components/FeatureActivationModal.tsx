@@ -208,7 +208,7 @@ const FeatureActivationModalComponent = ({
 
     if (!isUserPro && !isFreeEligible && !inSim) {
       Alert.alert(
-        '💎 ' + t('features.freeTrialExhaustedTitle', { defaultValue: 'Ücretsiz Kodlama Hakkı Kullanıldı' }),
+        t('features.freeTrialExhaustedTitle', { defaultValue: 'Ücretsiz Kodlama Hakkı Kullanıldı' }),
         t('features.freeTrialExhaustedMsg', { defaultValue: '1 adet ücretsiz gizli özellik açma hakkınızı kullandınız. Bu ve diğer tüm özellikleri sınırsız açmak, uzman kodlama ve servis sıfırlama için PRO sürüme geçin!' }),
         [
           { text: t('common.cancel', { defaultValue: 'Vazgeç' }), style: 'cancel' },
@@ -298,7 +298,7 @@ const FeatureActivationModalComponent = ({
       if (isConsumingNewCredit) {
         useAppStore.getState().useFreeFeatureCredit(feature.id);
         Alert.alert(
-          '🎉 ' + t('features.freeTrialSuccessTitle', { defaultValue: 'Tebrikler! Özellik Aktifleştirildi' }),
+          t('features.freeTrialSuccessTitle', { defaultValue: 'Tebrikler! Özellik Aktifleştirildi' }),
           t('features.freeTrialSuccessMsg', { defaultValue: '1 adet ücretsiz deneme hakkınızla bu özellik aracınıza başarıyla kodlandı! Diğer tüm özellikleri sınırsız açmak için dilediğiniz zaman PRO sürüme geçebilirsiniz.' }),
           [{ text: t('common.gotIt', { defaultValue: 'Harika' }) }]
         );
@@ -685,13 +685,13 @@ const FeatureActivationModalComponent = ({
    ) : (freeFeatureCredits ?? 1) > 0 ? (
      <View style={{ backgroundColor: `${colors.cyan}22`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: `${colors.cyan}60` }}>
        <Text style={{ color: colors.cyan, fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
-         {t('features.freeTrialAvailableBadge', { defaultValue: '🎁 1 ÜCRETSİZ HAK' })}
+         {t('features.freeTrialAvailableBadge', { defaultValue: '1 ÜCRETSİZ HAK' })}
        </Text>
      </View>
    ) : (
      <View style={{ backgroundColor: `${colors.purple || '#9c27b0'}22`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: `${colors.purple || '#9c27b0'}60` }}>
        <Text style={{ color: colors.purple || '#ab47bc', fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
-         {t('features.proRequiredBadge', { defaultValue: '💎 PRO' })}
+         {t('features.proRequiredBadge', { defaultValue: 'PRO' })}
        </Text>
      </View>
    )
