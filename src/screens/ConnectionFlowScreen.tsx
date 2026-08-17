@@ -395,13 +395,13 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  </TouchableOpacity>
  </View>
 
- {/* First-Time Pairing & Setup Guide Card */}
+ {/* First-Time Pairing & Setup Guide Card (Vertical layout: Text on top, Button at bottom) */}
  <View style={[styles.firstTimeCard, { backgroundColor: `${colors.cyan}0c`, borderColor: `${colors.cyan}35` }]}>
- <View style={{ flex: 1, marginRight: ms(10) }}>
+ <View style={{ width: '100%', marginBottom: vs(10) }}>
  <Text style={[styles.firstTimeTitle, { color: colors.cyan, fontSize: fs(12), fontFamily: colors.mono, fontWeight: '800' }]}>
  {t('connection.firstTimeGuideTitle', { defaultValue: 'İLK KURULUM & EŞLEŞTİRME REHBERİ' })}
  </Text>
- <Text style={[styles.firstTimeDesc, { color: colors.textPri, fontSize: fs(11.5), marginTop: vs(3), lineHeight: fs(16) }]}>
+ <Text style={[styles.firstTimeDesc, { color: colors.textPri, fontSize: fs(11.5), marginTop: vs(4), lineHeight: fs(16.5) }]}>
  {Platform.OS === 'android'
  ? t('connection.firstTimeGuideDescAndroid', { defaultValue: 'Bluetooth Classic (ELM327) adaptörleri ilk kez kullanmadan önce telefonunuzun Bluetooth ayarlarından eşleştirin (PIN: 1234 veya 0000). BLE ve Wi-Fi cihazlar doğrudan bağlanır.' })
  : t('connection.firstTimeGuideDescIos', { defaultValue: 'BLE (Bluetooth 4.0+) ve Wi-Fi adaptörleri telefon ayarlarından eşleştirme gerektirmez, doğrudan uygulama içinden taranarak bağlanır.' })
@@ -414,8 +414,8 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  style={[styles.firstTimeBtn, { backgroundColor: colors.cyan }]}
  onPress={handleOpenBtSettings}
  >
- <Text style={[styles.firstTimeBtnText, { fontSize: fs(10.5), fontFamily: colors.mono, color: '#ffffff', fontWeight: '900' }]}>
- {t('connection.openBtSettings', { defaultValue: 'AYARLAR' })}
+ <Text style={[styles.firstTimeBtnText, { fontSize: fs(11), fontFamily: colors.mono, color: '#ffffff', fontWeight: '900' }]}>
+ {t('connection.openBtSettings', { defaultValue: 'BLUETOOTH AYARLARI' })}
  </Text>
  </TouchableOpacity>
  )}
@@ -470,7 +470,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             {t('connection.motorcycle', { defaultValue: 'Motosiklet' }).toUpperCase()}
           </Text>
           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-            {t('connection.motorcycleDesc', { defaultValue: 'Euro 5 & High-RPM Motosiklet Telemetrisi' })}
+            {t('connection.motorcycleDesc', { defaultValue: 'Euro 5 & Yüksek Devirli Motosiklet Telemetrisi' })}
           </Text>
         </View>
         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
@@ -487,7 +487,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
       >
         <View style={styles.categoryContent}>
           <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-            {t('connection.heavyDutyTruck', { defaultValue: 'Kamyon & Ağır Ticari' }).toUpperCase()}
+            {t('connection.heavyDutyTruck', { defaultValue: 'Ağır Vasıta & Kamyon' }).toUpperCase()}
           </Text>
           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
             {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs (SAE J1939)' })}
@@ -1077,9 +1077,8 @@ const styles = StyleSheet.create({
  borderWidth: 1.2,
  padding: 14,
  marginBottom: 16,
- flexDirection: 'row',
- alignItems: 'center',
- justifyContent: 'space-between',
+ flexDirection: 'column',
+ alignItems: 'stretch',
  },
  firstTimeTitle: {
  letterSpacing: 0.5,
@@ -1088,11 +1087,12 @@ const styles = StyleSheet.create({
  fontWeight: '500',
  },
  firstTimeBtn: {
- paddingVertical: 8,
- paddingHorizontal: 12,
- borderRadius: 8,
+ paddingVertical: 10,
+ paddingHorizontal: 16,
+ borderRadius: 10,
  alignItems: 'center',
  justifyContent: 'center',
+ marginTop: 6,
  },
  firstTimeBtnText: {
  letterSpacing: 0.5,
