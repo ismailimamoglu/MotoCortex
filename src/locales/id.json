@@ -1,4 +1,5 @@
 {
+    "4202": "4202",
     "tabs": {
         "dashboard": "PEMANTAUAN",
         "expertise": "DIAGNOSTIK",
@@ -161,7 +162,14 @@
         "selected": "TERPILIH",
         "successTag": "[SUKSES]",
         "errorTag": "[GALAT]",
-        "brandName": "CORTEX OBD2"
+        "brandName": "CORTEX OBD2",
+        "sampleSimData": "Contoh Data Simulasi",
+        "normal": "Normal",
+        "connectionError": "Connection Error",
+        "gotIt": "Got It",
+        "securityAlert": "Security Alert",
+        "cloneSafetyRedirect": "Clone Safety Redirect",
+        "simMode": "Sim Mode"
     },
     "paywall": {
         "subtitle": "Buka kedalaman diagnostik tertinggi & parameter tak terbatas.",
@@ -190,8 +198,8 @@
         "noPurchasesMsgAndroid": "Tidak ditemukan keanggotaan PRO aktif yang terkait dengan akun Google Anda.",
         "terms": "Syarat Layanan",
         "privacy": "Kebijakan Privasi",
-        "hardwareWarning": "⚠️ Catatan Perangkat Keras Penting: Karena kebijakan Apple, perangkat iOS tidak mendukung adaptor Bluetooth Classic (v2.1) lama. Sebelum meningkatkan ke mode PRO, pastikan perangkat diagnostik Anda kompatibel dengan Bluetooth LE (4.0+) atau Wi-Fi.",
-        "hardwareWarningAndroid": "⚠️ Catatan Perangkat Keras Penting: Perangkat Android mendukung adaptor Bluetooth Classic dan Bluetooth LE (4.0+). Sebelum meningkatkan ke mode PRO, pastikan perangkat diagnostik Anda kompatibel.",
+        "hardwareWarning": " Catatan Perangkat Keras Penting: Karena kebijakan Apple, perangkat iOS tidak mendukung adaptor Bluetooth Classic (v2.1) lama. Sebelum meningkatkan ke mode PRO, pastikan perangkat diagnostik Anda kompatibel dengan Bluetooth LE (4.0+) atau Wi-Fi.",
+        "hardwareWarningAndroid": " Catatan Perangkat Keras Penting: Perangkat Android mendukung adaptor Bluetooth Classic dan Bluetooth LE (4.0+). Sebelum meningkatkan ke mode PRO, pastikan perangkat diagnostik Anda kompatibel.",
         "contextualDesc": "Tingkatkan ke Pemindai Diagnostik Cortex OBD2 PRO untuk membuka analisis diagnostik lengkap, risiko mesin kritis, estimasi biaya perbaikan, dan panduan langkah demi langkah untuk kode masalah ini.",
         "crownBadge": "MOTO CORTEX PRO",
         "errorTitle": "Gagal Memuat Produk",
@@ -200,21 +208,21 @@
         "loadingPrices": "Memuat harga...",
         "actionLocked": "FITUR TERKUNCI PRO",
         "congratsMsg": "Keanggotaan Cortex OBD2 PRO Anda telah berhasil diaktifkan. Nikmati semua fitur profesional!",
-        "congratsTitle": "🎉 Selamat!",
+        "congratsTitle": " Selamat!",
         "errMsg": "Terjadi kesalahan saat pembelian. Silakan coba lagi.",
-        "errTitle": "❌ Pembelian Gagal",
+        "errTitle": " Pembelian Gagal",
         "monthlyNotice": "Langganan bulanan yang dapat diperpanjang secara otomatis",
         "noPkgMsg": "Silakan pilih paket untuk melanjutkan.",
-        "noPkgTitle": "⚠️ Tidak Ada Paket yang Dipilih",
+        "noPkgTitle": " Tidak Ada Paket yang Dipilih",
         "noPurchasesMsg": "Tidak ditemukan keanggotaan PRO aktif yang terkait dengan akun Apple Anda.",
-        "noPurchasesTitle": "ℹ️ Tidak Ada Pembelian yang Ditemukan",
+        "noPurchasesTitle": "ℹ Tidak Ada Pembelian yang Ditemukan",
         "proRequiredDesc": "Fitur ini memerlukan langganan PRO untuk digunakan.",
         "proRequiredTitle": "Diperlukan PRO",
         "purchasingText": "Mengamankan transaksi...",
         "restoreErrorMsg": "Silakan periksa koneksi internet Anda dan coba lagi.",
-        "restoreErrorTitle": "⚠️ Kembalikan Kesalahan",
+        "restoreErrorTitle": " Kembalikan Kesalahan",
         "restoreSuccessMsg": "Keanggotaan premium Anda berhasil dipulihkan! Anda sekarang dapat mulai menggunakan fitur Cortex OBD2 PRO.",
-        "restoreSuccessTitle": "✅ Pembelian Dipulihkan",
+        "restoreSuccessTitle": " Pembelian Dipulihkan",
         "weeklyNotice": "Pembelian satu kali, tidak diperpanjang secara otomatis",
         "yearlyNotice": "Langganan tahunan yang dapat diperpanjang secara otomatis",
         "aiDoctorLimitTitle": "BATAS AI DOCTOR TERCAPAI",
@@ -255,8 +263,8 @@
         "ecuDetected": "ECU TERDETEKSI, VERIFIKASI... [4/5]",
         "ecuResponding": "ECU RESPON, SELESAIKAN KONEKSI... [5/5]",
         "protocolScanningHint": "(Memindai protokol standar SP5, SP3, SP6, SP7 secara berurutan...)",
-        "protocolFailed": "⚠️ PROTOKOL SESUAI TIDAK DITEMUKAN! (SP5, SP3, SP4, SP6, SP7 mencoba)",
-        "ecuNotFound": "⚠️ ECU KENDARAAN TIDAK RESPON!",
+        "protocolFailed": " PROTOKOL SESUAI TIDAK DITEMUKAN! (SP5, SP3, SP4, SP6, SP7 mencoba)",
+        "ecuNotFound": " ECU KENDARAAN TIDAK RESPON!",
         "hardwareCapabilityScore": "Skor Kemampuan Perangkat Keras Adaptor: {{score}}/100",
         "hardwareFatal": "Kesalahan Kritis: Perangkat keras Anda adalah tiruan palsu yang tidak mendukung protokol kendaraan lama. Tidak dapat terhubung ke ECU kendaraan. Silakan dapatkan adaptor berkualitas (v1.5 atau asli).",
         "progressFormat": "{{progress}}%",
@@ -297,7 +305,7 @@
         "terminalDesc": "Anda dapat mengirim perintah OBD-II atau AT/ST langsung ke ECU. Misalnya, \"010C\" (RPM Mesin) atau \"ATRV\" (Tegangan Baterai).",
         "ecuResponseLabel": "RESPON ECU:",
         "adapterConnected": "ADAPTOR TERHUBUNG (OK)",
-        "lowQualityAdapterWarning": "⚠️ Adaptor Kualitas Rendah (Skor: {{score}}/100): Adaptor Anda adalah tiruan tingkat rendah. Ini tidak memiliki ketepatan waktu yang diperlukan untuk protokol kendaraan lama (seperti K-Line di Dacia, Renault, Fiat, Lada). Kami sangat menyarankan untuk meningkatkan ke adaptor OBD2 berkualitas tinggi (v1.5 atau OBDLink/vLinker asli) agar berhasil terhubung.",
+        "lowQualityAdapterWarning": " Adaptor Kualitas Rendah (Skor: {{score}}/100): Adaptor Anda adalah tiruan tingkat rendah. Ini tidak memiliki ketepatan waktu yang diperlukan untuk protokol kendaraan lama (seperti K-Line di Dacia, Renault, Fiat, Lada). Kami sangat menyarankan untuk meningkatkan ke adaptor OBD2 berkualitas tinggi (v1.5 atau OBDLink/vLinker asli) agar berhasil terhubung.",
         "statusProfiling": "Menganalisis kemampuan adaptor OBD2...",
         "statusScanningCan": "Memindai protokol CAN-Bus modern...",
         "statusScanningKline": "Membangunkan protokol K-Line. Kendaraan tua (Dacia, Renault, Fiat) mungkin memerlukan waktu hingga 15 detik untuk merespons...",
@@ -314,7 +322,7 @@
         "connectBtn": "HUBUNGKAN PERANGKAT",
         "noActiveTitle": "Tidak Ada Koneksi Aktif",
         "noActiveDesc": "Tidak ada koneksi OBD2 aktif untuk diputuskan.",
-        "scanningAdapter": "🔄 Memindai Adaptor (Menunggu Respons)...",
+        "scanningAdapter": " Memindai Adaptor (Menunggu Respons)...",
         "scanningDevices": "Memindai Perangkat Bluetooth OBD2...",
         "quickConnectTitle": "Adaptor Terakhir Terdeteksi",
         "quickConnectDesc": "Sambungkan cepat ke adaptor yang terakhir Anda gunakan '{{name}}'?",
@@ -338,7 +346,18 @@
         "changeCategory": "Ubah Kategori",
         "passengerCarDesc": "Kendaraan Komersial Penumpang & Ringan 12V (OBD2 / CAN / KWP)",
         "motorcycleDesc": "Euro 5 & Telemetri Sepeda Motor RPM Tinggi",
-        "heavyDutyTruckDesc": "Truk & Bus Komersial Tugas Berat 24V (SAE J1939)"
+        "heavyDutyTruckDesc": "Truk & Bus Komersial Tugas Berat 24V (SAE J1939)",
+        "ignitionWarningTitle": "PEMERIKSAAN KONTAK (IGNITION ON)",
+        "ignitionWarningDesc": "Adaptor ELM327 Anda terhubung, tetapi ECU kendaraan tidak merespons. Harap putar kunci kontak ke posisi ON atau nyalakan mesin dan coba lagi.",
+        "goToDashboard": "KE DASHBOARD LANGSUNG",
+        "connectRequired": "Connect Required",
+        "connectingECU": "Connecting E C U",
+        "pairingTipTitle": "İLK KURULUM & EŞLEŞTİRME REHBERİ",
+        "pairingTipDesc": "Android cihazlarda Bluetooth Classic adaptör kullanıyorsanız, ilk bağlantıdan önce telefonun Bluetooth ayarlarından eşleştirin (PIN: 1234 veya 0000). iOS ve BLE adaptörlerde doğrudan bağlanabilirsiniz.",
+        "openBtSettings": "BLUETOOTH AYARLARI",
+        "firstTimeGuideTitle": "First Time Guide Title",
+        "firstTimeGuideDescAndroid": "First Time Guide Desc Android",
+        "firstTimeGuideDescIos": "First Time Guide Desc Ios"
     },
     "dashboard": {
         "selectDevice": "KETUK UNTUK MEMILIH PERANGKAT",
@@ -389,7 +408,12 @@
         "unit": "Satuan",
         "statusNormal": "NORMAL",
         "manifold": "MANIFOLD kPa",
-        "layoutChart": "BAGAN"
+        "layoutChart": "BAGAN",
+        "adblue": "Level AdBlue",
+        "egt": "Suhu Gas Buang (EGT)",
+        "nox": "Nilai Sensor NOx",
+        "torque": "Torsi Mesin",
+        "selectedSensorsCount": "{{count}} / {{max}} sensor dipilih"
     },
     "expertise": {
         "historyFound": "RIWAYAT KENDARAAN DITEMUKAN!",
@@ -418,7 +442,7 @@
         "vinRequiredDesc": "VIN harus terdeteksi secara otomatis atau dimasukkan secara manual untuk menyimpan catatan.",
         "missingInfo": "Info Kurang",
         "missingInfoDesc": "Silakan isi kolom Merek dan Model.",
-        "saved": "Disimpan ✅",
+        "saved": "Disimpan ",
         "savedDesc": "Hasil diagnostik ditambahkan ke garasi.",
         "connRequired": "Koneksi Diperlukan",
         "connRequiredDesc": "Harap hubungkan ke kendaraan terlebih dahulu untuk memulai operasi ini.",
@@ -436,26 +460,28 @@
         "moduleEngine": "Unit Kontrol Mesin (ECU)",
         "moduleAbs": "Sistem Pengereman Anti-lock (ABS)",
         "moduleTcm": "Modul Kontrol Transmisi (TCM)",
-        "moduleBcm": "Modul Kontrol Tubuh (BCM)"
+        "moduleBcm": "Modul Kontrol Tubuh (BCM)",
+        "simSaveBlocked": "Sim Save Blocked",
+        "scannedModules": "Scanned Modules"
     },
     "service": {
-        "safetyWarning": "⚠️ PERINGATAN KESELAMATAN",
+        "safetyWarning": " PERINGATAN KESELAMATAN",
         "safetyWarningDesc": "Selama operasi ini:\n\n• Kunci kontak harus ON\n• Mesin harus MATI\n• Jangan hidupkan kendaraan\n\nApakah Anda ingin melanjutkan?",
         "step1": "Langkah 1: Hapus Kode Kerusakan",
         "step1Desc": "Semua Kode Kerusakan (DTC) yang tersimpan dan lampu Check Engine akan dihapus. Nilai trim bahan bakar akan disetel ulang.\n\nTindakan ini tidak dapat dibatalkan!",
         "step2": "Langkah 2: Hard Reset ECU",
-        "step2Desc": "Reset listrik (Hard Reset) akan dikirim ke otak mesin. Berfungsi seperti lepas/pasang aki.\n\n⚠️ Tidak efektif pada ECU yang tidak mendukung. Tidak akan menyebabkan kerusakan.",
+        "step2Desc": "Reset listrik (Hard Reset) akan dikirim ke otak mesin. Berfungsi seperti lepas/pasang aki.\n\n Tidak efektif pada ECU yang tidak mendukung. Tidak akan menyebabkan kerusakan.",
         "clearCodes": "Hapus Kode",
         "ecuReset": "Lakukan Reset ECU",
         "finish": "Lewati (Selesai)",
-        "completed": "Selesai ✅",
+        "completed": "Selesai ",
         "completedDesc": "Operasi servis berhasil diselesaikan. Anda dapat menghidupkan kembali kendaraan.",
         "hardResetDesc": "Semua operasi servis berhasil diselesaikan.\n\n• Kode kerusakan dihapus\n• Trim bahan bakar disetel ulang\n• ECU direset\n\nAnda dapat menghidupkan kembali kendaraan."
     },
     "info": {
         "desc": "Aplikasi diagnostik sepeda motor dan kendaraan profesional.\nKompatibel dengan tüm kendaraan.",
-        "upgrade": "👑 Tingkatkan ke Cortex OBD2 Diagnostic Scanner PRO",
-        "upgradeAlert": "Akses Awal 🎉",
+        "upgrade": " Tingkatkan ke Cortex OBD2 Diagnostic Scanner PRO",
+        "upgradeAlert": "Akses Awal ",
         "upgradeAlertDesc": "Cortex OBD2 Diagnostic Scanner sedang dalam pengembangan. Sebagai pengguna awal, semua fitur pro terbuka untuk Anda. Umpan balik Anda sangat berharga!",
         "helpGuide": "BANTUAN & PANDUAN",
         "support": "PUSAT DUKUNGAN",
@@ -505,19 +531,19 @@
             }
         },
         "reconfigurePermissions": "Jalankan Kembali Onboarding & Ketentuan Hukum",
-        "language": "🌐 Dil / Bahasa / Bahasa",
+        "language": " Dil / Bahasa / Bahasa",
         "shareWithFriend": "BAGIKAN KE TEMAN",
-        "shareMessageText": "Temukan kode kesalahan ECU kendaraan & telemetri sensor langsung dengan Cortex OBD2 Diagnostic Scanner!\n\nUnduh Sekarang:\n🍏 iOS (App Store): https://apps.apple.com/app/id6742882583\n🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n🌐 Web Portal: https://motocortex-telemetry.vercel.app/"
+        "shareMessageText": "Temukan kode kesalahan ECU kendaraan & telemetri sensor langsung dengan Cortex OBD2 Diagnostic Scanner!\n\nUnduh Sekarang:\n iOS (App Store): https://apps.apple.com/app/id6742882583\n Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n Web Portal: https://motocortex-telemetry.vercel.app/"
     },
     "report": {
-        "title": "🏍️ ═══ LAPORAN DIAGNOSTIK CORTEX OBD2 ═══ 🏍️",
-        "vehicleIdentity": "📋 IDENTITAS KENDARAAN",
+        "title": " ═══ LAPORAN DIAGNOSTIK CORTEX OBD2 ═══ ",
+        "vehicleIdentity": " IDENTITAS KENDARAAN",
         "vin": "Nomor Rangka (VIN)",
         "odometer": "Jarak (KM)",
         "milDist": "Jarak MIL (Check Engine)",
         "distSinceCleared": "Jarak Sejak Dihapus",
-        "dtcCount": "🔍 KODE KERUSAKAN ({{count}} found)",
-        "sensorData": "📊 DATA SENSOR LANGSUNG",
+        "dtcCount": " KODE KERUSAKAN ({{count}} found)",
+        "sensorData": " DATA SENSOR LANGSUNG",
         "noData": "Data tidak tersedia",
         "proApp": "Dipindai dengan Cortex OBD2 Diagnostic Scanner v7 PRO.",
         "date": "Tanggal",
@@ -529,7 +555,7 @@
         "engineLoad": "Beban Mesin",
         "intakeAir": "Udara Masuk",
         "voltage": "Tegangan Aki",
-        "shareMessage": "Pantau kesehatan sepeda motor Anda dari saku dengan Aplikasi Diagnostik OBD2 Cortex OBD2 Diagnostic Scanner! 🏍️📲\n\nUnduh: https://cortexobd2.app",
+        "shareMessage": "Pantau kesehatan sepeda motor Anda dari saku dengan Aplikasi Diagnostik OBD2 Cortex OBD2 Diagnostic Scanner! \n\nUnduh: https://cortexobd2.app",
         "manifold": "Manifold",
         "subtitle": "Inspeksi Diagnostik & Telemetri Bekas yang Komprehensif",
         "vehicleInfo": "Identifikasi Kendaraan & Metadata ECU",
@@ -589,11 +615,15 @@
         "loading": "Menanyakan Mode 02...",
         "noData": "Data freeze frame tidak ditemukan. Kendaraan mungkin tidak mendukung fitur ini.",
         "error": "Kesalahan pembacaan data",
-        "values": "📸 NILAI DICATAT SAAT TERJADI KERUSAKAN",
+        "values": " NILAI DICATAT SAAT TERJADI KERUSAKAN",
         "retry": "BACA LAGI",
         "techInfo": "INFO TEKNIS",
         "techDesc": "• OBD-II Mode 02: Freeze Frame Data\n• PID 020C00: RPM saat kerusakan\n• PID 020D00: Kecepatan saat kerusakan\n• PID 020500: Suhu pendingin saat kerusakan\n\nData ini milik kode kerusakan terakhir. Menghapus kode juga akan menghapus data freeze frame.",
-        "title": "BINGKAI BEKU"
+        "title": "BINGKAI BEKU",
+        "throttle": "Throttle",
+        "mapPressure": "Map Pressure",
+        "stft": "Stft",
+        "trimUnit": "Trim Unit"
     },
     "perf": {
         "title": "UJI PERFORMA",
@@ -608,7 +638,7 @@
         "stop": "BERHENTI",
         "reset": "SETEL ULANG",
         "howItWorks": "CARA KERJA",
-        "howDesc": "1. Tekan tombol \"Mulai Uji\"\n2. Kendaraan harus berhenti (Kecepatan = 0)\n3. Timer dimulai otomatis saat Anda bergerak\n4. Waktu 0-60 km/jam dan 0-100 km/jam dicatat\n\n⚠️ Lakukan pengujian ini di area yang aman!",
+        "howDesc": "1. Tekan tombol \"Mulai Uji\"\n2. Kendaraan harus berhenti (Kecepatan = 0)\n3. Timer dimulai otomatis saat Anda bergerak\n4. Waktu 0-60 km/jam dan 0-100 km/jam dicatat\n\n Lakukan pengujian ini di area yang aman!",
         "sec": "detik"
     },
     "dtc": {
@@ -634,7 +664,8 @@
         "B0010": "Kontrol Penempatan Tahap 1 Depan Penumpang",
         "B0020": "Kontrol Pengebaran Airbag Sisi Kiri",
         "B1000": "Kesalahan Perangkat Keras Modul Kontrol Tubuh (BCM).",
-        "B1325": "Rangkaian Catu Daya Perangkat Tegangan Rendah"
+        "B1325": "Rangkaian Catu Daya Perangkat Tegangan Rendah",
+        "generalFault": "General Fault"
     },
     "vehicleSelect": {
         "title": "PILIH KENDARAAN ANDA UNTUK AKURASI DIAGNOSIS",
@@ -768,7 +799,8 @@
         "langDesc": "Silakan pilih bahasa yang Anda inginkan untuk menyesuaikan pengalaman diagnosis Anda.",
         "langSelectSub": "GERBANG BAHASA",
         "telemetryLabel": "Telemetri Diagnostik (Ikut serta)",
-        "telemetrySub": "Bagikan protokol anonim dan log kesalahan untuk meningkatkan kompatibilitas kendaraan."
+        "telemetrySub": "Bagikan protokol anonim dan log kesalahan untuk meningkatkan kompatibilitas kendaraan.",
+        "restartOnboarding": "Mulai Ulang Pengaturan Awal (Bahasa & Izin)"
     },
     "disclaimer": "Semua nama produk, logo, dan merek adalah milik dari pemiliknya masing-masing. Semua nama perusahaan, produk, dan layanan yang digunakan dalam aplikasi ini hanya untuk tujuan identifikasi. Penggunaan nama, logo, dan merek ini tidak menyiratkan dukungan.",
     "hiddenFeatures": {
@@ -905,8 +937,8 @@
         "lockExplain": "Adaptor Anda telah ditandai sebagai chip klon/palsu. Karena adaptor klon kurang presisi waktu dan dapat merusak kendaraan selama operasi penulisan, fitur pengodean dan adaptasi dikunci. Dapatkan perangkat ELM327 v2.1 atau vLinker asli untuk pengodean yang aman.",
         "vehiclePids": "DAFTAR PERIKSA SENSOR KENDARAAN",
         "checklistPrompt": "Parameter sensor standar (PID) yang didukung oleh ECU kendaraan Anda tercantum di bawah. Sensor tanpa tanda centang tidak dilaporkan oleh kendaraan Anda.",
-        "supportedBadge": "✓ DIDUKUNG",
-        "unsupportedBadge": "❌ TIDAK DIDUKUNG"
+        "supportedBadge": " DIDUKUNG",
+        "unsupportedBadge": " TIDAK DIDUKUNG"
     },
     "sensor": {
         "oilTemp": "Suhu Oli Mesin",
@@ -930,7 +962,7 @@
     "secretDebug": {
         "title": "PANEL PENGEMBANGAN MOTO CORTEX",
         "logFileSize": "Kotak Hitam / Ukuran File:",
-        "dtcCloudSync": "🛰️ SINKRONISASI CLOUD DTC",
+        "dtcCloudSync": " SINKRONISASI CLOUD DTC",
         "lastSync": "Sinkronisasi Terakhir",
         "syncNow": "Sinkronkan Sekarang",
         "developerTools": "ALAT PENGEMBANG",
@@ -944,8 +976,8 @@
         "title": "BUKA FITUR TERSEMBUNYI & KODE UDS",
         "subTitle": "Mesin Pengodean & Adaptasi Panjang UDS ISO 14229",
         "batteryVoltage": "TEGANGAN BATERAI",
-        "voltageReady": "✓ Aman (Siap untuk Penulisan Coding ECU)",
-        "voltageLocked": "⚠️ Tegangan Rendah (Coding Terkunci, Baca Aktif)",
+        "voltageReady": " Aman (Siap untuk Penulisan Coding ECU)",
+        "voltageLocked": " Tegangan Rendah (Coding Terkunci, Baca Aktif)",
         "locked": "TERKUNCI",
         "ready": "SIAP",
         "allMarks": "SEMUA TANDA",
@@ -955,7 +987,7 @@
         "catDisplay": "INSTRUMEN",
         "catComfort": "KENYAMANAN",
         "catSafety": "KESELAMATAN",
-        "safetyAlertTitle": "⚠️ Peringatan Tegangan Baterai Rendah",
+        "safetyAlertTitle": " Peringatan Tegangan Baterai Rendah",
         "safetyAlertMsg": "Tegangan baterai minimum 12.2V diperlukan untuk pengkodean.\nSilakan sambungkan pengisi daya atau nyalakan mesin.",
         "items": {
             "vag_staging_needle_sweep": {
@@ -2405,6 +2437,310 @@
             "fun_stealth_fighter_display": {
                 "name": "Mode Cluster Minimalis Berkendara Malam Stealth Fighter",
                 "desc": "Mematikan semua lampu cluster kecuali speedometer untuk berkendara di malam hari yang gelap gulita."
+            },
+            "vag_lap_timer_oil_temp": {
+                "name": "Lap Timer & Oil Temperature in Gauge Cluster",
+                "desc": "Unlocks racetrack lap timer stopwatch and real-time engine oil temperature readout."
+            },
+            "vag_rear_scandinavian_drl": {
+                "name": "Scandinavian DRL (Rear Tail Lights ON with DRL)",
+                "desc": "Illuminates rear LED tail lights constantly when front daytime running lights are active."
+            },
+            "vag_drl_handbrake_off": {
+                "name": "Turn OFF DRL when Handbrake is Engaged",
+                "desc": "Automatically turns off daytime running lights whenever parking brake is pulled up."
+            },
+            "vag_drl_menu_in_mib": {
+                "name": "DRL ON/OFF Toggle Switch in Touchscreen Menu",
+                "desc": "Adds Daytime Running Lights toggle checkbox under Vehicle Lights settings in MIB screen."
+            },
+            "vag_rain_closing_windows": {
+                "name": "Rain Closing (Automatic Windows & Sunroof Close)",
+                "desc": "Closes all open windows and panoramic sunroof if parked vehicle detects rain on windshield."
+            },
+            "vag_audi_dynamic_throttle": {
+                "name": "Audi Linear Direct Throttle Response",
+                "desc": "Removes electronic pedal lag by switching from time-gradient to direct linear throttle mapping."
+            },
+            "vag_xds_differential_sensitivity": {
+                "name": "XDS Electronic Differential Lock Sensitivity",
+                "desc": "Increases cornering traction and reduces understeer by applying higher inner-wheel brake torque."
+            },
+            "vag_offroad_display_mib": {
+                "name": "Off-Road Display & Compass in Infotainment",
+                "desc": "Unlocks Off-Road telemetry screen displaying steering angle, compass, and oil/coolant temperatures."
+            },
+            "vag_highbeam_assist_memory": {
+                "name": "High-Beam Assist (Light Assist) State Memory",
+                "desc": "Maintains Auto High-Beam Assist active across ignition cycles so driver does not have to re-arm it."
+            },
+            "vag_comfort_turn_signals_count": {
+                "name": "Comfort Turn Signal Flash Cycles",
+                "desc": "Changes number of highway lane-change blinker pulses from standard 3 to 4 or 5."
+            },
+            "bmw_video_in_motion_speedlock": {
+                "name": "Video in Motion (VIM) Speedlock Removal",
+                "desc": "Allows USB and DVD video playback on iDrive screen while vehicle is moving."
+            },
+            "bmw_digital_speedo_kombi": {
+                "name": "Digital Speedometer in Instrument Cluster (V= km/h)",
+                "desc": "Adds real-time digital speed numerical readout on the onboard computer screen."
+            },
+            "bmw_acoustic_lock_chirp": {
+                "name": "Acoustic Alarm Chirp on Lock / Unlock",
+                "desc": "Adds acoustic confirmation chirp via alarm siren with volume setting in iDrive menu."
+            },
+            "bmw_auto_mirror_fold_comfort_close": {
+                "name": "Fold Mirrors Instantly with 1-Click Lock",
+                "desc": "Eliminates the 1.5s delay requirement for folding mirrors when pressing key lock."
+            },
+            "bmw_rolls_royce_warning_chimes": {
+                "name": "Rolls-Royce / BMW i / MINI Warning Chime Tones",
+                "desc": "Changes the system warning chimes (door open, low temp, seatbelt) to luxury Rolls-Royce tones."
+            },
+            "bmw_m_performance_boot_animation": {
+                "name": "M Performance / Alpina Cluster Boot Logo",
+                "desc": "Sets startup logo on digital instrument cluster to M Performance, M2, M3, M5, or Alpina."
+            },
+            "bmw_tpms_temperature_display": {
+                "name": "Tire Pressure & Temperature Live Display",
+                "desc": "Adds real-time individual tire temperature readouts alongside tire pressure on iDrive screen."
+            },
+            "bmw_rear_drl_scandinavian": {
+                "name": "Rear Tail Lights Active with Daytime Running Lights",
+                "desc": "Keeps rear LED neon rings illuminated when daytime running lights are active in position 0/Auto."
+            },
+            "bmw_sport_automatic_transmission_2tb": {
+                "name": "Sport Automatic Transmission (2TB) & Launch Control",
+                "desc": "Unlocks faster shifting times, rev-matching downshifts, and factory Launch Control mode."
+            },
+            "merc_needle_sweep_staging": {
+                "name": "Instrument Needle Sweep (AMG Staging)",
+                "desc": "Sweeps gauge needles to maximum upon turning on the ignition."
+            },
+            "merc_highbeam_memory": {
+                "name": "High-Beam Assist State Memory",
+                "desc": "Remembers the last active state of Adaptive Highbeam Assist across ignition cycles."
+            },
+            "merc_acoustic_lock_chirp": {
+                "name": "Acoustic Alarm Lock Chirp",
+                "desc": "Emits a short acoustic confirmation beep via alarm siren when vehicle is locked."
+            },
+            "merc_amg_cluster_menu_unlock": {
+                "name": "AMG Performance Cluster Menu & Oil Temp",
+                "desc": "Unlocks AMG performance screen displaying engine oil & gearbox temperature, lap timer, and G-meter."
+            },
+            "merc_ambient_lighting_64_colors": {
+                "name": "64-Color Dynamic Ambient Lighting Unlock",
+                "desc": "Expands ambient lighting color palette from standard colors to 64 multi-color dynamic themes in MBUX."
+            },
+            "merc_start_stop_last_state_memory": {
+                "name": "ECO Start-Stop Last State Memory",
+                "desc": "Remembers ECO Start/Stop button status instead of defaulting to ON on every ignition restart."
+            },
+            "merc_auto_mirror_fold_lock": {
+                "name": "Automatic Mirror Folding on Key Lock",
+                "desc": "Automatically folds side mirrors when locking with key fob and unfolds upon driver door open."
+            },
+            "merc_rear_drl_scandinavian": {
+                "name": "Rear Tail Lights as Daytime Running Lights (Scandinavian Mode)",
+                "desc": "Keeps rear LED tail lamps illuminated together with front DRLs during daytime driving."
+            },
+            "merc_seatbelt_warning_chime_mute": {
+                "name": "Seatbelt Acoustic Warning Chime Mute",
+                "desc": "Disables the continuous chime sound for unbuckled seatbelts (visual warning lamp remains active)."
+            },
+            "merc_agility_manual_mode_unlock": {
+                "name": "Agility (Sport+) & Manual Transmission Mode",
+                "desc": "Enables hidden Agility (A) and True Manual (M) driving transmission profiles in Dynamic Select."
+            },
+            "merc_esp_sport_threshold_tuning": {
+                "name": "ESP Sport Dynamic Slip Angle Adjustment",
+                "desc": "Allows increased wheel slip angle before ESP torque intervention for track driving."
+            },
+            "merc_flashing_emergency_brake_light": {
+                "name": "Adaptive Emergency Flashing Brake Lights",
+                "desc": "Flashes stop lamps at high frequency (5.5 Hz) during hard emergency braking (> 7 m/s²)."
+            },
+            "stell_auto_mirror_fold_lock": {
+                "name": "Automatic Mirror Folding on Key Lock",
+                "desc": "Folds side mirrors automatically upon pressing lock button on key fob."
+            },
+            "stell_cornering_fog_lights": {
+                "name": "Cornering Fog Light Illumination",
+                "desc": "Activates corresponding front fog lamp when turn signal is on or steering angle > 30° below 40 km/h."
+            },
+            "stell_needle_sweep_cluster": {
+                "name": "Instrument Needle Sweep (Sport Staging)",
+                "desc": "Performs gauge sweep on startup for analog/hybrid instrument clusters."
+            },
+            "stell_acoustic_lock_chirp": {
+                "name": "Acoustic Horn Chirp on Remote Lock",
+                "desc": "Gives a short horn tap confirmation when vehicle doors successfully lock."
+            },
+            "stell_rear_scandinavian_drl": {
+                "name": "Rear Scandinavian DRL Tail Lights",
+                "desc": "Illuminates rear tail lamps in conjunction with daytime running lights in Auto/0 mode."
+            },
+            "stell_lane_assist_memory_default": {
+                "name": "Lane Keeping Assist Last State Memory",
+                "desc": "Remembers the last ON/OFF state of Lane Keeping Assist instead of re-activating at every start."
+            },
+            "stell_sport_steering_weight_calibration": {
+                "name": "Dynamic Electric Power Steering (EPS) Weight Curve",
+                "desc": "Increases steering wheel resistance and centering feel for a firmer, sportier feedback."
+            },
+            "stell_digital_speedo_unit_toggle": {
+                "name": "Digital Speedometer km/h & mph Dual Display",
+                "desc": "Shows numeric speed readout in both km/h and mph simultaneously in the center LCD."
+            },
+            "ford_apim_ambient_multi_colors": {
+                "name": "SYNC 3/4 Multi-Color Ambient Lighting Theme",
+                "desc": "Unlocks full 7-color ambient lighting palette slider in SYNC touchscreen interface."
+            },
+            "ford_lincoln_auto_fold_mirrors": {
+                "name": "Lincoln Style Auto-Fold Mirrors on Lock",
+                "desc": "Folds power mirrors when locking vehicle and automatically unfolds upon closing driver door."
+            },
+            "ford_bambi_mode_fog_with_highbeam": {
+                "name": "Bambi Mode (High Beams + Fog Lights Simultaneous)",
+                "desc": "Prevents fog lights from turning off automatically when high beams are activated."
+            },
+            "ford_double_honk_disable": {
+                "name": "Disable Double Horn Honk on Keyless Exit",
+                "desc": "Disables loud double horn honk when driver exits running vehicle with key fob in pocket."
+            },
+            "ford_global_windows_remote_open_close": {
+                "name": "Global Window Roll Up & Down via Key Fob",
+                "desc": "Opens or closes all power windows by holding unlock or lock button on factory key fob."
+            },
+            "ford_cluster_digital_tpms_readout": {
+                "name": "Individual Tire Pressure (TPMS) Bar/PSI Display",
+                "desc": "Displays exact individual tire pressure numerical readouts on the instrument cluster screen."
+            },
+            "ford_sync_boot_splash_st_raptor": {
+                "name": "SYNC Performance Boot Splash Theme (ST / Raptor / RS)",
+                "desc": "Changes SYNC infotainment boot logo animation to Ford Performance / ST / Raptor styling."
+            },
+            "renault_rlink_video_in_motion": {
+                "name": "Video in Motion (VIM) Playback Unlock",
+                "desc": "Allows USB/video playback on R-Link 2 / EasyLink touchscreen while vehicle is in motion."
+            },
+            "renault_rs_monitor_telemetry_unlock": {
+                "name": "RS Monitor Performance Telemetry App",
+                "desc": "Enables Renault Sport Monitor app displaying live turbo boost, torque, oil temp, and G-force meters."
+            },
+            "renault_acoustic_lock_chirp": {
+                "name": "Acoustic Horn Chirp on Hands-Free Walkaway Lock",
+                "desc": "Emits a brief beep when vehicle automatically locks upon walking away with key card."
+            },
+            "renault_rear_scandinavian_drl": {
+                "name": "Scandinavian Daytime Running Tail Lights",
+                "desc": "Keeps rear 3D LED signature tail lamps active simultaneously with front DRL strips."
+            },
+            "renault_cornering_fog_lamps": {
+                "name": "Static Cornering Fog Light Illumination",
+                "desc": "Lights up the relevant front fog light during turning maneuvers below 40 km/h."
+            },
+            "renault_seatbelt_buzzer_mute": {
+                "name": "Seatbelt Warning Buzzer Sound Mute",
+                "desc": "Mutes acoustic beeping for unfastened seatbelts (visual cluster alert remains active)."
+            },
+            "hyundai_ev_charge_limit_ui_unlock": {
+                "name": "Manual EV AC/DC Charge Limit Setting UI",
+                "desc": "Unlocks 50% to 100% target SoC slider controls in infotainment for battery longevity."
+            },
+            "hyundai_isg_start_stop_memory": {
+                "name": "ISG (Idle Stop & Go) Last State Memory",
+                "desc": "Retains the last selected state of the Start-Stop button across vehicle restarts."
+            },
+            "hyundai_approach_auto_unlock_distance": {
+                "name": "Smart Key Approach Auto-Unlock Sensitivity",
+                "desc": "Adjusts proximity radar detection sensitivity for automatic welcome door unlocking."
+            },
+            "hyundai_lead_vehicle_departure_alert": {
+                "name": "Lead Vehicle Departure Notification Sensitivity",
+                "desc": "Enhances front camera sensitivity when alerting that the front vehicle has started moving in traffic."
+            },
+            "hyundai_welcome_escort_lighting_timer": {
+                "name": "Headlamp Escort / Follow-Me-Home Delay Timer",
+                "desc": "Extends headlamp illumination duration from 15s to 30s or 60s after locking vehicle."
+            },
+            "byd_battery_preconditioning_manual_toggle": {
+                "name": "Blade Battery Manual Pre-Heating / Pre-Conditioning",
+                "desc": "Enables manual battery thermal pre-heating before DC fast charging in cold weather."
+            },
+            "byd_vess_pedestrian_sound_customization": {
+                "name": "VESS Low-Speed Pedestrian Acoustic Warning Themes",
+                "desc": "Unlocks alternative synthesized engine / futuristic tone profiles for low-speed pedestrian alert."
+            },
+            "byd_ambient_sound_rhythm_sync": {
+                "name": "Music Rhythm Pulse Ambient Lighting Sync",
+                "desc": "Synchronizes cabin ambient LED brightness and color shifting with music bass rhythm."
+            },
+            "chery_auto_window_rain_close": {
+                "name": "Automatic Window & Sunroof Rain Closing",
+                "desc": "Closes all open windows and panoramic sunroof when rain sensor detects rainfall while parked."
+            },
+            "mg_ev_one_pedal_drive_memory": {
+                "name": "One-Pedal Driving Mode Retention",
+                "desc": "Remembers the last selected regenerative braking intensity (High/One-Pedal) across starts."
+            },
+            "porsche_needle_sweep_staging": {
+                "name": "Porsche Tachometer Needle Sweep on Start",
+                "desc": "Sweeps central analog tachometer needle to redline on ignition power up."
+            },
+            "porsche_sport_exhaust_valve_manual_mode": {
+                "name": "PSE Sport Exhaust Flaps Permanently Open",
+                "desc": "Keeps dual active exhaust valves 100% open across all RPM ranges when PSE button is active."
+            },
+            "porsche_rear_spoiler_manual_speed_threshold": {
+                "name": "Active Rear Aerodynamic Wing Deployment Speed",
+                "desc": "Adjusts automatic rear spoiler deployment speed threshold (80 km/h vs 120 km/h)."
+            },
+            "porsche_matrix_highbeam_unlock": {
+                "name": "PDLS+ Matrix LED Adaptive Anti-Glare High Beam",
+                "desc": "Enables European-spec variable anti-glare high beam light distribution."
+            },
+            "porsche_acoustic_chirp_lock": {
+                "name": "Acoustic Siren Beep on Central Lock",
+                "desc": "Gives a quick chirp confirmation when locking with Porsche smart key."
+            },
+            "actros_rsl_fleet_speed_limit": {
+                "name": "Road Speed Limiter (Fleet Limit)",
+                "desc": "Configures maximum vehicle road speed limiter (RSL) calibration for fleet operation policy."
+            },
+            "actros_idle_shutdown_timer": {
+                "name": "Automatic Engine Idle Shutdown Timer",
+                "desc": "Automatically shuts down engine after specified idle time while stationary with parking brake set."
+            },
+            "volvo_pto_engine_rpm_preset": {
+                "name": "PTO (Power Take-Off) Engine RPM Preset",
+                "desc": "Sets predefined constant engine idle speed when PTO is engaged for hydraulic pump and tipper operation."
+            },
+            "volvo_ppc_eco_roll_hysteresis": {
+                "name": "I-See / PPC Topographical Speed Tolerance (Eco-Roll)",
+                "desc": "Adjusts GPS predictive cruise control speed hysteresis tolerance window for maximum rolling fuel economy."
+            },
+            "scania_retarder_jake_brake_aggressiveness": {
+                "name": "Retarder & Jake Brake Downshift Aggressiveness",
+                "desc": "Adjusts retarder torque blending curve and automatic transmission downshifting response under braking."
+            },
+            "man_ecas_dock_level_memory": {
+                "name": "ECAS Air Suspension Loading Dock Height Memory",
+                "desc": "Stores and recalls customized pneumatic air suspension height level presets for loading docks."
+            },
+            "daf_stationary_dpf_regen_trigger": {
+                "name": "Stationary DPF Forced Soot Regeneration",
+                "desc": "Initiates stationary diesel particulate filter thermal soot burn routine in parked position."
+            },
+            "ford_trucks_reverse_buzzer_night_mode": {
+                "name": "Reverse Acoustic Alarm Night Quiet Mode",
+                "desc": "Attenuates reverse backup horn alarm volume for quiet night distribution in residential areas."
+            },
+            "cummins_ecm_fleet_speed_limiter": {
+                "name": "Cummins Engine Road Speed Limiter (RSL)",
+                "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
         "codeBtn": "KODE",
@@ -2426,15 +2762,15 @@
         "searchPlaceholder": "Fitur pencarian, DID, atau ECU target...",
         "restoreSuccessTitle": "Status Pabrik Dipulihkan",
         "restoreSuccessMsg": "Fitur yang dipilih telah dikembalikan ke status DID asli.",
-        "cloneLockedBanner": "⚠️ Adaptor Klon Terdeteksi — Pengkodean Terkunci (Mode Hanya-Baca)",
-        "cloneAlertTitle": "⚠️ Adaptor Klon OBD2 Terdeteksi",
+        "cloneLockedBanner": " Adaptor Klon Terdeteksi — Pengkodean Terkunci (Mode Hanya-Baca)",
+        "cloneAlertTitle": " Adaptor Klon OBD2 Terdeteksi",
         "cloneAlertMsg": "Adaptor OBD2 Anda yang terhubung ditandai sebagai adaptor klon palsu yang tidak memerlukan akurasi waktu yang ketat untuk penulisan ECU.\n\nAnda dapat menelusuri dan mencari semua fitur, tetapi operasi penulisan pengkodean dikunci untuk melindungi kendaraan Anda. Silakan sambungkan adaptor ELM327 v2.1+ atau vLinker asli untuk menulis.",
         "riskLow": "RISIKO RENDAH",
         "riskMedium": "RISIKO SEDANG",
         "riskHigh": "RISIKO TINGGI",
         "sfdProtected": "ECU yang dilindungi SFD",
-        "legalDisclaimerUsLights": "⚠️ Catatan: Lampu parkir AS yang terus menerus mungkin tidak sah di jalan raya di beberapa yurisdiksi Eropa.",
-        "legalDisclaimerVim": "⚠️ Catatan: Pemutaran video saat mengemudi ditujukan untuk penggunaan penumpang saja.",
+        "legalDisclaimerUsLights": " Catatan: Lampu parkir AS yang terus menerus mungkin tidak sah di jalan raya di beberapa yurisdiksi Eropa.",
+        "legalDisclaimerVim": " Catatan: Pemutaran video saat mengemudi ditujukan untuk penggunaan penumpang saja.",
         "layoutChart": "GRAFIK",
         "headerCategory": "Fitur & Pengkodean Tersembunyi",
         "vehicleMatched": "{{make}} — TERHUBUNG",
@@ -2445,14 +2781,14 @@
         "connectForFeaturesNote": "Hubungkan ke perangkat OBD2 untuk menampilkan fitur",
         "codingFailed": "Pengkodean gagal.",
         "engineRunningMsg": "Pengkodean ECU memerlukan Ignition ON dengan Engine OFF (RPM == 0) untuk mencegah lonjakan tegangan alternator.",
-        "engineRunningTitle": "⚠️ Mesin Hidup",
+        "engineRunningTitle": " Mesin Hidup",
         "lowVoltageMsg": "Tegangan baterai berada di bawah ambang batas aman untuk pengoperasian penulisan ECU. Isi daya baterai sebelum melanjutkan.",
-        "lowVoltageTitle": "⚠️ Peringatan Tegangan Baterai Rendah",
+        "lowVoltageTitle": " Peringatan Tegangan Baterai Rendah",
         "motionAlertMsg": "Operasi penulisan ECU diblokir saat kendaraan bergerak. Harap parkir dengan aman sebelum coding.",
-        "motionAlertTitle": "🚨 Kendaraan Bergerak",
+        "motionAlertTitle": " Kendaraan Bergerak",
         "noMatchingFeatures": "Tidak ditemukan fitur yang cocok untuk filter yang dipilih.",
         "unsafeModuleMsg": "Operasi penulisan ECU ke modul ABS/ESP dan Airbag/SRS 100% diblokir untuk melindungi sistem keselamatan kendaraan yang penting.",
-        "unsafeModuleTitle": "🚫 Modul Keamanan Terlindung",
+        "unsafeModuleTitle": " Modul Keamanan Terlindung",
         "catMotorcycle": "ECU SEPEDA MOTOR",
         "catRetrofit": "RETROFIT & PERANGKAT KERAS",
         "catEv": "EV & BATERAI",
@@ -2461,12 +2797,12 @@
         "catService": "LAYANAN & PEMELIHARAAN",
         "catPerformance": "KINERJA",
         "segmentAll": "SEMUA MEMBUAT",
-        "segmentEuroPremium": "🇪🇮 Premi Eropa",
-        "segmentEuroVolume": "🇪🇮 Volume Eropa",
-        "segmentAsian": "🌏 Asia",
-        "segmentAmerican": "🇮🇩 Amerika",
+        "segmentEuroPremium": " Premi Eropa",
+        "segmentEuroVolume": " Volume Eropa",
+        "segmentAsian": " Asia",
+        "segmentAmerican": " Amerika",
         "segmentChineseEv": "CNY EV Tiongkok",
-        "segmentMotorcycle": "🏍️ Sepeda motor",
+        "segmentMotorcycle": " Sepeda motor",
         "detailTitle": "Detail Fitur & Pengkodean Sekali Klik",
         "prePostValues": "Pratinjau Pra/Pasca Muatan",
         "selectOption": "Pilih Opsi Pengkodean:",
@@ -2488,7 +2824,55 @@
         "expertDidPlaceholder": "DID Hex (misalnya 0501)",
         "expertValPlaceholder": "Nilai Hex (misal 01)",
         "writeRawPayload": "TULIS PAYLOAD UDS MENTAH",
-        "enterValidHex": "Silakan masukkan string DID dan Value Hex yang valid."
+        "enterValidHex": "Silakan masukkan string DID dan Value Hex yang valid.",
+        "options": {
+            "speed85": "85 km/h (Filo)",
+            "speed90": "90 km/h (Standart)",
+            "speed100": "100 km/h (Otoyol)",
+            "speed110": "110 km/h (Maksimum)",
+            "idleOff": "Devre Dışı (Sürekli Rölanti)",
+            "idle3m": "3 Dakika Sonra Kapat",
+            "idle5m": "5 Dakika Sonra Kapat",
+            "idle10m": "10 Dakika Sonra Kapat",
+            "pto900": "900 RPM (Düşük Debi)",
+            "pto1100": "1100 RPM (Damper / Standart)",
+            "pto1300": "1300 RPM (Vinç / Yüksek Debi)",
+            "retarderLow": "Düşük (Yumuşak Otoyol)",
+            "retarderMed": "Orta (Standart)",
+            "retarderHigh": "Yüksek (Ağır Yük / Dağ)",
+            "levelNormal": "Normal Sürüş Seviyesi",
+            "levelRamp1": "Yükleme Rampası Seviyesi 1",
+            "levelRamp2": "Yükleme Rampası Seviyesi 2",
+            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "regenStatus": "Kurum Durumunu Sorgula",
+            "alarmFull": "Tam Ses (%100 Gündüz)",
+            "alarmNight": "Kısık Ses (%50 Gece Modu)",
+            "hyst3": "+/- 3 km/h (Hassas)",
+            "hyst5": "+/- 5 km/h (Dengeli)",
+            "hyst10": "+/- 10 km/h (Maksimum Tasarruf)",
+            "drl25": "%25 Kısık",
+            "drl50": "%50 Orta",
+            "drl75": "%75 Parlak",
+            "drl100": "%100 Tam Güç",
+            "xdsStandard": "Standart (Orta)",
+            "xdsStrong": "Güçlü (GTI / R)",
+            "blink1": "1 Flaş",
+            "blink3": "3 Flaş (Standart)",
+            "blink4": "4 Flaş",
+            "blink5": "5 Flaş (Genişletilmiş)",
+            "chimeBmw": "BMW Standart",
+            "chimeMini": "MINI Tarzı",
+            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeBmwi": "BMW i Elektrik",
+            "logoStandard": "Standart",
+            "logoMPerf": "M Performance",
+            "logoAlpina": "Alpina Mavi"
+        },
+        "catSoundAlerts": "Ses & Uyarılar",
+        "catDisplayInstrument": "Gösterge Paneli",
+        "catDrivingComfort": "Sürüş Konforu",
+        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catMotorcycleEcu": "Motosiklet ECU"
     },
     "ignition": {
         "title": "Peringatan Status Pengapian",
@@ -2509,12 +2893,13 @@
         "peakHp": "PUNCAK HP",
         "peakTorque": "TORSI PUNCAK",
         "efficiency": "EFISIENSI",
-        "methodMaf": "Berbasis MAF (Aliran Udara).",
-        "methodTorque": "Berbasis PID Torsi Langsung",
-        "methodLoad": "Berdasarkan Beban Terhitung",
+        "methodMaf": "Hava Akış Tabanlı",
+        "methodTorque": "Canlı Tork Tabanlı",
+        "methodLoad": "Motor Yükü Tabanlı",
         "configWeight": "Berat Kendaraan (kg):",
         "configDisplacement": "Perpindahan Mesin (Kiri):",
-        "calcMethod": "METODE PERHITUNGAN"
+        "calcMethod": "METODE PERHITUNGAN",
+        "methodDiesel": "Dizel Tork & Yakıt Akışı"
     },
     "fuelTrim": {
         "title": "ANALISIS CAMPURAN BAHAN BAKAR & UDARA-BAHAN BAKAR",
@@ -2548,7 +2933,19 @@
         "causeHighFuelPressure": "Tekanan rel bahan bakar tinggi (regulator rusak)",
         "actionCriticalRich": "Periksa katup pembersih EVAP dan kebocoran balik injektor.",
         "causeRestrictedAirIntake": "Obstruksi saluran pemasukan udara",
-        "actionMildRich": "Periksa atau ganti filter udara mesin."
+        "actionMildRich": "Periksa atau ganti filter udara mesin.",
+        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
+        "railPressure": "Rail Basıncı",
+        "fuelRate": "Yakıt Debisi",
+        "widebandSensor": "Geniş Bant Lambda Sensörü",
+        "commonRailStatus": "Common Rail Püskürtme",
+        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
+        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda (Lean Burn) çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
+        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
+        "modeDiesel": "Dizel (Common Rail & Lambda)",
+        "modeGasoline": "Benzinli (STFT / LTFT)",
+        "leanNormal": "Fakir Karışım (İdeal Dizel)",
+        "railStable": "Basınç Kararlı"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER (DPF) MONITOR",
@@ -2589,24 +2986,46 @@
         "epsName": "Kemudi Daya Elektrik (EPS)",
         "hvacName": "Pendingin Udara & Iklim (HVAC)",
         "tpmsName": "Tekanan Ban Kendaraan (TPMS)",
-        "bmsName": "Manajemen Baterai Kendaraan (BMS / EV)"
+        "bmsName": "Manajemen Baterai Kendaraan (BMS / EV)",
+        "readyTitle": "Diagnostik ECU Siap"
     },
     "dct": {
         "title": "ADAPTASI KOPLING GANDA DCT",
         "subtitle": "Pengaturan Dasar Kopling Ganda DSG / Powershift / EDC",
         "warningTitle": "PERSYARATAN KESELAMATAN ADAPTASI DCT",
         "warningDesc": "Harap pastikan semua prasyarat fisik terpenuhi sebelum memulai adaptasi:",
-        "checkGearPark": "✓ Posisikan tuas ke P dan tarik rem tangan",
+        "checkGearPark": " Posisikan tuas ke P dan tarik rem tangan",
         "checkFootBrake": "Rem kaki ditekan dengan kuat",
         "checkHandBrake": "Rem tangan aktif",
-        "checkOilTemp": "✓ Temperatur oli transmisi harus antara 30°C dan 90°C",
+        "checkOilTemp": " Temperatur oli transmisi harus antara 30°C dan 90°C",
         "startAdaptation": "MULAI ADAPTASI",
         "inProgress": "Melakukan Pengaturan Dasar Transmisi... JANGAN lepas rem kaki!",
         "success": "Reset Transmisi DCT dan Pembelajaran Ulang Kopling Berhasil!",
         "step1": "1/3: Melakukan Kalibrasi Tekanan Hidraulik...",
         "step2": "2/3: Melakukan Pengaturan Dasar Kopling 1 (K1)...",
         "step3": "3/3: Melakukan Adaptasi Garpu Gigi Kopling 2 (K2)...",
-        "ensurePreconditions": "Harap penuhi semua prasyarat keselamatan sebelum memulai."
+        "ensurePreconditions": "Harap penuhi semua prasyarat keselamatan sebelum memulai.",
+        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
+        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
+        "clutchSwitch": "Debriyaj Pedalı Müşürü",
+        "neutralSwitch": "Boş Vites (Nötr) Sensörü",
+        "reverseSwitch": "Geri Vites Müşürü",
+        "pressed": "BASILI",
+        "released": "SERBEST",
+        "neutral": "BOŞTA",
+        "inGear": "VİTESTE",
+        "active": "AKTİF",
+        "passive": "PASİF",
+        "startManualTest": "Sensör Testini Başlat",
+        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
+        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
+        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
+        "manualStep2": "Boş Vites Sensör Doğrulaması...",
+        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
+        "modeAuto": "Otomatik / DCT Uyarlama",
+        "modeManual": "Manuel Şanzıman Testi",
+        "park": "P (Park)",
+        "engaged": "ÇEKİLİ"
     },
     "safeExit": {
         "btn": "PUTUSKAN KONEKSI AMAN & RESET ADAPTOR",
@@ -2615,29 +3034,29 @@
         "success": "Reset adaptor OBD2 dan koneksi diakhiri dengan bersih."
     },
     "admin": {
-        "clear": "🗑️ HAPUS",
-        "cloudTools": "🛰️ ALAT CLOUD & SISTEM",
+        "clear": " HAPUS",
+        "cloudTools": " ALAT CLOUD & SISTEM",
         "copy": "SALINAN",
-        "crashTest": "💥 UJI KELUAR",
+        "crashTest": " UJI KELUAR",
         "crashBtn": "Kecelakaan",
         "deviceUuid": "UUID PERANGKAT",
-        "presetTitle": "⚡ PERINTAH CEPAT:",
+        "presetTitle": " PERINTAH CEPAT:",
         "presetReset": "Setel ulang Adaptor OBD2",
         "presetSpeed": "Kecepatan kendaraan (km/jam)",
         "presetReadDtc": "Baca Kode Kesalahan",
         "presetClearDtc": "Hapus Kode Kesalahan",
-        "refresh": "🔄 PERBARUI",
+        "refresh": " PERBARUI",
         "send": "KIRIM",
-        "share": "📤 BAGIKAN",
-        "terminalTitle": "🖥️ KONSOL TERMINAL OBD LANGSUNG (TX / RX)",
+        "share": " BAGIKAN",
+        "terminalTitle": " KONSOL TERMINAL OBD LANGSUNG (TX / RX)",
         "userId": "ID PENGGUNA",
-        "userInfo": "🔒 KREDENSIAL PENGGUNA ADMIN",
+        "userInfo": " KREDENSIAL PENGGUNA ADMIN",
         "devModeAlert": "Kunci pengembang PRO rahasia dinonaktifkan dalam build produksi.",
         "invalidCmdError": "Harap masukkan perintah OBD yang valid (mis. 01 0C atau AT Z)",
         "noLogsInfo": "Tidak ditemukan catatan log untuk dibagikan.",
         "logsLoading": "Memuat log...",
         "calculating": "Menghitung...",
-        "secretProTitle": "Kunci PRO Rahasia ⚡ (DEV)",
+        "secretProTitle": "Kunci PRO Rahasia (DEV)",
         "secretProActive": "Status Mode Lisensi PRO: AKTIF (SEMUA FITUR TERBUKA)",
         "secretProInactive": "Status Mode Lisensi PRO: NONAKTIF (TERTUTUP)",
         "logsTruncated": "... [Log Terpotong] ...",
@@ -2704,14 +3123,14 @@
         "subtitle": "Penjual: {{vendor}} | VIN: {{vin}}",
         "disclaimerTitle": "PERINGATAN KESELAMATAN PENTING",
         "disclaimerText": "Membuka kunci SGW memberikan akses tulis ke ECU kendaraan. Pengkodean yang tidak sah atau modifikasi parameter yang tidak tepat dapat mempengaruhi garansi atau menonaktifkan sistem keselamatan. Tanggung jawab ada di tangan pengguna.",
-        "checkboxAccepted": "✓ Saya memahami dan menerima protokol buka kunci SGW",
+        "checkboxAccepted": " Saya memahami dan menerima protokol buka kunci SGW",
         "checkboxUnaccepted": "Harap terima protokol sebelum melanjutkan",
         "offlineLabel": "Kode Bypass Offline Teknisi Lapangan:",
         "offlinePlaceholder": "misalnya, OFF_89A2BF10",
         "offlineUnlockBtn": "Buka Kunci Offline (15 menit)",
         "cloudUnlockBtn": "Buka kunci dengan Cloud Token (60 mnt)",
         "toggleToCloud": "← Kembali ke Verifikasi Cloud",
-        "toggleToOffline": "⚡ Mode Bypass Bidang Offline",
+        "toggleToOffline": " Mode Bypass Bidang Offline",
         "cancel": "Batalkan",
         "warning": "Peringatan",
         "acceptWarning": "Harap terima penafian hukum untuk melanjutkan.",
@@ -2719,7 +3138,8 @@
         "error": "Kesalahan",
         "tokenError": "Kesalahan Token",
         "tokenErrorMsg": "Gagal membuka kunci SGW.",
-        "offlineActive": "Bypass Offline Aktif"
+        "offlineActive": "Bypass Offline Aktif",
+        "description": "Description"
     },
     "evBms": {
         "title": "Diagnostik EV BMS",
@@ -2793,14 +3213,16 @@
         "stepGeneric2": "Hapus kode DTC setelah memeriksa konektor rangkaian kabel.",
         "reportTitle": "Analisis Kode Diagnostik",
         "healthImpactTitle": "DAMPAK SKOR KESEHATAN MESIN",
-        "freeTrialBadge": "🎁 ANDA MENGGUNAKAN 1 UJI COBA DIAGNOSIS AI GRATIS"
+        "freeTrialBadge": " ANDA MENGGUNAKAN 1 UJI COBA DIAGNOSIS AI GRATIS",
+        "modalTitle": "Modal Title",
+        "modalSubtitle": "Modal Subtitle"
     },
     "dtcRisk": {
-        "safeTitle": "🟢 AMAN UNTUK DIKENDARAI",
+        "safeTitle": " AMAN UNTUK DIKENDARAI",
         "safeDesc": "Mogok ini tidak langsung mengancam keselamatan berkendara. Anda dapat berkendara dengan kecepatan sedang hingga ke bengkel.",
-        "warningTitle": "🟡 PERINGATAN: PERLU PEMERIKSAAN BENGKEL",
+        "warningTitle": " PERINGATAN: PERLU PEMERIKSAAN BENGKEL",
         "warningDesc": "Dapat terjadi penurunan performa dan emisi lebih tinggi. Harap segera kunjungi bengkel resmi.",
-        "criticalTitle": "🔴 KRITIS: HENTIKAN KENDARAAN / BENGKEL",
+        "criticalTitle": " KRITIS: HENTIKAN KENDARAAN / BENGKEL",
         "criticalDesc": "Risiko mekanis atau elektrikal kritis! Mesin atau sistem keselamatan dapat rusak. Segera tepi kendaraan dengan aman."
     },
     "dtcDetail": {
@@ -2851,7 +3273,7 @@
     "ev": {
         "loading": "Memuat Data Diagnostik EV...",
         "back": "← Kembali",
-        "title": "⚡ Dasbor Diagnostik EV & Baterai",
+        "title": " Dasbor Diagnostik EV & Baterai",
         "sohTitle": "Status Kesehatan Baterai (SOH)",
         "socAndPack": "Status Biaya (SoC): {{soc}}% | Tegangan Paket: {{voltage}} V",
         "insulationTitle": "Isolasi & Keamanan Termal",
@@ -2861,8 +3283,8 @@
         "minCellTemp": "Suhu Sel Min",
         "cellDistribution": "Distribusi Tegangan Sel",
         "cellIndex": "Sel #{{id}}",
-        "deviationWarning": "⚠️ Deviasi Tinggi",
-        "passportTitle": "🇪🇮 Paspor Baterai Digital UE",
+        "deviationWarning": " Deviasi Tinggi",
+        "passportTitle": " Paspor Baterai Digital UE",
         "passportId": "ID Paspor: {{id}}",
         "nominalCapacity": "Kapasitas Nominal: {{val}} kWh",
         "remainingCapacity": "Kapasitas Tersisa: {{val}} kWh",
@@ -2886,7 +3308,7 @@
         "exportSuccessMsg": "Paket data Anda dibuat pada {{date}}.\n\nIsi: Antrean telemetri (catatan {{count}}), Pengaturan aplikasi.",
         "exportErrorTitle": "Kesalahan",
         "exportErrorMsg": "Gagal membuat paket data.",
-        "purgeAlertTitle": "⚠️ Hapus Semua Data (Hak untuk Dilupakan)",
+        "purgeAlertTitle": " Hapus Semua Data (Hak untuk Dilupakan)",
         "purgeAlertMsg": "Semua catatan diagnostik kendaraan lokal dan cloud akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.",
         "cancel": "Batalkan",
         "confirmDelete": "Hapus Secara Permanen",
@@ -2896,13 +3318,13 @@
         "purgeErrorMsg": "Penghapusan data gagal."
     },
     "inspectionReport": {
-        "verificationHash": "🔒 HASH VERIFIKASI:"
+        "verificationHash": " HASH VERIFIKASI:"
     },
     "errorBoundary": {
         "aiDoctor": "AI DOKTER",
         "cortex": "KORTEKS",
         "obdScanner": "PEMINDAI DIAGNOSTIK OBD2",
-        "systemRecovery": "⚠️ Pemulihan Sistem",
+        "systemRecovery": " Pemulihan Sistem",
         "unexpectedError": "Pemindai Diagnostik Cortex OBD2 mengalami kesalahan UI yang tidak terduga. Peristiwa kecelakaan telah dilaporkan.",
         "retryApp": "COBA APLIKASI KEMBALI"
     },
@@ -2917,5 +3339,113 @@
         "engineOperatingHours": "JAM PENGOPERASIAN MESIN",
         "motorcycleTitle": "COCKPIT TELEMETRI SEPEDA MOTOR",
         "gear": "GIGI"
-    }
+    },
+    "coding": {
+        "wizard_title": "Daftar Periksa Keselamatan Pra-Pengkodean",
+        "voltage_check": "Pemeriksaan Tegangan Aki (Min 12.5V)",
+        "voltage_too_low": "Tegangan aki terlalu rendah. Pengkodean diblokir untuk keamanan.",
+        "preconditions_label": "PRASYARAT WAJIB",
+        "ignition_check": "Kontak ON, Mesin MATI",
+        "ignition_desc": "Nyalakan kontak tanpa menghidupkan mesin.",
+        "handbrake_check": "Rem Tangan Aktif",
+        "handbrake_desc": "Pastikan kendaraan berhenti dan rem tangan terpasang.",
+        "loads_check": "Lampu, AC & Radio MATI",
+        "loads_desc": "Matikan beban listrik tinggi untuk mencegah penurunan tegangan.",
+        "confirm_and_proceed": "Konfirmasi & Mulai Pengkodean",
+        "expert_mode_title": "MODE PAKAR / LONG CODING",
+        "expert_mode_warning": "Manipulasi Byte/Bit ECU langsung. Harap berhati-hati.",
+        "did_label": "TARGET DID (HEX)",
+        "payload_label": "DATA RAW HEX",
+        "byte_selector_title": "Pemilih Byte (Ketuk untuk mengedit bit)",
+        "bit_editor_title": "Byte {{index}} Peta Bit",
+        "byte_count": "TOTAL BYTE",
+        "checksum_label": "CHECKSUM (SUM16)",
+        "write_expert_payload": "Validasi & Tulis ke ECU",
+        "enter_valid_hex": "Masukkan DID yang valid dan muatan Hex dengan panjang genap."
+    },
+    "safety": {
+        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
+        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken (RPM = 0) silinebilir."
+    },
+    "deviceFound": "Device Found",
+    "data": "Data",
+    "stateChange": "State Change",
+    "error": "Error",
+    "log": "Log",
+    "android": {
+        "settings": {
+            "BLUETOOTH_SETTINGS": "B L U E T O O T H_ S E T T I N G S",
+            "WIFI_SETTINGS": "W I F I_ S E T T I N G S"
+        }
+    },
+    "DEV_123": "D E V_123",
+    "X-MotoCortex-Timestamp": "X- Moto Cortex- Timestamp",
+    "X-MotoCortex-Signature": "X- Moto Cortex- Signature",
+    "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
+    "grid": "Grid",
+    "disclaimers": {
+        "safetyNotice": "Safety Notice"
+    },
+    "Success": "Success",
+    "marketplace": {
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "unlocked": "Unlocked",
+        "unlock": "Unlock"
+    },
+    "inspection": {
+        "reportTitle": "Report Title",
+        "vehicleDetails": "Vehicle Details",
+        "diagnosticSummary": "Diagnostic Summary",
+        "shareReport": "Share Report"
+    },
+    "leanAngle": {
+        "title": "Title",
+        "resetMax": "Reset Max",
+        "maxLeft": "Max Left",
+        "maxRight": "Max Right",
+        "lateralG": "Lateral G",
+        "longitudinalG": "Longitudinal G",
+        "pitch": "Pitch"
+    },
+    "paywall_viewed": "Paywall_viewed",
+    "purchase_initiated": "Purchase_initiated",
+    "purchase_success": "Purchase_success",
+    "purchase_failed": "Purchase_failed",
+    "purchase_cancelled": "Purchase_cancelled",
+    "purchase_restore_initiated": "Purchase_restore_initiated",
+    "purchase_restore_success": "Purchase_restore_success",
+    "purchase_restore_failed": "Purchase_restore_failed",
+    "PERF_TEASER_LIMIT": "P E R F_ T E A S E R_ L I M I T",
+    "healthScore": {
+        "excellent": "Excellent",
+        "attention": "Attention",
+        "critical": "Critical",
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "launchAiDoctor": "Launch Ai Doctor"
+    },
+    "7E8": "7 E8",
+    "UU1ESD12345678901": "U U1 E S D12345678901",
+    "JY1RN123456789012": "J Y1 R N123456789012",
+    "WVWZZZ3CZWE123456": "W V W Z Z Z3 C Z W E123456",
+    "SHA-256": "S H A-256",
+    "DEFAULT_DEV_MOCK": "D E F A U L T_ D E V_ M O C K",
+    "GLOBAL": "G L O B A L",
+    "blocker-ok": "Blocker-ok",
+    "T": "T",
+    "ACTION_LOCKED": "A C T I O N_ L O C K E D",
+    "app_open": "App_open",
+    "": {
+        "": ""
+    },
+    "actuator": {
+        "fanTest": "Fan Test",
+        "fuelPumpTest": "Fuel Pump Test",
+        "throttleTest": "Throttle Test",
+        "safetySpeed": "Safety Speed",
+        "safetyVoltage": "Safety Voltage"
+    },
+    "item-1": "Item-1",
+    "_": "_"
 }

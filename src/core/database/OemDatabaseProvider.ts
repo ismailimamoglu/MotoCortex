@@ -10,12 +10,28 @@
 import { OEMFeatureDefinition, FeatureCategory } from './types';
 import { VAG_OEM_FEATURES } from './profiles/VagProfile';
 import { BMW_OEM_FEATURES } from './profiles/BmwProfile';
+import { MERCEDES_OEM_FEATURES } from './profiles/MercedesProfile';
+import { STELLANTIS_OEM_FEATURES } from './profiles/StellantisProfile';
+import { FORD_OEM_FEATURES } from './profiles/FordProfile';
+import { RENAULT_OEM_FEATURES } from './profiles/RenaultProfile';
+import { HYUNDAI_OEM_FEATURES } from './profiles/HyundaiProfile';
+import { CHINESE_EV_OEM_FEATURES } from './profiles/ChineseEvProfile';
+import { PORSCHE_OEM_FEATURES } from './profiles/PorscheProfile';
+import { HEAVY_DUTY_OEM_FEATURES } from './profiles/HeavyDutyProfile';
 
 export * from './types';
 
 const EXTENDED_OEM_FEATURES: OEMFeatureDefinition[] = [
     ...VAG_OEM_FEATURES,
     ...BMW_OEM_FEATURES,
+    ...MERCEDES_OEM_FEATURES,
+    ...STELLANTIS_OEM_FEATURES,
+    ...FORD_OEM_FEATURES,
+    ...RENAULT_OEM_FEATURES,
+    ...HYUNDAI_OEM_FEATURES,
+    ...CHINESE_EV_OEM_FEATURES,
+    ...PORSCHE_OEM_FEATURES,
+    ...HEAVY_DUTY_OEM_FEATURES,
     // ═════════════════════════════════════════════════════════════════════════
     // 0. SERVICE & MAINTENANCE SUITE (ALL BRANDS - P0 CRITICAL)
     // ═════════════════════════════════════════════════════════════════════════

@@ -1,4 +1,5 @@
 {
+    "4202": "4202",
     "tabs": {
         "dashboard": "SURVEILLANCE",
         "expertise": "EXPERT",
@@ -161,7 +162,14 @@
         "selected": "SÉLECTIONNÉ",
         "successTag": "[SUCCÈS]",
         "errorTag": "[ERREUR]",
-        "brandName": "CORTEX OBD2"
+        "brandName": "CORTEX OBD2",
+        "sampleSimData": "Données de simulation",
+        "normal": "Normal",
+        "connectionError": "Connection Error",
+        "gotIt": "Got It",
+        "securityAlert": "Security Alert",
+        "cloneSafetyRedirect": "Clone Safety Redirect",
+        "simMode": "Sim Mode"
     },
     "paywall": {
         "subtitle": "Débloquez les fonctionnalités de diagnostic les plus approfondies et tous les paramètres.",
@@ -190,8 +198,8 @@
         "noPurchasesMsgAndroid": "Aucun abonnement PRO actif n'a été trouvé associé à votre compte Google.",
         "terms": "Conditions d'utilisation",
         "privacy": "Politique de confidentialité",
-        "hardwareWarning": "⚠️ Remarque importante sur le matériel : en raison des restrictions légales d'Apple, les appareils iOS ne prennent pas en charge les adaptateurs Bluetooth Classic (v2.1) d'ancienne génération. Avant de mettre à niveau l'application vers le mode PRO, assurez-vous que votre appareil est compatible Bluetooth LE (4.0+) ou Wi-Fi.",
-        "hardwareWarningAndroid": "⚠️ Remarque importante sur le matériel : les appareils Android prennent en charge les adaptateurs Bluetooth Classic et Bluetooth LE (4.0+). Assurez-vous que votre appareil est compatible avant de passer en mode PRO.",
+        "hardwareWarning": " Remarque importante sur le matériel : en raison des restrictions légales d'Apple, les appareils iOS ne prennent pas en charge les adaptateurs Bluetooth Classic (v2.1) d'ancienne génération. Avant de mettre à niveau l'application vers le mode PRO, assurez-vous que votre appareil est compatible Bluetooth LE (4.0+) ou Wi-Fi.",
+        "hardwareWarningAndroid": " Remarque importante sur le matériel : les appareils Android prennent en charge les adaptateurs Bluetooth Classic et Bluetooth LE (4.0+). Assurez-vous que votre appareil est compatible avant de passer en mode PRO.",
         "errorTitle": "Les produits n'ont pas pu être chargés",
         "errorDesc": "Une erreur s'est produite lors du chargement des produits, veuillez vérifier votre connexion Internet et réessayer.",
         "retryBtn": "Réessayez",
@@ -200,21 +208,21 @@
         "crownBadge": "MOTO CORTEX PRO",
         "actionLocked": "FONCTIONNALITÉ PRO VERROUILLÉE",
         "congratsMsg": "Votre abonnement Cortex OBD2 PRO a été activé avec succès !",
-        "congratsTitle": "🎉 Félicitations !",
+        "congratsTitle": " Félicitations !",
         "errMsg": "Une erreur s'est produite lors de l'achat. Veuillez réessayer.",
-        "errTitle": "❌ Échec de l'achat",
+        "errTitle": " Échec de l'achat",
         "monthlyNotice": "Abonnement mensuel à renouvellement automatique",
         "noPkgMsg": "Veuillez sélectionner un forfait.",
-        "noPkgTitle": "⚠️ Aucun forfait sélectionné",
+        "noPkgTitle": " Aucun forfait sélectionné",
         "noPurchasesMsg": "Aucun abonnement PRO actif trouvé.",
-        "noPurchasesTitle": "ℹ️ Aucun achat trouvé",
+        "noPurchasesTitle": "ℹ Aucun achat trouvé",
         "proRequiredDesc": "Cette fonctionnalité nécessite un abonnement PRO.",
         "proRequiredTitle": "PRO requis",
         "purchasingText": "Sécurisation de la transaction...",
         "restoreErrorMsg": "Veuillez vérifier votre connexion internet.",
-        "restoreErrorTitle": "⚠️ Erreur de restauration",
+        "restoreErrorTitle": " Erreur de restauration",
         "restoreSuccessMsg": "Votre abonnement premium a été restauré avec succès !",
-        "restoreSuccessTitle": "✅ Achats restaurés",
+        "restoreSuccessTitle": " Achats restaurés",
         "weeklyNotice": "Achat unique, pas de renouvellement automatique",
         "yearlyNotice": "Abonnement annuel à renouvellement automatique",
         "aiDoctorLimitTitle": "LIMITE AI DOCTOR ATTEINTE",
@@ -258,8 +266,8 @@
         "ecuDetected": "ECU DÉTECTÉ, VÉRIFICATION... [4/5]",
         "ecuResponding": "L'ECU A RÉPONDÉ, TERMINANT LA CONNEXION... [5/5]",
         "protocolScanningHint": "(Analyse séquentielle des protocoles standards SP5, SP3, SP6, SP7...)",
-        "protocolFailed": "⚠️ PROTOCOLE COMPATIBLE INTROUVABLE ! (SP5, SP3, SP4, SP6, SP7 essayés)",
-        "ecuNotFound": "⚠️ L'ECU DU VÉHICULE NE RÉPOND PAS !",
+        "protocolFailed": " PROTOCOLE COMPATIBLE INTROUVABLE ! (SP5, SP3, SP4, SP6, SP7 essayés)",
+        "ecuNotFound": " L'ECU DU VÉHICULE NE RÉPOND PAS !",
         "hardwareCapabilityScore": "Score de capacité matérielle de l'adaptateur : {{score}}/100",
         "hardwareFatal": "Erreur critique : votre matériel est un faux clone qui ne prend pas en charge les anciens protocoles des véhicules. Impossible de se connecter à l'ECU du véhicule. Veuillez vous procurer un adaptateur de qualité (v1.5 ou original).",
         "progressFormat": "{{progress}}%",
@@ -297,7 +305,7 @@
         "terminalDesc": "Vous pouvez envoyer des commandes OBD-II ou AT/ST directement à l'ECU. Par exemple, « 010C » (régime du moteur) ou « ATRV » (tension de la batterie).",
         "ecuResponseLabel": "RÉPONSE DE L'ÉCU :",
         "adapterConnected": "ADAPTATEUR CONNECTÉ (OK)",
-        "lowQualityAdapterWarning": "⚠️ Adaptateur de faible qualité (score : {{score}}/100) : Votre adaptateur est un clone de faible qualité. Il lui manque la précision de timing requise pour les protocoles de véhicules plus anciens (comme K-Line sur Dacia, Renault, Fiat, Lada). Nous vous recommandons fortement de passer à un adaptateur OBD2 de haute qualité (v1.5 ou OBDLink/vLinker d'origine) pour vous connecter avec succès.",
+        "lowQualityAdapterWarning": " Adaptateur de faible qualité (score : {{score}}/100) : Votre adaptateur est un clone de faible qualité. Il lui manque la précision de timing requise pour les protocoles de véhicules plus anciens (comme K-Line sur Dacia, Renault, Fiat, Lada). Nous vous recommandons fortement de passer à un adaptateur OBD2 de haute qualité (v1.5 ou OBDLink/vLinker d'origine) pour vous connecter avec succès.",
         "statusProfiling": "Analyse des capacités de l'adaptateur OBD2...",
         "statusScanningCan": "Analyse des protocoles CAN-Bus modernes...",
         "statusScanningKline": "Réveiller les protocoles K-Line. Les véhicules anciens (Dacia, Renault, Fiat) peuvent mettre jusqu'à 15 secondes à répondre...",
@@ -314,7 +322,7 @@
         "connectBtn": "CONNECTER L'APPAREIL",
         "noActiveTitle": "Aucune connexion active",
         "noActiveDesc": "Il n’y a pas de connexion OBD2 active pour se déconnecter.",
-        "scanningAdapter": "🔄 Analyse de l'adaptateur (En attente de réponse)...",
+        "scanningAdapter": " Analyse de l'adaptateur (En attente de réponse)...",
         "scanningDevices": "Recherche des appareils Bluetooth OBD2...",
         "quickConnectTitle": "Dernier adaptateur détecté",
         "quickConnectDesc": "Connexion rapide à votre dernier adaptateur utilisé « {{name}} » ?",
@@ -338,7 +346,18 @@
         "changeCategory": "Changer de Catégorie",
         "passengerCarDesc": "Véhicules Particuliers & Utilitaires Léger 12V (OBD2 / CAN / KWP)",
         "motorcycleDesc": "Télémétrie Moto Euro 5 & Hauts Régimes",
-        "heavyDutyTruckDesc": "Poids Lourds & Autobus 24V (SAE J1939)"
+        "heavyDutyTruckDesc": "Poids Lourds & Autobus 24V (SAE J1939)",
+        "ignitionWarningTitle": "CONTRÔLE DU CONTACT (IGNITION ON)",
+        "ignitionWarningDesc": "Votre adaptateur ELM327 est connecté, mais le calculateur (ECU) ne répond pas. Veuillez mettre le contact (ON) ou démarrer le moteur et réessayer.",
+        "goToDashboard": "TABLEAU DE BORD EN DIRECT",
+        "connectRequired": "Connect Required",
+        "connectingECU": "Connecting E C U",
+        "pairingTipTitle": "İLK KURULUM & EŞLEŞTİRME REHBERİ",
+        "pairingTipDesc": "Android cihazlarda Bluetooth Classic adaptör kullanıyorsanız, ilk bağlantıdan önce telefonun Bluetooth ayarlarından eşleştirin (PIN: 1234 veya 0000). iOS ve BLE adaptörlerde doğrudan bağlanabilirsiniz.",
+        "openBtSettings": "BLUETOOTH AYARLARI",
+        "firstTimeGuideTitle": "First Time Guide Title",
+        "firstTimeGuideDescAndroid": "First Time Guide Desc Android",
+        "firstTimeGuideDescIos": "First Time Guide Desc Ios"
     },
     "dashboard": {
         "selectDevice": "TOUCHER POUR SÉLECTIONNER L'APPAREIL",
@@ -389,7 +408,12 @@
         "customizeSubtitleCAN": "Protocole CAN-Bus connecté. Vous pouvez sélectionner un maximum de {{limit}} capteurs.",
         "unit": "Unité",
         "statusNormal": "NORMAL",
-        "layoutChart": "GRAPHIQUE"
+        "layoutChart": "GRAPHIQUE",
+        "adblue": "Niveau d'AdBlue",
+        "egt": "Température des gaz d'échappement (EGT)",
+        "nox": "Valeur du capteur NOx",
+        "torque": "Couple moteur",
+        "selectedSensorsCount": "{{count}} / {{max}} capteurs sélectionnés"
     },
     "expertise": {
         "historyFound": "HISTORIQUE DU VÉHICULE TROUVÉ !",
@@ -418,7 +442,7 @@
         "vinRequiredDesc": "Pour s'inscrire, le numéro de châssis (VIN) doit apparaître automatiquement ou être écrit manuellement.",
         "missingInfo": "Informations manquantes",
         "missingInfoDesc": "Veuillez remplir les champs Marque et Modèle.",
-        "saved": "Enregistré ✅",
+        "saved": "Enregistré ",
         "savedDesc": "Il a été ajouté au garage grâce à l'expertise.",
         "connRequired": "Connexion requise",
         "connRequiredDesc": "Veuillez d'abord vous connecter au véhicule pour démarrer ce processus.",
@@ -436,29 +460,31 @@
         "moduleEngine": "Unité de commande du moteur (ECU)",
         "moduleAbs": "Système de freinage antiblocage (ABS)",
         "moduleTcm": "Module de commande de transmission (TCM)",
-        "moduleBcm": "Module de contrôle du corps (BCM)"
+        "moduleBcm": "Module de contrôle du corps (BCM)",
+        "simSaveBlocked": "Sim Save Blocked",
+        "scannedModules": "Scanned Modules"
     },
     "service": {
-        "safetyWarning": "⚠️ AVERTISSEMENT DE SÉCURITÉ",
+        "safetyWarning": " AVERTISSEMENT DE SÉCURITÉ",
         "safetyWarningDesc": "Au cours de ce processus : • Le contact doit être allumé • Le moteur doit être éteint • Ne démarrez pas le véhicule Voulez-vous continuer ?",
         "step1": "Étape 1 : effacer les codes d'erreur",
         "step1Desc": "Tous les codes d'erreur stockés (DTC) et le voyant Check Engine seront effacés. Les valeurs de compensation de carburant seront réinitialisées. Cette action est irréversible !",
         "step2": "Étape 2 : Réinitialisation matérielle de l'ECU",
-        "step2Desc": "Une réinitialisation électrique (Hard Reset) sera envoyée au calculateur moteur. Cela fonctionne comme si vous retiriez et installiez la batterie. ⚠️ Il est inefficace dans les calculateurs non pris en charge. Cela ne fait aucun mal.",
+        "step2Desc": "Une réinitialisation électrique (Hard Reset) sera envoyée au calculateur moteur. Cela fonctionne comme si vous retiriez et installiez la batterie. Il est inefficace dans les calculateurs non pris en charge. Cela ne fait aucun mal.",
         "clearCodes": "Supprimer les codes",
         "ecuReset": "Effacer les codes d'erreur",
         "finish": "Sauter (Terminer)",
-        "completed": "Terminé ✅",
+        "completed": "Terminé ",
         "completedDesc": "Les opérations de service ont été terminées avec succès. Vous pouvez redémarrer le véhicule.",
         "hardResetDesc": "Toutes les opérations de service ont été effectuées avec succès. • Codes d'erreur effacés • Réinitialisation des trims de carburant • Réinitialisation de l'ECU Vous pouvez redémarrer le véhicule."
     },
     "info": {
         "desc": "Application professionnelle de diagnostic de motos et de véhicules. Compatible avec tous les véhicules.",
-        "upgrade": "👑 Mise à niveau vers Cortex OBD2 Diagnostic Scanner PRO",
-        "upgradeAlert": "Accès anticipé 🎉",
+        "upgrade": " Mise à niveau vers Cortex OBD2 Diagnostic Scanner PRO",
+        "upgradeAlert": "Accès anticipé ",
         "upgradeAlertDesc": "Cortex OBD2 Diagnostic Scanner est actuellement en développement. Puisque vous êtes notre premier utilisateur, toutes les fonctionnalités professionnelles sont désormais disponibles. Votre retour nous est très précieux !",
         "helpGuide": "AIDE ET GUIDE",
-        "language": "🌐 Langue / Langue / Bahasa",
+        "language": " Langue / Langue / Bahasa",
         "support": "CENTRE D'ASSISTANCE",
         "supportSubject": "Assistance et commentaires Cortex OBD2 Diagnostic Scanner",
         "thanks": "Merci!",
@@ -507,16 +533,16 @@
         },
         "reconfigurePermissions": "Autorisations de réaffichage et conditions juridiques",
         "shareWithFriend": "PARTAGER AVEC UN AMI",
-        "shareMessageText": "Découvrez les codes d'erreur ECU et la télémétrie en direct avec Cortex OBD2 Diagnostic Scanner !\n\nTéléchargez dès maintenant :\n🍏 iOS (App Store): https://apps.apple.com/app/id6742882583\n🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n🌐 Web Portal: https://motocortex-telemetry.vercel.app/"
+        "shareMessageText": "Découvrez les codes d'erreur ECU et la télémétrie en direct avec Cortex OBD2 Diagnostic Scanner !\n\nTéléchargez dès maintenant :\n iOS (App Store): https://apps.apple.com/app/id6742882583\n Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n Web Portal: https://motocortex-telemetry.vercel.app/"
     },
     "report": {
-        "title": "🏍️ ═══ RAPPORT DE DIAGNOSTIC CORTEX OBD2 ═══ 🏍️",
-        "vehicleIdentity": "📋 IDENTIFICATION DU VÉHICULE",
+        "title": " ═══ RAPPORT DE DIAGNOSTIC CORTEX OBD2 ═══ ",
+        "vehicleIdentity": " IDENTIFICATION DU VÉHICULE",
         "vin": "Numéro de châssis (NIV)",
         "milDist": "Voyant moteur allumé",
         "distSinceCleared": "Erreur effacée",
-        "dtcCount": "🔍 CODES D'ERREUR (quantité{{count}})",
-        "sensorData": "📊 DONNÉES DU CAPTEUR EN DIRECT",
+        "dtcCount": " CODES D'ERREUR (quantité{{count}})",
+        "sensorData": " DONNÉES DU CAPTEUR EN DIRECT",
         "noData": "Échec de la lecture des données",
         "proApp": "Scanné avec Cortex OBD2 Diagnostic Scanner v7 PRO.",
         "date": "rendez-vous",
@@ -529,7 +555,7 @@
         "intakeAir": "Air d'admission",
         "manifold": "Collecteur",
         "voltage": "Tension de la batterie",
-        "shareMessage": "Suivez l'état de votre moto depuis votre poche avec l'application de diagnostic Motocortex OBD2 ! 🏍️📲 Télécharger : https://cortexobd2.app",
+        "shareMessage": "Suivez l'état de votre moto depuis votre poche avec l'application de diagnostic Motocortex OBD2 ! Télécharger : https://cortexobd2.app",
         "odometer": "Distance (KM)",
         "subtitle": "Inspection complète de diagnostic et de télémétrie d'occasion",
         "vehicleInfo": "Identification du véhicule et métadonnées de l'ECU",
@@ -590,10 +616,14 @@
         "loading": "Le mode 02 est remis en question...",
         "noData": "Aucune donnée gelée trouvée. Le véhicule peut ne pas prendre en charge cette fonctionnalité.",
         "error": "Erreur de lecture des données",
-        "values": "📸 VALEURS ÉCONOMISÉES AU MOMENT DE L'ÉCHEC",
+        "values": " VALEURS ÉCONOMISÉES AU MOMENT DE L'ÉCHEC",
         "retry": "RELIRE",
         "techInfo": "INFORMATIONS TECHNIQUES",
-        "techDesc": "• Mode OBD-II 02 : données d'arrêt sur image • PID 020C00 : RPM en défaut • PID 020D00 : Vitesse en défaut • PID 020500 : Température de l'eau de refroidissement au moment du défaut Ces données appartiennent au dernier code défaut. Lorsque les codes d'erreur sont effacés, les données d'arrêt sur image sont également effacées."
+        "techDesc": "• Mode OBD-II 02 : données d'arrêt sur image • PID 020C00 : RPM en défaut • PID 020D00 : Vitesse en défaut • PID 020500 : Température de l'eau de refroidissement au moment du défaut Ces données appartiennent au dernier code défaut. Lorsque les codes d'erreur sont effacés, les données d'arrêt sur image sont également effacées.",
+        "throttle": "Throttle",
+        "mapPressure": "Map Pressure",
+        "stft": "Stft",
+        "trimUnit": "Trim Unit"
     },
     "perf": {
         "title": "ESSAI DE PERFORMANCES",
@@ -608,7 +638,7 @@
         "stop": "ARRÊTER",
         "reset": "RÉINITIALISER",
         "howItWorks": "COMMENT ÇA MARCHE ?",
-        "howDesc": "1. Appuyez sur le bouton « Démarrer le test » 2. Le véhicule doit être à l'arrêt (Vitesse = 0) 3. Chrono démarre lorsque vous commencez à bouger 4. Des temps de dépassement de 60 km/h et 100 km/h sont enregistrés ⚠️ Faites ce test dans un endroit sûr !",
+        "howDesc": "1. Appuyez sur le bouton « Démarrer le test » 2. Le véhicule doit être à l'arrêt (Vitesse = 0) 3. Chrono démarre lorsque vous commencez à bouger 4. Des temps de dépassement de 60 km/h et 100 km/h sont enregistrés Faites ce test dans un endroit sûr !",
         "sec": "seconde"
     },
     "dtc": {
@@ -634,7 +664,8 @@
         "B0010": "Contrôle de déploiement de l'étape 1 avant le passager",
         "B0020": "Commande de déploiement de l'airbag latéral gauche",
         "B1000": "Défaut matériel du module de commande du corps (BCM)",
-        "B1325": "Basse tension du circuit d'alimentation de l'appareil"
+        "B1325": "Basse tension du circuit d'alimentation de l'appareil",
+        "generalFault": "General Fault"
     },
     "vehicleSelect": {
         "title": "CHOISISSEZ VOTRE VÉHICULE POUR AUGMENTER LA PRÉCISION DU DIAGNOSTIC",
@@ -768,7 +799,8 @@
         "langDesc": "Veuillez sélectionner votre langue préférée.",
         "langSelectSub": "PASSERELLE LINGUISTIQUE",
         "telemetryLabel": "Télémétrie diagnostique (opt-in)",
-        "telemetrySub": "Partagez un protocole anonyme et des journaux d'erreurs pour améliorer la compatibilité des véhicules."
+        "telemetrySub": "Partagez un protocole anonyme et des journaux d'erreurs pour améliorer la compatibilité des véhicules.",
+        "restartOnboarding": "Redémarrer la configuration initiale (Langue et autorisations)"
     },
     "disclaimer": "Tous les noms de produits, logos et marques sont la propriété de leurs propriétaires respectifs. Tous les noms d'entreprises, de produits et de services utilisés dans cette application sont uniquement à des fins d'identification. L'utilisation de ces noms, logos et marques n'implique aucune approbation ou parrainage.",
     "hiddenFeatures": {
@@ -903,8 +935,8 @@
         "lockExplain": "Votre adaptateur a été signalé comme une puce clone/fausse. Parce que les adaptateurs clones manquent de précision de synchronisation et peuvent endommager le véhicule pendant les opérations d'écriture, les fonctionnalités de codage et d'adaptation sont verrouillées. Veuillez vous procurer un appareil ELM327 v2.1 ou vLinker d'origine pour un codage sécurisé.",
         "vehiclePids": "LISTE DE CONTRÔLE DES CAPTEURS DU VÉHICULE",
         "checklistPrompt": "Les paramètres de capteur standard (PIDs) pris en charge par l'ECU de votre véhicule sont répertoriés ci-dessous. Les capteurs sans coche ne sont pas signalés par votre véhicule.",
-        "supportedBadge": "✓ PRIS EN CHARGE",
-        "unsupportedBadge": "❌ NON PRIS EN CHARGE",
+        "supportedBadge": " PRIS EN CHARGE",
+        "unsupportedBadge": " NON PRIS EN CHARGE",
         "excellent": "EXCELLENT (ORIGINAL)",
         "clone": "INCOMPATIBLE / CLONE"
     },
@@ -930,7 +962,7 @@
     "secretDebug": {
         "title": "DÉVERROUILLER FONCTIONS CACHÉES & UDS",
         "logFileSize": "Boîte noire/taille du fichier :",
-        "dtcCloudSync": "🛰️ SYNCHRONISATION NUAGE DTC",
+        "dtcCloudSync": " SYNCHRONISATION NUAGE DTC",
         "lastSync": "Dernière synchronisation",
         "syncNow": "Synchroniser maintenant",
         "developerTools": "OUTILS DE DÉVELOPPEUR",
@@ -944,8 +976,8 @@
         "title": "DÉBLOCAGE OPTIONS CACHÉES & CODAGE UDS",
         "subTitle": "ISO 14229 UDS Codage Long & Adaptation",
         "batteryVoltage": "TENSION BATTERIE",
-        "voltageReady": "✓ Sécurisé (Prêt pour codage calculateur)",
-        "voltageLocked": "⚠️ Tension basse (Codage verrouillé)",
+        "voltageReady": " Sécurisé (Prêt pour codage calculateur)",
+        "voltageLocked": " Tension basse (Codage verrouillé)",
         "locked": "VERROUILLÉ",
         "ready": "PRÊT",
         "allMarks": "TOUTES LES MARQUES",
@@ -955,7 +987,7 @@
         "catDisplay": "INSTRUMENTS",
         "catComfort": "CONFORT",
         "catSafety": "SÉCURITÉ",
-        "safetyAlertTitle": "⚠️ Alerte de tension de batterie faible",
+        "safetyAlertTitle": " Alerte de tension de batterie faible",
         "safetyAlertMsg": "Tension de batterie minimale de 12,2 V requise pour le codage.\nVeuillez connecter un chargeur ou démarrer le moteur.",
         "items": {
             "vag_staging_needle_sweep": {
@@ -2405,6 +2437,310 @@
             "fun_stealth_fighter_display": {
                 "name": "Mode cluster minimaliste de conduite nocturne de Stealth Fighter",
                 "desc": "Éteint tous les voyants du groupe, à l'exception du compteur de vitesse, pour la conduite de nuit dans l'obscurité totale."
+            },
+            "vag_lap_timer_oil_temp": {
+                "name": "Lap Timer & Oil Temperature in Gauge Cluster",
+                "desc": "Unlocks racetrack lap timer stopwatch and real-time engine oil temperature readout."
+            },
+            "vag_rear_scandinavian_drl": {
+                "name": "Scandinavian DRL (Rear Tail Lights ON with DRL)",
+                "desc": "Illuminates rear LED tail lights constantly when front daytime running lights are active."
+            },
+            "vag_drl_handbrake_off": {
+                "name": "Turn OFF DRL when Handbrake is Engaged",
+                "desc": "Automatically turns off daytime running lights whenever parking brake is pulled up."
+            },
+            "vag_drl_menu_in_mib": {
+                "name": "DRL ON/OFF Toggle Switch in Touchscreen Menu",
+                "desc": "Adds Daytime Running Lights toggle checkbox under Vehicle Lights settings in MIB screen."
+            },
+            "vag_rain_closing_windows": {
+                "name": "Rain Closing (Automatic Windows & Sunroof Close)",
+                "desc": "Closes all open windows and panoramic sunroof if parked vehicle detects rain on windshield."
+            },
+            "vag_audi_dynamic_throttle": {
+                "name": "Audi Linear Direct Throttle Response",
+                "desc": "Removes electronic pedal lag by switching from time-gradient to direct linear throttle mapping."
+            },
+            "vag_xds_differential_sensitivity": {
+                "name": "XDS Electronic Differential Lock Sensitivity",
+                "desc": "Increases cornering traction and reduces understeer by applying higher inner-wheel brake torque."
+            },
+            "vag_offroad_display_mib": {
+                "name": "Off-Road Display & Compass in Infotainment",
+                "desc": "Unlocks Off-Road telemetry screen displaying steering angle, compass, and oil/coolant temperatures."
+            },
+            "vag_highbeam_assist_memory": {
+                "name": "High-Beam Assist (Light Assist) State Memory",
+                "desc": "Maintains Auto High-Beam Assist active across ignition cycles so driver does not have to re-arm it."
+            },
+            "vag_comfort_turn_signals_count": {
+                "name": "Comfort Turn Signal Flash Cycles",
+                "desc": "Changes number of highway lane-change blinker pulses from standard 3 to 4 or 5."
+            },
+            "bmw_video_in_motion_speedlock": {
+                "name": "Video in Motion (VIM) Speedlock Removal",
+                "desc": "Allows USB and DVD video playback on iDrive screen while vehicle is moving."
+            },
+            "bmw_digital_speedo_kombi": {
+                "name": "Digital Speedometer in Instrument Cluster (V= km/h)",
+                "desc": "Adds real-time digital speed numerical readout on the onboard computer screen."
+            },
+            "bmw_acoustic_lock_chirp": {
+                "name": "Acoustic Alarm Chirp on Lock / Unlock",
+                "desc": "Adds acoustic confirmation chirp via alarm siren with volume setting in iDrive menu."
+            },
+            "bmw_auto_mirror_fold_comfort_close": {
+                "name": "Fold Mirrors Instantly with 1-Click Lock",
+                "desc": "Eliminates the 1.5s delay requirement for folding mirrors when pressing key lock."
+            },
+            "bmw_rolls_royce_warning_chimes": {
+                "name": "Rolls-Royce / BMW i / MINI Warning Chime Tones",
+                "desc": "Changes the system warning chimes (door open, low temp, seatbelt) to luxury Rolls-Royce tones."
+            },
+            "bmw_m_performance_boot_animation": {
+                "name": "M Performance / Alpina Cluster Boot Logo",
+                "desc": "Sets startup logo on digital instrument cluster to M Performance, M2, M3, M5, or Alpina."
+            },
+            "bmw_tpms_temperature_display": {
+                "name": "Tire Pressure & Temperature Live Display",
+                "desc": "Adds real-time individual tire temperature readouts alongside tire pressure on iDrive screen."
+            },
+            "bmw_rear_drl_scandinavian": {
+                "name": "Rear Tail Lights Active with Daytime Running Lights",
+                "desc": "Keeps rear LED neon rings illuminated when daytime running lights are active in position 0/Auto."
+            },
+            "bmw_sport_automatic_transmission_2tb": {
+                "name": "Sport Automatic Transmission (2TB) & Launch Control",
+                "desc": "Unlocks faster shifting times, rev-matching downshifts, and factory Launch Control mode."
+            },
+            "merc_needle_sweep_staging": {
+                "name": "Instrument Needle Sweep (AMG Staging)",
+                "desc": "Sweeps gauge needles to maximum upon turning on the ignition."
+            },
+            "merc_highbeam_memory": {
+                "name": "High-Beam Assist State Memory",
+                "desc": "Remembers the last active state of Adaptive Highbeam Assist across ignition cycles."
+            },
+            "merc_acoustic_lock_chirp": {
+                "name": "Acoustic Alarm Lock Chirp",
+                "desc": "Emits a short acoustic confirmation beep via alarm siren when vehicle is locked."
+            },
+            "merc_amg_cluster_menu_unlock": {
+                "name": "AMG Performance Cluster Menu & Oil Temp",
+                "desc": "Unlocks AMG performance screen displaying engine oil & gearbox temperature, lap timer, and G-meter."
+            },
+            "merc_ambient_lighting_64_colors": {
+                "name": "64-Color Dynamic Ambient Lighting Unlock",
+                "desc": "Expands ambient lighting color palette from standard colors to 64 multi-color dynamic themes in MBUX."
+            },
+            "merc_start_stop_last_state_memory": {
+                "name": "ECO Start-Stop Last State Memory",
+                "desc": "Remembers ECO Start/Stop button status instead of defaulting to ON on every ignition restart."
+            },
+            "merc_auto_mirror_fold_lock": {
+                "name": "Automatic Mirror Folding on Key Lock",
+                "desc": "Automatically folds side mirrors when locking with key fob and unfolds upon driver door open."
+            },
+            "merc_rear_drl_scandinavian": {
+                "name": "Rear Tail Lights as Daytime Running Lights (Scandinavian Mode)",
+                "desc": "Keeps rear LED tail lamps illuminated together with front DRLs during daytime driving."
+            },
+            "merc_seatbelt_warning_chime_mute": {
+                "name": "Seatbelt Acoustic Warning Chime Mute",
+                "desc": "Disables the continuous chime sound for unbuckled seatbelts (visual warning lamp remains active)."
+            },
+            "merc_agility_manual_mode_unlock": {
+                "name": "Agility (Sport+) & Manual Transmission Mode",
+                "desc": "Enables hidden Agility (A) and True Manual (M) driving transmission profiles in Dynamic Select."
+            },
+            "merc_esp_sport_threshold_tuning": {
+                "name": "ESP Sport Dynamic Slip Angle Adjustment",
+                "desc": "Allows increased wheel slip angle before ESP torque intervention for track driving."
+            },
+            "merc_flashing_emergency_brake_light": {
+                "name": "Adaptive Emergency Flashing Brake Lights",
+                "desc": "Flashes stop lamps at high frequency (5.5 Hz) during hard emergency braking (> 7 m/s²)."
+            },
+            "stell_auto_mirror_fold_lock": {
+                "name": "Automatic Mirror Folding on Key Lock",
+                "desc": "Folds side mirrors automatically upon pressing lock button on key fob."
+            },
+            "stell_cornering_fog_lights": {
+                "name": "Cornering Fog Light Illumination",
+                "desc": "Activates corresponding front fog lamp when turn signal is on or steering angle > 30° below 40 km/h."
+            },
+            "stell_needle_sweep_cluster": {
+                "name": "Instrument Needle Sweep (Sport Staging)",
+                "desc": "Performs gauge sweep on startup for analog/hybrid instrument clusters."
+            },
+            "stell_acoustic_lock_chirp": {
+                "name": "Acoustic Horn Chirp on Remote Lock",
+                "desc": "Gives a short horn tap confirmation when vehicle doors successfully lock."
+            },
+            "stell_rear_scandinavian_drl": {
+                "name": "Rear Scandinavian DRL Tail Lights",
+                "desc": "Illuminates rear tail lamps in conjunction with daytime running lights in Auto/0 mode."
+            },
+            "stell_lane_assist_memory_default": {
+                "name": "Lane Keeping Assist Last State Memory",
+                "desc": "Remembers the last ON/OFF state of Lane Keeping Assist instead of re-activating at every start."
+            },
+            "stell_sport_steering_weight_calibration": {
+                "name": "Dynamic Electric Power Steering (EPS) Weight Curve",
+                "desc": "Increases steering wheel resistance and centering feel for a firmer, sportier feedback."
+            },
+            "stell_digital_speedo_unit_toggle": {
+                "name": "Digital Speedometer km/h & mph Dual Display",
+                "desc": "Shows numeric speed readout in both km/h and mph simultaneously in the center LCD."
+            },
+            "ford_apim_ambient_multi_colors": {
+                "name": "SYNC 3/4 Multi-Color Ambient Lighting Theme",
+                "desc": "Unlocks full 7-color ambient lighting palette slider in SYNC touchscreen interface."
+            },
+            "ford_lincoln_auto_fold_mirrors": {
+                "name": "Lincoln Style Auto-Fold Mirrors on Lock",
+                "desc": "Folds power mirrors when locking vehicle and automatically unfolds upon closing driver door."
+            },
+            "ford_bambi_mode_fog_with_highbeam": {
+                "name": "Bambi Mode (High Beams + Fog Lights Simultaneous)",
+                "desc": "Prevents fog lights from turning off automatically when high beams are activated."
+            },
+            "ford_double_honk_disable": {
+                "name": "Disable Double Horn Honk on Keyless Exit",
+                "desc": "Disables loud double horn honk when driver exits running vehicle with key fob in pocket."
+            },
+            "ford_global_windows_remote_open_close": {
+                "name": "Global Window Roll Up & Down via Key Fob",
+                "desc": "Opens or closes all power windows by holding unlock or lock button on factory key fob."
+            },
+            "ford_cluster_digital_tpms_readout": {
+                "name": "Individual Tire Pressure (TPMS) Bar/PSI Display",
+                "desc": "Displays exact individual tire pressure numerical readouts on the instrument cluster screen."
+            },
+            "ford_sync_boot_splash_st_raptor": {
+                "name": "SYNC Performance Boot Splash Theme (ST / Raptor / RS)",
+                "desc": "Changes SYNC infotainment boot logo animation to Ford Performance / ST / Raptor styling."
+            },
+            "renault_rlink_video_in_motion": {
+                "name": "Video in Motion (VIM) Playback Unlock",
+                "desc": "Allows USB/video playback on R-Link 2 / EasyLink touchscreen while vehicle is in motion."
+            },
+            "renault_rs_monitor_telemetry_unlock": {
+                "name": "RS Monitor Performance Telemetry App",
+                "desc": "Enables Renault Sport Monitor app displaying live turbo boost, torque, oil temp, and G-force meters."
+            },
+            "renault_acoustic_lock_chirp": {
+                "name": "Acoustic Horn Chirp on Hands-Free Walkaway Lock",
+                "desc": "Emits a brief beep when vehicle automatically locks upon walking away with key card."
+            },
+            "renault_rear_scandinavian_drl": {
+                "name": "Scandinavian Daytime Running Tail Lights",
+                "desc": "Keeps rear 3D LED signature tail lamps active simultaneously with front DRL strips."
+            },
+            "renault_cornering_fog_lamps": {
+                "name": "Static Cornering Fog Light Illumination",
+                "desc": "Lights up the relevant front fog light during turning maneuvers below 40 km/h."
+            },
+            "renault_seatbelt_buzzer_mute": {
+                "name": "Seatbelt Warning Buzzer Sound Mute",
+                "desc": "Mutes acoustic beeping for unfastened seatbelts (visual cluster alert remains active)."
+            },
+            "hyundai_ev_charge_limit_ui_unlock": {
+                "name": "Manual EV AC/DC Charge Limit Setting UI",
+                "desc": "Unlocks 50% to 100% target SoC slider controls in infotainment for battery longevity."
+            },
+            "hyundai_isg_start_stop_memory": {
+                "name": "ISG (Idle Stop & Go) Last State Memory",
+                "desc": "Retains the last selected state of the Start-Stop button across vehicle restarts."
+            },
+            "hyundai_approach_auto_unlock_distance": {
+                "name": "Smart Key Approach Auto-Unlock Sensitivity",
+                "desc": "Adjusts proximity radar detection sensitivity for automatic welcome door unlocking."
+            },
+            "hyundai_lead_vehicle_departure_alert": {
+                "name": "Lead Vehicle Departure Notification Sensitivity",
+                "desc": "Enhances front camera sensitivity when alerting that the front vehicle has started moving in traffic."
+            },
+            "hyundai_welcome_escort_lighting_timer": {
+                "name": "Headlamp Escort / Follow-Me-Home Delay Timer",
+                "desc": "Extends headlamp illumination duration from 15s to 30s or 60s after locking vehicle."
+            },
+            "byd_battery_preconditioning_manual_toggle": {
+                "name": "Blade Battery Manual Pre-Heating / Pre-Conditioning",
+                "desc": "Enables manual battery thermal pre-heating before DC fast charging in cold weather."
+            },
+            "byd_vess_pedestrian_sound_customization": {
+                "name": "VESS Low-Speed Pedestrian Acoustic Warning Themes",
+                "desc": "Unlocks alternative synthesized engine / futuristic tone profiles for low-speed pedestrian alert."
+            },
+            "byd_ambient_sound_rhythm_sync": {
+                "name": "Music Rhythm Pulse Ambient Lighting Sync",
+                "desc": "Synchronizes cabin ambient LED brightness and color shifting with music bass rhythm."
+            },
+            "chery_auto_window_rain_close": {
+                "name": "Automatic Window & Sunroof Rain Closing",
+                "desc": "Closes all open windows and panoramic sunroof when rain sensor detects rainfall while parked."
+            },
+            "mg_ev_one_pedal_drive_memory": {
+                "name": "One-Pedal Driving Mode Retention",
+                "desc": "Remembers the last selected regenerative braking intensity (High/One-Pedal) across starts."
+            },
+            "porsche_needle_sweep_staging": {
+                "name": "Porsche Tachometer Needle Sweep on Start",
+                "desc": "Sweeps central analog tachometer needle to redline on ignition power up."
+            },
+            "porsche_sport_exhaust_valve_manual_mode": {
+                "name": "PSE Sport Exhaust Flaps Permanently Open",
+                "desc": "Keeps dual active exhaust valves 100% open across all RPM ranges when PSE button is active."
+            },
+            "porsche_rear_spoiler_manual_speed_threshold": {
+                "name": "Active Rear Aerodynamic Wing Deployment Speed",
+                "desc": "Adjusts automatic rear spoiler deployment speed threshold (80 km/h vs 120 km/h)."
+            },
+            "porsche_matrix_highbeam_unlock": {
+                "name": "PDLS+ Matrix LED Adaptive Anti-Glare High Beam",
+                "desc": "Enables European-spec variable anti-glare high beam light distribution."
+            },
+            "porsche_acoustic_chirp_lock": {
+                "name": "Acoustic Siren Beep on Central Lock",
+                "desc": "Gives a quick chirp confirmation when locking with Porsche smart key."
+            },
+            "actros_rsl_fleet_speed_limit": {
+                "name": "Road Speed Limiter (Fleet Limit)",
+                "desc": "Configures maximum vehicle road speed limiter (RSL) calibration for fleet operation policy."
+            },
+            "actros_idle_shutdown_timer": {
+                "name": "Automatic Engine Idle Shutdown Timer",
+                "desc": "Automatically shuts down engine after specified idle time while stationary with parking brake set."
+            },
+            "volvo_pto_engine_rpm_preset": {
+                "name": "PTO (Power Take-Off) Engine RPM Preset",
+                "desc": "Sets predefined constant engine idle speed when PTO is engaged for hydraulic pump and tipper operation."
+            },
+            "volvo_ppc_eco_roll_hysteresis": {
+                "name": "I-See / PPC Topographical Speed Tolerance (Eco-Roll)",
+                "desc": "Adjusts GPS predictive cruise control speed hysteresis tolerance window for maximum rolling fuel economy."
+            },
+            "scania_retarder_jake_brake_aggressiveness": {
+                "name": "Retarder & Jake Brake Downshift Aggressiveness",
+                "desc": "Adjusts retarder torque blending curve and automatic transmission downshifting response under braking."
+            },
+            "man_ecas_dock_level_memory": {
+                "name": "ECAS Air Suspension Loading Dock Height Memory",
+                "desc": "Stores and recalls customized pneumatic air suspension height level presets for loading docks."
+            },
+            "daf_stationary_dpf_regen_trigger": {
+                "name": "Stationary DPF Forced Soot Regeneration",
+                "desc": "Initiates stationary diesel particulate filter thermal soot burn routine in parked position."
+            },
+            "ford_trucks_reverse_buzzer_night_mode": {
+                "name": "Reverse Acoustic Alarm Night Quiet Mode",
+                "desc": "Attenuates reverse backup horn alarm volume for quiet night distribution in residential areas."
+            },
+            "cummins_ecm_fleet_speed_limiter": {
+                "name": "Cummins Engine Road Speed Limiter (RSL)",
+                "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
         "codeBtn": "CODER",
@@ -2427,15 +2763,15 @@
         "searchPlaceholder": "Rechercher option, DID ou calculateur...",
         "restoreSuccessTitle": "État d origine restauré",
         "restoreSuccessMsg": "L option sélectionnée a été réinitialisée à sa valeur DID d origine.",
-        "cloneLockedBanner": "⚠️ Adaptateur clone détecté - Codage verrouillé (mode lecture seule)",
-        "cloneAlertTitle": "⚠️ Adaptateur clone OBD2 détecté",
+        "cloneLockedBanner": " Adaptateur clone détecté - Codage verrouillé (mode lecture seule)",
+        "cloneAlertTitle": " Adaptateur clone OBD2 détecté",
         "cloneAlertMsg": "Votre adaptateur OBD2 connecté a été signalé comme un adaptateur clone contrefait manquant de la précision de synchronisation stricte requise pour l'écriture de l'ECU.\n\nVous pouvez parcourir et rechercher toutes les fonctionnalités, mais les opérations d'écriture de codage sont verrouillées pour protéger votre véhicule. Veuillez connecter un véritable adaptateur ELM327 v2.1+ ou vLinker pour l'écriture.",
         "riskLow": "FAIBLE RISQUE",
         "riskMedium": "RISQUE MOYEN",
         "riskHigh": "RISQUE ÉLEVÉ",
         "sfdProtected": "Calculateur protégé par SFD",
-        "legalDisclaimerUsLights": "⚠️ Remarque : les feux de stationnement continus aux États-Unis peuvent ne pas être légaux dans certaines juridictions européennes.",
-        "legalDisclaimerVim": "⚠️ Remarque : la lecture vidéo pendant la conduite est destinée uniquement aux passagers.",
+        "legalDisclaimerUsLights": " Remarque : les feux de stationnement continus aux États-Unis peuvent ne pas être légaux dans certaines juridictions européennes.",
+        "legalDisclaimerVim": " Remarque : la lecture vidéo pendant la conduite est destinée uniquement aux passagers.",
         "headerCategory": "Fonctionnalités et codage cachés",
         "vehicleMatched": "{{make}} — APPARAYÉ",
         "demoModeVehicle": "MODE DÉMO: {{make}}",
@@ -2445,14 +2781,14 @@
         "connectForFeaturesNote": "Connectez-vous à l'appareil OBD2 pour afficher les fonctionnalités",
         "codingFailed": "Échec du codage.",
         "engineRunningMsg": "Le codage ECU nécessite Contact MIS avec Moteur ÉTEINT (RPM == 0).",
-        "engineRunningTitle": "⚠️ Moteur en marche",
+        "engineRunningTitle": " Moteur en marche",
         "lowVoltageMsg": "La tension de la batterie est en dessous du seuil de sécurité.",
-        "lowVoltageTitle": "⚠️ Alerte tension batterie faible",
+        "lowVoltageTitle": " Alerte tension batterie faible",
         "motionAlertMsg": "Les opérations d'écriture ECU sont bloquées pendant que le véhicule est en mouvement.",
-        "motionAlertTitle": "🚨 Véhicule en mouvement",
+        "motionAlertTitle": " Véhicule en mouvement",
         "noMatchingFeatures": "Aucune fonctionnalité correspondante trouvée.",
         "unsafeModuleMsg": "Les écritures ECU sur les modules ABS/ESP et Airbag/SRS sont bloquées à 100%.",
-        "unsafeModuleTitle": "🚫 Module de sécurité protégé",
+        "unsafeModuleTitle": " Module de sécurité protégé",
         "catMotorcycle": "CALCULATEUR MOTO",
         "catRetrofit": "RÉNOVATION ET QUINCAILLERIE",
         "catEv": "VE ET BATTERIE",
@@ -2461,12 +2797,12 @@
         "catService": "SERVICE ET ENTRETIEN",
         "catPerformance": "PERFORMANCES",
         "segmentAll": "TOUTES LES MARQUES",
-        "segmentEuroPremium": "🇪🇺 Premium européenne",
-        "segmentEuroVolume": "🇪🇺 Volume européen",
-        "segmentAsian": "🌏 Asiatique",
-        "segmentAmerican": "🇺🇸 Américain",
-        "segmentChineseEv": "🇨🇳 EV chinois",
-        "segmentMotorcycle": "🏍️ Moto",
+        "segmentEuroPremium": " Premium européenne",
+        "segmentEuroVolume": " Volume européen",
+        "segmentAsian": " Asiatique",
+        "segmentAmerican": " Américain",
+        "segmentChineseEv": " EV chinois",
+        "segmentMotorcycle": " Moto",
         "detailTitle": "Détails des fonctionnalités et codage en un clic",
         "prePostValues": "Aperçu de la charge utile pré/post",
         "selectOption": "Sélectionnez l'option de codage :",
@@ -2488,7 +2824,55 @@
         "expertDidPlaceholder": "DID Hex (par exemple 0501)",
         "expertValPlaceholder": "Valeur Hex (par exemple 01)",
         "writeRawPayload": "ÉCRIRE LA CHARGE UDS BRUTE",
-        "enterValidHex": "Veuillez saisir des chaînes DID et Value Hex valides."
+        "enterValidHex": "Veuillez saisir des chaînes DID et Value Hex valides.",
+        "options": {
+            "speed85": "85 km/h (Filo)",
+            "speed90": "90 km/h (Standart)",
+            "speed100": "100 km/h (Otoyol)",
+            "speed110": "110 km/h (Maksimum)",
+            "idleOff": "Devre Dışı (Sürekli Rölanti)",
+            "idle3m": "3 Dakika Sonra Kapat",
+            "idle5m": "5 Dakika Sonra Kapat",
+            "idle10m": "10 Dakika Sonra Kapat",
+            "pto900": "900 RPM (Düşük Debi)",
+            "pto1100": "1100 RPM (Damper / Standart)",
+            "pto1300": "1300 RPM (Vinç / Yüksek Debi)",
+            "retarderLow": "Düşük (Yumuşak Otoyol)",
+            "retarderMed": "Orta (Standart)",
+            "retarderHigh": "Yüksek (Ağır Yük / Dağ)",
+            "levelNormal": "Normal Sürüş Seviyesi",
+            "levelRamp1": "Yükleme Rampası Seviyesi 1",
+            "levelRamp2": "Yükleme Rampası Seviyesi 2",
+            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "regenStatus": "Kurum Durumunu Sorgula",
+            "alarmFull": "Tam Ses (%100 Gündüz)",
+            "alarmNight": "Kısık Ses (%50 Gece Modu)",
+            "hyst3": "+/- 3 km/h (Hassas)",
+            "hyst5": "+/- 5 km/h (Dengeli)",
+            "hyst10": "+/- 10 km/h (Maksimum Tasarruf)",
+            "drl25": "%25 Kısık",
+            "drl50": "%50 Orta",
+            "drl75": "%75 Parlak",
+            "drl100": "%100 Tam Güç",
+            "xdsStandard": "Standart (Orta)",
+            "xdsStrong": "Güçlü (GTI / R)",
+            "blink1": "1 Flaş",
+            "blink3": "3 Flaş (Standart)",
+            "blink4": "4 Flaş",
+            "blink5": "5 Flaş (Genişletilmiş)",
+            "chimeBmw": "BMW Standart",
+            "chimeMini": "MINI Tarzı",
+            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeBmwi": "BMW i Elektrik",
+            "logoStandard": "Standart",
+            "logoMPerf": "M Performance",
+            "logoAlpina": "Alpina Mavi"
+        },
+        "catSoundAlerts": "Ses & Uyarılar",
+        "catDisplayInstrument": "Gösterge Paneli",
+        "catDrivingComfort": "Sürüş Konforu",
+        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catMotorcycleEcu": "Motosiklet ECU"
     },
     "ignition": {
         "title": "Avertissement d'état d'allumage",
@@ -2509,12 +2893,13 @@
         "peakHp": "HP de pointe",
         "peakTorque": "COUPLE DE PIC",
         "efficiency": "EFFICACITÉ",
-        "methodMaf": "Basé sur le MAF (débit d'air)",
-        "methodTorque": "Couple en direct basé sur PID",
-        "methodLoad": "Basé sur la charge calculée",
+        "methodMaf": "Hava Akış Tabanlı",
+        "methodTorque": "Canlı Tork Tabanlı",
+        "methodLoad": "Motor Yükü Tabanlı",
         "configWeight": "Poids du véhicule (kg) :",
         "configDisplacement": "Cylindrée du moteur (L) :",
-        "calcMethod": "MÉTHODE DE CALCUL"
+        "calcMethod": "MÉTHODE DE CALCUL",
+        "methodDiesel": "Dizel Tork & Yakıt Akışı"
     },
     "fuelTrim": {
         "title": "RÉGLAGE DU CARBURANT ET ANALYSE DU MÉLANGE AIR-CARBURANT",
@@ -2548,7 +2933,19 @@
         "causeHighFuelPressure": "Pression de rampe d'injection élevée (régulateur défectueux)",
         "actionCriticalRich": "Inspectez la vanne de purge EVAP et les fuites de retour de l’injecteur.",
         "causeRestrictedAirIntake": "Obstruction du conduit d’admission d’air",
-        "actionMildRich": "Vérifiez ou remplacez le filtre à air du moteur."
+        "actionMildRich": "Vérifiez ou remplacez le filtre à air du moteur.",
+        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
+        "railPressure": "Rail Basıncı",
+        "fuelRate": "Yakıt Debisi",
+        "widebandSensor": "Geniş Bant Lambda Sensörü",
+        "commonRailStatus": "Common Rail Püskürtme",
+        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
+        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda (Lean Burn) çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
+        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
+        "modeDiesel": "Dizel (Common Rail & Lambda)",
+        "modeGasoline": "Benzinli (STFT / LTFT)",
+        "leanNormal": "Fakir Karışım (İdeal Dizel)",
+        "railStable": "Basınç Kararlı"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER (DPF) MONITOR",
@@ -2589,24 +2986,46 @@
         "epsName": "Direction Assistée Électrique (EPS)",
         "hvacName": "Climatisation & Chauffage (HVAC)",
         "tpmsName": "Pression des Pneus (TPMS)",
-        "bmsName": "Gestion de la Batterie (BMS / EV)"
+        "bmsName": "Gestion de la Batterie (BMS / EV)",
+        "readyTitle": "Diagnostic ECU prêt"
     },
     "dct": {
         "title": "ADAPTATION DOUBLE EMBRAYAGE DCT",
         "subtitle": "Paramètres de base DSG / Powershift / EDC à double embrayage",
         "warningTitle": "CONDITIONS DE SÉCURITÉ DE L'ADAPTATION DCT",
         "warningDesc": "Veuillez vous assurer que toutes les conditions physiques préalables sont remplies avant de commencer l’adaptation :",
-        "checkGearPark": "✓ Enclenchez la position P et serrez le frein à main",
+        "checkGearPark": " Enclenchez la position P et serrez le frein à main",
         "checkFootBrake": "Frein à pied fermement enfoncé",
         "checkHandBrake": "Frein à main serré",
-        "checkOilTemp": "✓ La température d'huile de boîte doit être entre 30°C et 90°C",
+        "checkOilTemp": " La température d'huile de boîte doit être entre 30°C et 90°C",
         "startAdaptation": "COMMENCER L'ADAPTATION",
         "inProgress": "Exécution des réglages de base de la transmission... Ne relâchez PAS la pédale de frein !",
         "success": "Réinitialisation de la transmission DCT et réapprentissage de l'embrayage terminés avec succès !",
         "step1": "1/3 : Réalisation de l'étalonnage de la pression hydraulique...",
         "step2": "2/3 : Exécution des paramètres de base de l'embrayage 1 (K1)...",
         "step3": "3/3 : Exécution de l'adaptation de la fourche à engrenages de l'embrayage 2 (K2)...",
-        "ensurePreconditions": "Veuillez remplir toutes les conditions de sécurité avant de commencer."
+        "ensurePreconditions": "Veuillez remplir toutes les conditions de sécurité avant de commencer.",
+        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
+        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
+        "clutchSwitch": "Debriyaj Pedalı Müşürü",
+        "neutralSwitch": "Boş Vites (Nötr) Sensörü",
+        "reverseSwitch": "Geri Vites Müşürü",
+        "pressed": "BASILI",
+        "released": "SERBEST",
+        "neutral": "BOŞTA",
+        "inGear": "VİTESTE",
+        "active": "AKTİF",
+        "passive": "PASİF",
+        "startManualTest": "Sensör Testini Başlat",
+        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
+        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
+        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
+        "manualStep2": "Boş Vites Sensör Doğrulaması...",
+        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
+        "modeAuto": "Otomatik / DCT Uyarlama",
+        "modeManual": "Manuel Şanzıman Testi",
+        "park": "P (Park)",
+        "engaged": "ÇEKİLİ"
     },
     "safeExit": {
         "btn": "DÉCONNEXION SÉCURISÉE ET RÉINITIALISATION DE L'ADAPTATEUR",
@@ -2615,29 +3034,29 @@
         "success": "Réinitialisation de l'adaptateur OBD2 et connexion proprement terminée."
     },
     "admin": {
-        "clear": "🗑️ EFFACER",
-        "cloudTools": "🛰️ OUTILS CLOUD & SYSTÈME",
+        "clear": " EFFACER",
+        "cloudTools": " OUTILS CLOUD & SYSTÈME",
         "copy": "COPIER",
-        "crashTest": "💥 TEST DE CRASH",
+        "crashTest": " TEST DE CRASH",
         "crashBtn": "Accident",
         "deviceUuid": "UUID APPAREIL",
-        "presetTitle": "⚡ JEU DE COMMANDES RAPIDES :",
+        "presetTitle": " JEU DE COMMANDES RAPIDES :",
         "presetReset": "Réinitialiser l'adaptateur OBD2",
         "presetSpeed": "Vitesse du véhicule (km/h)",
         "presetReadDtc": "Lire les codes défaut",
         "presetClearDtc": "Effacer les codes défaut",
-        "refresh": "🔄 ACTUALISER",
+        "refresh": " ACTUALISER",
         "send": "ENVOYER",
-        "share": "📤 PARTAGER",
-        "terminalTitle": "🖥️ CONSOLE TERMINAL OBD EN DIRECT (TX / RX)",
+        "share": " PARTAGER",
+        "terminalTitle": " CONSOLE TERMINAL OBD EN DIRECT (TX / RX)",
         "userId": "ID UTILISATEUR",
-        "userInfo": "🔒 IDENTIFIANTS ADMINISTRATEUR",
+        "userInfo": " IDENTIFIANTS ADMINISTRATEUR",
         "devModeAlert": "La clé de développeur Secret PRO est désactivée dans les versions de production.",
         "invalidCmdError": "Veuillez entrer une commande OBD valide (ex: 01 0C ou AT Z)",
         "noLogsInfo": "Aucun enregistrement de journal à partager trouvé.",
         "logsLoading": "Chargement des journaux...",
         "calculating": "Calcul...",
-        "secretProTitle": "Clé PRO Secrète ⚡ (DEV)",
+        "secretProTitle": "Clé PRO Secrète (DEV)",
         "secretProActive": "Statut du Mode Licence PRO: ACTIF (TOUTES LES FONCTIONNALITÉS OUVERTES)",
         "secretProInactive": "Statut du Mode Licence PRO: INACTIF (FERMÉ)",
         "logsTruncated": "... [Journaux tronqués] ...",
@@ -2704,14 +3123,14 @@
         "subtitle": "Fournisseur : {{vendor}} | NIV : {{vin}}",
         "disclaimerTitle": "AVERTISSEMENT DE SÉCURITÉ",
         "disclaimerText": "Le déverrouillage du SGW accorde un accès en écriture aux calculateurs du véhicule. Un codage non autorisé ou des modifications inappropriées des paramètres peuvent affecter la garantie ou désactiver les systèmes de sécurité. La responsabilité appartient à l'utilisateur.",
-        "checkboxAccepted": "✓ J'accepte les conditions de déverrouillage SGW",
+        "checkboxAccepted": " J'accepte les conditions de déverrouillage SGW",
         "checkboxUnaccepted": "Veuillez accepter le protocole pour continuer",
         "offlineLabel": "Code de contournement hors ligne du technicien de terrain :",
         "offlinePlaceholder": "par exemple, OFF_89A2BF10",
         "offlineUnlockBtn": "Déverrouiller hors ligne (15 min)",
         "cloudUnlockBtn": "Déverrouiller avec Cloud Token (60 min)",
         "toggleToCloud": "← Revenir à la vérification cloud",
-        "toggleToOffline": "⚡ Mode de contournement de champ hors ligne",
+        "toggleToOffline": " Mode de contournement de champ hors ligne",
         "cancel": "Annuler",
         "warning": "Avertissement",
         "acceptWarning": "Veuillez accepter les mentions légales pour continuer.",
@@ -2719,7 +3138,8 @@
         "error": "Erreur",
         "tokenError": "Erreur de jeton",
         "tokenErrorMsg": "Échec du déverrouillage de SGW.",
-        "offlineActive": "Contournement hors ligne actif"
+        "offlineActive": "Contournement hors ligne actif",
+        "description": "Description"
     },
     "evBms": {
         "title": "Diagnostic GTB EV",
@@ -2793,14 +3213,16 @@
         "stepGeneric2": "Effacez les codes DTC après avoir inspecté les connecteurs du faisceau.",
         "reportTitle": "Analyse du code de diagnostic",
         "healthImpactTitle": "IMPACT DU SCORE DE SANTÉ DU MOTEUR",
-        "freeTrialBadge": "🎁 VOUS UTILISEZ VOTRE ESSAI GRATUIT DE DIAGNOSTIC IA"
+        "freeTrialBadge": " VOUS UTILISEZ VOTRE ESSAI GRATUIT DE DIAGNOSTIC IA",
+        "modalTitle": "Modal Title",
+        "modalSubtitle": "Modal Subtitle"
     },
     "dtcRisk": {
-        "safeTitle": "🟢 SANS DANGER POUR LA CONDUITE",
+        "safeTitle": " SANS DANGER POUR LA CONDUITE",
         "safeDesc": "Ce défaut ne menace pas directement la sécurité. Vous pouvez rouler à vitesse modérée jusqu'au garage.",
-        "warningTitle": "🟡 AVERTISSEMENT : CONTRÔLE AU GARAGE REQUIS",
+        "warningTitle": " AVERTISSEMENT : CONTRÔLE AU GARAGE REQUIS",
         "warningDesc": "Des pertes de puissance et une hausse des émissions sont possibles. Veuillez consulter un garage rapidement.",
-        "criticalTitle": "🔴 CRITIQUE : ARRÊTEZ LE VÉHICULE / URGENCE",
+        "criticalTitle": " CRITIQUE : ARRÊTEZ LE VÉHICULE / URGENCE",
         "criticalDesc": "Risque mécanique ou électrique critique ! Le moteur ou la sécurité peuvent être endommagés. Arrêtez-vous immédiatement."
     },
     "dtcDetail": {
@@ -2851,7 +3273,7 @@
     "ev": {
         "loading": "Chargement des données de diagnostic EV...",
         "back": "← Retour",
-        "title": "⚡ Tableau de bord de diagnostic EV et batterie",
+        "title": " Tableau de bord de diagnostic EV et batterie",
         "sohTitle": "État de santé de la batterie (SOH)",
         "socAndPack": "État de charge (SoC) : {{soc}}% | Tension du bloc : {{voltage}} V",
         "insulationTitle": "Isolation & Sécurité Thermique",
@@ -2861,8 +3283,8 @@
         "minCellTemp": "Température minimale de la cellule",
         "cellDistribution": "Distribution de tension des cellules",
         "cellIndex": "Cellule n°{{id}}",
-        "deviationWarning": "⚠️ Écart élevé",
-        "passportTitle": "🇪🇺 Passeport de batterie numérique européen",
+        "deviationWarning": " Écart élevé",
+        "passportTitle": " Passeport de batterie numérique européen",
         "passportId": "Numéro d'identification du passeport : {{id}}",
         "nominalCapacity": "Capacité nominale : {{val}} kWh",
         "remainingCapacity": "Capacité restante : {{val}} kWh",
@@ -2886,7 +3308,7 @@
         "exportSuccessMsg": "Votre package de données a été créé le {{date}}.\n\nContenu : file d'attente de télémétrie (enregistrements {{count}}), paramètres de l'application.",
         "exportErrorTitle": "Erreur",
         "exportErrorMsg": "Échec de la création du package de données.",
-        "purgeAlertTitle": "⚠️ Supprimer toutes les données (droit à l'oubli)",
+        "purgeAlertTitle": " Supprimer toutes les données (droit à l'oubli)",
         "purgeAlertMsg": "Tous les enregistrements de diagnostic de véhicule locaux et cloud seront définitivement supprimés. Cette action ne peut pas être annulée.",
         "cancel": "Annuler",
         "confirmDelete": "Supprimer définitivement",
@@ -2896,13 +3318,13 @@
         "purgeErrorMsg": "La suppression des données a échoué."
     },
     "inspectionReport": {
-        "verificationHash": "🔒 HASH DE VÉRIFICATION :"
+        "verificationHash": " HASH DE VÉRIFICATION :"
     },
     "errorBoundary": {
         "aiDoctor": "MÉDECIN IA",
         "cortex": "CORTEX",
         "obdScanner": "SCANNER DE DIAGNOSTIC OBD2",
-        "systemRecovery": "⚠️ Récupération du système",
+        "systemRecovery": " Récupération du système",
         "unexpectedError": "Le scanner de diagnostic Cortex OBD2 a rencontré une erreur d'interface utilisateur inattendue. L'événement de crash a été signalé.",
         "retryApp": "RÉESSAYER LA DEMANDE"
     },
@@ -2917,5 +3339,113 @@
         "engineOperatingHours": "HEURES DE FONCTIONNEMENT MOTEUR",
         "motorcycleTitle": "COCKPIT TÉLÉMÉTRIE MOTO",
         "gear": "RAPPORT"
-    }
+    },
+    "coding": {
+        "wizard_title": "Liste de contrôle de sécurité avant codage",
+        "voltage_check": "Contrôle tension batterie (Min 12.5V)",
+        "voltage_too_low": "Tension batterie trop basse. Codage bloqué.",
+        "preconditions_label": "PRÉCONDITIONS OBLIGATOIRES",
+        "ignition_check": "Contact MIS, Moteur COUPÉ",
+        "ignition_desc": "Mettre le contact sans démarrer le moteur.",
+        "handbrake_check": "Frein de stationnement serré",
+        "handbrake_desc": "Assurez-vous que le véhicule est immobile et le frein à main actif.",
+        "loads_check": "Phares, Climatisation & Radio ÉTEINTS",
+        "loads_desc": "Éteignez tous les consommateurs électriques pour éviter les chutes de tension.",
+        "confirm_and_proceed": "Confirmer & Lancer le codage",
+        "expert_mode_title": "MODE EXPERT / CODAGE LONG",
+        "expert_mode_warning": "Modification directe Octets/Bits ECU. Faites preuve de prudence.",
+        "did_label": "DID CIBLE (HEX)",
+        "payload_label": "DONNÉES HEX BRUTES",
+        "byte_selector_title": "Sélecteur d'octet (Appuyez pour modifier les bits)",
+        "bit_editor_title": "Octet {{index}} Matrice de bits",
+        "byte_count": "TOTAL OCTETS",
+        "checksum_label": "SOMME DE CONTRÔLE (SUM16)",
+        "write_expert_payload": "Valider & Écrire dans le calculateur",
+        "enter_valid_hex": "Veuillez saisir un DID valide et un hexadécimal de longueur paire."
+    },
+    "safety": {
+        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
+        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken (RPM = 0) silinebilir."
+    },
+    "deviceFound": "Device Found",
+    "data": "Data",
+    "stateChange": "State Change",
+    "error": "Error",
+    "log": "Log",
+    "android": {
+        "settings": {
+            "BLUETOOTH_SETTINGS": "B L U E T O O T H_ S E T T I N G S",
+            "WIFI_SETTINGS": "W I F I_ S E T T I N G S"
+        }
+    },
+    "DEV_123": "D E V_123",
+    "X-MotoCortex-Timestamp": "X- Moto Cortex- Timestamp",
+    "X-MotoCortex-Signature": "X- Moto Cortex- Signature",
+    "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
+    "grid": "Grid",
+    "disclaimers": {
+        "safetyNotice": "Safety Notice"
+    },
+    "Success": "Success",
+    "marketplace": {
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "unlocked": "Unlocked",
+        "unlock": "Unlock"
+    },
+    "inspection": {
+        "reportTitle": "Report Title",
+        "vehicleDetails": "Vehicle Details",
+        "diagnosticSummary": "Diagnostic Summary",
+        "shareReport": "Share Report"
+    },
+    "leanAngle": {
+        "title": "Title",
+        "resetMax": "Reset Max",
+        "maxLeft": "Max Left",
+        "maxRight": "Max Right",
+        "lateralG": "Lateral G",
+        "longitudinalG": "Longitudinal G",
+        "pitch": "Pitch"
+    },
+    "paywall_viewed": "Paywall_viewed",
+    "purchase_initiated": "Purchase_initiated",
+    "purchase_success": "Purchase_success",
+    "purchase_failed": "Purchase_failed",
+    "purchase_cancelled": "Purchase_cancelled",
+    "purchase_restore_initiated": "Purchase_restore_initiated",
+    "purchase_restore_success": "Purchase_restore_success",
+    "purchase_restore_failed": "Purchase_restore_failed",
+    "PERF_TEASER_LIMIT": "P E R F_ T E A S E R_ L I M I T",
+    "healthScore": {
+        "excellent": "Excellent",
+        "attention": "Attention",
+        "critical": "Critical",
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "launchAiDoctor": "Launch Ai Doctor"
+    },
+    "7E8": "7 E8",
+    "UU1ESD12345678901": "U U1 E S D12345678901",
+    "JY1RN123456789012": "J Y1 R N123456789012",
+    "WVWZZZ3CZWE123456": "W V W Z Z Z3 C Z W E123456",
+    "SHA-256": "S H A-256",
+    "DEFAULT_DEV_MOCK": "D E F A U L T_ D E V_ M O C K",
+    "GLOBAL": "G L O B A L",
+    "blocker-ok": "Blocker-ok",
+    "T": "T",
+    "ACTION_LOCKED": "A C T I O N_ L O C K E D",
+    "app_open": "App_open",
+    "": {
+        "": ""
+    },
+    "actuator": {
+        "fanTest": "Fan Test",
+        "fuelPumpTest": "Fuel Pump Test",
+        "throttleTest": "Throttle Test",
+        "safetySpeed": "Safety Speed",
+        "safetyVoltage": "Safety Voltage"
+    },
+    "item-1": "Item-1",
+    "_": "_"
 }

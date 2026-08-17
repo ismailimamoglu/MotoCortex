@@ -35,6 +35,30 @@ describe('1. Vehicle Identity & Fingerprint Engine Tests', () => {
         const parsed = identityEngine.parseVinResponse(rawResponse);
         expect(parsed).toBe('WVWZZZ1KZBP000000');
     });
+
+    test('Parses multi-frame ISO 15765-4 / J1979 5-frame VIN response correctly', () => {
+        const rawLogResponse = `
+            49 02 01 00 00 00 55
+            49 02 02 55 31 4B 53
+            49 02 03 44 38 4B 4A
+            49 02 04 34 35 31 34
+            49 02 05 33 32 30 32
+        `;
+        const parsed = identityEngine.parseVinResponse(rawLogResponse);
+        expect(parsed).toBe('UU1KSD8KJ45143202');
+    });
+
+    test('Parses continuous 5-frame hex stream without frame boundaries correctly', () => {
+        const continuousStream = `4902010000005549020255314B5349020344384B4A4902043435313449020533323032`;
+        const parsed = identityEngine.parseVinResponse(continuousStream);
+        expect(parsed).toBe('UU1KSD8KJ45143202');
+    });
+
+    test('Parses UDS 22 F1 90 ReadDataByIdentifier VIN response correctly', () => {
+        const rawUdsResponse = `62 F1 90 55 55 31 4B 53 44 38 4B 4A 34 35 31 34 33 32 30 32`;
+        const parsed = identityEngine.parseVinResponse(rawUdsResponse);
+        expect(parsed).toBe('UU1KSD8KJ45143202');
+    });
 });
 
 describe('2. ISO 14229 UDS Protocol Engine Tests', () => {

@@ -112,6 +112,7 @@ interface AppState {
   setIsPro: (isPro: boolean) => void;
   setIsBackdoorPro: (isBackdoorPro: boolean) => void;
   setHasOnboarded: (hasOnboarded: boolean) => void;
+  resetOnboarding: () => void;
   setFeatureEnabled: (id: string, enabled: boolean) => void;
   setIsTelemetryOptedIn: (enabled: boolean) => void;
   toggleSimulationMode: () => void;
@@ -270,6 +271,7 @@ export const useAppStore = create<AppState>()(
         }
       },
       setHasOnboarded: (hasOnboarded) => set({ hasOnboarded }),
+      resetOnboarding: () => set({ hasOnboarded: false }),
       toggleSimulationMode: () => set((state) => {
         const nextSimMode = !state.isSimulationMode;
         

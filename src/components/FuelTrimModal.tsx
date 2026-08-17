@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { FuelTrimService, FuelTrimAnalysis } from '../services/fuelTrimService';
@@ -7,20 +7,34 @@ import { FuelTrimService, FuelTrimAnalysis } from '../services/fuelTrimService';
 interface FuelTrimModalProps {
   visible: boolean;
   onClose: () => void;
-  stftBank1Pct: number;
-  ltftBank1Pct: number;
+  stftBank1Pct?: number;
+  ltftBank1Pct?: number;
   o2VoltageV?: number;
+  fuelType?: 'gasoline' | 'diesel' | 'hybrid' | 'electric';
+  railPressureBar?: number;
+  lambdaValue?: number;
+  fuelRateLph?: number;
 }
 
 export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
   visible,
   onClose,
-  stftBank1Pct,
-  ltftBank1Pct,
+  stftBank1Pct = 0,
+  ltftBank1Pct = 0,
   o2VoltageV,
+  fuelType = 'diesel',
+  railPressureBar = 320,
+  lambdaValue = 1.35,
+  fuelRateLph = 5.2,
 }) => {
   const { t } = useTranslation();
   const tc = useThemeColors();
+
+  const [activeType, setActiveType] = useState<'gasoline' | 'diesel'>(
+    fuelType === 'gasoline' ? 'gasoline' : 'diesel'
+  );
+
+  const isDiesel = activeType === 'diesel';
 
   const analysis: FuelTrimAnalysis = FuelTrimService.analyze({
     stftBank1Pct,
@@ -33,113 +47,181 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
   return (
     <View style={{ flex: 1, backgroundColor: tc.bg, padding: 16 }}>
       <ScrollView contentContainerStyle={styles.content}>
-            {/* Status Card */}
-            <View style={[styles.statusCard, { backgroundColor: tc.elevated, borderColor: analysis.statusColor }]}>
-              <Text style={[styles.statusTitle, { color: analysis.statusColor }]}>
-                {t(analysis.titleKey)}
+        {/* Fuel Type Switcher */}
+        <View style={styles.modeSwitcherContainer}>
+          <TouchableOpacity
+            style={[
+              styles.modeBtn,
+              {
+                backgroundColor: isDiesel ? '#007eff' : tc.elevated,
+                borderColor: isDiesel ? '#007eff' : tc.border,
+              },
+            ]}
+            onPress={() => setActiveType('diesel')}
+          >
+            <Text
+              style={[
+                styles.modeBtnText,
+                { color: isDiesel ? '#ffffff' : tc.textSec, fontWeight: isDiesel ? '800' : '600' },
+              ]}
+            >
+              {t('fuelTrim.modeDiesel', { defaultValue: 'Dizel (Common Rail & Lambda)' })}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.modeBtn,
+              {
+                backgroundColor: !isDiesel ? '#007eff' : tc.elevated,
+                borderColor: !isDiesel ? '#007eff' : tc.border,
+              },
+            ]}
+            onPress={() => setActiveType('gasoline')}
+          >
+            <Text
+              style={[
+                styles.modeBtnText,
+                { color: !isDiesel ? '#ffffff' : tc.textSec, fontWeight: !isDiesel ? '800' : '600' },
+              ]}
+            >
+              {t('fuelTrim.modeGasoline', { defaultValue: 'Benzinli (STFT / LTFT)' })}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Main Status Header Card */}
+        <View style={[styles.statusCard, { backgroundColor: tc.elevated, borderColor: isDiesel ? tc.green : analysis.statusColor }]}>
+          <Text style={[styles.statusTitle, { color: isDiesel ? tc.green : analysis.statusColor }]}>
+            {isDiesel 
+              ? t('fuelTrim.dieselCombustionNormal', { defaultValue: 'Dizel Enjeksiyon & Yanma Sağlığı Normal' }) 
+              : t(analysis.titleKey)}
+          </Text>
+
+          <View style={styles.metricsRow}>
+            <View style={styles.metricBox}>
+              <Text style={[styles.metricLabel, { color: tc.textSec }]}>
+                {isDiesel ? t('fuelTrim.railPressure', { defaultValue: 'Rail Basıncı' }) : t('fuelTrim.afrRatio')}
               </Text>
-
-              <View style={styles.metricsRow}>
-                <View style={styles.metricBox}>
-                  <Text style={[styles.metricLabel, { color: tc.textSec }]}>{t('fuelTrim.afrRatio')}</Text>
-                  <Text style={[styles.metricVal, { color: tc.textPri }]}>{analysis.estimatedAfr}:1</Text>
-                </View>
-
-                <View style={styles.metricBox}>
-                  <Text style={[styles.metricLabel, { color: tc.textSec }]}>{t('fuelTrim.lambda')}</Text>
-                  <Text style={[styles.metricVal, { color: tc.textPri }]}>{analysis.lambdaValue}</Text>
-                </View>
-
-                <View style={styles.metricBox}>
-                  <Text style={[styles.metricLabel, { color: tc.textSec }]}>{t('fuelTrim.totalTrim')}</Text>
-                  <Text style={[styles.metricVal, { color: analysis.statusColor }]}>
-                    {analysis.totalTrimBank1 > 0 ? `+${analysis.totalTrimBank1}` : analysis.totalTrimBank1}%
-                  </Text>
-                </View>
-              </View>
+              <Text style={[styles.metricVal, { color: tc.textPri }]}>
+                {isDiesel ? `${railPressureBar} Bar` : `${analysis.estimatedAfr}:1`}
+              </Text>
             </View>
 
-            {/* Live STFT & LTFT Meter Cards */}
-            <View style={styles.dualTrimRow}>
-              <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
-                <Text style={[styles.trimCardLabel, { color: tc.cyan }]}>{t('fuelTrim.stft')}</Text>
-                <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
-                  {stftBank1Pct > 0 ? `+${stftBank1Pct}` : stftBank1Pct}%
-                </Text>
-              </View>
-
-              <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
-                <Text style={[styles.trimCardLabel, { color: tc.purple }]}>{t('fuelTrim.ltft')}</Text>
-                <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
-                  {ltftBank1Pct > 0 ? `+${ltftBank1Pct}` : ltftBank1Pct}%
-                </Text>
-              </View>
+            <View style={styles.metricBox}>
+              <Text style={[styles.metricLabel, { color: tc.textSec }]}>{t('fuelTrim.lambda')}</Text>
+              <Text style={[styles.metricVal, { color: tc.textPri }]}>
+                {isDiesel ? lambdaValue : analysis.lambdaValue}
+              </Text>
             </View>
 
-            {/* Educational & Diagnostic Guide */}
-            <View style={[styles.guideBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
-              <Text style={[styles.guideTitle, { color: tc.textPri }]}>{t('fuelTrim.guideTitle')}</Text>
-              <Text style={[styles.guideDesc, { color: tc.textSec }]}>{t('fuelTrim.guideDesc')}</Text>
-
-              {analysis.causesKeys.length > 0 && (
-                <View style={styles.sectionMargin}>
-                  <Text style={[styles.subHeading, { color: tc.amber }]}>{t('fuelTrim.causesTitle')}</Text>
-                  {analysis.causesKeys.map((ck, i) => (
-                    <Text key={i} style={[styles.bulletPoint, { color: tc.textSec }]}>
-                      • {t(ck)}
-                    </Text>
-                  ))}
-                </View>
-              )}
-
-              <View style={styles.sectionMargin}>
-                <Text style={[styles.subHeading, { color: tc.cyan }]}>{t('fuelTrim.actionTitle')}</Text>
-                <Text style={[styles.actionText, { color: tc.textPri }]}>
-                  {t(analysis.recommendedActionKey)}
-                </Text>
-              </View>
+            <View style={styles.metricBox}>
+              <Text style={[styles.metricLabel, { color: tc.textSec }]}>
+                {isDiesel ? t('fuelTrim.fuelRate', { defaultValue: 'Yakıt Debisi' }) : t('fuelTrim.totalTrim')}
+              </Text>
+              <Text style={[styles.metricVal, { color: isDiesel ? tc.cyan : analysis.statusColor }]}>
+                {isDiesel 
+                  ? `${fuelRateLph} L/h` 
+                  : (analysis.totalTrimBank1 > 0 ? `+${analysis.totalTrimBank1}%` : `${analysis.totalTrimBank1}%`)}
+              </Text>
             </View>
-          </ScrollView>
+          </View>
+        </View>
+
+        {/* Live Trim or Diesel Injection Cards */}
+        {isDiesel ? (
+          <View style={styles.dualTrimRow}>
+            <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+              <Text style={[styles.trimCardLabel, { color: tc.cyan }]}>
+                {t('fuelTrim.widebandSensor', { defaultValue: 'Geniş Bant Lambda Sensörü' })}
+              </Text>
+              <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
+                λ {lambdaValue}
+              </Text>
+              <Text style={{ color: tc.green, fontSize: 11, fontWeight: '700', marginTop: 4 }}>
+                {t('fuelTrim.leanNormal', { defaultValue: 'Fakir Karışım (İdeal Dizel)' })}
+              </Text>
+            </View>
+
+            <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+              <Text style={[styles.trimCardLabel, { color: tc.green }]}>
+                {t('fuelTrim.commonRailStatus', { defaultValue: 'Common Rail Püskürtme' })}
+              </Text>
+              <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
+                {railPressureBar} Bar
+              </Text>
+              <Text style={{ color: tc.cyan, fontSize: 11, fontWeight: '700', marginTop: 4 }}>
+                {t('fuelTrim.railStable', { defaultValue: 'Basınç Kararlı' })}
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.dualTrimRow}>
+            <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+              <Text style={[styles.trimCardLabel, { color: tc.cyan }]}>{t('fuelTrim.stft')}</Text>
+              <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
+                {stftBank1Pct > 0 ? `+${stftBank1Pct}` : stftBank1Pct}%
+              </Text>
+            </View>
+
+            <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+              <Text style={[styles.trimCardLabel, { color: tc.purple }]}>{t('fuelTrim.ltft')}</Text>
+              <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
+                {ltftBank1Pct > 0 ? `+${ltftBank1Pct}` : ltftBank1Pct}%
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* Diagnostic Guide */}
+        <View style={[styles.guideBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+          <Text style={[styles.guideTitle, { color: tc.textPri }]}>
+            {isDiesel 
+              ? t('fuelTrim.dieselGuideTitle', { defaultValue: 'Dizel Yanma & Karışım Rehberi' }) 
+              : t('fuelTrim.guideTitle')}
+          </Text>
+          <Text style={[styles.guideDesc, { color: tc.textSec }]}>
+            {isDiesel
+              ? t('fuelTrim.dieselGuideDesc', { defaultValue: 'Dizel motorlar aşırı hava ile fakir karışımda (Lean Burn) çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.' })
+              : t('fuelTrim.guideDesc')}
+          </Text>
+
+          <View style={styles.sectionMargin}>
+            <Text style={[styles.subHeading, { color: tc.cyan }]}>{t('fuelTrim.actionTitle')}</Text>
+            <Text style={[styles.actionText, { color: tc.textPri }]}>
+              {isDiesel 
+                ? t('fuelTrim.dieselActionNormal', { defaultValue: 'Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.' })
+                : t(analysis.recommendedActionKey)}
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  container: {
-    height: '85%',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    borderWidth: 1,
-    padding: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '800',
-  },
-  subtitle: {
-    fontSize: 12,
-    marginTop: 2,
-  },
-  closeBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   content: {
     gap: 16,
     paddingBottom: 24,
+  },
+  modeSwitcherContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 4,
+  },
+  modeBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modeBtnText: {
+    fontSize: 12.5,
+    textAlign: 'center',
   },
   statusCard: {
     padding: 16,
@@ -183,10 +265,12 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '800',
     marginBottom: 4,
+    textAlign: 'center',
   },
   trimCardVal: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '900',
+    marginTop: 4,
   },
   guideBox: {
     padding: 16,
@@ -210,11 +294,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '800',
     marginBottom: 4,
-  },
-  bulletPoint: {
-    fontSize: 13,
-    lineHeight: 18,
-    marginLeft: 4,
   },
   actionText: {
     fontSize: 13,

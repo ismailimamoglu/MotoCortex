@@ -1,0 +1,128 @@
+/**
+ * FordProfile.ts — Ford & Lincoln OEM Feature Activation Profile
+ * Supports Focus, Fiesta, Mustang, Mach-E, Ranger, Explorer, F-150.
+ */
+
+import { OEMFeatureDefinition } from '../types';
+
+export const FORD_OEM_FEATURES: OEMFeatureDefinition[] = [
+    {
+        id: 'ford_apim_ambient_multi_colors',
+        nameKey: 'features.items.ford_apim_ambient_multi_colors.name',
+        descKey: 'features.items.ford_apim_ambient_multi_colors.desc',
+        defaultName: 'SYNC 3/4 Multi-Color Ambient Lighting Theme',
+        defaultDesc: 'Unlocks full 7-color ambient lighting palette slider in SYNC touchscreen interface.',
+        make: 'Ford',
+        category: 'LIGHTING',
+        targetEcuHeader: '5F',
+        didHex: '2010',
+        byteIndex: 0,
+        bitIndex: 2,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'ford_lincoln_auto_fold_mirrors',
+        nameKey: 'features.items.ford_lincoln_auto_fold_mirrors.name',
+        descKey: 'features.items.ford_lincoln_auto_fold_mirrors.desc',
+        defaultName: 'Lincoln Style Auto-Fold Mirrors on Lock',
+        defaultDesc: 'Folds power mirrors when locking vehicle and automatically unfolds upon closing driver door.',
+        make: 'Ford',
+        category: 'DRIVING_COMFORT',
+        targetEcuHeader: '726',
+        didHex: '2020',
+        byteIndex: 1,
+        bitIndex: 4,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'ford_bambi_mode_fog_with_highbeam',
+        nameKey: 'features.items.ford_bambi_mode_fog_with_highbeam.name',
+        descKey: 'features.items.ford_bambi_mode_fog_with_highbeam.desc',
+        defaultName: 'Bambi Mode (High Beams + Fog Lights Simultaneous)',
+        defaultDesc: 'Prevents fog lights from turning off automatically when high beams are activated.',
+        make: 'Ford',
+        category: 'LIGHTING',
+        targetEcuHeader: '726',
+        didHex: '2030',
+        byteIndex: 3,
+        bitIndex: 0,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'ford_double_honk_disable',
+        nameKey: 'features.items.ford_double_honk_disable.name',
+        descKey: 'features.items.ford_double_honk_disable.desc',
+        defaultName: 'Disable Double Horn Honk on Keyless Exit',
+        defaultDesc: 'Disables loud double horn honk when driver exits running vehicle with key fob in pocket.',
+        make: 'Ford',
+        category: 'SOUND_ALERTS',
+        targetEcuHeader: '726',
+        didHex: '2040',
+        byteIndex: 2,
+        bitIndex: 5,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'ford_global_windows_remote_open_close',
+        nameKey: 'features.items.ford_global_windows_remote_open_close.name',
+        descKey: 'features.items.ford_global_windows_remote_open_close.desc',
+        defaultName: 'Global Window Roll Up & Down via Key Fob',
+        defaultDesc: 'Opens or closes all power windows by holding unlock or lock button on factory key fob.',
+        make: 'Ford',
+        category: 'DRIVING_COMFORT',
+        targetEcuHeader: '726',
+        didHex: '2050',
+        byteIndex: 4,
+        bitIndex: 1,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'ford_cluster_digital_tpms_readout',
+        nameKey: 'features.items.ford_cluster_digital_tpms_readout.name',
+        descKey: 'features.items.ford_cluster_digital_tpms_readout.desc',
+        defaultName: 'Individual Tire Pressure (TPMS) Bar/PSI Display',
+        defaultDesc: 'Displays exact individual tire pressure numerical readouts on the instrument cluster screen.',
+        make: 'Ford',
+        category: 'DISPLAY_INSTRUMENT',
+        targetEcuHeader: '720',
+        didHex: '2060',
+        byteIndex: 0,
+        bitIndex: 6,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    },
+    {
+        id: 'ford_sync_boot_splash_st_raptor',
+        nameKey: 'features.items.ford_sync_boot_splash_st_raptor.name',
+        descKey: 'features.items.ford_sync_boot_splash_st_raptor.desc',
+        defaultName: 'SYNC Performance Boot Splash Theme (ST / Raptor / RS)',
+        defaultDesc: 'Changes SYNC infotainment boot logo animation to Ford Performance / ST / Raptor styling.',
+        make: 'Ford',
+        category: 'EASTER_EGG_FUN',
+        targetEcuHeader: '5F',
+        didHex: '2070',
+        byteIndex: 5,
+        bitIndex: 2,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_2_ADAPTATION',
+        riskLevel: 'LOW'
+    }
+];

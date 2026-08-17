@@ -28,6 +28,7 @@ import { ConnectionStateMachine, ConnectionState } from '../core/connection/Conn
 import { ProtocolNegotiator } from '../core/connection/ProtocolNegotiator';  
 import { PollingOrchestrator } from '../core/connection/PollingOrchestrator';  
 import { ProtocolEngine } from '../core/connection/ProtocolEngine';
+import { EcuIdentificationManager } from '../core/connection/EcuIdentificationManager';
 import CommandScheduler from '../core/queue/CommandScheduler';
 
 export const useBluetooth = () => {  
@@ -187,7 +188,7 @@ export const useBluetooth = () => {
         try {  
             useBluetoothStore.getState().setConnectionStatusText('connection.statusProfiling');
             OBDCommandQueue.clear(new Error('RETRY_INIT_FLUSH'));  
-            await preciseSleep(550); 
+            await preciseSleep(150); 
 
             await ProtocolNegotiator.runBenchmark();  
             await ProtocolNegotiator.applyPostResetConfig();  
@@ -205,6 +206,7 @@ export const useBluetooth = () => {
                 useBluetoothStore.getState().addLog('DIAG: Trying Auto Protocol (ATSP0)...');  
                 await OBDCommandQueue.add("ATSP0", 3500).catch(() => {});
                 OBDCommandQueue.resetStallCounter();
+                await preciseSleep(300);
 
                 const testCommand = "01 00";  
                 const initRes = await OBDCommandQueue.add(testCommand, 10000);  
@@ -300,6 +302,17 @@ export const useBluetooth = () => {
 
                if (!ecuConnected) {
                    updateStep('protocol', 'failed', 35);
+                   try {
+                       const vRes = await OBDCommandQueue.add("ATRV", 2000).catch(() => '');
+                       const cleanV = (vRes || '').replace(/[^\d.]/g, '');
+                       if (cleanV) {
+                           const parsedV = parseFloat(cleanV);
+                           if (!isNaN(parsedV) && parsedV < 12.0 && parsedV > 0) {
+                               useBluetoothStore.getState().addLog(`IGNITION_DIAG: Low battery voltage (${parsedV}V). Vehicle ignition may be OFF.`);
+                               useBluetoothStore.getState().setConnectionStatusText('connection.ecuNoResponse');
+                           }
+                       }
+                   } catch (vErr) {}
                    throw new Error("ALL_PROTOCOLS_FAILED");
                }
            }
@@ -321,21 +334,21 @@ export const useBluetooth = () => {
            const connectedProtocol = useBluetoothStore.getState().protocol || '';  
            const pUpper = connectedProtocol.toUpperCase();
            const isCan = pUpper.includes('CAN') || connectedProtocol.includes('6') || connectedProtocol.includes('7');  
-           useBluetoothStore.getState().setSensorData({ guardTime: isCan ? 100 : 200 });
-
-           // Dynamically inject ATAT0 and ATST 96 for legacy ISO/KWP (3, 4, 5) protocols (Ensure CAN protocols are excluded)
+           useBluetoothStore.getState().setSensorData({ guardTime: isCan ? 100 : 200 });            
+           
+           // Dynamically inject ATAT0 and ATST96 for legacy ISO/KWP (3, 4, 5) protocols (Ensure CAN protocols are excluded)
            const isLegacyIsoKwp = !isCan && (pUpper.includes('KWP') || pUpper.includes('ISO 14230') || pUpper.includes('ISO 9141') || pUpper.includes('3') || pUpper.includes('4') || pUpper.includes('5'));
            if (isLegacyIsoKwp) {
-               useBluetoothStore.getState().addLog('LEGACY_PROFILE_INJECTION: Injecting ATAT0 and ATST 96 for slow protocols.');
+               useBluetoothStore.getState().addLog('LEGACY_PROFILE_INJECTION: Injecting ATAT0 and ATST96 for slow protocols.');
                try {
-                   await OBDCommandQueue.add('AT AT0', 1500);
-                   await OBDCommandQueue.add('AT ST 96', 1500);
+                   await OBDCommandQueue.add('ATAT0', 1500);
+                   await OBDCommandQueue.add('ATST96', 1500);
                } catch (injErr) {
                    useBluetoothStore.getState().addLog(`LEGACY_PROFILE_INJECTION_WARN: Injection failed: ${injErr}`);
                }
            } else {
                try {
-                   await OBDCommandQueue.add('AT AT1', 1500);
+                   await OBDCommandQueue.add('ATAT2', 1500);
                } catch {}
            }
 
@@ -345,7 +358,7 @@ export const useBluetooth = () => {
            setError(null);
 
            if (isCan) {  
-               try { await OBDCommandQueue.add('AT ST 32', 1000); } catch (e) { }  
+               try { await OBDCommandQueue.add('ATST32', 1000); } catch (e) { }  
            }
 
            await Promise.race([
@@ -435,7 +448,7 @@ export const useBluetooth = () => {
             });
 
             setStatus('connected'); setAdapterStatus('connected');  
-            preciseSleep(1000).then(() => initializeAndCheckEcu());  
+            preciseSleep(200).then(() => initializeAndCheckEcu());  
         }  
     }, []);
 
@@ -479,30 +492,22 @@ export const useBluetooth = () => {
        if (vinCooldownMs > 0) await preciseSleep(vinCooldownMs);
 
        try {  
-           let vin = '';  
-           await sendCommand(ADAPTER_COMMANDS.READ_VIN);  
-           vin = useBluetoothStore.getState().vin || '';
+            OBDCommandQueue.flushRxBuffer();
+            let vin = await EcuIdentificationManager.readVin().catch(() => null);  
+            if (!vin) {
+                vin = useBluetoothStore.getState().vin || '';
+            }
 
-           if (!vin || vin.toUpperCase().includes('ERROR') || vin === 'UNAVAILABLE') {  
-               const kwpVin = await OBDCommandQueue.add('22 F1 90', 5000);  
-               const cleanRes = kwpVin.toUpperCase().replace(/\s+/g, '');  
-               const marker = '62F190';  
-               const idx = cleanRes.indexOf(marker);  
-               if (idx !== -1) {  
-                   let vinAscii = '';  
-                   const payload = cleanRes.substring(idx + marker.length);  
-                   for (let i = 0; i < payload.length; i += 2) {  
-                       const charCode = parseInt(payload.substring(i, i + 2), 16);  
-                       if (charCode >= 32 && charCode <= 126) vinAscii += String.fromCharCode(charCode);  
-                   }  
-                   vin = vinAscii.trim().substring(0, 17);  
-               }  
-           }  
-           if (vin && vin !== 'UNAVAILABLE') {  
-               useBluetoothStore.getState().setSensorData({ vin });  
-               await handleVinReceived(vin);  
-           }  
-           await sendCommand(ADAPTER_COMMANDS.READ_DTC);  
+            if (vin && vin !== 'UNAVAILABLE') {  
+                useBluetoothStore.getState().setSensorData({ vin });  
+                await handleVinReceived(vin);  
+            }  
+
+            // Sequentially query Mode 03 (Confirmed DTCs) and Mode 07 (Pending DTCs)
+            OBDCommandQueue.flushRxBuffer();
+            await sendCommand(ADAPTER_COMMANDS.READ_DTC).catch(() => '');  
+            await preciseSleep(100);
+            await sendCommand('07').catch(() => '');  
        } catch (e) {  
            setError("Diagnostics Failed");  
        } finally {  
@@ -532,8 +537,8 @@ export const useBluetooth = () => {
 
        if (currentRpm > 0 || currentSpeed > 0) {
            Alert.alert(
-               t('safety.engineRunningTitle', { defaultValue: 'Engine Running Safety Gate' }),
-               t('safety.engineRunningDesc', { defaultValue: 'For safety reasons, diagnostic trouble codes can only be cleared when ignition is ON but the engine is OFF (RPM = 0).' })
+               t('safety.engineRunningTitle', { defaultValue: 'Motor Çalışıyor Güvenlik Kilidi' }),
+               t('safety.engineRunningDesc', { defaultValue: 'Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken (RPM = 0) silinebilir.' })
            );
            return;
        }

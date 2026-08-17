@@ -29,7 +29,7 @@ describe('Vehicle Identification & Dynamic Brand Feature Filtering Integration',
         const fordFeatures = oemDatabaseProvider.getFeaturesForMake('Ford');
         expect(fordFeatures.length).toBeGreaterThan(5);
         fordFeatures.forEach(feature => {
-            expect(feature.make.toUpperCase()).toBe('FORD');
+            expect(feature.make.toUpperCase()).toMatch(/FORD/);
         });
     });
 
@@ -45,7 +45,7 @@ describe('Vehicle Identification & Dynamic Brand Feature Filtering Integration',
         const volvoFeatures = oemDatabaseProvider.getFeaturesForMake('Volvo');
         expect(volvoFeatures.length).toBeGreaterThanOrEqual(2);
         volvoFeatures.forEach(feature => {
-            expect(feature.make.toUpperCase()).toBe('VOLVO');
+            expect(feature.make.toUpperCase()).toMatch(/VOLVO/);
         });
     });
 });

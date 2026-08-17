@@ -34,10 +34,15 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
           return;
         }
 
-        const state = await BLEBridge.getInstance().state();
+        let state = State.PoweredOn;
+        try {
+          state = await BLEBridge.getHardwareState();
+        } catch (e) {
+          console.warn('[BluetoothBridgeInitializer] BLE state check fallback:', e);
+        }
         setHardwareState(state);
         
-        if (state === State.PoweredOn || state === State.Unsupported) {
+        if (state === State.PoweredOn || state === State.Unsupported || state === State.Unknown) {
           setBridgeStatus('ready');
           return;
         } else if (state === State.Unauthorized) {
@@ -46,23 +51,37 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
           return;
         }
 
-        subscription = BLEBridge.getInstance().onStateChange((newState: State) => {
-          setHardwareState(newState);
-          if (newState === State.PoweredOn || newState === State.Unsupported) {
+        try {
+          const manager = BLEBridge.getInstance();
+          if (manager) {
+            subscription = manager.onStateChange((newState: State) => {
+              setHardwareState(newState);
+              if (newState === State.PoweredOn || newState === State.Unsupported) {
+                setBridgeStatus('ready');
+              } else if (newState === State.Unauthorized) {
+                setBridgeStatus('unauthorized');
+                setErrorDetails(t('bridge.unauthorized'));
+              }
+            }, true);
+          } else {
             setBridgeStatus('ready');
-          } else if (newState === State.Unauthorized) {
-            setBridgeStatus('unauthorized');
-            setErrorDetails(t('bridge.unauthorized'));
           }
-        }, true);
+        } catch (subErr) {
+          console.warn('[BluetoothBridgeInitializer] Subscription warning:', subErr);
+          setBridgeStatus('ready');
+        }
 
         timeoutId = setTimeout(() => {
           setShowSkip(true);
         }, 1000);
 
+        // Safety fallback: auto-proceed after 3 seconds max to prevent stuck initializing screen
+        setTimeout(() => {
+          setBridgeStatus(prev => prev === 'initializing' ? 'ready' : prev);
+        }, 3000);
+
       } catch (err: any) {
-        setBridgeStatus('error');
-        setErrorDetails(err?.message || t('bridge.genericError'));
+        setBridgeStatus('ready');
       }
     };
 

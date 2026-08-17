@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { HorsepowerService, PowerCalculationResult } from '../services/horsepowerService';
@@ -11,6 +11,7 @@ interface HorsepowerModalProps {
   mafGps?: number;
   engineTorqueNm?: number;
   calculatedLoadPct?: number;
+  fuelType?: 'gasoline' | 'diesel' | 'hybrid' | 'electric';
 }
 
 export const HorsepowerModal: React.FC<HorsepowerModalProps> = ({
@@ -20,11 +21,14 @@ export const HorsepowerModal: React.FC<HorsepowerModalProps> = ({
   mafGps,
   engineTorqueNm,
   calculatedLoadPct,
+  fuelType = 'gasoline',
 }) => {
   const { t } = useTranslation();
   const tc = useThemeColors();
 
-  const [method, setMethod] = useState<'maf' | 'torque' | 'load'>('maf');
+  const [method, setMethod] = useState<'maf' | 'torque' | 'load' | 'diesel'>(
+    fuelType === 'diesel' ? 'diesel' : 'maf'
+  );
   const [peakHp, setPeakHp] = useState<number>(0);
   const [peakTorque, setPeakTorque] = useState<number>(0);
 
@@ -35,7 +39,8 @@ export const HorsepowerModal: React.FC<HorsepowerModalProps> = ({
     calculatedLoadPct,
     calculationMethod: method,
     ratedMaxHp: 200,
-    ratedPeakRpm: 6000,
+    ratedPeakRpm: fuelType === 'diesel' ? 4000 : 6000,
+    fuelType,
   });
 
   useEffect(() => {
@@ -48,138 +53,108 @@ export const HorsepowerModal: React.FC<HorsepowerModalProps> = ({
   return (
     <View style={{ flex: 1, backgroundColor: tc.bg, padding: 16 }}>
       <ScrollView contentContainerStyle={styles.content}>
-            {/* Main Power Meter Display */}
-            <View style={[styles.gaugeCard, { backgroundColor: tc.elevated, borderColor: tc.cyan }]}>
-              <Text style={[styles.gaugeLabel, { color: tc.cyan }]}>{t('hpGauge.horsepower')}</Text>
-              <View style={styles.valueRow}>
-                <Text style={[styles.hpValue, { color: tc.textPri }]}>{powerResult.hp}</Text>
-                <Text style={[styles.unitText, { color: tc.textSec }]}>HP / {powerResult.kw} kW</Text>
-              </View>
+        {/* Main Power Meter Display */}
+        <View style={[styles.gaugeCard, { backgroundColor: tc.elevated, borderColor: tc.cyan }]}>
+          <Text style={[styles.gaugeLabel, { color: tc.cyan }]}>{t('hpGauge.horsepower')}</Text>
+          <View style={styles.valueRow}>
+            <Text style={[styles.hpValue, { color: tc.textPri }]}>{powerResult.hp}</Text>
+            <Text style={[styles.unitText, { color: tc.textSec }]}>HP / {powerResult.kw} kW</Text>
+          </View>
 
-              {/* Progress Bar */}
-              <View style={[styles.progressTrack, { backgroundColor: tc.border }]}>
-                <View
-                  style={[
-                    styles.progressBar,
-                    {
-                      width: `${Math.min(100, (powerResult.hp / 250) * 100)}%`,
-                      backgroundColor: tc.cyan,
-                    },
-                  ]}
-                />
-              </View>
-            </View>
+          {/* Progress Bar */}
+          <View style={[styles.progressTrack, { backgroundColor: tc.border }]}>
+            <View
+              style={[
+                styles.progressBar,
+                {
+                  width: `${Math.min(100, (powerResult.hp / 250) * 100)}%`,
+                  backgroundColor: tc.cyan,
+                },
+              ]}
+            />
+          </View>
+        </View>
 
-            {/* Torque Display */}
-            <View style={[styles.gaugeCard, { backgroundColor: tc.elevated, borderColor: tc.amber }]}>
-              <Text style={[styles.gaugeLabel, { color: tc.amber }]}>{t('hpGauge.torque')}</Text>
-              <View style={styles.valueRow}>
-                <Text style={[styles.hpValue, { color: tc.textPri }]}>{powerResult.torqueNm}</Text>
-                <Text style={[styles.unitText, { color: tc.textSec }]}>Nm / {powerResult.torqueLbFt} lb-ft</Text>
-              </View>
+        {/* Torque Display */}
+        <View style={[styles.gaugeCard, { backgroundColor: tc.elevated, borderColor: tc.amber }]}>
+          <Text style={[styles.gaugeLabel, { color: tc.amber }]}>{t('hpGauge.torque')}</Text>
+          <View style={styles.valueRow}>
+            <Text style={[styles.hpValue, { color: tc.textPri }]}>{powerResult.torqueNm}</Text>
+            <Text style={[styles.unitText, { color: tc.textSec }]}>Nm / {powerResult.torqueLbFt} lb-ft</Text>
+          </View>
 
-              {/* Progress Bar */}
-              <View style={[styles.progressTrack, { backgroundColor: tc.border }]}>
-                <View
-                  style={[
-                    styles.progressBar,
-                    {
-                      width: `${Math.min(100, (powerResult.torqueNm / 400) * 100)}%`,
-                      backgroundColor: tc.amber,
-                    },
-                  ]}
-                />
-              </View>
-            </View>
+          {/* Progress Bar */}
+          <View style={[styles.progressTrack, { backgroundColor: tc.border }]}>
+            <View
+              style={[
+                styles.progressBar,
+                {
+                  width: `${Math.min(100, (powerResult.torqueNm / 400) * 100)}%`,
+                  backgroundColor: tc.amber,
+                },
+              ]}
+            />
+          </View>
+        </View>
 
-            {/* Peak Stats Cards */}
-            <View style={styles.statsRow}>
-              <View style={[styles.statBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
-                <Text style={[styles.statTitle, { color: tc.textSec }]}>{t('hpGauge.peakHp')}</Text>
-                <Text style={[styles.statVal, { color: tc.green }]}>{peakHp} HP</Text>
-              </View>
+        {/* Peak Stats Cards */}
+        <View style={styles.statsRow}>
+          <View style={[styles.statBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+            <Text style={[styles.statTitle, { color: tc.textSec }]}>{t('hpGauge.peakHp')}</Text>
+            <Text style={[styles.statVal, { color: tc.green }]}>{peakHp} HP</Text>
+          </View>
 
-              <View style={[styles.statBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
-                <Text style={[styles.statTitle, { color: tc.textSec }]}>{t('hpGauge.peakTorque')}</Text>
-                <Text style={[styles.statVal, { color: tc.green }]}>{peakTorque} Nm</Text>
-              </View>
+          <View style={[styles.statBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+            <Text style={[styles.statTitle, { color: tc.textSec }]}>{t('hpGauge.peakTorque')}</Text>
+            <Text style={[styles.statVal, { color: tc.green }]}>{peakTorque} Nm</Text>
+          </View>
 
-              <View style={[styles.statBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
-                <Text style={[styles.statTitle, { color: tc.textSec }]}>{t('hpGauge.efficiency')}</Text>
-                <Text style={[styles.statVal, { color: tc.cyan }]}>%{powerResult.efficiencyPct}</Text>
-              </View>
-            </View>
+          <View style={[styles.statBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
+            <Text style={[styles.statTitle, { color: tc.textSec }]}>{t('hpGauge.efficiency')}</Text>
+            <Text style={[styles.statVal, { color: tc.cyan }]}>%{powerResult.efficiencyPct}</Text>
+          </View>
+        </View>
 
-            {/* Calculation Method Selector */}
-            <Text style={[styles.sectionTitle, { color: tc.textPri }]}>
-              {t('hpGauge.calcMethod')}
-            </Text>
-            <View style={styles.methodSelector}>
-              {(['maf', 'torque', 'load'] as const).map((m) => (
-                <TouchableOpacity
-                  key={m}
-                  style={[
-                    styles.methodBtn,
-                    {
-                      backgroundColor: method === m ? tc.cyan : tc.elevated,
-                      borderColor: tc.border,
-                    },
-                  ]}
-                  onPress={() => setMethod(m)}
-                >
-                  <Text
-                    style={[
-                      styles.methodText,
-                      { color: method === m ? '#fff' : tc.textSec, fontWeight: method === m ? '700' : '500' },
-                    ]}
-                  >
-                    {m === 'maf'
-                      ? t('hpGauge.methodMaf')
-                      : m === 'torque'
-                      ? t('hpGauge.methodTorque')
-                      : t('hpGauge.methodLoad')}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
+        {/* Calculation Method Selector with clean, clear names */}
+        <Text style={[styles.sectionTitle, { color: tc.textPri }]}>
+          {t('hpGauge.calcMethod')}
+        </Text>
+        <View style={styles.methodSelector}>
+          {(['diesel', 'maf', 'torque', 'load'] as const).map((m) => (
+            <TouchableOpacity
+              key={m}
+              style={[
+                styles.methodBtn,
+                {
+                  backgroundColor: method === m ? '#007eff' : tc.elevated,
+                  borderColor: method === m ? '#007eff' : tc.border,
+                },
+              ]}
+              onPress={() => setMethod(m)}
+            >
+              <Text
+                style={[
+                  styles.methodText,
+                  { color: method === m ? '#fff' : tc.textSec, fontWeight: method === m ? '700' : '500' },
+                ]}
+              >
+                {m === 'diesel'
+                  ? t('hpGauge.methodDiesel', { defaultValue: 'Dizel Tork & Yakıt Akışı' })
+                  : m === 'maf'
+                  ? t('hpGauge.methodMaf', { defaultValue: 'Hava Akış Tabanlı' })
+                  : m === 'torque'
+                  ? t('hpGauge.methodTorque', { defaultValue: 'Canlı Tork Tabanlı' })
+                  : t('hpGauge.methodLoad', { defaultValue: 'Motor Yükü Tabanlı' })}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  container: {
-    height: '80%',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    borderWidth: 1,
-    padding: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '800',
-  },
-  subtitle: {
-    fontSize: 12,
-    marginTop: 2,
-  },
-  closeBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   content: {
     gap: 16,
     paddingBottom: 24,

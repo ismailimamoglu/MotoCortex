@@ -16,65 +16,125 @@ export class ProtocolNegotiator {
      */
     public static async runBenchmark(): Promise<number> {
         const store = useBluetoothStore.getState();
-        store.addLog('CLEAN_INIT: Initializing adapter UART line (global-standard sequence)...');
+        store.addLog('CLEAN_INIT: Initializing adapter UART line (Copilot/Car Scanner gold-standard sequence)...');
 
         try {
             OBDCommandQueue.resetStallCounter();
 
-            // ── Step 1: Adapter Reset ────────────────────────────────────
-            // ATZ sends a soft reset. If it returns '?' (common on cheapest clones), fall back to ATWS (warm start).
-            const atzRes = await OBDCommandQueue.add('ATZ', 5000).catch(() => '');
+            // ── Step 0: Link Stabilization & Initial RX Purge ───────────
+            await preciseSleep(400); // 400ms link stabilization (GATT/RFCOMM/MTU settling)
+            OBDCommandQueue.flushRxBuffer();
+            await preciseSleep(100);
             OBDCommandQueue.flushRxBuffer();
 
-            if ((atzRes || '').includes('?')) {
-                store.addLog('CLEAN_INIT: ATZ returned "?", falling back to ATWS (warm start)...');
-                await OBDCommandQueue.add('ATWS', 3000).catch(() => {});
+            // ── Step 1: Soft Wake (send \r to wake microcontroller) ──────
+            await OBDCommandQueue.add('\r', 150).catch(() => '');
+            await preciseSleep(120);
+            OBDCommandQueue.flushRxBuffer();
+
+            // ── Step 2: Guarded ATZ with Backoff Retries ─────────────────
+            let atzRes = '';
+            let atzSuccess = false;
+            for (let attempt = 1; attempt <= 3; attempt++) {
                 OBDCommandQueue.flushRxBuffer();
+                atzRes = await OBDCommandQueue.add('ATZ', 2000).catch(() => '');
+                if (/ELM|STN|ELM327|STN2120|ELM206|ELM324|OK|>/i.test(atzRes)) {
+                    atzSuccess = true;
+                    store.addLog(`CLEAN_INIT: ATZ succeeded on attempt ${attempt}: ${atzRes.trim()}`);
+                    break;
+                }
+                store.addLog(`CLEAN_INIT: ATZ attempt ${attempt} returned "${atzRes}", backing off 300ms...`);
+                await preciseSleep(300);
             }
-            await preciseSleep(500);
 
-            // ── Step 2: Clean Config BEFORE any info queries ─────────────
-            // ATE0 must be first — disables echo so ATI/ATRV/ATDP responses aren't polluted
-            await OBDCommandQueue.add('ATE0', 1500).catch(() => {});
-            await OBDCommandQueue.add('ATL0', 1000).catch(() => {}); // Linefeed off
-            await OBDCommandQueue.add('ATH0', 1000).catch(() => {}); // Headers off (Universal OBD2 standard for BLE/Classic/K-Line/CAN)
-            await OBDCommandQueue.add('ATS0', 1000).catch(() => {}); // Spaces off (faster parsing)
-            await OBDCommandQueue.add('ATSTFF', 1000).catch(() => {}); // Max timeout (clone-tolerant)
+            if (!atzSuccess) {
+                store.addLog('CLEAN_INIT: ATZ retries exhausted, attempting ATWS (warm start)...');
+                atzRes = await OBDCommandQueue.add('ATWS', 1500).catch(() => '');
+            }
 
-            // ── Step 3: Info queries (now echo is off, responses are clean) ──
+            // Post-reset settle & buffer drain
+            await preciseSleep(350);
+            OBDCommandQueue.flushRxBuffer();
+
+            // ── Step 3: Deterministic Configuration Sequence ─────────────
+            // ATE0 (Echo off) MUST be first to prevent command echoing
+            await OBDCommandQueue.add('ATE0', 500).catch(() => {});
+            await preciseSleep(50);
+            await OBDCommandQueue.add('ATL0', 500).catch(() => {}); // Linefeeds off
+            await preciseSleep(50);
+            await OBDCommandQueue.add('ATS0', 500).catch(() => {}); // Spaces off
+            await preciseSleep(50);
+            await OBDCommandQueue.add('ATH0', 500).catch(() => {}); // Headers off (universal default)
+            await preciseSleep(50);
+
+            // Capability probes (PIC18F25K80 / STN Verification)
+            const atalRes = await OBDCommandQueue.add('ATAL', 1000).catch(() => '?'); // Allow Long frames (> 7 bytes)
+            await preciseSleep(50);
+            const atcafRes = await OBDCommandQueue.add('ATCAF1', 1000).catch(() => '?'); // CAN Auto Formatting on
+            await preciseSleep(50);
+            await OBDCommandQueue.add('ATAT2', 1000).catch(() => {}); // Adaptive timing
+            await preciseSleep(50);
+            await OBDCommandQueue.add('ATST64', 1000).catch(() => {}); // 400ms timeout
+            await preciseSleep(50);
+            await OBDCommandQueue.add('ATSP0', 3500).catch(() => {}); // Auto protocol search
+            await preciseSleep(100);
+
+            // ── Step 4: Info Queries & Protocol Resolution ───────────────
             const t0 = Date.now();
             let unresponsiveCount = 0;
-            const atiRes = await OBDCommandQueue.add('ATI', 5000).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
-            const rvRes = await OBDCommandQueue.add('ATRV', 5000).catch(() => { unresponsiveCount++; return '12.0V'; });
-            const dpRes = await OBDCommandQueue.add('ATDP', 5000).catch(() => { unresponsiveCount++; return 'AUTO'; });
+            const atiRes = await OBDCommandQueue.add('ATI', 3000).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
+            const rvRes = await OBDCommandQueue.add('ATRV', 3000).catch(() => { unresponsiveCount++; return '12.0V'; });
+            const dpRes = await OBDCommandQueue.add('ATDP', 3000).catch(() => { unresponsiveCount++; return 'AUTO'; });
             const rtt = Math.max(10, Math.round((Date.now() - t0) / 3));
 
-            const cleanFirmware = (atiRes || 'ELM327 v1.5').replace(/[\r\n>]/g, '').trim();
-            // Refined clone heuristic: high RTT latency or unresponsive probes indicate clone/low-grade hardware
-            const isV15Clone = (cleanFirmware.includes('1.5') && rtt > 60) || rtt > 120 || unresponsiveCount > 0;
+            // ── Step 5: Smoke Test (01 00) ───────────────────────────────
+            OBDCommandQueue.flushRxBuffer();
+            const smokeRes = await OBDCommandQueue.add('01 00', 1500).catch(() => '');
+            store.addLog(`CLEAN_INIT: Smoke test (01 00) response: ${smokeRes}`);
 
-            // Behavioral scoring based on RTT latency, probe responsiveness, and firmware integrity
-            let score = 98;
-            if (isV15Clone) score -= 20;
+            const cleanFirmware = (atiRes || 'ELM327 v1.5').replace(/[\r\n>]/g, '').trim();
+            const supportsLongFrames = (atalRes || '').toUpperCase().includes('OK');
+            const supportsCanAutoFormat = (atcafRes || '').toUpperCase().includes('OK');
+
+            // Accurate hardware classification:
+            // Genuine STN / OBDLink / vLinker or PIC18F25K80 Dual-Chip (like MonoFe Ultra v1.5) support ATAL + ATCAF1
+            const isHighGradeHardware = supportsLongFrames && supportsCanAutoFormat;
+            const isCheapFakeClone = !supportsLongFrames && !supportsCanAutoFormat && unresponsiveCount > 0;
+
+            let score = 95;
+            if (cleanFirmware.includes('STN') || cleanFirmware.includes('OBDLink') || cleanFirmware.includes('vLinker') || cleanFirmware.includes('vGate') || cleanFirmware.includes('2.2')) {
+                score = 100;
+            } else if (isHighGradeHardware) {
+                // PIC18F25K80 Dual-Chip (e.g. MonoFe Ultra v1.5)
+                score = 95;
+            } else if (isCheapFakeClone) {
+                // Low-grade single-chip clone failing basic ELM commands
+                score = 45;
+            } else {
+                score = 80;
+            }
+
             if (unresponsiveCount > 0) score -= (unresponsiveCount * 15);
-            if (rtt > 80) score -= 15;
-            if (rtt > 150) score -= 15;
             score = Math.max(30, Math.min(100, score));
 
-            // Store voltage for battery gate check
+            const isClone = score < 60;
             const cleanVoltage = (rvRes || '').replace(/[\r\n>]/g, '').trim();
 
             store.setSensorData({ 
                 adapterCapabilityScore: score,
-                isCloneDevice: isV15Clone,
+                isCloneDevice: isClone,
+                isCodingAllowed: !isClone,
                 avgRtt: rtt,
                 adapterFirmware: cleanFirmware,
                 voltage: cleanVoltage || undefined,
             });
 
-            store.addLog(`CLEAN_INIT_COMPLETE: Adapter initialized (${cleanFirmware}), Voltage=${cleanVoltage}, RTT=${rtt}ms, score=${score}, clone=${isV15Clone}`);
+            store.addLog(`CLEAN_INIT_COMPLETE: Adapter (${cleanFirmware}), Voltage=${cleanVoltage}, RTT=${rtt}ms, score=${score}, isClone=${isClone}, ATAL=${supportsLongFrames}, ATCAF1=${supportsCanAutoFormat}`);
             return score;
-        } catch {
+        } catch (err: any) {
+            store.addLog(`CLEAN_INIT_WARNING: Benchmark exception (${err?.message || err}), applying safe fallback ATSTFF + ATSP0...`);
+            await OBDCommandQueue.add('ATSTFF', 1000).catch(() => {});
+            await OBDCommandQueue.add('ATSP0', 3500).catch(() => {});
             store.setSensorData({ adapterCapabilityScore: 65, isCloneDevice: false, avgRtt: 100 });
             return 65;
         }

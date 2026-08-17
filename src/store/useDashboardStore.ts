@@ -33,7 +33,7 @@ export const ALL_SENSORS: SensorConfig[] = [
   { key: 'transTemp', nameKey: 'sensor.transTemp', defaultName: 'Şanzıman Sıcaklığı', unit: '°C', pid: '01 7C', icon: '', color: '#d97706', isHighPriority: false },
   { key: 'ethanolPercent', nameKey: 'sensor.ethanol', defaultName: 'Etanol Oranı %', unit: '%', pid: '01 52', icon: '', color: '#10b981', isHighPriority: false },
   { key: 'baroPressure', nameKey: 'sensor.baro', defaultName: 'Barometrik Basınç', unit: 'kPa', pid: '01 33', icon: '', color: '#475569', isHighPriority: false },
-  { key: 'actualTorque', nameKey: 'hpGauge.torque', defaultName: 'Canlı Motor Torku', unit: 'Nm', pid: '01 62', icon: '', color: '#b45309', isHighPriority: true },
+  { key: 'actualTorque', nameKey: 'dashboard.torque', defaultName: 'Motor Torku', unit: 'Nm', pid: '01 62', icon: '', color: '#b45309', isHighPriority: true },
   { key: 'adblueLevel', nameKey: 'dashboard.adblue', defaultName: 'AdBlue Seviyesi', unit: '%', pid: '01 9B', icon: '', color: '#0284c7', isHighPriority: false },
   { key: 'egtTemp', nameKey: 'dashboard.egt', defaultName: 'Egzoz Gazı Sıcaklığı', unit: '°C', pid: '01 78', icon: '', color: '#e11d48', isHighPriority: false },
   { key: 'noxSensor', nameKey: 'dashboard.nox', defaultName: 'NOx Sensörü', unit: 'ppm', pid: '01 83', icon: '', color: '#0f766e', isHighPriority: false },

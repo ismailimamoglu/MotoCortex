@@ -12,28 +12,97 @@ import * as Logger from '../../services/Logger';
 export class VehicleIdentityEngine {
     /**
      * Parses raw response from OBD-II Mode 09 02 or UDS 22 F1 90 to extract clean VIN string.
+     * Fully supports ISO 15765-4 / SAE J1979 5-frame responses, ISO-TP decoded payloads, and UDS DID F190.
      */
     public parseVinResponse(rawResponse: string): string | null {
         if (!rawResponse) return null;
 
-        const clean = rawResponse.replace(/[\r\n\s>]/g, '').toUpperCase();
+        const clean = rawResponse.replace(/[\r\n>]/g, ' ').toUpperCase().trim();
 
-        // 1. Try decoding raw hex string to ASCII first (e.g., "0902015756575A5A5A314B5A4250303030303030")
-        const hexOnly = clean.replace(/[^0-9A-F]/g, '');
-        let asciiStr = '';
-        for (let i = 0; i < hexOnly.length - 1; i += 2) {
-            const code = parseInt(hexOnly.slice(i, i + 2), 16);
-            if (code >= 32 && code <= 126) {
-                asciiStr += String.fromCharCode(code);
+        // 1. Check for UDS 22 F1 90 Positive Response (62 F1 90 ...)
+        const udsIdx = clean.replace(/\s+/g, '').indexOf('62F190');
+        if (udsIdx !== -1) {
+            const hexPayload = clean.replace(/\s+/g, '').substring(udsIdx + 6);
+            let asciiStr = '';
+            for (let i = 0; i < hexPayload.length - 1; i += 2) {
+                const code = parseInt(hexPayload.slice(i, i + 2), 16);
+                if (code >= 32 && code <= 126) asciiStr += String.fromCharCode(code);
+            }
+            const vinMatch = asciiStr.match(/[A-HJ-NPR-Z0-9]{17}/);
+            if (vinMatch && isValidVin(vinMatch[0])) {
+                return vinMatch[0];
             }
         }
 
-        const asciiVinMatch = asciiStr.match(/[A-HJ-NPR-Z0-9]{17}/);
+        // 2. Multi-Frame OBD-II Mode 09 PID 02 parsing (J1979 / ISO 15765-4)
+        // Look for frame segments: (49|09) 02 01, (49|09) 02 02, etc.
+        const frameMatches = Array.from(clean.matchAll(/(?:49|09)\s*02\s*0([1-5])\s*([0-9A-F\s]+)/gi));
+        if (frameMatches.length >= 2) {
+            const frames: Record<number, string> = {};
+            for (const match of frameMatches) {
+                const frameIndex = parseInt(match[1], 10);
+                const rawData = match[2].replace(/\s+/g, '');
+                frames[frameIndex] = rawData;
+            }
+
+            // Frame 1: ends with 1 data byte (2 hex chars) of VIN
+            // Frame 2..5: 4 data bytes (8 hex chars) each
+            let assembledHex = '';
+            if (frames[1]) {
+                assembledHex += frames[1].slice(-2); // Last byte of frame 1
+            }
+            for (let i = 2; i <= 5; i++) {
+                if (frames[i]) {
+                    // Take first 8 hex characters (4 bytes)
+                    assembledHex += frames[i].substring(0, 8);
+                }
+            }
+
+            if (assembledHex.length === 34) {
+                let asciiVin = '';
+                for (let i = 0; i < assembledHex.length; i += 2) {
+                    const code = parseInt(assembledHex.slice(i, i + 2), 16);
+                    if (code >= 32 && code <= 126) asciiVin += String.fromCharCode(code);
+                }
+                if (asciiVin.length === 17 && isValidVin(asciiVin)) {
+                    return asciiVin;
+                }
+            }
+        }
+
+        // 3. Try parsing continuous hex string (e.g. continuous chunks or single-frame OBD)
+        const hexOnly = clean.replace(/[^0-9A-F]/g, '');
+        
+        // Scan continuous hex for "490201" or "090201" pattern
+        const mode9Idx = hexOnly.indexOf('490201') !== -1 ? hexOnly.indexOf('490201') : hexOnly.indexOf('090201');
+        if (mode9Idx !== -1) {
+            // Check if it's a concatenated 5-frame stream: 490201...490202...490203...
+            const frame1Match = hexOnly.match(/(?:49|09)0201(?:[0-9A-F]{6})([0-9A-F]{2})(?:49|09)0202([0-9A-F]{8})(?:49|09)0203([0-9A-F]{8})(?:49|09)0204([0-9A-F]{8})(?:49|09)0205([0-9A-F]{8})/i);
+            if (frame1Match) {
+                const combinedHex = frame1Match[1] + frame1Match[2] + frame1Match[3] + frame1Match[4] + frame1Match[5];
+                let asciiVin = '';
+                for (let i = 0; i < combinedHex.length; i += 2) {
+                    asciiVin += String.fromCharCode(parseInt(combinedHex.slice(i, i + 2), 16));
+                }
+                if (isValidVin(asciiVin)) return asciiVin;
+            }
+        }
+
+        // 4. Fallback: Generic Hex-to-ASCII string sweep
+        let fallbackAscii = '';
+        for (let i = 0; i < hexOnly.length - 1; i += 2) {
+            const code = parseInt(hexOnly.slice(i, i + 2), 16);
+            if (code >= 32 && code <= 126) {
+                fallbackAscii += String.fromCharCode(code);
+            }
+        }
+
+        const asciiVinMatch = fallbackAscii.match(/[A-HJ-NPR-Z0-9]{17}/);
         if (asciiVinMatch && isValidVin(asciiVinMatch[0])) {
             return asciiVinMatch[0];
         }
 
-        // 2. Direct string check if response was already plaintext ASCII
+        // 5. Direct string check if response was already plaintext ASCII
         const directVinMatch = clean.match(/[A-HJ-NPR-Z0-9]{17}/);
         if (directVinMatch && isValidVin(directVinMatch[0])) {
             return directVinMatch[0];

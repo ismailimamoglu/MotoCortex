@@ -5,7 +5,7 @@ import OBDCommandQueue from '../../api/OBDCommandQueue';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 
 export class CapabilityDiscoveryManager {
-    private static DEFAULT_EMERGENCY_PIDS = ['0C@7E8', '0D@7E8', '05@7E8', '11@7E8'];
+    private static DEFAULT_EMERGENCY_PIDS = ['0C@7E8', '0D@7E8', '05@7E8'];
 
     /**
      * Discovers supported PIDs and constructs a deterministic PID-to-ECU Routing Table.
@@ -71,19 +71,13 @@ export class CapabilityDiscoveryManager {
                 pidRoutingTable[pid] = [node];
             });
 
-            // TypeScript Tür Katı Kuralını Esnet (as any)
             store.setSensorData({
                 supportedPids: this.DEFAULT_EMERGENCY_PIDS,
                 pidRoutingTable: pidRoutingTable,
                 pidBlocksStatus: blockStatus
             } as any);
         } else {
-            ['0C', '0D', '05', '11'].forEach(pid => {
-                if (!pidRoutingTable[pid]) pidRoutingTable[pid] = ['7E8'];
-                if (!masterSupportedPids.includes(`${pid}@7E8`)) masterSupportedPids.push(`${pid}@7E8`);
-            });
-
-            // TypeScript Tür Katı Kuralını Esnet (as any)
+            // Strict bitmask mode: Do NOT inject unsupported PIDs (like 01 11) to avoid ECU negative responses (NRC 0x12)
             store.setSensorData({
                 supportedPids: masterSupportedPids,
                 pidRoutingTable: pidRoutingTable,

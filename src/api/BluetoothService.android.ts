@@ -114,40 +114,58 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     async waitForEnabled(timeoutMs: number = 5000): Promise<boolean> {
-        // First: try the direct check multiple times (state might not yet be propagated)
-        for (let i = 0; i < 3; i++) {
-            try {
-                const isEnabled = await RNBluetoothClassic.isBluetoothEnabled();
-                if (isEnabled) return true;
-            } catch (e) {
-                // ignore transient errors and retry
+        try {
+            // First: try the direct check multiple times (state might not yet be propagated)
+            for (let i = 0; i < 3; i++) {
+                try {
+                    const isEnabled = await RNBluetoothClassic.isBluetoothEnabled();
+                    if (isEnabled) return true;
+                } catch (e) {
+                    // ignore transient errors and retry
+                }
+                if (i < 2) await new Promise(r => setTimeout(r, 200));
             }
-            if (i < 2) await new Promise(r => setTimeout(r, 200));
-        }
-        // Fallback: wait for a state-change event up to timeoutMs
-        return new Promise((resolve) => {
-            let timer: NodeJS.Timeout;
-            let resolved = false;
-            const subscription = RNBluetoothClassic.onStateChanged((event) => {
-                if (event.enabled && !resolved) {
-                    resolved = true;
-                    if (timer) clearTimeout(timer);
-                    subscription.remove();
-                    resolve(true);
-                }
+            // Fallback: wait for a state-change event up to timeoutMs
+            return new Promise((resolve) => {
+                let timer: NodeJS.Timeout;
+                let resolved = false;
+                const subscription = RNBluetoothClassic.onStateChanged((event) => {
+                    if (event.enabled && !resolved) {
+                        resolved = true;
+                        if (timer) clearTimeout(timer);
+                        subscription.remove();
+                        resolve(true);
+                    }
+                });
+                timer = setTimeout(() => {
+                    if (!resolved) {
+                        resolved = true;
+                        subscription.remove();
+                        resolve(false);
+                    }
+                }, timeoutMs);
             });
-            timer = setTimeout(() => {
-                if (!resolved) {
-                    resolved = true;
-                    subscription.remove();
-                    resolve(false);
-                }
-            }, timeoutMs);
-        });
+        } catch (outerErr) {
+            console.warn('[BT Android] waitForEnabled outer error (handled):', outerErr);
+            return false;
+        }
     }
 
     async enableBluetooth(): Promise<boolean> {
         try {
+            // On Android 12+, requestBluetoothEnabled requires BLUETOOTH_CONNECT permission
+            const { PermissionsAndroid } = require('react-native');
+            const androidVersion = typeof Platform.Version === 'number' ? Platform.Version : parseInt(String(Platform.Version), 10);
+            if (androidVersion >= 31) {
+                const connectPerm = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT);
+                if (!connectPerm) {
+                    const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT);
+                    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+                        console.warn('[Bluetooth Android] BLUETOOTH_CONNECT permission denied');
+                        return false;
+                    }
+                }
+            }
             return await RNBluetoothClassic.requestBluetoothEnabled();
         } catch (e) {
             console.error('[Bluetooth Android] requestBluetoothEnabled failed:', e);
@@ -191,6 +209,42 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     async scanDevices(): Promise<any[]> {
+        // ── STEP 0: Ensure Android runtime permissions are granted ──────
+        // On Android 12+ (API 31+), BLUETOOTH_SCAN and BLUETOOTH_CONNECT are
+        // required at runtime. Without them, native BT APIs throw SecurityException
+        // which crashes the entire app process (not catchable by JS try-catch).
+        try {
+            const { PermissionsAndroid } = require('react-native');
+            const androidVersion = typeof Platform.Version === 'number' ? Platform.Version : parseInt(String(Platform.Version), 10);
+            if (androidVersion >= 31) {
+                const scanPerm = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN);
+                const connectPerm = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT);
+                if (!scanPerm || !connectPerm) {
+                    const granted = await PermissionsAndroid.requestMultiple([
+                        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+                        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+                    ]);
+                    const scanOk = granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] === PermissionsAndroid.RESULTS.GRANTED;
+                    const connectOk = granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] === PermissionsAndroid.RESULTS.GRANTED;
+                    if (!scanOk || !connectOk) {
+                        throw new BluetoothPermissionError('BLUETOOTH_PERMISSION_DENIED');
+                    }
+                }
+            } else {
+                // Android 11 and below: need ACCESS_FINE_LOCATION for BT scanning
+                const locPerm = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+                if (!locPerm) {
+                    const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+                    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+                        throw new BluetoothPermissionError('LOCATION_PERMISSION_DENIED');
+                    }
+                }
+            }
+        } catch (permErr) {
+            if (permErr instanceof BluetoothPermissionError) throw permErr;
+            console.warn('[BT Android] Permission check failed:', permErr);
+        }
+
         // Check Bluetooth state with retry logic
         const isReady = await this.waitForEnabled(5000);
         if (!isReady) throw new BluetoothPermissionError('BLUETOOTH_NOT_POWERED_ON');
@@ -658,11 +712,12 @@ class BluetoothServiceAndroid implements IBluetoothService {
         if (this.drainTimeout) clearTimeout(this.drainTimeout);
         this.drainTimeout = setTimeout(() => {
             this.isDraining = false;
-        }, 2000);
+        }, 100);
     }
 
     private startListening() {
         if (!this.connectedDevice) return;
+        this.stopListening();
         this.dataSubscription = this.connectedDevice.onDataReceived((event) => {
             if (this.isDraining) return;
             Logger.log('BT_READ_CHUNK', event.data);

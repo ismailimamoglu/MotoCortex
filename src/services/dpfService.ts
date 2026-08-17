@@ -3,7 +3,7 @@
  * 
  * Supports DPF Soot Loading percentage, Ash Mass (g), Exhaust Gas Temp (EGT °C),
  * Differential Pressure (hPa), and Regeneration State monitoring across VAG, BMW,
- * Fiat/JTD, Renault, and standard OBD2 PID 0x8A / 0x8B.
+ * Mercedes, Renault, Ford, Stellantis, and standard OBD2 PID 0x78 / 0x79 / 0x7A / 0x7B.
  */
 
 export interface DpfDataInput {
@@ -25,9 +25,26 @@ export interface DpfAnalysisResult {
   healthState: DpfHealthState;
   stateTitleKey: string;
   statusColor: string;
-  egtStatusKey: string; // Cold, Warm, Regeneration Active
+  egtStatusKey: string;
   regenRecommendationKey: string;
 }
+
+export interface OemDpfDidProfile {
+  make: string;
+  sootDidHex: string;
+  tempDidHex?: string;
+  diffPressureDidHex?: string;
+  sootScale: number;
+}
+
+export const OEM_DPF_DID_PROFILES: Record<string, OemDpfDidProfile> = {
+  volkswagen: { make: 'Volkswagen / VAG', sootDidHex: '114E', tempDidHex: '1153', diffPressureDidHex: '1156', sootScale: 0.1 },
+  bmw: { make: 'BMW / MINI', sootDidHex: '010A', tempDidHex: '010B', sootScale: 0.1 },
+  mercedes: { make: 'Mercedes-Benz', sootDidHex: '0023', diffPressureDidHex: '0024', sootScale: 0.1 },
+  renault: { make: 'Renault / Dacia', sootDidHex: '2002', sootScale: 0.1 },
+  ford: { make: 'Ford', sootDidHex: '0556', sootScale: 0.1 },
+  stellantis: { make: 'Stellantis / Fiat / Peugeot', sootDidHex: '180E', sootScale: 0.1 }
+};
 
 export class DpfService {
   public static analyze(input: DpfDataInput): DpfAnalysisResult {

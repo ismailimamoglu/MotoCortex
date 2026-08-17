@@ -4,14 +4,16 @@
 import OBDCommandQueue from '../../api/OBDCommandQueue';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 import { CategoryAutoCorrectionEngine } from './CategoryAutoCorrectionEngine';
+import { vehicleIdentityEngine } from '../identity/VehicleIdentityEngine';
 
 export interface EcuIdentificationRecord {
     vin?: string;
     ecuSupplier?: string;
     hardwareNumber?: string;
     softwareNumber?: string;
-    isValidated: boolean;
-    timestamp: number;
+    calibrationId?: string;
+    isValidated?: boolean;
+    timestamp?: number;
 }
 
 export class EcuIdentificationManager {
@@ -25,10 +27,11 @@ export class EcuIdentificationManager {
         store.addLog('ECU_ID: Querying VIN via Mode 09 PID 02...');
 
         let discoveredVin: string | null = null;
+        OBDCommandQueue.flushRxBuffer();
 
         try {
             const raw = await OBDCommandQueue.add('09 02', 3000);
-            const vin = this.parseVinHex(raw);
+            const vin = vehicleIdentityEngine.parseVinResponse(raw);
             if (vin && vin.length === 17) {
                 store.addLog(`ECU_ID: Discovered VIN = ${vin}`);
                 discoveredVin = vin;
@@ -39,8 +42,9 @@ export class EcuIdentificationManager {
 
         if (!discoveredVin) {
             try {
+                OBDCommandQueue.flushRxBuffer();
                 const rawUds = await OBDCommandQueue.add('22 F1 90', 3000);
-                const vin = this.parseVinHex(rawUds);
+                const vin = vehicleIdentityEngine.parseVinResponse(rawUds);
                 if (vin && vin.length === 17) {
                     store.addLog(`ECU_ID: UDS Discovered VIN = ${vin}`);
                     discoveredVin = vin;
@@ -48,6 +52,10 @@ export class EcuIdentificationManager {
             } catch (udsErr) {
                 store.addLog(`ECU_ID: VIN query unavailable.`);
             }
+        }
+
+        if (discoveredVin) {
+            store.setSensorData({ vin: discoveredVin });
         }
 
         // Trigger autonomous category validation and auto-correction
@@ -60,23 +68,7 @@ export class EcuIdentificationManager {
      * Parses ASCII VIN characters from multi-line OBD/UDS response.
      */
     public static parseVinHex(rawHex: string): string | null {
-        if (!rawHex) return null;
-
-        const clean = rawHex.replace(/[\r\n>]/g, ' ').toUpperCase();
-        const hexBytes = clean
-            .split(/\s+/)
-            .filter(token => /^[0-9A-F]{2}$/.test(token));
-
-        let asciiStr = '';
-        for (const hex of hexBytes) {
-            const charCode = parseInt(hex, 16);
-            if (charCode >= 48 && charCode <= 90 && (charCode <= 57 || charCode >= 65)) {
-                asciiStr += String.fromCharCode(charCode);
-            }
-        }
-
-        const vinMatch = asciiStr.match(/[A-HJ-NPR-Z0-9]{17}/);
-        return vinMatch ? vinMatch[0] : null;
+        return vehicleIdentityEngine.parseVinResponse(rawHex);
     }
 
     /**

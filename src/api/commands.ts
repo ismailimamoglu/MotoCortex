@@ -19,8 +19,11 @@ export const ADAPTER_COMMANDS = {
     INIT_ADDRESS: 'ATIIA11',   // K-Line Init Target ECU Address
     DEVICE_INFO: 'ATI',       // Adapter info (e.g., "ELM327 v2.1")
     VOLTAGE: 'ATRV',          // Read battery voltage
-    ADAPTIVE_TIMING: 'AT AT1',  // Adaptive Timing On
-    TIMEOUT_LIMIT: 'AT ST 62',  // Timeout limit sabitleme (248ms)
+    ADAPTIVE_TIMING: 'ATAT1',  // Adaptive Timing On (no spaces)
+    ADAPTIVE_TIMING_AGGRESSIVE: 'ATAT2', // Aggressive Adaptive Timing (Car Scanner standard)
+    TIMEOUT_LIMIT: 'ATST62',  // Timeout limit (248ms)
+    CAN_AUTO_FORMAT: 'ATCAF1', // CAN Auto Formatting On (Multi-frame ISO-TP assembly)
+    ALLOW_LONG: 'ATAL',       // Allow Long Messages (> 7 bytes)
 
     // OBD-II PIDs (Mode 01)
     RPM: '01 0C',              // Engine RPM (2 bytes)

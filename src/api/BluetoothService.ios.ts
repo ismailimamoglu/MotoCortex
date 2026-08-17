@@ -537,7 +537,7 @@ class BluetoothServiceIOS implements IBluetoothService {
         if (this.drainTimeout) clearTimeout(this.drainTimeout);
         this.drainTimeout = setTimeout(() => {
             this.isDraining = false;
-        }, 2000);
+        }, 100);
     }
 
     private startConnectionMonitor() {
