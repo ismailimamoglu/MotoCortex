@@ -168,14 +168,20 @@ export function requiresProAccess(cls: CommandClass): boolean {
  * This is the Layer 3 (hardware) security gate — the last line of defense
  * before bytes hit the OBD transport wire.
  */
-export function assertHardwareGate(rawCmd: string, isPro: boolean, isMoving: boolean = false, customVoltageStr?: string): void {
+export function assertHardwareGate(
+    rawCmd: string,
+    isPro: boolean,
+    isMoving: boolean = false,
+    customVoltageStr?: string,
+    isFreeTrialAllowed: boolean = false
+): void {
     const normalizedCmd = normalizeCommand(rawCmd);
 
     // Handshake whitelist bypass — these commands must ALWAYS work for connection
     if (isHandshakeWhitelisted(normalizedCmd)) return;
 
     const cls = classifyCommand(rawCmd, isMoving);
-    if (requiresProAccess(cls) && !isPro) {
+    if (requiresProAccess(cls) && !isPro && !isFreeTrialAllowed) {
         throw new Error('HARDWARE_GATE_VIOLATION');
     }
 

@@ -490,10 +490,12 @@ class BluetoothServiceIOS implements IBluetoothService {
             const { assertHardwareGate } = require('../core/security/CommandClassificationRegistry');
             const { useAppStore } = require('../store/useAppStore');
             const { useBluetoothStore } = require('../store/useBluetoothStore');
-            const isPro = useAppStore?.getState?.()?.isPro ?? false;
+            const appState = useAppStore?.getState?.() ?? {};
+            const isPro = appState.isPro ?? false;
+            const isFreeTrialAllowed = appState.activeFreeTrialExecution ?? false;
             const btState = useBluetoothStore?.getState?.() ?? {};
             const isMoving = (btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0;
-            assertHardwareGate(cleanCmd, isPro, isMoving);
+            assertHardwareGate(cleanCmd, isPro, isMoving, undefined, isFreeTrialAllowed);
         }
 
         const command = data.endsWith('\r') ? data : data + '\r';

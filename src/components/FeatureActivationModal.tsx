@@ -101,6 +101,9 @@ const FeatureActivationModalComponent = ({
  const insets = useSafeAreaInsets();
  const isCloneDevice = useBluetoothStore((s) => s.isCloneDevice);
  const isSimulationMode = useAppStore((s) => s.isSimulationMode);
+ const isPro = useAppStore((s) => s.isPro);
+ const freeFeatureCredits = useAppStore((s) => s.freeFeatureCredits);
+ const usedFreeFeatureIds = useAppStore((s) => s.usedFreeFeatureIds);
  const rpm = useBluetoothStore((s) => s.rpm);
  const speed = useBluetoothStore((s) => s.speed);
 
@@ -192,72 +195,118 @@ const FeatureActivationModalComponent = ({
  };
 
  const handleToggleFeature = async (feature: OEMFeatureDefinition, customPayloadHex?: string) => {
- const inSim = isSimulationMode || useAppStore.getState().isSimulationMode;
+    const inSim = isSimulationMode || useAppStore.getState().isSimulationMode;
+    const storeState = useAppStore.getState();
+    const isUserPro = storeState.isPro;
+    const usedIds = storeState.usedFreeFeatureIds || [];
+    const credits = storeState.freeFeatureCredits ?? 1;
 
- // 0. Clone Adapter Safety Gate Check (Bypassed in Demo Mode)
- if (isCloneDevice && !inSim) {
- Alert.alert(
- t('features.cloneAlertTitle'),
- t('features.cloneAlertMsg'),
- [{ text: t('common.ok'), style: 'cancel' }]
- );
- return;
- }
+    // Check Free Trial vs PRO gate
+    const isFeatureAlreadyUnlockedFree = usedIds.includes(feature.id);
+    const isFreeCreditAvailable = credits > 0;
+    const isFreeEligible = isFeatureAlreadyUnlockedFree || isFreeCreditAvailable;
 
- // 1. Vehicle & ECU Compatibility Check (Bypassed in Demo Mode)
- if (!inSim) {
- const isSupported = featureActivationEngine.checkVehicleSupport(feature.make, connectedVehicleMake);
- if (!isSupported) {
- Alert.alert(
- ' ' + t('features.unsupportedTitle'),
- t('features.unsupportedMsg', 'This feature is not supported by your vehicle\'s ECU hardware or software version.'),
- [{ text: t('common.ok'), style: 'cancel' }]
- );
- return;
- }
- }
+    if (!isUserPro && !isFreeEligible && !inSim) {
+      Alert.alert(
+        '💎 ' + t('features.freeTrialExhaustedTitle', { defaultValue: 'Ücretsiz Kodlama Hakkı Kullanıldı' }),
+        t('features.freeTrialExhaustedMsg', { defaultValue: '1 adet ücretsiz gizli özellik açma hakkınızı kullandınız. Bu ve diğer tüm özellikleri sınırsız açmak, uzman kodlama ve servis sıfırlama için PRO sürüme geçin!' }),
+        [
+          { text: t('common.cancel', { defaultValue: 'Vazgeç' }), style: 'cancel' },
+          { 
+            text: t('features.upgradeToPro', { defaultValue: 'PRO\'YA GEÇ' }), 
+            onPress: () => {
+              onClose();
+              try {
+                const { useSubscriptionStore } = require('../store/useSubscriptionStore');
+                useSubscriptionStore?.getState?.()?.setPaywallVisible?.(true);
+              } catch (_) {}
+            } 
+          }
+        ]
+      );
+      return;
+    }
 
- // 2. Safety Gate Checks: Battery Voltage, Vehicle Motion, Engine Running & Safety-Critical Module Protection
- if (!inSim) {
- try {
- const mappedDefinition = mapOemToFeatureDefinition(feature);
- featureActivationEngine.validateSafetyGate({
- batteryVoltage: effectiveVoltage,
- vehicleSpeed: speed || 0,
- isSpeedReadable: true,
- isEngineRunning: (rpm || 0) > 0,
- }, mappedDefinition);
- } catch (err: any) {
- const errMsg = err?.message || String(err);
- let title = t('features.safetyAlertTitle');
- let message = errMsg;
+    // 0. Clone Adapter Safety Gate Check (Bypassed in Demo Mode)
+    if (isCloneDevice && !inSim) {
+      Alert.alert(
+        t('features.cloneAlertTitle'),
+        t('features.cloneAlertMsg'),
+        [{ text: t('common.ok'), style: 'cancel' }]
+      );
+      return;
+    }
 
- if (errMsg.includes('UNSAFE_MODULE_WRITE')) {
- title = t('features.unsafeModuleTitle');
- message = t('features.unsafeModuleMsg');
- } else if (errMsg.includes('LOW_VOLTAGE')) {
- title = t('features.lowVoltageTitle');
- message = t('features.lowVoltageMsg');
- } else if (errMsg.includes('VEHICLE_IN_MOTION')) {
- title = t('features.motionAlertTitle');
- message = t('features.motionAlertMsg');
- } else if (errMsg.includes('ENGINE_RUNNING')) {
- title = t('features.engineRunningTitle');
- message = t('features.engineRunningMsg');
- }
+    // 1. Vehicle & ECU Compatibility Check (Bypassed in Demo Mode)
+    if (!inSim) {
+      const isSupported = featureActivationEngine.checkVehicleSupport(feature.make, connectedVehicleMake);
+      if (!isSupported) {
+        Alert.alert(
+          ' ' + t('features.unsupportedTitle'),
+          t('features.unsupportedMsg', 'This feature is not supported by your vehicle\'s ECU hardware or software version.'),
+          [{ text: t('common.ok'), style: 'cancel' }]
+        );
+        return;
+      }
+    }
 
- Alert.alert(title, message, [{ text: t('common.ok'), style: 'cancel' }]);
- return;
- }
- }
+    // 2. Safety Gate Checks: Battery Voltage, Vehicle Motion, Engine Running & Safety-Critical Module Protection
+    if (!inSim) {
+      try {
+        const mappedDefinition = mapOemToFeatureDefinition(feature);
+        featureActivationEngine.validateSafetyGate({
+          batteryVoltage: effectiveVoltage,
+          vehicleSpeed: speed || 0,
+          isSpeedReadable: true,
+          isEngineRunning: (rpm || 0) > 0,
+        }, mappedDefinition);
+      } catch (err: any) {
+        const errMsg = err?.message || String(err);
+        let title = t('features.safetyAlertTitle');
+        let message = errMsg;
 
- if (!isDisclaimerAccepted && !inSim) {
- setPendingDisclaimerFeature(feature);
- return;
- }
+        if (errMsg.includes('UNSAFE_MODULE_WRITE')) {
+          title = t('features.unsafeModuleTitle');
+          message = t('features.unsafeModuleMsg');
+        } else if (errMsg.includes('LOW_VOLTAGE')) {
+          title = t('features.lowVoltageTitle');
+          message = t('features.lowVoltageMsg');
+        } else if (errMsg.includes('VEHICLE_IN_MOTION')) {
+          title = t('features.motionAlertTitle');
+          message = t('features.motionAlertMsg');
+        } else if (errMsg.includes('ENGINE_RUNNING')) {
+          title = t('features.engineRunningTitle');
+          message = t('features.engineRunningMsg');
+        }
 
- await executeToggleFeature(feature, customPayloadHex);
- };
+        Alert.alert(title, message, [{ text: t('common.ok'), style: 'cancel' }]);
+        return;
+      }
+    }
+
+    if (!isDisclaimerAccepted && !inSim) {
+      setPendingDisclaimerFeature(feature);
+      return;
+    }
+
+    const isConsumingNewCredit = !isUserPro && !isFeatureAlreadyUnlockedFree;
+    try {
+      if (isConsumingNewCredit || isFeatureAlreadyUnlockedFree) {
+        useAppStore.getState().setActiveFreeTrialExecution(true);
+      }
+      await executeToggleFeature(feature, customPayloadHex);
+      if (isConsumingNewCredit) {
+        useAppStore.getState().useFreeFeatureCredit(feature.id);
+        Alert.alert(
+          '🎉 ' + t('features.freeTrialSuccessTitle', { defaultValue: 'Tebrikler! Özellik Aktifleştirildi' }),
+          t('features.freeTrialSuccessMsg', { defaultValue: '1 adet ücretsiz deneme hakkınızla bu özellik aracınıza başarıyla kodlandı! Diğer tüm özellikleri sınırsız açmak için dilediğiniz zaman PRO sürüme geçebilirsiniz.' }),
+          [{ text: t('common.gotIt', { defaultValue: 'Harika' }) }]
+        );
+      }
+    } finally {
+      useAppStore.getState().setActiveFreeTrialExecution(false);
+    }
+  };
 
  // Filter features based on brand, segment, category, and search query
  const filteredFeatures = useMemo(() => {
@@ -624,6 +673,29 @@ const FeatureActivationModalComponent = ({
  {item.riskLevel === 'HIGH' ? t('features.riskHigh') : item.riskLevel === 'MEDIUM' ? t('features.riskMedium') : t('features.riskLow')}
  </Text>
  </View>
+
+ {/* Free Trial / PRO Status Pill */}
+ {!isPro && (
+   usedFreeFeatureIds?.includes(item.id) ? (
+     <View style={{ backgroundColor: `${colors.green}22`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: `${colors.green}60` }}>
+       <Text style={{ color: colors.green, fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
+         {t('features.freeTrialUsedBadge', { defaultValue: 'ÜCRETSİZ HAK İLE AÇIK' })}
+       </Text>
+     </View>
+   ) : (freeFeatureCredits ?? 1) > 0 ? (
+     <View style={{ backgroundColor: `${colors.cyan}22`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: `${colors.cyan}60` }}>
+       <Text style={{ color: colors.cyan, fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
+         {t('features.freeTrialAvailableBadge', { defaultValue: '🎁 1 ÜCRETSİZ HAK' })}
+       </Text>
+     </View>
+   ) : (
+     <View style={{ backgroundColor: `${colors.purple || '#9c27b0'}22`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: `${colors.purple || '#9c27b0'}60` }}>
+       <Text style={{ color: colors.purple || '#ab47bc', fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
+         {t('features.proRequiredBadge', { defaultValue: '💎 PRO' })}
+       </Text>
+     </View>
+   )
+ )}
 
  {/* SFD Protection Badge */}
  {item.sfdProtected && (

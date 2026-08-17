@@ -101,6 +101,9 @@ interface AppState {
   
   isSimulationMode: boolean;
   freeUsageCount: number; // Persistent free trial usage counter
+  freeFeatureCredits: number; // 1 Free Feature Activation Credit for Free users
+  usedFreeFeatureIds: string[]; // IDs of features unlocked using free trial
+  activeFreeTrialExecution: boolean; // Transitory flag during hardware write
   appUserId: string | null;
   deviceUuid: string | null;
   enabledFeatures: Record<string, boolean>; // Persistent ECU coding feature activation states
@@ -118,6 +121,8 @@ interface AppState {
   toggleSimulationMode: () => void;
   incrementFreeUsage: () => void; // Track trial count
   resetFreeUsage: () => void; // Reset trial count
+  useFreeFeatureCredit: (featureId: string) => boolean;
+  setActiveFreeTrialExecution: (active: boolean) => void;
   verifyEntitlement: () => Promise<void>;
   loadOfferings: () => Promise<void>;
   purchasePackage: (pkg: PurchasesPackage) => Promise<boolean>;
@@ -244,6 +249,9 @@ export const useAppStore = create<AppState>()(
       isSimulationMode: false,
       packages: [],
       freeUsageCount: 0,
+      freeFeatureCredits: 1,
+      usedFreeFeatureIds: [],
+      activeFreeTrialExecution: false,
       appUserId: null,
       deviceUuid: null,
       enabledFeatures: {},
@@ -258,6 +266,30 @@ export const useAppStore = create<AppState>()(
         enabledFeatures: { ...state.enabledFeatures, [id]: enabled }
       })),
       setIsTelemetryOptedIn: (isTelemetryOptedIn) => set({ isTelemetryOptedIn }),
+      useFreeFeatureCredit: (featureId: string) => {
+        let result = false;
+        set((state) => {
+          if (state.isPro) {
+            result = true;
+            return state;
+          }
+          if (state.usedFreeFeatureIds.includes(featureId)) {
+            result = true;
+            return state;
+          }
+          if (state.freeFeatureCredits > 0) {
+            result = true;
+            return {
+              freeFeatureCredits: state.freeFeatureCredits - 1,
+              usedFreeFeatureIds: [...state.usedFreeFeatureIds, featureId]
+            };
+          }
+          result = false;
+          return state;
+        });
+        return result;
+      },
+      setActiveFreeTrialExecution: (activeFreeTrialExecution) => set({ activeFreeTrialExecution }),
       setIsPro: (isPro) => {
         set({ isPro });
         if (isPro) {
@@ -476,12 +508,14 @@ export const useAppStore = create<AppState>()(
         hasOnboarded: state.hasOnboarded,
         isSimulationMode: state.isSimulationMode,
         freeUsageCount: state.freeUsageCount,
+        freeFeatureCredits: state.freeFeatureCredits ?? 1,
+        usedFreeFeatureIds: state.usedFreeFeatureIds ?? [],
         deviceUuid: state.deviceUuid,
         isBackdoorPro: state.isBackdoorPro,
         isPro: state.isPro,
         enabledFeatures: state.enabledFeatures,
         isTelemetryOptedIn: state.isTelemetryOptedIn,
-        // isSessionProMemoryLock intentionally EXCLUDED — RAM-only lock
+        // isSessionProMemoryLock and activeFreeTrialExecution intentionally EXCLUDED — RAM-only
       }),
       onRehydrateStorage: () => (state) => {
         if (state?.language) {

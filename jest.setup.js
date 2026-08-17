@@ -144,4 +144,28 @@ jest.mock('expo-crypto', () => ({
   getRandomBytes: jest.fn((size) => new Uint8Array(size).fill(7)),
 }));
 
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn().mockResolvedValue(null),
+  setItemAsync: jest.fn().mockResolvedValue(undefined),
+  deleteItemAsync: jest.fn().mockResolvedValue(undefined),
+}));
+
+jest.mock('react-native-purchases', () => ({
+  configure: jest.fn(),
+  setLogLevel: jest.fn(),
+  getCustomerInfo: jest.fn().mockResolvedValue({ entitlements: { active: {} } }),
+  getOfferings: jest.fn().mockResolvedValue({ current: null }),
+  purchasePackage: jest.fn().mockResolvedValue({ customerInfo: { entitlements: { active: {} } } }),
+  restorePurchases: jest.fn().mockResolvedValue({ entitlements: { active: {} } }),
+  addCustomerInfoUpdateListener: jest.fn().mockReturnValue(jest.fn()),
+  removeCustomerInfoUpdateListener: jest.fn(),
+  LOG_LEVEL: {
+    VERBOSE: 'VERBOSE',
+    DEBUG: 'DEBUG',
+    INFO: 'INFO',
+    WARN: 'WARN',
+    ERROR: 'ERROR',
+  },
+}));
+
 
