@@ -44,3 +44,7 @@ görevi de, bir architect görevi de bunlara uymak zorundadır.
   taksonomiye atıfta bulunuluyorsa, bu taksonomi `reference/` altında somut
   bir dosyada tanımlı olmalıdır. Tanımsız bir taksonomiye göre "kontrol
   ettim" demek — kanıtsız iddiadır ve Madde 5'i ihlal eder.
+
+## 7. No Emojis in Text Strings or Badges (Strict Rule)
+- UI butonlarında, kartlarda, rozetlerde (badges), modal/alert metinlerinde ve `src/locales/*.json` çeviri dosyalarında metinlerin önüne veya içine emoji (`🎁`, `💎`, `🎉`, `⚡`, `🚀`, `⚠️` vb.) eklemek **kesinlikle yasaktır**. Tüm metinler sade, minimalist ve kurumsal otomotiv arayüzü standartlarında düz metin olmalıdır.
+

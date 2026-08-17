@@ -25,3 +25,8 @@
   offset behavior ile).
 - Terminal Input veya SEND butonu gibi action component'ler parent card'ın
   altına flex ile dock edilir, native klavye tarafından kapatılmaz.
+
+## 4. Minimalist UI & No Emojis in Text/Badges/Buttons (Strict)
+- Buton metinleri, rozetler (badges), alert başlıkları, toast bildirimleri veya çeviri string'lerinin başına/içine emoji ya da dekoratif simgeler (`🎁`, `💎`, `🎉`, `⚡`, `🚀`, `🚗`, `✓` vb.) eklemek **kesinlikle yasaktır**.
+- Tüm arayüz metinleri otomotiv teşhis standardına uygun, sade, minimalist ve profesyonel yazılmalıdır (Örn: `"1 ÜCRETSİZ HAK"`, `"PRO GEREKLİ"`, `"KODLA"`).
+- Görsel simge gereken durumlarda metin içine emoji gömmek yerine React Native ikon bileşenleri (`@expo/vector-icons`, Ionicons vb.) kullanılmalıdır.
