@@ -484,10 +484,6 @@ class BluetoothServiceIOS implements IBluetoothService {
         this.disconnectCallback = null;
     }
 
-    async shutdownCurrentSocket(): Promise<void> {
-        await this.disconnect();
-    }
-
     async write(data: string): Promise<void> {
         const cleanCmd = data.replace(/[\r\n]/g, '').trim();
         if (cleanCmd.length > 0) {
@@ -592,11 +588,27 @@ class BluetoothServiceIOS implements IBluetoothService {
         } catch (e) {}
     }
 
-    async getLastDevice(): Promise<{ id: string, name: string } | null> {
+    async getLastDevice(): Promise<{ id: string; name: string } | null> {
         try {
             const data = await AsyncStorage.getItem(this.STORAGE_KEY);
             return data ? JSON.parse(data) : null;
         } catch (e) { return null; }
+    }
+
+    async shutdownCurrentSocket(): Promise<void> {
+        await this.safeDisconnect();
+    }
+
+    async safeDisconnect(): Promise<void> {
+        try {
+            this.clearBuffer();
+            await Promise.race([
+                this.disconnect(),
+                new Promise<void>((resolve) => setTimeout(resolve, 2000))
+            ]);
+        } catch (e) {
+            console.warn('[Bluetooth iOS] safeDisconnect error:', e);
+        }
     }
 }
 

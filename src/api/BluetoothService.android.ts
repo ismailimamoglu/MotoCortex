@@ -794,7 +794,19 @@ class BluetoothServiceAndroid implements IBluetoothService {
     }
 
     async shutdownCurrentSocket(): Promise<void> {
-        await this.disconnect();
+        await this.safeDisconnect();
+    }
+
+    async safeDisconnect(): Promise<void> {
+        try {
+            this.clearBuffer();
+            await Promise.race([
+                this.disconnect(),
+                new Promise<void>((resolve) => setTimeout(resolve, 2000))
+            ]);
+        } catch (e) {
+            console.warn('[Bluetooth Android] safeDisconnect error:', e);
+        }
     }
 }
 

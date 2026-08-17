@@ -35,4 +35,5 @@ export interface IBluetoothService {
     saveLastDevice(deviceId: string, deviceName: string): Promise<void>;
     getLastDevice(): Promise<{ id: string; name: string } | null>;
     shutdownCurrentSocket(): Promise<void>;
+    safeDisconnect(): Promise<void>;
 }

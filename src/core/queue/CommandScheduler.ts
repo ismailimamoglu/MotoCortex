@@ -4,6 +4,7 @@
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 import CommandRateLimiter from './CommandRateLimiter';
 import { Mutex } from '../transport/Mutex';
+import { ReadWriteLock } from './ReadWriteLock';
 
 export enum SchedulerMode {
     NORMAL,
@@ -33,6 +34,7 @@ export class CommandSchedulerClass {
     private activeItem: QueueItem | null;
     private checkLockFn: (() => boolean) | null = null;
     private writeMutex: Mutex = new Mutex();
+    private rwLock: ReadWriteLock = new ReadWriteLock();
     private onAdHocInterruptFn: (() => void) | null = null;
 
     // Weighted Fair Queuing (WFQ): Telemetri akışının arıza kodu/VIN işlemlerini boğmasını engeller
@@ -48,6 +50,17 @@ export class CommandSchedulerClass {
         this.consecutiveSuccessCount = 0;
         this.executionFn = null;
         this.activeItem = null;
+    }
+
+    /**
+     * Acquire exclusive write lock for UDS / Coding operations
+     */
+    public async acquireExclusiveWriteLock(timeoutMs: number = 5000): Promise<() => void> {
+        return this.rwLock.writeLock(timeoutMs);
+    }
+
+    public isWriteLocked(): boolean {
+        return this.rwLock.isLocked();
     }
 
     public setAdHocInterruptHandler(fn: () => void) {
