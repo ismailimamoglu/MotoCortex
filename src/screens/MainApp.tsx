@@ -31,7 +31,6 @@ import * as Clipboard from 'expo-clipboard';
 import { useAppStore, checkIsProStatus, AppLanguage } from '../store/useAppStore';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 import Paywall from '../components/Paywall';
-import ContextualPaywallModal from '../components/ContextualPaywallModal';
 import { useThemeColors } from '../theme';
 import { BluetoothBridgeInitializer } from '../components/BluetoothBridgeInitializer';
 import { useResponsive } from '../hooks/useResponsive';
@@ -666,6 +665,14 @@ export default function MainApp() {
  const [aiDoctorContext, setAiDoctorContext] = useState<AiDiagnosticContext>({ dtcCodes: [] });
  const adminTapCountRef = useRef(0);
  const adminTapTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+ const paywallContext = useBluetoothStore((s) => s.paywallContext);
+ useEffect(() => {
+   if (paywallContext) {
+     setIsPaywallVisible(true);
+     useBluetoothStore.getState().clearPaywallContext();
+   }
+ }, [paywallContext]);
 
  // Force disable React Native Element Inspector overlay on startup if currently shown
  useEffect(() => {
@@ -1580,14 +1587,14 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  dtcs.map((dtc, i) => {
  const desc = lookupDTC(dtc);
  const isPro = useAppStore.getState().isPro;
- const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
+ const displayDesc = isPro ? desc : getContextualDtcDesc(dtc);
  return (
  <TouchableOpacity
  key={i}
  style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
  onPress={() => {
  if (!isPro) {
- useBluetoothStore.getState().setPaywallContext('DTC_DETAIL');
+ setIsPaywallVisible(true);
  } else {
  handleOpenDtcDetail(dtc);
  }
@@ -1608,14 +1615,14 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  {dtcs.map((dtc, i) => {
  const desc = lookupDTC(dtc);
  const isPro = useAppStore.getState().isPro;
- const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
+ const displayDesc = isPro ? desc : getContextualDtcDesc(dtc);
  return (
  <TouchableOpacity
  key={i}
  style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
  onPress={() => {
  if (!isPro) {
- useBluetoothStore.getState().setPaywallContext('DTC_DETAIL');
+ setIsPaywallVisible(true);
  } else {
  handleOpenDtcDetail(dtc);
  }
