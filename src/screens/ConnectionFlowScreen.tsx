@@ -308,16 +308,6 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  </Text>
  </View>
  )}
-
- <TouchableOpacity 
- activeOpacity={0.8}
- style={[styles.healthBtn, { backgroundColor: colors.cyan, marginTop: vs(6), shadowColor: colors.cyan, shadowOpacity: 0.25, shadowRadius: 6, elevation: 3 }]}
- onPress={onNavigateToHealth}
- >
- <Text style={[styles.healthBtnText, { fontSize: fs(13), fontFamily: colors.mono, color: '#ffffff', fontWeight: '800' }]}>
- {t('connection.viewHealth')}
- </Text>
- </TouchableOpacity>
  </View>
  ) : (
  <Text style={[styles.statusDesc, { color: colors.textSec, fontSize: fs(12) }]}>
