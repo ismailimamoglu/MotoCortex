@@ -1630,31 +1630,9 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  
  return (
  <View style={{ flex: 1.1, gap: isCompact ? scaleHeight(8) : scaleHeight(16) }}>
- {/* Secondary Actions */}
+ {/* Secondary Actions (4 Extra Actions Grid) */}
  <View style={[s.panel, { padding: panelPad, marginBottom: 0 }]}>
  <Text style={[s.panelTitle, { marginBottom: isCompact ? scaleHeight(6) : scaleHeight(10), fontSize: titleSz }]}>{t('expertise.extraActions')}</Text>
- 
- {/* Featured Action: OBD2 Capability & Compatibility Matrix */}
- <TouchableOpacity
-   activeOpacity={0.8}
-   style={[
-     s.actionBtn, 
-     { 
-       backgroundColor: tc.cyan, 
-       paddingVertical: isCompact ? scaleHeight(8.5) : scaleHeight(11), 
-       borderRadius: 8, 
-       marginBottom: isCompact ? scaleHeight(6) : scaleHeight(8),
-       marginVertical: 0,
-       alignItems: 'center',
-       justifyContent: 'center',
-     }
-   ]}
-   onPress={() => setActiveHubView('obd_health')}
- >
-   <Text style={[s.actionBtnText, { color: '#ffffff', fontSize: isCompact ? scaleFont(9.5) : scaleFont(11), fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5 }]}>
-     {t('health.titleMenu', { defaultValue: 'OBD2 YETENEK & UYUMLULUK MATRİSİ' })}
-   </Text>
- </TouchableOpacity>
 
  <View style={{ gap: isCompact ? scaleHeight(6) : scaleHeight(8) }}>
  {isCompact ? (
@@ -1690,7 +1668,6 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  <Text style={[s.miniActionText, { color: tc.card, fontSize: scaleFont(9) }]}>{t('service.ecuReset')}</Text>
  </TouchableOpacity>
  </View>
-
  </>
  ) : (
  <>
@@ -1721,11 +1698,33 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  >
  <Text style={[s.miniActionText, { color: tc.card, fontSize: scaleFont(11) }]}>{t('service.ecuReset')}</Text>
  </TouchableOpacity>
-
  </>
  )}
  </View>
  </View>
+
+  {/* Separate Bottom Panel: OBD2 Capabilities & Compatibility Matrix */}
+  <View style={[s.panel, { padding: panelPad, marginBottom: 0 }]}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={[
+        s.actionBtn, 
+        { 
+          backgroundColor: tc.cyan, 
+          paddingVertical: isCompact ? scaleHeight(10) : scaleHeight(12), 
+          borderRadius: 8, 
+          marginVertical: 0,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }
+      ]}
+      onPress={() => setActiveHubView('obd_health')}
+    >
+      <Text style={[s.actionBtnText, { color: '#ffffff', fontSize: isCompact ? scaleFont(9.5) : scaleFont(11), fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5 }]}>
+        {t('health.titleMenu', { defaultValue: 'OBD2 YETENEKLERİ & UYUMLULUK MATRİSİ' })}
+      </Text>
+    </TouchableOpacity>
+  </View>
 
 
  </View>
