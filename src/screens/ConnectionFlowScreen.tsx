@@ -157,7 +157,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
     
     // Stop any active Bluetooth discovery/scan immediately so radio is free for RFCOMM
     try {
-      await RNBluetoothClassic.stopDiscovery();
+      await (RNBluetoothClassic as any).cancelDiscovery?.();
       setIsScanning(false);
     } catch (e) {}
 
@@ -560,7 +560,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  {sortedDevices.map((dev, idx) => {
  const devId = dev.address || dev.id || 'dev';
  const signal = getSignalInfo(dev.rssi);
- const isTargetConnecting = connectingDeviceId === devId || (status === 'connecting' && pairingDeviceId === devId);
+ const isTargetConnecting = connectingDeviceId === devId || (connectionState === 'ADAPTER_CONNECTING' && pairingDeviceId === devId);
  return (
  <TouchableOpacity 
  key={devId + idx}
@@ -571,8 +571,8 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
      borderColor: isTargetConnecting ? colors.cyan : colors.border 
    }
  ]}
- onPress={() => !isTargetConnecting && status !== 'connecting' && handleConnectDevice(devId, dev.name)}
- disabled={status === 'connecting'}
+ onPress={() => !isTargetConnecting && connectionState !== 'ADAPTER_CONNECTING' && handleConnectDevice(devId, dev.name)}
+ disabled={connectionState === 'ADAPTER_CONNECTING'}
  activeOpacity={0.7}
  >
  <View style={styles.deviceInfo}>

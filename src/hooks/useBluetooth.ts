@@ -385,7 +385,7 @@ export const useBluetooth = () => {
              // Ensure active session vehicle is registered even if VIN cannot be read from hardware
              const currentTelemetryState = useTelemetryStore.getState();
              if (!currentTelemetryState.activeSessionVehicle) {
-                 const category = useBluetoothStore.getState().selectedCategory || 'PASSENGER_CAR';
+                 const category = useBluetoothStore.getState().selectedCategoryByUser || 'PASSENGER_CAR';
                  const defaultBrand = category === 'MOTORCYCLE' ? 'Motosiklet' : (category === 'HEAVY_DUTY_TRUCK' ? 'Ağır Ticari' : 'OBD-II Standart');
                  const defaultModel = category === 'MOTORCYCLE' ? 'Euro 5 (OBD2)' : (category === 'HEAVY_DUTY_TRUCK' ? 'J1939 (24V)' : 'Binek Araç (CAN)');
                  const fallbackVehicle = {
