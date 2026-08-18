@@ -10,15 +10,15 @@ export class AdapterProfileRegistry {
      * based on the adapter capability score.
      */
     public static getReinitCommands(score: number, isCloneDevice = false): string[] {
-        // Force Tier C minimal configuration for clone/unreliable devices
-        if (isCloneDevice || score < 60) {
+        // Force Tier C minimal configuration only for severely unreliable devices (< 40 score)
+        if (score < 40) {
             return [
                 'ATE0', // Disable echo
                 'ATH1'  // Enable headers (mandatory for parser)
             ];
         }
 
-        if (score >= 90) {
+        if (score >= 85 && !isCloneDevice) {
             // Tier S: Full configuration
             return [
                 'ATE0',     // Disable echo
@@ -30,7 +30,7 @@ export class AdapterProfileRegistry {
             ];
         }
 
-        // Tier A: Medium configuration (e.g. skip adaptive timing to prevent freeze)
+        // Tier A: Standard configuration for good clone (v1.5 PIC18F25K80) and standard adapters
         return [
             'ATE0',     // Disable echo
             'ATL0',     // Linefeeds off

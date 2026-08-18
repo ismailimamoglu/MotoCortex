@@ -377,17 +377,36 @@ export const useBluetooth = () => {
                });
            }
 
-            setEcuStatus('connected');
-            updateStep('stabilization', 'success', 100);  
-            useBluetoothStore.getState().setConnectionStatusText(null);
-            startPolling();  
-            initSuccess = true;  
+             setEcuStatus('connected');
+             updateStep('stabilization', 'success', 100);  
+             useBluetoothStore.getState().setConnectionStatusText(null);
+             
+             // Autonomous Zero-Friction Vehicle Profiling:
+             // Ensure active session vehicle is registered even if VIN cannot be read from hardware
+             const currentTelemetryState = useTelemetryStore.getState();
+             if (!currentTelemetryState.activeSessionVehicle) {
+                 const category = useBluetoothStore.getState().selectedCategory || 'PASSENGER_CAR';
+                 const defaultBrand = category === 'MOTORCYCLE' ? 'Motosiklet' : (category === 'HEAVY_DUTY_TRUCK' ? 'Ağır Ticari' : 'OBD-II Standart');
+                 const defaultModel = category === 'MOTORCYCLE' ? 'Euro 5 (OBD2)' : (category === 'HEAVY_DUTY_TRUCK' ? 'J1939 (24V)' : 'Binek Araç (CAN)');
+                 const fallbackVehicle = {
+                     brand: defaultBrand,
+                     model: defaultModel,
+                     year: new Date().getFullYear(),
+                     vin: 'OBD2_GENERIC'
+                 };
+                 currentTelemetryState.setActiveSessionVehicle(fallbackVehicle);
+                 const { saveRegisteredVehicle } = require('../store/garageStore');
+                 saveRegisteredVehicle(fallbackVehicle).catch(() => {});
+             }
 
-            setTimeout(() => {
-                runDiagnostics().catch(err => {
-                    useBluetoothStore.getState().addLog(`DIAG_WARN: Auto diagnostics failed: ${err?.message || err}`);
-                });
-            }, 1000);
+             startPolling();  
+             initSuccess = true;  
+
+             setTimeout(() => {
+                 runDiagnostics().catch(err => {
+                     useBluetoothStore.getState().addLog(`DIAG_WARN: Auto diagnostics failed: ${err?.message || err}`);
+                 });
+             }, 1000);
         } catch (e) {  
            updateStep('stabilization', 'failed', useBluetoothStore.getState().connectionProgress);  
            const errorReasonStr = e instanceof Error ? e.message : String(e);

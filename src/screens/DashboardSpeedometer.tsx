@@ -105,7 +105,7 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  speed: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.speed || storeSpeed || (isSimulationMode ? 50 : null)) : null,
  coolant: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.coolant || storeCoolant || (isSimulationMode ? 87 : null)) : null,
  throttle: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.throttle || storeThrottle || (isSimulationMode ? 25 : null)) : null,
- voltage: (ecuStatus === 'connected' || isSimulationMode) ? (storeVoltage || localSensors.voltage || (isSimulationMode ? '14.2V' : null)) : null,
+ voltage: (ecuStatus === 'connected' || isSimulationMode) ? (storeVoltage || (localSensors.voltage !== '0.0V' ? localSensors.voltage : null) || (isSimulationMode ? '14.2V' : null)) : null,
  engineLoad: (ecuStatus === 'connected' || isSimulationMode) ? (engineLoad !== null ? engineLoad : (isSimulationMode ? 35 : null)) : null,
  intakeAirTemp: (ecuStatus === 'connected' || isSimulationMode) ? (intakeAirTemp !== null ? intakeAirTemp : (isSimulationMode ? 28 : null)) : null,
  manifoldPressure: (ecuStatus === 'connected' || isSimulationMode) ? (manifoldPressure !== null ? manifoldPressure : (isSimulationMode ? 100 : null)) : null,
@@ -356,9 +356,10 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  );
  }
 
- const CRITICAL_PIDS = ['0C', '0D', '05'];
+ const CRITICAL_PIDS = ['0C', '0D', '05', '42'];
  const activeConfigs = ALL_SENSORS.filter(s => {
  if (!activeSensors.includes(s.key)) return false;
+ if (s.key === 'voltage') return true; // Hardware ATRV is always supported by adapter
  if (isSimulationMode || supportedPids.length === 0) return true;
  const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
  if (!pidHex) return true;

@@ -64,6 +64,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  const connectionProgress = useBluetoothStore(s => s.connectionProgress);
  const connectionStatusTextKey = useBluetoothStore(s => s.connectionStatusTextKey);
  const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
+ const connectingDeviceId = useBluetoothStore(s => s.connectingDeviceId);
  const errorMsg = useBluetoothStore(s => s.error);
 
  const radarScale = useRef(new Animated.Value(1)).current;
@@ -150,34 +151,36 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  }
  };
 
- // Connect to selected device
- const handleConnectDevice = async (id: string, name: string) => {
- triggerHaptic();
- 
- // On Android Classic, if the device is not bonded, show custom pairing helper overlay
- if (Platform.OS === 'android' && !id.includes('BLE') && !id.includes('SIM')) {
- try {
- const bonded = await scanDevices(); // returns bonded first
- const isBonded = bonded.some((d: any) => d.id === id || d.address === id);
- if (!isBonded) {
- setPairingDeviceId(id);
- setShowPairingOverlay(true);
- return;
- }
- } catch (e) {}
- }
+  // Connect to selected device with single-tap guarantee
+  const handleConnectDevice = async (id: string, name: string) => {
+    triggerHaptic();
+    
+    // Stop any active Bluetooth discovery/scan immediately so radio is free for RFCOMM
+    try {
+      await RNBluetoothClassic.stopDiscovery();
+      setIsScanning(false);
+    } catch (e) {}
 
- proceedWithConnection(id, name);
- };
+    proceedWithConnection(id, name);
+  };
 
- const proceedWithConnection = (id: string, name: string) => {
- setShowPairingOverlay(false);
- // Delegate connection lifecycle to single source of truth: useBluetooth hook
- connect(id, name).catch((err: any) => {
- const BluetoothStore = useBluetoothStore.getState();
- BluetoothStore.setSensorData({ status: 'error', ecuStatus: 'error', error: err?.message || String(err) });
- });
- };
+  const proceedWithConnection = (id: string, name: string) => {
+    setShowPairingOverlay(false);
+    setPairingDeviceId(id);
+    useBluetoothStore.getState().setSensorData({ connectingDeviceId: id });
+    
+    // Delegate connection lifecycle to single source of truth: useBluetooth hook
+    connect(id, name).catch((err: any) => {
+      const BluetoothStore = useBluetoothStore.getState();
+      BluetoothStore.setSensorData({ 
+        status: 'error', 
+        ecuStatus: 'error', 
+        error: err?.message || String(err),
+        connectingDeviceId: null
+      });
+      setPairingDeviceId(null);
+    });
+  };
 
   // Open Wi-Fi system Settings panel
   const handleOpenWifiSettings = () => {
@@ -565,23 +568,42 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  {t('connection.foundDevices')} ({sortedDevices.length})
  </Text>
  {sortedDevices.map((dev, idx) => {
+ const devId = dev.address || dev.id || 'dev';
  const signal = getSignalInfo(dev.rssi);
+ const isTargetConnecting = connectingDeviceId === devId || (status === 'connecting' && pairingDeviceId === devId);
  return (
  <TouchableOpacity 
- key={(dev.address || dev.id || 'dev') + idx}
- style={[styles.deviceRow, { backgroundColor: colors.card, borderColor: colors.border }]}
- onPress={() => handleConnectDevice(dev.address || dev.id, dev.name)}
+ key={devId + idx}
+ style={[
+   styles.deviceRow, 
+   { 
+     backgroundColor: isTargetConnecting ? `${colors.cyan}18` : colors.card, 
+     borderColor: isTargetConnecting ? colors.cyan : colors.border 
+   }
+ ]}
+ onPress={() => !isTargetConnecting && status !== 'connecting' && handleConnectDevice(devId, dev.name)}
+ disabled={status === 'connecting'}
+ activeOpacity={0.7}
  >
  <View style={styles.deviceInfo}>
- <Text style={[styles.deviceName, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
- {dev.name || 'Unknown OBD2'}
- </Text>
+ <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+   <Text style={[styles.deviceName, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
+   {dev.name || 'Unknown OBD2'}
+   </Text>
+   {isTargetConnecting && (
+     <ActivityIndicator size="small" color={colors.cyan} style={{ marginLeft: ms(8) }} />
+   )}
+ </View>
  <Text style={[styles.deviceAddr, { color: colors.textSec, fontSize: fs(10) }]}>
  {dev.address || dev.id}
  </Text>
  </View>
  <View style={styles.rssiContainer}>
- {typeof dev.rssi === 'number' ? (
+ {isTargetConnecting ? (
+   <Text style={[styles.rssiText, { color: colors.cyan, fontSize: fs(10), fontFamily: colors.mono, fontWeight: '700' }]}>
+     {t('connection.connecting', { defaultValue: 'Bağlanıyor...' })}
+   </Text>
+ ) : typeof dev.rssi === 'number' ? (
  <View style={{ alignItems: 'flex-end' }}>
  <View style={{ flexDirection: 'row', alignItems: 'flex-end', height: vs(14) }}>
  {[1, 2, 3, 4].map(barIdx => (

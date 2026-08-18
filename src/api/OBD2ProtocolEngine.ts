@@ -750,16 +750,18 @@ export class OBD2ProtocolEngine {
  // Do not naively mark v1.5 as clone; clone classification is handled via hardware capability tests
  return; 
  }
- if (command === 'ATRV') {
- const clean = response.replace(/[^\d.]/g, '');
- if (clean) {
- const voltage = clean + 'V';
- if (this.voltageCallback) {
- this.voltageCallback(voltage);
- }
- }
- return;
- }
+  if (command === 'ATRV') {
+    const clean = response.replace(/[^\d.]/g, '');
+    if (clean) {
+      const voltage = clean + 'V';
+      telemetryBuffer.pushTelemetry({ voltage });
+      useBluetoothStore.getState().setSensorData({ voltage });
+      if (this.voltageCallback) {
+        this.voltageCallback(voltage);
+      }
+    }
+    return;
+  }
  if (this.isErrorPayload(response)) return;
 
  if (command.startsWith('01')) this.parseMode01Response(response); 

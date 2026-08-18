@@ -34,26 +34,34 @@ export class PollingOrchestrator {
         store.addLog('POLLING_ORCHESTRATOR: Commencing Hardened Multiplexed Telemetry Pipeline.');
 
         // 1. ADIM: Sensör isteklerini hedef donanım düğümlerine göre kümele (Batching)
+        // Statik capability ve meta PID'leri (00, 20, 40, 60, 80, A0, C0, 1C) telemetri döngüsünden filtrele
+        const STATIC_PIDS_TO_EXCLUDE = new Set(['00', '20', '40', '60', '80', 'A0', 'C0', '1C', '0100', '0120', '0140', '0160', '011C']);
         const batchedQueue = new Map<string, string[]>(); // ECU_HEADER -> PID[]
 
-        const keysToProcess = (requestedKeys && requestedKeys.length > 0)
+        const rawKeys = (requestedKeys && requestedKeys.length > 0)
             ? requestedKeys
             : ['0C@7E8', '0D@7E8', '04@7E8'];
 
-        for (const key of keysToProcess) {
-            if (!key.includes('@')) {
-                // If standard PID without @ header, route to 7E8 by default
-                if (!batchedQueue.has('7E8')) batchedQueue.set('7E8', []);
-                batchedQueue.get('7E8')!.push(key.trim());
-                continue;
-            }
-            const [pid, ecuHeader] = key.split('@');
+        for (const key of rawKeys) {
+            const cleanKey = key.trim();
+            let pid = cleanKey;
+            let targetHeader = '7E8';
 
-            const targetHeader = ecuHeader || '7E8';
+            if (cleanKey.includes('@')) {
+                const parts = cleanKey.split('@');
+                pid = parts[0].trim();
+                targetHeader = parts[1]?.trim() || '7E8';
+            }
+
+            const cleanPidHex = pid.replace(/^01\s*/i, '').toUpperCase();
+            if (STATIC_PIDS_TO_EXCLUDE.has(cleanPidHex) || STATIC_PIDS_TO_EXCLUDE.has(pid.toUpperCase())) {
+                continue; // Skip static capability bitmasks during live streaming
+            }
+
             if (!batchedQueue.has(targetHeader)) {
                 batchedQueue.set(targetHeader, []);
             }
-            batchedQueue.get(targetHeader)!.push(pid.trim());
+            batchedQueue.get(targetHeader)!.push(cleanPidHex);
         }
 
         // 2. ADIM: Donanım Kalitesine Göre Adaptif Limitlerin Hesaplanması
@@ -80,40 +88,43 @@ export class PollingOrchestrator {
         store.addLog(`POLLING_ORCHESTRATOR: Target pacing parameters computed. Score=${score}, isCAN=${isCanProtocol}, interLoopDelay=${interLoopDelay}ms, cmdTimeoutBase=${cmdTimeoutBase}ms, cmdPacingDelay=${cmdPacingDelay}ms`);
 
         let lastVoltageReadTime = 0;
+        let lastSlowCadenceTime = 0;
+        const SLOW_CADENCE_PIDS = new Set(['01', '05', '46']); // MIL, Coolant, Ambient Temp
+
         const batchEntries = Array.from(batchedQueue.entries());
 
         while (this.isPollingActive) {
             try {
                 // ============================================================
                 // PERFORMANCE MODE: High-frequency 010D (Speed) polling for 0-100 km/h measurement
-                // Suspends all other PIDs to achieve 15+ Hz sampling on Speed PID
                 // ============================================================
                 if (this.isPerformanceMode) {
                     try {
                         await OBDCommandQueue.add('01 0D', cmdTimeoutBase);
-                    } catch (e) {
-                        // Don't blacklist speed PID in performance mode — keep retrying
-                    }
+                    } catch (e) {}
                     await preciseSleep(2);
-                    continue; // Skip normal batch processing entirely
+                    continue;
                 }
 
-                // Periodically query battery voltage via ATRV (every 10 seconds)
                 const now = Date.now();
-                if (now - lastVoltageReadTime > 10000) {
+
+                // Periodically query battery voltage via ATRV (every 5 seconds)
+                if (now - lastVoltageReadTime > 5000) {
                     try {
                         await OBDCommandQueue.add('ATRV', cmdTimeoutBase);
                         lastVoltageReadTime = now;
-                    } catch (e) {
-                        // Ignore voltage query error
-                    }
+                    } catch (e) {}
+                }
+
+                const shouldRunSlowCadence = (now - lastSlowCadenceTime > 5000);
+                if (shouldRunSlowCadence) {
+                    lastSlowCadenceTime = now;
                 }
 
                 for (const [ecuHeader, pids] of batchEntries) {
                     if (!this.isPollingActive) break;
 
                     // --- KADEMELİ FİLTRE 1: DONANIM SEVİYESİ ACK-CHECK ---
-                    // AT SH komutu YALNIZCA CAN protokollerinde ve varsayılan 7E8 dışındaki düğümlere geçerken gönderilir
                     if (isCanProtocol && ecuHeader !== '7E8' && this.currentActiveHeader !== ecuHeader) {
                         try {
                             const ack = await OBDCommandQueue.add(`AT SH ${ecuHeader}`, cmdTimeoutBase);
@@ -130,45 +141,55 @@ export class PollingOrchestrator {
                         }
                     }
 
-                    // Bu düğüme ait tüm PID'leri ardışık olarak patlat
-                    for (const pid of pids) {
-                        if (!this.isPollingActive) break;
-                        if (this.blacklistedPids.has(pid)) continue;
+                    // Dinamik Priority Interleaving: Yüksek devir tepkisi için her ikincil sensörde bir RPM (010C) sıkıştır
+                    const highPriorityPids = pids.filter(p => p === '0C' || p === '0D' || p === '11');
+                    const secondaryPids = pids.filter(p => p !== '0C' && p !== '0D' && p !== '11');
 
-                        const cmd = `01 ${pid}`;
-                        const timeout = (ecuHeader === '7E8' || !isCanProtocol) ? cmdTimeoutBase : (cmdTimeoutBase * 2);
+                    // 1. Önce yüksek öncelikli dinamik sensörleri oku (RPM, Hız)
+                    for (const hpPid of highPriorityPids) {
+                        if (!this.isPollingActive) break;
+                        if (this.blacklistedPids.has(hpPid)) continue;
 
                         try {
-                            const rawResponse = await OBDCommandQueue.add(cmd, timeout);
-                            const cleanResponse = rawResponse.toUpperCase().replace(/\s+/g, '');
+                            const raw = await OBDCommandQueue.add(`01 ${hpPid}`, cmdTimeoutBase);
+                            const clean = raw.toUpperCase().replace(/\s+/g, '');
+                            if (clean.includes("NODATA") || clean.includes("CANERROR") || clean.includes("7F01")) {
+                                this.blacklistedPids.add(hpPid);
+                            }
+                        } catch (e) {}
+                        if (cmdPacingDelay > 0) await preciseSleep(cmdPacingDelay);
+                    }
 
-                            // Sinyal yoksa veya 7F01 (NRC 0x12) döndüyse kara listeye al
-                            if (cleanResponse.includes("NODATA") || cleanResponse.includes("CANERROR") || cleanResponse.includes("7F01")) {
-                                store.addLog(`POLLING_ORCHESTRATOR: PID ${pid} returned NODATA/NRC. Blacklisting.`);
-                                this.blacklistedPids.add(pid);
-                                continue;
-                            }
+                    // 2. İkincil sensörleri sırayla oku, her birinden sonra tekrar RPM (010C) araya sıkıştır
+                    for (const secPid of secondaryPids) {
+                        if (!this.isPollingActive) break;
+                        if (this.blacklistedPids.has(secPid)) continue;
 
-                            // --- KADEMELİ FİLTRE 2: ELEKTRİKSEL HEADER DRIFT VERIFICATION ---
-                            if (ecuHeader === '7E9' && cleanResponse.includes('7E841')) {
-                                this.currentActiveHeader = 'UNKNOWN';
-                                break;
-                            }
-                        } catch (err: any) {
-                            if (err?.message?.includes('Timeout')) {
-                                store.addLog(`POLLING_ORCHESTRATOR: PID ${pid} timed out.`);
-                            }
+                        // Yavaş değişen PID'leri sadece 5 saniyede bir çalıştır
+                        if (SLOW_CADENCE_PIDS.has(secPid) && !shouldRunSlowCadence) {
                             continue;
                         }
 
-                        // Komutlar arası dinlenme payı (Adaptive Pacing)
-                        if (cmdPacingDelay > 0) {
-                            await preciseSleep(cmdPacingDelay);
+                        try {
+                            const raw = await OBDCommandQueue.add(`01 ${secPid}`, cmdTimeoutBase);
+                            const clean = raw.toUpperCase().replace(/\s+/g, '');
+                            if (clean.includes("NODATA") || clean.includes("CANERROR") || clean.includes("7F01")) {
+                                this.blacklistedPids.add(secPid);
+                            }
+                        } catch (e) {}
+                        if (cmdPacingDelay > 0) await preciseSleep(cmdPacingDelay);
+
+                        // PRIORITY INTERLEAVE: Anlık aragazı ve devir değişimini kaçırmamak için anında RPM oku
+                        if (highPriorityPids.includes('0C') && !this.blacklistedPids.has('0C')) {
+                            try {
+                                await OBDCommandQueue.add('01 0C', cmdTimeoutBase);
+                            } catch (e) {}
+                            if (cmdPacingDelay > 0) await preciseSleep(cmdPacingDelay);
                         }
                     }
                 }
 
-                // BLE veri hattı ve UART buffer sönümlenme payı (Adaptive Loop Delay)
+                // BLE veri hattı ve UART buffer dinlenme payı (Adaptive Loop Delay)
                 await preciseSleep(interLoopDelay);
 
             } catch (error) {
@@ -176,7 +197,7 @@ export class PollingOrchestrator {
                 if (store.connectionState === 'DISCONNECTED') {
                     this.isPollingActive = false;
                 }
-                await preciseSleep(50);
+                await preciseSleep(30);
             }
         }
     }

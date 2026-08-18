@@ -18,7 +18,7 @@ export const ALL_SENSORS: SensorConfig[] = [
   { key: 'speed', nameKey: 'dashboard.speed', defaultName: 'Hız', unit: 'km/h', pid: '01 0D', icon: '', color: '#3a86ff', isHighPriority: true },
   { key: 'coolant', nameKey: 'dashboard.coolant', defaultName: 'Motor Sıcaklığı', unit: '°C', pid: '01 05', icon: '', color: '#10b981', isHighPriority: false },
   { key: 'throttle', nameKey: 'dashboard.throttle', defaultName: 'Gaz Kelebeği', unit: '%', pid: '01 11', icon: '', color: '#f59e0b', isHighPriority: false },
-  { key: 'voltage', nameKey: 'dashboard.voltage', defaultName: 'Akü Voltajı', unit: 'V', pid: '01 42', icon: '', color: '#059669', isHighPriority: false },
+  { key: 'voltage', nameKey: 'dashboard.voltage', defaultName: 'Akü Voltajı', unit: 'V', pid: 'ATRV', icon: '', color: '#059669', isHighPriority: false },
   { key: 'engineLoad', nameKey: 'dashboard.engineLoad', defaultName: 'Motor Yükü', unit: '%', pid: '01 04', icon: '', color: '#2563eb', isHighPriority: false },
   { key: 'intakeAirTemp', nameKey: 'dashboard.intakeAirTemp', defaultName: 'Emme Havası', unit: '°C', pid: '01 0F', icon: '', color: '#64748b', isHighPriority: false },
   { key: 'manifoldPressure', nameKey: 'dashboard.manifoldPressure', defaultName: 'Manifold Basıncı', unit: 'kPa', pid: '01 0B', icon: '', color: '#0284c7', isHighPriority: false },
