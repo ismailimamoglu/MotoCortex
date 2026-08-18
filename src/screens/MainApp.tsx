@@ -2541,9 +2541,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  onClose={() => setIsPaywallVisible(false)}
  />
 
- {/* Contextual Paywall Modal */}
- <ContextualPaywallModal />
-
+ 
  {/* DIAG Modal */}
  <Modal
  visible={isDiagVisible}
