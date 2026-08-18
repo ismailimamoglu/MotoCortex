@@ -33,6 +33,7 @@ interface FeatureActivationModalProps {
  onClose: () => void;
  currentVoltage?: number; // e.g. 12.6V or 11.4V
  connectedVehicleMake?: string; // e.g. "Volkswagen" or undefined
+ onOpenPaywall?: () => void;
 }
 
 const BRAND_FILTERS = [
@@ -94,6 +95,7 @@ const FeatureActivationModalComponent = ({
  onClose,
  currentVoltage = 12.6,
  connectedVehicleMake,
+ onOpenPaywall,
 }: FeatureActivationModalProps) => {
  const { t } = useTranslation();
  const colors = useThemeColors();
