@@ -210,15 +210,9 @@ const FeatureActivationModalComponent = ({
 
     if (!isUserPro && !isFreeEligible && !inSim) {
       onClose();
-      if (onOpenPaywall) {
-        onOpenPaywall();
-      } else {
-        Alert.alert(
-          t('features.freeTrialExhaustedTitle', { defaultValue: 'Ücretsiz Kodlama Hakkı Kullanıldı' }),
-          t('features.freeTrialExhaustedMsg', { defaultValue: '1 adet ücretsiz gizli özellik açma hakkınızı kullandınız. Bu ve diğer tüm özellikleri sınırsız açmak, uzman kodlama ve servis sıfırlama için PRO sürüme geçin!' }),
-          [{ text: t('common.ok', { defaultValue: 'Tamam' }), style: 'cancel' }]
-        );
-      }
+      setTimeout(() => {
+        onOpenPaywall?.();
+      }, Platform.OS === 'ios' ? 280 : 80);
       return;
     }
 

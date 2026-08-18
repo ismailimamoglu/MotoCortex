@@ -126,54 +126,40 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
  }, [visible, activeSensors, layoutType, isKLineProtocol]);
 
  const handleToggleSensor = useCallback((key: string) => {
- setShowLimitWarning(false);
- const sensorConfig = ALL_SENSORS.find(s => s.key === key);
+    setShowLimitWarning(false);
+    const sensorConfig = ALL_SENSORS.find(s => s.key === key);
 
- // If sensor is PRO-only and user is not PRO, trigger Paywall!
- if (!isPro && sensorConfig?.isProOnly) {
- useBluetoothStore.getState().setPaywallContext('CUSTOM_SENSORS');
- if (onOpenPaywall) {
- onClose();
- onOpenPaywall();
- } else {
- Alert.alert(
- t('paywall.proRequiredTitle', { defaultValue: 'PRO Gerekli' }),
- t('dashboard.proSensorMsg', { defaultValue: 'Gelişmiş canlı sensörleri (Turbo, Yağ Sıcaklığı, Tork vb.) izlemek ve özelleştirmek için PRO pakete yükseltin.' }),
- [
- { text: t('common.cancel', { defaultValue: 'Vazgeç' }), style: 'cancel' },
- { 
- text: t('features.upgradeToPro', { defaultValue: 'PRO\'YA GEÇ' }),
- onPress: () => {
- onClose();
- onOpenPaywall?.();
- }
- }
- ]
- );
- }
- return;
- }
+    // If sensor is PRO-only and user is not PRO, trigger Paywall!
+    if (!isPro && sensorConfig?.isProOnly) {
+      useBluetoothStore.getState().setPaywallContext('CUSTOM_SENSORS');
+      onClose();
+      setTimeout(() => {
+        onOpenPaywall?.();
+      }, Platform.OS === 'ios' ? 280 : 80);
+      return;
+    }
 
- setDraftSensors((prev) => {
- const isExists = prev.includes(key);
- if (isExists) {
- if (prev.length <= 1) return prev;
- return prev.filter((k) => k !== key);
- } else {
- if (prev.length >= maxLimit) {
- if (!isPro && prev.length >= 6) {
- // User reached 6 free sensor cap, prompt for PRO
- onClose();
- onOpenPaywall?.();
- return prev;
- }
- setShowLimitWarning(true);
- return prev;
- }
- return [...prev, key];
- }
- });
- }, [isPro, maxLimit, onOpenPaywall, onClose, t]);
+    setDraftSensors((prev) => {
+      const isExists = prev.includes(key);
+      if (isExists) {
+        if (prev.length <= 1) return prev;
+        return prev.filter((k) => k !== key);
+      } else {
+        if (prev.length >= maxLimit) {
+          if (!isPro && prev.length >= 6) {
+            onClose();
+            setTimeout(() => {
+              onOpenPaywall?.();
+            }, Platform.OS === 'ios' ? 280 : 80);
+            return prev;
+          }
+          setShowLimitWarning(true);
+          return prev;
+        }
+        return [...prev, key];
+      }
+    });
+  }, [isPro, maxLimit, onOpenPaywall, onClose]);
 
  const handleReset = useCallback(() => {
  setShowLimitWarning(false);
