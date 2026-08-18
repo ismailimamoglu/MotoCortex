@@ -1266,7 +1266,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  disabled={isDiagnosticMode}
  activeOpacity={0.4}
  >
- <Text style={[s.actionBtnText, { color: tc.card }]}>↺ {t('connection.connectLast')} ({lastDeviceName})</Text>
+ <Text style={[s.actionBtnText, { color: tc.card }]}>{t('connection.connectLast')} ({lastDeviceName})</Text>
  </TouchableOpacity>
  )}
 

@@ -342,7 +342,7 @@ export default function FreezeFrameModal({ visible, onClose, sendCommand, hasDtc
  style={[sDyn.actionBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]}
  onPress={() => { resetState(); }}
  >
- <Text style={[sDyn.actionBtnText, { color: colors.textSec, fontFamily: MONO }]}>↺ {t('freeze.retry')}</Text>
+ <Text style={[sDyn.actionBtnText, { color: colors.textSec, fontFamily: MONO }]}>{t('freeze.retry')}</Text>
  </TouchableOpacity>
  </View>
  )}

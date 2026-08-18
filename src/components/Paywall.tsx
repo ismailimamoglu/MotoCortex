@@ -912,7 +912,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  disabled={isPurchasing}
  >
  <Text style={[sDyn.restoreBtnText, { color: colors.textPri }]}>
- ↺ {t('paywall.restore').toUpperCase()}
+ {t('paywall.restore').toUpperCase()}
  </Text>
  </TouchableOpacity>
 

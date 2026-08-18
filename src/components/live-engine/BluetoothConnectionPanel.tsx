@@ -185,7 +185,7 @@ export default function BluetoothConnectionPanel({
           activeOpacity={0.4}
         >
           <Text style={{ color: colors.textPri, fontSize: scaleFont(10), fontWeight: '800', fontFamily: MONO }}>
-            ↺ {t('connection.connectLast')} ({lastDeviceName})
+            {t('connection.connectLast')} ({lastDeviceName})
           </Text>
         </TouchableOpacity>
       )}

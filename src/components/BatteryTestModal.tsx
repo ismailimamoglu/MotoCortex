@@ -378,7 +378,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
  style={[sDyn.actionBtn, { backgroundColor: colors.elevated, borderWidth: 1, borderColor: colors.border }]}
  onPress={resetTest}
  >
- <Text style={[sDyn.actionBtnText, { color: colors.textSec }]}>↺ {t('battery.retry')}</Text>
+ <Text style={[sDyn.actionBtnText, { color: colors.textSec }]}>{t('battery.retry')}</Text>
  </TouchableOpacity>
  )}
  {isRunning && (

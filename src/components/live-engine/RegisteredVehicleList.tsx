@@ -46,7 +46,7 @@ export default function RegisteredVehicleList({
  activeOpacity={0.4}
  >
  <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(10), fontWeight: 'bold' }}>
- ← {t('common.back').toUpperCase()}
+ {t('common.back').toUpperCase()}
  </Text>
  </TouchableOpacity>
  </View>

@@ -481,7 +481,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
                   </View>
                 </View>
                 <Text style={[styles.catDetail, { color: colors.cyan, fontSize: fs(10.5), fontFamily: colors.mono }]}>
-                  ⚡ {cat.voltage} • 🔌 {cat.pinout}
+                  {cat.voltage} | {cat.pinout}
                 </Text>
                 <Text style={[styles.catProtocols, { color: colors.textSec, fontSize: fs(10), marginTop: vs(3) }]}>
                   Protokoller: {cat.protocols}
