@@ -125,17 +125,13 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
  }
  }, [visible, activeSensors, layoutType, isKLineProtocol]);
 
- const handleToggleSensor = useCallback((key: string) => {
+  const handleToggleSensor = useCallback((key: string) => {
     setShowLimitWarning(false);
     const sensorConfig = ALL_SENSORS.find(s => s.key === key);
 
     // If sensor is PRO-only and user is not PRO, trigger Paywall!
     if (!isPro && sensorConfig?.isProOnly) {
-      useBluetoothStore.getState().setPaywallContext('CUSTOM_SENSORS');
-      onClose();
-      setTimeout(() => {
-        onOpenPaywall?.();
-      }, Platform.OS === 'ios' ? 280 : 80);
+      onOpenPaywall?.();
       return;
     }
 
@@ -147,10 +143,7 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
       } else {
         if (prev.length >= maxLimit) {
           if (!isPro && prev.length >= 6) {
-            onClose();
-            setTimeout(() => {
-              onOpenPaywall?.();
-            }, Platform.OS === 'ios' ? 280 : 80);
+            onOpenPaywall?.();
             return prev;
           }
           setShowLimitWarning(true);
@@ -159,7 +152,7 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
         return [...prev, key];
       }
     });
-  }, [isPro, maxLimit, onOpenPaywall, onClose]);
+  }, [isPro, maxLimit, onOpenPaywall]);
 
  const handleReset = useCallback(() => {
  setShowLimitWarning(false);

@@ -663,16 +663,24 @@ export default function MainApp() {
  const [isIgnitionModalVisible, setIsIgnitionModalVisible] = useState(false);
  const [isAiDoctorModalVisible, setIsAiDoctorModalVisible] = useState(false);
  const [aiDoctorContext, setAiDoctorContext] = useState<AiDiagnosticContext>({ dtcCodes: [] });
+ const handleOpenPaywall = useCallback(() => {
+    setIsCustomizeModalVisible(false);
+    setIsAiDoctorModalVisible(false);
+    setIsIgnitionModalVisible(false);
+    setTimeout(() => {
+      setIsPaywallVisible(true);
+    }, Platform.OS === 'ios' ? 450 : 100);
+  }, []);
+
+  const paywallContext = useBluetoothStore((s) => s.paywallContext);
+  useEffect(() => {
+    if (paywallContext) {
+      handleOpenPaywall();
+      useBluetoothStore.getState().clearPaywallContext();
+    }
+  }, [paywallContext, handleOpenPaywall]);
  const adminTapCountRef = useRef(0);
  const adminTapTimerRef = useRef<NodeJS.Timeout | null>(null);
-
- const paywallContext = useBluetoothStore((s) => s.paywallContext);
- useEffect(() => {
-   if (paywallContext) {
-     setIsPaywallVisible(true);
-     useBluetoothStore.getState().clearPaywallContext();
-   }
- }, [paywallContext]);
 
  // Force disable React Native Element Inspector overlay on startup if currently shown
  useEffect(() => {
