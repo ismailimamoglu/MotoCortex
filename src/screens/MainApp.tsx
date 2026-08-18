@@ -1579,18 +1579,26 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  isCompact ? (
  dtcs.map((dtc, i) => {
  const desc = lookupDTC(dtc);
- const isPro = useAppStore.getState().isPro || isSimulationMode;
- const displayDesc = isPro ? desc : ` ${getContextualDtcDesc(dtc)}`;
+ const isPro = useAppStore.getState().isPro;
+ const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
  return (
  <TouchableOpacity
  key={i}
  style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
- onPress={() => handleOpenDtcDetail(dtc)}
+ onPress={() => {
+ if (!isPro) {
+ useBluetoothStore.getState().setPaywallContext('DTC_DETAIL');
+ } else {
+ handleOpenDtcDetail(dtc);
+ }
+ }}
  >
  <View style={s.dtcDot} />
  <View style={{ flex: 1 }}>
  <Text style={[s.dtcCode, { fontSize: scaleFont(11) }]}>{dtc}</Text>
- {desc && <Text style={{ color: tc.red, opacity: 0.8, fontSize: scaleFont(9), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(12) }}>{displayDesc}</Text>}
+ <Text style={{ color: isPro ? tc.red : tc.amber, opacity: isPro ? 0.85 : 0.95, fontSize: scaleFont(9), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(12), fontWeight: isPro ? '400' : '600' }}>
+ {displayDesc}
+ </Text>
  </View>
  </TouchableOpacity>
  );
@@ -1599,18 +1607,26 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  <View style={{ gap: scaleHeight(4) }}>
  {dtcs.map((dtc, i) => {
  const desc = lookupDTC(dtc);
- const isPro = useAppStore.getState().isPro || isSimulationMode;
- const displayDesc = isPro ? desc : ` ${getContextualDtcDesc(dtc)}`;
+ const isPro = useAppStore.getState().isPro;
+ const displayDesc = isPro ? desc : `🔒 ${getContextualDtcDesc(dtc)}`;
  return (
  <TouchableOpacity
  key={i}
  style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
- onPress={() => handleOpenDtcDetail(dtc)}
+ onPress={() => {
+ if (!isPro) {
+ useBluetoothStore.getState().setPaywallContext('DTC_DETAIL');
+ } else {
+ handleOpenDtcDetail(dtc);
+ }
+ }}
  >
  <View style={s.dtcDot} />
  <View style={{ flex: 1 }}>
  <Text style={[s.dtcCode, { fontSize: scaleFont(10) }]}>{dtc}</Text>
- {desc && <Text style={{ color: tc.red, opacity: 0.8, fontSize: scaleFont(8), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(11) }}>{displayDesc}</Text>}
+ <Text style={{ color: isPro ? tc.red : tc.amber, opacity: isPro ? 0.85 : 0.95, fontSize: scaleFont(8), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(11), fontWeight: isPro ? '400' : '600' }}>
+ {displayDesc}
+ </Text>
  </View>
  </TouchableOpacity>
  );
