@@ -2311,6 +2311,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  visible={true}
  onClose={handleCloseSubView}
  connectedVehicleMake={activeSessionBrand}
+ onOpenPaywall={() => setIsPaywallVisible(true)}
  />
  )}
  {activeHubView === 'hp_gauge' && (
@@ -2575,6 +2576,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  <CustomizeDashboardModal
  visible={isCustomizeModalVisible}
  onClose={() => setIsCustomizeModalVisible(false)}
+ onOpenPaywall={() => setIsPaywallVisible(true)}
  />
  </View>
  </SafeAreaView>

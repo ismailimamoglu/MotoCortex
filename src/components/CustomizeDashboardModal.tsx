@@ -9,16 +9,19 @@ import {
  ScrollView,
  Platform,
  Switch,
+ Alert,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
-import { useDashboardStore, ALL_SENSORS, SensorConfig } from '../store/useDashboardStore';
+import { useDashboardStore, ALL_SENSORS, SensorConfig, DEFAULT_SENSORS } from '../store/useDashboardStore';
 import { useBluetoothStore } from '../store/useBluetoothStore';
+import { useAppStore } from '../store/useAppStore';
 
 interface CustomizeDashboardModalProps {
  visible: boolean;
  onClose: () => void;
+ onOpenPaywall?: () => void;
 }
 
 interface SensorItemRowProps {
@@ -27,9 +30,10 @@ interface SensorItemRowProps {
  onToggle: (key: string) => void;
  colors: any;
  sDyn: any;
+ isPro: boolean;
 }
 
-const SensorItemRow = memo(({ sensor, isActive, onToggle, colors, sDyn }: SensorItemRowProps) => {
+const SensorItemRow = memo(({ sensor, isActive, onToggle, colors, sDyn, isPro }: SensorItemRowProps) => {
  const { t } = useTranslation();
  const handlePress = useCallback(() => {
  onToggle(sensor.key);
@@ -57,6 +61,21 @@ const SensorItemRow = memo(({ sensor, isActive, onToggle, colors, sDyn }: Sensor
  <Text style={[sDyn.sensorName, { color: colors.textPri }]}>
  {t(sensor.nameKey, sensor.defaultName)}
  </Text>
+
+ {/* PRO / FREE Badge Pill */}
+ {sensor.isProOnly ? (
+ <View style={{ backgroundColor: `${colors.purple || '#9c27b0'}22`, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginLeft: 8, borderWidth: 1, borderColor: `${colors.purple || '#9c27b0'}60` }}>
+ <Text style={{ color: colors.purple || '#ab47bc', fontSize: 9, fontWeight: '900', fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif' }}>
+ PRO
+ </Text>
+ </View>
+ ) : (
+ <View style={{ backgroundColor: `${colors.green || '#10b981'}20`, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginLeft: 8 }}>
+ <Text style={{ color: colors.green || '#10b981', fontSize: 8.5, fontWeight: '800', fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif' }}>
+ {t('common.free', { defaultValue: 'ÜCRETSİZ' })}
+ </Text>
+ </View>
+ )}
  </View>
 
  {/* pointerEvents="none" prevents gesture collision between Switch and Pressable on Android Release builds */}
@@ -73,12 +92,13 @@ const SensorItemRow = memo(({ sensor, isActive, onToggle, colors, sDyn }: Sensor
  );
 });
 
-export default function CustomizeDashboardModal({ visible, onClose }: CustomizeDashboardModalProps) {
+export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywall }: CustomizeDashboardModalProps) {
  const { t } = useTranslation();
  const colors = useThemeColors();
  
  const { activeSensors, layoutType } = useDashboardStore();
  const connectedProtocol = useBluetoothStore(state => state.protocol);
+ const isPro = useAppStore(state => state.isPro);
  
  const isKLineProtocol = useMemo(() => {
  if (!connectedProtocol) return false;
@@ -86,7 +106,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
  return p.includes('ISO 9141') || p.includes('ISO 14230') || p.includes('KWP') || p.includes('PROTOCOL 3') || p.includes('PROTOCOL 4') || p.includes('PROTOCOL 5');
  }, [connectedProtocol]);
 
- const maxLimit = isKLineProtocol ? 4 : 8;
+ const maxLimit = isKLineProtocol ? 4 : (isPro ? 8 : 6);
 
  const [draftSensors, setDraftSensors] = useState<string[]>(activeSensors);
  const [draftLayout, setDraftLayout] = useState<'grid' | 'list' | 'gauge' | 'chart'>(layoutType);
@@ -107,6 +127,33 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
 
  const handleToggleSensor = useCallback((key: string) => {
  setShowLimitWarning(false);
+ const sensorConfig = ALL_SENSORS.find(s => s.key === key);
+
+ // If sensor is PRO-only and user is not PRO, trigger Paywall!
+ if (!isPro && sensorConfig?.isProOnly) {
+ useBluetoothStore.getState().setPaywallContext('CUSTOM_SENSORS');
+ if (onOpenPaywall) {
+ onClose();
+ onOpenPaywall();
+ } else {
+ Alert.alert(
+ t('paywall.proRequiredTitle', { defaultValue: 'PRO Gerekli' }),
+ t('dashboard.proSensorMsg', { defaultValue: 'Gelişmiş canlı sensörleri (Turbo, Yağ Sıcaklığı, Tork vb.) izlemek ve özelleştirmek için PRO pakete yükseltin.' }),
+ [
+ { text: t('common.cancel', { defaultValue: 'Vazgeç' }), style: 'cancel' },
+ { 
+ text: t('features.upgradeToPro', { defaultValue: 'PRO\'YA GEÇ' }),
+ onPress: () => {
+ onClose();
+ onOpenPaywall?.();
+ }
+ }
+ ]
+ );
+ }
+ return;
+ }
+
  setDraftSensors((prev) => {
  const isExists = prev.includes(key);
  if (isExists) {
@@ -114,17 +161,22 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
  return prev.filter((k) => k !== key);
  } else {
  if (prev.length >= maxLimit) {
+ if (!isPro && prev.length >= 6) {
+ // User reached 6 free sensor cap, prompt for PRO
+ onClose();
+ onOpenPaywall?.();
+ return prev;
+ }
  setShowLimitWarning(true);
  return prev;
  }
  return [...prev, key];
  }
  });
- }, [maxLimit]);
+ }, [isPro, maxLimit, onOpenPaywall, onClose, t]);
 
  const handleReset = useCallback(() => {
  setShowLimitWarning(false);
- const DEFAULT_SENSORS = ['rpm', 'speed', 'coolant', 'voltage'];
  let initialSensors = [...DEFAULT_SENSORS];
  if (isKLineProtocol && initialSensors.length > 4) {
  initialSensors = initialSensors.slice(0, 4);
@@ -401,6 +453,7 @@ export default function CustomizeDashboardModal({ visible, onClose }: CustomizeD
  onToggle={handleToggleSensor}
  colors={colors}
  sDyn={sDyn}
+ isPro={isPro}
  />
  );
  })}

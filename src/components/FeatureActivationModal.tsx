@@ -207,23 +207,25 @@ const FeatureActivationModalComponent = ({
     const isFreeEligible = isFeatureAlreadyUnlockedFree || isFreeCreditAvailable;
 
     if (!isUserPro && !isFreeEligible && !inSim) {
-      Alert.alert(
-        t('features.freeTrialExhaustedTitle', { defaultValue: 'Ücretsiz Kodlama Hakkı Kullanıldı' }),
-        t('features.freeTrialExhaustedMsg', { defaultValue: '1 adet ücretsiz gizli özellik açma hakkınızı kullandınız. Bu ve diğer tüm özellikleri sınırsız açmak, uzman kodlama ve servis sıfırlama için PRO sürüme geçin!' }),
-        [
-          { text: t('common.cancel', { defaultValue: 'Vazgeç' }), style: 'cancel' },
-          { 
-            text: t('features.upgradeToPro', { defaultValue: 'PRO\'YA GEÇ' }), 
-            onPress: () => {
-              onClose();
-              try {
-                const { useSubscriptionStore } = require('../store/useSubscriptionStore');
-                useSubscriptionStore?.getState?.()?.setPaywallVisible?.(true);
-              } catch (_) {}
-            } 
-          }
-        ]
-      );
+      if (onOpenPaywall) {
+        onClose();
+        onOpenPaywall();
+      } else {
+        Alert.alert(
+          t('features.freeTrialExhaustedTitle', { defaultValue: 'Ücretsiz Kodlama Hakkı Kullanıldı' }),
+          t('features.freeTrialExhaustedMsg', { defaultValue: '1 adet ücretsiz gizli özellik açma hakkınızı kullandınız. Bu ve diğer tüm özellikleri sınırsız açmak, uzman kodlama ve servis sıfırlama için PRO sürüme geçin!' }),
+          [
+            { text: t('common.cancel', { defaultValue: 'Vazgeç' }), style: 'cancel' },
+            { 
+              text: t('features.upgradeToPro', { defaultValue: 'PRO\'YA GEÇ' }), 
+              onPress: () => {
+                onClose();
+                onOpenPaywall?.();
+              } 
+            }
+          ]
+        );
+      }
       return;
     }
 
