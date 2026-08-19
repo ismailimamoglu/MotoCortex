@@ -57,6 +57,7 @@ import MultiEcuScanModal from '../components/MultiEcuScanModal';
 import DctResetModal from '../components/DctResetModal';
 import FeatureActivationModal from '../components/FeatureActivationModal';
 import ObdService from '../services/obdService';
+import SupportModal, { SupportCategory } from '../components/SupportModal';
 
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
@@ -142,7 +143,16 @@ export default function MainApp() {
  const appUserId = useAppStore((state) => state.appUserId);
  const language = useAppStore((state) => state.language);
 
- const [isAiDoctorAnalysisActive, setIsAiDoctorAnalysisActive] = useState(false);
+  const [isAiDoctorAnalysisActive, setIsAiDoctorAnalysisActive] = useState(false);
+  const [isSupportModalVisible, setIsSupportModalVisible] = useState(false);
+  const [supportCategory, setSupportCategory] = useState<SupportCategory>('CONNECTION');
+  const [supportCustomError, setSupportCustomError] = useState<string | null>(null);
+
+  const handleOpenSupport = (cat: SupportCategory = 'CONNECTION', err?: string | null) => {
+    setSupportCategory(cat);
+    setSupportCustomError(err || null);
+    setIsSupportModalVisible(true);
+  };
 
  const handleOpenDtcDetail = (dtcCode: string) => {
  setSelectedDtcDetail(dtcCode);
@@ -516,11 +526,11 @@ export default function MainApp() {
  disconnectBtn: { backgroundColor: 'transparent', borderWidth: 1, borderColor: tc.red, borderRadius: scaleMod(6), paddingVertical: scaleHeight(8), paddingHorizontal: scaleWidth(20), width: '100%', alignItems: 'center' },
  disconnectBtnText: { color: tc.red, fontWeight: '700', fontSize: scaleFont(11.5), fontFamily: MONO },
 
- topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 16, paddingRight: 24, paddingVertical: scaleHeight(8), backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border },
- topLeft: { flexDirection: 'row', alignItems: 'baseline', gap: scaleMod(6) },
- topLogo: { color: tc.cyan, fontSize: scaleFont(13.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 1.5 },
- topVersion: { color: tc.textSec, fontSize: scaleFont(9.5), fontFamily: MONO },
- topRight: { flexDirection: 'row', alignItems: 'center', gap: 8, marginRight: 16 },
+ topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: scaleWidth(8), paddingVertical: scaleHeight(6), backgroundColor: tc.card, borderBottomWidth: 1, borderBottomColor: tc.border, gap: scaleMod(4) },
+    topLeft: { flexDirection: 'row', alignItems: 'center', gap: scaleMod(4), flexShrink: 0 },
+    topLogo: { color: tc.cyan, fontSize: scaleFont(11.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5 },
+    topVersion: { color: tc.textSec, fontSize: scaleFont(9), fontFamily: MONO },
+    topRight: { flexDirection: 'row', alignItems: 'center', gap: scaleMod(4), flexShrink: 1, justifyContent: 'flex-end' },
  topBadge: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: scaleMod(4), paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(3), gap: scaleMod(4) },
  topBadgeDot: { width: scaleMod(5), height: scaleMod(5), borderRadius: scaleMod(2.5) },
  topBadgeText: { fontSize: scaleFont(8.5), fontWeight: '900', fontFamily: MONO },
@@ -2074,14 +2084,19 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  {/* Top Header Bar */}
  <View style={[s.topBar, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
  <View style={s.topLeft}>
- <Text style={[
+ <Text
+ numberOfLines={1}
+ style={[
  s.topLogo,
  {
  color: colors.cyan,
- fontSize: isPhone ? (isSimulationMode ? scaleFont(10.5) : scaleFont(11.5)) : scaleFont(13),
+ fontSize: isPhone ? scaleFont(11) : scaleFont(13),
  letterSpacing: 0.5
  }
- ]}>CORTEX OBD2 {isSimulationMode ? 'SIM' : ''}</Text>
+ ]}
+ >
+ CORTEX {isSimulationMode ? 'SIM' : ''}
+ </Text>
  <View style={[s.topBadge, { borderColor: statusColor(ecuStatus) }]}>
  <View style={[s.topBadgeDot, { backgroundColor: statusColor(ecuStatus) }]} />
  <Text style={[s.topBadgeText, { color: statusColor(ecuStatus) }]}>
@@ -2089,7 +2104,41 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  </Text>
  </View>
  </View>
+
  <View style={s.topRight}>
+ {/* Technical Support Quick Action Button */}
+ <TouchableOpacity
+ onPress={() => handleOpenSupport('CONNECTION')}
+ style={{
+ paddingHorizontal: scaleMod(6),
+ paddingVertical: scaleHeight(4),
+ backgroundColor: `${colors.cyan}18`,
+ borderRadius: scaleMod(8),
+ borderWidth: 1.2,
+ borderColor: `${colors.cyan}40`,
+ alignItems: 'center',
+ justifyContent: 'center',
+ flexShrink: 1,
+ maxWidth: isPhone ? scaleWidth(130) : scaleWidth(180),
+ }}
+ activeOpacity={0.6}
+ >
+ <Text
+ numberOfLines={1}
+ adjustsFontSizeToFit={true}
+ minimumFontScale={0.65}
+ style={{
+ color: colors.cyan,
+ fontFamily: MONO,
+ fontWeight: '900',
+ fontSize: scaleFont(8.5),
+ letterSpacing: 0.2
+ }}
+ >
+ {t('support.techSupport', { defaultValue: 'TEKNİK DESTEK' })}
+ </Text>
+ </TouchableOpacity>
+
  {(ecuStatus === 'connected' || isSimulationMode) && (
  <TouchableOpacity 
  onPress={() => {
@@ -2100,16 +2149,31 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  }
  }} 
  style={{ 
- paddingHorizontal: 10, 
- paddingVertical: 5, 
+ paddingHorizontal: scaleMod(6), 
+ paddingVertical: scaleHeight(4), 
  backgroundColor: `${colors.red}1F`, 
- borderRadius: 12, 
+ borderRadius: scaleMod(8), 
  borderWidth: 1.2, 
- borderColor: colors.red 
+ borderColor: colors.red,
+ alignItems: 'center',
+ justifyContent: 'center',
+ flexShrink: 1,
+ maxWidth: isPhone ? scaleWidth(130) : scaleWidth(180),
  }}
  activeOpacity={0.6}
  >
- <Text style={[s.topDisconnect, { color: colors.red, fontFamily: MONO, fontWeight: '900', fontSize: scaleFont(9.5) }]}>
+ <Text
+ numberOfLines={1}
+ adjustsFontSizeToFit={true}
+ minimumFontScale={0.65}
+ style={{
+ color: colors.red,
+ fontFamily: MONO,
+ fontWeight: '900',
+ fontSize: scaleFont(8.5),
+ letterSpacing: 0.2
+ }}
+ >
  {t('bento.safeDisconnect').toUpperCase()}
  </Text>
  </TouchableOpacity>
@@ -2171,7 +2235,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  onOpenProfile={() => setActiveHubView('info')}
  onOpenSettings={() => setActiveHubView('settings')}
  onOpenPaywall={() => setIsPaywallVisible(true)}
- onOpenSupport={handleSupportEmail}
+ onOpenSupport={() => handleOpenSupport('BUG')}
  onShareApp={handleShareApp}
  onDisconnect={disconnect}
  onOpenHpGauge={() => setActiveHubView('hp_gauge')}
@@ -2590,6 +2654,15 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  visible={isCustomizeModalVisible}
  onClose={() => setIsCustomizeModalVisible(false)}
  onOpenPaywall={() => setIsPaywallVisible(true)}
+ />
+
+ {/* Universal Support & Feedback Modal */}
+ <SupportModal
+ visible={isSupportModalVisible}
+ onClose={() => setIsSupportModalVisible(false)}
+ initialCategory={supportCategory}
+ customContextError={supportCustomError}
+ currentVehicleMake={activeSessionBrand || undefined}
  />
  </View>
  </SafeAreaView>

@@ -65,7 +65,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
                 { color: isDiesel ? '#ffffff' : tc.textSec, fontWeight: isDiesel ? '800' : '600' },
               ]}
             >
-              {t('fuelTrim.modeDiesel', { defaultValue: 'Dizel (Common Rail & Lambda)' })}
+              {t('fuelTrim.modeDiesel', { defaultValue: 'Dizel' })}
             </Text>
           </TouchableOpacity>
 
@@ -85,7 +85,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
                 { color: !isDiesel ? '#ffffff' : tc.textSec, fontWeight: !isDiesel ? '800' : '600' },
               ]}
             >
-              {t('fuelTrim.modeGasoline', { defaultValue: 'Benzinli (STFT / LTFT)' })}
+              {t('fuelTrim.modeGasoline', { defaultValue: 'Benzinli' })}
             </Text>
           </TouchableOpacity>
         </View>
@@ -139,7 +139,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
                 λ {lambdaValue}
               </Text>
               <Text style={{ color: tc.green, fontSize: 11, fontWeight: '700', marginTop: 4 }}>
-                {t('fuelTrim.leanNormal', { defaultValue: 'Fakir Karışım (İdeal Dizel)' })}
+                {t('fuelTrim.leanNormal', { defaultValue: 'Fakir Karışım' })}
               </Text>
             </View>
 
@@ -182,7 +182,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
           </Text>
           <Text style={[styles.guideDesc, { color: tc.textSec }]}>
             {isDiesel
-              ? t('fuelTrim.dieselGuideDesc', { defaultValue: 'Dizel motorlar aşırı hava ile fakir karışımda (Lean Burn) çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.' })
+              ? t('fuelTrim.dieselGuideDesc', { defaultValue: 'Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.' })
               : t('fuelTrim.guideDesc')}
           </Text>
 

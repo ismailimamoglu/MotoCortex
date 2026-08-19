@@ -54,7 +54,7 @@ export const SettingsView = ({ s }: SettingsViewProps) => {
  activeOpacity={0.7}
  >
  <Text style={{ color: tc.cyan, fontWeight: '700', fontSize: scaleFont(11.5), fontFamily: MONO, textAlign: 'center' }}>
- {t('permissions.restartOnboarding', { defaultValue: 'İlk Kurulum Ekranını Yeniden Başlat (Dil & İzinler)' })}
+ {t('permissions.restartOnboarding', { defaultValue: 'İlk Kurulum Ekranını Yeniden Başlat' })}
  </Text>
  </TouchableOpacity>
  </View>

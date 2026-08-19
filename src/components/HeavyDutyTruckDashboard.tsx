@@ -19,7 +19,7 @@ export const HeavyDutyTruckDashboard: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.headerBadge}>
         <Text style={styles.headerTitle}>
-          {t('categoryDashboards.heavyDutyTitle', { defaultValue: 'COMMERCIAL HEAVY-DUTY TELEMETRY (SAE J1939)' })}
+          {t('categoryDashboards.heavyDutyTitle', { defaultValue: 'COMMERCIAL HEAVY-DUTY TELEMETRY' })}
         </Text>
       </View>
 

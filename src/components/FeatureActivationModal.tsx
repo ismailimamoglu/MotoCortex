@@ -25,6 +25,7 @@ import DisclaimersModal from './DisclaimersModal';
 import { mapOemToFeatureDefinition } from '../core/features/OemFeatureMapper';
 import { ExpertLongCodingModal } from './coding/ExpertLongCodingModal';
 import { PreconditionWizardModal } from './coding/PreconditionWizardModal';
+import SupportModal from './SupportModal';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -133,6 +134,8 @@ const FeatureActivationModalComponent = ({
  // One-Click Feature Detail Sheet State
  const [selectedDetailFeature, setSelectedDetailFeature] = useState<OEMFeatureDefinition | null>(null);
  const [selectedOptionHex, setSelectedOptionHex] = useState<string | null>(null);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [supportError, setSupportError] = useState<string | null>(null);
 
  // Expert Mode State
  const [isExpertMode, setIsExpertMode] = useState<boolean>(false);
@@ -154,7 +157,7 @@ const FeatureActivationModalComponent = ({
  const isVoltageLow = !isSimulationMode && effectiveVoltage < 12.2;
  const rawList = useMemo(() => oemDatabaseProvider.getFeaturesForMake(), []);
 
- const [codingToastMessage, setCodingToastMessage] = useState<string | null>(null);
+ const [codingToastMessage, setCodingToastMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
  const executeToggleFeature = async (feature: OEMFeatureDefinition, customPayloadHex?: string) => {
  if (activeCodingId !== null) return;
@@ -182,14 +185,20 @@ const FeatureActivationModalComponent = ({
  await new Promise((res) => setTimeout(res, 450));
  setFeatureEnabledInStore(feature.id, newTargetState);
  const featureName = t(feature.nameKey, feature.defaultName);
- const statusStr = newTargetState ? t('bento.enabled') : t('bento.disabled');
- const successTag = t('common.successTag');
- setCodingToastMessage(`${successTag} "${featureName}" ${statusStr}.`);
+ const statusStr = newTargetState
+   ? t('features.toastActivated', { defaultValue: 'Aktifleştirildi' })
+   : t('features.toastDeactivated', { defaultValue: 'Devre Dışı Bırakıldı' });
+ setCodingToastMessage({
+   type: 'success',
+   text: `${featureName} • ${statusStr}`
+ });
  setTimeout(() => setCodingToastMessage(null), 3500);
  } catch (err) {
  console.warn('[FeatureActivationModal] Toggle failed:', err);
- const errorTag = t('common.errorTag');
- setCodingToastMessage(`${errorTag} ${t('features.codingFailed')}`);
+ setCodingToastMessage({
+   type: 'error',
+   text: t('features.codingFailed', { defaultValue: 'İşlem Başarısız Oldu' })
+ });
  setTimeout(() => setCodingToastMessage(null), 3500);
  } finally {
  setActiveCodingId(null);
@@ -441,16 +450,25 @@ const FeatureActivationModalComponent = ({
  {/* Coding Feedback Toast Banner */}
  {codingToastMessage && (
  <View style={{
- backgroundColor: `${colors.cyan}18`,
- borderColor: colors.cyan,
+ backgroundColor: codingToastMessage.type === 'error' ? `${colors.red}18` : `${colors.green}18`,
+ borderColor: codingToastMessage.type === 'error' ? colors.red : colors.green,
  borderWidth: 1.2,
  borderRadius: scaleMod(10),
- padding: scaleMod(10),
+ paddingVertical: scaleHeight(8),
+ paddingHorizontal: scaleWidth(14),
  marginBottom: scaleHeight(10),
- alignItems: 'center'
+ flexDirection: 'row',
+ alignItems: 'center',
+ justifyContent: 'center',
+ gap: scaleWidth(6)
  }}>
- <Text style={{ color: colors.cyan, fontSize: scaleFont(11), fontWeight: '900', fontFamily: MONO }}>
- {codingToastMessage}
+ <Text style={{
+ color: codingToastMessage.type === 'error' ? colors.red : colors.green,
+ fontSize: scaleFont(11),
+ fontWeight: '900',
+ fontFamily: MONO
+ }}>
+ {codingToastMessage.type === 'error' ? '✕' : '✓'} {codingToastMessage.text}
  </Text>
  </View>
  )}
@@ -636,14 +654,8 @@ const FeatureActivationModalComponent = ({
  >
  <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
  <View style={{ flex: 1, paddingRight: scaleWidth(12) }}>
- {/* Brand & Risk Badges */}
+ {/* Risk & Protection Badges */}
  <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(6), marginBottom: scaleHeight(6), flexWrap: 'wrap' }}>
- <View style={{ backgroundColor: `${colors.cyan}15`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4) }}>
- <Text style={{ color: colors.cyan, fontSize: scaleFont(8), fontWeight: 'bold', fontFamily: MONO }}>
- {item.make.toUpperCase()}
- </Text>
- </View>
-
  {/* Risk Level Badge */}
  <View style={{
  backgroundColor: item.riskLevel === 'HIGH' ? '#ff084422' : item.riskLevel === 'MEDIUM' ? '#ffaa0022' : '#00e67622',
@@ -697,9 +709,9 @@ const FeatureActivationModalComponent = ({
 
  {/* Options Indicator Pill */}
  {item.options && item.options.length > 0 && (
- <View style={{ backgroundColor: `${colors.purple || '#9c27b0'}25`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4) }}>
+ <View style={{ backgroundColor: `${colors.purple || '#9c27b0'}22`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: `${colors.purple || '#9c27b0'}50` }}>
  <Text style={{ color: colors.purple || '#ab47bc', fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>
- {item.options.length} OPTIONS
+ {t('features.optionsBadge', { count: item.options.length, defaultValue: `${item.options.length} SEÇENEK` })}
  </Text>
  </View>
  )}
@@ -802,7 +814,7 @@ const FeatureActivationModalComponent = ({
  <View style={{ flex: 1, paddingRight: scaleWidth(12) }}>
  <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(6), marginBottom: scaleHeight(4) }}>
  <Text style={{ color: colors.cyan, fontWeight: '900', fontSize: scaleFont(10), fontFamily: MONO }}>
- {selectedDetailFeature.make.toUpperCase()} • {getCategoryLabel(selectedDetailFeature.category)}
+ {getCategoryLabel(selectedDetailFeature.category)}
  </Text>
  </View>
  <Text style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(16), fontFamily: MONO }}>
@@ -832,7 +844,8 @@ const FeatureActivationModalComponent = ({
  {t(selectedDetailFeature.descKey, { defaultValue: selectedDetailFeature.defaultDesc })}
  </Text>
 
- {/* Technical ECU Info & Pre/Post Preview Box */}
+ {/* Technical ECU Info & Pre/Post Preview Box - Expert Only */}
+ {isExpertMode && (
  <View style={{
  backgroundColor: colors.bg || '#090d16',
  borderColor: colors.border,
@@ -859,12 +872,13 @@ const FeatureActivationModalComponent = ({
  </Text>
  </View>
  </View>
+ )}
 
  {/* Multi-Option Selector if present */}
  {selectedDetailFeature.options && selectedDetailFeature.options.length > 0 && (
  <View style={{ marginBottom: scaleHeight(16) }}>
  <Text style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, marginBottom: scaleHeight(8) }}>
- {t('features.selectOption')}
+ {t('features.selectOption', { defaultValue: 'Kodlama Seçeneğini Belirleyin:' })}
  </Text>
  <View style={{ gap: scaleHeight(6) }}>
  {selectedDetailFeature.options.map(opt => {
@@ -873,23 +887,52 @@ const FeatureActivationModalComponent = ({
  <TouchableOpacity
  key={opt.valueHex}
  onPress={() => setSelectedOptionHex(opt.valueHex)}
+ activeOpacity={0.75}
  style={{
- backgroundColor: isOptSelected ? `${colors.cyan}25` : colors.bg,
+ backgroundColor: isOptSelected ? `${colors.cyan}20` : (colors.bg || '#090d16'),
  borderColor: isOptSelected ? colors.cyan : colors.border,
  borderWidth: isOptSelected ? 1.8 : 1,
- borderRadius: scaleMod(8),
- padding: scaleMod(10),
+ borderRadius: scaleMod(10),
+ paddingVertical: scaleHeight(12),
+ paddingHorizontal: scaleWidth(14),
  flexDirection: 'row',
  justifyContent: 'space-between',
  alignItems: 'center'
  }}
  >
- <Text style={{ color: isOptSelected ? colors.cyan : colors.textPri, fontWeight: 'bold', fontSize: scaleFont(11), fontFamily: MONO }}>
+ <Text style={{
+ color: isOptSelected ? colors.cyan : colors.textPri,
+ fontWeight: isOptSelected ? '900' : 'bold',
+ fontSize: scaleFont(11.5),
+ fontFamily: MONO
+ }}>
  {t(opt.labelKey, { defaultValue: opt.defaultLabel })}
  </Text>
+ {isExpertMode ? (
  <Text style={{ color: colors.textSec, fontSize: scaleFont(10), fontFamily: MONO }}>
  Payload: 0x{opt.valueHex}
  </Text>
+ ) : isOptSelected ? (
+ <View style={{
+ width: scaleMod(20),
+ height: scaleMod(20),
+ borderRadius: scaleMod(10),
+ backgroundColor: colors.cyan,
+ alignItems: 'center',
+ justifyContent: 'center'
+ }}>
+ <Text style={{ color: '#ffffff', fontSize: scaleFont(11), fontWeight: '900' }}>✓</Text>
+ </View>
+ ) : (
+ <View style={{
+ width: scaleMod(20),
+ height: scaleMod(20),
+ borderRadius: scaleMod(10),
+ borderWidth: 1.5,
+ borderColor: colors.border,
+ backgroundColor: 'transparent'
+ }} />
+ )}
  </TouchableOpacity>
  );
  })}
@@ -897,8 +940,8 @@ const FeatureActivationModalComponent = ({
  </View>
  )}
 
- {/* Coding Logs Display during activation */}
- {activeCodingId === selectedDetailFeature.id && codingLogs.length > 0 && (
+ {/* Coding Logs Display during activation - Expert Only */}
+ {isExpertMode && activeCodingId === selectedDetailFeature.id && codingLogs.length > 0 && (
  <View style={{
  backgroundColor: '#000000',
  borderColor: colors.cyan,

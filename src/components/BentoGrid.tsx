@@ -327,7 +327,7 @@ export default function BentoGrid({
         </BentoButton>
       </View>
 
-      {/* Row 2: 4 Compact Action Tiles (About, Language, Support, Share) */}
+      {/* Row 2: 3 Compact Action Tiles (Profile, Language, Share) */}
       <View style={{ flexDirection: 'row', gap: scaleMod(6), width: '100%' }}>
         {/* Card 1: About App / Profile */}
         <BentoButton
@@ -354,18 +354,7 @@ export default function BentoGrid({
           </View>
         </BentoButton>
 
-        {/* Card 3: Support Center */}
-        <BentoButton
-          style={[sDyn.toolTile, { flex: 1, width: undefined }]}
-          onPress={onOpenSupport}
-          activeOpacity={0.4}
-        >
-          <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={[sDyn.toolTileText, { color: colors.textPri }]}>
-            {t('info.support').toUpperCase()}
-          </Text>
-        </BentoButton>
-
-        {/* Card 4: Share with Friend */}
+        {/* Card 3: Share with Friend */}
         <BentoButton
           style={[sDyn.toolTile, { flex: 1, width: undefined }]}
           onPress={onShareApp}

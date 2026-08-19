@@ -15,7 +15,7 @@ export const ALL_26_LANGUAGES: LanguageItem[] = [
  { code: 'da', name: 'Dansk', flag: '', nativeName: 'Dansk', sub: 'Danish Diagnostics Hub' },
  { code: 'de', name: 'Deutsch', flag: '', nativeName: 'Deutsch', sub: 'German Diagnostics Hub' },
  { code: 'el', name: 'Ελληνικά', flag: '', nativeName: 'Ελληνικά', sub: 'Greek Diagnostics Hub' },
- { code: 'en', name: 'English', flag: '', nativeName: 'English (US)', sub: 'English Diagnostics Hub' },
+ { code: 'en', name: 'English', flag: '', nativeName: 'English', sub: 'English Diagnostics Hub' },
  { code: 'es', name: 'Español', flag: '', nativeName: 'Español', sub: 'Spanish Diagnostics Hub' },
  { code: 'fr', name: 'Français', flag: '', nativeName: 'Français', sub: 'French Diagnostics Hub' },
  { code: 'hi', name: 'हिन्दी', flag: '', nativeName: 'हिन्दी', sub: 'Hindi Diagnostics Hub' },

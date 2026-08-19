@@ -43,7 +43,7 @@ export const STELLANTIS_OEM_FEATURES: OEMFeatureDefinition[] = [
         id: 'stell_needle_sweep_cluster',
         nameKey: 'features.items.stell_needle_sweep_cluster.name',
         descKey: 'features.items.stell_needle_sweep_cluster.desc',
-        defaultName: 'Instrument Needle Sweep (Sport Staging)',
+        defaultName: 'Instrument Needle Sweep',
         defaultDesc: 'Performs gauge sweep on startup for analog/hybrid instrument clusters.',
         make: 'Alfa Romeo',
         category: 'DISPLAY_INSTRUMENT',

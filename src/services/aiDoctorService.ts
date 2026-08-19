@@ -153,7 +153,7 @@ export class AiDoctorService {
       return {
         riskLevel: 'WARNING',
         riskScore: 65,
-        title: i18n.t('aiDoctor.o2Title', { defaultValue: 'Oxygen (O2) Sensor Circuit Malfunction' }),
+        title: i18n.t('aiDoctor.o2Title', { defaultValue: 'Oxygen Sensor Circuit Malfunction' }),
         summary: i18n.t('aiDoctor.o2Summary', { defaultValue: 'Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.' }),
         causes: [
           i18n.t('aiDoctor.causeO2Heater', { defaultValue: 'O2 sensor heating element failure' }),

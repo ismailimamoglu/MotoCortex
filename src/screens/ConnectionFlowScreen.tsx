@@ -25,6 +25,7 @@ import { useResponsive } from '../hooks/useResponsive';
 import { triggerHaptic } from '../utils/haptics';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { RadarScannerView } from '../components/RadarScannerView';
+import SupportModal from '../components/SupportModal';
 
 interface ConnectionFlowScreenProps {
  onBack: () => void;
@@ -36,6 +37,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  const colors = useThemeColors();
  const { fs, ms, vs } = useResponsive();
 
+ const [isSupportModalVisible, setIsSupportModalVisible] = useState(false);
  const [selectedType, setSelectedType] = useState<'BLUETOOTH' | 'WIFI' | null>(null);
  const [selectedCategory, setSelectedCategory] = useState<'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK' | null>(null);
  const [wifiIp, setWifiIp] = useState('192.168.0.10');
@@ -256,22 +258,44 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  return t('connection.errProtocolFailed', { defaultValue: 'OBD2 Protokol İletişimi Başarısız' });
  }
  if (code.includes('ECU CONNECTION FAILED') || code.includes('ECU_HANDSHAKE') || code.includes('NO_RESPONSE') || code.includes('ECUNOTFOUND')) {
- return t('connection.errEcuHandshake', { defaultValue: 'Araç Beyni (ECU) Yanıt Vermiyor' });
+ return t('connection.errEcuHandshake', { defaultValue: 'Araç Beyni Yanıt Vermiyor' });
  }
  return rawMsg
  .replace(/_/g, ' ')
  .toLowerCase()
- .replace(/\b\w/g, (c) => c.toUpperCase());
+.replace(/\b\w/g, (c) => c.toUpperCase());
  };
 
  return (
  <ScrollView style={[styles.container, { backgroundColor: colors.bg }]} contentContainerStyle={styles.content}>
- {/* Header */}
- <View style={styles.header}>
- <Text style={[styles.title, { color: colors.textPri, fontSize: fs(18), fontFamily: colors.mono }]}>
- {t('vehicleSelect.titleMenu')}
- </Text>
- </View>
+      {/* Header */}
+      <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+        <Text style={[styles.title, { color: colors.textPri, fontSize: fs(18), fontFamily: colors.mono }]}>
+          {t('vehicleSelect.titleMenu')}
+        </Text>
+        <TouchableOpacity
+          onPress={() => {
+            triggerHaptic();
+            setIsSupportModalVisible(true);
+          }}
+          style={{
+            paddingHorizontal: ms(10),
+            paddingVertical: vs(5),
+            backgroundColor: `${colors.cyan}18`,
+            borderRadius: ms(10),
+            borderWidth: 1,
+            borderColor: `${colors.cyan}40`,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 4
+          }}
+        >
+          <Text style={{ fontSize: fs(11) }}>💬</Text>
+          <Text style={{ color: colors.cyan, fontFamily: colors.mono, fontWeight: '900', fontSize: fs(10.5) }}>
+            {t('support.help', { defaultValue: 'Destek' })}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
  {/* Main Connection Status Card */}
  <View style={[styles.statusCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -396,8 +420,8 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  </Text>
  <Text style={[styles.firstTimeDesc, { color: colors.textPri, fontSize: fs(11.5), marginTop: vs(4), lineHeight: fs(16.5) }]}>
  {Platform.OS === 'android'
- ? t('connection.firstTimeGuideDescAndroid', { defaultValue: 'Bluetooth Classic (ELM327) adaptörleri ilk kez kullanmadan önce telefonunuzun Bluetooth ayarlarından eşleştirin (PIN: 1234 veya 0000). BLE ve Wi-Fi cihazlar doğrudan bağlanır.' })
- : t('connection.firstTimeGuideDescIos', { defaultValue: 'BLE (Bluetooth 4.0+) ve Wi-Fi adaptörleri telefon ayarlarından eşleştirme gerektirmez, doğrudan uygulama içinden taranarak bağlanır.' })
+ ? t('connection.firstTimeGuideDescAndroid', { defaultValue: 'Bluetooth Classic adaptörleri ilk kez kullanmadan önce telefonunuzun Bluetooth ayarlarından eşleştirin. BLE ve Wi-Fi cihazlar doğrudan bağlanır.' })
+ : t('connection.firstTimeGuideDescIos', { defaultValue: 'BLE ve Wi-Fi adaptörleri telefon ayarlarından eşleştirme gerektirmez, doğrudan uygulama içinden taranarak bağlanır.' })
  }
  </Text>
  </View>
@@ -443,7 +467,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             {t('connection.passengerCar', { defaultValue: 'Otomobil' }).toUpperCase()}
           </Text>
           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-            {t('connection.passengerCarDesc', { defaultValue: '12V Binek & Hafif Ticari Araçlar (OBD2 / CAN / KWP)' })}
+            {t('connection.passengerCarDesc', { defaultValue: '12V Binek & Hafif Ticari Araçlar' })}
           </Text>
         </View>
         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
@@ -483,7 +507,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
             {t('connection.heavyDutyTruck', { defaultValue: 'Ağır Vasıta & Kamyon' }).toUpperCase()}
           </Text>
           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-            {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs (SAE J1939)' })}
+            {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs' })}
           </Text>
         </View>
         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
@@ -505,7 +529,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  {Platform.OS === 'ios' && (
  <View style={[styles.warningBanner, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan, marginVertical: vs(8) }]}>
  <Text style={[styles.warningText, { color: colors.cyan, fontSize: fs(11) }]}>
- {t('connection.iosClassicWarning', { defaultValue: 'Not: iOS cihazlar sadece BLE (Bluetooth Low Energy) destekli OBD2 adaptörleriyle çalışır. Standart (Classic) adaptörler taranamaz.' })}
+ {t('connection.iosClassicWarning', { defaultValue: 'Not: iOS cihazlar sadece BLE destekli OBD2 adaptörleriyle çalışır. Standart adaptörler taranamaz.' })}
  </Text>
  </View>
  )}
@@ -804,10 +828,10 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  gap: vs(6)
  }}>
  <Text style={{ color: colors.amber, fontSize: fs(12), fontWeight: '900', fontFamily: colors.mono, letterSpacing: 0.5 }}>
- {t('connection.ignitionWarningTitle', { defaultValue: 'KONTAK KONTROLÜ (IGNITION ON)' }).toUpperCase()}
+ {t('connection.ignitionWarningTitle', { defaultValue: 'KONTAK KONTROLÜ' }).toUpperCase()}
  </Text>
  <Text style={{ color: colors.textPri, fontSize: fs(11), lineHeight: vs(15), fontFamily: colors.mono }}>
- {t('connection.ignitionWarningDesc', { defaultValue: 'ELM327 adaptörünüz bağlı ancak araç beyninden (ECU) yanıt alınamadı. Lütfen aracın kontağını AÇIK (ON) konuma getirin veya motoru çalıştırıp tekrar deneyin.' })}
+ {t('connection.ignitionWarningDesc', { defaultValue: 'ELM327 adaptörünüz bağlı ancak araç beyninden yanıt alınamadı. Lütfen aracın kontağını AÇIK konuma getirin veya motoru çalıştırıp tekrar deneyin.' })}
  </Text>
  </View>
 

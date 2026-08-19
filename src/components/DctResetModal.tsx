@@ -205,7 +205,7 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
                       onPress={() => setNeutralGearEngaged(!neutralGearEngaged)}
                     >
                       <Text style={[styles.checkText, { color: tc.textPri, flex: 1 }]}>
-                        {t('dct.neutralSwitch', { defaultValue: 'Boş Vites (Nötr) Sensörü' })}
+                        {t('dct.neutralSwitch', { defaultValue: 'Boş Vites Sensörü' })}
                       </Text>
                       <View style={[styles.pillBadge, { backgroundColor: neutralGearEngaged ? `${tc.green}20` : `${tc.red}20` }]}>
                         <Text style={{ color: neutralGearEngaged ? tc.green : tc.red, fontSize: 11, fontWeight: '800' }}>
@@ -286,7 +286,7 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
                       return (
                         <View style={[styles.checkItem, { backgroundColor: tc.card, borderColor: isTempValid ? `${tc.green}40` : `${tc.red}40` }]}>
                           <Text style={[styles.checkText, { color: tc.textPri, flex: 1 }]}>
-                            {t('dct.checkOilTemp', { defaultValue: 'Şanzıman Yağ Sıcaklığı (30°C - 90°C arası)' })}
+                            {t('dct.checkOilTemp', { defaultValue: 'Şanzıman Yağ Sıcaklığı' })}
                           </Text>
                           <View style={[styles.pillBadge, { backgroundColor: isTempValid ? `${tc.green}20` : `${tc.red}20` }]}>
                             <Text style={{ color: isTempValid ? tc.green : tc.red, fontSize: 11, fontWeight: '800' }}>

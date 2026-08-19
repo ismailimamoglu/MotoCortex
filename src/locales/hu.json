@@ -23,11 +23,11 @@
         "deleteConfirmDesc": "Biztosan törli ezt a rekordot?",
         "continueBtn": "Folytatás",
         "cancelBtn": "Mégsem",
-        "skipBtn": "Kihagyás (befejezés)"
+        "skipBtn": "Kihagyás"
     },
     "bento": {
         "diagnostics": "Szakértelem",
-        "cleanFaults": "0 HIBA (TISZTA)",
+        "cleanFaults": "0 HIBA",
         "dtcDetected": "{{count}}HIBA ÉSZLELVE",
         "liveSensors": "Élő érzékelők",
         "realtimeData": "ÉLŐ ADAT streamelés",
@@ -51,8 +51,8 @@
             "original": "Eredeti",
             "safeMode": "Csökkentett mód / klónozó adapter",
             "deviceNotConnected": "Az eszköz nincs csatlakoztatva",
-            "pollingLow": "2 Hz (alacsony)",
-            "pollingHigh": "4 Hz (Magas)",
+            "pollingLow": "2 Hz",
+            "pollingHigh": "4 Hz",
             "pollingZero": "0 Hz",
             "userIdLabel": "Felhasználói azonosító:",
             "idCopied": "A felhasználói azonosító a vágólapra másolva.",
@@ -62,14 +62,14 @@
             "deviceName": "Eszköz neve:",
             "simulationObd": "Szimulációs OBD",
             "obdHealthTitle": "OBD EGÉSZSÉGÜGYI STATISZTIKA",
-            "txRequests": "Elküldött kérések (TX):",
-            "rxResponses": "Beérkezett válaszok (RX):",
+            "txRequests": "Elküldött kérések:",
+            "rxResponses": "Beérkezett válaszok:",
             "timeouts": "Időtúllépések:",
             "recoveries": "Helyreállítási kísérletek:",
             "avgLatency": "Átl. Késés:",
             "lastErrorLabel": "Utolsó hiba:",
             "shareReport": "Ossza meg a DIAGNOSZTIKAI JELENTÉST",
-            "diagnosticLog": "DIAGNOSZTIKAI NAPLÓ (LEGUTÓBBI 500 SOR)",
+            "diagnosticLog": "DIAGNOSZTIKAI NAPLÓ",
             "noTraffic": "Még nincs streaming forgalom...",
             "shareError": "Megosztási hiba",
             "noLogsToShare": "Nincsenek megosztható diagnosztikai naplók.",
@@ -160,8 +160,8 @@
         "syncing": "Szinkronizálás...",
         "continueBtn": "FOLYTATÁS",
         "selected": "KIVÁLASZTVA",
-        "successTag": "[SIKER]",
-        "errorTag": "[HIBA]",
+        "successTag": "SIKER",
+        "errorTag": "HIBA",
         "brandName": "CORTEX OBD2",
         "sampleSimData": "Minta szimulációs adatok",
         "normal": "Normal",
@@ -199,8 +199,8 @@
         "noPurchasesMsgAndroid": "Nem található aktív PRO-tagság a Google-fiókjához társítva.",
         "terms": "Felhasználási feltételek",
         "privacy": "Adatvédelmi szabályzat",
-        "hardwareWarning": "Fontos hardver megjegyzés: Az Apple jogi korlátozásai miatt az iOS eszközök nem támogatják a régebbi generációs Bluetooth Classic (v2.1) adaptereket. Mielőtt PRO módra frissítené az alkalmazást, győződjön meg arról, hogy eszköze Bluetooth LE (4.0+) vagy Wi-Fi-kompatibilis.",
-        "hardwareWarningAndroid": "Fontos hardver megjegyzés: Az Android készülékek a Bluetooth Classic és a Bluetooth LE (4.0+) adaptereket is támogatják. Mielőtt PRO módra váltana, győződjön meg arról, hogy eszköze kompatibilis.",
+        "hardwareWarning": "Fontos hardver megjegyzés: Az Apple jogi korlátozásai miatt az iOS eszközök nem támogatják a régebbi generációs Bluetooth Classic adaptereket. Mielőtt PRO módra frissítené az alkalmazást, győződjön meg arról, hogy eszköze Bluetooth LE vagy Wi-Fi-kompatibilis.",
+        "hardwareWarningAndroid": "Fontos hardver megjegyzés: Az Android készülékek a Bluetooth Classic és a Bluetooth LE adaptereket is támogatják. Mielőtt PRO módra váltana, győződjön meg arról, hogy eszköze kompatibilis.",
         "errorTitle": "A termékeket nem sikerült betölteni",
         "errorDesc": "Hiba történt a termékek betöltése közben. Kérjük, ellenőrizze internetkapcsolatát, és próbálja újra.",
         "retryBtn": "Próbáld újra",
@@ -251,8 +251,8 @@
         "permissionDesc": "Bluetooth engedély megtagadva. Kérjük, engedélyezze az alkalmazás beállításaiból.",
         "safeModeActive": "BIZTONSÁGOS ÜZEMMÓD AKTÍV: Klón vagy rossz minőségű adapter észlelve.",
         "iosBtManual": "Kapcsolja be a Bluetooth-t a Vezérlőközpontból vagy a Beállításokból. A Bluetooth nem kapcsolható be automatikusan iOS-eszközökön.",
-        "iosBleOnly": "Megjegyzés: Az iOS-eszközök csak a BLE (Bluetooth Low Energy) OBD2-adaptereket támogatják. A klasszikus Bluetooth-adapterek nem szkennelhetők.",
-        "androidClassicHint": "Megjegyzés: A szabványos (klasszikus) Bluetooth OBD2 adaptereket párosítani kell az Android Bluetooth beállításaiban, mielőtt megjelennének a keresésben.",
+        "iosBleOnly": "Megjegyzés: Az iOS-eszközök csak a BLE OBD2-adaptereket támogatják. A klasszikus Bluetooth-adapterek nem szkennelhetők.",
+        "androidClassicHint": "Megjegyzés: A szabványos Bluetooth OBD2 adaptereket párosítani kell az Android Bluetooth beállításaiban, mielőtt megjelennének a keresésben.",
         "deviceNotPairedTitle": "Az eszköz párosítása megszüntetve",
         "deviceNotPairedDesc": "A klasszikus Bluetooth OBD2 adapterek csatlakoztatása előtt párosítania kell őket a telefon Bluetooth beállításai között. A rendszer a rendszerbeállításokhoz irányítja.",
         "unsupportedDeviceTitle": "Nem kompatibilis hardver",
@@ -263,18 +263,18 @@
         "protocolNegotiating": "SZKENNELÉSI PROTOKOLL ÉS ÉBREDÉS... [3/5]",
         "ecuDetected": "ECU ÉSZLELVE, ELLENŐRZÉS... [4/5]",
         "ecuResponding": "ECU VÁLASZOLT, A CSATLAKOZTATÁS BEFEJEZÉSE... [5/5]",
-        "protocolScanningHint": "(A szabványos SP5, SP3, SP6, SP7 protokollok egymás utáni beolvasása...)",
-        "protocolFailed": "NEM TALÁLHATÓ KOMPATIBÁLIS PROTOKOLL! (SP5, SP3, SP4, SP6, SP7 kipróbálva)",
+        "protocolScanningHint": "",
+        "protocolFailed": "NEM TALÁLHATÓ KOMPATIBÁLIS PROTOKOLL!",
         "ecuNotFound": "A GÉPJÁRMŰ ECU NEM VÁLASZ!",
         "hardwareCapabilityScore": "Az adapter hardverképességének pontszáma: {{score}}/100",
-        "hardwareFatal": "Kritikus hiba: A hardver egy hamis klón, amely nem támogatja a régebbi járműprotokollokat. Nem lehet csatlakoztatni a jármű ECU-jához. Kérjük, szerezzen be egy minőségi adaptert (v1.5 vagy eredeti).",
+        "hardwareFatal": "Kritikus hiba: A hardver egy hamis klón, amely nem támogatja a régebbi járműprotokollokat. Nem lehet csatlakoztatni a jármű ECU-jához. Kérjük, szerezzen be egy minőségi adaptert.",
         "progressFormat": "{{progress}}%",
         "btDisabled": "Bluetooth letiltva",
         "btDisabledDesc": "Kérem, engedélyezze a Bluetooth-t az OBD2 adapterek kereséséhez.",
-        "btDescIos": "Csatlakozzon BLE OBD2 adaptereken keresztül (Veepeak, vLinker).",
+        "btDescIos": "Csatlakozzon BLE OBD2 adaptereken keresztül.",
         "btDescAndroid": "Csatlakozzon Classic Bluetooth vagy BLE adaptereken keresztül.",
-        "wifiDesc": "Csatlakozzon Wi-Fi adapterekhez (jellemzően 192.168.0.10).",
-        "wifiGuide": "A Wi-Fi adapterhez való csatlakozáshoz lépjen a telefon Wi-Fi beállításaiba, és válassza ki az OBD adapter hálózatát (pl. OBDII, V-LINK). Ezután térjen vissza ide.",
+        "wifiDesc": "Csatlakozzon Wi-Fi adapterekhez.",
+        "wifiGuide": "A Wi-Fi adapterhez való csatlakozáshoz lépjen a telefon Wi-Fi beállításaiba, és válassza ki az OBD adapter hálózatát. Ezután térjen vissza ide.",
         "openWifiSettings": "WI-FI BEÁLLÍTÁSOK MEGNYITÁSA",
         "connectWifi": "CSATLAKOZÁS WI-FI-N KERESZTÜL",
         "pairRequired": "OBD2 eszköz párosítása",
@@ -291,7 +291,7 @@
         "failed": "KAPCSOLÓDÁSI KÍSÉRLET SIKERTELEN",
         "errLayer1": "Hibaelhárítás: A Bluetooth le van tiltva. Engedélyezze az eszköz beállításaiban.",
         "errLayer2": "Hibaelhárítás: Kapcsolat időtúllépés. Győződjön meg róla, hogy az adapter szorosan illeszkedik az OBD2 portba és az áramkijelző világít.",
-        "errLayer5": "Hibaelhárítás: Az OBD2 protokoll tárgyalása sikertelen. Győződjön meg róla, hogy a jármű gyújtása ON helyzetben van (a motor beindítása javasolt).",
+        "errLayer5": "Hibaelhárítás: Az OBD2 protokoll tárgyalása sikertelen. Győződjön meg róla, hogy a jármű gyújtása ON helyzetben van.",
         "errLayer6": "Hibaelhárítás: Az adapter csatlakoztatva, de a jármű ECU nem válaszol. Kapcsolja be a gyújtást, vagy indítsa újra a kapcsolatot.",
         "errGeneric": "Hibaelhárítás: Győződjön meg róla, hogy az adapter áramot kap, a gyújtás be van kapcsolva, és nincs más OBD alkalmazás nyitva.",
         "stepAdapter": "Adapter kapcsolat és képesség pontszám",
@@ -303,13 +303,13 @@
         "online": "ONLINE",
         "offline": "OFFLINE",
         "terminalTitle": "OBD TERMINÁL / EGYEDI KÓD",
-        "terminalDesc": "Az OBD-II vagy AT/ST parancsokat közvetlenül az ECU-ra küldheti. Pl. \"010C\" (motor fordulatszám) vagy \"ATRV\" (akkumulátorfeszültség).",
+        "terminalDesc": "Az OBD-II vagy AT/ST parancsokat közvetlenül az ECU-ra küldheti. Pl. \"010C\" vagy \"ATRV\".",
         "ecuResponseLabel": "ECU VÁLASZ:",
-        "adapterConnected": "ADAPTER CSATLAKOZTATVA (OK)",
-        "lowQualityAdapterWarning": "Gyenge minőségű adapter (pontszám: {{score}}/100): Az adapter egy gyenge minőségű klón. Hiányzik belőle a régebbi járműprotokollokhoz szükséges időzítési pontosság (mint például a K-Line a Dacia, Renault, Fiat, Lada esetében). Erősen javasoljuk, hogy frissítsen egy kiváló minőségű OBD2 adapterre (v1.5 vagy eredeti OBDLink/vLinker) a sikeres csatlakozáshoz.",
+        "adapterConnected": "ADAPTER CSATLAKOZTATVA",
+        "lowQualityAdapterWarning": "Gyenge minőségű adapter: Az adapter egy gyenge minőségű klón. Hiányzik belőle a régebbi járműprotokollokhoz szükséges időzítési pontosság. Erősen javasoljuk, hogy frissítsen egy kiváló minőségű OBD2 adapterre a sikeres csatlakozáshoz.",
         "statusProfiling": "Az OBD2 adapter képességeinek elemzése...",
         "statusScanningCan": "Modern CAN-Bus protokollok vizsgálata...",
-        "statusScanningKline": "K-Line protokollok felébresztése. A régi járművek (Dacia, Renault, Fiat) akár 15 másodpercig is eltarthat, mire reagálnak...",
+        "statusScanningKline": "K-Line protokollok felébresztése. A régi járművek akár 15 másodpercig is eltarthat, mire reagálnak...",
         "statusHandshake": "ECU kommunikáció ellenőrzése...",
         "statusStabilization": "A telemetriai adatfolyam stabilizálása...",
         "changeType": "Kapcsolattípus módosítása",
@@ -323,7 +323,7 @@
         "connectBtn": "CSATLAKOZTASSA KÉSZÜLÉKET",
         "noActiveTitle": "Nincs aktív kapcsolat",
         "noActiveDesc": "Nincs aktív OBD2 kapcsolat, amelyről le kellene kapcsolódni.",
-        "scanningAdapter": "Adapter keresése (Várakozás válaszra)...",
+        "scanningAdapter": "Adapter keresése...",
         "scanningDevices": "OBD2 Bluetooth eszközök keresése...",
         "quickConnectTitle": "Utolsó adapter észlelve",
         "quickConnectDesc": "Gyors csatlakozás a legutóbb használt '{{name}}' adapteréhez?",
@@ -332,33 +332,33 @@
         "signalGood": "Jó jel",
         "signalFair": "Fair Signal",
         "signalWeak": "Gyenge jel",
-        "iosClassicWarning": "Megjegyzés: Az iOS-eszközök csak a BLE (Bluetooth Low Energy) OBD2-adaptereket támogatják. A klasszikus Bluetooth-adapterek nem szkennelhetők.",
+        "iosClassicWarning": "Megjegyzés: Az iOS-eszközök csak a BLE OBD2-adaptereket támogatják. A klasszikus Bluetooth-adapterek nem szkennelhetők.",
         "wifiIpLabel": "Wi-Fi IP-cím",
         "wifiPortLabel": "Wi-Fi port",
         "cancelConnection": "BAĞLANTIYI İPTAL ET",
-        "statusScanningProtocol": "OBD2 Otomatik Protokol Taraması Yapılıyor (CAN / KWP)...",
+        "statusScanningProtocol": "OBD2 Otomatik Protokol Taraması Yapılıyor...",
         "motorcycle": "Motorkerékpár",
         "heavyDutyTruck": "Nehéz tehergépjárművek és buszok",
-        "statusReadingVin": "Araç Şasi Numarası (VIN) Okunuyor & Profil Oluşturuluyor...",
+        "statusReadingVin": "Araç Şasi Numarası Okunuyor & Profil Oluşturuluyor...",
         "selectCategory": "VÁLASSZON JÁRMŰKATEGÓRIÁT",
         "statusConnected": "ECU İletişimi Başarıyla Kuruldu",
         "statusAdaptingHardware": "Adaptör Bağlantısı ve Donanım Skoru Doğrulanıyor...",
         "passengerCar": "Személygépkocsi és kishaszonjármű",
         "changeCategory": "Kategória módosítása",
-        "passengerCarDesc": "12V Személy- és kishaszonjárművek (OBD2 / CAN / KWP)",
+        "passengerCarDesc": "12V Személy- és kishaszonjárművek",
         "motorcycleDesc": "Euro 5 és magas fordulatszámú motorkerékpár-telemetria",
-        "heavyDutyTruckDesc": "24V Haszongépjárművek, nehéz teherautók és buszok (SAE J1939)",
-        "ignitionWarningTitle": "GYÚJTÁS ELLENŐRZÉSE (IGNITION ON)",
-        "ignitionWarningDesc": "Az ELM327 adapter csatlakoztatva van, de a jármű ECU nem válaszol. Kérjük, kapcsolja be a gyújtást (ON) vagy indítsa be a motort, és próbálja újra.",
+        "heavyDutyTruckDesc": "24V Haszongépjárművek, nehéz teherautók és buszok",
+        "ignitionWarningTitle": "GYÚJTÁS ELLENŐRZÉSE",
+        "ignitionWarningDesc": "Az ELM327 adapter csatlakoztatva van, de a jármű ECU nem válaszol. Kérjük, kapcsolja be a gyújtást vagy indítsa be a motort, és próbálja újra.",
         "goToDashboard": "UGRÁS AZ ÉLŐ MŰSZERFALRA",
         "connectRequired": "Connect Required",
         "connectingECU": "Connecting E C U",
         "pairingTipTitle": "ELSŐ PÁROSÍTÁSI ÉS BEÁLLÍTÁSI ÚTMUTATÓ",
-        "pairingTipDesc": "Androidos Bluetooth Classic adapterek esetén csatlakozás előtt párosítsa a beállításokban (PIN: 1234 vagy 0000). Az iOS és BLE adapterek közvetlenül csatlakoznak.",
+        "pairingTipDesc": "Androidos Bluetooth Classic adapterek esetén csatlakozás előtt párosítsa a beállításokban. Az iOS és BLE adapterek közvetlenül csatlakoznak.",
         "openBtSettings": "BLUETOOTH BEÁLLÍTÁSOK",
         "firstTimeGuideTitle": "ELSŐ PÁROSÍTÁSI ÉS BEÁLLÍTÁSI ÚTMUTATÓ",
-        "firstTimeGuideDescAndroid": "Első használat előtt párosítsa a Bluetooth Classic (ELM327) adaptereket a telefon Bluetooth-beállításaiban (PIN: 1234 vagy 0000). A BLE és Wi-Fi eszközök közvetlenül csatlakoznak.",
-        "firstTimeGuideDescIos": "A BLE (Bluetooth 4.0+) és Wi-Fi adapterek nem igényelnek párosítást a telefon beállításaiban; közvetlenül az alkalmazásban kereshetők és csatlakoztathatók."
+        "firstTimeGuideDescAndroid": "Első használat előtt párosítsa a Bluetooth Classic adaptereket a telefon Bluetooth-beállításaiban. A BLE és Wi-Fi eszközök közvetlenül csatlakoznak.",
+        "firstTimeGuideDescIos": "A BLE és Wi-Fi adapterek nem igényelnek párosítást a telefon beállításaiban; közvetlenül az alkalmazásban kereshetők és csatlakoztathatók."
     },
     "dashboard": {
         "selectDevice": "Érintse meg az ESZKÖZ KIVÁLASZTÁSÁHOZ",
@@ -368,7 +368,7 @@
         "batteryLowDesc": "Az akkumulátor feszültsége{{voltage}}. Indítsa el vagy töltse fel a járművet. Az ECU kommunikáció megszakadhat alacsony feszültség esetén.",
         "batteryWarn": "AZ AKKUMULÁTOR GYENGE",
         "batteryWarnDesc": "Az akkumulátor feszültsége{{voltage}}. Legyen óvatos a hosszú távú műveletek során.",
-        "rpm": "Motor fordulatszám (RPM)",
+        "rpm": "Motor fordulatszám",
         "speed": "Jármű sebessége",
         "temp": "HŐMÉRSÉKLET",
         "throttle": "Fojtószelep állás",
@@ -381,7 +381,7 @@
         "intake": "BESZÍVÓ LEVEGŐ",
         "manifold": "ELÖLT. kPa",
         "customizeTitle": "MŰSZERFAL BEÁLLÍTÁSOK",
-        "customizeSubtitle": "Válassza ki a kijelzőn megjelenő szenzorokat (Max. 8).",
+        "customizeSubtitle": "Válassza ki a kijelzőn megjelenő szenzorokat.",
         "layoutType": "Elrendezés Típusa",
         "layoutGrid": "RÁCS",
         "layoutList": "LISTA",
@@ -390,7 +390,7 @@
         "voltage": "Akkumulátor feszültség",
         "engineLoad": "Motorterhelés",
         "intakeAirTemp": "Szívólevegő temp.",
-        "manifoldPressure": "Szívócső nyomás (MAP)",
+        "manifoldPressure": "Szívócső nyomás",
         "ambientTemp": "Külső hőmérséklet",
         "oilTemp": "Olajhőmérséklet",
         "mafFlow": "MAF légtömegáram",
@@ -411,27 +411,27 @@
         "unit": "Egység",
         "layoutChart": "CHART",
         "adblue": "AdBlue szint",
-        "egt": "Kipufogógáz hőmérséklet (EGT)",
+        "egt": "Kipufogógáz hőmérséklet",
         "nox": "NOx érzékelő érték",
         "torque": "Motor nyomaték",
         "selectedSensorsCount": "{{count}} / {{max}} érzékelő kiválasztva",
-        "proSensorMsg": "Upgrade to PRO to unlock and monitor advanced live sensors (Turbo Boost, Oil Temp, Torque, AFR, etc.)."
+        "proSensorMsg": "Upgrade to PRO to unlock and monitor advanced live sensors."
     },
     "expertise": {
         "historyFound": "A JÁRMŰ TÖRTÉNETE MEGTALÁLHATÓ!",
         "historyFoundDesc": "{{count}}rekordot készítettek erről a járműről korábban. Az előzményeket alább tekintheti át.",
         "viewHistory": "NÉZD MEG AZ TÖRTÉNETET ›",
-        "manualVin": "ALVÁZ SZÁMA (KÉZI BELÉPÉS)",
-        "manualVinDesc": "Ha a jármű számítógépe nem osztja meg automatikusan az alvázszámot (VIN), ide írhatja azt.",
+        "manualVin": "ALVÁZ SZÁMA",
+        "manualVinDesc": "Ha a jármű számítógépe nem osztja meg automatikusan az alvázszámot, ide írhatja azt.",
         "vinPlaceholder": "Írja be a VIN-t...",
         "startScan": "SZAKÉRTŐI VIZSGÁLAT INDÍTÁSA",
         "scanning": "SZKENNELÉS...",
         "vehicleIdentity": "GÉPJÁRMŰ AZONOSÍTÓ ÉS FUTTATÁS",
-        "vin": "Alvázszám (VIN)",
+        "vin": "Alvázszám",
         "odometer": "Eredeti KM",
         "distSinceCleared": "Hiba törölve",
         "milDist": "Motorlámpa világít",
-        "dtcTitle": "Hibakódok (DTC)",
+        "dtcTitle": "Hibakódok",
         "dtcClean": "NINCS HIBAKÓD – TISZTA",
         "extraActions": "EXTRA TRANZAKCIÓK",
         "garageTitle": "GARÁZS ÉS MÚLT LEVEZETEK",
@@ -441,7 +441,7 @@
         "clean": "TISZTA",
         "faults": "kudarc",
         "vinRequired": "VIN kötelező",
-        "vinRequiredDesc": "A regisztrációhoz az alvázszámnak (VIN) automatikusan vagy manuálisan kell megjelennie.",
+        "vinRequiredDesc": "A regisztrációhoz az alvázszámnak automatikusan vagy manuálisan kell megjelennie.",
         "missingInfo": "Hiányzó információ",
         "missingInfoDesc": "Kérjük, töltse ki a Márka és modell mezőt.",
         "saved": "Mentve",
@@ -449,20 +449,20 @@
         "connRequired": "Csatlakozás szükséges",
         "connRequiredDesc": "A folyamat elindításához először csatlakozzon a járműhöz.",
         "chronicFaultsTitle": "Krónikus statisztikai problémák",
-        "chronicFaultsObs": "{{code}}(Megfigyelés:{{days}}Eltérő nap / Összesen:{{total}}alkalommal)",
+        "chronicFaultsObs": "{{code}}",
         "chronicFaultsPending": "Adatbázis gyűjtése / Statisztikák elemzése",
         "notScanned": "Nincs beolvasva",
         "notScannedDesc": "Kérjük, nyomja meg a szkennelés gombot a jobb felső sarokban a diagnosztikai kódok olvasásához.",
         "scanFailed": "SZKENNELÉS SIKERTELEN",
-        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
-        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
-        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
-        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "errTimeout": "Error: Connection Timeout\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error\nECU trouble codes could not be read.",
         "scannedSystems": "VIZSGÁLT RENDSZEREK",
-        "moduleEngine": "Motorvezérlő egység (ECU)",
-        "moduleAbs": "Blokkolásgátló fékrendszer (ABS)",
-        "moduleTcm": "Sebességváltó-vezérlő modul (TCM)",
-        "moduleBcm": "Testvezérlő modul (BCM)",
+        "moduleEngine": "Motorvezérlő egység",
+        "moduleAbs": "Blokkolásgátló fékrendszer",
+        "moduleTcm": "Sebességváltó-vezérlő modul",
+        "moduleBcm": "Testvezérlő modul",
         "simSaveBlocked": "Sim Save Blocked",
         "scannedModules": "Scanned Modules"
     },
@@ -470,12 +470,12 @@
         "safetyWarning": "BIZTONSÁGI FIGYELMEZTETÉS",
         "safetyWarningDesc": "A folyamat során: • A gyújtásnak BE kell lennie • A motornak KI kell állnia • Ne indítsa be a járművet Folytatja?",
         "step1": "1. lépés: Törölje a hibakódokat",
-        "step1Desc": "Az összes tárolt hibakód (DTC) és a Check Engine jelzőfény törlődik. Az üzemanyag-csökkentési értékek visszaállnak. Ez a művelet nem vonható vissza!",
+        "step1Desc": "Az összes tárolt hibakód és a Check Engine jelzőfény törlődik. Az üzemanyag-csökkentési értékek visszaállnak. Ez a művelet nem vonható vissza!",
         "step2": "2. lépés: ECU Hard Reset",
-        "step2Desc": "A rendszer egy elektromos visszaállítást (Hard Reset) küld a motorszámítógépnek. Úgy működik, mint az akkumulátor eltávolítása és behelyezése. Nem hatékony a nem támogató ECU-kban. Nem árt.",
+        "step2Desc": "A rendszer egy elektromos visszaállítást küld a motorszámítógépnek. Úgy működik, mint az akkumulátor eltávolítása és behelyezése. Nem hatékony a nem támogató ECU-kban. Nem árt.",
         "clearCodes": "Kódok törlése",
         "ecuReset": "Törölje a hibakódokat",
-        "finish": "Kihagyás (befejezés)",
+        "finish": "Kihagyás",
         "completed": "Elkészült",
         "completedDesc": "A szervizműveletek sikeresen befejeződtek. Újraindíthatja a járművet.",
         "hardResetDesc": "Minden szervizművelet sikeresen befejeződött. • A hibakódok törölve • Az üzemanyag-beállítások visszaállítása • ECU reset Újraindíthatja a járművet."
@@ -494,11 +494,11 @@
         "sections": {
             "live": {
                 "title": "ÉLŐ MONITORING ÉRZÉKELŐK",
-                "content": "Azonnal figyelheti a fordulatszámot, a sebességet, a motor hőmérsékletét, a fojtószelep helyzetét, az akkumulátorfeszültséget, a motorterhelést, a beszívott levegő hőmérsékletét és a szívócső nyomását (MAP). Az értékek másodpercenként 1-5 alkalommal frissülnek a Bluetooth sebességétől függően. A terminálon keresztül UDS / OBD parancsokkal közvetlenül beavatkozhat a járműbe."
+                "content": "Azonnal figyelheti a fordulatszámot, a sebességet, a motor hőmérsékletét, a fojtószelep helyzetét, az akkumulátorfeszültséget, a motorterhelést, a beszívott levegő hőmérsékletét és a szívócső nyomását. Az értékek másodpercenként 1-5 alkalommal frissülnek a Bluetooth sebességétől függően. A terminálon keresztül UDS / OBD parancsokkal közvetlenül beavatkozhat a járműbe."
             },
             "expertise": {
                 "title": "VIZSGÁLAT ÉS GARANCIA",
-                "content": "Az alkalmazás ECU (Brain) kódokat használ a hibák észlelésére. A rendszer rögzíti a járművön rögzített VIN-számot (VIN) és az aktuális futásteljesítményt. Ezenkívül a múltbeli hibákat úgy határozzák meg, hogy a Check Engine jelzőfényével kiszámítják, mennyit tett meg a jármű. Az eredményül kapott jelentés megosztható PDF és üzenetküldő környezetben."
+                "content": "Az alkalmazás ECU kódokat használ a hibák észlelésére. A rendszer rögzíti a járművön rögzített VIN-számot és az aktuális futásteljesítményt. Ezenkívül a múltbeli hibákat úgy határozzák meg, hogy a Check Engine jelzőfényével kiszámítják, mennyit tett meg a jármű. Az eredményül kapott jelentés megosztható PDF és üzenetküldő környezetben."
             },
             "tests": {
                 "title": "AKKUMULÁTOR / TELJESÍTMÉNY TESZTEK",
@@ -506,7 +506,7 @@
             },
             "hardware": {
                 "title": "HARDVER KOMPATIBILITÁS",
-                "content": "Az ELM327 Bluetooth (v1.5) használata javasolt. Előfordulhat, hogy egyes speciális kódok nem működnek gyenge minőségű hardveren a v2.1 CLONE verzióval. A leggyorsabb sebességet az olyan prémium adapterekkel érheti el, mint a vLinker és az OBDLink."
+                "content": "Az ELM327 Bluetooth használata javasolt. Előfordulhat, hogy egyes speciális kódok nem működnek gyenge minőségű hardveren a v2.1 CLONE verzióval. A leggyorsabb sebességet az olyan prémium adapterekkel érheti el, mint a vLinker és az OBDLink."
             },
             "warnings": {
                 "title": "FONTOS FIGYELMEZTETÉSEK",
@@ -514,7 +514,7 @@
             },
             "onboarding": {
                 "title": "JOGI ENGEDÉLYEK ÉS ANONÍM TELEMETRIA",
-                "content": "Az alkalmazás minőségének és a járművek kompatibilitásának javítása érdekében; A teljesen anonimizált motorparaméterek és a hibadiagnosztika során generált hibakódok (személyes adatok és alvázszám nélkül) elemezhetők biztonságos szervereinken. A folytatással elfogadja ezeket az anonim telemetriai feltételeket. A motorkerékpár ECU-jával való kommunikációhoz Bluetooth és helymeghatározási engedélyek szükségesek."
+                "content": "Az alkalmazás minőségének és a járművek kompatibilitásának javítása érdekében; A teljesen anonimizált motorparaméterek és a hibadiagnosztika során generált hibakódok elemezhetők biztonságos szervereinken. A folytatással elfogadja ezeket az anonim telemetriai feltételeket. A motorkerékpár ECU-jával való kommunikációhoz Bluetooth és helymeghatározási engedélyek szükségesek."
             },
             "featureCoding": {
                 "title": "REJTETT FUNKCIÓK FELOLDÁSA ÉS UDS KÓDOLÁSA",
@@ -522,29 +522,29 @@
             },
             "multiEcu": {
                 "title": "MULTI-ECU MINDEN MODUL SZKENNELÉSE",
-                "content": "Olvassa be és törölje a hibakódokat a motor ECU-n túl – beleértve az ABS-t, a légzsákot, az automata sebességváltót (TCU), a műszercsoportot, a klímaszabályozást (HVAC) és a karosszéria-vezérlő modulokat (BCM)."
+                "content": "Olvassa be és törölje a hibakódokat a motor ECU-n túl – beleértve az ABS-t, a légzsákot, az automata sebességváltót, a műszercsoportot, a klímaszabályozást és a karosszéria-vezérlő modulokat."
             },
             "advancedDiagnostics": {
                 "title": "DCT ADAPTÁCIÓ, DPF & HP TELJESÍTMÉNYMÉRŐ",
-                "content": "• DCT / DSG tengelykapcsoló csókpont tanulás és alkalmazkodás visszaállítása\n• DPF koromterhelés (%/g) és kipufogógáz regenerációs hőmérséklet figyelése\n• Valós idejű rövid/hosszú távú üzemanyag-kiegyenlítés (STFT/LTFT) és lambda-elemzés\n• Dinamikus lóerő (HP) és nyomaték (Nm) élő telemetriai grafikon"
+                "content": "• DCT / DSG tengelykapcsoló csókpont tanulás és alkalmazkodás visszaállítása\n• DPF koromterhelés és kipufogógáz regenerációs hőmérséklet figyelése\n• Valós idejű rövid/hosszú távú üzemanyag-kiegyenlítés és lambda-elemzés\n• Dinamikus lóerő és nyomaték élő telemetriai grafikon"
             },
             "demoMode": {
-                "title": "DEMO MÓD (SZIMULÁCIÓ)",
+                "title": "DEMO MÓD",
                 "content": "Tesztelje és fedezze fel az alkalmazást fizikai OBD2 hardver nélkül. Tapasztalja meg a teljes CAN-busz és UDS diagnosztikai funkciókat valósághű, valós idejű telemetriai szimulációval."
             }
         },
         "reconfigurePermissions": "Újramegjelenítési engedélyek és jogi feltételek",
         "shareWithFriend": "MEGOSZTÁS EGY BARÁTTAL",
-        "shareMessageText": "Fedezze fel a jármű ECU hibakódjait és az élő szenzor telemetriát a Cortex OBD2 Diagnostic Scanner segítségével!\n\nTöltse le most:\n iOS (App Store): https://apps.apple.com/app/id6742882583\n Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n Web Portal: https://motocortex-telemetry.vercel.app/"
+        "shareMessageText": "Fedezze fel a jármű ECU hibakódjait és az élő szenzor telemetriát a Cortex OBD2 Diagnostic Scanner segítségével! Töltse le most: iOS: https://apps.apple.com/app/id6742882583 Android: https://play.google.com/store/apps/details?id=com.ismail.motocortexv2 Web Portal: https://motocortex-telemetry.vercel.app/"
     },
     "report": {
         "title": "═══ CORTEX OBD2 DIAGNOSZTIKAI JELENTÉS ═══",
         "vehicleIdentity": "GÉPJÁRMŰ azonosító",
-        "vin": "Alvázszám (VIN)",
-        "odometer": "Távolság (KM)",
+        "vin": "Alvázszám",
+        "odometer": "Távolság",
         "milDist": "Motorlámpa világít",
         "distSinceCleared": "Hiba törölve",
-        "dtcCount": "HIBAKÓDOK ({{count}}mennyiség)",
+        "dtcCount": "HIBAKÓDOK",
         "sensorData": "ÉLŐ ÉRZÉKELŐ ADATOK",
         "noData": "Nem sikerült beolvasni az adatokat",
         "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO-val szkennelve.",
@@ -562,7 +562,7 @@
         "subtitle": "Átfogó használt diagnosztikai és telemetriai vizsgálat",
         "vehicleInfo": "Járműazonosító és ECU metaadatok",
         "healthScore": "Az ECU általános állapotértéke",
-        "dtcSection": "Diagnosztikai hibakódok (DTC audit)",
+        "dtcSection": "Diagnosztikai hibakódok",
         "telemetrySection": "Élő telemetria és érzékelő pillanatfelvétel",
         "maintenanceSection": "Akıllı Garaj szerviz- és karbantartási előzmények",
         "aiSection": "AI Doctor általános állapotelemzés",
@@ -575,7 +575,7 @@
         "title": "AKKUMULÁTOR ÉS INDÍTÁSI TESZT",
         "ready": "Készen áll a tesztelésre.",
         "restingStatus": "Gyújtás be, motor le... Az akkumulátorfeszültség leolvasása folyamatban...",
-        "crankingStatus": "KEZDJEN MOST! (A mérés 5 másodpercig történik)",
+        "crankingStatus": "KEZDJEN MOST!",
         "chargingStatus": "A motor alapjáraton jár... Töltési feszültség leolvasása folyamatban...",
         "doneStatus": "A tesztelés befejeződött!",
         "voltageError": "A feszültséget nem lehetett leolvasni. Ellenőrizze a kapcsolatot.",
@@ -640,32 +640,32 @@
         "stop": "STOP",
         "reset": "RESET",
         "howItWorks": "HOGYAN MŰKÖDIK?",
-        "howDesc": "1. Nyomja meg a \"Teszt indítása\" gombot 2. A járműnek állónak kell lennie (sebesség = 0) 3. A Chrono elindul, amikor elkezd mozogni 4. A 60 km/h és 100 km/h áthaladási időket rögzítik Töltsd ki ezt a tesztet biztonságos helyen!",
+        "howDesc": "1. Nyomja meg a \"Teszt indítása\" gombot 2. A járműnek állónak kell lennie 3. A Chrono elindul, amikor elkezd mozogni 4. A 60 km/h és 100 km/h áthaladási időket rögzítik Töltsd ki ezt a tesztet biztonságos helyen!",
         "sec": "mp"
     },
     "dtc": {
-        "P0102": "Légáramlás-érzékelő (MAF) - Alacsony bemenet",
+        "P0102": "Légáramlás-érzékelő - Alacsony bemenet",
         "P0113": "Beszívott levegő hőmérséklet érzékelő – magas feszültség",
-        "P0171": "Az üzemanyagrendszer alacsony (1. bank)",
+        "P0171": "Az üzemanyagrendszer alacsony",
         "P0300": "Véletlenszerű/több hengeres begyújtási hiba",
-        "P0420": "Katalizátor rendszer (B1) - Alacsony hatásfok",
+        "P0420": "Katalizátor rendszer - Alacsony hatásfok",
         "P0700": "Sebességváltó-vezérlő rendszer - Meghibásodás",
         "P0715": "Turbina fordulatszám érzékelő – Áramköri hiba",
         "P0560": "Rendszerfeszültség - Hibás működés",
         "P0562": "Rendszerfeszültség - Alacsony",
-        "U0100": "Megszakadt a kommunikáció a motorvezérlő modullal (ECM/PCM)",
-        "U0121": "Megszakadt a kommunikáció a blokkolásgátló fékrendszer (ABS) modullal",
+        "U0100": "Megszakadt a kommunikáció a motorvezérlő modullal",
+        "U0121": "Megszakadt a kommunikáció a blokkolásgátló fékrendszer modullal",
         "C0035": "Bal első kerék fordulatszám-érzékelő áramköri hibája",
         "B0001": "Vezető első szakaszának 1. kiépítési vezérlő áramköre",
         "P0750": "A sebességváltó mágnesszelep meghibásodása",
         "P0814": "Sebességváltó tartomány kijelző áramkör meghibásodása",
-        "U0140": "Megszakadt a kommunikáció a testvezérlő modullal (BCM)",
+        "U0140": "Megszakadt a kommunikáció a testvezérlő modullal",
         "C0040": "A jobb első kerék fordulatszám-érzékelő áramkörének hibája",
         "C0110": "Az ABS szivattyú motor áramkörének meghibásodása",
         "C0121": "A féknyomás-érzékelő áramköri hibája",
         "B0010": "Utasfront 1. szakasz kiépítési vezérlése",
         "B0020": "Bal oldali légzsák kioldó vezérlés",
-        "B1000": "Testvezérlő modul (BCM) hardverhiba",
+        "B1000": "Testvezérlő modul hardverhiba",
         "B1325": "A készülék tápegység áramköre alacsony feszültség",
         "generalFault": "General Fault"
     },
@@ -687,7 +687,7 @@
         "confirm": "FOLYTATÁS",
         "errorBrand": "Kérjük, válasszon vagy írjon be egy márkát.",
         "errorModel": "Kérjük, válasszon vagy írjon be egy modellt.",
-        "errorYear": "Kérjük, válasszon vagy adjon meg egy érvényes évet (pl. 2018).",
+        "errorYear": "Kérjük, válasszon vagy adjon meg egy érvényes évet.",
         "noResults": "Nincs találat",
         "selectVehiclePrompt": "KÉRJÜK, ELŐSZÖR VÁLASSZON JÁRMŰVET",
         "selectedVehicle": "KIVÁLASZTOTT JÁRMŰ",
@@ -701,7 +701,7 @@
         "noRegisteredVehicles": "Nem található regisztrált jármű.",
         "selectVehicle": "KIVÁLASZT",
         "mismatchTitle": "Jármű Eltérés",
-        "mismatchDesc": "A csatlakoztatott jármű gyártója a VIN alapján \"{{make}}\"ként lett azonosítva. Az Ön által választott jármű azonban \"{{selected}}\".\n\nSzeretné törölni a jelenlegi választást, és újra meghatározni a helyes márkával ({{make}})?",
+        "mismatchDesc": "A csatlakoztatott jármű gyártója a VIN alapján \"{{make}}\"ként lett azonosítva. Az Ön által választott jármű azonban \"{{selected}}\". Szeretné törölni a jelenlegi választást, és újra meghatározni a helyes márkával?",
         "operations": {
             "clearDtc": "Hibakódok törölve",
             "fuelAdaptation": "Üzemanyag adaptáció visszaállítása",
@@ -718,16 +718,16 @@
         "audi": "Audi",
         "bajaj": "bajaj",
         "benelli": "benelli",
-        "bmw_car": "BMW (autó)",
-        "bmw_moto": "BMW (motorkerékpár)",
+        "bmw_car": "BMW",
+        "bmw_moto": "BMW",
         "chery": "Chery",
         "cupra": "Cupra",
         "dacia": "Dacia",
         "fiat": "fiat",
         "ford": "ford",
         "hero": "hős",
-        "honda_car": "Honda (autó)",
-        "honda_moto": "Honda (motorkerékpár)",
+        "honda_car": "Honda",
+        "honda_moto": "Honda",
         "hyundai": "hyundai",
         "indian": "indián",
         "jeep": "dzsip",
@@ -743,14 +743,14 @@
         "mondial": "mondial",
         "mv_agusta": "MV Augusta",
         "opel": "opel",
-        "peugeot_car": "Peugeot (autó)",
-        "peugeot_moto": "Peugeot (motorkerékpár)",
+        "peugeot_car": "Peugeot",
+        "peugeot_moto": "Peugeot",
         "porsche": "porsche",
         "rks": "RKS",
         "seat": "Ülés",
         "skoda": "Skoda",
-        "suzuki_car": "Suzuki (autó)",
-        "suzuki_moto": "Suzuki (Motorkerékpár)",
+        "suzuki_car": "Suzuki",
+        "suzuki_moto": "Suzuki",
         "sym": "sym",
         "tesla": "Tesla",
         "togg": "togg",
@@ -786,23 +786,23 @@
     "permissions": {
         "headerSubtitle": "ENGEDÉLYEZÉSI PANEL",
         "cardTitle": "Hardver hozzáférés szükséges",
-        "cardDesc": "Az alkalmazás minőségének és a járművek kompatibilitásának javítása érdekében; A teljesen anonimizált motorparaméterek és a hibadiagnosztika során generált hibakódok (személyes adatok és alvázszám nélkül) elemezhetők biztonságos szervereinken. A folytatással elfogadja ezeket az anonim telemetriai feltételeket.",
+        "cardDesc": "Az alkalmazás minőségének és a járművek kompatibilitásának javítása érdekében; A teljesen anonimizált motorparaméterek és a hibadiagnosztika során generált hibakódok elemezhetők biztonságos szervereinken. A folytatással elfogadja ezeket az anonim telemetriai feltételeket.",
         "btSub": "Csak az ELM327/OBD2 adapterrel való párosításra és élő CAN-bus/K-Line adatok streamelésére használható.",
         "locLabel": "Helyengedély",
         "locSub": "Az Android rendszerarchitektúrája kötelezővé teszi a közeli, alacsony energiafogyasztású Bluetooth-eszközök megkeresését. Nem követjük nyomon a vezetésedet.",
         "grantBtn": "ENGEDÉLYEZD ÉS FOLYTASSA",
-        "skipBtn": "Kihagyás most (demó mód)",
+        "skipBtn": "Kihagyás most",
         "deniedDesc": "Néhány engedélyt megtagadtak. Előfordulhat, hogy a Cortex OBD2 Diagnostic Scanner nem szkennel, vagy nem csatlakozik sikeresen az OBD2-eszközökhöz.",
         "proceedAnyway": "Folytasd mindenesetre",
         "openSettings": "Nyissa meg a Beállítások lehetőséget",
-        "btLabel": "Bluetooth (BLE)",
+        "btLabel": "Bluetooth",
         "langTitle": "Nyelv kiválasztása",
         "nextBtn": "FOLYTATÁS",
         "langDesc": "Kérjük, válassza ki a kívánt nyelvet a diagnosztikai élmény testreszabásához.",
         "langSelectSub": "NYELVÁTJÁRÓ",
-        "telemetryLabel": "Diagnosztikai telemetria (opt-in)",
+        "telemetryLabel": "Diagnosztikai telemetria",
         "telemetrySub": "Névtelen protokollok és hibanaplók megosztása a jármű kompatibilitás javítása érdekében.",
-        "restartOnboarding": "Kezdeti beállítás újraindítása (Nyelv és engedélyek)"
+        "restartOnboarding": "Kezdeti beállítás újraindítása"
     },
     "disclaimer": "Minden terméknév, logó és márka a megfelelő tulajdonosok tulajdona. Az alkalmazásban használt összes vállalat-, termék- és szolgáltatásnév csak azonosítási célokat szolgál. Ezen nevek, logók és márkák használata nem jelent semmilyen támogatást vagy szponzorálást.",
     "hiddenFeatures": {
@@ -821,7 +821,7 @@
         "categorySound": "HANG ÉS FIGYELMEZTETÉSEK",
         "categoryDisplay": "MŰSZERFAL",
         "categoryDriving": "VEZETÉS",
-        "featureDrl": "Nappali menetfény (DRL)",
+        "featureDrl": "Nappali menetfény",
         "featureRearFog": "Hátsó ködlámpa Override",
         "featureDoorChime": "Ajtócsengő letiltása",
         "featureParkingAlert": "Kézifékhang figyelmeztetés",
@@ -838,7 +838,7 @@
         "unsupportedOk": "OK",
         "disclaimerTitle": "FELELŐSSÉGI NYILATKOZAT",
         "disclaimerFeature": "Funkció",
-        "disclaimerBody": "Ennek a funkciónak a módosítása közvetlenül érinti a jármű gyári beállításait és az ECU szoftverét. Kérjük, figyelmesen olvassa el a következő kockázatokat:\n\n• A helytelen alkalmazás érvénytelenítheti a jármű garanciáját.\n• Egyes változtatások maradandó hibákat vagy váratlan elektromos hibákat okozhatnak.\n• Bár a művelet visszafordítható, egyes ECU-modulok gyári alaphelyzetbe állítást igényelhetnek.\n• Kizárólag a felhasználó felelős minden olyan anyagi vagy immateriális kárért, amely ennek a funkciónak a használatából ered.\n• A Cortex OBD2 Diagnostic Scanner nem tehető felelőssé az ezen változtatások által okozott meghibásodásokért vagy károkért.\n\nMeg kell erősítenie, hogy elolvasta és megértette ezt a figyelmeztetést.",
+        "disclaimerBody": "Ennek a funkciónak a módosítása közvetlenül érinti a jármű gyári beállításait és az ECU szoftverét. Kérjük, figyelmesen olvassa el a következő kockázatokat: • A helytelen alkalmazás érvénytelenítheti a jármű garanciáját.\n• Egyes változtatások maradandó hibákat vagy váratlan elektromos hibákat okozhatnak.\n• Bár a művelet visszafordítható, egyes ECU-modulok gyári alaphelyzetbe állítást igényelhetnek.\n• Kizárólag a felhasználó felelős minden olyan anyagi vagy immateriális kárért, amely ennek a funkciónak a használatából ered.\n• A Cortex OBD2 Diagnostic Scanner nem tehető felelőssé az ezen változtatások által okozott meghibásodásokért vagy károkért. Meg kell erősítenie, hogy elolvasta és megértette ezt a figyelmeztetést.",
         "checkboxTitle": "MEGERŐSÍTÉS SZÜKSÉGES",
         "check1": "Elolvastam ezt a figyelmeztetést, és tudomásul veszem, hogy ez érintheti a jármű garanciáját.",
         "check2": "Tudomásul veszem, hogy a Cortex OBD2 Diagnostic Scanner nem vállal felelősséget az ebből a műveletből eredő hibákért vagy károkért.",
@@ -846,13 +846,13 @@
         "disclaimerCancel": "MÉGSEM",
         "disclaimerContinue": "FOLYTATÁS",
         "unsupportedTitle": "Nem támogatott",
-        "unsupportedMsg": "A csatlakoztatott OBD2 eszköz még nem támogatja ezt a funkciót.\n\nA rejtett funkciók írásához kompatibilis ELM327 v2.1+ adapter szükséges. A klónozó vagy szabványos adapterek nem tudják feldolgozni ezeket a parancsokat."
+        "unsupportedMsg": "A csatlakoztatott OBD2 eszköz még nem támogatja ezt a funkciót. A rejtett funkciók írásához kompatibilis ELM327 v2.1+ adapter szükséges. A klónozó vagy szabványos adapterek nem tudják feldolgozni ezeket a parancsokat."
     },
     "disconnectShort": "LEVÁL.",
     "obdTerminal": {
         "title": "OBD HEALTH & TERMINAL",
         "terminalTitle": "OBD TERMINÁL",
-        "terminalPlaceholder": "Írja be az alábbi parancsot az ECU-nak való küldéshez (pl. 010C, ATRV)",
+        "terminalPlaceholder": "Írja be az alábbi parancsot az ECU-nak való küldéshez",
         "inputPlaceholder": "Írja be a parancsot...",
         "sendButton": "KÜLDÉS",
         "statsTitle": "OBD EGÉSZSÉGÜGYI STATISZTIKA",
@@ -863,7 +863,7 @@
         "clone": "Klón",
         "requestResponseCount": "Kérések/válaszok száma:",
         "timeoutCount": "Időtúllépések száma:",
-        "recoveryCount": "Helyreállítási szám (helyreállítás):",
+        "recoveryCount": "Helyreállítási szám:",
         "diagnosticLogTitle": "DIAGNOSZTIKAI NAPLÓ",
         "clearButton": "CLEAR",
         "shareButton": "MEGOSZTÁS",
@@ -904,7 +904,7 @@
         "connecting": "Csatlakozás...",
         "error": "Hiba",
         "openSandbox": "DIAG",
-        "advancedTerminal": "Advanced Connection Terminal (DIAG)",
+        "advancedTerminal": "Advanced Connection Terminal",
         "terminalTitle": "Élő terminál és buszfigyelő",
         "pause": "SZÜNET",
         "resume": "FOLYTATÁS",
@@ -919,31 +919,31 @@
     "health": {
         "titleMenu": "OBD2 EGÉSZSÉG ÉS KÉPESSÉGEK",
         "adapterQuality": "ADAPTER MINŐSÉG ÉS TELJESÍTMÉNY",
-        "excellent": "KIVÁLÓ (EREDETI)",
-        "good": "JÓ (ALAP)",
+        "excellent": "KIVÁLÓ",
+        "good": "JÓ",
         "clone": "INKOMPATIBILIS / KLÓN",
         "firmware": "Firmware verzió:",
         "capScore": "Képesség pontszám",
-        "latency": "Késleltetés (RTT)",
+        "latency": "Késleltetés",
         "protocol": "Aktív protokoll",
         "featureSupport": "ALKALMAZÁS FUNKCIÓ MÁTRIX",
         "matrixReadCodes": "Hibakódok olvasása és törlése",
-        "matrixLiveSensors": "Valós idejű érzékelő-felügyelet (Alap)",
+        "matrixLiveSensors": "Valós idejű érzékelő-felügyelet",
         "matrixBattery": "Akkumulátor / feszültség teszt",
-        "matrixHighSpeed": "Nagy sebességű telemetria (20Hz)",
+        "matrixHighSpeed": "Nagy sebességű telemetria",
         "matrixCoding": "ECU kódolás és adaptációk",
         "active": "Aktív",
-        "degraded": "Leromlott (Lassú RTT)",
-        "locked": "Zárolt (Biztonságos mód)",
+        "degraded": "Leromlott",
+        "locked": "Zárolt",
         "warning": "BIZTONSÁGI ZÁROLT:",
         "lockExplain": "Az adaptere klón/hamis chipként lett megjelölve. Mivel a klón adapterek hiányoznak az időzítési pontossággal, és írási műveletek során károsíthatják a járművet, a kódolási és adaptációs funkciók zárolva vannak. Szerezzen be egy eredeti ELM327 v2.1 vagy vLinker eszközt a biztonságos kódoláshoz.",
         "vehiclePids": "JÁRMŰ ÉRZÉKELŐ ELLENŐRZŐLISTA",
-        "checklistPrompt": "Az alábbiakban felsorolt standard érzékelő paraméterek (PID-ek) támogatottak az Ön járművének ECU-ja által. Az ellenőrző jel nélküli érzékelőket az Ön járműve nem jelenti.",
+        "checklistPrompt": "Az alábbiakban felsorolt standard érzékelő paraméterek támogatottak az Ön járművének ECU-ja által. Az ellenőrző jel nélküli érzékelőket az Ön járműve nem jelenti.",
         "supportedBadge": "TÁMOGATOTT",
         "unsupportedBadge": "NEM TÁMOGATOTT",
         "backToExpertise": "BACK TO DIAGNOSTICS",
         "tabHardware": "HARDWARE",
-        "tabModes": "MODES (01-0A)",
+        "tabModes": "MODES",
         "tabTopology": "ECU NETWORK",
         "tabReadiness": "I/M READINESS",
         "tabVehicles": "VEHICLES",
@@ -951,34 +951,34 @@
         "atCommands": "AT Command Set Benchmark",
         "mode01": "Mode 01: Live Sensor Stream",
         "mode02": "Mode 02: Freeze Frame Snapshot",
-        "mode03": "Mode 03 & 07: Fault Codes (DTCs)",
+        "mode03": "Mode 03 & 07: Fault Codes",
         "mode04": "Mode 04: Clear DTCs & Reset MIL",
         "mode06": "Mode 06: On-Board & Misfire Tests",
         "mode08": "Mode 08: Bi-Directional Actuator Control",
-        "mode09": "Mode 09: Vehicle Identity (VIN/CALID/CVN)",
+        "mode09": "Mode 09: Vehicle Identity",
         "mode0A": "Mode 0A: Permanent Emission DTCs",
-        "modulePcm": "Powertrain / Engine (PCM / ECM)",
-        "moduleTcm": "Transmission Control (TCM)",
+        "modulePcm": "Powertrain / Engine",
+        "moduleTcm": "Transmission Control",
         "moduleAbs": "ABS / ESP Brake Control Module",
-        "moduleBcm": "Body Control Module (BCM / Comfort)",
-        "moduleSrs": "Airbag & Safety System (SRS)",
-        "moduleIpc": "Instrument Panel (IPC) & Gateway",
+        "moduleBcm": "Body Control Module",
+        "moduleSrs": "Airbag & Safety System",
+        "moduleIpc": "Instrument Panel & Gateway",
         "readinessStatus": "I/M Emission & Inspection Readiness",
         "readinessReady": "READY FOR INSPECTION",
         "readinessComplete": "COMPLETE",
         "readinessIncomplete": "INCOMPLETE",
         "monMisfire": "Misfire Monitor",
         "monFuel": "Fuel System Monitor",
-        "monComponent": "Comprehensive Components (CCM)",
+        "monComponent": "Comprehensive Components",
         "monCatalyst": "Catalyst Monitor",
         "monEvap": "EVAP System Monitor",
-        "monO2": "Oxygen Sensors (O2)",
+        "monO2": "Oxygen Sensors",
         "monO2Heater": "O2 Sensor Heaters",
         "monEgr": "EGR & VVT Variable Timing",
-        "catPassenger": "Passenger & Light Commercial (12V)",
-        "catMotorcycle": "Motorcycle (Euro 4/5 CAN & K-Line)",
-        "catTruck": "Heavy-Duty Commercial & Truck (J1939 24V)",
-        "catEv": "Electric & Hybrid Vehicles (BMS / SoH)"
+        "catPassenger": "Passenger & Light Commercial",
+        "catMotorcycle": "Motorcycle",
+        "catTruck": "Heavy-Duty Commercial & Truck",
+        "catEv": "Electric & Hybrid Vehicles"
     },
     "sensor": {
         "oilTemp": "Motorolaj hőmérséklete",
@@ -989,7 +989,7 @@
         "ethanol": "Etanol üzemanyag %",
         "timingAdvance": "Gyújtás időzítés előre",
         "baro": "Barometrikus nyomás",
-        "rpm": "Motor fordulatszám (RPM)",
+        "rpm": "Motor fordulatszám",
         "speed": "Jármű sebessége",
         "coolant": "Hűtőfolyadék hőmérséklete",
         "throttle": "Fojtószelep helyzete",
@@ -1016,8 +1016,8 @@
         "title": "REJTETT FUNKCIÓK ÉS UDS-KÓDOLÁS FELOLDÁSA",
         "subTitle": "ISO 14229 UDS hosszú kódolási és adaptációs motor",
         "batteryVoltage": "AKKUMULÁTOR FESZÜLTSÉG",
-        "voltageReady": "Biztonságos (ECU kódolási írásra kész)",
-        "voltageLocked": "Alacsony feszültség (kódolás zárolva, olvasás aktív)",
+        "voltageReady": "Biztonságos",
+        "voltageLocked": "Alacsony feszültség",
         "locked": "ZÁRVA",
         "ready": "KÉSZ",
         "allMarks": "MINDEN JELZÉS",
@@ -1043,7 +1043,7 @@
                 "desc": "Folyamatosan világítja az első irányjelzőket 20%-os tompítás mellett parkolólámpákkal."
             },
             "vag_drl_menu_toggle": {
-                "name": "Daytime Running Lights (DRL) menü váltása",
+                "name": "Daytime Running Lights menü váltása",
                 "desc": "Engedélyezi a DRL BE/KI jelölőnégyzetet az infotainment járműbeállítások menüjében."
             },
             "vag_tear_wiping": {
@@ -1072,14 +1072,14 @@
             },
             "bmw_start_stop_memory": {
                 "name": "Auto Start-Stop memória mód",
-                "desc": "Emlékszik a legutóbbi Auto Start-Stop állapotra (KI/BE) a jármű újraindításakor."
+                "desc": "Emlékszik a legutóbbi Auto Start-Stop állapotra a jármű újraindításakor."
             },
             "bmw_digital_speedometer": {
                 "name": "Digitális sebességmérő kijelző",
                 "desc": "Azonnali digitális sebességű numerikus megjelenítési opciót ad a fürt képernyőhöz."
             },
             "bmw_sport_displays": {
-                "name": "Sport kijelzők (HP és Nm műszerek)",
+                "name": "Sport kijelzők",
                 "desc": "Élő lóerő és nyomaték dinamikus tárcsákat tesz lehetővé az iDrive képernyőjén."
             },
             "bmw_acoustic_lock_sound": {
@@ -1087,7 +1087,7 @@
                 "desc": "A riasztórendszer csipogását bocsátja ki a jármű zárásakor vagy kinyitásakor."
             },
             "bmw_mirror_fold_delay_zero": {
-                "name": "Azonnali tükörbehajtás (0,0 s késleltetés)",
+                "name": "Azonnali tükörbehajtás",
                 "desc": "Az oldalsó tükrök azonnal behajthatók a zár gomb megnyomására, késleltetés nélkül."
             },
             "bmw_tpms_tire_temperature": {
@@ -1111,7 +1111,7 @@
                 "desc": "Megerősítő kürt csipogás hallatszik a jármű ajtajának bezárásakor."
             },
             "renault_shift_indicator": {
-                "name": "Sebességváltó visszajelző (GSI)",
+                "name": "Sebességváltó visszajelző",
                 "desc": "Aktiválja a környezetbarát vezetési váltás FEL/LE nyilait a műszercsoportban."
             },
             "ford_double_horn_honk_disable": {
@@ -1139,7 +1139,7 @@
                 "desc": "Alacsony sebességű kanyarokban világít a kanyar ködlámpája."
             },
             "vag_traffic_sign_recognition": {
-                "name": "Közlekedési tábla felismerés (VZE)",
+                "name": "Közlekedési tábla felismerés",
                 "desc": "A kamera által észlelt sebességtáblákat jeleníti meg a műszercsoportban és a HUD-ban."
             },
             "vag_ambient_color_palette_30": {
@@ -1155,7 +1155,7 @@
                 "desc": "A kék Alpina aláírás témát alkalmazza a digitális műszercsoportra."
             },
             "bmw_video_in_motion": {
-                "name": "Videó mozgásban (VIM)",
+                "name": "Videó mozgásban",
                 "desc": "Vezetés közben feloldja az USB-videólejátszást az iDrive képernyőjén."
             },
             "bmw_sport_plus_mode_unlock": {
@@ -1167,7 +1167,7 @@
                 "desc": "Megjeleníti az AMG olajhőmérsékletet, a sebességváltó hőmérsékletet, a köridőt és a G-mérőt."
             },
             "mercedes_agility_mode_enable": {
-                "name": "Agility (A) átviteli mód",
+                "name": "Agility átviteli mód",
                 "desc": "Feloldja az ultrareszponzív Agility váltóprogramot a 7G/9G-Tronic sebességváltóban."
             },
             "mercedes_drl_brightness_boost": {
@@ -1191,7 +1191,7 @@
                 "desc": "Az oldalsó tükröket automatikusan behajtja a BCM központi zár parancsával."
             },
             "ford_bambi_mode_fog_light": {
-                "name": "Bambi mód (távolsági fényszóró + ködlámpa)",
+                "name": "Bambi mód",
                 "desc": "Lehetővé teszi, hogy a ködlámpák bekapcsolva maradjanak, amikor a távolsági fényszórók aktiválva vannak."
             },
             "ford_st_rs_boot_animation": {
@@ -1207,7 +1207,7 @@
                 "desc": "Ha lenyomva tartja a kulcstartó nyitógombját, az összes elektromos ablakemelőt lehajtja."
             },
             "toyota_auto_lock_shift_p": {
-                "name": "Automatikusan záródó ajtók a sebességváltón (P -> D)",
+                "name": "Automatikusan záródó ajtók a sebességváltón",
                 "desc": "Automatikusan bezárja az összes ajtót, ha Parkoló helyzetből vált."
             },
             "peugeot_icockpit_theme_unlock": {
@@ -1223,11 +1223,11 @@
                 "desc": "Automatikusan kihajtja az oldalsó tükröket, amikor intelligens kulccsal közeledik a járműhöz."
             },
             "hyundai_one_touch_turn_7_flashes": {
-                "name": "Egyérintéses sávváltás jelzés (7 villanás)",
+                "name": "Egyérintéses sávváltás jelzés",
                 "desc": "Az egyérintéses sávváltás villogásának időtartamát 7 villanásra állítja be."
             },
             "hyundai_svm_camera_speed_extend": {
-                "name": "360°-os térhatású kamera sebességnövelő (20 km/h)",
+                "name": "360°-os térhatású kamera sebességnövelő",
                 "desc": "Aktívan tartja a 360 fokos parkolókamerát 20 km/h haladási sebességig."
             },
             "hyundai_n_performance_exhaust_flap": {
@@ -1235,7 +1235,7 @@
                 "desc": "Beállítja az aktív kipufogószelep alapértelmezett helyzetét NYITVA a motor indításakor."
             },
             "vag_rain_closing_sunroof": {
-                "name": "Esőzárás (Regenschließen)",
+                "name": "Esőzárás",
                 "desc": "Parkolás közben eső észlelésekor automatikusan bezárja a napfénytetőt és az ablakokat."
             },
             "bmw_launch_control_unlock": {
@@ -1247,15 +1247,15 @@
                 "desc": "Feloldja a dinamikus, többzónás színciklus-animációt az MBUX belső világításban."
             },
             "ford_trailer_brake_activation": {
-                "name": "Trailer Brake Controller (TBC) engedélyezése",
+                "name": "Trailer Brake Controller engedélyezése",
                 "desc": "Engedélyezi az integrált pótkocsi fékvezérlő menüjét a műszercsoportban."
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
-                "name": "AFM/DFM V8 hengerzár (nincs V4 leesés)",
+                "name": "AFM/DFM V8 hengerzár",
                 "desc": "Állandóan 8 hengeres üzemmódban zárja a motort, hogy megakadályozza a V4 vibrációját."
             },
             "gm_remote_start_time_extend": {
-                "name": "Távoli indítás időtartamának meghosszabbítása (20 perc)",
+                "name": "Távoli indítás időtartamának meghosszabbítása",
                 "desc": "10 percről 20 percre meghosszabbítja a gyári kulcstartó távoli motorindítási idejét."
             },
             "dodge_srt_performance_pages": {
@@ -1279,7 +1279,7 @@
                 "desc": "Lehetővé teszi a kézi akkumulátor-előmelegítő kapcsolót az egyenáramú gyorstöltés előtt."
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "Driver Monitoring (DMS) kamera érzékenységének csökkentése",
+                "name": "Driver Monitoring kamera érzékenységének csökkentése",
                 "desc": "Csökkenti a túlérzékeny szemkövető fáradtságra vonatkozó figyelmeztetéseket a kormányoszlopon."
             },
             "honda_walk_away_auto_lock": {
@@ -1287,7 +1287,7 @@
                 "desc": "Automatikusan bezárja az összes ajtót, ha a vezető 2 méterrel távolabb lép a kulcstartóval."
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "Auto Vehicle Hold (AVH) memória mód",
+                "name": "Auto Vehicle Hold memória mód",
                 "desc": "Emlékszik az AVH féktartás BE/KI állapotára a gyújtási ciklusokon keresztül."
             },
             "volvo_start_stop_default_off": {
@@ -1319,12 +1319,12 @@
                 "desc": "Az ajtónyitáskor az elektromos vezetőülést 5 cm-rel hátratolja a könnyű beszállás érdekében."
             },
             "vag_hba_memory_state": {
-                "name": "High-Beam Assist (HBA) memóriamegtartás",
+                "name": "High-Beam Assist memóriamegtartás",
                 "desc": "Emlékszik a távolsági fényszóró asszisztens bekapcsolt állapotára a gyújtás újraindítási ciklusai során."
             },
             "vag_battery_soc_display": {
-                "name": "Az akkumulátor töltöttségi állapotának (% SOC) kijelzése",
-                "desc": "Az akkumulátor pontos töltöttségi százalékát (% SOC) mutatja a műszercsoporton, ha lenyomva tartja a kioldó gombot."
+                "name": "Az akkumulátor töltöttségi állapotának kijelzése",
+                "desc": "Az akkumulátor pontos töltöttségi százalékát mutatja a műszercsoporton, ha lenyomva tartja a kioldó gombot."
             },
             "bmw_idrive7_m_animation": {
                 "name": "iDrive 7/8 M-Performance Startup Animation",
@@ -1347,7 +1347,7 @@
                 "desc": "Letiltja a motoros biztonsági öv-hosszabbító kart a 4-es és a 2-es sorozatú kupékon."
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "Automatikus ülés- és kormánykerék fűtési hőmérséklet (+5°C)",
+                "name": "Automatikus ülés- és kormánykerék fűtési hőmérséklet",
                 "desc": "Bekapcsolja az automatikus ülés- és kormányfűtést, ha a környezeti hőmérséklet 5°C alá esik."
             },
             "mercedes_amg_track_pace_unlock": {
@@ -1356,7 +1356,7 @@
             },
             "mercedes_drive_mode_last_memory": {
                 "name": "Dynamic Select Last Drive Mode Memória",
-                "desc": "Emlékszik az utoljára kiválasztott vezetési módra (Egyéni / Sport) a jármű újraindításakor."
+                "desc": "Emlékszik az utoljára kiválasztott vezetési módra a jármű újraindításakor."
             },
             "mercedes_proximity_360_camera_auto": {
                 "name": "Közelségérzékelő automatikus 360°-os kameranézet",
@@ -1367,27 +1367,27 @@
                 "desc": "Lehetővé teszi a klímaszabályozást, az ülésfűtést és a légáramlás irányát érintő érintőképernyőt."
             },
             "ford_turn_signal_5_flashes": {
-                "name": "Egyérintéses sávváltás jelzés (5 villanás)",
+                "name": "Egyérintéses sávváltás jelzés",
                 "desc": "3-ról 5 villanásra növeli az egyérintéses sávváltás irányjelzőjének időtartamát."
             },
             "ford_auto_engine_shutdown_disable": {
                 "name": "30 perces üresjárati automatikus motorleállítás felülbírálása",
-                "desc": "Megakadályozza az automatikus motorleállást 30 perc üresjárat után (kempingezéshez/konnektoros használathoz)."
+                "desc": "Megakadályozza az automatikus motorleállást 30 perc üresjárat után."
             },
             "ev_battery_preheat_manual_switch": {
-                "name": "EV akkumulátor előmelegítés kézi kapcsoló (gyors egyenáramú töltés előkészítése)",
+                "name": "EV akkumulátor előmelegítés kézi kapcsoló",
                 "desc": "Lehetővé teszi az akkumulátor kézi előmelegítését 25°C-ra az egyenáramú gyorstöltés előtt, navigációs útvonal nélkül."
             },
             "ev_v2l_power_output_expand": {
-                "name": "V2L (Vehicle-to-Load) 220 V kimeneti teljesítmény bővítés (3,6 kW)",
+                "name": "V2L 220 V kimeneti teljesítmény bővítés",
                 "desc": "2,2 kW-ról 3,6 kW-ra bővíti a V2L külső 220 V AC háztartási konnektorok korlátját."
             },
             "ev_one_pedal_regen_force_level3": {
                 "name": "Egypedálos meghajtás Maximális regeneratív fékezés alapértelmezés",
-                "desc": "A maximális regeneratív fékezést (One-Pedal stop mód) állítja be alapértelmezettként a jármű indításakor."
+                "desc": "A maximális regeneratív fékezést állítja be alapértelmezettként a jármű indításakor."
             },
             "byd_soc_max_charge_target_limit": {
-                "name": "BYD akkumulátor egészségvédelmi maximális töltési korlát (80% / 90%)",
+                "name": "BYD akkumulátor egészségvédelmi maximális töltési korlát",
                 "desc": "A maximális AC/DC töltési határértéket 80%-ra vagy 90%-ra állítja a Blade akkumulátor élettartamának meghosszabbítása érdekében."
             },
             "byd_dmi_forced_pure_ev_speed_override": {
@@ -1395,7 +1395,7 @@
                 "desc": "Gátolja a benzinmotor beindulását EV üzemmódban 130 km/h-ig még teljes gázadás mellett is."
             },
             "byd_vtol_v2v_rescue_charge_mode": {
-                "name": "BYD VTOL (Vehicle-to-Vehicle) mentési töltési mód",
+                "name": "BYD VTOL mentési töltési mód",
                 "desc": "Feloldja a külső váltakozó áramú kimenetet, hogy töltse az úton elakadt elektromos járműveket."
             },
             "hyundai_ipedal_memory_lock": {
@@ -1411,7 +1411,7 @@
                 "desc": "Kényszeríti a hőszivattyút / PTC elektromos fűtést a kabinklímához benzinmotor indítása nélkül."
             },
             "vag_taycan_ess_sound_profile_swap": {
-                "name": "Electric Sport Sound (ESS) Taycan / RS e-tron profil",
+                "name": "Electric Sport Sound Taycan / RS e-tron profil",
                 "desc": "Az elektromos vezetési hangprofilt Porsche Taycan GTS vagy Audi RS e-tron GT hanggenerátorra módosítja."
             },
             "vag_meb_daily_charge_target_menu": {
@@ -1419,7 +1419,7 @@
                 "desc": "Gyors kapcsolósávot ad a MIB képernyőn, hogy váltson a 80%-os napi akkumulátor-ellátás és a 100%-os utazási töltés között."
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "GTE / E-módú motorgenerátor akkumulátor-töltöttség (80%)",
+                "name": "GTE / E-módú motorgenerátor akkumulátor-töltöttség",
                 "desc": "Kényszeríti a belső égésű motort, hogy generátorként működjön, és vezetés közben akár 80%-ra feltölti a nagyfeszültségű akkumulátort."
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
@@ -1427,19 +1427,19 @@
                 "desc": "Feloldja a Hans Zimmer akusztikus M-Performance elektromos gyorsulási hangprofiljait az i4-en és az iX-en."
             },
             "bmw_phev_max_edrive_140kmh": {
-                "name": "PHEV MAX eDrive Pure Electric Sebességmennyezet (140 km/h)",
+                "name": "PHEV MAX eDrive Pure Electric Sebességmennyezet",
                 "desc": "A 330e / 530e Plug-in hibridek maximális tiszta elektromos sebességét 140 km/h-ra növeli."
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "AC otthoni töltő maximális áramkorlát választója (6A - 32A)",
-                "desc": "AC otthoni töltőáram-korlátozóval (6A / 10A / 16A / 32A) hozzáadódik az otthoni áramkör túlterhelésének megelőzése érdekében."
+                "name": "AC otthoni töltő maximális áramkorlát választója",
+                "desc": "AC otthoni töltőáram-korlátozóval hozzáadódik az otthoni áramkör túlterhelésének megelőzése érdekében."
             },
             "toyota_hybrid_ev_mode_override": {
                 "name": "Toyota / Lexus EV módú fojtószelep felülírás elnyomása",
                 "desc": "Megakadályozza a benzinmotor kényszerindítását gyorsítás közben, amikor az EV mód gomb aktív."
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "Toyota / Lexus nagyfeszültségű akkumulátoros hűtőventilátor-erősítés (+30%)",
+                "name": "Toyota / Lexus nagyfeszültségű akkumulátoros hűtőventilátor-erősítés",
                 "desc": "+30%-kal növeli a hibrid vontatóakkumulátor hűtőventilátorának sebességét, hogy megakadályozza a hőbomlást meleg éghajlaton."
             },
             "tesla_sentry_high_bitrate_video": {
@@ -1447,7 +1447,7 @@
                 "desc": "Növeli a Sentry Mode kamera videorögzítési bitsebességét a kristálytiszta rendszámláthatóság érdekében."
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "Tesla kabin túlmelegedés elleni védelmi hőmérsékleti küszöbértéke (30°C)",
+                "name": "Tesla kabin túlmelegedés elleni védelmi hőmérsékleti küszöbértéke",
                 "desc": "40°C-ról 30°C-ra csökkenti a kabin túlmelegedés elleni védelemének hőmérsékletét a belső tér megőrzése érdekében."
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
@@ -1491,7 +1491,7 @@
                 "desc": "Feloldja a köridőt és a szektormegosztott kijelzőt a műszercsoporton."
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "Motorfékvezérlés (EBC) szintbeállítása",
+                "name": "Motorfékvezérlés szintbeállítása",
                 "desc": "Beállítja a hátsó kerék lassítási nyomatékát a kemény kanyarban történő fékezés során."
             },
             "ducati_cruise_control_retrofit_enable": {
@@ -1536,15 +1536,15 @@
             },
             "yamaha_ride_by_wire_throttle_map": {
                 "name": "Ride-by-Wire fojtószelep-térkép előre beállított választó",
-                "desc": "Váltás az A-mód (agresszív), az STD és a B-mód (sima) fojtószelep-térképek között."
+                "desc": "Váltás az A-mód, az STD és a B-mód fojtószelep-térképek között."
             },
             "yamaha_tft_track_theme_unlock": {
                 "name": "TFT Track Display Layout & Shift Light Unlock",
                 "desc": "Feloldja az R1/MT-09 SP síncsoport-elrendezést és a programozható fordulatszám-váltó lámpákat."
             },
             "yamaha_launch_control_sensitivity": {
-                "name": "Launch Control System (LCS) Rev Ceiling",
-                "desc": "Beállítja az indítási vezérlést a fordulatszám tartása mellett (8000-10 000 RPM tartomány)."
+                "name": "Launch Control System Rev Ceiling",
+                "desc": "Beállítja az indítási vezérlést a fordulatszám tartása mellett."
             },
             "yamaha_heated_grips_accessory_enable": {
                 "name": "Eredeti fűtött markolat TFT menüintegráció",
@@ -1595,7 +1595,7 @@
                 "desc": "Lehetővé teszi az akkumulátor kézi hőkezelését az egyenáramú gyorstöltés előtt."
             },
             "byd_v2l_220v_outlet_power_expansion": {
-                "name": "V2L (Vehicle-to-Load) 220 V kimeneti teljesítmény bővítés (3,6 kW)",
+                "name": "V2L 220 V kimeneti teljesítmény bővítés",
                 "desc": "Kibővíti a külső V2L kisülési teljesítmény mennyezetét 2,2 kW-ról maximum 3,6 kW-ra."
             },
             "byd_one_pedal_regen_default_max": {
@@ -1659,7 +1659,7 @@
                 "desc": "Csökkenti a belső megfigyelő kamera hamis pozitív figyelemelterelő riasztásait."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Utólag beépíthető első/hátsó parkolási távolságszabályzó (PDC) kódolás",
+                "name": "Utólag beépíthető első/hátsó parkolási távolságszabályzó kódolás",
                 "desc": "Regisztrálja az utángyártott vagy OEM parkolóérzékelő modult a Gateway telepítési listájában."
             },
             "retrofit_360_camera_activation": {
@@ -1683,7 +1683,7 @@
                 "desc": "Engedélyezi a vezeték nélküli töltő állapotjelző LED-jét, és a telefon az emlékeztető előugró ablak mögött marad."
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "Utólag beépíthető adaptív sebességtartó automatika (ACC) első radarmodul",
+                "name": "Utólag beépíthető adaptív sebességtartó automatika első radarmodul",
                 "desc": "Kódolja az utólag beépített első távolságradar egységet a CAN busz járműhálózatba."
             },
             "retrofit_traffic_sign_camera_activation": {
@@ -1731,7 +1731,7 @@
                 "desc": "Lehetővé teszi a gyors kézmozdulatokat a rejtett műszaki diagnosztikai képernyők eléréséhez."
             },
             "easteregg_seasonal_cluster_theme_effect": {
-                "name": "Szezonális időjárási fürt téma fedvény (hópehely/eső)",
+                "name": "Szezonális időjárási fürt téma fedvény",
                 "desc": "Animált hópehely vagy eső részecskék hátteret ad hozzá a mérőfürthöz télen."
             },
             "easteregg_valet_mode_prank_warning_message": {
@@ -1739,7 +1739,7 @@
                 "desc": "Humorosan szigorú figyelmeztető üzenetet jelenít meg a műszerfalon, ha az inas módot túllépik."
             },
             "adas_lane_keep_assist_gentle_curve": {
-                "name": "Lane Keep Assist (LKA) finom kormányzási beavatkozási ív",
+                "name": "Lane Keep Assist finom kormányzási beavatkozási ív",
                 "desc": "Progresszív forgatónyomaték-beavatkozással tompítja a hirtelen kormányrántásokat."
             },
             "adas_lka_last_state_memory_mode": {
@@ -1747,11 +1747,11 @@
                 "desc": "Megakadályozza, hogy az LKA automatikusan újra BE kapcsoljon a gyújtás minden újraindításakor."
             },
             "adas_acc_default_follow_distance": {
-                "name": "Adaptív sebességtartó automatika (ACC) alapértelmezett előre beállított távolság",
-                "desc": "Beállítja az alapértelmezett hézagbeállítást (1–4 bar), amikor az ACC be van kapcsolva."
+                "name": "Adaptív sebességtartó automatika alapértelmezett előre beállított távolság",
+                "desc": "Beállítja az alapértelmezett hézagbeállítást, amikor az ACC be van kapcsolva."
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "ACC utazósebesség-növekmény fokozatválasztó (+5 / +10 km/h)",
+                "name": "ACC utazósebesség-növekmény fokozatválasztó",
                 "desc": "1 km/h-ról 5 km/h-ra változtatja a kormánykeréken megnyomott sebességgombok fokozatát."
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
@@ -1771,15 +1771,15 @@
                 "desc": "Dinamikus kamerakép-összefűzési kalibrációt hajt végre közúti vezetés közben."
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "Kormányszög-érzékelő (SAS) nullapont kalibrálása",
+                "name": "Kormányszög-érzékelő nullapont kalibrálása",
                 "desc": "Visszaállítja a kormánytengely szögét 0,0°-ra a kerékbeállítást követően."
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "Hátsó keresztirányú forgalom figyelmeztetés (RCTA) érzékelési tartománya",
+                "name": "Hátsó keresztirányú forgalom figyelmeztetés érzékelési tartománya",
                 "desc": "Növeli az oldalradar észlelési távolságát a tolatás közben közeledő járművek számára."
             },
             "adas_aeb_emergency_braking_threshold_preview": {
-                "name": "Automatikus vészfékezés (AEB) figyelmeztetés hatékonysága",
+                "name": "Automatikus vészfékezés figyelmeztetés hatékonysága",
                 "desc": "Beállítja a korai és késői figyelmeztető csengőhang időzítését az ütközési riasztásokhoz."
             },
             "adas_night_vision_camera_alignment": {
@@ -1827,12 +1827,12 @@
                 "desc": "Megakadályozza, hogy a motor automatikusan leálljon 30 perc parkolás után."
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "N Grin Shift (NGS) 20 másodperces Overboost utólagos feloldás",
+                "name": "N Grin Shift 20 másodperces Overboost utólagos feloldás",
                 "desc": "Engedélyezi a kormánykerék NGS gomb túlnyomás funkcióját az ECU-ban."
             },
             "hyundai_smart_tailgate_approach_distance": {
                 "name": "Intelligens, kéz nélküli csomagtérajtó közelségérzékelés",
-                "desc": "Beállítja az állás késleltetési idejét (3 és 1 másodperc között), mielőtt az intelligens csomagtérajtó automatikusan kinyílik."
+                "desc": "Beállítja az állás késleltetési idejét, mielőtt az intelligens csomagtérajtó automatikusan kinyílik."
             },
             "hyundai_digital_cluster_n_performance_theme": {
                 "name": "N Teljesítményű digitális műszercsoport mérőelrendezés",
@@ -1855,23 +1855,23 @@
                 "desc": "Testreszabja a távolságokat autonóm Super Cruise autópályán történő vezetés közben."
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "Head-Up Display (HUD) pozíció és dőlésszögű nullapont kalibrálás",
+                "name": "Head-Up Display pozíció és dőlésszögű nullapont kalibrálás",
                 "desc": "Visszaállítja a szélvédő HUD kivetítő képszögét és a horizontális nulla szintet."
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
-                "name": "AFM / DFM henger deaktiválás felülbírálása (mindig V8 mód)",
+                "name": "AFM / DFM henger deaktiválás felülbírálása",
                 "desc": "Letiltja az Active Fuel Management hengeresést, hogy a motor 8 hengeres üzemmódban működjön."
             },
             "dodge_ram_truck_fog_lights_with_high_beam": {
-                "name": "RAM teherautó ködlámpák távolsági fénnyel (magas-alacsony köd-kombináció)",
+                "name": "RAM teherautó ködlámpák távolsági fénnyel",
                 "desc": "Megakadályozza, hogy a ködlámpák automatikusan kikapcsoljanak, amikor a távolsági fényszóró be van kapcsolva."
             },
             "toyota_keyless_window_down": {
-                "name": "Toyota kulcstartó ablak nyitva (Hold Unlock)",
+                "name": "Toyota kulcstartó ablak nyitva",
                 "desc": "Ha lenyomva tartja az UNLOCK gombot a távirányítón, minden elektromos ablakemelőt lehajt."
             },
             "toyota_seatbelt_chime_disable": {
-                "name": "Toyota utas biztonsági öv riasztó némítása (parkoló/terepen)",
+                "name": "Toyota utas biztonsági öv riasztó némítása",
                 "desc": "Letiltja a tartós akusztikus biztonsági öv figyelmeztető hangjelzést az utasülésben."
             },
             "honda_walkaway_auto_lock": {
@@ -1883,7 +1883,7 @@
                 "desc": "Beállítja a 180 km/h gyári sebességkorlátot a pálya / autópálya teljesítményhez."
             },
             "byd_v2l_3kw_power_unlock": {
-                "name": "BYD Vehicle-to-Load (V2L) 3,6 kW AC kimeneti mód",
+                "name": "BYD Vehicle-to-Load 3,6 kW AC kimeneti mód",
                 "desc": "Lehetővé teszi a külső 220V/3.6kW V2L AC kisülési portot kempingberendezésekhez."
             },
             "xiaomi_su7_drift_mode_unlock": {
@@ -1891,15 +1891,15 @@
                 "desc": "Aktiválja a 100%-os hátsó motor nyomaték előfeszítést és az ESC Track Drift módot."
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset (Flexible Interval)",
+                "name": "Oil Change Service Reset",
                 "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
             },
             "vag_epb_service_mode": {
-                "name": "Elektronikus rögzítőfék (EPB) fékbetét szervizmód",
+                "name": "Elektronikus rögzítőfék fékbetét szervizmód",
                 "desc": "Visszahúzza a hátsó EPB féknyereg dugattyúit a hátsó fékbetét és a forgórész cseréjéhez."
             },
             "bmw_bms_battery_registration": {
-                "name": "Intelligens akkumulátor-érzékelő (IBS) akkumulátor-regisztráció",
+                "name": "Intelligens akkumulátor-érzékelő akkumulátor-regisztráció",
                 "desc": "Regisztrálja az új 12V-os AGM/Olom-savas akkumulátor cserét a DME/DDE motorkezelésben."
             },
             "bmw_motorrad_service_indicator_reset": {
@@ -1912,10 +1912,10 @@
             },
             "byd_bms_isolation_self_test": {
                 "name": "BYD blade akkumulátor nagyfeszültségű leválasztási önteszt",
-                "desc": "Elvégzi a nagyfeszültségű rendszer (400V/800V) szivárgás- és ellenállásdiagnosztikáját a BMS-ben."
+                "desc": "Elvégzi a nagyfeszültségű rendszer szivárgás- és ellenállásdiagnosztikáját a BMS-ben."
             },
             "vag_drl_brightness_multi": {
-                "name": "Nappali futólámpák (DRL) fényerejének beállítása",
+                "name": "Nappali futólámpák fényerejének beállítása",
                 "desc": "Állítsa be a LED DRL intenzitási szintjét tompított fényszóró/parkoló üzemmódhoz."
             },
             "bmw_comfort_turn_signal_cycles": {
@@ -1923,51 +1923,51 @@
                 "desc": "Válassza ki, hány pislogás következzen be az irányjelző kar gyors megérintésekor."
             },
             "bmw_oil_service_reset": {
-                "name": "CBS motorolaj visszaállítása (BMW)",
-                "desc": "Visszaállítja 100%-ra a Condition Based Service (CBS) olaj élettartamát."
+                "name": "CBS motorolaj visszaállítása",
+                "desc": "Visszaállítja 100%-ra a Condition Based Service olaj élettartamát."
             },
             "generic_oil_service_reset": {
                 "name": "Univerzális olajkarbantartási jelző visszaállítása",
                 "desc": "Törli a műszerfal olajkarbantartásra figyelmeztető lámpáját a támogatott OBD2/UDS ECU-kon."
             },
             "vag_epb_pad_change": {
-                "name": "EPB fékbetét csere üzemmód (VAG)",
+                "name": "EPB fékbetét csere üzemmód",
                 "desc": "Visszahúzza az elektronikus rögzítőféknyergeket a hátsó fékbetét szervizeléséhez."
             },
             "bmw_epb_pad_change": {
-                "name": "EPB féküzemmód (BMW)",
+                "name": "EPB féküzemmód",
                 "desc": "A rögzítőfék működtetőjét szervizhelyzetbe nyitja a hátsó betét cseréjéhez."
             },
             "mb_epb_pad_change": {
-                "name": "EPB Pad Fitting Mode (Mercedes-Benz)",
+                "name": "EPB Pad Fitting Mode",
                 "desc": "A rögzítőfék orsóját a műhelyhelyzetbe engedi a fékezéshez."
             },
             "vag_dpf_regen": {
-                "name": "DPF Service Regeneration Trigger (VAG)",
-                "desc": "Megindítja az álló dízel részecskeszűrő (DPF) koromégési ciklusát."
+                "name": "DPF Service Regeneration Trigger",
+                "desc": "Megindítja az álló dízel részecskeszűrő koromégési ciklusát."
             },
             "bmw_dpf_regen": {
-                "name": "DPF kényszerített regenerációs trigger (BMW)",
+                "name": "DPF kényszerített regenerációs trigger",
                 "desc": "Kéri a DDE ECU-t, hogy indítsa el az aktív részecskeszűrő regenerálási rutint."
             },
             "psa_dpf_regen": {
-                "name": "DPF-regenerálási kérelem (Peugeot/Citroën)",
+                "name": "DPF-regenerálási kérelem",
                 "desc": "Kiváltja a helyhez kötött DPF regenerációt a HDi dízelmotoros ECU-k számára."
             },
             "bmw_bms_battery_register": {
-                "name": "BMS akkumulátorcsere regisztráció (BMW)",
+                "name": "BMS akkumulátorcsere regisztráció",
                 "desc": "Regisztrálja az új elemcserét a DME/DDE intelligens akkumulátorérzékelővel."
             },
             "mb_bms_battery_register": {
-                "name": "Akkumulátor regisztráció és visszaállítás (Mercedes-Benz)",
+                "name": "Akkumulátor regisztráció és visszaállítás",
                 "desc": "Új elem behelyezése után nullázza az akkumulátor öregedési számlálóját a SAM modulban."
             },
             "vag_sas_calibrate": {
-                "name": "Kormányszög-érzékelő (SAS) kalibrálása (VAG)",
+                "name": "Kormányszög-érzékelő kalibrálása",
                 "desc": "Kalibrálja a G85 kormányszög-érzékelő nullapontját az ABS/ESP ECU-hoz."
             },
             "toyota_sas_calibrate": {
-                "name": "Kormányzási szög nullapont kalibráció (Toyota)",
+                "name": "Kormányzási szög nullapont kalibráció",
                 "desc": "A Skid Control ECU-ban a kormányszög-érzékelő nullpont-kalibrálását végzi."
             },
             "generic_tba_adapt": {
@@ -1979,23 +1979,23 @@
                 "desc": "Alaphelyzetbe állítja az elektronikus kézifék-nyerge kopásszámlálót és kalibrálja a légrést."
             },
             "vag_dsg_reset": {
-                "name": "DSG sebességváltó alapbeállításainak visszaállítása (VAG)",
+                "name": "DSG sebességváltó alapbeállításainak visszaállítása",
                 "desc": "Visszaállítja a tengelykapcsoló kapcsolódási pontjait és a váltószelep-adaptációkat a DSG/S-Tronichoz."
             },
             "bmw_zf_reset": {
-                "name": "ZF 8HP sebességváltó adaptáció visszaállítása (BMW)",
+                "name": "ZF 8HP sebességváltó adaptáció visszaállítása",
                 "desc": "Törli az EGS sebességváltó váltási idejét és a nyomásadaptáció értékeit."
             },
             "bmw_brake_fluid_reset": {
-                "name": "Fékfolyadék szervizintervallum visszaállítása (BMW)",
-                "desc": "Alaphelyzetbe állítja a 2 éves fékfolyadékcsere időzítőt (CBS)."
+                "name": "Fékfolyadék szervizintervallum visszaállítása",
+                "desc": "Alaphelyzetbe állítja a 2 éves fékfolyadékcsere időzítőt."
             },
             "ford_injector_code": {
-                "name": "Injektor korrekciós tényező kódolása (Ford)",
+                "name": "Injektor korrekciós tényező kódolása",
                 "desc": "A dízel befecskendezők 16 karakteres IQA kódjait programozza a PCM-be."
             },
             "bmw_injector_code": {
-                "name": "Üzemanyag befecskendező szelep áramlási sebesség kódolása (BMW)",
+                "name": "Üzemanyag befecskendező szelep áramlási sebesség kódolása",
                 "desc": "Beírja a kicserélt üzemanyag-befecskendezők energiakalibrációs értékeit a DME-be."
             },
             "generic_headlight_aim": {
@@ -2003,463 +2003,463 @@
                 "desc": "Beállítja a referencia nulla pozíciót az adaptív, automatikusan beállító fényszórómotorokhoz."
             },
             "bmw_12v_battery_reg": {
-                "name": "12V-os segédakkumulátor regisztráció (BMW)",
+                "name": "12V-os segédakkumulátor regisztráció",
                 "desc": "Regisztrálja a kiegészítő AGM indító/támogató akkumulátor cseréjét a PCU-ban."
             },
             "vag_comfort_turn_signal": {
-                "name": "Komfort irányjelző villogásszáma (VAG)",
+                "name": "Komfort irányjelző villogásszáma",
                 "desc": "A sávváltási villogó ciklusszámát 3, 4 és 5 villanás között állítja be."
             },
             "vag_coming_home_duration": {
-                "name": "Hazatérési/hazalépési fény időtartama (VAG)",
-                "desc": "Beállítja a fényszóró megvilágításának időzítőjét a jármű lezárása után (10 mp - 60 mp)."
+                "name": "Hazatérési/hazalépési fény időtartama",
+                "desc": "Beállítja a fényszóró megvilágításának időzítőjét a jármű lezárása után."
             },
             "vag_remote_windows": {
-                "name": "Távoli kényelmi ablakvezérlés (VAG)",
+                "name": "Távoli kényelmi ablakvezérlés",
                 "desc": "Lehetővé teszi az elektromos ablakemelők nyitását és zárását a távirányító hosszú megnyomásával."
             },
             "vag_auto_lock_15kmh": {
-                "name": "Automatikus ajtózár 15 km/h sebességnél (VAG)",
+                "name": "Automatikus ajtózár 15 km/h sebességnél",
                 "desc": "Automatikusan zár minden ajtót, ha a jármű sebessége eléri a 15 km/h-t."
             },
             "vag_sfd_unlock_prep": {
-                "name": "SFD Gateway Protection Status Prep (VAG 2020+)",
+                "name": "SFD Gateway Protection Status Prep",
                 "desc": "Előkészíti az MQB-evo SFD átjáró token munkamenetet védett DID-k írásához."
             },
             "bmw_asd_deactivate": {
-                "name": "Active Sound Design (ASD) deaktiválás (BMW)",
+                "name": "Active Sound Design deaktiválás",
                 "desc": "Elnémítja a szintetikus motorhangot a kabin hangszóróin keresztül."
             },
             "bmw_comfort_turn_signal": {
-                "name": "Komfort irányjelző számláló (BMW)",
-                "desc": "Az egyérintéses kijelző impulzusszámának beállítása (1-től 5-ig villog)."
+                "name": "Komfort irányjelző számláló",
+                "desc": "Az egyérintéses kijelző impulzusszámának beállítása."
             },
             "bmw_mirror_fold_lock": {
-                "name": "Becsukható komfortos tükör a záron (BMW)",
+                "name": "Becsukható komfortos tükör a záron",
                 "desc": "Automatikusan behajtja az oldalsó tükröket a jármű zárásakor."
             },
             "toyota_coming_home_duration": {
-                "name": "Fényszóró késleltetése / Hazatérés (Toyota)",
-                "desc": "Beállítja a fényszóró kikapcsolási késleltetési időzítőjét a gyújtás leállítása után (30-120 mp)."
+                "name": "Fényszóró késleltetése / Hazatérés",
+                "desc": "Beállítja a fényszóró kikapcsolási késleltetési időzítőjét a gyújtás leállítása után."
             },
             "toyota_lane_change_flash": {
-                "name": "Sávváltási irányjelző villanások száma (Toyota)",
+                "name": "Sávváltási irányjelző villanások száma",
                 "desc": "Egy gombnyomással beállítja a sávváltás villogó ciklusszámát."
             },
             "toyota_remote_window_close": {
-                "name": "Távirányítós elektromos ablakzárás (Toyota)",
+                "name": "Távirányítós elektromos ablakzárás",
                 "desc": "Lehetővé teszi az összes elektromos ablak bezárását a távirányító gombjának nyomva tartásával."
             },
             "toyota_autolock_behavior": {
-                "name": "Automatikus ajtózár/nyitás testreszabása (Toyota)",
-                "desc": "Beállítja az ajtózár kioldóját (Shift out of P vs Vehicle Speed > 20 km/h)."
+                "name": "Automatikus ajtózár/nyitás testreszabása",
+                "desc": "Beállítja az ajtózár kioldóját."
             },
             "toyota_approach_welcome_lights": {
-                "name": "Smart Key Approach üdvözlő lámpák (Toyota)",
+                "name": "Smart Key Approach üdvözlő lámpák",
                 "desc": "Felkapcsolja a belső pocsolya/kabin világítását, amikor az intelligens kulcs megközelíti a járművet."
             },
             "hyundai_autolock_behavior": {
-                "name": "Automatikus ajtózár/kioldó viselkedés (Hyundai/Kia)",
+                "name": "Automatikus ajtózár/kioldó viselkedés",
                 "desc": "Automatikusan bezárja az ajtókat váltáskor vagy sebességnél, és kinyit P vagy Kikapcsolt gyújtás esetén."
             },
             "hyundai_window_remote": {
-                "name": "Távoli ablak nyitása/zárása (Hyundai/Kia)",
+                "name": "Távoli ablak nyitása/zárása",
                 "desc": "Lehetővé teszi az ablakok fel/le görgetését az intelligens távvezérlő gombjaival."
             },
             "hyundai_sport_mode_memory": {
-                "name": "Vezetési mód kiválasztása memória (Hyundai/Kia)",
-                "desc": "Emlékszik a legutóbb kiválasztott vezetési módra (Sport/Eco) a motor újraindítása után."
+                "name": "Vezetési mód kiválasztása memória",
+                "desc": "Emlékszik a legutóbb kiválasztott vezetési módra a motor újraindítása után."
             },
             "tesla_charge_limit_custom": {
-                "name": "Akkumulátor töltési határérték testreszabása (Tesla)",
-                "desc": "Beállítja az alapértelmezett nagyfeszültségű akkumulátor töltési határérték százalékát (80% napi / 100% utazás)."
+                "name": "Akkumulátor töltési határérték testreszabása",
+                "desc": "Beállítja az alapértelmezett nagyfeszültségű akkumulátor töltési határérték százalékát."
             },
             "tesla_mirror_fold_lock": {
-                "name": "Tükör automatikus behajtása Walk-Away Lock-on (Tesla)",
+                "name": "Tükör automatikus behajtása Walk-Away Lock-on",
                 "desc": "Automatikusan behajtja az oldalsó tükröket, amikor a telefonkulcs zárja kiold."
             },
             "nissan_coming_home": {
-                "name": "Előnyös fényszóró kikapcsolási késleltetés (Nissan)",
+                "name": "Előnyös fényszóró kikapcsolási késleltetés",
                 "desc": "A Nissan járműből való kiszállás után 30 másodpercig égve tartja a fényszórókat."
             },
             "nissan_lane_change_flash": {
-                "name": "Tap-to-Pass sávváltás villanások száma (Nissan)",
+                "name": "Tap-to-Pass sávváltás villanások száma",
                 "desc": "Beállítja az irányjelző impulzusszámát a villanykapcsoló kapcsolóján."
             },
             "nissan_autolock_behavior": {
-                "name": "Sebességfüggő automatikus ajtózár (Nissan)",
+                "name": "Sebességfüggő automatikus ajtózár",
                 "desc": "Automatikusan zár minden ajtót, ha a jármű eléri a 24 km/h sebességet."
             },
             "nissan_window_remote": {
-                "name": "Távirányítós, elektromos ablakvezérlés (Nissan)",
+                "name": "Távirányítós, elektromos ablakvezérlés",
                 "desc": "Az elülső ablakok nyitása/zárása a kulcstartó nyitógombjának hosszan tartó megnyomásával."
             },
             "nissan_seatbelt_chime_mute": {
-                "name": "Biztonsági öv figyelmeztető hangjelzés elnyomása (Nissan)",
+                "name": "Biztonsági öv figyelmeztető hangjelzés elnyomása",
                 "desc": "Elnémítja az ismétlődő biztonsági öv figyelmeztető hangjelzést, miközben megtartja a csoport ikonját."
             },
             "porsche_sport_chrono_launch": {
-                "name": "Sport Chrono Launch Control Response Profile (Porsche)",
+                "name": "Sport Chrono Launch Control Response Profile",
                 "desc": "Optimalizálja a PDK sebességváltó indító vezérlésének fordulatszám-küszöbét és a tengelykapcsoló harapását."
             },
             "porsche_pasm_default": {
-                "name": "PASM felfüggesztési mód indítási előbeállítása (Porsche)",
+                "name": "PASM felfüggesztési mód indítási előbeállítása",
                 "desc": "Beállítja a PASM adaptív felfüggesztés alapértelmezett merevségét a gyújtás indításakor."
             },
             "porsche_exhaust_flap": {
-                "name": "Sport kipufogóajtó állandó nyitás felülbírálása (Porsche)",
+                "name": "Sport kipufogóajtó állandó nyitás felülbírálása",
                 "desc": "Kényszeríti az aktív kipufogószelepeket, hogy 100%-ban nyitva maradjanak minden fordulatszám-tartományban."
             },
             "audi_drive_select_memory": {
-                "name": "Audi Drive Select Mode Memóriamegőrzés (Audi)",
-                "desc": "Újraindításkor megőrzi az utolsó aktív Drive Select profilt (dinamikus/egyedi)."
+                "name": "Audi Drive Select Mode Memóriamegőrzés",
+                "desc": "Újraindításkor megőrzi az utolsó aktív Drive Select profilt."
             },
             "audi_virtual_cockpit_themes": {
-                "name": "Audi Virtual Cockpit S/RS Sport grafikus elrendezés (Audi)",
+                "name": "Audi Virtual Cockpit S/RS Sport grafikus elrendezés",
                 "desc": "Feloldja az S/RS központi fordulatszámmérő elrendezési lehetőségeit a Virtuális pilótafülkén."
             },
             "vag_scandinavian_drl": {
-                "name": "Skandináv DRL mód (VAG)",
+                "name": "Skandináv DRL mód",
                 "desc": "Folyamatosan égve tartja a hátsó hátsó lámpákat az első DRL-ek mellett."
             },
             "vag_mirror_dip_reverse": {
-                "name": "Utastükör hátramenetben (VAG)",
+                "name": "Utastükör hátramenetben",
                 "desc": "Lefelé dönti az utasoldali tükröt, ha hátrameneti fokozatba van kapcsolva."
             },
             "vag_dynamic_turn_signal": {
-                "name": "Dinamikus / szekvenciális irányjelző üzemmód (VAG)",
+                "name": "Dinamikus / szekvenciális irányjelző üzemmód",
                 "desc": "Lehetővé teszi az elsöprő dinamikus LED-villogó mintát a kompatibilis hátsó lámpamodulokon."
             },
             "vag_seatbelt_warning_duration": {
-                "name": "Biztonsági öv figyelmeztető hangjelzés időtartamának beállítása (VAG)",
+                "name": "Biztonsági öv figyelmeztető hangjelzés időtartamának beállítása",
                 "desc": "Lerövidíti vagy elnyomja a biztonsági öv ismétlődő figyelmeztető hangjelzését."
             },
             "vag_sunroof_remote": {
-                "name": "Napfénytető távirányító (VAG)",
+                "name": "Napfénytető távirányító",
                 "desc": "Lehetővé teszi a panorámatető nyitását és billentését a távirányítós kulcstartón keresztül."
             },
             "vag_acc_distance_preset": {
-                "name": "ACC Adaptive Cruise alapértelmezett követési távolság (VAG)",
+                "name": "ACC Adaptive Cruise alapértelmezett követési távolság",
                 "desc": "Beállítja a radar alapértelmezett követési távolságprofilját a gyújtás indításakor."
             },
             "vag_infotainment_startup_logo": {
-                "name": "Infotainment Boot Graphic Logo (VAG)",
-                "desc": "Testreszabja az infotainment indítóképernyőjének logóját (R-Line, GTI, RS)."
+                "name": "Infotainment Boot Graphic Logo",
+                "desc": "Testreszabja az infotainment indítóképernyőjének logóját."
             },
             "vag_ambient_color_cycle": {
-                "name": "Belső környezeti fény színspektrum feloldása (VAG)",
+                "name": "Belső környezeti fény színspektrum feloldása",
                 "desc": "Kibővíti a környezeti világítás paletta opcióit a járműbeállítások menüjében."
             },
             "vag_service_interval_custom": {
-                "name": "Egyéni ellenőrzési és szervizelési távolság küszöbértéke (VAG)",
+                "name": "Egyéni ellenőrzési és szervizelési távolság küszöbértéke",
                 "desc": "Egyéni kilométer- és napcélokat konfigurál a következő szervizfigyelmeztetéshez."
             },
             "vag_door_handle_lights_reverse": {
-                "name": "Külső ajtókilincs világítás hátramenetben (VAG)",
+                "name": "Külső ajtókilincs világítás hátramenetben",
                 "desc": "Tolatáskor megvilágítja az ajtókilincs LED-es pocsolya lámpáit, hogy jól látható legyen a talaj."
             },
             "bmw_msport_exhaust_burble": {
-                "name": "M-Sport kipufogógáz és pop intenzitás (BMW)",
+                "name": "M-Sport kipufogógáz és pop intenzitás",
                 "desc": "Beállítja a túlcsorduló hang agresszivitását Sport módban."
             },
             "bmw_welcome_light_sequence": {
-                "name": "Welcome Light Sequence Animation (BMW)",
+                "name": "Welcome Light Sequence Animation",
                 "desc": "Testreszabja a LED-es fényszórót és az Angel Eyes üdvözlő szövegsorozatot."
             },
             "bmw_service_history_menu": {
-                "name": "Digitális szervizelőzmények menü engedélyezése (BMW)",
+                "name": "Digitális szervizelőzmények menü engedélyezése",
                 "desc": "Feloldja az iDrive digitális szervizkönyv menüjét a központi kijelzőn."
             },
             "bmw_hud_speed_display": {
-                "name": "Head-Up Display Digital Speedometer Overlay (BMW)",
+                "name": "Head-Up Display Digital Speedometer Overlay",
                 "desc": "Valós idejű digitális sebességkijelzést vetít a Head-Up kijelzőre."
             },
             "bmw_cornering_lights_fog": {
-                "name": "Ködlámpa kanyarvilágítás (BMW)",
+                "name": "Ködlámpa kanyarvilágítás",
                 "desc": "Felkapcsolja az első ködlámpát irányjelző vagy alacsony fordulatszámú kormányzási szög esetén."
             },
             "bmw_easy_entry_steering": {
-                "name": "Könnyen belépő, automatikusan visszahúzódó kormányoszlop (BMW)",
+                "name": "Könnyen belépő, automatikusan visszahúzódó kormányoszlop",
                 "desc": "A motor leállításakor felfelé húzza az elektromos kormánykereket a könnyű kiszállás érdekében."
             },
             "bmw_bluetooth_audio_enable": {
-                "name": "Továbbfejlesztett Bluetooth Audio Streaming Unlock (BMW)",
+                "name": "Továbbfejlesztett Bluetooth Audio Streaming Unlock",
                 "desc": "Lehetővé teszi az A2DP Bluetooth vezeték nélküli zenei streamelést az iDrive HU_ENTRYNAV szolgáltatásban."
             },
             "bmw_door_handle_lights_reverse": {
-                "name": "Külső ajtókilincs tócsás lámpák hátramenetben (BMW)",
+                "name": "Külső ajtókilincs tócsás lámpák hátramenetben",
                 "desc": "Az ajtókilincs LED-jeit megvilágítja, ha hátrameneti fokozat van kapcsolva."
             },
             "toyota_auto_headlight_threshold": {
-                "name": "Automatikus fényszóró környezeti fényérzékelő érzékenysége (Toyota)",
+                "name": "Automatikus fényszóró környezeti fényérzékelő érzékenysége",
                 "desc": "Beállítja a szürkületi küszöböt az automatikus fényszóró bekapcsolásához."
             },
             "toyota_turn_signal_click_volume": {
-                "name": "Az irányjelző hangcsatoló hangszóró hangereje (Toyota)",
-                "desc": "Beállítja az irányjelző relé kattanási hangerejét (alacsony, közepes, magas)."
+                "name": "Az irányjelző hangcsatoló hangszóró hangereje",
+                "desc": "Beállítja az irányjelző relé kattanási hangerejét."
             },
             "toyota_smart_key_approach_lights": {
-                "name": "Smart Key Proximity üdvözlő tócsás lámpák (Toyota)",
+                "name": "Smart Key Proximity üdvözlő tócsás lámpák",
                 "desc": "Felkapcsolja a tükör pocsolya világítását, amikor az intelligens kulcs megközelíti a járművet."
             },
             "toyota_rear_hatch_behavior": {
-                "name": "Az elektromos csomagtérajtó emelőajtó nyitás/zárás működési logikája (Toyota)",
+                "name": "Az elektromos csomagtérajtó emelőajtó nyitás/zárás működési logikája",
                 "desc": "Konfigurálja a távirányító és a műszerfal bekapcsológombjának megnyomásának időtartamát."
             },
             "toyota_open_windows_smart_key": {
-                "name": "Intelligens kulcsú távirányító ablakának hosszan lehúzása (Toyota)",
+                "name": "Intelligens kulcsú távirányító ablakának hosszan lehúzása",
                 "desc": "Lehetővé teszi az összes ablak kinyitását a távoli feloldó gomb nyomva tartásával."
             },
             "toyota_interior_light_dim_timer": {
-                "name": "Belső utastér világítás automatikus elsötétülésének késleltetése (Toyota)",
+                "name": "Belső utastér világítás automatikus elsötétülésének késleltetése",
                 "desc": "Beállítja a belső kupola világítás kikapcsolási időzítőjét az ajtó bezárása után."
             },
             "toyota_panic_alarm_remote": {
-                "name": "Távirányítós pánikriasztó sziréna funkció (Toyota)",
+                "name": "Távirányítós pánikriasztó sziréna funkció",
                 "desc": "Engedélyezi vagy letiltja a jármű kürtjének pánikriasztását a távirányítós kulcstartással."
             },
             "toyota_eco_drive_indicator": {
-                "name": "ECO Drive Cluster Zone jelzőfény (Toyota)",
+                "name": "ECO Drive Cluster Zone jelzőfény",
                 "desc": "Környezetbarát gyorsulási sávot és jelzőfényt mutat a fürtön."
             },
             "hyundai_coming_home_duration": {
-                "name": "Escort fényszóró kikapcsolási késleltetési időzítő (Hyundai/Kia)",
+                "name": "Escort fényszóró kikapcsolási késleltetési időzítő",
                 "desc": "Fenntartja a tompított fényszórókat a jármű elhagyása után."
             },
             "hyundai_drl_menu_toggle": {
-                "name": "Nappali menetfény menüvezérlés (Hyundai/Kia)",
+                "name": "Nappali menetfény menüvezérlés",
                 "desc": "Hozzáadja a DRL ON/OFF beállítást a műszercsoport felhasználói opcióihoz."
             },
             "hyundai_welcome_sequence": {
-                "name": "Smart Key Proximity üdvözlő lámpa és kibontakozó tükör (Hyundai/Kia)",
+                "name": "Smart Key Proximity üdvözlő lámpa és kibontakozó tükör",
                 "desc": "Kihajtja az elektromos tükröket és megvilágítja a kilincseket közeledéskor."
             },
             "hyundai_interior_light_delay": {
-                "name": "Kabin belső szobai lámpa automatikus lekapcsolási késleltetése (Hyundai/Kia)",
+                "name": "Kabin belső szobai lámpa automatikus lekapcsolási késleltetése",
                 "desc": "Beállítja az időzítőt, mielőtt a belső világítás automatikusan kikapcsolna az akkumulátor kímélése érdekében."
             },
             "hyundai_heat_pump_efficiency": {
-                "name": "EV klíma hőszivattyús hőhatékonysági üzemmód (Hyundai/Kia)",
+                "name": "EV klíma hőszivattyús hőhatékonysági üzemmód",
                 "desc": "Optimalizálja az EV hőszivattyú energiafogyasztását hideg téli időben."
             },
             "tesla_track_mode_params": {
-                "name": "Nyomvonal-stabilitási és nyomaték-előfeszítési profil (Tesla)",
+                "name": "Nyomvonal-stabilitási és nyomaték-előfeszítési profil",
                 "desc": "Konfigurálja az első/hátsó motorhajtás előfeszítését és a stabilitási beavatkozást."
             },
             "tesla_regen_brake_strength": {
-                "name": "Regeneratív fékerő-profil (Tesla)",
+                "name": "Regeneratív fékerő-profil",
                 "desc": "Beállítja a gázpedál felemelésének energia-visszanyerési intenzitását."
             },
             "tesla_walkaway_door_lock": {
-                "name": "Eltávolítható telefonkulcs automatikus ajtózár (Tesla)",
+                "name": "Eltávolítható telefonkulcs automatikus ajtózár",
                 "desc": "Zárja az ajtókat, és kürt csipogással nyugtázza, ha a telefonkulcs elmozdul."
             },
             "tesla_acceleration_boost_unlock": {
-                "name": "Erőátviteli gyorsulást fokozó hajtásprofil (Tesla)",
+                "name": "Erőátviteli gyorsulást fokozó hajtásprofil",
                 "desc": "Élesíti az elektromotor inverter reakcióját a gyorsabb 0-100 km/h sebesség érdekében."
             },
             "tesla_interior_ambient_color": {
-                "name": "Előre beállított kabin lábtér környezeti világítás színe (Tesla)",
+                "name": "Előre beállított kabin lábtér környezeti világítás színe",
                 "desc": "Testreszabja a lábtér LED-es környezeti fényének RGB színpalettáját."
             },
             "audi_matrix_led_animation": {
-                "name": "Mátrix LED fényszóró dinamikus üdvözlőfény tánc (Audi)",
+                "name": "Mátrix LED fényszóró dinamikus üdvözlőfény tánc",
                 "desc": "Dinamikus fénykoreográfiát játszik le a jármű kinyitásakor."
             },
             "audi_mmi_startup_screen": {
-                "name": "MMI érintőképernyő indító grafikus téma (Audi)",
-                "desc": "Testreszabja az MMI központi képernyőjének indítóanimációját (S / RS / e-tron)."
+                "name": "MMI érintőképernyő indító grafikus téma",
+                "desc": "Testreszabja az MMI központi képernyőjének indítóanimációját."
             },
             "audi_drive_select_efficiency": {
-                "name": "Hatékony vezetési profil az Audi Drive Select szolgáltatásban (Audi)",
+                "name": "Hatékony vezetési profil az Audi Drive Select szolgáltatásban",
                 "desc": "Engedélyezi az üzemanyag-takarékos Efficiency módot a Drive Select opciókban."
             },
             "audi_laptimer_boost_display": {
-                "name": "Köridőzítő és turbórúd nyomásmérő fedvény (Audi)",
+                "name": "Köridőzítő és turbórúd nyomásmérő fedvény",
                 "desc": "Megjeleníti a köridőt és a valós idejű turbóerősítést a virtuális pilótafülkén."
             },
             "audi_needle_sweep_gauge": {
-                "name": "Sportmérő tűsöprés ellenőrzése (Audi)",
+                "name": "Sportmérő tűsöprés ellenőrzése",
                 "desc": "Indításkor teljes fordulatszámmérőt és sebességmérő tűsöprést végez."
             },
             "skoda_coming_home_lights": {
-                "name": "Leaving Home / Coming Home Lighting Timer (Skoda)",
+                "name": "Leaving Home / Coming Home Lighting Timer",
                 "desc": "Beállítja a fényszóró megvilágításának időzítőjét a jármű elhagyása után."
             },
             "skoda_comfort_turn_signal": {
-                "name": "Komfortjelző pulzusszám beállítása (Skoda)",
+                "name": "Komfortjelző pulzusszám beállítása",
                 "desc": "Beállítja az egyérintéses irányjelző villogásának számát 3 és 5 villanás között."
             },
             "cupra_sport_display_menu": {
-                "name": "Cupra Performance Instrument & G-Meter menü (Cupra)",
+                "name": "Cupra Performance Instrument & G-Meter menü",
                 "desc": "Feloldja a G-erőmérőt, a kW teljesítménymérőt és az olajhőmérséklet kijelzőt."
             },
             "cupra_virtual_cockpit_copper": {
-                "name": "Réz téma műszerfali kiemelő grafika (Cupra)",
+                "name": "Réz téma műszerfali kiemelő grafika",
                 "desc": "A jellegzetes Cupra réz fémes akcentus témát alkalmazza a mérőfürtre."
             },
             "vag_brake_disc_drying": {
-                "name": "Féktárcsa törlő/szárító funkció esőben (VAG)",
+                "name": "Féktárcsa törlő/szárító funkció esőben",
                 "desc": "Időnként minimális párnanyomást kell alkalmazni nedves időben a száraz rotorokra."
             },
             "vag_tourist_mode_lights": {
-                "name": "Turisztikai módú fényszóró-minta (VAG)",
+                "name": "Turisztikai módú fényszóró-minta",
                 "desc": "Külföldön történő vezetéshez átkapcsolja a fényszórók fényszóróit az LHD és az RHD között."
             },
             "vag_hood_warning_mute": {
-                "name": "Motorháztető nyitott hangszer némítása (VAG)",
+                "name": "Motorháztető nyitott hangszer némítása",
                 "desc": "Elnyomja a műszer folyamatos figyelmeztető hangjelzését, amikor a motorháztető nincs reteszelve."
             },
             "vag_emergency_brake_hazard": {
-                "name": "Vészfékező automatikus vészvillogó (VAG)",
+                "name": "Vészfékező automatikus vészvillogó",
                 "desc": "Gyorsan villog a vészvillogó erős ABS vészleálláskor."
             },
             "vag_sunroof_comfort_open": {
-                "name": "Dönthető/nyitható napfénytető távirányítós kényelmes kulcstartó logika (VAG)",
+                "name": "Dönthető/nyitható napfénytető távirányítós kényelmes kulcstartó logika",
                 "desc": "Konfigurálja a távoli kulcstartást billentéshez vagy teljesen nyitott napfénytetőhöz."
             },
             "bmw_ecopro_display_variant": {
-                "name": "ECO PRO műszercsoport-mérő stílus (BMW)",
+                "name": "ECO PRO műszercsoport-mérő stílus",
                 "desc": "Testreszabja a kék ECO PRO hatékonyságmérő grafikus témát."
             },
             "bmw_volume_bar_hud": {
-                "name": "Head-Up Display hangerőszint sáv fedvény (BMW)",
+                "name": "Head-Up Display hangerőszint sáv fedvény",
                 "desc": "Közvetlenül a HUD-kivetítésen jeleníti meg a hangerő-szabályozó sávot."
             },
             "bmw_anti_dazzle_mirror": {
-                "name": "Elektrokróm vakításgátló tükör tompítási érzékenység (BMW)",
+                "name": "Elektrokróm vakításgátló tükör tompítási érzékenység",
                 "desc": "Beállítja a visszapillantó tükör automatikus elsötétülésének fényérzékelő küszöbértékét."
             },
             "bmw_camera_pdc_warning_mute": {
-                "name": "PDC és térhatású nézet sebességének levágási sebességének beállítása (BMW)",
+                "name": "PDC és térhatású nézet sebességének levágási sebességének beállítása",
                 "desc": "Beállítja azt a járműsebesség-küszöböt, amelynél a parkolókamerák kikapcsolnak."
             },
             "toyota_pcs_distance_preset": {
-                "name": "Ütközés előtti rendszer (PCS) alapértelmezett riasztási távolsága (Toyota)",
+                "name": "Ütközés előtti rendszer alapértelmezett riasztási távolsága",
                 "desc": "Beállítja a radar első ütközésre figyelmeztető távolságérzékenységét."
             },
             "toyota_bsm_timing": {
-                "name": "Holttérfigyelő (BSM) Figyelmeztetési Figyelmeztetés időzítése (Toyota)",
+                "name": "Holttérfigyelő Figyelmeztetési Figyelmeztetés időzítése",
                 "desc": "Beállítja a holttér oldalsó tükrök figyelmeztető lámpájának megvilágításának időzítését."
             },
             "toyota_ac_noise_reduction": {
-                "name": "Légkondicionáló kompresszor ventilátor zajcsökkentési mód (Toyota)",
+                "name": "Légkondicionáló kompresszor ventilátor zajcsökkentési mód",
                 "desc": "Korlátozza a légkondicionáló ventilátor maximális sebességét a kabin csendessége érdekében."
             },
             "toyota_sflow_control": {
-                "name": "S-Flow Smart Climate egyutas üzemmód (Toyota)",
+                "name": "S-Flow Smart Climate egyutas üzemmód",
                 "desc": "Az A/C légáramlást kizárólag az elfoglalt ülésekre irányítja a súlyérzékelők alapján."
             },
             "toyota_relock_timeout": {
-                "name": "Automatikus újrazárás késleltetési időzítő távkioldás után (Toyota)",
-                "desc": "Beállítja a másodperceket az ajtók automatikus újrazárása előtt, ha egyetlen ajtó sem nyílik ki (30-120 másodperc)."
+                "name": "Automatikus újrazárás késleltetési időzítő távkioldás után",
+                "desc": "Beállítja a másodperceket az ajtók automatikus újrazárása előtt, ha egyetlen ajtó sem nyílik ki."
             },
             "lexus_mark_levinson_audio_profile": {
-                "name": "Mark Levinson Surround Sound DSP audioprofil (Lexus)",
+                "name": "Mark Levinson Surround Sound DSP audioprofil",
                 "desc": "Optimalizálja a 3D térbeli akusztikus hangolást a Mark Levinson prémium hangszórókhoz."
             },
             "lexus_ev_mode_beeper_mute": {
-                "name": "Alacsony sebességű gyalogos elektromos autó akusztikus figyelmeztető hangjelzés némítása (Lexus)",
+                "name": "Alacsony sebességű gyalogos elektromos autó akusztikus figyelmeztető hangjelzés némítása",
                 "desc": "Elnyomja a kis sebességű elektromos üzemmódú szintetikus külső harangszót."
             },
             "lexus_easy_access_seat": {
-                "name": "Könnyen hozzáférhető kormánykerék és motoros ülés csúsztatható háttámla (Lexus)",
+                "name": "Könnyen hozzáférhető kormánykerék és motoros ülés csúsztatható háttámla",
                 "desc": "Csúsztatja a vezetőülést, és elhajtja a kormányt a könnyű be- és kiszállás érdekében."
             },
             "nissan_epower_regen_mode": {
-                "name": "e-POWER egypedálos regeneratív fékezési mód (Nissan)",
+                "name": "e-POWER egypedálos regeneratív fékezési mód",
                 "desc": "Beállítja az alapértelmezett e-Pedal regeneratív fékezési lassítási szintet."
             },
             "nissan_propilot_assist_timing": {
-                "name": "ProPILOT Lane Centering Assist kormányzási érzékenység (Nissan)",
+                "name": "ProPILOT Lane Centering Assist kormányzási érzékenység",
                 "desc": "Konfigurálja a ProPILOT kormányzási beavatkozás élességét."
             },
             "nissan_intelligent_around_view": {
-                "name": "Körültekintő monitor automatikus felugró ablaka alacsony sebességnél (Nissan)",
+                "name": "Körültekintő monitor automatikus felugró ablaka alacsony sebességnél",
                 "desc": "Kikapcsolja a 360 fokos kamerakijelzést, amikor az elülső parkolóérzékelők akadályokat észlelnek."
             },
             "mazda_g_vectoring_display": {
-                "name": "G-Vectoring Control Plus dinamikus megjelenítő (Mazda)",
+                "name": "G-Vectoring Control Plus dinamikus megjelenítő",
                 "desc": "Valós idejű GVC+ kanyarodási nyomaték vektorgrafikont jelenít meg a műszerfalon."
             },
             "mazda_ieloop_capacitor_monitor": {
-                "name": "i-ELOOP fékenergia-visszanyerő kondenzátor mérő (Mazda)",
+                "name": "i-ELOOP fékenergia-visszanyerő kondenzátor mérő",
                 "desc": "Az elektromos kondenzátor töltési és kisütési állapotát mutatja a központi képernyőn."
             },
             "mazda_smart_city_brake_sens": {
-                "name": "Smart City Brake Support (SCBS) érzékenysége (Mazda)",
+                "name": "Smart City Brake Support érzékenysége",
                 "desc": "Beállítja az alacsony sebességű automatikus vészfék-érzékelő tartományát."
             },
             "subaru_eyesight_distance_preset": {
-                "name": "EyeSight adaptív sebességtartó automatika alapértelmezett távolsága (Subaru)",
+                "name": "EyeSight adaptív sebességtartó automatika alapértelmezett távolsága",
                 "desc": "Indításkor konfigurálja a sztereó kamera alapértelmezett cruise gap profilját."
             },
             "subaru_xmode_auto_engage": {
-                "name": "X-módú terepjáró tapadás automatikus bekapcsolási küszöbértéke (Subaru)",
+                "name": "X-módú terepjáró tapadás automatikus bekapcsolási küszöbértéke",
                 "desc": "Beállítja a kerékcsúszás küszöbét az automatikus kétfunkciós X-Mode aktiváláshoz."
             },
             "subaru_steering_responsive_headlights": {
-                "name": "Kormányzásra reagáló fényszórók (SRH) billenőkapcsoló (Subaru)",
+                "name": "Kormányzásra reagáló fényszórók billenőkapcsoló",
                 "desc": "Engedélyezi vagy letiltja az adaptív fényszóró forgását."
             },
             "genesis_sport_plus_mode": {
-                "name": "Sport+ hajtáslánc és elektronikus felfüggesztési mód (Genesis)",
+                "name": "Sport+ hajtáslánc és elektronikus felfüggesztési mód",
                 "desc": "Feloldja a vágányorientált ESC OFF és a merevített lengéscsillapító leképezést."
             },
             "genesis_ambient_active_light": {
-                "name": "Aktív környezeti világítás meghajtó mód szinkronizálása (Genesis)",
+                "name": "Aktív környezeti világítás meghajtó mód szinkronizálása",
                 "desc": "Dinamikusan változtatja a belső környezeti világítás színét a vezetési mód alapján."
             },
             "volvo_city_safety_warning": {
-                "name": "City Safety autonóm vészhelyzeti figyelmeztető érzékenység (Volvo)",
-                "desc": "Konfigurálja a radar és a lidar ütközésre figyelmeztető riasztás időzítését (korai/normál)."
+                "name": "City Safety autonóm vészhelyzeti figyelmeztető érzékenység",
+                "desc": "Konfigurálja a radar és a lidar ütközésre figyelmeztető riasztás időzítését."
             },
             "chery_ar_navigation_hud": {
-                "name": "AR navigációs vetítési fedvény HUD-on (Chery)",
+                "name": "AR navigációs vetítési fedvény HUD-on",
                 "desc": "3D kiterjesztett valóság navigációs nyilakat vetít a szélvédőre."
             },
             "jlr_terrain_response_preset": {
-                "name": "Terepreakció automatikus terep üzemmód előre beállított (JLR)",
-                "desc": "Emlékszik a legutóbbi terepreakció felületi profiljára (fű/kavics/hó)."
+                "name": "Terepreakció automatikus terep üzemmód előre beállított",
+                "desc": "Emlékszik a legutóbbi terepreakció felületi profiljára."
             },
             "jlr_adaptive_dynamics_firm": {
-                "name": "Adaptive Dynamics Damper Firmness Profile (JLR)",
+                "name": "Adaptive Dynamics Damper Firmness Profile",
                 "desc": "Beállítja az elektronikus lengéscsillapító alapértelmezett csillapítási merevségét."
             },
             "jlr_wading_sensor_alert": {
-                "name": "Wade Sensing Depth Warning Chime Threshold (JLR)",
+                "name": "Wade Sensing Depth Warning Chime Threshold",
                 "desc": "Beállítja az ultrahangos vízmélység figyelmeztető hangjelzés érzékenységét."
             },
             "alfa_dna_dynamic_memory": {
-                "name": "Alfa DNA Selector dinamikus üzemmódú indítási memória (Alfa Romeo)",
+                "name": "Alfa DNA Selector dinamikus üzemmódú indítási memória",
                 "desc": "Megtartja a dinamikus üzemmódú fojtószelep reakcióját az újraindítás után."
             },
             "alfa_q4_torque_split": {
-                "name": "Q4 összkerékhajtás, valós idejű nyomaték osztott grafikon (Alfa Romeo)",
+                "name": "Q4 összkerékhajtás, valós idejű nyomaték osztott grafikon",
                 "desc": "Az AWD első/hátsó teljesítménymegosztás százalékát mutatja a műszer kijelzőjén."
             },
             "li_auto_range_extender_mode": {
-                "name": "REV generátor akkumulátor töltöttségi szint (Li Auto)",
+                "name": "REV generátor akkumulátor töltöttségi szint",
                 "desc": "Beállítja a belső égésű motor generátorának indítási küszöbét."
             },
             "li_auto_cinema_seat_position": {
-                "name": "Színház/mozi mód Ergonomikus üléshelyzet (Li Auto)",
+                "name": "Színház/mozi mód Ergonomikus üléshelyzet",
                 "desc": "Dönthető a hátsó ülések és kihajtható a lábtámasz, ha a mozi mód aktív."
             },
             "zeekr_drift_mode_torque": {
-                "name": "Dual Motor Performance Drift Mode Rear Bias (Zeekr)",
+                "name": "Dual Motor Performance Drift Mode Rear Bias",
                 "desc": "100%-os nyomatékot küld a hátsó villanymotornak a szabályozott sodródás érdekében."
             },
             "zeekr_ambient_beat_sync": {
-                "name": "Környezeti megvilágítású zene ritmus beat szinkron (Zeekr)",
+                "name": "Környezeti megvilágítású zene ritmus beat szinkron",
                 "desc": "A kabin belső világítása a lejátszott zene ütemével szinkronban lüktet."
             },
             "tata_drive_mode_voice": {
-                "name": "Vezetési mód kapcsoló hangos bejelentés (Tata)",
-                "desc": "Lehetővé teszi a hangos megerősítést a vezetési módok (City/Sport/Eco) váltásakor."
+                "name": "Vezetési mód kapcsoló hangos bejelentés",
+                "desc": "Lehetővé teszi a hangos megerősítést a vezetési módok váltásakor."
             },
             "mahindra_zip_zap_zoom_custom": {
-                "name": "Zip/Zap/Zoom erőátviteli fojtószelep válaszprofil (Mahindra)",
+                "name": "Zip/Zap/Zoom erőátviteli fojtószelep válaszprofil",
                 "desc": "Testreszabja a gyorsulási görbét a Zip, Zap és Zoom vezetési módokhoz."
             },
             "fun_cyberpunk_cluster_theme": {
@@ -2483,7 +2483,7 @@
                 "desc": "Unlocks racetrack lap timer stopwatch and real-time engine oil temperature readout."
             },
             "vag_rear_scandinavian_drl": {
-                "name": "Scandinavian DRL (Rear Tail Lights ON with DRL)",
+                "name": "Scandinavian DRL",
                 "desc": "Illuminates rear LED tail lights constantly when front daytime running lights are active."
             },
             "vag_drl_handbrake_off": {
@@ -2495,7 +2495,7 @@
                 "desc": "Adds Daytime Running Lights toggle checkbox under Vehicle Lights settings in MIB screen."
             },
             "vag_rain_closing_windows": {
-                "name": "Rain Closing (Automatic Windows & Sunroof Close)",
+                "name": "Rain Closing",
                 "desc": "Closes all open windows and panoramic sunroof if parked vehicle detects rain on windshield."
             },
             "vag_audi_dynamic_throttle": {
@@ -2511,7 +2511,7 @@
                 "desc": "Unlocks Off-Road telemetry screen displaying steering angle, compass, and oil/coolant temperatures."
             },
             "vag_highbeam_assist_memory": {
-                "name": "High-Beam Assist (Light Assist) State Memory",
+                "name": "High-Beam Assist State Memory",
                 "desc": "Maintains Auto High-Beam Assist active across ignition cycles so driver does not have to re-arm it."
             },
             "vag_comfort_turn_signals_count": {
@@ -2519,11 +2519,11 @@
                 "desc": "Changes number of highway lane-change blinker pulses from standard 3 to 4 or 5."
             },
             "bmw_video_in_motion_speedlock": {
-                "name": "Video in Motion (VIM) Speedlock Removal",
+                "name": "Video in Motion Speedlock Removal",
                 "desc": "Allows USB and DVD video playback on iDrive screen while vehicle is moving."
             },
             "bmw_digital_speedo_kombi": {
-                "name": "Digital Speedometer in Instrument Cluster (V= km/h)",
+                "name": "Digital Speedometer in Instrument Cluster",
                 "desc": "Adds real-time digital speed numerical readout on the onboard computer screen."
             },
             "bmw_acoustic_lock_chirp": {
@@ -2536,7 +2536,7 @@
             },
             "bmw_rolls_royce_warning_chimes": {
                 "name": "Rolls-Royce / BMW i / MINI Warning Chime Tones",
-                "desc": "Changes the system warning chimes (door open, low temp, seatbelt) to luxury Rolls-Royce tones."
+                "desc": "Changes the system warning chimes to luxury Rolls-Royce tones."
             },
             "bmw_m_performance_boot_animation": {
                 "name": "M Performance / Alpina Cluster Boot Logo",
@@ -2551,11 +2551,11 @@
                 "desc": "Keeps rear LED neon rings illuminated when daytime running lights are active in position 0/Auto."
             },
             "bmw_sport_automatic_transmission_2tb": {
-                "name": "Sport Automatic Transmission (2TB) & Launch Control",
+                "name": "Sport Automatic Transmission & Launch Control",
                 "desc": "Unlocks faster shifting times, rev-matching downshifts, and factory Launch Control mode."
             },
             "merc_needle_sweep_staging": {
-                "name": "Instrument Needle Sweep (AMG Staging)",
+                "name": "Instrument Needle Sweep",
                 "desc": "Sweeps gauge needles to maximum upon turning on the ignition."
             },
             "merc_highbeam_memory": {
@@ -2583,16 +2583,16 @@
                 "desc": "Automatically folds side mirrors when locking with key fob and unfolds upon driver door open."
             },
             "merc_rear_drl_scandinavian": {
-                "name": "Rear Tail Lights as Daytime Running Lights (Scandinavian Mode)",
+                "name": "Rear Tail Lights as Daytime Running Lights",
                 "desc": "Keeps rear LED tail lamps illuminated together with front DRLs during daytime driving."
             },
             "merc_seatbelt_warning_chime_mute": {
                 "name": "Seatbelt Acoustic Warning Chime Mute",
-                "desc": "Disables the continuous chime sound for unbuckled seatbelts (visual warning lamp remains active)."
+                "desc": "Disables the continuous chime sound for unbuckled seatbelts."
             },
             "merc_agility_manual_mode_unlock": {
-                "name": "Agility (Sport+) & Manual Transmission Mode",
-                "desc": "Enables hidden Agility (A) and True Manual (M) driving transmission profiles in Dynamic Select."
+                "name": "Agility & Manual Transmission Mode",
+                "desc": "Enables hidden Agility and True Manual driving transmission profiles in Dynamic Select."
             },
             "merc_esp_sport_threshold_tuning": {
                 "name": "ESP Sport Dynamic Slip Angle Adjustment",
@@ -2600,7 +2600,7 @@
             },
             "merc_flashing_emergency_brake_light": {
                 "name": "Adaptive Emergency Flashing Brake Lights",
-                "desc": "Flashes stop lamps at high frequency (5.5 Hz) during hard emergency braking (> 7 m/s²)."
+                "desc": "Flashes stop lamps at high frequency during hard emergency braking."
             },
             "stell_auto_mirror_fold_lock": {
                 "name": "Automatic Mirror Folding on Key Lock",
@@ -2611,7 +2611,7 @@
                 "desc": "Activates corresponding front fog lamp when turn signal is on or steering angle > 30° below 40 km/h."
             },
             "stell_needle_sweep_cluster": {
-                "name": "Instrument Needle Sweep (Sport Staging)",
+                "name": "Instrument Needle Sweep",
                 "desc": "Performs gauge sweep on startup for analog/hybrid instrument clusters."
             },
             "stell_acoustic_lock_chirp": {
@@ -2627,7 +2627,7 @@
                 "desc": "Remembers the last ON/OFF state of Lane Keeping Assist instead of re-activating at every start."
             },
             "stell_sport_steering_weight_calibration": {
-                "name": "Dynamic Electric Power Steering (EPS) Weight Curve",
+                "name": "Dynamic Electric Power Steering Weight Curve",
                 "desc": "Increases steering wheel resistance and centering feel for a firmer, sportier feedback."
             },
             "stell_digital_speedo_unit_toggle": {
@@ -2643,7 +2643,7 @@
                 "desc": "Folds power mirrors when locking vehicle and automatically unfolds upon closing driver door."
             },
             "ford_bambi_mode_fog_with_highbeam": {
-                "name": "Bambi Mode (High Beams + Fog Lights Simultaneous)",
+                "name": "Bambi Mode",
                 "desc": "Prevents fog lights from turning off automatically when high beams are activated."
             },
             "ford_double_honk_disable": {
@@ -2655,15 +2655,15 @@
                 "desc": "Opens or closes all power windows by holding unlock or lock button on factory key fob."
             },
             "ford_cluster_digital_tpms_readout": {
-                "name": "Individual Tire Pressure (TPMS) Bar/PSI Display",
+                "name": "Individual Tire Pressure Bar/PSI Display",
                 "desc": "Displays exact individual tire pressure numerical readouts on the instrument cluster screen."
             },
             "ford_sync_boot_splash_st_raptor": {
-                "name": "SYNC Performance Boot Splash Theme (ST / Raptor / RS)",
+                "name": "SYNC Performance Boot Splash Theme",
                 "desc": "Changes SYNC infotainment boot logo animation to Ford Performance / ST / Raptor styling."
             },
             "renault_rlink_video_in_motion": {
-                "name": "Video in Motion (VIM) Playback Unlock",
+                "name": "Video in Motion Playback Unlock",
                 "desc": "Allows USB/video playback on R-Link 2 / EasyLink touchscreen while vehicle is in motion."
             },
             "renault_rs_monitor_telemetry_unlock": {
@@ -2684,14 +2684,14 @@
             },
             "renault_seatbelt_buzzer_mute": {
                 "name": "Seatbelt Warning Buzzer Sound Mute",
-                "desc": "Mutes acoustic beeping for unfastened seatbelts (visual cluster alert remains active)."
+                "desc": "Mutes acoustic beeping for unfastened seatbelts."
             },
             "hyundai_ev_charge_limit_ui_unlock": {
                 "name": "Manual EV AC/DC Charge Limit Setting UI",
                 "desc": "Unlocks 50% to 100% target SoC slider controls in infotainment for battery longevity."
             },
             "hyundai_isg_start_stop_memory": {
-                "name": "ISG (Idle Stop & Go) Last State Memory",
+                "name": "ISG Last State Memory",
                 "desc": "Retains the last selected state of the Start-Stop button across vehicle restarts."
             },
             "hyundai_approach_auto_unlock_distance": {
@@ -2724,7 +2724,7 @@
             },
             "mg_ev_one_pedal_drive_memory": {
                 "name": "One-Pedal Driving Mode Retention",
-                "desc": "Remembers the last selected regenerative braking intensity (High/One-Pedal) across starts."
+                "desc": "Remembers the last selected regenerative braking intensity across starts."
             },
             "porsche_needle_sweep_staging": {
                 "name": "Porsche Tachometer Needle Sweep on Start",
@@ -2736,7 +2736,7 @@
             },
             "porsche_rear_spoiler_manual_speed_threshold": {
                 "name": "Active Rear Aerodynamic Wing Deployment Speed",
-                "desc": "Adjusts automatic rear spoiler deployment speed threshold (80 km/h vs 120 km/h)."
+                "desc": "Adjusts automatic rear spoiler deployment speed threshold."
             },
             "porsche_matrix_highbeam_unlock": {
                 "name": "PDLS+ Matrix LED Adaptive Anti-Glare High Beam",
@@ -2747,19 +2747,19 @@
                 "desc": "Gives a quick chirp confirmation when locking with Porsche smart key."
             },
             "actros_rsl_fleet_speed_limit": {
-                "name": "Road Speed Limiter (Fleet Limit)",
-                "desc": "Configures maximum vehicle road speed limiter (RSL) calibration for fleet operation policy."
+                "name": "Road Speed Limiter",
+                "desc": "Configures maximum vehicle road speed limiter calibration for fleet operation policy."
             },
             "actros_idle_shutdown_timer": {
                 "name": "Automatic Engine Idle Shutdown Timer",
                 "desc": "Automatically shuts down engine after specified idle time while stationary with parking brake set."
             },
             "volvo_pto_engine_rpm_preset": {
-                "name": "PTO (Power Take-Off) Engine RPM Preset",
+                "name": "PTO Engine RPM Preset",
                 "desc": "Sets predefined constant engine idle speed when PTO is engaged for hydraulic pump and tipper operation."
             },
             "volvo_ppc_eco_roll_hysteresis": {
-                "name": "I-See / PPC Topographical Speed Tolerance (Eco-Roll)",
+                "name": "I-See / PPC Topographical Speed Tolerance",
                 "desc": "Adjusts GPS predictive cruise control speed hysteresis tolerance window for maximum rolling fuel economy."
             },
             "scania_retarder_jake_brake_aggressiveness": {
@@ -2779,7 +2779,7 @@
                 "desc": "Attenuates reverse backup horn alarm volume for quiet night distribution in residential areas."
             },
             "cummins_ecm_fleet_speed_limiter": {
-                "name": "Cummins Engine Road Speed Limiter (RSL)",
+                "name": "Cummins Engine Road Speed Limiter",
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
@@ -2802,9 +2802,9 @@
         "searchPlaceholder": "Keresés funkció, DID vagy cél ECU...",
         "restoreSuccessTitle": "Gyári állapot visszaállítva",
         "restoreSuccessMsg": "A kiválasztott funkció visszaállt az eredeti DID állapotba.",
-        "cloneLockedBanner": "Klónadapter észlelve – kódolás zárolva (csak olvasható mód)",
+        "cloneLockedBanner": "Klónadapter észlelve – kódolás zárolva",
         "cloneAlertTitle": "OBD2-adapter klónozása észlelve",
-        "cloneAlertMsg": "A csatlakoztatott OBD2 adaptert hamisított klónadapterként jelölték meg, amelyből hiányzik az ECU írásához szükséges szigorú időzítési pontosság.\n\nAz összes szolgáltatásban böngészhet és kereshet, de a kódolási írási műveletek zárolva vannak a jármű védelme érdekében. Az íráshoz csatlakoztasson egy eredeti ELM327 v2.1+ vagy vLinker adaptert.",
+        "cloneAlertMsg": "A csatlakoztatott OBD2 adaptert hamisított klónadapterként jelölték meg, amelyből hiányzik az ECU írásához szükséges szigorú időzítési pontosság. Az összes szolgáltatásban böngészhet és kereshet, de a kódolási írási műveletek zárolva vannak a jármű védelme érdekében. Az íráshoz csatlakoztasson egy eredeti ELM327 v2.1+ vagy vLinker adaptert.",
         "riskLow": "ALACSONY KOCKÁZAT",
         "riskMedium": "KÖZEPES KOCKÁZAT",
         "riskHigh": "MAGAS KOCKÁZAT",
@@ -2820,7 +2820,7 @@
         "demoFeaturesCount": "{{count}} demó funkció listázva",
         "connectForFeaturesNote": "Csatlakozzon OBD2 eszközhöz a funkciók listázásához",
         "codingFailed": "A kódolás nem sikerült.",
-        "engineRunningMsg": "Az ECU kódolásához BEkapcsolt gyújtást kell kikapcsolni motorral (RPM == 0) a generátor feszültségcsúcsainak elkerülése érdekében.",
+        "engineRunningMsg": "Az ECU kódolásához BEkapcsolt gyújtást kell kikapcsolni motorral a generátor feszültségcsúcsainak elkerülése érdekében.",
         "engineRunningTitle": "Jár a motor",
         "lowVoltageMsg": "Az akkumulátor feszültsége az ECU írási műveleteihez szükséges biztonságos küszöb alatt van. A folytatás előtt töltse fel az akkumulátort.",
         "lowVoltageTitle": "Alacsony akkumulátorfeszültség riasztás",
@@ -2845,61 +2845,61 @@
         "segmentMotorcycle": "Motorkerékpár",
         "detailTitle": "Funkció részletei és egykattintásos kódolás",
         "prePostValues": "Pre / Post Payload Preview",
-        "selectOption": "Válassza ki a kódolási lehetőséget:",
+        "selectOption": "Válasszon kódolási opciót:",
         "oneClickActivate": "AKTIVÁLÁS EGY KATTINTÁSSAL",
-        "expertModeTitle": "Szakértői mód (Raw DID Hex Editor)",
+        "expertModeTitle": "Szakértői mód",
         "allMakes": "MINDEN TERMÉK",
         "techEcuSpecs": "MŰSZAKI ECU MŰSZAKI ADATOK ÉS HATÁSTERHELÉS ELŐNÉZÉSE",
         "targetEcuHeaderLabel": "Cél ECU fejléc:",
-        "udsDidLabel": "UDS adatazonosító (DID):",
+        "udsDidLabel": "UDS adatazonosító:",
         "bitPositionLabel": "Bitpozíció:",
         "targetPayloadLabel": "Cél UDS hasznos terhelés:",
         "byteBitValue": "{{byte}}. bájt, {{bit}}. bit",
         "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
         "restoreFactoryBtn": "GYÁRI BEÁLLÍTÁSOK VISSZAÁLLÍTÁSA",
         "restoreFactoryTitle": "GYÁRI BEÁLLÍTÁSOK VISSZAÁLLÍTÁSA",
-        "enterDidFirst": "Kérjük, adja meg a DID Hex kódot a visszaállításhoz (pl. 0501).",
+        "enterDidFirst": "Kérjük, adja meg a DID Hex kódot a visszaállításhoz.",
         "restoreConfirmMsg": "Visszaállítja a 0x{{didHex}} DID eredeti gyári állapotát?",
         "restoreAction": "GYÁR VISSZAÁLLÍTÁSA",
-        "expertDidPlaceholder": "DID Hex (pl. 0501)",
-        "expertValPlaceholder": "Hex érték (pl. 01)",
+        "expertDidPlaceholder": "DID Hex",
+        "expertValPlaceholder": "Hex érték",
         "writeRawPayload": "ÍRJA RAW UDS TERHELÉST",
         "enterValidHex": "Adjon meg érvényes DID és Value Hex karakterláncokat.",
         "options": {
-            "speed85": "85 km/h (Filo)",
-            "speed90": "90 km/h (Standart)",
-            "speed100": "100 km/h (Otoyol)",
-            "speed110": "110 km/h (Maksimum)",
-            "idleOff": "Devre Dışı (Sürekli Rölanti)",
+            "speed85": "85 km/h",
+            "speed90": "90 km/h",
+            "speed100": "100 km/h",
+            "speed110": "110 km/h",
+            "idleOff": "Devre Dışı",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
-            "pto900": "900 RPM (Düşük Debi)",
-            "pto1100": "1100 RPM (Damper / Standart)",
-            "pto1300": "1300 RPM (Vinç / Yüksek Debi)",
-            "retarderLow": "Düşük (Yumuşak Otoyol)",
-            "retarderMed": "Orta (Standart)",
-            "retarderHigh": "Yüksek (Ağır Yük / Dağ)",
+            "pto900": "900 RPM",
+            "pto1100": "1100 RPM",
+            "pto1300": "1300 RPM",
+            "retarderLow": "Düşük",
+            "retarderMed": "Orta",
+            "retarderHigh": "Yüksek",
             "levelNormal": "Normal Sürüş Seviyesi",
             "levelRamp1": "Yükleme Rampası Seviyesi 1",
             "levelRamp2": "Yükleme Rampası Seviyesi 2",
             "regenStart": "Sabit Rejenerasyonu Başlat",
             "regenStatus": "Kurum Durumunu Sorgula",
-            "alarmFull": "Tam Ses (%100 Gündüz)",
-            "alarmNight": "Kısık Ses (%50 Gece Modu)",
-            "hyst3": "+/- 3 km/h (Hassas)",
-            "hyst5": "+/- 5 km/h (Dengeli)",
-            "hyst10": "+/- 10 km/h (Maksimum Tasarruf)",
+            "alarmFull": "Tam Ses",
+            "alarmNight": "Kısık Ses",
+            "hyst3": "+/- 3 km/h",
+            "hyst5": "+/- 5 km/h",
+            "hyst10": "+/- 10 km/h",
             "drl25": "%25 Kısık",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
             "drl100": "%100 Tam Güç",
-            "xdsStandard": "Standart (Orta)",
-            "xdsStrong": "Güçlü (GTI / R)",
+            "xdsStandard": "Standart",
+            "xdsStrong": "Güçlü",
             "blink1": "1 Flaş",
-            "blink3": "3 Flaş (Standart)",
+            "blink3": "3 Flaş",
             "blink4": "4 Flaş",
-            "blink5": "5 Flaş (Genişletilmiş)",
+            "blink5": "5 Flaş",
             "chimeBmw": "BMW Standart",
             "chimeMini": "MINI Tarzı",
             "chimeRolls": "Rolls-Royce Lüks",
@@ -2914,28 +2914,31 @@
         "catSecuritySafety": "Güvenlik & Emniyet",
         "catMotorcycleEcu": "Motosiklet ECU",
         "freeTrialAvailableBadge": "1 INGYENES KREDIT",
-        "freeTrialUsedBadge": "FELOLDVA (PRÓBA)",
+        "freeTrialUsedBadge": "FELOLDVA",
         "proRequiredBadge": "PRO SZÜKSÉGES",
         "freeTrialExhaustedTitle": "Ingyenes próbakredit felhasználva",
         "freeTrialExhaustedMsg": "Felhasználta az 1 ingyenes funkcióaktiválási kreditjét. Váltson PRO-ra a korlátlan feloldáshoz, szakértői kódoláshoz és szerviznullázáshoz!",
         "freeTrialSuccessTitle": "Gratulálunk! Funkció aktiválva",
         "freeTrialSuccessMsg": "Ez a funkció sikeresen felprogramozásra került az ingyenes próbakreditjével! Bármikor váltson PRO-ra a többi funkció korlátlan eléréséhez.",
-        "upgradeToPro": "VÁLTÁS PRO-RA"
+        "upgradeToPro": "VÁLTÁS PRO-RA",
+        "toastActivated": "Aktiválva",
+        "toastDeactivated": "Deaktiválva",
+        "optionsBadge": "{{count}} LEHETŐSÉG"
     },
     "ignition": {
         "title": "Figyelmeztetés a gyújtás állapotára",
         "warningOff": "A gyújtás KI!",
-        "descOff": "Az ECU-modulok eléréséhez fordítsa a kulcsot BE állásba (jár a motor vagy a kulcs BE állásba).",
+        "descOff": "Az ECU-modulok eléréséhez fordítsa a kulcsot BE állásba.",
         "reconnectingTitle": "Automatikus újracsatlakozás...",
         "reconnectingDesc": "Gyújtási ciklus észlelve. A link automatikus visszaállítása a háttérben.",
-        "lowVoltageOff": "Alacsony akkumulátorfeszültség (Kikapcsolt gyújtás)",
-        "noEcuResponse": "Nincs ECU-reakció (Kikapcsolt gyújtás)",
-        "on": "Gyújtás BE (CSATLAKOZTATVA)",
+        "lowVoltageOff": "Alacsony akkumulátorfeszültség",
+        "noEcuResponse": "Nincs ECU-reakció",
+        "on": "Gyújtás BE",
         "batteryVoltage": "Akkumulátor feszültség:"
     },
     "hpGauge": {
         "title": "ÉLŐ TELJESÍTMÉNY ÉS NYOMATÉKMÉRŐ",
-        "subtitle": "Valós idejű lóerő (LE / kW) és nyomaték (Nm)",
+        "subtitle": "Valós idejű lóerő és nyomaték",
         "horsepower": "LÓERŐ",
         "torque": "MOTOR NYOMATÉK",
         "peakHp": "CSÚCS HP",
@@ -2944,32 +2947,32 @@
         "methodMaf": "Hava Akış Tabanlı",
         "methodTorque": "Canlı Tork Tabanlı",
         "methodLoad": "Motor Yükü Tabanlı",
-        "configWeight": "A jármű tömege (kg):",
-        "configDisplacement": "Motor lökettérfogat (L):",
+        "configWeight": "A jármű tömege:",
+        "configDisplacement": "Motor lökettérfogat:",
         "calcMethod": "SZÁMÍTÁSI MÓDSZER",
         "methodDiesel": "Dizel Tork & Yakıt Akışı"
     },
     "fuelTrim": {
         "title": "ÜZEMANYAG-BESZÁMÍTÁS ÉS LEVEGŐ-ÜZEMANYAG KEVERÉK ELEMZÉSE",
-        "subtitle": "STFT (Short Term) & LTFT (Long Term) Diagnostics",
-        "stft": "STFT (Short Term Trim)",
-        "ltft": "LTFT (Long Term Trim)",
+        "subtitle": "STFT & LTFT Diagnostics",
+        "stft": "STFT",
+        "ltft": "LTFT",
         "totalTrim": "TELJES ÜZEMANYAG-SZABÁLYOZÁS",
-        "afrRatio": "AIR-FUEL RATIO (AFR)",
-        "lambda": "LAMBDA (λ)",
-        "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE (λ = 1.00)",
-        "stateMildLean": "MILD LEAN MIXTURE (Trim 10% - 18%)",
-        "stateCriticalLean": "CRITICAL LEAN MIXTURE (Trim > 18%)",
-        "stateMildRich": "MILD RICH MIXTURE (Trim -10% to -18%)",
-        "stateCriticalRich": "CRITICAL RICH MIXTURE (Trim < -18%)",
+        "afrRatio": "AIR-FUEL RATIO",
+        "lambda": "LAMBDA",
+        "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
+        "stateMildLean": "MILD LEAN MIXTURE",
+        "stateCriticalLean": "CRITICAL LEAN MIXTURE",
+        "stateMildRich": "MILD RICH MIXTURE",
+        "stateCriticalRich": "CRITICAL RICH MIXTURE",
         "guideTitle": "LEAN vs RICH MIXTURE ÚTMUTATÓ",
-        "guideDesc": "A dús keverék az égéstérben lévő tüzelőanyag-felesleget (üzemanyag-hulladék, korom), míg a sovány keverék a felesleges levegőt (magas égési hőmérséklet, kopogásveszély) jelzi.",
+        "guideDesc": "A dús keverék az égéstérben lévő tüzelőanyag-felesleget, míg a sovány keverék a felesleges levegőt jelzi.",
         "causesTitle": "Lehetséges okok:",
         "actionTitle": "Javasolt intézkedés:",
-        "causeNormal": "System operates within ideal range (-5% to +5%). No faults.",
+        "causeNormal": "System operates within ideal range. No faults.",
         "actionNormal": "Folytassa a rutin karbantartást.",
         "causeVacuumLeak": "Vákuumos szivárgás, szakadt tömlők vagy szívócső tömítés",
-        "causeDirtyMaf": "Piszkos vagy hibás MAF (Mass Air Flow) érzékelő",
+        "causeDirtyMaf": "Piszkos vagy hibás MAF érzékelő",
         "causeLowFuelPressure": "Alacsony üzemanyag-szivattyú nyomás vagy eltömődött üzemanyagszűrő",
         "causeCloggedInjectors": "Eltömődött vagy szennyezett üzemanyag-befecskendezők",
         "actionCriticalLean": "Végezzen füsttesztet a szívószivárgás szempontjából, és tisztítsa meg a MAF-érzékelőt.",
@@ -2977,8 +2980,8 @@
         "actionMildLean": "Ellenőrizze a feszültség alatt lévő O2-érzékelő adatait és a szívótömlőket.",
         "causeLeakingInjector": "Szivárgó/elakadt üzemanyag-befecskendező",
         "causeStuckEvapPurgeVal": "Beragadt EVAP tartály ürítőszelep",
-        "causeDirtyAirFilter": "Erősen szennyezett légszűrő (korlátozott beszívás)",
-        "causeHighFuelPressure": "Magas üzemanyag-nyomócső nyomás (hibás szabályozó)",
+        "causeDirtyAirFilter": "Erősen szennyezett légszűrő",
+        "causeHighFuelPressure": "Magas üzemanyag-nyomócső nyomás",
         "actionCriticalRich": "Ellenőrizze az EVAP ürítőszelepet és a befecskendező szelep visszatérő szivárgását.",
         "causeRestrictedAirIntake": "A levegő beszívó csatorna elzáródása",
         "actionMildRich": "Ellenőrizze vagy cserélje ki a motor levegőszűrőjét.",
@@ -2988,53 +2991,53 @@
         "widebandSensor": "Geniş Bant Lambda Sensörü",
         "commonRailStatus": "Common Rail Püskürtme",
         "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda (Lean Burn) çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
+        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
         "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel (Common Rail & Lambda)",
-        "modeGasoline": "Benzinli (STFT / LTFT)",
-        "leanNormal": "Fakir Karışım (İdeal Dizel)",
+        "modeDiesel": "Dizel",
+        "modeGasoline": "Benzinli",
+        "leanNormal": "Fakir Karışım",
         "railStable": "Basınç Kararlı"
     },
     "dpf": {
-        "title": "DIESEL PARTICULATE FILTER (DPF) MONITOR",
+        "title": "DIESEL PARTICULATE FILTER MONITOR",
         "subtitle": "Korom- és hamutömeg, kipufogógáz hőmérséklet és regenerációs állapot",
         "sootLoad": "KORM BETÖLTÉSI SZINT",
         "ashLoad": "HAMU FELHALMAZÁSI SZINT",
-        "egtTemp": "EXHAUST GAS TEMP (EGT)",
+        "egtTemp": "EXHAUST GAS TEMP",
         "diffPressure": "NYOMÁSKÜLÖNBSÉG",
-        "stateOptimal": "DPF CLEAN & HEALTHY (0% - 40%)",
-        "stateModerate": "DPF MODERATE LOADING (40% - 65%)",
-        "stateHighSoot": "HIGH SOOT ACCUMULATION (65% - 85%)",
-        "stateCriticalClogged": "CRITICAL CLOGGING (85%+)",
-        "egtCold": "Cold (< 300°C)",
-        "egtWarm": "Warmed Up (300°C - 550°C)",
-        "egtRegenActive": "REGENERATION ACTIVE (550°C+)",
+        "stateOptimal": "DPF CLEAN & HEALTHY",
+        "stateModerate": "DPF MODERATE LOADING",
+        "stateHighSoot": "HIGH SOOT ACCUMULATION",
+        "stateCriticalClogged": "CRITICAL CLOGGING",
+        "egtCold": "Cold",
+        "egtWarm": "Warmed Up",
+        "egtRegenActive": "REGENERATION ACTIVE",
         "recommendNormal": "A szűrő állapota optimális. Folytassa a normál vezetést.",
         "recommendMonitor": "Városi vezetési felhalmozás. Folytassa a figyelést.",
-        "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM (Passive Regen).",
+        "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "A szűrő eltömődött! Szervizregenerálás vagy tisztítás szükséges.",
         "regenRecommendation": "Városi vezetési felhalmozás. Folytassa a figyelést."
     },
     "multiEcu": {
-        "title": "ALL-SYSTEM SCAN (MULTI-ECU SCAN)",
-        "subtitle": "Engine (ECM), Transmission (TCM), ABS, Airbag (SRS) & Body (BCM)",
+        "title": "ALL-SYSTEM SCAN",
+        "subtitle": "Engine, Transmission, ABS, Airbag & Body",
         "scanBtn": "AZ ÖSSZES MODUL SZKENNELÉSE",
         "scanning": "Szkennelés: {{module}}...",
-        "ecmName": "Engine Control Module (ECM)",
-        "tcmName": "Transmission Control Module (TCM / DCT)",
+        "ecmName": "Engine Control Module",
+        "tcmName": "Transmission Control Module",
         "absName": "ABS / Brake Safety System",
-        "srsName": "Airbag / Safety System (SRS)",
-        "bcmName": "Body Control Module (BCM)",
-        "statusClean": "0 FAULTS (HEALTHY)",
+        "srsName": "Airbag / Safety System",
+        "bcmName": "Body Control Module",
+        "statusClean": "0 FAULTS",
         "statusFault": "{{count}} HIBÁK ÉSZLELVE",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
         "scanHintText": "Érintse meg az 'ÖSSZES MODUL VIZSGÁLÁSA' elemet a diagnosztikai hibakódok lekérdezéséhez a jármű összes elektronikus vezérlőegységében.",
-        "gatewayName": "Központi Hálózati Átjáró (Gateway)",
-        "ipcName": "Műszeregység (IPC / Cockpit)",
-        "epsName": "Elektromos Szervokormány (EPS)",
-        "hvacName": "Klímaberendezés & Fűtés (HVAC)",
-        "tpmsName": "Gumiabroncs-nyomás Ellenőrző (TPMS)",
-        "bmsName": "Akkumulátorkezelő Rendszer (BMS / EV)",
+        "gatewayName": "Központi Hálózati Átjáró",
+        "ipcName": "Műszeregység",
+        "epsName": "Elektromos Szervokormány",
+        "hvacName": "Klímaberendezés & Fűtés",
+        "tpmsName": "Gumiabroncs-nyomás Ellenőrző",
+        "bmsName": "Akkumulátorkezelő Rendszer",
         "readyTitle": "ECU diagnosztika kész"
     },
     "dct": {
@@ -3050,13 +3053,13 @@
         "inProgress": "A sebességváltó alapbeállításainak végrehajtása... NE engedje el a fékpedált!",
         "success": "A DCT sebességváltó visszaállítása és a tengelykapcsoló újratanulása sikeresen befejeződött!",
         "step1": "1/3: Hidraulikus nyomás kalibrálása...",
-        "step2": "2/3: Az 1. tengelykapcsoló (K1) alapbeállításainak végrehajtása...",
-        "step3": "3/3: A 2. tengelykapcsoló (K2) sebességváltó villa adaptációja...",
+        "step2": "2/3: Az 1. tengelykapcsoló alapbeállításainak végrehajtása...",
+        "step3": "3/3: A 2. tengelykapcsoló sebességváltó villa adaptációja...",
         "ensurePreconditions": "Mielőtt elkezdené, minden biztonsági előfeltételnek eleget kell tennie.",
         "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
         "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
         "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites (Nötr) Sensörü",
+        "neutralSwitch": "Boş Vites Sensörü",
         "reverseSwitch": "Geri Vites Müşürü",
         "pressed": "BASILI",
         "released": "SERBEST",
@@ -3072,7 +3075,7 @@
         "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
         "modeAuto": "Otomatik / DCT Uyarlama",
         "modeManual": "Manuel Şanzıman Testi",
-        "park": "P (Park)",
+        "park": "P",
         "engaged": "ÇEKİLİ"
     },
     "safeExit": {
@@ -3090,28 +3093,28 @@
         "deviceUuid": "ESZKÖZ UUID",
         "presetTitle": "GYORS PARANCSOK:",
         "presetReset": "Állítsa vissza az OBD2 adaptert",
-        "presetSpeed": "Járműsebesség (km/h)",
+        "presetSpeed": "Járműsebesség",
         "presetReadDtc": "Olvassa el a hibakódokat",
         "presetClearDtc": "Törölje a hibakódokat",
         "refresh": "FRISSÍTÉS",
         "send": "KÜLDÉS",
         "share": "MEGOSZTÁS",
-        "terminalTitle": "ÉLŐ OBD TERMINÁL KONZOL (TX / RX)",
+        "terminalTitle": "ÉLŐ OBD TERMINÁL KONZOL",
         "userId": "FELHASZNÁLÓI ID",
         "userInfo": "ADMINISZTRÁTORI FELHASZNÁLÓI ADATOK",
         "devModeAlert": "A titkos PRO fejlesztői kulcs le van tiltva az éles buildekben.",
-        "invalidCmdError": "Kérjük, adjon meg egy érvényes OBD parancsot (pl. 01 0C vagy AT Z)",
+        "invalidCmdError": "Kérjük, adjon meg egy érvényes OBD parancsot",
         "noLogsInfo": "Nem található megosztható naplórekord.",
         "logsLoading": "Naplók betöltése...",
         "calculating": "Számítás...",
-        "secretProTitle": "Titkos PRO Kulcs (DEV)",
-        "secretProActive": "PRO Licenc Mód Állapota: AKTÍV (MINDEN FUNKCIÓ NYITVA)",
-        "secretProInactive": "PRO Licenc Mód Állapota: INAKTÍV (ZÁRVA)",
+        "secretProTitle": "Titkos PRO Kulcs",
+        "secretProActive": "PRO Licenc Mód Állapota: AKTÍV",
+        "secretProInactive": "PRO Licenc Mód Állapota: INAKTÍV",
         "logsTruncated": "... [naplók csonkolva] ...",
         "noLogsFound": "Nincsenek rögzített naplók.",
         "logsReadErr": "Nem sikerült beolvasni a naplókat:",
         "unknown": "Ismeretlen",
-        "deviceNotConnectedWarning": "(FIGYELMEZTETÉS: Az eszköz nincs csatlakoztatva)",
+        "deviceNotConnectedWarning": "",
         "deviceNotConnectedAlert": "Az eszköz nincs csatlakoztatva. Parancs hozzáadva a terminálhoz:",
         "cmdError": "Parancs hiba",
         "ecuNoResponse": "Az ECU nem válaszolt:",
@@ -3142,7 +3145,7 @@
         "initializing": "A HÍD INDÍTÁSA...",
         "iosAdvice": "Győződjön meg arról, hogy a Bluetooth engedélyezve van a Cortex OBD2 számára a rendszerbeállításokban.",
         "nativeState": "NATIVE_STATE",
-        "proceedBypass": "TOVÁBB AZ IRÁNYÍTÓPULTRA (KIKERÜLÉS)",
+        "proceedBypass": "TOVÁBB AZ IRÁNYÍTÓPULTRA",
         "state": "ÁLLAM",
         "unauthorized": "A Bluetooth engedélyek nem engedélyezettek.",
         "verifyingAndroid": "Android Bluetooth-alrendszer ellenőrzése",
@@ -3167,7 +3170,7 @@
         "year": "Év:"
     },
     "sgw": {
-        "title": "BIZTONSÁGI ÁTJÁRÓ (SGW) FELOLDÁSA",
+        "title": "BIZTONSÁGI ÁTJÁRÓ FELOLDÁSA",
         "subtitle": "Eladó: {{vendor}} | VIN: {{vin}}",
         "disclaimerTitle": "FONTOS BIZTONSÁGI FIGYELMEZTETÉS",
         "disclaimerText": "Az SGW feloldása írási hozzáférést biztosít a jármű ECU-jához. A jogosulatlan kódolás vagy a nem megfelelő paramétermódosítások hatással lehetnek a garanciára vagy letilthatják a biztonsági rendszereket. A felelősség a felhasználót illeti.",
@@ -3175,8 +3178,8 @@
         "checkboxUnaccepted": "Kérjük, fogadja el a protokollt a folytatáshoz",
         "offlineLabel": "Field Technician Offline Bypass kód:",
         "offlinePlaceholder": "például OFF_89A2BF10",
-        "offlineUnlockBtn": "Offline feloldás (15 perc)",
-        "cloudUnlockBtn": "Feloldás a Cloud Token segítségével (60 perc)",
+        "offlineUnlockBtn": "Offline feloldás",
+        "cloudUnlockBtn": "Feloldás a Cloud Token segítségével",
         "toggleToCloud": "Vissza a felhőalapú ellenőrzéshez",
         "toggleToOffline": "Offline Field Bypass mód",
         "cancel": "Mégse",
@@ -3191,13 +3194,13 @@
     },
     "evBms": {
         "title": "EV BMS diagnosztika",
-        "subtitle": "Telemetria és Akkumulátor Állapot (SOH / SOC) ({{brand}})",
-        "sohLabel": "Akkumulátor Állapot (SOH):",
+        "subtitle": "Telemetria és Akkumulátor Állapot",
+        "sohLabel": "Akkumulátor Állapot:",
         "capacityRetained": "Kapacitás megtartva",
-        "socLabel": "Töltöttségi Szint (SOC):",
+        "socLabel": "Töltöttségi Szint:",
         "remainingCharge": "Fennmaradó töltés",
-        "cellBalance": "Cellafeszültség egyensúly (16S csomag)",
-        "optimalBalance": "Optimális egyensúly (<30mV delta)",
+        "cellBalance": "Cellafeszültség egyensúly",
+        "optimalBalance": "Optimális egyensúly",
         "mildImbalance": "Enyhe egyensúlyhiány észlelve",
         "thermalStatus": "Termikus állapot és csomaginformáció",
         "packTemp": "Csomag hőmérséklet:",
@@ -3207,17 +3210,17 @@
     },
     "serviceReset": {
         "title": "SZERVIZ ÉS KARBANTARTÁS VISSZAÁLLÍTÁSA",
-        "subtitle": "Válassza ki a végrehajtandó karbantartási feladatot ({{make}})",
+        "subtitle": "Válassza ki a végrehajtandó karbantartási feladatot",
         "preCheckTitle": "Előzetes követelmények ellenőrzőlista",
         "preCheckIgnition": "A jármű gyújtáskapcsolójának ON állásban kell lennie.",
-        "preCheckEngine": "A motort KI KELL állítani (0 RPM).",
+        "preCheckEngine": "A motort KI KELL állítani.",
         "preCheckBattery": "Az akkumulátor feszültségének 12,2 V felett kell lennie.",
         "selectRoutine": "SZOLGÁLTATÁSI RUTIN KIVÁLASZTÁSA",
         "intervalReset": "Szerviz karbantartási intervallum visszaállítása",
         "intervalTitle": "Állítsa vissza a szervizintervallum jelzőfényét",
         "intervalSubtitle": "Törli a műszerfal szervizfigyelmeztetését, és visszaállítja a következő ellenőrzési intervallumot.",
-        "tpsReset": "Fojtószelep helyzetérzékelő (TPS) visszaállítása",
-        "tpsTitle": "Fojtószelep helyzetérzékelő (TPS) adaptációja",
+        "tpsReset": "Fojtószelep helyzetérzékelő visszaállítása",
+        "tpsTitle": "Fojtószelep helyzetérzékelő adaptációja",
         "tpsSubtitle": "Újrakalibrálja a nulla fojtószelep feszültség leállási pontját.",
         "absBleed": "ABS légtelenítés és szelep teszt",
         "absTitle": "ABS hidraulika szivattyú légtelenítési tesztje",
@@ -3245,7 +3248,7 @@
         "stepSwapCoils": "Cserélje ki a gyújtótekercset a hengerek között, hogy ellenőrizze a hibaátvitelt.",
         "stepFuelPressure": "Mérje meg az üzemanyagcső nyomását.",
         "criticalDrive": "Ne vezessen nagy távolságot erős gázzal. Azonnal menjen a szervizbe.",
-        "o2Title": "Oxigén (O2) érzékelő áramkör hibás működése",
+        "o2Title": "Oxigén érzékelő áramkör hibás működése",
         "o2Summary": "A levegő-üzemanyag keverék visszacsatolása romlik. A motor dúsan vagy szegényesen járhat, ami csökkenti az üzemanyag-hatékonyságot.",
         "causeO2Heater": "O2 érzékelő fűtőelem meghibásodás",
         "causeExhaustLeak": "A kipufogócső szivárgása az érzékelő előtt",
@@ -3253,8 +3256,8 @@
         "stepCheckWiring": "Vizsgálja meg az O2-érzékelő kábelkötegét, hogy nem olvadt-e vagy kopott-e.",
         "stepCleanSensor": "Tisztítsa meg az O2-érzékelő hegyét, vagy cserélje ki az érzékelőt, ha az ellenállás meghaladja a specifikációt.",
         "warningDrive": "Mérsékelt sebességgel biztonságosan behajtható a javítóműhelybe.",
-        "genericTitle": "Diagnosztikai kód elemzése ({{codes}})",
-        "genericSummary": "Aktív hibakód(ok) észlelve: {{codes}}. Rendszerfelügyelet ajánlott.",
+        "genericTitle": "Diagnosztikai kód elemzése",
+        "genericSummary": "Aktív hibakód észlelve: {{codes}}. Rendszerfelügyelet ajánlott.",
         "causeGeneric1": "Az érzékelő áramköre kívül esik a várt feszültségtartományon",
         "causeGeneric2": "Laza elektromos csatlakozás vagy földelési hiba",
         "stepGeneric1": "Hajtsa végre a diagnosztikai vizsgálatot, és rögzítse a kimerevített keretadatokat.",
@@ -3280,7 +3283,7 @@
         "cause2": "Mechanikai kopás vagy elektromos hiba az alkatrészben",
         "cause3": "Végezzen feszültség/ellenállás tesztet multiméterrel, vagy cserélje ki az alkatrészt",
         "recommendedAction": "Javasolt intézkedés",
-        "tsbTitle": "MŰSZAKI SZOLGÁLTATÁSI KÖZLÖNY (TSB)",
+        "tsbTitle": "MŰSZAKI SZOLGÁLTATÁSI KÖZLÖNY",
         "aiDoctorBtn": "AI DOCTOR SZAKÉRTŐI ELEMZÉS",
         "backToDetail": "VISSZA A HIBA RÉSZLETEIHEZ"
     },
@@ -3299,7 +3302,7 @@
         "p0171_cause1": "Vákuumtömlő szivárgás / szívócső szivárgása",
         "p0171_cause2": "Gyenge üzemanyag-szivattyú / alacsony nyomás",
         "p0171_cause3": "Elszennyeződött O2-érzékelő 1",
-        "p0171_action": "Végezzen füsttesztet a szívócsonkon, és ellenőrizze a hosszú távú üzemanyag-szabályozást (LTFT).",
+        "p0171_action": "Végezzen füsttesztet a szívócsonkon, és ellenőrizze a hosszú távú üzemanyag-szabályozást.",
         "p0171_tsb": "TSB-2022-14: Ellenőrizze, hogy a PCV szelep membránja nem szakadt-e meg.",
         "p0420_cause1": "A katalizátor hatékonyságának romlása",
         "p0420_cause2": "Hátsó alsó O2 érzékelő hiba",
@@ -3322,8 +3325,8 @@
         "loading": "EV diagnosztikai adatok betöltése...",
         "back": "Vissza",
         "title": "EV és akkumulátor diagnosztikai műszerfal",
-        "sohTitle": "Az akkumulátor állapota (SOH)",
-        "socAndPack": "Töltöttségi állapot (SoC): {{soc}}% | Csomagfeszültség: {{voltage}} V",
+        "sohTitle": "Az akkumulátor állapota",
+        "socAndPack": "Töltöttségi állapot: {{soc}}% | Csomagfeszültség: {{voltage}} V",
         "insulationTitle": "Szigetelés és hőbiztonság",
         "insulationResistance": "Szigetelési ellenállás",
         "cellDeltaVoltage": "Cellfeszültség Delta",
@@ -3350,13 +3353,13 @@
         "crashLabel": "Automatikus összeomlási jelentések",
         "crashSub": "Névtelen naplókat küld a hibafelismeréshez.",
         "rightsTitle": "GDPR és KVKK adatjogok",
-        "downloadBtn": "ADATAIM LETÖLTÉSE (JSON)",
+        "downloadBtn": "ADATAIM LETÖLTÉSE",
         "purgeBtn": "MINDEN ADATOM TÖRLÉSE",
-        "exportSuccessTitle": "Adatkész (GDPR / KVKK)",
-        "exportSuccessMsg": "Adatcsomagod létrehozásának dátuma: {{date}}.\n\nTartalom: Telemetriai sor ({{count}} rekord), Alkalmazásbeállítások.",
+        "exportSuccessTitle": "Adatkész",
+        "exportSuccessMsg": "Adatcsomagod létrehozásának dátuma: {{date}}. Tartalom: Telemetriai sor, Alkalmazásbeállítások.",
         "exportErrorTitle": "Hiba",
         "exportErrorMsg": "Nem sikerült létrehozni az adatcsomagot.",
-        "purgeAlertTitle": "Minden adat törlése (az elfelejtéshez való jog)",
+        "purgeAlertTitle": "Minden adat törlése",
         "purgeAlertMsg": "Az összes helyi és felhőalapú járműdiagnosztikai rekord véglegesen törlődik. Ez a művelet nem vonható vissza.",
         "cancel": "Mégse",
         "confirmDelete": "Végleges törlés",
@@ -3377,7 +3380,7 @@
         "retryApp": "PRÓBÁLJON MEG ÚJRA AZ ALKALMAZÁST"
     },
     "categoryDashboards": {
-        "heavyDutyTitle": "KERESKEDELMI NAGY TERMÉSZETŰ TELEMETRIA (SAE J1939)",
+        "heavyDutyTitle": "KERESKEDELMI NAGY TERMÉSZETŰ TELEMETRIA",
         "engineSpeed": "MOTOR SEBESSÉG",
         "vehicleSpeed": "A JÁRMŰ SEBESSÉGE",
         "pneumaticAirBrake": "PNEUMATIKUS LÉGFÉKRENDSZEREK",
@@ -3390,7 +3393,7 @@
     },
     "coding": {
         "wizard_title": "Kódolás előtti biztonsági ellenőrzőlista",
-        "voltage_check": "Akkumulátorfeszültség ellenőrzése (Min 12.5V)",
+        "voltage_check": "Akkumulátorfeszültség ellenőrzése",
         "voltage_too_low": "Az akkumulátor feszültsége túl alacsony. Kódolás blokkolva.",
         "preconditions_label": "KÖTELEZŐ ELŐFELTÉTELEK",
         "ignition_check": "Gyújtás BE, Motor KI",
@@ -3402,18 +3405,18 @@
         "confirm_and_proceed": "Megerősítés és Kódolás indítása",
         "expert_mode_title": "SZAKÉRTŐI MÓD / HOSSZÚ KÓDOLÁS",
         "expert_mode_warning": "Közvetlen ECU bájt/bit manipuláció. Legyen óvatos.",
-        "did_label": "CÉL DID (HEX)",
+        "did_label": "CÉL DID",
         "payload_label": "NYERS HEX ADAT",
-        "byte_selector_title": "Bájt választó (Érintse meg a bitek szerkesztéséhez)",
+        "byte_selector_title": "Bájt választó",
         "bit_editor_title": "Bájt {{index}} Bittérkép",
         "byte_count": "ÖSSZES BÁJT",
-        "checksum_label": "ELLENŐRZŐ ÖSSZEG (SUM16)",
+        "checksum_label": "ELLENŐRZŐ ÖSSZEG",
         "write_expert_payload": "Ellenőrzés és Írás az ECU-ba",
         "enter_valid_hex": "Kérjük, adjon meg érvényes DID-et és páros hosszúságú hex értéket."
     },
     "safety": {
         "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken (RPM = 0) silinebilir."
+        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3495,5 +3498,31 @@
         "safetyVoltage": "Safety Voltage"
     },
     "item-1": "Item-1",
-    "_": "_"
+    "_": "_",
+    "support": {
+        "techSupport": "MŰSZAKI TÁMOGATÁS",
+        "help": "MŰSZAKI TÁMOGATÁS",
+        "title": "Műszaki Támogatás és Visszajelzés",
+        "subtitle": "Küldje el kérdéseit vagy hibajelentéseit csapatunknak.",
+        "categoryTitle": "Kategória",
+        "catConnection": "Csatlakozás és Adapter",
+        "catVehicle": "Jármű és ECU Kompatibilitás",
+        "catCoding": "Kódolás és Funkciók",
+        "catRequest": "Funkció Kérése",
+        "catBug": "Hibajelentés",
+        "messagePlaceholder": "Írja ide üzenetét...",
+        "autoDiagnosticsTitle": "AUTOMATIKUS DIAGNOSZTIKAI JELENTÉS",
+        "deviceLabel": "Eszköz / OS",
+        "vehicleLabel": "Jármű",
+        "adapterLabel": "Adapter / Állapot",
+        "lastErrorLabel": "Utolsó Hiba",
+        "none": "Nincs",
+        "emailBtn": "Küldés E-mailben",
+        "sendInAppBtn": "Visszajelzés Küldése",
+        "rateStoreBtn": "Értékelés az Áruházban",
+        "ratePrompt": "Értékelje a MotoCortexet:",
+        "successTitle": "Visszajelzés Megérkezett",
+        "successDesc": "Köszönjük az üzenetet! Csapatunk hamarosan áttekinti.",
+        "reportIssueBtn": "Műszaki Probléma Jelzése"
+    }
 }

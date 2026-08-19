@@ -50,7 +50,7 @@ export class EcuReportService {
     const tSubtitle = i18n.t('report.subtitle', { defaultValue: 'Comprehensive Second-Hand Diagnostic & Telemetry Inspection' });
     const tVehicleInfo = i18n.t('report.vehicleInfo', { defaultValue: 'Vehicle Identification & ECU Metadata' });
     const tHealthScore = i18n.t('report.healthScore', { defaultValue: 'Overall ECU Health Score' });
-    const tDtcSection = i18n.t('report.dtcSection', { defaultValue: 'Diagnostic Trouble Codes (DTC Audit)' });
+    const tDtcSection = i18n.t('report.dtcSection', { defaultValue: 'Diagnostic Trouble Codes' });
     const tTelemetrySection = i18n.t('report.telemetrySection', { defaultValue: 'Live Telemetry & Sensor Snapshot' });
     const tMaintenanceSection = i18n.t('report.maintenanceSection', { defaultValue: 'Akıllı Garaj Service & Maintenance History' });
     const tAiSection = i18n.t('report.aiSection', { defaultValue: 'AI Doctor Overall Condition Analysis' });

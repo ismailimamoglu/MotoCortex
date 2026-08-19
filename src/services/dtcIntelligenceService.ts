@@ -134,7 +134,7 @@ export function getGuidedDiagnostics(code: string): GuidedDiagnostic {
  { cause: i18n.t('guidedDiag.p0171_cause2', { defaultValue: 'Weak Fuel Pump / Low Pressure' }), probability: 30 },
  { cause: i18n.t('guidedDiag.p0171_cause3', { defaultValue: 'Fouled O2 Sensor 1' }), probability: 20 },
  ],
- recommendedAction: i18n.t('guidedDiag.p0171_action', { defaultValue: 'Perform smoke test on intake manifold and check long-term fuel trim (LTFT).' }),
+ recommendedAction: i18n.t('guidedDiag.p0171_action', { defaultValue: 'Perform smoke test on intake manifold and check long-term fuel trim.' }),
  tsbSummary: i18n.t('guidedDiag.p0171_tsb', { defaultValue: 'TSB-2022-14: Check PCV valve diaphragm for tears.' }),
  };
 

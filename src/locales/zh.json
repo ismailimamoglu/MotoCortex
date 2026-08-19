@@ -65,7 +65,7 @@
             "simulationObd": "模拟 OBD",
             "obdHealthTitle": "OBD健康统计",
             "txRequests": "发送的请求（TX）：",
-            "rxResponses": "收到的响应 (RX)：",
+            "rxResponses": "收到的响应：",
             "timeouts": "超时：",
             "recoveries": "恢复尝试：",
             "avgLatency": "平均。延迟：",
@@ -160,8 +160,8 @@
         "syncing": "同步中...",
         "continueBtn": "继续",
         "selected": "已选择",
-        "successTag": "[成功]",
-        "errorTag": "[错误]",
+        "successTag": "成功",
+        "errorTag": "错误",
         "brandName": "CORTEX OBD2",
         "sampleSimData": "示例模拟数据",
         "normal": "Normal",
@@ -200,8 +200,8 @@
         "noPurchasesMsgAndroid": "未发现与您的 Google 帐户关联的有效 PRO 会员资格。",
         "terms": "使用条款",
         "privacy": "隐私政策",
-        "hardwareWarning": "重要硬件注意事项：由于 Apple 法律限制，iOS 设备不支持老一代蓝牙经典 (v2.1) 适配器。在将应用程序升级到 PRO 模式之前，请确保您的设备兼容蓝牙 LE (4.0+) 或 Wi-Fi。",
-        "hardwareWarningAndroid": "重要硬件注意事项：Android 设备支持经典蓝牙和蓝牙 LE (4.0+) 适配器。在切换到 PRO 模式之前，请确保您的设备兼容。",
+        "hardwareWarning": "重要硬件注意事项：由于 Apple 法律限制，iOS 设备不支持老一代蓝牙经典 适配器。在将应用程序升级到 PRO 模式之前，请确保您的设备兼容蓝牙 LE 或 Wi-Fi。",
+        "hardwareWarningAndroid": "重要硬件注意事项：Android 设备支持经典蓝牙和蓝牙 LE 适配器。在切换到 PRO 模式之前，请确保您的设备兼容。",
         "errorTitle": "产品加载失败",
         "errorDesc": "加载产品时出错，请检查您的互联网连接并重试。",
         "retryBtn": "再试一次",
@@ -254,7 +254,7 @@
         "permissionDesc": "蓝牙权限被拒绝。请从应用程序设置中允许它。",
         "safeModeActive": "安全模式已激活：检测到克隆或低质量适配器。",
         "iosBtManual": "请从控制中心或设置打开蓝牙。 iOS 设备上的蓝牙无法自动打开。",
-        "iosBleOnly": "注意：iOS 设备仅支持 BLE (低功耗蓝牙) OBD2 适配器。无法扫描传统蓝牙适配器。",
+        "iosBleOnly": "注意：iOS 设备仅支持 BLE OBD2 适配器。无法扫描传统蓝牙适配器。",
         "androidClassicHint": "注意：标准（经典）蓝牙 OBD2 适配器必须在 Android 蓝牙设置中配对，然后才能出现在扫描中。",
         "deviceNotPairedTitle": "设备未配对",
         "deviceNotPairedDesc": "在连接经典蓝牙 OBD2 适配器之前，您需要通过手机的蓝牙设置将它们配对。您将被引导至系统设置。",
@@ -332,24 +332,24 @@
         "signalGood": "信号良好",
         "signalFair": "公平信号",
         "signalWeak": "信号弱",
-        "iosClassicWarning": "注意：iOS 设备仅支持 BLE (低功耗蓝牙) OBD2 适配器。无法扫描传统蓝牙适配器。",
+        "iosClassicWarning": "注意：iOS 设备仅支持 BLE OBD2 适配器。无法扫描传统蓝牙适配器。",
         "wifiIpLabel": "Wi-Fi IP 地址",
         "wifiPortLabel": "Wi-Fi 端口",
         "cancelConnection": "BAĞLANTIYI İPTAL ET",
-        "statusScanningProtocol": "OBD2 Otomatik Protokol Taraması Yapılıyor (CAN / KWP)...",
+        "statusScanningProtocol": "OBD2 Otomatik Protokol Taraması Yapılıyor...",
         "motorcycle": "摩托车",
         "heavyDutyTruck": "重型卡车与商用客车",
-        "statusReadingVin": "Araç Şasi Numarası (VIN) Okunuyor & Profil Oluşturuluyor...",
+        "statusReadingVin": "Araç Şasi Numarası Okunuyor & Profil Oluşturuluyor...",
         "selectCategory": "选择车辆类别",
         "statusConnected": "ECU İletişimi Başarıyla Kuruldu",
         "statusAdaptingHardware": "Adaptör Bağlantısı ve Donanım Skoru Doğrulanıyor...",
         "passengerCar": "乘用车与轻型商用车",
         "changeCategory": "更改类别",
-        "passengerCarDesc": "12V 乘用车与轻型商用车 (OBD2 / CAN / KWP)",
+        "passengerCarDesc": "12V 乘用车与轻型商用车",
         "motorcycleDesc": "欧5与高转速摩托车遥测",
-        "heavyDutyTruckDesc": "24V 商用重型卡车与客车 (SAE J1939)",
-        "ignitionWarningTitle": "点火开关检查 (IGNITION ON)",
-        "ignitionWarningDesc": "您的 ELM327 适配器已连接，但车辆电脑 (ECU) 未响应。请将车辆点火开关转至 ON 档或启动发动机后重试。",
+        "heavyDutyTruckDesc": "24V 商用重型卡车与客车",
+        "ignitionWarningTitle": "点火开关检查",
+        "ignitionWarningDesc": "您的 ELM327 适配器已连接，但车辆电脑 未响应。请将车辆点火开关转至 ON 档或启动发动机后重试。",
         "goToDashboard": "进入实时仪表盘",
         "connectRequired": "Connect Required",
         "connectingECU": "Connecting E C U",
@@ -357,7 +357,7 @@
         "pairingTipDesc": "在 Android 上使用经典蓝牙适配器时，请在连接前在手机设置中配对（PIN：1234 或 0000）。iOS 和 BLE 适配器可直接连接。",
         "openBtSettings": "蓝牙设置",
         "firstTimeGuideTitle": "首次配对与设置指南",
-        "firstTimeGuideDescAndroid": "首次使用前请在手机蓝牙设置中配对经典蓝牙 (ELM327) 适配器（PIN 码：1234 或 0000）。BLE 和 Wi-Fi 设备可直接连接。",
+        "firstTimeGuideDescAndroid": "首次使用前请在手机蓝牙设置中配对经典蓝牙 适配器（PIN 码：1234 或 0000）。BLE 和 Wi-Fi 设备可直接连接。",
         "firstTimeGuideDescIos": "BLE（蓝牙 4.0+）和 Wi-Fi 适配器无需在手机设置中配对，可直接在应用内扫描并连接。"
     },
     "dashboard": {
@@ -368,7 +368,7 @@
         "batteryLowDesc": "电池电压为{{voltage}}。启动车辆或给车辆充电。低电压时 ECU 通信可能会中断。",
         "batteryWarn": "电池电量越来越弱",
         "batteryWarnDesc": "电池电压{{voltage}}。长期操作时要小心。",
-        "rpm": "发动机转速 (RPM)",
+        "rpm": "发动机转速",
         "speed": "车速",
         "temp": "温度",
         "throttle": "节气门开度",
@@ -390,7 +390,7 @@
         "voltage": "电瓶电压",
         "engineLoad": "发动机负荷",
         "intakeAirTemp": "进气温度",
-        "manifoldPressure": "进气歧管压力 (MAP)",
+        "manifoldPressure": "进气歧管压力",
         "ambientTemp": "环境温度",
         "oilTemp": "机油温度",
         "mafFlow": "MAF空气流量",
@@ -411,11 +411,11 @@
         "unit": "单位",
         "layoutChart": "图表",
         "adblue": "AdBlue 液位",
-        "egt": "排气温度 (EGT)",
+        "egt": "排气温度",
         "nox": "NOx 传感器值",
         "torque": "发动机扭矩",
         "selectedSensorsCount": "已选 {{count}} / {{max}} 个传感器",
-        "proSensorMsg": "Upgrade to PRO to unlock and monitor advanced live sensors (Turbo Boost, Oil Temp, Torque, AFR, etc.)."
+        "proSensorMsg": "Upgrade to PRO to unlock and monitor advanced live sensors."
     },
     "expertise": {
         "historyFound": "找到车辆历史记录！",
@@ -427,11 +427,11 @@
         "startScan": "开始专家扫描",
         "scanning": "扫描中...",
         "vehicleIdentity": "车辆 ID 和里程",
-        "vin": "底盘编号 (VIN)",
+        "vin": "底盘编号",
         "odometer": "原公里",
         "distSinceCleared": "错误已清除",
         "milDist": "发动机灯亮",
-        "dtcTitle": "故障代码 (DTC)",
+        "dtcTitle": "故障代码",
         "dtcClean": "无错误代码 - 干净",
         "extraActions": "额外交易",
         "garageTitle": "车库和过去的记录",
@@ -441,7 +441,7 @@
         "clean": "清洁",
         "faults": "失败",
         "vinRequired": "需要车辆识别号码",
-        "vinRequiredDesc": "为了注册，底盘号 (VIN) 必须自动显示或手动写入。",
+        "vinRequiredDesc": "为了注册，底盘号 必须自动显示或手动写入。",
         "missingInfo": "缺失信息",
         "missingInfoDesc": "请填写品牌和型号字段。",
         "saved": "已保存",
@@ -454,15 +454,15 @@
         "notScanned": "未扫描",
         "notScannedDesc": "请按右上角的扫描按钮读取诊断代码。",
         "scanFailed": "扫描失败",
-        "errTimeout": "Error: Connection Timeout (TIMEOUT)\nECU not responding, connection slow or disconnected.",
-        "errConnectionLost": "Error: Connection Lost (CONNECTION_LOST)\nCommunication with the adapter was lost.",
-        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\n(HARDWARE_FATAL_RECOVERY_FAILED)\nRecovery attempts failed. Please unplug and re-insert the adapter.",
-        "errUnableToRead": "Error: Read Error (ERROR_UNABLE_TO_READ)\nECU trouble codes could not be read.",
+        "errTimeout": "Error: Connection Timeout\nECU not responding, connection slow or disconnected.",
+        "errConnectionLost": "Error: Connection Lost\nCommunication with the adapter was lost.",
+        "errHardwareFatal": "ERROR: HARDWARE CRITICAL LOCK\nRecovery attempts failed. Please unplug and re-insert the adapter.",
+        "errUnableToRead": "Error: Read Error\nECU trouble codes could not be read.",
         "scannedSystems": "扫描系统",
-        "moduleEngine": "发动机控制单元 (ECU)",
-        "moduleAbs": "防抱死制动系统 (ABS)",
+        "moduleEngine": "发动机控制单元",
+        "moduleAbs": "防抱死制动系统",
         "moduleTcm": "变速箱控制模块（TCM）",
-        "moduleBcm": "车身控制模块 (BCM)",
+        "moduleBcm": "车身控制模块",
         "simSaveBlocked": "Sim Save Blocked",
         "scannedModules": "Scanned Modules"
     },
@@ -470,7 +470,7 @@
         "safetyWarning": "安全警告",
         "safetyWarningDesc": "在此过程中： • 点火开关必须打开 • 发动机必须关闭 • 请勿启动车辆 您想继续吗？",
         "step1": "第 1 步：删除错误代码",
-        "step1Desc": "所有存储的故障代码 (DTC) 和检查发动机指示灯都将被清除。燃油修正值将被重置。 此操作无法撤消！",
+        "step1Desc": "所有存储的故障代码 和检查发动机指示灯都将被清除。燃油修正值将被重置。 此操作无法撤消！",
         "step2": "第2步：ECU硬重置",
         "step2Desc": "电气重置（硬重置）将发送至发动机计算机。其工作原理类似于拆卸和安装电池。 在不支持的ECU中无效。它没有害处。",
         "clearCodes": "删除代码",
@@ -494,11 +494,11 @@
         "sections": {
             "live": {
                 "title": "实时监控传感器",
-                "content": "您可以即时监控转速、速度、发动机温度、节气门位置、电池电压、发动机负载、进气温度和歧管压力 (MAP)。 根据您的蓝牙速度，数值每秒刷新 1-5 次。您可以通过终端用UDS/OBD命令直接干预车辆。"
+                "content": "您可以即时监控转速、速度、发动机温度、节气门位置、电池电压、发动机负载、进气温度和歧管压力。 根据您的蓝牙速度，数值每秒刷新 1-5 次。您可以通过终端用UDS/OBD命令直接干预车辆。"
             },
             "expertise": {
                 "title": "检查和保修",
-                "content": "该应用程序使用 ECU（大脑）代码来检测错误。捕获车辆上记录的车辆识别号 (VIN) 和当前里程。 此外，过去的错误是通过计算车辆在“检查发动机”灯亮起时行驶了多远来确定的。生成的报告可以在 PDF 和消息环境中共享。"
+                "content": "该应用程序使用 ECU（大脑）代码来检测错误。捕获车辆上记录的车辆识别号 和当前里程。 此外，过去的错误是通过计算车辆在“检查发动机”灯亮起时行驶了多远来确定的。生成的报告可以在 PDF 和消息环境中共享。"
             },
             "tests": {
                 "title": "电池/性能测试",
@@ -506,7 +506,7 @@
             },
             "hardware": {
                 "title": "硬件兼容性",
-                "content": "推荐使用 ELM327 蓝牙 (v1.5)。某些高级代码可能无法在 v2.1 CLONE 版本的劣质硬件上运行。使用 vLinker 和 OBDLink 等高级适配器，您可以获得最快的速度。"
+                "content": "推荐使用 ELM327 蓝牙。某些高级代码可能无法在 v2.1 CLONE 版本的劣质硬件上运行。使用 vLinker 和 OBDLink 等高级适配器，您可以获得最快的速度。"
             },
             "warnings": {
                 "title": "重要警告",
@@ -522,11 +522,11 @@
             },
             "multiEcu": {
                 "title": "多ECU全模块扫描",
-                "content": "扫描并清除发动机 ECU 之外的故障代码，包括 ABS、安全气囊、自动变速箱 (TCU)、仪表组、气候控制 (HVAC) 和车身控制模块 (BCM)。"
+                "content": "扫描并清除发动机 ECU 之外的故障代码，包括 ABS、安全气囊、自动变速箱、仪表组、气候控制 和车身控制模块。"
             },
             "advancedDiagnostics": {
                 "title": "DCT 适配、DPF 和 HP 功率计",
-                "content": "• DCT / DSG 离合器接触点学习和适应重置\n• DPF 烟灰负荷 (%/g) 和排气再生温度监测\n• 实时短期/长期燃油调整 (STFT/LTFT) 和 Lambda 分析\n• 动态马力 (HP) 和扭矩 (Nm) 实时遥测图"
+                "content": "• DCT / DSG 离合器接触点学习和适应重置\n• DPF 烟灰负荷 和排气再生温度监测\n• 实时短期/长期燃油调整 和 Lambda 分析\n• 动态马力 和扭矩 实时遥测图"
             },
             "demoMode": {
                 "title": "演示模式（模拟）",
@@ -535,12 +535,12 @@
         },
         "reconfigurePermissions": "重新显示权限和法律条款",
         "shareWithFriend": "与朋友分享",
-        "shareMessageText": "使用 Cortex OBD2 Diagnostic Scanner 探索车辆 ECU 故障码和实时传感器数据！\n\n立即下载：\n iOS (App Store): https://apps.apple.com/app/id6742882583\n Android (Play Store): https://play.google.com/store/apps/details?id=com.ismail.motocortexv2\n Web Portal: https://motocortex-telemetry.vercel.app/"
+        "shareMessageText": "使用 Cortex OBD2 Diagnostic Scanner 探索车辆 ECU 故障码和实时传感器数据！ 立即下载： iOS: https://apps.apple.com/app/id6742882583 Android: https://play.google.com/store/apps/details?id=com.ismail.motocortexv2 Web Portal: https://motocortex-telemetry.vercel.app/"
     },
     "report": {
         "title": "═══摩托皮层诊断报告═══",
         "vehicleIdentity": "车辆 ID",
-        "vin": "底盘编号 (VIN)",
+        "vin": "底盘编号",
         "odometer": "距离（公里）",
         "milDist": "发动机灯亮",
         "distSinceCleared": "错误已清除",
@@ -644,28 +644,28 @@
         "sec": "秒"
     },
     "dtc": {
-        "P0102": "空气流量传感器 (MAF) - 低输入",
+        "P0102": "空气流量传感器 - 低输入",
         "P0113": "进气温度传感器 - 高电压",
         "P0171": "燃油系统低（组 1）",
         "P0300": "随机/多缸点火错误",
-        "P0420": "催化转化器系统 (B1) - 低效率",
+        "P0420": "催化转化器系统 - 低效率",
         "P0700": "变速箱控制系统 - 故障",
         "P0715": "涡轮速度传感器 - 电路故障",
         "P0560": "系统电压 - 故障",
         "P0562": "系统电压 - 低",
-        "U0100": "与发动机控制模块 (ECM/PCM) 失去通信",
-        "U0121": "与防抱死制动系统 (ABS) 模块失去通讯",
+        "U0100": "与发动机控制模块 失去通信",
+        "U0121": "与防抱死制动系统 模块失去通讯",
         "C0035": "左前轮速度传感器电路故障",
         "B0001": "驱动器前级 1 部署控制电路",
         "P0750": "换档电磁阀 A 故障",
         "P0814": "传输范围显示电路故障",
-        "U0140": "与车身控制模块 (BCM) 失去通讯",
+        "U0140": "与车身控制模块 失去通讯",
         "C0040": "右前轮速度传感器电路故障",
         "C0110": "ABS 泵电机电路故障",
         "C0121": "制动压力传感器电路故障",
         "B0010": "乘客前端 1 级部署控制",
         "B0020": "左侧安全气囊展开控制",
-        "B1000": "车身控制模块 (BCM) 硬件故障",
+        "B1000": "车身控制模块 硬件故障",
         "B1325": "器件电源电路低电压",
         "generalFault": "General Fault"
     },
@@ -701,7 +701,7 @@
         "noRegisteredVehicles": "未找到已注册车辆。",
         "selectVehicle": "选择",
         "mismatchTitle": "车辆不匹配",
-        "mismatchDesc": "从车架号（VIN）检测到连接车辆的品牌为“{{make}}”。然而，您选择的车辆是“{{selected}}”。\n\n您要取消当前选择并使用正确的品牌（{{make}}）重新选择吗？",
+        "mismatchDesc": "从车架号（VIN）检测到连接车辆的品牌为“{{make}}”。然而，您选择的车辆是“{{selected}}”。 您要取消当前选择并使用正确的品牌（{{make}}）重新选择吗？",
         "operations": {
             "clearDtc": "故障码已清除",
             "fuelAdaptation": "燃油自适应重置",
@@ -838,7 +838,7 @@
         "unsupportedOk": "OK",
         "disclaimerTitle": "免责声明",
         "disclaimerFeature": "特点",
-        "disclaimerBody": "更改此功能会直接影响车辆的出厂设置和 ECU 软件。请仔细阅读以下风险：\n\n• 不正确的应用可能会使您的车辆保修失效。\n• 某些更改可能会导致永久性故障或意外的电气错误。\n• 虽然操作可能是可逆的，但某些ECU 模块可能需要恢复出厂设置。\n• 用户应对因使用此功能而造成的任何物质或非物质损害承担全部责任。\n• Cortex OBD2 诊断扫描仪对这些更改造成的任何故障或损坏不承担任何责任。\n\n您必须确认您已阅读并理解此警告。",
+        "disclaimerBody": "更改此功能会直接影响车辆的出厂设置和 ECU 软件。请仔细阅读以下风险： • 不正确的应用可能会使您的车辆保修失效。\n• 某些更改可能会导致永久性故障或意外的电气错误。\n• 虽然操作可能是可逆的，但某些ECU 模块可能需要恢复出厂设置。\n• 用户应对因使用此功能而造成的任何物质或非物质损害承担全部责任。\n• Cortex OBD2 诊断扫描仪对这些更改造成的任何故障或损坏不承担任何责任。 您必须确认您已阅读并理解此警告。",
         "checkboxTitle": "需要确认",
         "check1": "我已阅读此警告并了解我的车辆保修可能会受到影响。",
         "check2": "我承认 Cortex OBD2 诊断扫描仪对此操作造成的任何故障或损坏不承担任何责任。",
@@ -904,7 +904,7 @@
         "connecting": "正在连接...",
         "error": "错误",
         "openSandbox": "诊断",
-        "advancedTerminal": "高级连接终端 (DIAG)",
+        "advancedTerminal": "高级连接终端",
         "terminalTitle": "现场终端和总线监视器",
         "pause": "暂停",
         "resume": "继续",
@@ -943,7 +943,7 @@
         "unsupportedBadge": "不支持",
         "backToExpertise": "BACK TO DIAGNOSTICS",
         "tabHardware": "HARDWARE",
-        "tabModes": "MODES (01-0A)",
+        "tabModes": "MODES",
         "tabTopology": "ECU NETWORK",
         "tabReadiness": "I/M READINESS",
         "tabVehicles": "VEHICLES",
@@ -951,34 +951,34 @@
         "atCommands": "AT Command Set Benchmark",
         "mode01": "Mode 01: Live Sensor Stream",
         "mode02": "Mode 02: Freeze Frame Snapshot",
-        "mode03": "Mode 03 & 07: Fault Codes (DTCs)",
+        "mode03": "Mode 03 & 07: Fault Codes",
         "mode04": "Mode 04: Clear DTCs & Reset MIL",
         "mode06": "Mode 06: On-Board & Misfire Tests",
         "mode08": "Mode 08: Bi-Directional Actuator Control",
-        "mode09": "Mode 09: Vehicle Identity (VIN/CALID/CVN)",
+        "mode09": "Mode 09: Vehicle Identity",
         "mode0A": "Mode 0A: Permanent Emission DTCs",
-        "modulePcm": "Powertrain / Engine (PCM / ECM)",
-        "moduleTcm": "Transmission Control (TCM)",
+        "modulePcm": "Powertrain / Engine",
+        "moduleTcm": "Transmission Control",
         "moduleAbs": "ABS / ESP Brake Control Module",
-        "moduleBcm": "Body Control Module (BCM / Comfort)",
-        "moduleSrs": "Airbag & Safety System (SRS)",
-        "moduleIpc": "Instrument Panel (IPC) & Gateway",
+        "moduleBcm": "Body Control Module",
+        "moduleSrs": "Airbag & Safety System",
+        "moduleIpc": "Instrument Panel & Gateway",
         "readinessStatus": "I/M Emission & Inspection Readiness",
         "readinessReady": "READY FOR INSPECTION",
         "readinessComplete": "COMPLETE",
         "readinessIncomplete": "INCOMPLETE",
         "monMisfire": "Misfire Monitor",
         "monFuel": "Fuel System Monitor",
-        "monComponent": "Comprehensive Components (CCM)",
+        "monComponent": "Comprehensive Components",
         "monCatalyst": "Catalyst Monitor",
         "monEvap": "EVAP System Monitor",
-        "monO2": "Oxygen Sensors (O2)",
+        "monO2": "Oxygen Sensors",
         "monO2Heater": "O2 Sensor Heaters",
         "monEgr": "EGR & VVT Variable Timing",
-        "catPassenger": "Passenger & Light Commercial (12V)",
-        "catMotorcycle": "Motorcycle (Euro 4/5 CAN & K-Line)",
-        "catTruck": "Heavy-Duty Commercial & Truck (J1939 24V)",
-        "catEv": "Electric & Hybrid Vehicles (BMS / SoH)"
+        "catPassenger": "Passenger & Light Commercial",
+        "catMotorcycle": "Motorcycle",
+        "catTruck": "Heavy-Duty Commercial & Truck",
+        "catEv": "Electric & Hybrid Vehicles"
     },
     "sensor": {
         "oilTemp": "发动机油温",
@@ -1031,7 +1031,7 @@
         "safetyAlertMsg": "编码所需的最低电池电压为 12.2V。\n请连接充电器或启动发动机。",
         "items": {
             "vag_staging_needle_sweep": {
-                "name": "仪表扫针 (Staging / Needle Sweep)",
+                "name": "仪表扫针",
                 "desc": "点火启动时仪表盘指针自动扫至最大值并返回。"
             },
             "vag_acoustic_lock_confirmation": {
@@ -1044,10 +1044,10 @@
             },
             "vag_drl_menu_toggle": {
                 "name": "日间行车灯开关菜单",
-                "desc": "在中控屏车辆设置中添加日间行车灯(DRL)开启/关闭选项。"
+                "desc": "在中控屏车辆设置中添加日间行车灯开启/关闭选项。"
             },
             "vag_tear_wiping": {
-                "name": "雨刮器补刮 (Tear Wiping)",
+                "name": "雨刮器补刮",
                 "desc": "使用喷水清洗挡风玻璃5秒后，雨刮自动补刮一次残留雨滴。"
             },
             "vag_emergency_brake_flashing": {
@@ -1079,8 +1079,8 @@
                 "desc": "在仪表盘中央显示屏中添加实时数字车速显示选项。"
             },
             "bmw_sport_displays": {
-                "name": "运动组合仪表 (马力与扭矩表)",
-                "desc": "在iDrive中控屏中开启实时马力(HP)与扭矩(Nm)动态仪表。"
+                "name": "运动组合仪表",
+                "desc": "在iDrive中控屏中开启实时马力与扭矩动态仪表。"
             },
             "bmw_acoustic_lock_sound": {
                 "name": "锁车/解锁声音确认",
@@ -1092,7 +1092,7 @@
             },
             "bmw_tpms_tire_temperature": {
                 "name": "胎压与胎温实时显示",
-                "desc": "在胎压监测(TPMS)界面中同时实时显示轮胎温度数值。"
+                "desc": "在胎压监测界面中同时实时显示轮胎温度数值。"
             },
             "renault_trip_computer_enable": {
                 "name": "行车电脑功能开启",
@@ -1111,7 +1111,7 @@
                 "desc": "车辆锁定成功时通过喇叭发出提示音。"
             },
             "renault_shift_indicator": {
-                "name": "换挡提醒指示灯 (GSI)",
+                "name": "换挡提醒指示灯",
                 "desc": "开启仪表盘升挡/降挡箭头提示以实现节能驾驶。"
             },
             "ford_double_horn_honk_disable": {
@@ -1155,7 +1155,7 @@
                 "desc": "将蓝色 Alpina 签名主题应用于数字仪表盘。"
             },
             "bmw_video_in_motion": {
-                "name": "动态视频 (VIM)",
+                "name": "动态视频",
                 "desc": "驾驶时解锁 iDrive 屏幕上的 USB 视频播放。"
             },
             "bmw_sport_plus_mode_unlock": {
@@ -1207,7 +1207,7 @@
                 "desc": "按住遥控钥匙解锁按钮时可摇下所有电动车窗。"
             },
             "toyota_auto_lock_shift_p": {
-                "name": "变速时自动锁门 (P -> D)",
+                "name": "变速时自动锁门",
                 "desc": "当移出驻车位置时，自动锁定所有车门。"
             },
             "peugeot_icockpit_theme_unlock": {
@@ -1235,7 +1235,7 @@
                 "desc": "在发动机启动时将主动排气阀默认位置设置为“打开”。"
             },
             "vag_rain_closing_sunroof": {
-                "name": "雨天关闭 (Regenschließen)",
+                "name": "雨天关闭",
                 "desc": "停车时检测到下雨时，自动关闭天窗和车窗。"
             },
             "bmw_launch_control_unlock": {
@@ -1247,7 +1247,7 @@
                 "desc": "解锁 MBUX 室内照明中的动态多区域颜色循环动画。"
             },
             "ford_trailer_brake_activation": {
-                "name": "挂车制动控制器 (TBC) 启用",
+                "name": "挂车制动控制器 启用",
                 "desc": "在仪表盘中启用集成拖车制动控制器菜单。"
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
@@ -1279,7 +1279,7 @@
                 "desc": "在直流快速充电之前启用手动电池预热开关。"
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "驾驶员监控 (DMS) 摄像头灵敏度降低",
+                "name": "驾驶员监控 摄像头灵敏度降低",
                 "desc": "减少转向柱上过度敏感的眼动追踪疲劳警告。"
             },
             "honda_walk_away_auto_lock": {
@@ -1287,7 +1287,7 @@
                 "desc": "当驾驶员使用钥匙扣走出 2 米时，自动锁上所有车门。"
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "自动车辆保持 (AVH) 记忆模式",
+                "name": "自动车辆保持 记忆模式",
                 "desc": "记住整个点火周期的 AVH 制动保持 ON/OFF 状态。"
             },
             "volvo_start_stop_default_off": {
@@ -1319,12 +1319,12 @@
                 "desc": "车门打开时电动驾驶员座椅靠背移动 5 厘米，方便车辆进入。"
             },
             "vag_hba_memory_state": {
-                "name": "远光灯辅助 (HBA) 记忆保留",
+                "name": "远光灯辅助 记忆保留",
                 "desc": "在整个点火重启循环中记住远光灯辅助开启状态。"
             },
             "vag_battery_soc_display": {
-                "name": "电池充电状态 (% SOC) 显示",
-                "desc": "按住行程按钮时，仪表盘上会显示准确的电池充电百分比 (% SOC)。"
+                "name": "电池充电状态 显示",
+                "desc": "按住行程按钮时，仪表盘上会显示准确的电池充电百分比。"
             },
             "bmw_idrive7_m_animation": {
                 "name": "iDrive 7 / 8 M-Performance 启动动画",
@@ -1347,7 +1347,7 @@
                 "desc": "禁用 4 系列和 2 系列轿跑车上的电动安全带延长臂。"
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "自动座椅和方向盘加热温度 (+5°C)",
+                "name": "自动座椅和方向盘加热温度",
                 "desc": "当环境温度低于 5°C 时，触发自动座椅和方向盘加热。"
             },
             "mercedes_amg_track_pace_unlock": {
@@ -1379,7 +1379,7 @@
                 "desc": "允许在直流快速充电之前手动将电池预热至 25°C，无需导航路线。"
             },
             "ev_v2l_power_output_expand": {
-                "name": "V2L（车辆到负载）220V 插座功率扩展 (3.6 kW)",
+                "name": "V2L（车辆到负载）220V 插座功率扩展",
                 "desc": "将 V2L 外部 220V 交流家用电源插座限制从 2.2 kW 扩大到 3.6 kW。"
             },
             "ev_one_pedal_regen_force_level3": {
@@ -1411,7 +1411,7 @@
                 "desc": "强制热泵/PTC 电加热器适应客舱气候，无需启动汽油发动机。"
             },
             "vag_taycan_ess_sound_profile_swap": {
-                "name": "电动运动音响 (ESS) Taycan / RS e-tron 简介",
+                "name": "电动运动音响 Taycan / RS e-tron 简介",
                 "desc": "将电动驾驶声音配置更改为保时捷 Taycan GTS 或奥迪 RS e-tron GT 声音发生器。"
             },
             "vag_meb_daily_charge_target_menu": {
@@ -1419,7 +1419,7 @@
                 "desc": "在 MIB 屏幕上添加快速切换栏，可在 80% 日常电池护理和 100% 行程充电之间切换。"
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "GTE / E 模式发动机发电机电池强制充电 (80%)",
+                "name": "GTE / E 模式发动机发电机电池强制充电",
                 "desc": "驾驶时强制内燃机充当发电机，为高压电池充电至 80%。"
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
@@ -1431,7 +1431,7 @@
                 "desc": "将 330e / 530e 插电式混合动力车的最大纯电动速度上限提高至 140 公里/小时。"
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "交流家用充电器最大电流限制选择器 (6A - 32A)",
+                "name": "交流家用充电器最大电流限制选择器",
                 "desc": "增加交流家用充电限流器（6A/10A/16A/32A），防止家用电路过载。"
             },
             "toyota_hybrid_ev_mode_override": {
@@ -1439,7 +1439,7 @@
                 "desc": "当 EV 模式按钮处于活动状态时，防止汽油发动机在加速过程中强制启动。"
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "丰田/雷克萨斯高压电池冷却风扇升压 (+30%)",
+                "name": "丰田/雷克萨斯高压电池冷却风扇升压",
                 "desc": "将混合动力动力电池冷却风扇速度提高 30%，以防止炎热气候下的热退化。"
             },
             "tesla_sentry_high_bitrate_video": {
@@ -1447,7 +1447,7 @@
                 "desc": "提高哨兵模式摄像机视频录制比特率，实现清晰的车牌可见度。"
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "Tesla 驾驶室过热保护温度阈值 (30°C)",
+                "name": "Tesla 驾驶室过热保护温度阈值",
                 "desc": "将客舱过热保护气候触发温度从 40°C 降低至 30°C，以保护内部环境。"
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
@@ -1491,7 +1491,7 @@
                 "desc": "解锁赛道单圈计时器和仪表盘上的扇区分割显示。"
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "发动机制动控制 (EBC) 水平调整",
+                "name": "发动机制动控制 水平调整",
                 "desc": "调整硬角进入制动期间的后轮减速扭矩。"
             },
             "ducati_cruise_control_retrofit_enable": {
@@ -1543,7 +1543,7 @@
                 "desc": "解锁 R1/MT-09 SP 轨道集群布局和可编程变速 RPM 灯。"
             },
             "yamaha_launch_control_sensitivity": {
-                "name": "发射控制系统 (LCS) 转速上限",
+                "name": "发射控制系统 转速上限",
                 "desc": "配置启动控制保持 RPM（8,000 至 10,000 RPM 范围）。"
             },
             "yamaha_heated_grips_accessory_enable": {
@@ -1595,7 +1595,7 @@
                 "desc": "在直流快速充电之前启用手动电池热调节。"
             },
             "byd_v2l_220v_outlet_power_expansion": {
-                "name": "V2L（车辆到负载）220V 插座功率扩展 (3.6 kW)",
+                "name": "V2L（车辆到负载）220V 插座功率扩展",
                 "desc": "将外部 V2L 放电功率上限从最大 2.2 kW 扩大到 3.6 kW。"
             },
             "byd_one_pedal_regen_default_max": {
@@ -1659,7 +1659,7 @@
                 "desc": "减少内部监控摄像头发出的误报干扰警报。"
             },
             "retrofit_parking_sensor_coding": {
-                "name": "改装前/后停车距离控制 (PDC) 编码",
+                "name": "改装前/后停车距离控制 编码",
                 "desc": "在网关安装列表中注册售后市场或 OEM 停车传感器模块。"
             },
             "retrofit_360_camera_activation": {
@@ -1683,7 +1683,7 @@
                 "desc": "启用无线充电器状态 LED 和手机遗留提醒弹出窗口。"
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "改装自适应巡航控制 (ACC) 前雷达模块",
+                "name": "改装自适应巡航控制 前雷达模块",
                 "desc": "将改装的前距雷达单元编码到 CAN 总线车辆网络中。"
             },
             "retrofit_traffic_sign_camera_activation": {
@@ -1739,7 +1739,7 @@
                 "desc": "如果超出代客泊车模式，则会在仪表板上显示幽默而严格的警告消息。"
             },
             "adas_lane_keep_assist_gentle_curve": {
-                "name": "车道保持辅助系统 (LKA) 温和转向干预曲线",
+                "name": "车道保持辅助系统 温和转向干预曲线",
                 "desc": "通过应用渐进式扭矩干预来软化突然的方向盘拖拽。"
             },
             "adas_lka_last_state_memory_mode": {
@@ -1747,11 +1747,11 @@
                 "desc": "防止 LKA 每次重新启动点火装置时自动重新打开。"
             },
             "adas_acc_default_follow_distance": {
-                "name": "自适应巡航控制 (ACC) 默认距离预设",
+                "name": "自适应巡航控制 默认距离预设",
                 "desc": "每当 ACC 通电时，设置默认间隙设置（1 至 4 条）。"
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "ACC 巡航速度增量选择器 (+5 / +10 km/h)",
+                "name": "ACC 巡航速度增量选择器",
                 "desc": "将短按方向盘速度按钮步长从 1 km/h 更改为 5 km/h。"
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
@@ -1771,11 +1771,11 @@
                 "desc": "在道路行驶时执行动态相机图像拼接校准。"
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "转向角传感器 (SAS) 零点校准",
+                "name": "转向角传感器 零点校准",
                 "desc": "进行车轮定位服务后，将转向中心角重置为 0.0°。"
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "后方交叉交通警报 (RCTA) 检测范围",
+                "name": "后方交叉交通警报 检测范围",
                 "desc": "增加倒车时接近的车辆的侧面雷达检测距离。"
             },
             "adas_aeb_emergency_braking_threshold_preview": {
@@ -1827,7 +1827,7 @@
                 "desc": "防止发动机在停车 30 分钟后自动关闭。"
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "N Grin Shift (NGS) 20 秒 Overboost 改造解锁",
+                "name": "N Grin Shift 20 秒 Overboost 改造解锁",
                 "desc": "启用 ECU 中的方向盘 NGS 按钮超增压功能。"
             },
             "hyundai_smart_tailgate_approach_distance": {
@@ -1855,7 +1855,7 @@
                 "desc": "在自动超级巡航高速公路驾驶期间自定义间隙间距。"
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "平视显示器 (HUD) 位置和倾斜零点校准",
+                "name": "平视显示器 位置和倾斜零点校准",
                 "desc": "重置挡风玻璃 HUD 投影仪图像角度和零水平水平对齐。"
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
@@ -1891,15 +1891,15 @@
                 "desc": "激活 100% 后电机扭矩偏置和 ESC 轨道漂移模式。"
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset (Flexible Interval)",
+                "name": "Oil Change Service Reset",
                 "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
             },
             "vag_epb_service_mode": {
-                "name": "电子驻车制动器 (EPB) 刹车片保养模式",
+                "name": "电子驻车制动器 刹车片保养模式",
                 "desc": "缩回后 EPB 卡钳活塞以更换后刹车片和转子。"
             },
             "bmw_bms_battery_registration": {
-                "name": "智能电池传感器 (IBS) 电池注册",
+                "name": "智能电池传感器 电池注册",
                 "desc": "在 DME/DDE 发动机管理中注册新的 12V AGM/铅酸电池更换。"
             },
             "bmw_motorrad_service_indicator_reset": {
@@ -1912,10 +1912,10 @@
             },
             "byd_bms_isolation_self_test": {
                 "name": "比亚迪刀片电池高压隔离自检",
-                "desc": "在 BMS 中执行高压系统 (400V/800V) 漏电和电阻诊断。"
+                "desc": "在 BMS 中执行高压系统 漏电和电阻诊断。"
             },
             "vag_drl_brightness_multi": {
-                "name": "日间行车灯 (DRL) 亮度调节",
+                "name": "日间行车灯 亮度调节",
                 "desc": "调整近光/停车模式的 LED DRL 强度级别。"
             },
             "bmw_comfort_turn_signal_cycles": {
@@ -1923,8 +1923,8 @@
                 "desc": "选择快速点击转向灯控制杆时闪烁的次数。"
             },
             "bmw_oil_service_reset": {
-                "name": "CBS 发动机油重置 (宝马)",
-                "desc": "将基于状态的服务 (CBS) 油寿命百分比重置回 100%。"
+                "name": "CBS 发动机油重置",
+                "desc": "将基于状态的服务 油寿命百分比重置回 100%。"
             },
             "generic_oil_service_reset": {
                 "name": "通用机油维护指示器重置",
@@ -1943,8 +1943,8 @@
                 "desc": "将驻车制动轴释放至车间位置以进行制动维修。"
             },
             "vag_dpf_regen": {
-                "name": "DPF 服务再生触发器 (VAG)",
-                "desc": "启动固定式柴油颗粒过滤器 (DPF) 烟灰燃烧循环。"
+                "name": "DPF 服务再生触发器",
+                "desc": "启动固定式柴油颗粒过滤器 烟灰燃烧循环。"
             },
             "bmw_dpf_regen": {
                 "name": "DPF 强制再生触发器（宝马）",
@@ -1955,7 +1955,7 @@
                 "desc": "触发 HDi 柴油发动机 ECU 的固定 DPF 再生。"
             },
             "bmw_bms_battery_register": {
-                "name": "BMS 电池更换登记 (BMW)",
+                "name": "BMS 电池更换登记",
                 "desc": "使用 DME/DDE 智能电池传感器注册新电池更换。"
             },
             "mb_bms_battery_register": {
@@ -1963,7 +1963,7 @@
                 "desc": "安装新电池后重置 SAM 模块中的电池老化计数器。"
             },
             "vag_sas_calibrate": {
-                "name": "转向角传感器 (SAS) 校准 (VAG)",
+                "name": "转向角传感器 校准",
                 "desc": "校准 ABS/ESP ECU 的 G85 转向角传感器零点位置。"
             },
             "toyota_sas_calibrate": {
@@ -1979,7 +1979,7 @@
                 "desc": "重置电子驻车制动卡钳磨损计数器并校准气隙。"
             },
             "vag_dsg_reset": {
-                "name": "DSG 变速箱基本设置重置 (VAG)",
+                "name": "DSG 变速箱基本设置重置",
                 "desc": "重置 DSG/S-Tronic 的离合器接合点和换档阀适配。"
             },
             "bmw_zf_reset": {
@@ -1987,15 +1987,15 @@
                 "desc": "清除 EGS 变速箱换档时间和压力适应值。"
             },
             "bmw_brake_fluid_reset": {
-                "name": "制动液保养间隔重置 (BMW)",
-                "desc": "重置基于状态的服务 (CBS) 2 年制动液更换计时器。"
+                "name": "制动液保养间隔重置",
+                "desc": "重置基于状态的服务 2 年制动液更换计时器。"
             },
             "ford_injector_code": {
                 "name": "喷油器修正系数编码（福特）",
                 "desc": "将柴油喷油器的 16 字符 IQA 代码编程到 PCM 中。"
             },
             "bmw_injector_code": {
-                "name": "喷油器流量编码 (BMW)",
+                "name": "喷油器流量编码",
                 "desc": "将更换的喷油器的能量校准值写入 DME。"
             },
             "generic_headlight_aim": {
@@ -2007,27 +2007,27 @@
                 "desc": "注册 PCU 中的辅助 AGM 启动器/支持电池更换。"
             },
             "vag_comfort_turn_signal": {
-                "name": "舒适转向信号眨眼计数 (VAG)",
+                "name": "舒适转向信号眨眼计数",
                 "desc": "在 3、4 和 5 次闪烁之间调整变道闪光灯周期计数。"
             },
             "vag_coming_home_duration": {
-                "name": "进/离家灯光持续时间 (VAG)",
+                "name": "进/离家灯光持续时间",
                 "desc": "配置车辆锁止后大灯照明定时器（10 秒 - 60 秒）。"
             },
             "vag_remote_windows": {
-                "name": "远程便捷车窗控制 (VAG)",
+                "name": "远程便捷车窗控制",
                 "desc": "通过长按遥控钥匙即可打开和关闭电动车窗。"
             },
             "vag_auto_lock_15kmh": {
-                "name": "时速 15 公里时自动门锁 (VAG)",
+                "name": "时速 15 公里时自动门锁",
                 "desc": "当车速达到 15 公里/小时时，自动锁止所有车门。"
             },
             "vag_sfd_unlock_prep": {
-                "name": "SFD 网关保护状态准备 (VAG 2020+)",
+                "name": "SFD 网关保护状态准备",
                 "desc": "准备 MQB-evo SFD 网关令牌会话以写入受保护的 DID。"
             },
             "bmw_asd_deactivate": {
-                "name": "主动声音设计 (ASD) 停用 (BMW)",
+                "name": "主动声音设计 停用",
                 "desc": "使通过机舱扬声器播放的合成发动机声音静音。"
             },
             "bmw_comfort_turn_signal": {
@@ -2119,59 +2119,59 @@
                 "desc": "解锁虚拟驾驶舱上的 S/RS 中央转速表布局选项。"
             },
             "vag_scandinavian_drl": {
-                "name": "斯堪的纳维亚 DRL 模式 (VAG)",
+                "name": "斯堪的纳维亚 DRL 模式",
                 "desc": "使后尾灯与前日行灯一起持续亮起。"
             },
             "vag_mirror_dip_reverse": {
-                "name": "倒车镜下倾式乘客镜 (VAG)",
+                "name": "倒车镜下倾式乘客镜",
                 "desc": "挂倒档时，将乘客侧后视镜向下倾斜。"
             },
             "vag_dynamic_turn_signal": {
-                "name": "动态/顺序转向信号模式 (VAG)",
+                "name": "动态/顺序转向信号模式",
                 "desc": "在兼容的尾灯模块上启用动态 LED 闪光灯模式。"
             },
             "vag_seatbelt_warning_duration": {
-                "name": "安全带警告鸣响持续时间调整 (VAG)",
+                "name": "安全带警告鸣响持续时间调整",
                 "desc": "缩短或抑制重复的安全带警告铃声计时器。"
             },
             "vag_sunroof_remote": {
-                "name": "天窗远程舒适控制 (VAG)",
+                "name": "天窗远程舒适控制",
                 "desc": "允许通过遥控钥匙扣打开和倾斜全景天窗。"
             },
             "vag_acc_distance_preset": {
-                "name": "ACC 自适应巡航默认跟随距离 (VAG)",
+                "name": "ACC 自适应巡航默认跟随距离",
                 "desc": "设置点火启动时的默认雷达跟随距离曲线。"
             },
             "vag_infotainment_startup_logo": {
-                "name": "信息娱乐系统启动图形标志 (VAG)",
+                "name": "信息娱乐系统启动图形标志",
                 "desc": "自定义信息娱乐启动启动画面徽标（R-Line、GTI、RS）。"
             },
             "vag_ambient_color_cycle": {
-                "name": "室内环境光光谱解锁 (VAG)",
+                "name": "室内环境光光谱解锁",
                 "desc": "扩展车辆设置菜单中的环境照明调色板选项。"
             },
             "vag_service_interval_custom": {
-                "name": "海关检验和服务距离阈值 (VAG)",
+                "name": "海关检验和服务距离阈值",
                 "desc": "配置下一次服务警告的自定义公里和天数目标。"
             },
             "vag_door_handle_lights_reverse": {
-                "name": "倒车时外门把手灯亮起 (VAG)",
+                "name": "倒车时外门把手灯亮起",
                 "desc": "倒车时照亮门把手 LED 水坑灯，以提高地面可见性。"
             },
             "bmw_msport_exhaust_burble": {
-                "name": "M-Sport 排气管爆裂声和爆裂声强度 (BMW)",
+                "name": "M-Sport 排气管爆裂声和爆裂声强度",
                 "desc": "调整运动模式下超限声音的攻击性。"
             },
             "bmw_welcome_light_sequence": {
-                "name": "欢迎光序列动画 (BMW)",
+                "name": "欢迎光序列动画",
                 "desc": "定制 LED 头灯和天使眼欢迎问候序列。"
             },
             "bmw_service_history_menu": {
-                "name": "数字服务历史菜单启用 (BMW)",
+                "name": "数字服务历史菜单启用",
                 "desc": "解锁中央显示屏上的 iDrive 数字服务记录簿菜单。"
             },
             "bmw_hud_speed_display": {
-                "name": "平视显示器数字车速表覆盖层 (BMW)",
+                "name": "平视显示器数字车速表覆盖层",
                 "desc": "将实时数字速度读数投射到平视显示器上。"
             },
             "bmw_cornering_lights_fog": {
@@ -2179,11 +2179,11 @@
                 "desc": "在转向灯或低速转向角时打开前雾灯。"
             },
             "bmw_easy_entry_steering": {
-                "name": "轻松进入自动缩回转向柱 (BMW)",
+                "name": "轻松进入自动缩回转向柱",
                 "desc": "发动机关闭时向上缩回电动方向盘，以便轻松退出。"
             },
             "bmw_bluetooth_audio_enable": {
-                "name": "增强型蓝牙音频流解锁 (BMW)",
+                "name": "增强型蓝牙音频流解锁",
                 "desc": "在 iDrive HU_ENTRYNAV 中启用 A2DP 蓝牙无线音乐流。"
             },
             "bmw_door_handle_lights_reverse": {
@@ -2259,7 +2259,7 @@
                 "desc": "提高电动机逆变器响应速度，实现更快的 0-100 公里/小时速度。"
             },
             "tesla_interior_ambient_color": {
-                "name": "驾驶室脚部空间环境照明颜色预设 (Tesla)",
+                "name": "驾驶室脚部空间环境照明颜色预设",
                 "desc": "自定义 LED 脚坑环境光 RGB 调色板。"
             },
             "audi_matrix_led_animation": {
@@ -2271,7 +2271,7 @@
                 "desc": "自定义MMI中控屏开机动画（S/RS/e-tron）。"
             },
             "audi_drive_select_efficiency": {
-                "name": "Audi Drive Select 中的高效驾驶配置文件 (Audi)",
+                "name": "Audi Drive Select 中的高效驾驶配置文件",
                 "desc": "在“驾驶选择”选项中启用节油效率模式。"
             },
             "audi_laptimer_boost_display": {
@@ -2291,11 +2291,11 @@
                 "desc": "将一键式转向灯闪烁次数设置为 3 到 5 次闪烁。"
             },
             "cupra_sport_display_menu": {
-                "name": "Cupra 性能仪器和重力计菜单 (Cupra)",
+                "name": "Cupra 性能仪器和重力计菜单",
                 "desc": "解锁重力计、千瓦功率计和油温显示。"
             },
             "cupra_virtual_cockpit_copper": {
-                "name": "铜主题仪表板强调图形 (Cupra)",
+                "name": "铜主题仪表板强调图形",
                 "desc": "将标志性的 Cupra 铜金属主题应用于仪表组。"
             },
             "vag_brake_disc_drying": {
@@ -2303,27 +2303,27 @@
                 "desc": "在潮湿天气中定期对干燥转子施加最小的垫压力。"
             },
             "vag_tourist_mode_lights": {
-                "name": "旅游模式头灯光束模式 (VAG)",
+                "name": "旅游模式头灯光束模式",
                 "desc": "在国外行驶时，可在左驾和右驾之间切换前灯光束模式。"
             },
             "vag_hood_warning_mute": {
-                "name": "阀盖打开乐器鸣响静音 (VAG)",
+                "name": "阀盖打开乐器鸣响静音",
                 "desc": "当引擎盖未闩锁时，抑制持续的仪器警告声。"
             },
             "vag_emergency_brake_hazard": {
-                "name": "紧急制动自动危险闪光器 (VAG)",
+                "name": "紧急制动自动危险闪光器",
                 "desc": "ABS 紧急停止期间危险灯快速闪烁。"
             },
             "vag_sunroof_comfort_open": {
-                "name": "天窗倾斜/打开远程舒适钥匙扣逻辑 (VAG)",
+                "name": "天窗倾斜/打开远程舒适钥匙扣逻辑",
                 "desc": "配置远程钥匙按住操作以倾斜或完全打开天窗。"
             },
             "bmw_ecopro_display_variant": {
-                "name": "ECO PRO 仪表盘仪表造型 (BMW)",
+                "name": "ECO PRO 仪表盘仪表造型",
                 "desc": "定制蓝色 ECO PRO 效率计图形主题。"
             },
             "bmw_volume_bar_hud": {
-                "name": "平视显示音频音量条覆盖 (BMW)",
+                "name": "平视显示音频音量条覆盖",
                 "desc": "直接在 HUD 投影上显示音量变化条。"
             },
             "bmw_anti_dazzle_mirror": {
@@ -2331,11 +2331,11 @@
                 "desc": "调整自动后视镜调光光电传感器阈值。"
             },
             "bmw_camera_pdc_warning_mute": {
-                "name": "PDC & 环视速度截止速度调整 (BMW)",
+                "name": "PDC & 环视速度截止速度调整",
                 "desc": "调整停车摄像头关闭的车速阈值。"
             },
             "toyota_pcs_distance_preset": {
-                "name": "预碰撞系统 (PCS) 默认警报距离（丰田）",
+                "name": "预碰撞系统 默认警报距离（丰田）",
                 "desc": "设置初始雷达前方碰撞警告距离灵敏度。"
             },
             "toyota_bsm_timing": {
@@ -2355,7 +2355,7 @@
                 "desc": "如果没有门打开，则调整门自动重新锁定之前的秒数（30 秒至 120 秒）。"
             },
             "lexus_mark_levinson_audio_profile": {
-                "name": "Mark Levinson 环绕声 DSP 音频配置文件 (Lexus)",
+                "name": "Mark Levinson 环绕声 DSP 音频配置文件",
                 "desc": "优化 Mark Levinson 高级扬声器的 3D 空间声学调音。"
             },
             "lexus_ev_mode_beeper_mute": {
@@ -2387,7 +2387,7 @@
                 "desc": "在中央屏幕上显示电容器充电和放电状态。"
             },
             "mazda_smart_city_brake_sens": {
-                "name": "智能城市制动支持 (SCBS) 灵敏度（马自达）",
+                "name": "智能城市制动支持 灵敏度（马自达）",
                 "desc": "设置低速自动紧急制动传感器范围。"
             },
             "subaru_eyesight_distance_preset": {
@@ -2399,7 +2399,7 @@
                 "desc": "设置自动双功能 X 模式激活的车轮滑移阈值。"
             },
             "subaru_steering_responsive_headlights": {
-                "name": "转向响应式车头灯 (SRH) 切换（斯巴鲁）",
+                "name": "转向响应式车头灯 切换（斯巴鲁）",
                 "desc": "启用或禁用定向自适应头灯旋转。"
             },
             "genesis_sport_plus_mode": {
@@ -2407,7 +2407,7 @@
                 "desc": "解锁面向赛道的 ESC OFF 和加强阻尼器映射。"
             },
             "genesis_ambient_active_light": {
-                "name": "主动环境照明驱动模式同步 (Genesis)",
+                "name": "主动环境照明驱动模式同步",
                 "desc": "根据驾驶模式动态改变内部环境照明颜色。"
             },
             "volvo_city_safety_warning": {
@@ -2419,19 +2419,19 @@
                 "desc": "将 3D 增强现实导航箭头投影到挡风玻璃上。"
             },
             "jlr_terrain_response_preset": {
-                "name": "地形响应自动越野模式预设 (JLR)",
+                "name": "地形响应自动越野模式预设",
                 "desc": "记住最后的地形响应表面轮廓（草地/砾石/雪）。"
             },
             "jlr_adaptive_dynamics_firm": {
-                "name": "自适应动态阻尼器硬度曲线 (JLR)",
+                "name": "自适应动态阻尼器硬度曲线",
                 "desc": "设置默认电子减震器阻尼刚度。"
             },
             "jlr_wading_sensor_alert": {
-                "name": "涉水感应深度警告鸣响阈值 (JLR)",
+                "name": "涉水感应深度警告鸣响阈值",
                 "desc": "配置超声波水深警报鸣响灵敏度。"
             },
             "alfa_dna_dynamic_memory": {
-                "name": "Alfa DNA 选择器动态模式启动内存 (Alfa Romeo)",
+                "name": "Alfa DNA 选择器动态模式启动内存",
                 "desc": "重启后保留动态模式油门响应。"
             },
             "alfa_q4_torque_split": {
@@ -2447,7 +2447,7 @@
                 "desc": "当影院模式激活时，可倾斜后排座椅并展开腿托。"
             },
             "zeekr_drift_mode_torque": {
-                "name": "双电机性能漂移模式后偏置 (Zeekr)",
+                "name": "双电机性能漂移模式后偏置",
                 "desc": "向后电动机发送 100% 扭矩以实现受控漂移。"
             },
             "zeekr_ambient_beat_sync": {
@@ -2459,7 +2459,7 @@
                 "desc": "切换驾驶模式（城市/运动/生态）时启用音频语音确认。"
             },
             "mahindra_zip_zap_zoom_custom": {
-                "name": "Zip/Zap/Zoom 动力系统油门响应曲线 (Mahindra)",
+                "name": "Zip/Zap/Zoom 动力系统油门响应曲线",
                 "desc": "自定义 Zip、Zap 和 Zoom 驾驶模式的加速曲线。"
             },
             "fun_cyberpunk_cluster_theme": {
@@ -2483,7 +2483,7 @@
                 "desc": "Unlocks racetrack lap timer stopwatch and real-time engine oil temperature readout."
             },
             "vag_rear_scandinavian_drl": {
-                "name": "Scandinavian DRL (Rear Tail Lights ON with DRL)",
+                "name": "Scandinavian DRL",
                 "desc": "Illuminates rear LED tail lights constantly when front daytime running lights are active."
             },
             "vag_drl_handbrake_off": {
@@ -2495,7 +2495,7 @@
                 "desc": "Adds Daytime Running Lights toggle checkbox under Vehicle Lights settings in MIB screen."
             },
             "vag_rain_closing_windows": {
-                "name": "Rain Closing (Automatic Windows & Sunroof Close)",
+                "name": "Rain Closing",
                 "desc": "Closes all open windows and panoramic sunroof if parked vehicle detects rain on windshield."
             },
             "vag_audi_dynamic_throttle": {
@@ -2511,7 +2511,7 @@
                 "desc": "Unlocks Off-Road telemetry screen displaying steering angle, compass, and oil/coolant temperatures."
             },
             "vag_highbeam_assist_memory": {
-                "name": "High-Beam Assist (Light Assist) State Memory",
+                "name": "High-Beam Assist State Memory",
                 "desc": "Maintains Auto High-Beam Assist active across ignition cycles so driver does not have to re-arm it."
             },
             "vag_comfort_turn_signals_count": {
@@ -2519,11 +2519,11 @@
                 "desc": "Changes number of highway lane-change blinker pulses from standard 3 to 4 or 5."
             },
             "bmw_video_in_motion_speedlock": {
-                "name": "Video in Motion (VIM) Speedlock Removal",
+                "name": "Video in Motion Speedlock Removal",
                 "desc": "Allows USB and DVD video playback on iDrive screen while vehicle is moving."
             },
             "bmw_digital_speedo_kombi": {
-                "name": "Digital Speedometer in Instrument Cluster (V= km/h)",
+                "name": "Digital Speedometer in Instrument Cluster",
                 "desc": "Adds real-time digital speed numerical readout on the onboard computer screen."
             },
             "bmw_acoustic_lock_chirp": {
@@ -2536,7 +2536,7 @@
             },
             "bmw_rolls_royce_warning_chimes": {
                 "name": "Rolls-Royce / BMW i / MINI Warning Chime Tones",
-                "desc": "Changes the system warning chimes (door open, low temp, seatbelt) to luxury Rolls-Royce tones."
+                "desc": "Changes the system warning chimes to luxury Rolls-Royce tones."
             },
             "bmw_m_performance_boot_animation": {
                 "name": "M Performance / Alpina Cluster Boot Logo",
@@ -2551,11 +2551,11 @@
                 "desc": "Keeps rear LED neon rings illuminated when daytime running lights are active in position 0/Auto."
             },
             "bmw_sport_automatic_transmission_2tb": {
-                "name": "Sport Automatic Transmission (2TB) & Launch Control",
+                "name": "Sport Automatic Transmission & Launch Control",
                 "desc": "Unlocks faster shifting times, rev-matching downshifts, and factory Launch Control mode."
             },
             "merc_needle_sweep_staging": {
-                "name": "Instrument Needle Sweep (AMG Staging)",
+                "name": "Instrument Needle Sweep",
                 "desc": "Sweeps gauge needles to maximum upon turning on the ignition."
             },
             "merc_highbeam_memory": {
@@ -2583,16 +2583,16 @@
                 "desc": "Automatically folds side mirrors when locking with key fob and unfolds upon driver door open."
             },
             "merc_rear_drl_scandinavian": {
-                "name": "Rear Tail Lights as Daytime Running Lights (Scandinavian Mode)",
+                "name": "Rear Tail Lights as Daytime Running Lights",
                 "desc": "Keeps rear LED tail lamps illuminated together with front DRLs during daytime driving."
             },
             "merc_seatbelt_warning_chime_mute": {
                 "name": "Seatbelt Acoustic Warning Chime Mute",
-                "desc": "Disables the continuous chime sound for unbuckled seatbelts (visual warning lamp remains active)."
+                "desc": "Disables the continuous chime sound for unbuckled seatbelts."
             },
             "merc_agility_manual_mode_unlock": {
-                "name": "Agility (Sport+) & Manual Transmission Mode",
-                "desc": "Enables hidden Agility (A) and True Manual (M) driving transmission profiles in Dynamic Select."
+                "name": "Agility & Manual Transmission Mode",
+                "desc": "Enables hidden Agility and True Manual driving transmission profiles in Dynamic Select."
             },
             "merc_esp_sport_threshold_tuning": {
                 "name": "ESP Sport Dynamic Slip Angle Adjustment",
@@ -2600,7 +2600,7 @@
             },
             "merc_flashing_emergency_brake_light": {
                 "name": "Adaptive Emergency Flashing Brake Lights",
-                "desc": "Flashes stop lamps at high frequency (5.5 Hz) during hard emergency braking (> 7 m/s²)."
+                "desc": "Flashes stop lamps at high frequency during hard emergency braking."
             },
             "stell_auto_mirror_fold_lock": {
                 "name": "Automatic Mirror Folding on Key Lock",
@@ -2611,7 +2611,7 @@
                 "desc": "Activates corresponding front fog lamp when turn signal is on or steering angle > 30° below 40 km/h."
             },
             "stell_needle_sweep_cluster": {
-                "name": "Instrument Needle Sweep (Sport Staging)",
+                "name": "Instrument Needle Sweep",
                 "desc": "Performs gauge sweep on startup for analog/hybrid instrument clusters."
             },
             "stell_acoustic_lock_chirp": {
@@ -2627,7 +2627,7 @@
                 "desc": "Remembers the last ON/OFF state of Lane Keeping Assist instead of re-activating at every start."
             },
             "stell_sport_steering_weight_calibration": {
-                "name": "Dynamic Electric Power Steering (EPS) Weight Curve",
+                "name": "Dynamic Electric Power Steering Weight Curve",
                 "desc": "Increases steering wheel resistance and centering feel for a firmer, sportier feedback."
             },
             "stell_digital_speedo_unit_toggle": {
@@ -2643,7 +2643,7 @@
                 "desc": "Folds power mirrors when locking vehicle and automatically unfolds upon closing driver door."
             },
             "ford_bambi_mode_fog_with_highbeam": {
-                "name": "Bambi Mode (High Beams + Fog Lights Simultaneous)",
+                "name": "Bambi Mode",
                 "desc": "Prevents fog lights from turning off automatically when high beams are activated."
             },
             "ford_double_honk_disable": {
@@ -2655,15 +2655,15 @@
                 "desc": "Opens or closes all power windows by holding unlock or lock button on factory key fob."
             },
             "ford_cluster_digital_tpms_readout": {
-                "name": "Individual Tire Pressure (TPMS) Bar/PSI Display",
+                "name": "Individual Tire Pressure Bar/PSI Display",
                 "desc": "Displays exact individual tire pressure numerical readouts on the instrument cluster screen."
             },
             "ford_sync_boot_splash_st_raptor": {
-                "name": "SYNC Performance Boot Splash Theme (ST / Raptor / RS)",
+                "name": "SYNC Performance Boot Splash Theme",
                 "desc": "Changes SYNC infotainment boot logo animation to Ford Performance / ST / Raptor styling."
             },
             "renault_rlink_video_in_motion": {
-                "name": "Video in Motion (VIM) Playback Unlock",
+                "name": "Video in Motion Playback Unlock",
                 "desc": "Allows USB/video playback on R-Link 2 / EasyLink touchscreen while vehicle is in motion."
             },
             "renault_rs_monitor_telemetry_unlock": {
@@ -2684,14 +2684,14 @@
             },
             "renault_seatbelt_buzzer_mute": {
                 "name": "Seatbelt Warning Buzzer Sound Mute",
-                "desc": "Mutes acoustic beeping for unfastened seatbelts (visual cluster alert remains active)."
+                "desc": "Mutes acoustic beeping for unfastened seatbelts."
             },
             "hyundai_ev_charge_limit_ui_unlock": {
                 "name": "Manual EV AC/DC Charge Limit Setting UI",
                 "desc": "Unlocks 50% to 100% target SoC slider controls in infotainment for battery longevity."
             },
             "hyundai_isg_start_stop_memory": {
-                "name": "ISG (Idle Stop & Go) Last State Memory",
+                "name": "ISG Last State Memory",
                 "desc": "Retains the last selected state of the Start-Stop button across vehicle restarts."
             },
             "hyundai_approach_auto_unlock_distance": {
@@ -2724,7 +2724,7 @@
             },
             "mg_ev_one_pedal_drive_memory": {
                 "name": "One-Pedal Driving Mode Retention",
-                "desc": "Remembers the last selected regenerative braking intensity (High/One-Pedal) across starts."
+                "desc": "Remembers the last selected regenerative braking intensity across starts."
             },
             "porsche_needle_sweep_staging": {
                 "name": "Porsche Tachometer Needle Sweep on Start",
@@ -2736,7 +2736,7 @@
             },
             "porsche_rear_spoiler_manual_speed_threshold": {
                 "name": "Active Rear Aerodynamic Wing Deployment Speed",
-                "desc": "Adjusts automatic rear spoiler deployment speed threshold (80 km/h vs 120 km/h)."
+                "desc": "Adjusts automatic rear spoiler deployment speed threshold."
             },
             "porsche_matrix_highbeam_unlock": {
                 "name": "PDLS+ Matrix LED Adaptive Anti-Glare High Beam",
@@ -2747,19 +2747,19 @@
                 "desc": "Gives a quick chirp confirmation when locking with Porsche smart key."
             },
             "actros_rsl_fleet_speed_limit": {
-                "name": "Road Speed Limiter (Fleet Limit)",
-                "desc": "Configures maximum vehicle road speed limiter (RSL) calibration for fleet operation policy."
+                "name": "Road Speed Limiter",
+                "desc": "Configures maximum vehicle road speed limiter calibration for fleet operation policy."
             },
             "actros_idle_shutdown_timer": {
                 "name": "Automatic Engine Idle Shutdown Timer",
                 "desc": "Automatically shuts down engine after specified idle time while stationary with parking brake set."
             },
             "volvo_pto_engine_rpm_preset": {
-                "name": "PTO (Power Take-Off) Engine RPM Preset",
+                "name": "PTO Engine RPM Preset",
                 "desc": "Sets predefined constant engine idle speed when PTO is engaged for hydraulic pump and tipper operation."
             },
             "volvo_ppc_eco_roll_hysteresis": {
-                "name": "I-See / PPC Topographical Speed Tolerance (Eco-Roll)",
+                "name": "I-See / PPC Topographical Speed Tolerance",
                 "desc": "Adjusts GPS predictive cruise control speed hysteresis tolerance window for maximum rolling fuel economy."
             },
             "scania_retarder_jake_brake_aggressiveness": {
@@ -2779,7 +2779,7 @@
                 "desc": "Attenuates reverse backup horn alarm volume for quiet night distribution in residential areas."
             },
             "cummins_ecm_fleet_speed_limiter": {
-                "name": "Cummins Engine Road Speed Limiter (RSL)",
+                "name": "Cummins Engine Road Speed Limiter",
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
@@ -2805,7 +2805,7 @@
         "restoreSuccessMsg": "选定的功能已恢复至原始 DID 状态。",
         "cloneLockedBanner": "检测到克隆适配器 — 编码已锁定（只读模式）",
         "cloneAlertTitle": "检测到克隆 OBD2 适配器",
-        "cloneAlertMsg": "您连接的 OBD2 适配器被标记为假冒克隆适配器，缺乏 ECU 写入所需的严格计时精度。\n\n您可以浏览和搜索所有功能，但编码写入操作被锁定以保护您的车辆。请连接正品ELM327 v2.1+或vLinker适配器进行写入。",
+        "cloneAlertMsg": "您连接的 OBD2 适配器被标记为假冒克隆适配器，缺乏 ECU 写入所需的严格计时精度。 您可以浏览和搜索所有功能，但编码写入操作被锁定以保护您的车辆。请连接正品ELM327 v2.1+或vLinker适配器进行写入。",
         "riskLow": "低风险",
         "riskMedium": "中等风险",
         "riskHigh": "高风险",
@@ -2866,40 +2866,40 @@
         "writeRawPayload": "写入原始 UDS 有效负载",
         "enterValidHex": "请输入有效的 DID 和值十六进制字符串。",
         "options": {
-            "speed85": "85 km/h (Filo)",
-            "speed90": "90 km/h (Standart)",
-            "speed100": "100 km/h (Otoyol)",
-            "speed110": "110 km/h (Maksimum)",
-            "idleOff": "Devre Dışı (Sürekli Rölanti)",
+            "speed85": "85 km/h",
+            "speed90": "90 km/h",
+            "speed100": "100 km/h",
+            "speed110": "110 km/h",
+            "idleOff": "Devre Dışı",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
-            "pto900": "900 RPM (Düşük Debi)",
-            "pto1100": "1100 RPM (Damper / Standart)",
-            "pto1300": "1300 RPM (Vinç / Yüksek Debi)",
-            "retarderLow": "Düşük (Yumuşak Otoyol)",
-            "retarderMed": "Orta (Standart)",
-            "retarderHigh": "Yüksek (Ağır Yük / Dağ)",
+            "pto900": "900 RPM",
+            "pto1100": "1100 RPM",
+            "pto1300": "1300 RPM",
+            "retarderLow": "Düşük",
+            "retarderMed": "Orta",
+            "retarderHigh": "Yüksek",
             "levelNormal": "Normal Sürüş Seviyesi",
             "levelRamp1": "Yükleme Rampası Seviyesi 1",
             "levelRamp2": "Yükleme Rampası Seviyesi 2",
             "regenStart": "Sabit Rejenerasyonu Başlat",
             "regenStatus": "Kurum Durumunu Sorgula",
-            "alarmFull": "Tam Ses (%100 Gündüz)",
-            "alarmNight": "Kısık Ses (%50 Gece Modu)",
-            "hyst3": "+/- 3 km/h (Hassas)",
-            "hyst5": "+/- 5 km/h (Dengeli)",
-            "hyst10": "+/- 10 km/h (Maksimum Tasarruf)",
+            "alarmFull": "Tam Ses",
+            "alarmNight": "Kısık Ses",
+            "hyst3": "+/- 3 km/h",
+            "hyst5": "+/- 5 km/h",
+            "hyst10": "+/- 10 km/h",
             "drl25": "%25 Kısık",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
             "drl100": "%100 Tam Güç",
-            "xdsStandard": "Standart (Orta)",
-            "xdsStrong": "Güçlü (GTI / R)",
+            "xdsStandard": "Standart",
+            "xdsStrong": "Güçlü",
             "blink1": "1 Flaş",
-            "blink3": "3 Flaş (Standart)",
+            "blink3": "3 Flaş",
             "blink4": "4 Flaş",
-            "blink5": "5 Flaş (Genişletilmiş)",
+            "blink5": "5 Flaş",
             "chimeBmw": "BMW Standart",
             "chimeMini": "MINI Tarzı",
             "chimeRolls": "Rolls-Royce Lüks",
@@ -2920,7 +2920,10 @@
         "freeTrialExhaustedMsg": "您已使用 1 次免费功能激活额度。升级至 PRO 即可享受无限制功能解锁、专家级编码及全套保养复位！",
         "freeTrialSuccessTitle": "恭喜！功能已激活",
         "freeTrialSuccessMsg": "此功能已使用您的 1 次免费试用额度成功写入车辆！随时升级到 PRO 即可无限解锁全部高级特性。",
-        "upgradeToPro": "升级至 PRO"
+        "upgradeToPro": "升级至 PRO",
+        "toastActivated": "已启用",
+        "toastDeactivated": "已禁用",
+        "optionsBadge": "{{count}} 个选项"
     },
     "ignition": {
         "title": "点火状态警告",
@@ -2935,7 +2938,7 @@
     },
     "hpGauge": {
         "title": "带电功率和扭矩表",
-        "subtitle": "实时马力 (HP / kW) 和扭矩 (Nm)",
+        "subtitle": "实时马力 和扭矩",
         "horsepower": "马力",
         "torque": "发动机扭矩",
         "peakHp": "峰值马力",
@@ -2951,22 +2954,22 @@
     },
     "fuelTrim": {
         "title": "燃油调整和空气-燃油混合物分析",
-        "subtitle": "STFT (Short Term) & LTFT (Long Term) Diagnostics",
-        "stft": "STFT (Short Term Trim)",
-        "ltft": "LTFT (Long Term Trim)",
+        "subtitle": "STFT & LTFT Diagnostics",
+        "stft": "STFT",
+        "ltft": "LTFT",
         "totalTrim": "总燃油调整",
-        "afrRatio": "AIR-FUEL RATIO (AFR)",
-        "lambda": "LAMBDA (λ)",
-        "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE (λ = 1.00)",
-        "stateMildLean": "MILD LEAN MIXTURE (Trim 10% - 18%)",
-        "stateCriticalLean": "CRITICAL LEAN MIXTURE (Trim > 18%)",
-        "stateMildRich": "MILD RICH MIXTURE (Trim -10% to -18%)",
-        "stateCriticalRich": "CRITICAL RICH MIXTURE (Trim < -18%)",
+        "afrRatio": "AIR-FUEL RATIO",
+        "lambda": "LAMBDA",
+        "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
+        "stateMildLean": "MILD LEAN MIXTURE",
+        "stateCriticalLean": "CRITICAL LEAN MIXTURE",
+        "stateMildRich": "MILD RICH MIXTURE",
+        "stateCriticalRich": "CRITICAL RICH MIXTURE",
         "guideTitle": "精益与丰富混合指南",
         "guideDesc": "浓混合气表示燃烧室中燃料过多（燃料浪费、烟灰），而稀混合气表示空气过多（燃烧温度高、爆震风险）。",
         "causesTitle": "潜在原因：",
         "actionTitle": "建议采取的行动：",
-        "causeNormal": "System operates within ideal range (-5% to +5%). No faults.",
+        "causeNormal": "System operates within ideal range. No faults.",
         "actionNormal": "继续日常维护。",
         "causeVacuumLeak": "真空泄漏、软管撕裂或进气歧管垫圈",
         "causeDirtyMaf": "MAF（空气质量流量）传感器脏或有故障",
@@ -2988,53 +2991,53 @@
         "widebandSensor": "Geniş Bant Lambda Sensörü",
         "commonRailStatus": "Common Rail Püskürtme",
         "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda (Lean Burn) çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
+        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
         "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel (Common Rail & Lambda)",
-        "modeGasoline": "Benzinli (STFT / LTFT)",
-        "leanNormal": "Fakir Karışım (İdeal Dizel)",
+        "modeDiesel": "Dizel",
+        "modeGasoline": "Benzinli",
+        "leanNormal": "Fakir Karışım",
         "railStable": "Basınç Kararlı"
     },
     "dpf": {
-        "title": "DIESEL PARTICULATE FILTER (DPF) MONITOR",
+        "title": "DIESEL PARTICULATE FILTER MONITOR",
         "subtitle": "烟灰质量、废气温度和再生状态",
         "sootLoad": "烟尘负荷水平",
         "ashLoad": "灰烬累积水平",
-        "egtTemp": "EXHAUST GAS TEMP (EGT)",
+        "egtTemp": "EXHAUST GAS TEMP",
         "diffPressure": "压差",
-        "stateOptimal": "DPF CLEAN & HEALTHY (0% - 40%)",
-        "stateModerate": "DPF MODERATE LOADING (40% - 65%)",
-        "stateHighSoot": "HIGH SOOT ACCUMULATION (65% - 85%)",
-        "stateCriticalClogged": "CRITICAL CLOGGING (85%+)",
-        "egtCold": "Cold (< 300°C)",
-        "egtWarm": "Warmed Up (300°C - 550°C)",
-        "egtRegenActive": "REGENERATION ACTIVE (550°C+)",
+        "stateOptimal": "DPF CLEAN & HEALTHY",
+        "stateModerate": "DPF MODERATE LOADING",
+        "stateHighSoot": "HIGH SOOT ACCUMULATION",
+        "stateCriticalClogged": "CRITICAL CLOGGING",
+        "egtCold": "Cold",
+        "egtWarm": "Warmed Up",
+        "egtRegenActive": "REGENERATION ACTIVE",
         "recommendNormal": "过滤器状态为最佳。继续正常驾驶。",
         "recommendMonitor": "城市带动积累。继续监控。",
-        "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM (Passive Regen).",
+        "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "过滤器堵塞！需要再生或清洁服务。",
         "regenRecommendation": "城市带动积累。继续监控。"
     },
     "multiEcu": {
-        "title": "ALL-SYSTEM SCAN (MULTI-ECU SCAN)",
-        "subtitle": "Engine (ECM), Transmission (TCM), ABS, Airbag (SRS) & Body (BCM)",
+        "title": "ALL-SYSTEM SCAN",
+        "subtitle": "Engine, Transmission, ABS, Airbag & Body",
         "scanBtn": "扫描所有模块",
         "scanning": "扫描：{{module}}...",
-        "ecmName": "Engine Control Module (ECM)",
-        "tcmName": "Transmission Control Module (TCM / DCT)",
+        "ecmName": "Engine Control Module",
+        "tcmName": "Transmission Control Module",
         "absName": "ABS / Brake Safety System",
-        "srsName": "Airbag / Safety System (SRS)",
-        "bcmName": "Body Control Module (BCM)",
-        "statusClean": "0 FAULTS (HEALTHY)",
+        "srsName": "Airbag / Safety System",
+        "bcmName": "Body Control Module",
+        "statusClean": "0 FAULTS",
         "statusFault": "{{count}} 检测到故障",
         "statusNoResponse": "NO RESPONSE / NO HARDWARE",
         "scanHintText": "点击“扫描所有模块”可查询所有车辆电子控制单元的诊断故障代码。",
-        "gatewayName": "中央网络网关 (Gateway)",
-        "ipcName": "仪表盘组合 (IPC / Cockpit)",
-        "epsName": "电动助力转向系统 (EPS)",
-        "hvacName": "空调与气候控制系统 (HVAC)",
-        "tpmsName": "胎压监测系统 (TPMS)",
-        "bmsName": "电池管理系统 (BMS / EV)",
+        "gatewayName": "中央网络网关",
+        "ipcName": "仪表盘组合",
+        "epsName": "电动助力转向系统",
+        "hvacName": "空调与气候控制系统",
+        "tpmsName": "胎压监测系统",
+        "bmsName": "电池管理系统",
         "readyTitle": "ECU 诊断就绪"
     },
     "dct": {
@@ -3050,13 +3053,13 @@
         "inProgress": "执行变速箱基本设置...请勿松开脚制动器！",
         "success": "DCT 变速箱复位和离合器重新学习成功完成！",
         "step1": "1/3：执行液压校准...",
-        "step2": "2/3：执行离合器 1 (K1) 基本设置...",
-        "step3": "3/3：执行离合器 2 (K2) 齿叉适应...",
+        "step2": "2/3：执行离合器 1 基本设置...",
+        "step3": "3/3：执行离合器 2 齿叉适应...",
         "ensurePreconditions": "开始前请满足所有安全先决条件。",
         "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
         "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
         "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites (Nötr) Sensörü",
+        "neutralSwitch": "Boş Vites Sensörü",
         "reverseSwitch": "Geri Vites Müşürü",
         "pressed": "BASILI",
         "released": "SERBEST",
@@ -3072,7 +3075,7 @@
         "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
         "modeAuto": "Otomatik / DCT Uyarlama",
         "modeManual": "Manuel Şanzıman Testi",
-        "park": "P (Park)",
+        "park": "P",
         "engaged": "ÇEKİLİ"
     },
     "safeExit": {
@@ -3090,13 +3093,13 @@
         "deviceUuid": "设备UUID",
         "presetTitle": "快速命令集：",
         "presetReset": "重置OBD2适配器",
-        "presetSpeed": "车速 (km/h)",
+        "presetSpeed": "车速",
         "presetReadDtc": "读取故障码",
         "presetClearDtc": "清除故障码",
         "refresh": "刷新",
         "send": "发送",
         "share": "分享",
-        "terminalTitle": "实时OBD终端控制台 (TX / RX)",
+        "terminalTitle": "实时OBD终端控制台",
         "userId": "用户ID",
         "userInfo": "管理员凭证",
         "devModeAlert": "Secret PRO 开发人员密钥在生产版本中被禁用。",
@@ -3104,7 +3107,7 @@
         "noLogsInfo": "未找到可共享的日志记录。",
         "logsLoading": "正在加载日志...",
         "calculating": "正在计算...",
-        "secretProTitle": "秘密 PRO 密钥 (DEV)",
+        "secretProTitle": "秘密 PRO 密钥",
         "secretProActive": "PRO 许可证模式状态：已激活（所有功能已解锁）",
         "secretProInactive": "PRO 许可证模式状态：未激活（关闭）",
         "logsTruncated": "... [日志被截断] ...",
@@ -3167,7 +3170,7 @@
         "year": "年份："
     },
     "sgw": {
-        "title": "安全网关 (SGW) 解锁",
+        "title": "安全网关 解锁",
         "subtitle": "供应商：{{vendor}} |车辆识别号：{{vin}}",
         "disclaimerTitle": "重要车间安全提示",
         "disclaimerText": "解锁 SGW 授予对车辆 ECU 的写访问权限。未经授权的编码或不当的参数修改可能会影响保修或禁用安全系统。责任属于用户。",
@@ -3191,10 +3194,10 @@
     },
     "evBms": {
         "title": "电动汽车 BMS 诊断",
-        "subtitle": "遥测与电池健康状态 (SOH / SOC) ({{brand}})",
-        "sohLabel": "电池健康度 (SOH)：",
+        "subtitle": "遥测与电池健康状态",
+        "sohLabel": "电池健康度：",
         "capacityRetained": "保留容量",
-        "socLabel": "电池电量 (SOC)：",
+        "socLabel": "电池电量：",
         "remainingCharge": "剩余电量",
         "cellBalance": "电池电压平衡（16节电池组）",
         "optimalBalance": "最佳平衡（<30mV 增量）",
@@ -3207,7 +3210,7 @@
     },
     "serviceReset": {
         "title": "保养与保养周期复位",
-        "subtitle": "请选择要执行的保养复位项目 ({{make}})",
+        "subtitle": "请选择要执行的保养复位项目",
         "preCheckTitle": "预先要求清单",
         "preCheckIgnition": "车辆点火开关必须处于 ON 位置。",
         "preCheckEngine": "发动机必须关闭（0 RPM）。",
@@ -3216,8 +3219,8 @@
         "intervalReset": "服务维护间隔重置",
         "intervalTitle": "重置保养间隔指示灯",
         "intervalSubtitle": "清除仪表板维修警告并重置下一个检查间隔。",
-        "tpsReset": "节气门位置传感器 (TPS) 重置",
-        "tpsTitle": "节气门位置传感器 (TPS) 适配",
+        "tpsReset": "节气门位置传感器 重置",
+        "tpsTitle": "节气门位置传感器 适配",
         "tpsSubtitle": "重新校准零油门电压停止点。",
         "absBleed": "ABS 排气和阀门测试",
         "absTitle": "ABS 液压泵放气测试",
@@ -3245,7 +3248,7 @@
         "stepSwapCoils": "在气缸之间交换点火线圈以测试故障转移。",
         "stepFuelPressure": "测量燃油轨压力。",
         "criticalDrive": "请勿在大油门下行驶较长距离。立即开车去维修。",
-        "o2Title": "氧气 (O2) 传感器电路故障",
+        "o2Title": "氧气 传感器电路故障",
         "o2Summary": "空气-燃料混合物反馈降低。发动机可能会浓燃或稀燃，从而降低燃油效率。",
         "causeO2Heater": "O2 传感器加热元件故障",
         "causeExhaustLeak": "传感器上游排气歧管泄漏",
@@ -3253,7 +3256,7 @@
         "stepCheckWiring": "检查 O2 传感器线束是否熔化或磨损。",
         "stepCleanSensor": "如果电阻超出规格，请清洁 O2 传感器尖端或更换传感器。",
         "warningDrive": "以中等速度安全行驶至维修店。",
-        "genericTitle": "诊断代码分析 ({{codes}})",
+        "genericTitle": "诊断代码分析",
         "genericSummary": "检测到活动故障代码：{{codes}}。建议进行系统监控。",
         "causeGeneric1": "传感器电路超出预期电压范围",
         "causeGeneric2": "电气连接松动或接地故障",
@@ -3280,7 +3283,7 @@
         "cause2": "部件机械磨损或电气故障",
         "cause3": "用万用表进行电压/电阻测试或更换元件",
         "recommendedAction": "建议操作",
-        "tsbTitle": "技术服务公告 (TSB)",
+        "tsbTitle": "技术服务公告",
         "aiDoctorBtn": "AI DOCTOR 专家诊断分析",
         "backToDetail": "返回故障详情"
     },
@@ -3299,7 +3302,7 @@
         "p0171_cause1": "真空软管泄漏/进气泄漏",
         "p0171_cause2": "燃油泵弱/低压",
         "p0171_cause3": "O2 传感器 1 脏污",
-        "p0171_action": "对进气歧管进行冒烟测试并检查长期燃油调整 (LTFT)。",
+        "p0171_action": "对进气歧管进行冒烟测试并检查长期燃油调整。",
         "p0171_tsb": "TSB-2022-14：检查 PCV 阀隔膜是否有撕裂。",
         "p0420_cause1": "催化转化器效率下降",
         "p0420_cause2": "后下游 O2 传感器故障",
@@ -3322,8 +3325,8 @@
         "loading": "正在加载电动汽车诊断数据...",
         "back": "返回",
         "title": "电动汽车和电池诊断仪表板",
-        "sohTitle": "电池健康状态 (SOH)",
-        "socAndPack": "充电状态 (SoC)：{{soc}}% |电池组电压：{{voltage}} V",
+        "sohTitle": "电池健康状态",
+        "socAndPack": "充电状态：{{soc}}% |电池组电压：{{voltage}} V",
         "insulationTitle": "绝缘和热安全",
         "insulationResistance": "绝缘电阻",
         "cellDeltaVoltage": "电池电压增量",
@@ -3350,10 +3353,10 @@
         "crashLabel": "自动崩溃报告",
         "crashSub": "发送匿名日志以进行错误检测。",
         "rightsTitle": "GDPR 和 KVKK 数据权利",
-        "downloadBtn": "下载我的数据 (JSON)",
+        "downloadBtn": "下载我的数据",
         "purgeBtn": "清除所有用户数据",
-        "exportSuccessTitle": "数据就绪 (GDPR / KVKK)",
-        "exportSuccessMsg": "您的数据包是在 {{date}} 上创建的。\n\n内容：遥测队列（{{count}} 记录）、应用程序设置。",
+        "exportSuccessTitle": "数据就绪",
+        "exportSuccessMsg": "您的数据包是在 {{date}} 上创建的。 内容：遥测队列（{{count}} 记录）、应用程序设置。",
         "exportErrorTitle": "错误",
         "exportErrorMsg": "创建数据包失败。",
         "purgeAlertTitle": "删除所有数据（被遗忘的权利）",
@@ -3377,7 +3380,7 @@
         "retryApp": "重试申请"
     },
     "categoryDashboards": {
-        "heavyDutyTitle": "重型商用车远程信息处理 (SAE J1939)",
+        "heavyDutyTitle": "重型商用车远程信息处理",
         "engineSpeed": "发动机转速",
         "vehicleSpeed": "车辆速度",
         "pneumaticAirBrake": "气动气压制动系统",
@@ -3390,7 +3393,7 @@
     },
     "coding": {
         "wizard_title": "编码前安全检查清单",
-        "voltage_check": "电瓶电压检测 (最低 12.5V)",
+        "voltage_check": "电瓶电压检测",
         "voltage_too_low": "电瓶电压过低，已阻止编码以防锁死。",
         "preconditions_label": "强制先决条件",
         "ignition_check": "点火开关开启，发动机熄火",
@@ -3402,18 +3405,18 @@
         "confirm_and_proceed": "确认并开始编码",
         "expert_mode_title": "专家模式 / 长编码",
         "expert_mode_warning": "直接修改 ECU 字节/位数据，请谨慎操作。",
-        "did_label": "目标 DID (HEX)",
+        "did_label": "目标 DID",
         "payload_label": "原始 HEX 数据",
-        "byte_selector_title": "字节选择器 (点击编辑位)",
+        "byte_selector_title": "字节选择器",
         "bit_editor_title": "字节 {{index}} 位映射",
         "byte_count": "总字节数",
-        "checksum_label": "校验和 (SUM16)",
+        "checksum_label": "校验和",
         "write_expert_payload": "验证并写入 ECU",
         "enter_valid_hex": "请输入有效的 DID 和偶数长度的十六进制数据。"
     },
     "safety": {
         "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken (RPM = 0) silinebilir."
+        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3495,5 +3498,31 @@
         "safetyVoltage": "Safety Voltage"
     },
     "item-1": "Item-1",
-    "_": "_"
+    "_": "_",
+    "support": {
+        "techSupport": "技术支持",
+        "help": "技术支持",
+        "title": "技术支持与反馈",
+        "subtitle": "向我们的技术团队提交问题或建议。",
+        "categoryTitle": "类型",
+        "catConnection": "连接与适配器",
+        "catVehicle": "车辆与ECU兼容性",
+        "catCoding": "隐藏功能与编码",
+        "catRequest": "新功能请求",
+        "catBug": "错误报告",
+        "messagePlaceholder": "请在此输入您的留言...",
+        "autoDiagnosticsTitle": "自动诊断报告",
+        "deviceLabel": "设备 / 系统",
+        "vehicleLabel": "车辆",
+        "adapterLabel": "适配器 / 状态",
+        "lastErrorLabel": "最近错误",
+        "none": "无",
+        "emailBtn": "通过电子邮件发送",
+        "sendInAppBtn": "提交反馈",
+        "rateStoreBtn": "在应用商店评分",
+        "ratePrompt": "评价您的 MotoCortex 体验：",
+        "successTitle": "已收到反馈",
+        "successDesc": "感谢您的反馈！工程团队将尽快处理。",
+        "reportIssueBtn": "报告技术问题"
+    }
 }

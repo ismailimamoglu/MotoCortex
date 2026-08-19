@@ -87,12 +87,9 @@ i18n
          *
          * saveMissing must be true for this handler to fire.
          */
-        saveMissing: true,
-        parseMissingKeyHandler: (key) => {
-            if (__DEV__) {
-                return `[MISSING: ${key}]`;
-            }
-            return key;
+        saveMissing: !__DEV__,
+        parseMissingKeyHandler: (key, defaultValue) => {
+            return defaultValue || key;
         },
         missingKeyHandler: (lngs, namespace, key, fallbackValue) => {
             const keyIdentifier = `${namespace}:${key}`;

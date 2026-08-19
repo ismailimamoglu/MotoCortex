@@ -15,6 +15,7 @@ import { useBluetoothStore } from '../store/useBluetoothStore';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { triggerHaptic } from '../utils/haptics';
+import SupportModal from '../components/SupportModal';
 
 interface ObdHealthScreenProps {
   onBack?: () => void;
@@ -28,6 +29,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
   const { fs, ms, vs } = useResponsive();
 
   const [activeTab, setActiveTab] = useState<MatrixTab>('HARDWARE');
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
 
   // Load metrics from Bluetooth Store
   const adapterCapabilityScore = useBluetoothStore(s => s.adapterCapabilityScore) || 100;
@@ -185,9 +187,36 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             {t('health.backToExpertise')}
           </Text>
         </TouchableOpacity>
-        <Text style={[styles.screenTitle, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
-          {t('health.titleMenu')}
-        </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={[styles.screenTitle, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
+            {t('health.titleMenu')}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              triggerHaptic();
+              setIsSupportOpen(true);
+            }}
+            style={{
+              paddingHorizontal: ms(8),
+              paddingVertical: vs(4),
+              backgroundColor: `${colors.cyan}18`,
+              borderRadius: ms(8),
+              borderWidth: 1.2,
+              borderColor: `${colors.cyan}40`,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.7}
+              style={{ color: colors.cyan, fontFamily: colors.mono, fontWeight: '900', fontSize: fs(9.5) }}
+            >
+              {t('support.techSupport', { defaultValue: 'TEKNİK DESTEK' })}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* 2. Top Summary Overview Card */}
@@ -491,6 +520,11 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
           </View>
         )}
       </ScrollView>
+      <SupportModal
+        visible={isSupportOpen}
+        onClose={() => setIsSupportOpen(false)}
+        initialCategory="VEHICLE"
+      />
     </View>
   );
 }

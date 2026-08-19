@@ -557,7 +557,7 @@ export const useBluetooth = () => {
        if (currentRpm > 0 || currentSpeed > 0) {
            Alert.alert(
                t('safety.engineRunningTitle', { defaultValue: 'Motor Çalışıyor Güvenlik Kilidi' }),
-               t('safety.engineRunningDesc', { defaultValue: 'Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken (RPM = 0) silinebilir.' })
+               t('safety.engineRunningDesc', { defaultValue: 'Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir.' })
            );
            return;
        }
