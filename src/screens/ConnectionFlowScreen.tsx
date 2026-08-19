@@ -269,32 +269,10 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  return (
  <ScrollView style={[styles.container, { backgroundColor: colors.bg }]} contentContainerStyle={styles.content}>
       {/* Header */}
-      <View style={[styles.header, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+      <View style={styles.header}>
         <Text style={[styles.title, { color: colors.textPri, fontSize: fs(18), fontFamily: colors.mono }]}>
           {t('vehicleSelect.titleMenu')}
         </Text>
-        <TouchableOpacity
-          onPress={() => {
-            triggerHaptic();
-            setIsSupportModalVisible(true);
-          }}
-          style={{
-            paddingHorizontal: ms(10),
-            paddingVertical: vs(5),
-            backgroundColor: `${colors.cyan}18`,
-            borderRadius: ms(10),
-            borderWidth: 1,
-            borderColor: `${colors.cyan}40`,
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 4
-          }}
-        >
-          <Text style={{ fontSize: fs(11) }}>💬</Text>
-          <Text style={{ color: colors.cyan, fontFamily: colors.mono, fontWeight: '900', fontSize: fs(10.5) }}>
-            {t('support.help', { defaultValue: 'Destek' })}
-          </Text>
-        </TouchableOpacity>
       </View>
 
  {/* Main Connection Status Card */}

@@ -187,35 +187,10 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             {t('health.backToExpertise')}
           </Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={[styles.screenTitle, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
             {t('health.titleMenu')}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              triggerHaptic();
-              setIsSupportOpen(true);
-            }}
-            style={{
-              paddingHorizontal: ms(8),
-              paddingVertical: vs(4),
-              backgroundColor: `${colors.cyan}18`,
-              borderRadius: ms(8),
-              borderWidth: 1.2,
-              borderColor: `${colors.cyan}40`,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.7}
-              style={{ color: colors.cyan, fontFamily: colors.mono, fontWeight: '900', fontSize: fs(9.5) }}
-            >
-              {t('support.techSupport', { defaultValue: 'TEKNİK DESTEK' })}
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
 
