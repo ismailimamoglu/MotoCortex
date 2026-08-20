@@ -54,8 +54,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  identifier: 'weekly_single',
  packageType: 'WEEKLY',
  product: {
- price: 2.99,
- priceString: '$2.99',
+ price: 9.99,
+ priceString: '$9.99',
  title: t('paywall.weekly'),
  description: t('paywall.weeklyDesc'),
  },
@@ -64,8 +64,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  identifier: '$rc_monthly',
  packageType: 'MONTHLY',
  product: {
- price: 5.99,
- priceString: '$5.99',
+ price: 29.99,
+ priceString: '$29.99',
  title: t('paywall.monthly'),
  description: t('paywall.monthlyDesc'),
  },
@@ -74,8 +74,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  identifier: '$rc_yearly',
  packageType: 'ANNUAL',
  product: {
- price: 19.99,
- priceString: '$19.99',
+ price: 199.99,
+ priceString: '$199.99',
  title: t('paywall.yearly'),
  description: t('paywall.yearlyDesc'),
  },
@@ -89,8 +89,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  packageType: 'WEEKLY',
  product: {
  identifier: 'motocortex_pro_weekly_nonrenew',
- price: 4.99,
- priceString: '₺164,99',
+ price: 9.99,
+ priceString: '$9.99',
  title: t('paywall.weekly'),
  description: t('paywall.weeklyDesc'),
  }
@@ -100,8 +100,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  packageType: 'MONTHLY',
  product: {
  identifier: 'motocortex_pro_monthly',
- price: 9.99,
- priceString: '₺329,99',
+ price: 29.99,
+ priceString: '$29.99',
  title: t('paywall.monthly'),
  description: t('paywall.monthlyDesc'),
  }
@@ -111,8 +111,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  packageType: 'ANNUAL',
  product: {
  identifier: 'motocortex_pro_yearly',
- price: 29.99,
- priceString: '₺1.099,99',
+ price: 199.99,
+ priceString: '$199.99',
  title: t('paywall.yearly'),
  description: t('paywall.yearlyDesc'),
  }
@@ -669,67 +669,81 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  }, [scaleWidth, scaleHeight, scaleMod, scaleFont, isTablet, isLargeTablet, bottomInset]) as any;
 
  const renderPackageCard = (pkg: PurchasesPackage, type: 'weekly' | 'monthly' | 'yearly') => {
- const isSelected = selectedPkgId === pkg.identifier;
- 
- let badgeLabel = '';
- let badgeColor = colors.purple;
- 
- if (type === 'yearly') {
- badgeLabel = t('paywall.bestValue');
- badgeColor = colors.green;
- } else if (type === 'monthly') {
- badgeLabel = t('paywall.popular');
- badgeColor = colors.purple;
- }
+    const isSelected = selectedPkgId === pkg.identifier;
+    
+    let badgeLabel = '';
+    let badgeColor = colors.purple;
+    let savingsText = '';
+    let planDescText = '';
+    
+    if (type === 'yearly') {
+      badgeLabel = t('paywall.bestValue');
+      badgeColor = colors.green;
+      const currencySymbol = pkg.product.priceString ? pkg.product.priceString.replace(/[0-9.,\s]/g, '') : '$';
+      const monthlyPrice = (pkg.product.price / 12).toFixed(2);
+      const perMonthText = t('paywall.perMonth');
+      const saveText = t('paywall.save44');
+      savingsText = `~${currencySymbol}${monthlyPrice}${perMonthText} • ${saveText}`;
+      planDescText = t('paywall.yearlyDesc');
+    } else if (type === 'monthly') {
+      badgeLabel = t('paywall.popular');
+      badgeColor = colors.purple;
+      planDescText = t('paywall.monthlyDesc');
+    } else {
+      planDescText = t('paywall.weeklyDesc');
+    }
 
- const cardSubtitleText = type === 'weekly'
- ? t('paywall.weeklyNotice')
- : type === 'monthly'
- ? t('paywall.monthlyNotice')
- : t('paywall.yearlyNotice');
-
- return (
- <TouchableOpacity
- key={pkg.identifier}
- style={[
- sDyn.packageCard,
- {
- backgroundColor: isSelected ? `${colors.purple}14` : `${colors.purple}04`,
- borderColor: isSelected ? colors.purple : colors.cardBorder,
- borderWidth: isSelected ? 2.5 : 1.2,
- },
- ]}
- onPress={() => setSelectedPkgId(pkg.identifier)}
- disabled={isPurchasing}
- activeOpacity={0.85}
- >
- <View style={sDyn.packageLeft}>
- <View style={[sDyn.radioOuter, { borderColor: isSelected ? colors.purple : colors.textTertiary }]}>
- {isSelected && <View style={[sDyn.radioInner, { backgroundColor: colors.purple }]} />}
- </View>
- <View style={sDyn.packageInfo}>
- <View style={sDyn.packageTitleRow}>
- <Text style={[sDyn.packageTitle, { color: colors.textPri }]}>
- {getPackageDisplayName(pkg, type)}
- </Text>
- {badgeLabel ? (
- <View style={[sDyn.tierBadge, { backgroundColor: badgeColor }]}>
- <Text style={sDyn.tierBadgeText}>{badgeLabel.toUpperCase()}</Text>
- </View>
- ) : null}
- </View>
- </View>
- </View>
- <View style={sDyn.priceColumn}>
- <View style={[sDyn.priceBadge, { backgroundColor: isSelected ? colors.purple : `${colors.purple}40` }]}>
- <Text style={[sDyn.priceText, { color: '#FFF' }]}>
- {pkg.product.priceString}
- </Text>
- </View>
- </View>
- </TouchableOpacity>
- );
- };
+    return (
+      <TouchableOpacity
+        key={pkg.identifier}
+        style={[
+          sDyn.packageCard,
+          {
+            backgroundColor: isSelected ? `${colors.purple}14` : `${colors.purple}04`,
+            borderColor: isSelected ? colors.purple : colors.cardBorder,
+            borderWidth: isSelected ? 2.5 : 1.2,
+          },
+        ]}
+        onPress={() => setSelectedPkgId(pkg.identifier)}
+        disabled={isPurchasing}
+        activeOpacity={0.85}
+      >
+        <View style={sDyn.packageLeft}>
+          <View style={[sDyn.radioOuter, { borderColor: isSelected ? colors.purple : colors.textTertiary }]}>
+            {isSelected && <View style={[sDyn.radioInner, { backgroundColor: colors.purple }]} />}
+          </View>
+          <View style={sDyn.packageInfo}>
+            <View style={sDyn.packageTitleRow}>
+              <Text style={[sDyn.packageTitle, { color: colors.textPri }]}>
+                {getPackageDisplayName(pkg, type)}
+              </Text>
+              {badgeLabel ? (
+                <View style={[sDyn.tierBadge, { backgroundColor: badgeColor }]}>
+                  <Text style={sDyn.tierBadgeText}>{badgeLabel.toUpperCase()}</Text>
+                </View>
+              ) : null}
+            </View>
+            {savingsText ? (
+              <Text style={{ fontSize: scaleFont(9.5), color: colors.green, fontWeight: '800', marginTop: scaleHeight(2), fontFamily: MONO }}>
+                {savingsText}
+              </Text>
+            ) : planDescText ? (
+              <Text style={{ fontSize: scaleFont(9), color: colors.textSec, fontWeight: '600', marginTop: scaleHeight(2), fontFamily: MONO }}>
+                {planDescText}
+              </Text>
+            ) : null}
+          </View>
+        </View>
+        <View style={sDyn.priceColumn}>
+          <View style={[sDyn.priceBadge, { backgroundColor: isSelected ? colors.purple : `${colors.purple}40` }]}>
+            <Text style={[sDyn.priceText, { color: '#FFF' }]}>
+              {pkg.product.priceString}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
  const hasLoadedPackages = weeklyPkg !== null || monthlyPkg !== null || yearlyPkg !== null;
 
@@ -815,6 +829,34 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  </View>
  ))}
  </View>
+
+          {/* Trust & Transparency Guarantee Badges */}
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: `${colors.purple}0A`,
+            borderColor: `${colors.purple}20`,
+            borderWidth: 1,
+            borderRadius: scaleMod(10),
+            paddingVertical: scaleHeight(6),
+            paddingHorizontal: scaleWidth(10),
+            marginVertical: scaleHeight(4),
+            flexWrap: 'wrap',
+            gap: scaleMod(8),
+          }}>
+            <Text style={{ fontSize: scaleFont(8.5), color: colors.textPri, fontWeight: '800', fontFamily: MONO }}>
+              {t('paywall.trustNoAds')}
+            </Text>
+            <Text style={{ fontSize: scaleFont(8.5), color: colors.textTertiary }}>•</Text>
+            <Text style={{ fontSize: scaleFont(8.5), color: colors.textPri, fontWeight: '800', fontFamily: MONO }}>
+              {t('paywall.trustNoTokens')}
+            </Text>
+            <Text style={{ fontSize: scaleFont(8.5), color: colors.textTertiary }}>•</Text>
+            <Text style={{ fontSize: scaleFont(8.5), color: colors.textPri, fontWeight: '800', fontFamily: MONO }}>
+              {t('paywall.trustUniversal')}
+            </Text>
+          </View>
 
  {/* Separator Line */}
  <View style={[sDyn.divider, { backgroundColor: colors.cardBorder }]} />

@@ -182,11 +182,11 @@
         "feat3Desc": "Zaznamenejte přesné stavy senzoru v době, kdy k chybě došlo.",
         "selectPlan": "VYBERTE PLÁN",
         "weekly": "Týdenní členství",
-        "weeklyDesc": "Ideální pro rychlou kontrolu.",
+        "weeklyDesc": "Rychlá kontrola a jednorázové vymazání chyb.",
         "monthly": "Měsíční členství",
-        "monthlyDesc": "Nejoblíbenější volba.",
+        "monthlyDesc": "Plná flexibilita, zrušení kdykoliv.",
         "yearly": "Roční členství",
-        "yearlyDesc": "Záruka nejlepší ceny.",
+        "yearlyDesc": "All-Inclusive Garážový Pas (Nejlepší Volba).",
         "restore": "Obnovit stávající nákupy",
         "subscribe": "PŘIHLÁSIT SE NYNÍ",
         "bestValue": "NEJLEPŠÍ HODNOTA",
@@ -227,7 +227,12 @@
         "weeklyNotice": "Jednorázový nákup, neprodlužuje se automaticky",
         "yearlyNotice": "Roční automaticky obnovitelné předplatné",
         "aiDoctorLimitTitle": "DOSAŽEN LIMIT AI DOCTOR",
-        "aiDoctorLimitDesc": "Využili jste 1 bezplatný test diagnostiky motoru AI. Upgradujte na PRO pro neomezené analýzy AI."
+        "aiDoctorLimitDesc": "Využili jste 1 bezplatný test diagnostiky motoru AI. Upgradujte na PRO pro neomezené analýzy AI.",
+        "trustNoAds": "100% Bez Reklam (Free & PRO)",
+        "trustNoTokens": "Neomezený Přístup • Žádné Skryté Tokeny",
+        "trustUniversal": "Podpora jakéhokoliv BLE adaptéru",
+        "yearlySavingsBadge": "~.65/měs. • Ušetřete 44%",
+        "save44": "Ušetřete 44%"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -306,7 +311,7 @@
         "terminalDesc": "Příkazy OBD-II nebo AT/ST můžete odesílat přímo do ECU. Např. \"010C\" nebo \"ATRV\".",
         "ecuResponseLabel": "ODPOVĚĎ ECU:",
         "adapterConnected": "ADAPTÉR PŘIPOJEN",
-        "lowQualityAdapterWarning": "Adaptér nízké kvality: Váš adaptér je klon nízké kvality. Postrádá přesnost časování potřebnou pro starší protokoly vozidel. Pro úspěšné připojení důrazně doporučujeme upgradovat na vysoce kvalitní adaptér OBD2.",
+        "lowQualityAdapterWarning": "Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols. We highly recommend upgrading to a high-quality OBD2 adapter to connect successfully.",
         "statusProfiling": "Analýza schopností adaptéru OBD2...",
         "statusScanningCan": "Skenování moderních protokolů CAN-Bus...",
         "statusScanningKline": "Probuzení protokolů K-Line. U starých vozidel může trvat až 15 sekund, než zareagují...",
@@ -449,7 +454,7 @@
         "connRequired": "Je vyžadováno připojení",
         "connRequiredDesc": "Chcete-li zahájit tento proces, nejprve se připojte k vozidlu.",
         "chronicFaultsTitle": "Statistické chronické problémy",
-        "chronicFaultsObs": "{{code}}",
+        "chronicFaultsObs": "{{code}} (Observation: {{days}} Unique Days / Total: {{total}} Times)",
         "chronicFaultsPending": "Shromažďování datového fondu / analýza statistik",
         "notScanned": "Nenaskenováno",
         "notScannedDesc": "Chcete-li přečíst diagnostické kódy, stiskněte tlačítko skenování vpravo nahoře.",
@@ -544,7 +549,7 @@
         "odometer": "Vzdálenost",
         "milDist": "Kontrolka motoru Svítí",
         "distSinceCleared": "Chyba vymazána",
-        "dtcCount": "CHYBOVÉ KÓDY",
+        "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "ŽIVÉ DATA SENZORU",
         "noData": "Data se nepodařilo přečíst",
         "proApp": "Skenováno pomocí Cortex OBD2 Diagnostic Scanner v7 PRO.",
@@ -804,7 +809,13 @@
         "telemetrySub": "Sdílejte anonymní protokoly a protokoly chyb pro zlepšení kompatibility vozidel.",
         "restartOnboarding": "Restartovat počáteční nastavení"
     },
-    "disclaimer": "Všechny názvy produktů, loga a značky jsou majetkem jejich příslušných vlastníků. Všechny názvy společností, produktů a služeb použité v této aplikaci slouží pouze pro účely identifikace. Použití těchto jmen, log a značek neznamená žádnou podporu nebo sponzorství.",
+    "disclaimer": {
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
+    },
     "hiddenFeatures": {
         "title": "SKRYTÉ FUNKCE",
         "btnLabel": "ODEMKNOUT SKRYTÉ FUNKCE",
@@ -1013,1470 +1024,1470 @@
         "crashTest": "Crash Test"
     },
     "features": {
-        "title": "ODEMKNĚTE SKRYTÉ FUNKCE A KÓDOVÁNÍ UDS",
-        "subTitle": "Dlouhé kódování a adaptace ISO 14229 UDS",
-        "batteryVoltage": "NAPĚTÍ BATERIE",
-        "voltageReady": "Bezpečné",
-        "voltageLocked": "Nízké napětí",
-        "locked": "ZAMKNUTO",
-        "ready": "PŘIPRAVEN",
-        "allMarks": "VŠECHNY ZNAČKY",
-        "writeBtn": "NAPIŠTE",
-        "catLighting": "OSVĚTLENÍ",
-        "catSound": "ZVUK A VÝSTRAHY",
-        "catDisplay": "NÁSTROJE",
-        "catComfort": "KOMFORT",
-        "catSafety": "BEZPEČNOST",
-        "safetyAlertTitle": "Upozornění na nízké napětí baterie",
-        "safetyAlertMsg": "Pro kódování je potřeba minimálně 12,2V napětí baterie.\nPřipojte nabíječku nebo nastartujte motor.",
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
+        "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "Safe",
+        "voltageLocked": "Low Voltage",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
         "items": {
             "vag_staging_needle_sweep": {
-                "name": "Měřidlo Staging / Jehla Sweep",
-                "desc": "Při startu zapalování zametá jehly přístroje na maximum."
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
             },
             "vag_acoustic_lock_confirmation": {
-                "name": "Cvrlikání potvrzení akustického zámku",
-                "desc": "Při uzamčení klíčenky vydá krátké potvrzovací pípnutí klaksonu."
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
             },
             "vag_american_parking_lights": {
-                "name": "Parkovací světla amerického stylu",
-                "desc": "Svítí nepřetržitě přední směrová světla při 20% stmívání s parkovacími světly."
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
             },
             "vag_drl_menu_toggle": {
-                "name": "Přepínač nabídky světel pro denní svícení .",
-                "desc": "Aktivuje zaškrtávací políčko DRL ON/OFF v nabídce nastavení vozidla infotainmentu."
+                "name": "Daytime Running Lights Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
             },
             "vag_tear_wiping": {
-                "name": "Otírání roztržení čelního skla",
-                "desc": "Provede dodatečné závěrečné setření 5 sekund po použití ostřikovače čelního skla."
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
             },
             "vag_emergency_brake_flashing": {
-                "name": "Bliká nebezpečí nouzové brzdy",
-                "desc": "Při prudkém nouzovém brzdění rychle bliká brzdová světla a nebezpečí."
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
             },
             "vag_cornering_lights": {
-                "name": "Zatáčková mlhová světla",
-                "desc": "Rozsvítí se světlo do zatáčky na straně otáčení volantu."
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
             },
             "vag_comfort_mirror_folding": {
-                "name": "Klíčenka Comfort Skládací zrcadlo",
-                "desc": "Automaticky sklopí boční zrcátka, když podržíte zamykací tlačítko na přívěsku klíče."
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
             },
             "vag_lap_timer": {
                 "name": "Instrument Cluster Lap Timer",
-                "desc": "Odemkne záložku zobrazení stopky na displeji sdruženého přístroje."
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
             },
             "vag_refuel_quantity": {
-                "name": "Zobrazení množství paliva",
-                "desc": "Zobrazuje přesný objem v litrech potřebný pro plné natankování paliva."
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
             },
             "bmw_start_stop_memory": {
-                "name": "Režim paměti Auto Start-Stop",
-                "desc": "Pamatuje si poslední stav Auto Start-Stop při restartování vozidla."
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state across vehicle restarts."
             },
             "bmw_digital_speedometer": {
-                "name": "Digitální displej rychloměru",
-                "desc": "Přidává možnost okamžitého digitálního číselného zobrazení rychlosti na obrazovku sdruženého přístroje."
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
             },
             "bmw_sport_displays": {
-                "name": "Sportovní displeje",
-                "desc": "Umožňuje živé dynamické ovladače výkonu a točivého momentu na obrazovce iDrive."
+                "name": "Sport Displays",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
             },
             "bmw_acoustic_lock_sound": {
-                "name": "Zvuk akustického zámku/odemknutí",
-                "desc": "Při zamykání nebo odemykání vozidla vydává zvukový signál poplašného systému."
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
             },
             "bmw_mirror_fold_delay_zero": {
-                "name": "Okamžité skládání zrcadla",
-                "desc": "Sklopí boční zrcátka okamžitě po stisknutí zamykacího tlačítka bez prodlevy."
+                "name": "Instant Mirror Folding",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
             },
             "bmw_tpms_tire_temperature": {
-                "name": "Zobrazení tlaku a teploty v pneumatikách",
-                "desc": "Zobrazuje teplotu pneumatik v reálném čase spolu s tlakem na obrazovce TPMS."
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
             },
             "renault_trip_computer_enable": {
-                "name": "Palubní palubní počítač Povolit",
-                "desc": "Odemkne ukazatele průměrné spotřeby paliva a dojezdu na palubním počítači."
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
             },
             "renault_external_temp_display": {
-                "name": "Zobrazení externí teploty",
-                "desc": "Umožňuje odečítání venkovní teploty v přístrojové desce."
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
             },
             "renault_automatic_tailgate": {
-                "name": "Uvolnění kufru klíčenky",
-                "desc": "Po přidržení tlačítka kufru na přívěsku na klíče se zcela vysune západkový mechanismus kufru."
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
             },
             "renault_alarm_chirp": {
-                "name": "Cvrlikání potvrzení zámku alarmu",
-                "desc": "Při zamknutí dveří vozidla se ozve potvrzovací pípnutí klaksonu."
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
             },
             "renault_shift_indicator": {
-                "name": "Indikátor řazení",
-                "desc": "Aktivuje šipky NAHORU/DOLŮ při ekologické jízdě na sdruženém přístroji."
+                "name": "Gear Shift Indicator",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
             },
             "ford_double_horn_honk_disable": {
-                "name": "Vypněte dvojité houkání při zavření dveří",
-                "desc": "Deaktivuje dvojité houkání při zavírání dveří při běžícím motoru."
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
             },
             "ford_auto_door_locking": {
-                "name": "Automatické zamykání dveří při rychlosti 20 km/h",
-                "desc": "Automaticky uzamkne všechny dveře, když rychlost vozidla překročí 20 km/h."
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
             },
             "ford_tpms_psi_display": {
-                "name": "Číselný ukazatel tlaku v pneumatikách",
-                "desc": "Zobrazuje přesný číselný tlak PSI/BAR na pneumatiku na obrazovce přístroje."
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
             },
             "ford_sync_climate_screen": {
-                "name": "Ovládání klimatizace obrazovky SYNC",
-                "desc": "Přidá na displej SYNC nabídku ovládání klimatizace a vyhřívání sedadel."
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
             },
             "stellantis_power_windows_remote": {
-                "name": "Klíčenka s dálkovým ovládáním stahování/stahování oken",
-                "desc": "Přidržením tlačítek zamykání/odemykání se srolují nebo stahují všechna elektricky ovládaná okna."
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
             },
             "stellantis_cornering_fogs": {
-                "name": "Povolit zatáčení mlhových světel",
-                "desc": "Rozsvítí se světlomety do zatáčky při zatáčkách při nízké rychlosti."
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
             },
             "vag_traffic_sign_recognition": {
-                "name": "Rozpoznávání dopravních značek",
-                "desc": "Zobrazuje rychlostní značky detekované kamerou na sdruženém přístroji a HUD."
+                "name": "Traffic Sign Recognition",
+                "desc": "Displays camera-detected speed signs in instrument cluster and HUD."
             },
             "vag_ambient_color_palette_30": {
-                "name": "30barevná paleta okolního osvětlení",
-                "desc": "Odemkne 30 RGB výběr barvy osvětlení interiéru v nabídce infotainmentu MIB."
+                "name": "30-Color Ambient Lighting Palette",
+                "desc": "Unlocks 30 RGB interior lighting color picker in MIB infotainment menu."
             },
             "vag_seatbelt_warning_mute": {
-                "name": "Deaktivace zvonku bezpečnostních pásů",
-                "desc": "Deaktivuje akustický zvuk rozepnutého bezpečnostního pásu v přístrojové desce."
+                "name": "Seatbelt Chime Deactivation",
+                "desc": "Disables unbuckled seatbelt acoustic chime in instrument cluster."
             },
             "bmw_alpina_cluster_theme": {
-                "name": "Rozložení digitální pomlčky Alpina",
-                "desc": "Použije modrý charakteristický motiv Alpina na digitální přístrojový štít."
+                "name": "Alpina Digital Dash Layout",
+                "desc": "Applies blue Alpina signature theme to digital instrument cluster."
             },
             "bmw_video_in_motion": {
-                "name": "Video v pohybu",
-                "desc": "Odemkne přehrávání USB videa na obrazovce iDrive během jízdy."
+                "name": "Video In Motion",
+                "desc": "Unlocks USB video playback on iDrive screen while driving."
             },
             "bmw_sport_plus_mode_unlock": {
-                "name": "Aktivovat jízdní režim Sport+",
-                "desc": "Aktivuje vysoce výkonný dynamický jízdní režim Sport+ na voliči DEC."
+                "name": "Sport+ Driving Mode Enable",
+                "desc": "Enables Sport+ high-performance dynamic driving mode in DEC selector."
             },
             "mercedes_amg_menu_unlock": {
-                "name": "Nabídka telemetrie AMG Performance",
-                "desc": "Zobrazuje teplotu oleje AMG, teplotu převodovky, stopky a G-metr."
+                "name": "AMG Performance Telemetry Menu",
+                "desc": "Displays AMG oil temp, transmission temp, lap timer, and G-meter."
             },
             "mercedes_agility_mode_enable": {
-                "name": "Agility Režim přenosu",
-                "desc": "Odemyká extrémně citlivý program řazení Agility v převodovce 7G/9G-Tronic."
+                "name": "Agility Transmission Mode",
+                "desc": "Unlocks ultra-responsive Agility shift program in 7G/9G-Tronic transmission."
             },
             "mercedes_drl_brightness_boost": {
-                "name": "Světla pro denní svícení 100% intenzita",
-                "desc": "Zvyšuje výkon LED světel pro denní svícení na 100% plný jas."
+                "name": "Daytime Running Lights 100% Intensity",
+                "desc": "Increases LED daytime running lights output to 100% full brightness."
             },
             "mercedes_alarm_lock_chirp": {
-                "name": "Cvrlikání akustické houkačky",
-                "desc": "Při aktivaci centrálního zamykání vydává krátké pípnutí klaksonu."
+                "name": "Acoustic Locking Horn Chirp",
+                "desc": "Emits short horn chirp notification when central locking is engaged."
             },
             "mercedes_dpf_adblue_gauge": {
-                "name": "Ukazatel hladiny DPF sazí a AdBlue",
-                "desc": "Zobrazuje přesné procento hmotnosti sazí DPF a zbývající rozsah AdBlue v IC."
+                "name": "DPF Soot & AdBlue Level Gauge",
+                "desc": "Displays exact DPF soot mass percentage and remaining AdBlue range in IC."
             },
             "renault_rs_monitor_enable": {
-                "name": "Telemetrie monitoru Renault Sport RS",
-                "desc": "Umožňuje živé G-force, turbo boost a telemetrii teploty oleje na R-Link."
+                "name": "Renault Sport RS Monitor Telemetry",
+                "desc": "Enables live G-force, turbo boost, and oil temp telemetry on R-Link."
             },
             "renault_duster_mirror_fold": {
                 "name": "Duster Auto Mirror Folding on Lock",
-                "desc": "Automaticky sklápí boční zrcátka pomocí příkazu centrálního zamykání BCM."
+                "desc": "Folds side mirrors automatically via BCM central locking command."
             },
             "ford_bambi_mode_fog_light": {
-                "name": "Režim Bambi",
-                "desc": "Umožňuje, aby mlhová světla zůstala rozsvícená, když jsou aktivována dálková světla."
+                "name": "Bambi Mode",
+                "desc": "Allows fog lights to remain ON when high beam headlights are activated."
             },
             "ford_st_rs_boot_animation": {
-                "name": "Spouštěcí obrazovka ST/RS Performance SYNC",
-                "desc": "Změní úvodní úvodní animaci dotykové obrazovky SYNC na logo ST / RS."
+                "name": "ST/RS Performance SYNC Boot Screen",
+                "desc": "Changes SYNC touchscreen startup splash animation to ST / RS logo."
             },
             "toyota_reverse_beep_mute": {
-                "name": "Nepřetržité ztlumení pípání v kabině zpátečky",
-                "desc": "Ztlumí nepřetržitý zvuk zpátečky uvnitř kabiny na jediné pípnutí."
+                "name": "Reverse Gear Continuous Cabin Beep Mute",
+                "desc": "Mutes continuous reverse gear chime inside cabin to a single beep."
             },
             "toyota_remote_window_drop": {
-                "name": "Dálkové ovládání okenního přívěsku na klíče",
-                "desc": "Stáhne všechna elektricky ovládaná okna při podržení tlačítka odemykání na klíčence."
+                "name": "Key Fob Remote Window Roll Down",
+                "desc": "Rolls down all power windows when holding key fob unlock button."
             },
             "toyota_auto_lock_shift_p": {
-                "name": "Automatické zamykání dveří při řazení",
-                "desc": "Automaticky uzamkne všechny dveře při vyřazení z parkovací polohy."
+                "name": "Auto Lock Doors on Gear Shift",
+                "desc": "Automatically locks all doors when shifting out of Park position."
             },
             "peugeot_icockpit_theme_unlock": {
-                "name": "Motiv výkonu Peugeot 3D i-Cockpit",
-                "desc": "Odemyká barevná témata zobrazení Copper a Track Red na 3D digitálním clusteru."
+                "name": "Peugeot 3D i-Cockpit Performance Theme",
+                "desc": "Unlocks Copper and Track Red color display themes on 3D digital cluster."
             },
             "jeep_offroad_pages_enable": {
                 "name": "Jeep Uconnect Off-Road Pages",
-                "desc": "Umožňuje měření úhlu sklonu/náklonu, kloubového spojení kol a stavu zámku 4x4."
+                "desc": "Enables pitch/roll angle gauges, wheel articulation, and 4x4 lock status."
             },
             "hyundai_smart_welcome_mirror": {
-                "name": "Přístup pomocí chytrého klíče Welcome Mirror Unfold",
-                "desc": "Automaticky odklopí boční zrcátka při přiblížení k vozidlu pomocí smart klíče."
+                "name": "Smart Key Approach Welcome Mirror Unfold",
+                "desc": "Automatically unfolds side mirrors when approaching vehicle with smart key."
             },
             "hyundai_one_touch_turn_7_flashes": {
-                "name": "Signál změny jízdního pruhu jedním dotykem",
-                "desc": "Nastaví dobu trvání blinkru změny jízdního pruhu na 7 bliknutí."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Sets one-touch lane change blinker duration to 7 flashes."
             },
             "hyundai_svm_camera_speed_extend": {
-                "name": "Rozšíření rychlosti 360° prostorové kamery",
-                "desc": "Udržuje 360stupňovou parkovací kameru aktivní až do rychlosti 20 km/h vpřed."
+                "name": "360° Surround Camera Speed Extension",
+                "desc": "Keeps 360-degree parking camera active up to 20 km/h forward speed."
             },
             "hyundai_n_performance_exhaust_flap": {
-                "name": "Výfuková klapka N-Performance Výchozí OTEVŘENÁ",
-                "desc": "Nastaví výchozí polohu aktivního výfukového ventilu na OPEN při startování motoru."
+                "name": "N-Performance Exhaust Flap Default OPEN",
+                "desc": "Sets active exhaust valve default position to OPEN on engine start."
             },
             "vag_rain_closing_sunroof": {
-                "name": "Zavírání deště",
-                "desc": "Automaticky zavře střešní okno a okna, když je při parkování detekován déšť."
+                "name": "Rain Closing",
+                "desc": "Automatically closes sunroof and windows when rain is detected while parked."
             },
             "bmw_launch_control_unlock": {
                 "name": "Launch Control Unlock",
-                "desc": "Odemkne program akcelerace řízení spuštění z výroby v převodové ECU."
+                "desc": "Unlocks factory launch control acceleration program in transmission ECU."
             },
             "mercedes_ambient_64_multi_zone": {
-                "name": "64barevný vícezónový okolní profil",
-                "desc": "Odemyká dynamickou vícezónovou animaci barevného cyklu v osvětlení interiéru MBUX."
+                "name": "64-Color Multi-Zone Ambient Profile",
+                "desc": "Unlocks dynamic multi-zone color cycle animation in MBUX interior lighting."
             },
             "ford_trailer_brake_activation": {
-                "name": "Povolit ovladač brzdy přívěsu.",
-                "desc": "Aktivuje nabídku integrovaného ovladače brzd přívěsu ve sdruženém přístroji."
+                "name": "Trailer Brake Controller Enable",
+                "desc": "Enables integrated trailer brake controller menu in instrument cluster."
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
-                "name": "Cylindrový zámek AFM/DFM V8",
-                "desc": "Trvale uzamkne motor v 8válcovém režimu, aby se zabránilo vibracím motoru V4."
+                "name": "AFM/DFM V8 Cylinder Lock",
+                "desc": "Locks engine in 8-cylinder mode permanently to prevent V4 vibration."
             },
             "gm_remote_start_time_extend": {
-                "name": "Prodloužení doby trvání vzdáleného spuštění",
-                "desc": "Prodlužuje dobu chodu dálkového startování motoru z tovární klíčenky z 10 na 20 minut."
+                "name": "Remote Start Duration Extension",
+                "desc": "Extends factory key fob remote engine start run time from 10 to 20 minutes."
             },
             "dodge_srt_performance_pages": {
-                "name": "Stránky výkonu SRT a režimy jízdy",
-                "desc": "Odemyká časovače zrychlení Uconnect 0-100, měřič síly G a ovládání spouštění."
+                "name": "SRT Performance Pages & Drive Modes",
+                "desc": "Unlocks Uconnect 0-100 acceleration timers, G-force meter, and launch control."
             },
             "ram_bambi_mode_fog": {
-                "name": "RAM Truck Mlhová světla s dálkovými světly",
-                "desc": "Umožňuje, aby mlhová světla RAM zůstala aktivní spolu s dálkovými světlomety."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Allows RAM fog lights to remain active alongside high beam headlights."
             },
             "byd_avas_pedestrian_siren_mute": {
-                "name": "Ztlumení nízkorychlostní sirény AVAS EV",
-                "desc": "Ztlumí nízkorychlostní sirénu umělého elektromotoru pod 30 km/h."
+                "name": "AVAS EV Low-Speed Siren Mute",
+                "desc": "Mutes low-speed artificial electric motor siren below 30 km/h."
             },
             "chery_isa_overspeed_chime_mute": {
-                "name": "Deaktivace varovného zvonění ISA při překročení rychlosti",
-                "desc": "Deaktivuje nepřetržité pípání upozornění na překročení rychlosti 80/120 km/h u modelů Tiggo/MG."
+                "name": "ISA Overspeed Warning Chime Deactivation",
+                "desc": "Disables continuous 80/120 km/h overspeed warning beep on Tiggo/MG models."
             },
             "mg_ev_battery_preconditioning_toggle": {
-                "name": "Ruční spínač předehřívání EV rychlého nabíjení",
-                "desc": "Umožňuje manuální spínač předehřívání baterie před rychlým DC nabíjením."
+                "name": "EV Fast-Charge Battery Pre-Heating Manual Switch",
+                "desc": "Enables manual battery pre-heating switch before DC fast charging."
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "Snížení citlivosti kamery pro monitorování řidiče.",
-                "desc": "Snižuje přecitlivělá upozornění na únavu při sledování očí na sloupku řízení."
+                "name": "Driver Monitoring Camera Sensitivity Reduction",
+                "desc": "Reduces over-sensitive eye-tracking fatigue warnings on steering column."
             },
             "honda_walk_away_auto_lock": {
-                "name": "Automatický zámek dveří s možností chůze",
-                "desc": "Automaticky zamkne všechny dveře, když řidič ustoupí 2 metry pomocí přívěsku na klíče."
+                "name": "Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when driver steps 2 meters away with key fob."
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "Režim paměti automatického přidržení vozidla.",
-                "desc": "Pamatuje si stav přidržení brzdy AVH ON/OFF během zapalovacích cyklů."
+                "name": "Auto Vehicle Hold Memory Mode",
+                "desc": "Remembers AVH brake hold ON/OFF state across ignition cycles."
             },
             "volvo_start_stop_default_off": {
-                "name": "Auto Start-Stop Výchozí režim VYPNUTO",
-                "desc": "Nastaví výchozí stav systému vypnutí motoru Start-Stop na VYPNUTO při nastartování vozidla."
+                "name": "Auto Start-Stop Default OFF Mode",
+                "desc": "Sets Start-Stop engine shutoff system default state to OFF upon vehicle start."
             },
             "volvo_polestar_digital_theme": {
-                "name": "Téma digitálního clusteru Polestar Blue",
-                "desc": "Odemyká charakteristický modrý motiv dynamického měřidla Polestar na displeji řidiče Volva."
+                "name": "Polestar Blue Digital Cluster Theme",
+                "desc": "Unlocks Polestar signature blue dynamic gauge theme in Volvo driver display."
             },
             "vag_virtual_cockpit_r_theme": {
-                "name": "Motivy virtuálního kokpitu R / S / Cupra",
-                "desc": "Odemyká motivy výkonu centrálního otáčkoměru R-Line, S-Line a Cupra v digitálním kokpitu."
+                "name": "Virtual Cockpit R / S / Cupra Performance Themes",
+                "desc": "Unlocks R-Line, S-Line, and Cupra central tachometer performance themes in digital cockpit."
             },
             "vag_sound_symposer_mute": {
-                "name": "Sound Symposer falešná deaktivace hluku motoru",
-                "desc": "Deaktivuje generátor falešného zvuku motoru z reproduktorů kabiny pro čistý zvuk výfuku."
+                "name": "Sound Symposer Fake Engine Noise Deactivation",
+                "desc": "Deactivates cabin speaker fake engine sound generator for pure exhaust note."
             },
             "vag_wireless_carplay_enable": {
-                "name": "Bezdrátová aktivace Apple CarPlay a Android Auto",
-                "desc": "Umožňuje 5GHz bezdrátové Wi-Fi Apple CarPlay a Android Auto na jednotkách MIB2.5/MIB3."
+                "name": "Wireless Apple CarPlay & Android Auto Activation",
+                "desc": "Enables 5GHz Wi-Fi wireless Apple CarPlay and Android Auto on MIB2.5/MIB3 units."
             },
             "vag_offroad_telemetry_menu": {
-                "name": "Displej telemetrie a měřidel MIB Offroad",
-                "desc": "Zobrazuje úhel řízení, teplotu oleje, teplotu chladicí kapaliny a nadmořskou výšku na obrazovce MIB."
+                "name": "MIB Offroad Telemetry & Gauge Display",
+                "desc": "Displays steering angle, oil temp, coolant temp, and altitude gauges on MIB screen."
             },
             "vag_easy_entry_driver_seat": {
-                "name": "Automatické snadné nastupování elektricky ovládané opěradlo sedadla",
-                "desc": "Posune elektrické sedadlo řidiče dozadu o 5 cm při otevření dveří pro snadný vstup do vozidla."
+                "name": "Automatic Easy Entry Power Seat Back-step",
+                "desc": "Moves electric driver seat back 5 cm upon door opening for easy vehicle entry."
             },
             "vag_hba_memory_state": {
-                "name": "Uchování paměti High-Beam Assist.",
-                "desc": "Pamatuje si stav zapnutého asistenta dálkových světel během cyklů restartování zapalování."
+                "name": "High-Beam Assist Memory Retention",
+                "desc": "Remembers High-Beam Assist ON status across ignition restart cycles."
             },
             "vag_battery_soc_display": {
-                "name": "Zobrazení stavu nabití baterie.",
-                "desc": "Ukazuje přesné procento nabití baterie na sdruženém přístroji, když držíte vypínací tlačítko."
+                "name": "Battery State of Charge Display",
+                "desc": "Shows exact battery charge percentage on instrument cluster when trip button is held."
             },
             "bmw_idrive7_m_animation": {
-                "name": "Animace spouštění iDrive 7/8 M-Performance",
-                "desc": "Změní spouštěcí grafiku obrazovky iDrive na animaci loga M-Performance nebo M-GmbH."
+                "name": "iDrive 7 / 8 M-Performance Startup Animation",
+                "desc": "Changes iDrive screen boot graphic to M-Performance or M-GmbH logo animation."
             },
             "bmw_bowers_wilkins_audio_profiles": {
                 "name": "Bowers & Wilkins 3D Sound Engine Unlock",
-                "desc": "Odemyká zvukové profily Bowers & Wilkins Concert, Studio a Stage DSP na HiFi systémech."
+                "desc": "Unlocks Bowers & Wilkins Concert, Studio, and Stage DSP audio profiles on HiFi systems."
             },
             "bmw_hitch_zoom_camera": {
-                "name": "Reverzní režim přiblížení přívěsu přívěsu kamery",
-                "desc": "Odemkne režim zoomu zarovnání návěsu shora dolů při pohledu ze zpětné kamery."
+                "name": "Reverse Camera Trailer Hitch Zoom Mode",
+                "desc": "Unlocks top-down trailer hitch alignment zoom mode on reverse camera view."
             },
             "bmw_secure_idle_protection": {
-                "name": "Bezpečná ochrana proti zablokování řazení motoru při volnoběhu",
-                "desc": "Zamkne převodovku v režimu Park, pokud řidič opustí běžící vozidlo s přívěskem na klíče."
+                "name": "Secure Idle Engine Shift-Lock Protection",
+                "desc": "Locks transmission in Park if driver leaves running vehicle with key fob."
             },
             "bmw_seatbelt_handover_mute": {
-                "name": "Elektrická deaktivace ramene bezpečnostního pásu pro kupé",
-                "desc": "Deaktivuje motorizované prodlužovací rameno bezpečnostního pásu na řadách 4 a 2 kupé."
+                "name": "Coupe Electric Seatbelt Handover Arm Deactivation",
+                "desc": "Disables motorized seatbelt extender arm on 4 Series and 2 Series Coupes."
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "Teplota automatického vyhřívání sedadla a volantu",
-                "desc": "Spustí automatické vyhřívání sedadla a volantu, když okolní teplota klesne pod 5 °C."
+                "name": "Automatic Seat & Steering Wheel Heating Temperature",
+                "desc": "Triggers automatic seat and steering wheel heating when ambient temp drops below 5°C."
             },
             "mercedes_amg_track_pace_unlock": {
                 "name": "MBUX AMG Track Pace Telemetry & Lap Timer",
-                "desc": "Odemkne měření času kola, telemetrii zrychlení a grafy G-force na obrazovce MBUX."
+                "desc": "Unlocks lap timing, acceleration telemetry, and G-force graphs on MBUX screen."
             },
             "mercedes_drive_mode_last_memory": {
-                "name": "Dynamický výběr paměti posledního režimu jízdy",
-                "desc": "Pamatuje si poslední zvolený jízdní režim po restartování vozidla."
+                "name": "Dynamic Select Last Drive Mode Memory",
+                "desc": "Remembers last selected Drive Mode across vehicle restart."
             },
             "mercedes_proximity_360_camera_auto": {
-                "name": "Automatický 360° pohled kamery přiblížení senzoru",
-                "desc": "Automaticky přepne obrazovku na 360° kameru, když přední senzory detekují překážku < 50 cm."
+                "name": "Proximity Sensor Auto 360° Camera View",
+                "desc": "Automatically switches screen to 360 camera when front sensors detect obstacle < 50 cm."
             },
             "ford_sync_climate_screen_unlock": {
-                "name": "Stránka ovládání klimatu SYNC3 / SYNC4 s dotykovou obrazovkou",
-                "desc": "Umožňuje ovládání klimatizace, vyhřívání sedadla a stránku na dotykové obrazovce pro směr proudění vzduchu."
+                "name": "SYNC3 / SYNC4 Touchscreen Climate Control Page",
+                "desc": "Enables climate control, heated seat, and airflow direction touchscreen page."
             },
             "ford_turn_signal_5_flashes": {
-                "name": "Signál změny jízdního pruhu jedním dotykem",
-                "desc": "Prodlužuje dobu trvání směrových světel při změně jízdního pruhu na jeden dotek ze 3 na 5 bliknutí."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Increases one-touch lane change turn signal duration from 3 to 5 flashes."
             },
             "ford_auto_engine_shutdown_disable": {
-                "name": "Potlačení automatického vypnutí motoru po 30 minutách nečinnosti",
-                "desc": "Zabraňuje automatickému vypnutí motoru po 30 minutách nečinnosti."
+                "name": "30-Minute Idle Auto Engine Shutdown Override",
+                "desc": "Prevents automatic engine shutoff after 30 minutes idle."
             },
             "ev_battery_preheat_manual_switch": {
-                "name": "Ruční spínač předehřívání baterie EV",
-                "desc": "Umožňuje manuální předehřátí baterie na 25 °C před stejnosměrným rychlým nabíjením bez navigační trasy."
+                "name": "EV Battery Pre-Heating Manual Switch",
+                "desc": "Allows manual battery pre-heating to 25°C before DC fast charging without navigation route."
             },
             "ev_v2l_power_output_expand": {
-                "name": "V2L 220V rozšíření výstupního výkonu",
-                "desc": "Rozšiřuje limit externí domácí elektrické zásuvky V2L 220 V AC z 2,2 kW na 3,6 kW."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands V2L external 220V AC household power outlet limit from 2.2 kW to 3.6 kW."
             },
             "ev_one_pedal_regen_force_level3": {
-                "name": "Výchozí nastavení maximálního rekuperačního brzdění s jedním pedálem",
-                "desc": "Nastaví maximální rekuperační brzdění jako výchozí při startu vozidla."
+                "name": "One-Pedal Drive Maximum Regenerative Braking Default",
+                "desc": "Sets maximum regenerative braking as default on vehicle start."
             },
             "byd_soc_max_charge_target_limit": {
-                "name": "Maximální limit nabití baterie BYD",
-                "desc": "Nastavuje maximální limit přerušení nabíjení AC/DC na 80 % nebo 90 %, aby se prodloužila životnost baterie Blade."
+                "name": "BYD Battery Health Protection Max Charge Limit",
+                "desc": "Sets max AC/DC charge cutoff limit to 80% or 90% to extend Blade Battery lifespan."
             },
             "byd_dmi_forced_pure_ev_speed_override": {
-                "name": "Přepis benzínového motoru BYD DM-i Pure EV Mode",
-                "desc": "Zabraňuje nastartování benzínového motoru v režimu EV až do rychlosti 130 km/h i při akceleraci na plný plyn."
+                "name": "BYD DM-i Pure EV Mode Gasoline Engine Override",
+                "desc": "Inhibits gasoline engine start in EV mode up to 130 km/h even during full throttle acceleration."
             },
             "byd_vtol_v2v_rescue_charge_mode": {
-                "name": "Režim záchranného nabíjení BYD VTOL.",
-                "desc": "Odemyká externí výstup střídavého proudu pro nabíjení uvízlých elektrických vozidel na silnici."
+                "name": "BYD VTOL Rescue Charge Mode",
+                "desc": "Unlocks external AC power output to charge stranded electric vehicles on road."
             },
             "hyundai_ipedal_memory_lock": {
                 "name": "Hyundai / Kia i-PEDAL One-Pedal Drive Memory Lock",
-                "desc": "Zabraňuje tomu, aby se režim zastavení i-PEDAL jedním pedálem vrátil zpět na úroveň 3 po zařazení zpětného chodu."
+                "desc": "Prevents i-PEDAL one-pedal stop mode from dropping back to Level 3 after shifting to Reverse."
             },
             "hyundai_utility_mode_12v_saver": {
-                "name": "Užitný režim Camping High-Voltage 12V Saver",
-                "desc": "Napájí 220V V2L výstup přímo z HV trakční baterie, aby se zabránilo vybití pomocné 12V baterie."
+                "name": "Utility Camping Mode High-Voltage 12V Saver",
+                "desc": "Powers 220V V2L outlet directly from HV traction battery to prevent auxiliary 12V battery drain."
             },
             "hyundai_phev_no_ice_climate_start": {
-                "name": "Režim PHEV EV Klima Topení Potlačení benzínového motoru",
-                "desc": "Vynutí tepelné čerpadlo / elektrické topení PTC pro klima v kabině bez nastartování benzínového motoru."
+                "name": "PHEV EV Mode Climate Heating Gasoline Engine Suppression",
+                "desc": "Forces heat pump / PTC electric heater for cabin climate without starting gasoline engine."
             },
             "vag_taycan_ess_sound_profile_swap": {
                 "name": "Electric Sport Sound Taycan / RS e-tron Profile",
-                "desc": "Mění elektrický jízdní zvukový profil na zvukový generátor Porsche Taycan GTS nebo Audi RS e-tron GT."
+                "desc": "Changes electric driving sound profile to Porsche Taycan GTS or Audi RS e-tron GT sound generator."
             },
             "vag_meb_daily_charge_target_menu": {
-                "name": "Baterie MEB denně 80 % / výlet 100 % Lišta rychlého nabíjení",
-                "desc": "Přidá rychlý přepínací panel na obrazovku MIB pro přepínání mezi 80% denní péčí o baterii a 100% výletním nabitím."
+                "name": "MEB Battery Daily 80% / Trip 100% Quick Charge Bar",
+                "desc": "Adds quick toggle bar on MIB screen to switch between 80% daily battery care and 100% trip charge."
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "Nabití baterie generátoru motoru GTE / E-Mode",
-                "desc": "Přinutí spalovací motor, aby fungoval jako generátor pro dobití vysokonapěťové baterie až na 80 % za jízdy."
+                "name": "GTE / E-Mode Engine Generator Battery Force Charge",
+                "desc": "Forces combustion engine to act as generator to recharge high-voltage battery up to 80% while driving."
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
                 "name": "Hans Zimmer IconicSounds Electric M-Performance Sound Engine",
-                "desc": "Odemyká zvukové profily Hanse Zimmera akustické M-Performance elektrické akcelerace na i4 a iX."
+                "desc": "Unlocks Hans Zimmer acoustic M-Performance electric acceleration sound profiles on i4 and iX."
             },
             "bmw_phev_max_edrive_140kmh": {
-                "name": "PHEV MAX eDrive Pure Electric rychlostní strop",
-                "desc": "Zvyšuje maximální čistě elektrický strop rychlosti u hybridů 330e / 530e Plug-in na 140 km/h."
+                "name": "PHEV MAX eDrive Pure Electric Speed Ceiling",
+                "desc": "Increases max pure electric speed ceiling on 330e / 530e Plug-in hybrids to 140 km/h."
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "Volič maximálního limitu proudu domácí nabíječky",
-                "desc": "Přidává omezovač domácího nabíjecího proudu AC, aby se zabránilo přetížení domácího okruhu."
+                "name": "AC Home Charger Maximum Current Limit Selector",
+                "desc": "Adds AC home charging current limiter to prevent home circuit overload."
             },
             "toyota_hybrid_ev_mode_override": {
-                "name": "Potlačení potlačení škrticí klapky v režimu EV Toyota / Lexus",
-                "desc": "Zabraňuje vynucenému startu benzínového motoru během akcelerace, když je aktivní tlačítko režimu EV."
+                "name": "Toyota / Lexus EV Mode Throttle Override Suppression",
+                "desc": "Prevents gasoline engine from forced start during acceleration when EV mode button is active."
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "Posílení ventilátoru vysokonapěťového chlazení baterie Toyota / Lexus",
-                "desc": "Zvyšuje rychlost ventilátoru chlazení hybridní trakční baterie o +30 %, aby se zabránilo tepelné degradaci v horkém klimatu."
+                "name": "Toyota / Lexus High-Voltage Battery Cooling Fan Boost",
+                "desc": "Increases hybrid traction battery cooling fan speed by +30% to prevent thermal degradation in hot climates."
             },
             "tesla_sentry_high_bitrate_video": {
-                "name": "Nepřetržité nahrávání z palubní kamery s vysokou přenosovou rychlostí v režimu Tesla Sentry",
-                "desc": "Zvyšuje přenosovou rychlost záznamu videa z kamery Sentry Mode pro křišťálově čistou viditelnost SPZ."
+                "name": "Tesla Sentry Mode High-Bitrate Continuous Dashcam Recording",
+                "desc": "Increases Sentry Mode camera video recording bitrate for crystal-clear license plate visibility."
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "Teplotní práh ochrany proti přehřátí kabiny Tesla",
-                "desc": "Snižuje teplotu spouštěcí klima ochrany proti přehřátí v kabině ze 40 °C na 30 °C pro zachování interiéru."
+                "name": "Tesla Cabin Overheat Protection Temperature Threshold",
+                "desc": "Lowers cabin overheat protection climate trigger temperature from 40°C to 30°C for interior preservation."
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
-                "name": "Shift Assistant Pro Re-adaptace",
-                "desc": "Resetuje parametry učení snímače řazení a inicializuje rekalibraci quickshifteru."
+                "name": "Shift Assistant Pro Re-Adaptation",
+                "desc": "Resets shift sensor learning parameters and initiates quickshifter recalibration."
             },
             "bmwmotorrad_esa_zero_point_calib": {
-                "name": "Dynamická kalibrace nulového bodu odpružení ESA",
-                "desc": "Kalibruje elektronické snímače zatížení odpružení a pojezdu na tovární nulu."
+                "name": "Dynamic ESA Suspension Zero-Point Calibration",
+                "desc": "Calibrates electronic suspension load and travel sensors to factory zero."
             },
             "bmwmotorrad_abs_pro_cornering_toggle": {
-                "name": "Práh zásahu režimu ABS Pro v zatáčkách",
-                "desc": "Nastavuje citlivost zásahu ABS závislou na úhlu sklonu pro použití na trati."
+                "name": "ABS Pro Cornering Mode Intervention Threshold",
+                "desc": "Adjusts lean-angle dependent ABS intervention sensitivity for track use."
             },
             "bmwmotorrad_service_interval_reset": {
-                "name": "Resetování připomenutí roční a distanční služby",
-                "desc": "Resetuje servisní indikátor sdruženého přístroje a nastavuje vlastní interval."
+                "name": "Annual & Distance Service Reminder Reset",
+                "desc": "Resets instrument cluster service indicator and sets custom interval."
             },
             "bmwmotorrad_headlight_pro_cornering": {
-                "name": "Adaptivní citlivost na zatáčení světlometů Pro",
-                "desc": "Nastavuje práh úhlu náklonu pro adaptivní aktivaci světlometů v zatáčkách."
+                "name": "Headlight Pro Adaptive Cornering Light Sensitivity",
+                "desc": "Adjusts lean angle threshold for adaptive cornering headlight activation."
             },
             "bmwmotorrad_keyless_ride_range_extend": {
-                "name": "Rozšíření dosahu detekce přívěsku pro jízdu bez klíče",
-                "desc": "Optimalizuje dosah signálu transpondéru pro snímání bezklíčového zapalování."
+                "name": "Keyless Ride Fob Detection Range Extension",
+                "desc": "Optimizes transponder signal range for keyless ignition sensing."
             },
             "bmwmotorrad_reverse_assist_sensitivity": {
-                "name": "Citlivost motoru elektrického asistenta zpátečky",
-                "desc": "Jemně dolaďuje otáčky a limit točivého momentu motoru elektrického startéru vzad."
+                "name": "Electric Reverse Assist Motor Sensitivity",
+                "desc": "Fine-tunes reverse drive electric starter motor speed and torque limit."
             },
             "ducati_riding_mode_custom_profile": {
-                "name": "Tvůrce vlastních profilů režimu jízdy",
-                "desc": "Odemkne vlastní kombinace pro profily Race, Sport, Touring a Urban."
+                "name": "Riding Mode Custom Profile Creator",
+                "desc": "Unlocks custom combinations for Race, Sport, Touring, and Urban profiles."
             },
             "ducati_ohlins_suspension_mapping": {
-                "name": "Poloaktivní mapování odpružení Öhlins Smart EC 2.0",
-                "desc": "Jemně dolaďuje křivku tlumení a přednastavení tuhosti pro elektronické odpružení."
+                "name": "Öhlins Smart EC 2.0 Semi-Active Suspension Mapping",
+                "desc": "Fine-tunes damping curve and stiffness presets for electronic suspension."
             },
             "ducati_dashboard_lap_timer_gps": {
-                "name": "TFT Dashboard Lap Timer & GPS sektorové rozdělení",
-                "desc": "Odemkne stopky a zobrazení rozdělení sektorů na sdruženém přístroji."
+                "name": "TFT Dashboard Lap Timer & GPS Sector Splits",
+                "desc": "Unlocks track lap timer and sector split display on instrument cluster."
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "Nastavení úrovně řízení motorové brzdy.",
-                "desc": "Nastavuje moment zpomalení zadního kola při prudkém brzdění při nájezdu do zatáčky."
+                "name": "Engine Brake Control Level Adjustment",
+                "desc": "Adjusts rear wheel deceleration torque during hard corner entry braking."
             },
             "ducati_cruise_control_retrofit_enable": {
-                "name": "Dodatečná aktivace tempomatu",
-                "desc": "Povoluje softwarový příznak ECU pro dovybavené spínače elektronického tempomatu."
+                "name": "Cruise Control Retrofit Activation",
+                "desc": "Enables ECU software flag for retrofitted electronic cruise control switches."
             },
             "ducati_exhaust_valve_sound_map": {
-                "name": "Mapa otvírání výfukového servoventilu",
-                "desc": "Nastavuje práh otevření akustického výfukového ventilu pro lepší výfuk."
+                "name": "Exhaust Servo Valve Opening RPM Map",
+                "desc": "Adjusts acoustic exhaust valve opening threshold for enhanced exhaust note."
             },
             "ducati_pit_lane_limiter_config": {
-                "name": "Práh omezovače rychlosti v boxech",
-                "desc": "Umožňuje přepínání omezovače rychlosti v boxové uličce na 60 km/h na spínačích na řídítkách."
+                "name": "Pit Lane Speed Limiter Threshold",
+                "desc": "Enables 60 km/h pit lane speed limiter toggle on handlebar switches."
             },
             "ducati_desmo_service_light_reset": {
-                "name": "Reset servisní kontrolky olejového a desmo ventilu",
-                "desc": "Vymaže varování připomenutí servisu desmodromického ventilu na sdruženém přístroji."
+                "name": "Oil & Desmo Valve Service Light Reset",
+                "desc": "Clears Desmodromic valve service reminder warning on instrument cluster."
             },
             "ktm_quickshifter_plus_delay_tuning": {
-                "name": "Jemné ladění Quickshifter+ Shift Cut Time & Delay",
-                "desc": "Přizpůsobuje dobu přerušení zapalování na rychlostní stupeň pro plynulé řazení nahoru/dolů."
+                "name": "Quickshifter+ Shift Cut Time & Delay Fine-Tuning",
+                "desc": "Customizes ignition cut duration per gear for seamless up/down shifts."
             },
             "ktm_rally_offroad_abs_tc_unlock": {
-                "name": "Odemknutí režimu Rally / Off-Road ABS & TC",
-                "desc": "Deaktivuje zadní ABS a odemkne 9-stupňové nastavení prokluzu v režimu Rally."
+                "name": "Rally / Off-Road ABS & TC Mode Unlock",
+                "desc": "Disables rear ABS and unlocks 9-stage slip adjustment in Rally mode."
             },
             "ktm_my_ktm_connectivity_unlock": {
-                "name": "Aktivace mého modulu připojení KTM / Husqvarna",
-                "desc": "Umožňuje navigaci Bluetooth a podrobné směrování na TFT displeji."
+                "name": "My KTM / Husqvarna Connectivity Module Activation",
+                "desc": "Enables Bluetooth navigation and turn-by-turn routing on TFT display."
             },
             "ktm_cruise_control_retrofit_enable": {
-                "name": "Odemknutí softwaru pro modernizaci tempomatu",
-                "desc": "Aktivuje funkci tempomatu po instalaci sady spínačů na řídítka."
+                "name": "Cruise Control Retrofit Software Unlock",
+                "desc": "Activates cruise control function after installing handlebar switch kit."
             },
             "ktm_clutch_pull_map_switch_gesture": {
-                "name": "Přepínání mapy gestem spojky a tahu",
-                "desc": "Umožňuje rychlé přepínání map provedením gesta páčky spojky při spuštění."
+                "name": "Clutch-Pull Gesture Map Switching",
+                "desc": "Enables rapid map switching by executing clutch lever gesture on startup."
             },
             "yamaha_quickshifter_cut_time_adjust": {
-                "name": "Quickshifter zapalování Cut-Time & Citlivost",
-                "desc": "Nastavuje prahovou hodnotu zatížení snímače quickshifter a zpoždění přerušení jiskry."
+                "name": "Quickshifter Ignition Cut-Time & Sensitivity",
+                "desc": "Adjusts quickshifter sensor load threshold and spark interruption delay."
             },
             "yamaha_ride_by_wire_throttle_map": {
-                "name": "Volič předvoleb mapy Ride-by-Wire",
-                "desc": "Přepíná mezi mapami plynu A-Mode, STD a B-Mode."
+                "name": "Ride-by-Wire Throttle Map Preset Selector",
+                "desc": "Switches between A-Mode, STD, and B-Mode throttle maps."
             },
             "yamaha_tft_track_theme_unlock": {
-                "name": "Rozvržení zobrazení stopy TFT a odemknutí světla posunu",
-                "desc": "Odemyká rozvržení skupiny kolejnic R1/MT-09 SP a kontrolky programovatelného řazení RPM."
+                "name": "TFT Track Display Layout & Shift Light Unlock",
+                "desc": "Unlocks R1/MT-09 SP track cluster layout and programmable shift RPM lights."
             },
             "yamaha_launch_control_sensitivity": {
                 "name": "Launch Control System Rev Ceiling",
-                "desc": "Konfiguruje ovládání spouštění podržením RPM."
+                "desc": "Configures launch control holding RPM."
             },
             "yamaha_heated_grips_accessory_enable": {
-                "name": "Integrace originálních vyhřívaných rukojetí TFT menu",
-                "desc": "Umožňuje ovládací prvky vyhřívané rukojeti a teploměr na obrazovce TFT."
+                "name": "Genuine Heated Grips TFT Menu Integration",
+                "desc": "Enables heated grip controls and temperature gauge on TFT screen."
             },
             "honda_hstc_wheelie_control_fine_tune": {
-                "name": "Jemné vyladění trakce HSTC & Wheelie Control",
-                "desc": "Nastavuje poměr prokluzu Honda Selectable Torque Control a toleranci zdvihu předního kola."
+                "name": "HSTC Traction & Wheelie Control Fine-Tuning",
+                "desc": "Adjusts Honda Selectable Torque Control slip ratio and front wheel lift tolerance."
             },
             "honda_bi_directional_quickshifter_enable": {
-                "name": "Obousměrný Quickshifter Retrofit Unlock",
-                "desc": "Umožňuje automatické bliknutí a kódování rychlého řazení nahoru/dolů v paměti ECU."
+                "name": "Bi-Directional Quickshifter Retrofit Unlock",
+                "desc": "Enables auto-blipper and up/down quickshifter coding in ECU memory."
             },
             "honda_service_reminder_custom_interval": {
-                "name": "Přizpůsobení vzdálenosti připomenutí olejové služby",
-                "desc": "Nastavuje vlastní interval výměny oleje na digitální přístrojové desce."
+                "name": "Oil Service Reminder Distance Customizer",
+                "desc": "Sets custom oil change mileage interval on digital dash."
             },
             "honda_track_abs_rear_disable": {
-                "name": "Track ABS Deaktivace zadního kola",
-                "desc": "Deaktivuje kanál ABS zadního kola a zachová ABS v předních zatáčkách pro dny na závodní dráze."
+                "name": "Track ABS Rear-Wheel Deactivation",
+                "desc": "Disables rear wheel ABS channel while retaining front cornering ABS for track days."
             },
             "honda_cold_start_idle_enrichment": {
-                "name": "Obohacení paliva při studeném startu a cílové otáčky při volnoběhu",
-                "desc": "Upravuje volnoběžné otáčky při počátečním zahřívání pro výfukové systémy po prodeji."
+                "name": "Cold-Start Fuel Enrichment & Idle Target RPM",
+                "desc": "Adjusts initial warm-up idle speed for aftermarket exhaust systems."
             },
             "harley_custom_throttle_curve_editor": {
-                "name": "Vlastní editor křivky odezvy plynu",
-                "desc": "Upravuje progresi plynu Milwaukee-Eight / Revolution Max ride-by-wire."
+                "name": "Custom Throttle Response Curve Editor",
+                "desc": "Adjusts Milwaukee-Eight / Revolution Max ride-by-wire throttle progression."
             },
             "harley_security_alarm_sensitivity": {
-                "name": "Inteligentní bezpečnostní systém blízkost a citlivost na náklon",
-                "desc": "Nastavuje citlivost snímače pohybu a zpoždění aktivace přívěsku hands-free."
+                "name": "Smart Security System Proximity & Tilt Sensitivity",
+                "desc": "Adjusts motion sensor sensitivity and hands-free fob arming delay."
             },
             "harley_boom_box_gts_hidden_diagnostics": {
-                "name": "Bum! Box GTS Infotainment Nabídka skryté diagnostiky",
-                "desc": "Odemyká technické telemetrické displeje, měřiče teploty motoru a tlaku oleje."
+                "name": "Boom! Box GTS Infotainment Hidden Diagnostic Menu",
+                "desc": "Unlocks engineering telemetry displays, engine temp, and oil pressure gauges."
             },
             "harley_rdrs_defensive_system_tune": {
-                "name": "Citlivost řízení prokluzu brzdného momentu RDRS",
-                "desc": "Dolaďuje systém Reflex Defensive Rider System zmírňující prokluz zadního kola při podřazování."
+                "name": "RDRS Drag-Torque Slip Control Sensitivity",
+                "desc": "Fine-tunes Reflex Defensive Rider System rear-wheel slip mitigation during downshifts."
             },
             "byd_avas_low_speed_siren_mute": {
-                "name": "Ztlumení varovné sirény pro chodce AVAS pro nízkorychlostní EV",
-                "desc": "Ztlumí nebo sníží externí akustickou sirénu výstražného systému vozidla pod 30 km/h."
+                "name": "AVAS Low-Speed EV Pedestrian Warning Siren Mute",
+                "desc": "Mutes or lowers external acoustic vehicle alerting system siren under 30 km/h."
             },
             "byd_ev_battery_preheat_manual_switch": {
-                "name": "Přepínač manuálního předehřívání baterie EV",
-                "desc": "Umožňuje manuální tepelnou úpravu baterie před stejnosměrným rychlým nabíjením."
+                "name": "Manual EV Battery Pre-Heating Toggle",
+                "desc": "Enables manual battery thermal conditioning prior to DC fast charging."
             },
             "byd_v2l_220v_outlet_power_expansion": {
-                "name": "V2L 220V rozšíření výstupního výkonu",
-                "desc": "Rozšiřuje strop externího výboje V2L z 2,2 kW na maximum 3,6 kW."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands external V2L discharge power ceiling from 2.2 kW to 3.6 kW maximum."
             },
             "byd_one_pedal_regen_default_max": {
-                "name": "Regenerativní brzdění s pohonem jedním pedálem Výchozí Max",
-                "desc": "Blokuje vysoké rekuperační brzdění jako trvalé výchozí nastavení při nastartování vozidla."
+                "name": "One-Pedal Drive Regenerative Braking Default Max",
+                "desc": "Locks high regenerative braking as persistent default upon vehicle startup."
             },
             "mg_ismart_connectivity_unlock": {
                 "name": "i-SMART Connectivity & Remote Telemetry Unlock",
-                "desc": "Umožňuje dálkové ovládání klimatizace a funkce sledování stavu vozidla."
+                "desc": "Enables remote climate control and vehicle status tracking features."
             },
             "mg_mg4_xpower_launch_control_enable": {
-                "name": "Režim ovládání spouštění dvou motorů MG4 XPower",
-                "desc": "Odemkne režim akcelerace 3,8s 0-100 km/h."
+                "name": "MG4 XPower Dual-Motor Launch Control Mode",
+                "desc": "Unlocks 3.8s 0-100 km/h launch control acceleration mode."
             },
             "mg_battery_preheat_manual_trigger": {
-                "name": "Manuální předběžná úprava baterie s rychlým nabíjením",
-                "desc": "Vynutí ZAPNUTÍ vysokonapěťových bateriových topných článků pro maximální stejnosměrné nabíjení."
+                "name": "Manual Fast-Charge Battery Pre-Conditioning",
+                "desc": "Forces high-voltage battery heating elements ON for peak DC charge rates."
             },
             "xpeng_xngp_adas_region_unlock": {
-                "name": "Odemknutí regionu asistenta autonomního řízení XNGP",
-                "desc": "Umožňuje pokročilou navigaci naváděnou pilotní asistenci v odemčených oblastech."
+                "name": "XNGP Autonomous Driving Assistant Region Unlock",
+                "desc": "Enables advanced navigation-guided pilot assistance in unlocked regions."
             },
             "xpeng_ambient_lighting_music_sync": {
-                "name": "Hudebně-reaktivní rytmické okolní osvětlení",
-                "desc": "Synchronizuje pulzy okolního osvětlení kabiny s basovými rytmy audio systému."
+                "name": "Music-Reactive Rhythm Ambient Lighting",
+                "desc": "Synchronizes cabin LED ambient lighting pulses with audio system bass beats."
             },
             "xpeng_rear_camera_trailer_hitch_view": {
-                "name": "360° režim překrytí kamery Hitch & Ground",
-                "desc": "Přidává překryvnou mřížku pro vyrovnání závěsu s vysokým rozlišením do zadní kamery."
+                "name": "360° Camera Hitch & Ground Overlay Mode",
+                "desc": "Adds high-resolution hitch alignment grid overlay to backup camera."
             },
             "nio_battery_swap_interval_reminder": {
-                "name": "Režim předběžné úpravy stanice Power Swap",
-                "desc": "Automaticky spustí uzamykací kolíky baterie a připraví sady před výměnou."
+                "name": "Power Swap Station Pre-Conditioning Mode",
+                "desc": "Automatically lowers battery lock pins and pre-conditions packs prior to swap."
             },
             "nio_nomi_assistant_custom_voice_phrases": {
                 "name": "NOMI AI Companion Personalization & Wake Words",
-                "desc": "Odemyká vlastní animace avatarů a personalizované pozdravné fráze pro NOMI."
+                "desc": "Unlocks custom avatar animations and personalized greeting phrases for NOMI."
             },
             "nio_sentry_watchdog_continuous_recording": {
-                "name": "Záznam z vyrovnávací paměti fotoaparátu 4K v režimu NIO Sentry",
-                "desc": "Umožňuje nahrávání prostorové kamery s vysokou bitovou rychlostí na USB disk, když je zaparkovaný."
+                "name": "NIO Sentry Mode 4K Camera Buffer Recording",
+                "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
                 "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
-                "desc": "Automaticky synchronizuje předvolby sedadla, zrcátka a klimatizace prostřednictvím Bluetooth telefonu Xiaomi."
+                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Režim zesílení 20sekundové odblokování výkonu při převýšení",
-                "desc": "Prodlužuje maximální dobu trvání přebití elektromotoru při akceleraci na plný plyn."
+                "name": "Boost Mode 20-Second Overboost Power Unlock",
+                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Režim Drift Přidělení vektorování točivého momentu RWD",
-                "desc": "Přiděluje 100 % točivého momentu motoru zadní nápravě s vypnutou kontrolou trakce."
+                "name": "Drift Mode RWD Torque Vectoring Allocation",
+                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "ISA Intelligent Speed Assist Varovné ztlumení zvonění",
-                "desc": "Deaktivuje trvalé akustické zvonění při překročení zjištěného rychlostního limitu."
+                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
+                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "Citlivost kamery pro monitorování únavy řidiče DMS",
-                "desc": "Snižuje falešně pozitivní upozornění na rozptýlení z vnitřní monitorovací kamery."
+                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
+                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Dodatečná montáž kódování přední/zadní parkovací vzdálenosti.",
-                "desc": "Registruje modul parkovacího senzoru pro trh s náhradními díly nebo OEM modul parkovacího senzoru v instalačním seznamu brány."
+                "name": "Retrofit Front/Rear Parking Distance Control Coding",
+                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
             },
             "retrofit_360_camera_activation": {
-                "name": "Dodatečná montáž 360° prostorového kamerového systému s prostorovým výhledem",
-                "desc": "Aktivuje ovladač prostorové kamery a přidává pohled kamery do infotainmentu."
+                "name": "Retrofit 360° Area View Surround Camera System",
+                "desc": "Activates surround view camera controller and adds camera view to infotainment."
             },
             "retrofit_led_license_plate_light_coding": {
-                "name": "Dodatečná montáž LED SPZ a zadního světla Zrušit",
-                "desc": "Deaktivuje monitorování studené žárovky, aby se zabránilo falešným varováním zhasnutých světel pomocí LED."
+                "name": "Retrofit LED License Plate & Tail Light Error Cancel",
+                "desc": "Disables cold bulb check monitoring to prevent false lamp out warnings with LEDs."
             },
             "retrofit_dash_cam_sentry_integration": {
                 "name": "Retrofit Dash Cam Continuous Ignition Power & Sentry Mode",
-                "desc": "Konfiguruje napájecí vedení 30 řídicího modulu karosérie pro nepřetržité nahrávání parkování."
+                "desc": "Configures Body Control Module terminal 30 power line for continuous parking recording."
             },
             "retrofit_heated_windshield_activation": {
-                "name": "Dodatečná montáž kódování prvku vyhřívaného čelního skla",
-                "desc": "Umožňuje výstup relé vyhřívání odmrazování čelního skla a tlačítko obrazovky climatronic."
+                "name": "Retrofit Heated Windshield Element Coding",
+                "desc": "Enables windshield defrost heater relay output and climatronic screen button."
             },
             "retrofit_wireless_charger_module_coding": {
-                "name": "Dodatečná integrace Qi bezdrátové nabíjecí podložky pro smartphone",
-                "desc": "Aktivuje LED stavu bezdrátové nabíječky a vyskakovací okno s připomínkou zanechaného telefonu."
+                "name": "Retrofit Qi Wireless Smartphone Charging Pad Integration",
+                "desc": "Enables wireless charger status LED and phone left behind reminder popup."
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "Dodatečná montáž předního radarového modulu adaptivního tempomatu.",
-                "desc": "Kóduje dodatečně namontovanou přední distanční radarovou jednotku do vozidlové sítě CAN bus."
+                "name": "Retrofit Adaptive Cruise Control Front Radar Module",
+                "desc": "Encodes retrofitted front distance radar unit into CAN bus vehicle network."
             },
             "retrofit_traffic_sign_camera_activation": {
-                "name": "Dodatečná montáž Kódování čelního skla pro rozpoznávání dopravních značek",
-                "desc": "Umožňuje zpracování rozpoznávání znaků VZE na dovybavené kameře čelního skla."
+                "name": "Retrofit Traffic Sign Recognition Windshield Camera Coding",
+                "desc": "Enables VZE sign recognition processing on retrofitted windshield camera."
             },
             "retrofit_heated_steering_wheel_coding": {
-                "name": "Retrofit Aktivace modulu vyhřívaného volantu",
-                "desc": "Umožňuje výstup topného tělesa volantu a automatické spouštění teploty."
+                "name": "Retrofit Heated Steering Wheel Module Activation",
+                "desc": "Enables steering wheel heating element output and auto-on temperature triggers."
             },
             "retrofit_fatigue_camera_calibration": {
-                "name": "Dodatečná montáž Integrace kamery pro sledování únavy řidiče",
-                "desc": "Kalibruje snímač infračervené kamery monitorující řidiče po instalaci sloupku řízení."
+                "name": "Retrofit Driver Fatigue Monitoring Camera Integration",
+                "desc": "Calibrates driver monitoring infrared camera sensor after steering column install."
             },
             "retrofit_trailer_hitch_module_coding": {
-                "name": "Dodatečná montáž integrace elektrického modulu tažného zařízení a přívěsu",
-                "desc": "Kóduje modul přívěsu do stabilizačního systému ESP pro zmírnění výkyvů přívěsu."
+                "name": "Retrofit Tow Bar & Trailer Electrical Module Integration",
+                "desc": "Encodes trailer module into ESP stability system for trailer sway mitigation."
             },
             "retrofit_power_tailgate_trunk_kit_coding": {
-                "name": "Dodatečná montáž elektricky ovládaných dveří zavazadlového prostoru a integrace snímače gest nohou",
-                "desc": "Umožňuje elektrické motory pohonu kufru a kódování snímače nárazu do nárazníku."
+                "name": "Retrofit Power Tailgate & Foot Gesture Sensor Integration",
+                "desc": "Enables electric trunk drive motors and bumper kick sensor coding."
             },
             "easteregg_urban_joke_light_show": {
-                "name": "Urban Joke střídavá zadní světelná show",
-                "desc": "Konfiguruje koncová světla a ukazatele směru tak, aby při zamykání vozidla střídavě blikaly."
+                "name": "Urban Joke Alternating Rear Light Show",
+                "desc": "Configures tail lights and turn signals to flash alternately when locking vehicle."
             },
             "easteregg_custom_boot_greeting_text": {
-                "name": "Vlastní spouštěcí text pozdravu na digitálním clusteru",
-                "desc": "Po zapnutí zapalování zobrazí uživatelskou uvítací zprávu na obrazovce sdruženého přístroje."
+                "name": "Custom Boot Greeting Text on Digital Cluster",
+                "desc": "Displays custom welcome message on instrument cluster screen upon ignition on."
             },
             "easteregg_cluster_mini_game_mode": {
-                "name": "Instrument Cluster Skrytá nabídka miniher",
-                "desc": "Při zaparkování odemkne na displeji retro minihru ovládanou tlačítkem na volantu."
+                "name": "Instrument Cluster Hidden Mini-Game Menu",
+                "desc": "Unlocks steering-wheel button controlled retro mini-game on display when parked."
             },
             "easteregg_custom_horn_melody_package": {
-                "name": "Vlastní uvítací melodie akustického klaksonu",
-                "desc": "Při odemykání auta přehraje krátký rytmický cvrlikání na klakson."
+                "name": "Custom Acoustic Horn Welcome Melody",
+                "desc": "Plays short rhythm chirp pattern on horn when unlocking car."
             },
             "easteregg_welcome_lighting_door_sequence": {
-                "name": "Chasing LED Welcome Light Door sekvence",
-                "desc": "Provádí progresivní LED chasing animaci na vnějších klikách dveří."
+                "name": "Chasing LED Welcome Light Door Sequence",
+                "desc": "Executes progressive LED chasing animation on exterior door handles."
             },
             "easteregg_developer_service_menu_shortcut": {
-                "name": "Zástupce obrazovky diagnostiky pro vývojáře a služby",
-                "desc": "Umožňuje rychlou zkratku gesta pro přístup ke skrytým obrazovkám inženýrské diagnostiky."
+                "name": "Developer & Service Diagnostic Screen Shortcut",
+                "desc": "Enables quick gesture shortcut to access hidden engineering diagnostic screens."
             },
             "easteregg_seasonal_cluster_theme_effect": {
-                "name": "Překryvné téma Sezónní seskupení počasí",
-                "desc": "Přidá animované pozadí sněhových vloček nebo dešťových částic do shluku měřidel v zimě."
+                "name": "Seasonal Weather Cluster Theme Overlay",
+                "desc": "Adds animated snowflake or rain particle background to gauge cluster in winter."
             },
             "easteregg_valet_mode_prank_warning_message": {
-                "name": "Vyskakovací upozornění na omezení rychlosti v režimu obsluhy žert",
-                "desc": "Zobrazuje vtipně přísné varovné hlášení na palubní desce, pokud je překročen servisní režim."
+                "name": "Valet Mode Prank Speed Limit Popup Warning",
+                "desc": "Displays humorously strict warning message on dashboard if valet mode is exceeded."
             },
             "adas_lane_keep_assist_gentle_curve": {
-                "name": "Lane Keep Assist Jemná křivka zásahu řízení",
-                "desc": "Zmírňuje náhlé škubání volantem použitím progresivního zásahu točivého momentu."
+                "name": "Lane Keep Assist Gentle Steering Intervention Curve",
+                "desc": "Softens sudden steering wheel tugs by applying progressive torque intervention."
             },
             "adas_lka_last_state_memory_mode": {
-                "name": "Asistent udržování jízdního pruhu Poslední stav Zámek paměti",
-                "desc": "Zabraňuje automatickému opětovnému zapnutí LKA při každém restartování zapalování."
+                "name": "Lane Keep Assist Last State Memory Lock",
+                "desc": "Prevents LKA from automatically turning back ON every time ignition is restarted."
             },
             "adas_acc_default_follow_distance": {
-                "name": "Výchozí předvolba vzdálenosti adaptivního tempomatu.",
-                "desc": "Nastaví výchozí nastavení mezery při každém zapnutí ACC."
+                "name": "Adaptive Cruise Control Default Distance Preset",
+                "desc": "Sets default gap setting whenever ACC is powered on."
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "Krokový volič tempomatu ACC",
-                "desc": "Změní krok tlačítka rychlosti na volantu z 1 km/h na 5 km/h."
+                "name": "ACC Cruise Speed Increment Step Selector",
+                "desc": "Changes short-press steering wheel speed button step from 1 km/h to 5 km/h."
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
-                "name": "Matrix LED bezoslňující adaptivní dálkový světelný štít",
-                "desc": "Odemyká adaptivní dálková světla evropské specifikace na severoamerických autech."
+                "name": "Matrix LED Glare-Free Adaptive High-Beam Glare Shield",
+                "desc": "Unlocks European-spec adaptive beam-forming high beams on North American cars."
             },
             "adas_traffic_jam_assist_follow_fine_tune": {
-                "name": "Traffic Jam Assist Stop-and-Go Resume Resume",
-                "desc": "Prodlužuje okno automatického restartu stop-and-go ze 3 sekund na 15 sekund."
+                "name": "Traffic Jam Assist Stop-and-Go Resume Delay",
+                "desc": "Extends automatic stop-and-go restart window from 3 seconds to 15 seconds."
             },
             "adas_rear_radar_blind_spot_zero_point_reset": {
-                "name": "Kalibrace úhlu nulového bodu radaru pro zadní mrtvý úhel",
-                "desc": "Překalibruje úhel azimutu radaru zadního nárazníku po demontáži nebo opravě nárazníku."
+                "name": "Rear Blind Spot Radar Zero-Point Angle Calibration",
+                "desc": "Recalibrates rear bumper radar azimuth angle after bumper removal or repair."
             },
             "adas_surround_camera_stitching_recalib": {
-                "name": "Kamera s prostorovým pohledem Zarovnání dynamického sešívání obrazu",
-                "desc": "Provádí dynamickou kalibraci sešívání obrazu kamery při jízdě na silnici."
+                "name": "Surround View Camera Dynamic Image Stitching Alignment",
+                "desc": "Executes dynamic camera image stitching calibration while driving on road."
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "Kalibrace nulového bodu snímače úhlu řízení .",
-                "desc": "Resetuje středový úhel řízení na 0,0° po službě seřízení geometrie kol."
+                "name": "Steering Angle Sensor Zero-Point Calibration",
+                "desc": "Resets steering center angle to 0.0° following wheel alignment service."
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "Rozsah detekce zadního upozornění na křížový provoz.",
-                "desc": "Prodlužuje boční radarovou detekční vzdálenost pro vozidla přibližující se při couvání."
+                "name": "Rear Cross-Traffic Alert Detection Range",
+                "desc": "Increases side radar detection distance for vehicles approaching while backing out."
             },
             "adas_aeb_emergency_braking_threshold_preview": {
-                "name": "Výstražná účinnost automatického nouzového brzdění.",
-                "desc": "Upravuje časování včasného a pozdního varování pro upozornění na kolizi vpřed."
+                "name": "Automatic Emergency Braking Warning Efficacy",
+                "desc": "Adjusts early vs late warning chime timing for forward collision alerts."
             },
             "adas_night_vision_camera_alignment": {
-                "name": "Zarovnání cíle infračervené termokamery pro noční vidění",
-                "desc": "Spustí sekvenci ověření zarovnání podstavce infračervené kamery."
+                "name": "Infrared Night Vision Thermal Camera Target Alignment",
+                "desc": "Initiates infrared camera pedestal alignment verification sequence."
             },
             "adas_dms_driver_monitoring_ir_threshold": {
                 "name": "DMS Driver Attention Camera Infrared Sensitivity",
-                "desc": "Upravuje práh sledování očí pro řidiče s tmavými polarizačními slunečními brýlemi."
+                "desc": "Adjusts eye tracking threshold for drivers wearing dark polarized sunglasses."
             },
             "toyota_soft_close_door_retrofit_coding": {
-                "name": "Power Soft-Close Door Actuator Actuator Code",
-                "desc": "Umožňuje elektrické zatahovací aktuátory západky dveří v řídicím modulu karosérie."
+                "name": "Power Soft-Close Door Vacuum Actuator Coding",
+                "desc": "Enables power door latch pull-in actuators in body control module."
             },
             "toyota_digital_speedometer_display_enable": {
-                "name": "Středový displej digitálního rychloměru",
-                "desc": "Přidává velký digitální odečet rychlosti na LCD analogového sdruženého přístroje."
+                "name": "Digital Speedometer Center Gauge Display",
+                "desc": "Adds large digital speed readout to analog instrument cluster LCD."
             },
             "toyota_walk_away_auto_lock_sensitivity": {
-                "name": "Citlivost automatického zamykání dveří pomocí chytrého klíče při odchodu",
-                "desc": "Upraví práh vzdálenosti před automatickým zamknutím dveří při odchodu."
+                "name": "Walk-Away Smart Key Auto Door Locking Sensitivity",
+                "desc": "Adjusts distance threshold before doors automatically lock when walking away."
             },
             "toyota_jbl_3d_eq_audio_profile_unlock": {
-                "name": "Křivky ekvalizéru prostorového zvuku JBL Premium Surround Sound",
-                "desc": "Odemyká 3D profily ekvalizéru koncertního sálu v audio hlavní jednotce JBL."
+                "name": "JBL Premium Surround Sound Equalizer Curves",
+                "desc": "Unlocks 3D concert hall equalizer profiles in JBL audio head unit."
             },
             "toyota_ev_mode_throttle_override_suppression": {
-                "name": "Čisté elektrické omezení limitu škrticí klapky v režimu EV",
-                "desc": "Zabraňuje nastartování benzínového motoru při mírné akceleraci EV."
+                "name": "EV Mode Pure Electric Throttle Limit Suppression",
+                "desc": "Prevents gasoline engine from kicking ON during moderate EV acceleration."
             },
             "ford_sync3_engineering_diagnostics_page": {
-                "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostická obrazovka",
-                "desc": "Povoluje nezpracované obrazovky GPS, test APIM a diagnostické obrazovky zvukové frekvence v systému SYNC."
+                "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostic Screen",
+                "desc": "Enables raw GPS, APIM test, and audio frequency diagnostic screens on SYNC."
             },
             "ford_rear_seat_entertainment_unlock": {
-                "name": "Zadní sedadla HDMI / Video Entertainment Audio Pass-Through",
-                "desc": "Umožňuje streamování zvuku ze sluchátek v kabině pro obrazovky zábavy na zadních sedadlech."
+                "name": "Rear Seat HDMI / Video Entertainment Audio Pass-Through",
+                "desc": "Enables cabin headphone audio streaming for rear seat entertainment screens."
             },
             "ford_bambi_mode_fog_light_expansion": {
-                "name": "Režim Bambi Dálková světla + současné osvětlení mlhových světel",
-                "desc": "Udržuje zapnutá přední mlhová světla, i když jsou aktivována dálková světla."
+                "name": "Bambi Mode High Beam + Fog Light Simultaneous Illumination",
+                "desc": "Keeps front fog lights powered ON even when high beam headlights are activated."
             },
             "ford_auto_engine_idle_shutdown_30min_override": {
-                "name": "Automatické vypnutí motoru po 30 minutách nečinnosti zakázat",
-                "desc": "Zabraňuje automatickému vypnutí motoru po 30 minutách v Parkování."
+                "name": "30-Minute Idle Auto Engine Shutdown Disable",
+                "desc": "Prevents engine from shutting OFF automatically after 30 minutes in Park."
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "N Grin Shift 20sekundové odblokování dodatečného přeboostování",
-                "desc": "Umožňuje funkci overboost tlačítka NGS na volantu v ECU."
+                "name": "N Grin Shift 20-Second Overboost Retrofit Unlock",
+                "desc": "Enables steering wheel NGS button overboost function in ECU."
             },
             "hyundai_smart_tailgate_approach_distance": {
-                "name": "Inteligentní snímání přiblížení k zadním výklopným dveřím bez použití rukou",
-                "desc": "Upravuje dobu zpoždění stání, než se chytré dveře zavazadlového prostoru automaticky otevřou."
+                "name": "Smart Hands-Free Tailgate Approach Proximity Sensing",
+                "desc": "Adjusts standing delay time before smart tailgate automatically opens."
             },
             "hyundai_digital_cluster_n_performance_theme": {
                 "name": "N Performance Digital Instrument Cluster Gauge Layout",
-                "desc": "Aplikuje rozložení skupiny červeného indikátoru řazení N-Performance na standardní přístrojovou desku LCD."
+                "desc": "Applies N-Performance red shift-indicator cluster layout to standard LCD dash."
             },
             "stellantis_scr_adblue_warning_threshold_adjust": {
-                "name": "Nastavení prahu vzdálenosti výstrahy SCR AdBlue",
-                "desc": "Upravuje první varovnou vzdálenost připomenutí doplnění AdBlue z 2400 km na 1000 km."
+                "name": "SCR AdBlue Warning Distance Threshold Adjustment",
+                "desc": "Adjusts first AdBlue refill reminder warning distance from 2400 km to 1000 km."
             },
             "stellantis_jeep_trail_rated_offroad_pages": {
-                "name": "Jeep Uconnect Trail-Rated Off-Road telemetrické stránky",
-                "desc": "Odemyká stránky náklonu hnacího ústrojí, náklonu, kloubového spojení kol a teploty chladicí kapaliny na Uconnect."
+                "name": "Jeep Uconnect Trail-Rated Off-Road Telemetry Pages",
+                "desc": "Unlocks drivetrain pitch, roll, wheel articulation, and coolant temp pages on Uconnect."
             },
             "stellantis_peugeot_icockpit_3d_color_schemes": {
-                "name": "Vlastní paleta barevných schémat Peugeot 3D i-Cockpit",
-                "desc": "Odemyká barevné motivy mědi a křemene pro 3D holografický digitální přístrojový panel."
+                "name": "Peugeot 3D i-Cockpit Custom Color Scheme Palette",
+                "desc": "Unlocks Copper and Quartz color themes for 3D holographic digital instrument cluster."
             },
             "gm_super_cruise_follow_distance_adjust": {
-                "name": "Super Cruise Hands-Free Posun vzdálenosti",
-                "desc": "Přizpůsobuje rozestup mezer během autonomní dálniční jízdy Super Cruise."
+                "name": "Super Cruise Hands-Free Following Distance Offset",
+                "desc": "Customizes gap spacing during autonomous Super Cruise highway driving."
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "Head-Up Display Kalibrace polohy a náklonu nulového bodu",
-                "desc": "Resetuje úhel obrazu projektoru HUD na čelním skle a zarovnání horizontu na nulové úrovni."
+                "name": "Head-Up Display Position & Tilt Zero-Point Calibration",
+                "desc": "Resets wind-shield HUD projector image angle and zero-level horizon alignment."
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
-                "name": "Přepsání deaktivace válce AFM / DFM",
-                "desc": "Deaktivuje aktivní spouštění válců pro řízení paliva, aby motor běžel v 8válcovém režimu."
+                "name": "AFM / DFM Cylinder Deactivation Override",
+                "desc": "Disables Active Fuel Management cylinder drop to keep engine operating in 8-cylinder mode."
             },
             "dodge_ram_truck_fog_lights_with_high_beam": {
-                "name": "Mlhová světla RAM Truck s dálkovými světly",
-                "desc": "Zabraňuje automatickému vypnutí mlhových světel při zapnutí dálkových světel."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Prevents fog lights from turning OFF automatically when high beams are switched ON."
             },
             "toyota_keyless_window_down": {
-                "name": "Otevřené okénko na klíče Toyota",
-                "desc": "Podržením tlačítka UNLOCK na dálkovém ovladači stáhne všechna elektricky ovládaná okna."
+                "name": "Toyota Key Fob Window Open",
+                "desc": "Rolls down all power windows when holding UNLOCK button on remote fob."
             },
             "toyota_seatbelt_chime_disable": {
-                "name": "Ztlumení alarmu bezpečnostního pásu Toyota",
-                "desc": "Deaktivuje trvalý akustický varovný signál bezpečnostního pásu na sedadle spolujezdce."
+                "name": "Toyota Passenger Seatbelt Alarm Mute",
+                "desc": "Disables persistent acoustic seatbelt warning chime in passenger seat."
             },
             "honda_walkaway_auto_lock": {
-                "name": "Automatický zámek dveří Honda Walk-Away",
-                "desc": "Automaticky zamkne všechny dveře, když Smart Key opustí okruh vozidla 2,5 m."
+                "name": "Honda Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when Smart Key leaves 2.5m vehicle radius."
             },
             "volvo_speed_limiter_unlock": {
-                "name": "Rozšířený tovární omezovač rychlosti Volvo na 180 km/h",
-                "desc": "Upravuje maximální tovární rychlost 180 km/h pro použití na trati / dálnici."
+                "name": "Volvo 180 km/h Factory Speed Limiter Extended",
+                "desc": "Adjusts 180 km/h factory speed cap for Track / Autobahn performance use."
             },
             "byd_v2l_3kw_power_unlock": {
-                "name": "BYD Režim střídavého výstupu 3,6 kW od vozidla k zatížení.",
-                "desc": "Umožňuje externí vybíjecí port 220V/3,6kW V2L AC pro kempingová zařízení."
+                "name": "BYD Vehicle-to-Load 3.6kW AC Output Mode",
+                "desc": "Enables external 220V/3.6kW V2L AC discharge port for camping appliances."
             },
             "xiaomi_su7_drift_mode_unlock": {
                 "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
-                "desc": "Aktivuje 100% zkreslení točivého momentu zadního motoru a režim ESC Track Drift."
+                "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset",
-                "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
+                "name": "Oil Service Interval Reset",
+                "desc": "Resets oil change service counter and inspection interval for VAG vehicles."
             },
             "vag_epb_service_mode": {
-                "name": "Servisní režim brzdových destiček elektronické parkovací brzdy .",
-                "desc": "Stahuje písty zadního EPB třmenu pro výměnu zadní brzdové destičky a rotoru."
+                "name": "Electronic Parking Brake Brake Pad Service Mode",
+                "desc": "Retracts rear EPB caliper pistons for rear brake pad and rotor replacement."
             },
             "bmw_bms_battery_registration": {
-                "name": "Registrace baterie inteligentního snímače baterie.",
-                "desc": "Registruje novou výměnu 12V AGM/olověné baterie v řízení motoru DME/DDE."
+                "name": "Intelligent Battery Sensor Battery Registration",
+                "desc": "Registers new 12V AGM/Lead-acid battery replacement in DME/DDE engine management."
             },
             "bmw_motorrad_service_indicator_reset": {
-                "name": "Výroční servis BMW Motorrad a reset indikátoru oleje",
-                "desc": "Vymaže datum ročního servisu a připomenutí ujeté vzdálenosti 10 000 km na sdruženém přístroji TFT."
+                "name": "BMW Motorrad Annual Service & Oil Indicator Reset",
+                "desc": "Clears annual service date and 10,000 km distance reminder on TFT instrument cluster."
             },
             "ducati_desmo_service_reset": {
-                "name": "Připomenutí servisu ventilů Ducati Desmo je jasné",
-                "desc": "Vymaže ikonu klíče Desmoservice na přístrojové desce po 15 000 / 30 000 km servisu."
+                "name": "Ducati Desmo Valve Service Reminder Clear",
+                "desc": "Clears Desmoservice wrench icon on dashboard after 15,000 / 30,000 km service."
             },
             "byd_bms_isolation_self_test": {
-                "name": "Samočinný vysokonapěťový izolační test BYD Blade Battery",
-                "desc": "Provádí diagnostiku svodů a odporu vysokonapěťového systému v BMS."
+                "name": "BYD Blade Battery High-Voltage Isolation Self-Test",
+                "desc": "Executes high-voltage system leakage & resistance diagnostics in BMS."
             },
             "vag_drl_brightness_multi": {
-                "name": "Nastavení jasu světel pro denní svícení .",
-                "desc": "Upravte úroveň intenzity LED DRL pro režim potkávacích světel/parkování."
+                "name": "Daytime Running Lights Brightness Adjustment",
+                "desc": "Adjust LED DRL intensity level for low-beam / parking mode."
             },
             "bmw_comfort_turn_signal_cycles": {
-                "name": "Jednodotykový komfortní počet pulzů směrových světel",
-                "desc": "Vyberte počet bliknutí při rychlém klepnutí na páčku ukazatelů směru."
+                "name": "One-Touch Comfort Turn Signal Pulse Count",
+                "desc": "Select how many blinks occur on quick tap of turn indicator lever."
             },
             "bmw_oil_service_reset": {
-                "name": "Resetování motorového oleje CBS",
-                "desc": "Resetuje procento životnosti oleje CBS zpět na 100 %."
+                "name": "CBS Engine Oil Reset",
+                "desc": "Resets Condition Based Service oil life percentage back to 100%."
             },
             "generic_oil_service_reset": {
-                "name": "Resetování univerzálního indikátoru údržby oleje",
-                "desc": "Vymaže výstražnou kontrolku údržby oleje na palubní desce u podporovaných ECU OBD2/UDS."
+                "name": "Universal Oil Maintenance Indicator Reset",
+                "desc": "Clears dashboard oil maintenance warning light across supported OBD2/UDS ECUs."
             },
             "vag_epb_pad_change": {
-                "name": "Režim výměny brzdových destiček EPB",
-                "desc": "Stahuje třmeny elektronické parkovací brzdy pro servis zadních brzdových destiček."
+                "name": "EPB Brake Pad Replacement Mode",
+                "desc": "Retracts electronic parking brake calipers for rear brake pad servicing."
             },
             "bmw_epb_pad_change": {
-                "name": "Servisní režim brzd EPB",
-                "desc": "Otevírá ovladač parkovací brzdy do servisní polohy pro výměnu zadního obložení."
+                "name": "EPB Brake Service Mode",
+                "desc": "Opens parking brake actuator to service position for rear pad replacement."
             },
             "mb_epb_pad_change": {
-                "name": "Režim EPB Pad Fitting Mode",
-                "desc": "Uvolní vřeteno parkovací brzdy do dílenské polohy pro servis brzd."
+                "name": "EPB Pad Fitting Mode",
+                "desc": "Releases parking brake spindle to workshop position for brake service."
             },
             "vag_dpf_regen": {
-                "name": "Spouštěč regenerace DPF",
-                "desc": "Spouští stacionární cyklus vypalování sazí filtru pevných částic."
+                "name": "DPF Service Regeneration Trigger",
+                "desc": "Initiates stationary Diesel Particulate Filter soot burn-off cycle."
             },
             "bmw_dpf_regen": {
-                "name": "Spouštěč nucené regenerace DPF",
-                "desc": "Požaduje ECU DDE, aby zahájila aktivní rutinu regenerace filtru pevných částic."
+                "name": "DPF Forced Regeneration Trigger",
+                "desc": "Requests DDE ECU to start active particulate filter regeneration routine."
             },
             "psa_dpf_regen": {
-                "name": "Žádost o regeneraci DPF",
-                "desc": "Spouští stacionární regeneraci DPF pro ECU dieselového motoru HDi."
+                "name": "DPF Regeneration Request",
+                "desc": "Triggers stationary DPF regeneration for HDi diesel engine ECUs."
             },
             "bmw_bms_battery_register": {
-                "name": "Registrace výměny baterie BMS",
-                "desc": "Registruje novou výměnu baterie pomocí inteligentního snímače baterie DME/DDE."
+                "name": "BMS Battery Replacement Registration",
+                "desc": "Registers new battery replacement with DME/DDE Intelligent Battery Sensor."
             },
             "mb_bms_battery_register": {
-                "name": "Registrace a reset baterie",
-                "desc": "Po instalaci nové baterie vynuluje počítadlo stárnutí baterie v modulu SAM."
+                "name": "Battery Registration & Reset",
+                "desc": "Resets battery aging counter in SAM module after new battery installation."
             },
             "vag_sas_calibrate": {
-                "name": "Kalibrace snímače úhlu řízení",
-                "desc": "Kalibruje nulovou polohu snímače úhlu řízení G85 pro ECU ABS/ESP."
+                "name": "Steering Angle Sensor Calibration",
+                "desc": "Calibrates G85 steering angle sensor zero-point position for ABS/ESP ECU."
             },
             "toyota_sas_calibrate": {
-                "name": "Kalibrace nulového bodu úhlu řízení",
-                "desc": "Provádí kalibraci nulového bodu snímače úhlu natočení volantu v ECU řízení smyku."
+                "name": "Steering Angle Zero Point Calibration",
+                "desc": "Performs zero point calibration of steering angle sensor in Skid Control ECU."
             },
             "generic_tba_adapt": {
-                "name": "Vyrovnání a přizpůsobení těla škrticí klapky",
-                "desc": "V ECU motoru provede rutinu učení zastavení elektronického tělesa škrticí klapky."
+                "name": "Throttle Body Alignment & Adaptation",
+                "desc": "Executes electronic throttle body stop learning routine in engine ECU."
             },
             "epb_service_reset": {
-                "name": "Univerzální reset údržby EPB",
-                "desc": "Resetuje počítadlo opotřebení třmenu elektronické parkovací brzdy a kalibruje vzduchovou mezeru."
+                "name": "Universal EPB Maintenance Reset",
+                "desc": "Resets electronic park brake caliper wear counter and calibrates air gap."
             },
             "vag_dsg_reset": {
-                "name": "Obnovení základního nastavení převodovky DSG",
-                "desc": "Resetuje body záběru spojky a přizpůsobení řadicích ventilů pro DSG/S-Tronic."
+                "name": "DSG Transmission Basic Settings Reset",
+                "desc": "Resets clutch engagement points and shift valve adaptations for DSG/S-Tronic."
             },
             "bmw_zf_reset": {
-                "name": "Obnovení adaptace převodovky ZF 8HP",
-                "desc": "Vymaže čas řazení převodovky EGS a hodnoty přizpůsobení tlaku."
+                "name": "ZF 8HP Transmission Adaptation Reset",
+                "desc": "Clears EGS transmission shift time and pressure adaptation values."
             },
             "bmw_brake_fluid_reset": {
-                "name": "Resetování servisního intervalu brzdové kapaliny",
-                "desc": "Resetuje 2letý časovač výměny brzdové kapaliny Service."
+                "name": "Brake Fluid Service Interval Reset",
+                "desc": "Resets Condition Based Service 2-year brake fluid change timer."
             },
             "ford_injector_code": {
-                "name": "Kódování korekčního faktoru vstřikovače",
-                "desc": "Programuje 16znakové IQA kódy pro dieselové vstřikovače do PCM."
+                "name": "Injector Correction Factor Coding",
+                "desc": "Programs 16-character IQA codes for diesel injectors into PCM."
             },
             "bmw_injector_code": {
-                "name": "Kódování průtoku vstřikovače paliva",
-                "desc": "Zapisuje hodnoty energetické kalibrace pro vyměněné vstřikovače paliva do DME."
+                "name": "Fuel Injector Flow Rate Coding",
+                "desc": "Writes energy calibration values for replaced fuel injectors into DME."
             },
             "generic_headlight_aim": {
-                "name": "Kalibrace automatického vyrovnávání světlometů",
-                "desc": "Nastavuje referenční nulovou polohu pro motory adaptivního automatického nastavování sklonu světlometů."
+                "name": "Headlight Auto-Leveling Calibration",
+                "desc": "Sets reference zero position for adaptive auto-leveling headlight motors."
             },
             "bmw_12v_battery_reg": {
-                "name": "Registrace 12V pomocné baterie",
-                "desc": "Registruje výměnu pomocného startéru/pomocné baterie AGM v PCU."
+                "name": "12V Auxiliary Battery Registration",
+                "desc": "Registers auxiliary AGM starter/support battery replacement in PCU."
             },
             "vag_comfort_turn_signal": {
-                "name": "Komfortní počet bliknutí blinkrů",
-                "desc": "Upravuje počet cyklů blinkru změny jízdního pruhu mezi 3, 4 a 5 bliknutími."
+                "name": "Comfort Turn Signal Blink Count",
+                "desc": "Adjusts lane change blinker cycle count between 3, 4, and 5 flashes."
             },
             "vag_coming_home_duration": {
-                "name": "Doba osvětlení příchodu/odcházení",
-                "desc": "Konfiguruje časovač osvětlení světlometů po uzamčení vozidla."
+                "name": "Coming/Leaving Home Light Duration",
+                "desc": "Configures headlight illumination timer after vehicle locking."
             },
             "vag_remote_windows": {
-                "name": "Dálkové pohodlné ovládání oken",
-                "desc": "Umožňuje otevírání a zavírání elektricky ovládaných oken dlouhým stisknutím dálkového ovladače."
+                "name": "Remote Convenience Window Control",
+                "desc": "Enables opening and closing power windows via remote key fob long press."
             },
             "vag_auto_lock_15kmh": {
-                "name": "Auto Door Lock při 15 km/h",
-                "desc": "Automaticky uzamkne všechny dveře, když rychlost vozidla dosáhne 15 km/h."
+                "name": "Auto Door Lock at 15 km/h",
+                "desc": "Automatically locks all doors when vehicle speed reaches 15 km/h."
             },
             "vag_sfd_unlock_prep": {
-                "name": "Příprava na stav ochrany brány SFD",
-                "desc": "Připravuje relaci tokenu brány MQB-evo SFD pro zápis chráněných DID."
+                "name": "SFD Gateway Protection Status Prep",
+                "desc": "Prepares MQB-evo SFD gateway token session for writing protected DIDs."
             },
             "bmw_asd_deactivate": {
-                "name": "Deaktivace aktivního zvukového designu",
-                "desc": "Ztlumí syntetický zvuk motoru přehrávaný z reproduktorů v kabině."
+                "name": "Active Sound Design Deactivation",
+                "desc": "Mutes synthetic engine sound played through cabin speakers."
             },
             "bmw_comfort_turn_signal": {
-                "name": "Komfortní počet směrových světel",
-                "desc": "Nastavuje počet pulzů indikátoru jedním dotykem."
+                "name": "Comfort Turn Signal Count",
+                "desc": "Sets one-touch indicator pulse count."
             },
             "bmw_mirror_fold_lock": {
                 "name": "Comfort Access Mirror Fold on Lock",
-                "desc": "Automaticky sklopí boční zrcátka ihned po zamknutí vozidla."
+                "desc": "Automatically folds side mirrors immediately upon locking vehicle."
             },
             "toyota_coming_home_duration": {
-                "name": "Zpoždění světlometu / Coming-Home",
-                "desc": "Konfiguruje časovač zpoždění vypnutí světlometů po vypnutí zapalování."
+                "name": "Headlight Courtesy Delay / Coming-Home",
+                "desc": "Configures headlight off delay timer after ignition shutdown."
             },
             "toyota_lane_change_flash": {
-                "name": "Počet záblesků směrových světel při změně jízdního pruhu",
-                "desc": "Upravuje počet cyklů blinkru změny jízdního pruhu na jeden dotek."
+                "name": "Lane-Change Turn Signal Flash Count",
+                "desc": "Adjusts one-touch lane change blinker cycle count."
             },
             "toyota_remote_window_close": {
-                "name": "Dálkové elektrické zavírání oken",
-                "desc": "Umožňuje zavřít všechna elektricky ovládaná okna přidržením tlačítka dálkového zamykání."
+                "name": "Remote Power Window Closure",
+                "desc": "Allows closing all power windows by holding remote lock button."
             },
             "toyota_autolock_behavior": {
-                "name": "Přizpůsobení automatického zamykání/odemykání dveří",
-                "desc": "Nastaví spoušť zamykání dveří."
+                "name": "Auto Door Lock/Unlock Customization",
+                "desc": "Sets door locking trigger."
             },
             "toyota_approach_welcome_lights": {
-                "name": "Uvítací světla Smart Key Approach",
-                "desc": "Zapne vnitřní osvětlení kaluže/kabiny, když se chytrý klíč přiblíží k vozidlu."
+                "name": "Smart Key Approach Welcome Lights",
+                "desc": "Turns on interior puddle/cabin lights when smart key approaches vehicle."
             },
             "hyundai_autolock_behavior": {
-                "name": "Chování automatického zamykání/odemykání dveří",
-                "desc": "Automaticky zamyká dveře při řazení nebo rychlosti a odemyká v poloze P nebo při vypnutém zapalování."
+                "name": "Auto Door Lock/Unlock Behavior",
+                "desc": "Automatically locks doors on shift or speed and unlocks on P or Ignition Off."
             },
             "hyundai_window_remote": {
-                "name": "Dálkové otevírání/zavírání oken",
-                "desc": "Umožňuje rolování oken nahoru/dolů pomocí tlačítek na chytré klíčence."
+                "name": "Remote Window Open/Close",
+                "desc": "Enables rolling windows up/down using smart key fob buttons."
             },
             "hyundai_sport_mode_memory": {
-                "name": "Paměť volby režimu jízdy",
-                "desc": "Pamatuje si poslední zvolený jízdní režim po restartování motoru."
+                "name": "Drive Mode Select Memory",
+                "desc": "Remembers last selected Drive Mode after engine restart."
             },
             "tesla_charge_limit_custom": {
-                "name": "Přizpůsobení limitu nabití baterie",
-                "desc": "Nastaví výchozí procento limitu nabití HV baterie."
+                "name": "Battery Charge Limit Customization",
+                "desc": "Sets default HV battery charge limit percentage."
             },
             "tesla_mirror_fold_lock": {
-                "name": "Automatické skládání zrcadla na zámku Walk-Away",
-                "desc": "Automaticky sklopí boční zrcátka, když se aktivuje odemykání klíče od telefonu."
+                "name": "Mirror Auto-Fold on Walk-Away Lock",
+                "desc": "Automatically folds side mirrors when phone key walk-away lock triggers."
             },
             "nissan_coming_home": {
-                "name": "Zpoždění zhasnutí světlometů",
-                "desc": "Udržuje světlomety rozsvícené po dobu 30 sekund po opuštění vozidla Nissan."
+                "name": "Courtesy Headlight Off Delay",
+                "desc": "Keeps headlights illuminated for 30 seconds after exiting Nissan vehicle."
             },
             "nissan_lane_change_flash": {
-                "name": "Počet záblesků změny jízdního pruhu při přejíždění klepnutím",
-                "desc": "Nastavuje počet impulzů ukazatele směru při klepnutí na páčku světla."
+                "name": "Tap-to-Pass Lane Change Flash Count",
+                "desc": "Sets turn signal indicator pulse count on light stalk tap."
             },
             "nissan_autolock_behavior": {
-                "name": "Automatický zámek dveří závislý na rychlosti",
-                "desc": "Automaticky zamkne všechny dveře, když vozidlo dosáhne rychlosti 24 km/h."
+                "name": "Speed-Dependent Automatic Door Lock",
+                "desc": "Locks all doors automatically when vehicle reaches 24 km/h."
             },
             "nissan_window_remote": {
-                "name": "Dálkové ovládání oken na klíčenku",
-                "desc": "Otevírá/zavírá přední okna dlouhým stisknutím tlačítka odemykání na klíčence."
+                "name": "Remote Key Fob Power Window Control",
+                "desc": "Opens/closes front windows via key fob unlock button long press."
             },
             "nissan_seatbelt_chime_mute": {
-                "name": "Potlačení zvuku upozornění na bezpečnostní pás",
-                "desc": "Ztlumí opakující se varovný signál bezpečnostních pásů a zároveň zachová ikonu sdruženého přístroje."
+                "name": "Seatbelt Warning Audio Chime Suppress",
+                "desc": "Mutes repetitive seatbelt warning chime while keeping cluster icon."
             },
             "porsche_sport_chrono_launch": {
-                "name": "Profil odezvy Sport Chrono Launch Control",
-                "desc": "Optimalizuje ovládání spouštění převodovky PDK prahové hodnoty otáček a záběr spojky."
+                "name": "Sport Chrono Launch Control Response Profile",
+                "desc": "Optimizes PDK transmission launch control RPM threshold & clutch bite."
             },
             "porsche_pasm_default": {
-                "name": "Předvolba spuštění režimu PASM Suspension",
-                "desc": "Nastaví výchozí tuhost adaptivního odpružení PASM při startu zapalování."
+                "name": "PASM Suspension Mode Startup Preset",
+                "desc": "Sets PASM adaptive suspension default stiffness on ignition start."
             },
             "porsche_exhaust_flap": {
-                "name": "Konstantní vypínání sportovní výfukové klapky",
-                "desc": "Přinutí aktivní výfukové ventily, aby zůstaly 100% otevřené ve všech rozsazích otáček."
+                "name": "Sport Exhaust Flap Constant Open Override",
+                "desc": "Forces active exhaust valves to stay 100% open across all RPM ranges."
             },
             "audi_drive_select_memory": {
-                "name": "Uchování paměti režimu Audi Drive Select",
-                "desc": "Po restartu zachová poslední aktivní profil Drive Select."
+                "name": "Audi Drive Select Mode Memory Retention",
+                "desc": "Retains last active Drive Select profile upon restart."
             },
             "audi_virtual_cockpit_themes": {
-                "name": "Grafické rozložení Audi Virtual Cockpit S/RS Sport",
-                "desc": "Odemyká možnosti rozložení centrálního tachometru S/RS ve virtuálním kokpitu."
+                "name": "Audi Virtual Cockpit S/RS Sport Graphic Layout",
+                "desc": "Unlocks S/RS central tachometer layout options on Virtual Cockpit."
             },
             "vag_scandinavian_drl": {
-                "name": "Skandinávský režim DRL",
-                "desc": "Udržuje zadní koncová světla trvale rozsvícená vedle předních DRL."
+                "name": "Scandinavian DRL Mode",
+                "desc": "Keeps rear tail lights illuminated continuously alongside front DRLs."
             },
             "vag_mirror_dip_reverse": {
-                "name": "Sklopení zpětného zrcátka spolujezdce",
-                "desc": "Sklopí zrcátko na straně spolujezdce dolů, když je zařazena zpátečka."
+                "name": "Passenger Mirror Dip in Reverse",
+                "desc": "Tills passenger side mirror downward when reverse gear is engaged."
             },
             "vag_dynamic_turn_signal": {
-                "name": "Dynamický / sekvenční režim směrových světel",
-                "desc": "Umožňuje rozmítání dynamického vzoru blikání LED na kompatibilních modulech zadních světel."
+                "name": "Dynamic / Sequential Turn Signal Mode",
+                "desc": "Enables sweeping dynamic LED blinker pattern on compatible rear light modules."
             },
             "vag_seatbelt_warning_duration": {
-                "name": "Nastavení doby varovného zvonění bezpečnostního pásu",
-                "desc": "Zkracuje nebo potlačuje opakující se časovač varovného signálu bezpečnostního pásu."
+                "name": "Seatbelt Warning Chime Duration Adjustment",
+                "desc": "Shortens or suppresses repetitive seatbelt warning chime timer."
             },
             "vag_sunroof_remote": {
-                "name": "Dálkové ovládání komfortu střešního okna",
-                "desc": "Umožňuje otevírání a vyklápění panoramatického střešního okna pomocí dálkového držení klíčenky."
+                "name": "Sunroof Remote Comfort Control",
+                "desc": "Allows opening and tilting panoramic sunroof via remote key fob hold."
             },
             "vag_acc_distance_preset": {
-                "name": "ACC Adaptive Cruise Default Follow Distance",
-                "desc": "Nastaví výchozí radar podle profilu vzdálenosti při startu zapalování."
+                "name": "ACC Adaptive Cruise Default Following Distance",
+                "desc": "Sets default radar following distance profile on ignition start."
             },
             "vag_infotainment_startup_logo": {
                 "name": "Infotainment Boot Graphic Logo",
-                "desc": "Přizpůsobuje logo úvodní obrazovky infotainmentu."
+                "desc": "Customizes infotainment startup splash screen logo."
             },
             "vag_ambient_color_cycle": {
-                "name": "Odemknutí barevného spektra okolního světla",
-                "desc": "Rozšiřuje možnosti palety okolního osvětlení v nabídce nastavení vozidla."
+                "name": "Interior Ambient Light Color Spectrum Unlock",
+                "desc": "Expands ambient lighting palette options in vehicle settings menu."
             },
             "vag_service_interval_custom": {
-                "name": "Vlastní inspekce a prahová hodnota servisní vzdálenosti",
-                "desc": "Konfiguruje vlastní km a denní cíle pro upozornění na další servisní službu."
+                "name": "Custom Inspection & Service Distance Threshold",
+                "desc": "Configures custom km and day targets for next service warning."
             },
             "vag_door_handle_lights_reverse": {
-                "name": "Osvětlení vnější kliky dveří zapnuto při zpátečce",
-                "desc": "Rozsvítí LED loužová světla klik dveří při couvání pro viditelnost na zem."
+                "name": "Exterior Door Handle Lights ON in Reverse",
+                "desc": "Illuminates door handle LED puddle lights when reversing for ground visibility."
             },
             "bmw_msport_exhaust_burble": {
                 "name": "M-Sport Exhaust Burble & Pop Intensity",
-                "desc": "Upraví agresivitu zvuku přetečení v režimu Sport."
+                "desc": "Adjusts overrun burble sound aggressiveness in Sport mode."
             },
             "bmw_welcome_light_sequence": {
-                "name": "Uvítací světelná sekvence animace",
-                "desc": "Přizpůsobí LED světlomet a uvítací uvítací sekvenci Angel Eyes."
+                "name": "Welcome Light Sequence Animation",
+                "desc": "Customizes LED headlight and Angel Eyes welcome greeting sequence."
             },
             "bmw_service_history_menu": {
-                "name": "Povolit nabídku digitální servisní historie",
-                "desc": "Odemkne nabídku digitální servisní knihy iDrive na centrálním displeji."
+                "name": "Digital Service History Menu Enable",
+                "desc": "Unlocks iDrive digital service record book menu on central display."
             },
             "bmw_hud_speed_display": {
-                "name": "Head-Up Display Překryvný digitální rychloměr",
-                "desc": "Promítá digitální odečet rychlosti v reálném čase na Head-Up displej."
+                "name": "Head-Up Display Digital Speedometer Overlay",
+                "desc": "Projects real-time digital speed readout onto Head-Up Display."
             },
             "bmw_cornering_lights_fog": {
-                "name": "Osvětlení zatáček do mlhy",
-                "desc": "Zapne přední mlhové světlo na ukazatel směru nebo při nízké rychlosti natočení volantu."
+                "name": "Fog Lamp Cornering Illumination",
+                "desc": "Turns on front fog light on turn signal or low-speed steering angle."
             },
             "bmw_easy_entry_steering": {
-                "name": "Automaticky zasouvací sloupek řízení Easy Entry",
-                "desc": "Stáhne elektrický volant nahoru po vypnutí motoru pro snadné vystupování."
+                "name": "Easy Entry Auto-Retracting Steering Column",
+                "desc": "Retracts electric steering wheel upward upon engine shutdown for easy exit."
             },
             "bmw_bluetooth_audio_enable": {
-                "name": "Odemknutí vylepšeného Bluetooth Audio Streaming",
-                "desc": "Umožňuje bezdrátové streamování hudby A2DP Bluetooth v iDrive HU_ENTRYNAV."
+                "name": "Enhanced Bluetooth Audio Streaming Unlock",
+                "desc": "Enables A2DP Bluetooth wireless music streaming in iDrive HU_ENTRYNAV."
             },
             "bmw_door_handle_lights_reverse": {
-                "name": "Vnější světla na klikách dveří při zpátečce",
-                "desc": "Rozsvítí LED kliky dveří při zařazení zpátečky."
+                "name": "Exterior Door Handle Puddle Lights in Reverse",
+                "desc": "Illuminates door handle LEDs when reverse gear is engaged."
             },
             "toyota_auto_headlight_threshold": {
-                "name": "Citlivost senzoru okolního světla pro automatické světlomety",
-                "desc": "Upravuje práh soumraku pro automatickou aktivaci světlometů."
+                "name": "Auto Headlight Ambient Light Sensor Sensitivity",
+                "desc": "Adjusts twilight dusk threshold for automatic headlight activation."
             },
             "toyota_turn_signal_click_volume": {
-                "name": "Hlasitost reproduktoru s cvaknutím směrového signálu",
-                "desc": "Konfiguruje hlasitost cvaknutí relé směrových světel."
+                "name": "Turn Signal Audio Clicker Speaker Volume",
+                "desc": "Configures turn signal relay click chime volume."
             },
             "toyota_smart_key_approach_lights": {
                 "name": "Smart Key Proximity Welcome Puddle Lights",
-                "desc": "Když se chytrý klíč přiblíží k vozidlu, zapne se osvětlení louže zrcátka."
+                "desc": "Turns on mirror puddle lights when smart key approaches vehicle."
             },
             "toyota_rear_hatch_behavior": {
-                "name": "Logika ovládání otevírání/zavírání výklopných dveří zavazadlového prostoru",
-                "desc": "Konfiguruje dobu stisknutí tlačítka dálkového ovládání a ovládacího panelu."
+                "name": "Power Tailgate Liftgate Open/Close Operation Logic",
+                "desc": "Configures remote and dashboard power hatch button press duration."
             },
             "toyota_open_windows_smart_key": {
-                "name": "Dlouhý stisk stahovacího okna na dálkovém ovladači Smart Key",
-                "desc": "Umožňuje otevření všech oken přidržením tlačítka dálkového odemykání."
+                "name": "Smart Key Remote Window Roll-Down Long Press",
+                "desc": "Allows opening all windows by holding remote unlock button."
             },
             "toyota_interior_light_dim_timer": {
-                "name": "Zpoždění automatického zhasnutí vnitřního světla v kabině",
-                "desc": "Nastavuje časovač vypnutí vnitřního stropního světla po zavření dveří."
+                "name": "Interior Cabin Light Auto-Dimming Off Delay",
+                "desc": "Adjusts interior dome light shutdown timer after door closure."
             },
             "toyota_panic_alarm_remote": {
-                "name": "Funkce sirény nouzového alarmu dálkového ovladače",
-                "desc": "Aktivuje nebo deaktivuje panikový alarm klaksonu vozidla prostřednictvím dálkového přidržení klíče."
+                "name": "Remote Key Fob Panic Alarm Siren Function",
+                "desc": "Enables or disables vehicle horn panic alarm via remote key hold."
             },
             "toyota_eco_drive_indicator": {
-                "name": "Kontrolka zóny ECO Drive Cluster",
-                "desc": "Zobrazuje ekologickou akcelerační lištu a kontrolku na sdruženém přístroji."
+                "name": "ECO Drive Cluster Zone Indicator Light",
+                "desc": "Shows eco-friendly acceleration bar and indicator light on cluster."
             },
             "hyundai_coming_home_duration": {
-                "name": "Časovač zpoždění zhasnutí doprovodných světlometů",
-                "desc": "Udržuje rozsvícená potkávací světla po opuštění vozidla."
+                "name": "Escort Headlight Off Delay Timer",
+                "desc": "Keeps low beam headlights illuminated after vehicle exit."
             },
             "hyundai_drl_menu_toggle": {
-                "name": "Ovládání nabídky světel pro denní svícení",
-                "desc": "Přidá nastavení DRL ON/OFF do uživatelských možností sdruženého přístroje."
+                "name": "Daytime Running Lights Menu Control",
+                "desc": "Adds DRL ON/OFF setting to instrument cluster user options."
             },
             "hyundai_welcome_sequence": {
-                "name": "Uvítací světlo a zrcátko pro přiblížení chytrého klíče",
-                "desc": "Při přiblížení odklopí elektricky ovládaná zrcátka a rozsvítí kliky dveří."
+                "name": "Smart Key Proximity Welcome Light & Mirror Unfold",
+                "desc": "Unfolds power mirrors and lights up door handles upon approach."
             },
             "hyundai_interior_light_delay": {
-                "name": "Zpoždění automatického vypnutí vnitřního osvětlení kabiny",
-                "desc": "Nastaví časovač, než se vnitřní osvětlení automaticky vypne, aby se šetřila baterie."
+                "name": "Cabin Interior Room Lamp Auto-Cut Delay",
+                "desc": "Sets timer before interior lights automatically turn off to save battery."
             },
             "hyundai_heat_pump_efficiency": {
-                "name": "Režim tepelné účinnosti tepelného čerpadla EV",
-                "desc": "Optimalizuje spotřebu energie tepelného čerpadla EV v chladném zimním počasí."
+                "name": "EV Climate Heat Pump Thermal Efficiency Mode",
+                "desc": "Optimizes EV heat pump energy consumption in cold winter weather."
             },
             "tesla_track_mode_params": {
-                "name": "Profil stability a krouticího momentu v režimu tratě",
-                "desc": "Konfiguruje předpětí pohonu předního/zadního motoru a zásah stability."
+                "name": "Track Mode Stability & Torque Bias Profile",
+                "desc": "Configures front/rear motor drive bias and stability intervention."
             },
             "tesla_regen_brake_strength": {
-                "name": "Profil regenerativního brzdného výkonu",
-                "desc": "Nastavuje intenzitu rekuperace energie při zdvihu pedálu plynu."
+                "name": "Regenerative Braking Power Profile",
+                "desc": "Adjusts accelerator pedal lift-off energy recovery intensity."
             },
             "tesla_walkaway_door_lock": {
-                "name": "Automatický zámek dveří s klíčem k telefonu",
-                "desc": "Zamkne dveře a potvrdí cvrlikáním klaksonu, když se klíč telefonu vzdálí."
+                "name": "Walk-Away Phone Key Auto Door Lock",
+                "desc": "Locks doors and confirms with horn chirp when phone key moves away."
             },
             "tesla_acceleration_boost_unlock": {
-                "name": "Profil pohonu zrychlení zrychlení",
-                "desc": "Zlepšuje odezvu měniče elektromotoru pro rychlejší časy z 0-100 km/h."
+                "name": "Powertrain Acceleration Boost Drive Profile",
+                "desc": "Sharpens electric motor inverter response for faster 0-100 km/h times."
             },
             "tesla_interior_ambient_color": {
-                "name": "Předvolba barvy okolního osvětlení prostoru pro nohy v kabině",
-                "desc": "Přizpůsobuje barevnou paletu RGB okolního osvětlení prostoru pro nohy LED."
+                "name": "Cabin Footwell Ambient Lighting Color Preset",
+                "desc": "Customizes LED footwell ambient light RGB color palette."
             },
             "audi_matrix_led_animation": {
-                "name": "Matrix LED světlomety Dynamic Welcome Light Dance",
-                "desc": "Přehrává dynamickou světelnou choreografii po odemknutí vozidla."
+                "name": "Matrix LED Headlight Dynamic Welcome Light Dance",
+                "desc": "Plays dynamic light choreography upon vehicle unlocking."
             },
             "audi_mmi_startup_screen": {
-                "name": "Grafický motiv spouštění dotykové obrazovky MMI",
-                "desc": "Přizpůsobí animaci spouštění na centrální obrazovce MMI."
+                "name": "MMI Touch Screen Boot Graphic Theme",
+                "desc": "Customizes MMI central screen boot animation."
             },
             "audi_drive_select_efficiency": {
-                "name": "Profil efektivity jízdy v Audi Drive Select",
-                "desc": "Aktivuje úsporný režim Efficiency v možnostech Drive Select."
+                "name": "Efficiency Driving Profile in Audi Drive Select",
+                "desc": "Enables fuel-saving Efficiency mode in Drive Select options."
             },
             "audi_laptimer_boost_display": {
-                "name": "Časovač kola a překryvný měřič tlaku Turbo Bar",
-                "desc": "Zobrazuje stopky a ukazatel turbo boostu v reálném čase na Virtual Cockpit."
+                "name": "Lap Timer & Turbo Bar Pressure Gauge Overlay",
+                "desc": "Displays track lap timer and real-time turbo boost gauge on Virtual Cockpit."
             },
             "audi_needle_sweep_gauge": {
-                "name": "Ověření pohybu jehly sportovního měřidla",
-                "desc": "Při startu provede plný test ručičky tachometru a rychloměru."
+                "name": "Sport Gauge Needle Sweep Verification",
+                "desc": "Performs full tachometer and speedometer needle sweep test on start."
             },
             "skoda_coming_home_lights": {
-                "name": "Časovač osvětlení Leaving Home / Coming Home",
-                "desc": "Konfiguruje časovač osvětlení světlometů po opuštění vozidla."
+                "name": "Leaving Home / Coming Home Lighting Timer",
+                "desc": "Configures headlight illumination timer after vehicle exit."
             },
             "skoda_comfort_turn_signal": {
-                "name": "Nastavení počtu pulzů indikátoru komfortu",
-                "desc": "Nastavuje počet bliknutí ukazatelů směru jedním dotykem mezi 3 a 5 bliknutími."
+                "name": "Comfort Indicator Pulse Count Adjustment",
+                "desc": "Sets one-touch turn signal blink count between 3 and 5 flashes."
             },
             "cupra_sport_display_menu": {
-                "name": "Nabídka přístroje Cupra Performance a G-metru",
-                "desc": "Odemyká měřič síly G, měřidlo výkonu kW a displej teploty oleje."
+                "name": "Cupra Performance Instrument & G-Meter Menu",
+                "desc": "Unlocks G-force meter, kW power gauge, and oil temp display."
             },
             "cupra_virtual_cockpit_copper": {
-                "name": "Zdůrazněná grafika palubní desky s motivem mědi",
-                "desc": "Aplikuje na seskupení měřidel charakteristický motiv měděné metalízy Cupra."
+                "name": "Copper Theme Dashboard Accent Graphics",
+                "desc": "Applies signature Cupra copper metallic accent theme to gauge cluster."
             },
             "vag_brake_disc_drying": {
-                "name": "Funkce stírání / sušení brzdového kotouče v dešti",
-                "desc": "Pravidelně aplikuje minimální tlak na destičky ve vlhkém počasí na suché rotory."
+                "name": "Brake Disc Wiping / Drying Function in Rain",
+                "desc": "Periodically applies minimal pad pressure in wet weather to dry rotors."
             },
             "vag_tourist_mode_lights": {
-                "name": "Vzor paprsku světlometu v turistickém režimu",
-                "desc": "Přepíná směr paprsku světlometů mezi LHD a RHD pro jízdu v zahraničí."
+                "name": "Tourist Mode Headlight Beam Pattern",
+                "desc": "Switches headlight beam pattern between LHD and RHD for driving abroad."
             },
             "vag_hood_warning_mute": {
-                "name": "Ztlumení zvuku nástroje kapoty",
-                "desc": "Potlačuje trvalé varovné zvonění přístroje, když je kapota odjištěna."
+                "name": "Bonnet Open Instrument Chime Mute",
+                "desc": "Suppresses persistent instrument warning chime when hood is unlatched."
             },
             "vag_emergency_brake_hazard": {
-                "name": "Automatické výstražné světlo pro nouzové brzdění",
-                "desc": "Rychle bliká výstražná světla během prudkého nouzového zastavení ABS."
+                "name": "Emergency Braking Automatic Hazard Flasher",
+                "desc": "Flashes hazard lights rapidly during hard ABS emergency stops."
             },
             "vag_sunroof_comfort_open": {
-                "name": "Logika dálkového ovládání komfortního vyklápění/otevření střešního okna",
-                "desc": "Konfiguruje akci dálkového držení klíče na vyklopení nebo úplné otevření střešního okna."
+                "name": "Sunroof Tilt / Open Remote Comfort Key Fob Logic",
+                "desc": "Configures remote key hold action to either tilt or fully open sunroof."
             },
             "bmw_ecopro_display_variant": {
                 "name": "ECO PRO Instrument Cluster Gauge Styling",
-                "desc": "Přizpůsobuje modrý grafický motiv měřiče účinnosti ECO PRO."
+                "desc": "Customizes blue ECO PRO efficiency gauge graphic theme."
             },
             "bmw_volume_bar_hud": {
-                "name": "Head-Up Display Překryvná lišta úrovně hlasitosti zvuku",
-                "desc": "Zobrazuje pruh změny hlasitosti přímo na projekci HUD."
+                "name": "Head-Up Display Audio Volume Level Bar Overlay",
+                "desc": "Shows volume change bar directly on HUD projection."
             },
             "bmw_anti_dazzle_mirror": {
-                "name": "Elektrochromická citlivost stmívání zrcátek proti oslnění",
-                "desc": "Nastavuje prahovou hodnotu automatického stmívání fotosenzoru zpětného zrcátka."
+                "name": "Electrochromic Anti-Dazzle Mirror Dimming Sensitivity",
+                "desc": "Adjusts automatic rearview mirror dimming photo-sensor threshold."
             },
             "bmw_camera_pdc_warning_mute": {
-                "name": "Nastavení mezní rychlosti PDC a Surround View",
-                "desc": "Upravuje práh rychlosti vozidla, při kterém se parkovací kamery vypnou."
+                "name": "PDC & Surround View Speed Cut-off Speed Adjustment",
+                "desc": "Adjusts vehicle speed threshold at which parking cameras turn off."
             },
             "toyota_pcs_distance_preset": {
-                "name": "Výchozí vzdálenost výstrahy před srážkou",
-                "desc": "Nastavuje počáteční citlivost radaru na vzdálenost varování před kolizí."
+                "name": "Pre-Collision System Default Alert Distance",
+                "desc": "Sets initial radar forward collision warning distance sensitivity."
             },
             "toyota_bsm_timing": {
-                "name": "Načasování varování monitoru mrtvého úhlu",
-                "desc": "Nastavuje časování rozsvícení výstražného světla bočních zrcátek v mrtvém úhlu."
+                "name": "Blind Spot Monitor Warning Warning Timing",
+                "desc": "Adjusts blind spot side mirror warning light illumination timing."
             },
             "toyota_ac_noise_reduction": {
-                "name": "Režim redukce hluku kompresoru klimatizace",
-                "desc": "Omezuje maximální otáčky ventilátoru klimatizace pro zajištění ticha v kabině."
+                "name": "A/C Compressor Blower Noise Reduction Mode",
+                "desc": "Limits maximum air conditioning blower fan speed for cabin quietness."
             },
             "toyota_sflow_control": {
-                "name": "Režim S-Flow Smart Climate pro jednoho cestujícího",
-                "desc": "Směruje proudění vzduchu klimatizace výhradně na obsazená sedadla na základě senzorů hmotnosti."
+                "name": "S-Flow Smart Climate Single-Occupant Mode",
+                "desc": "Directs A/C airflow exclusively to occupied seats based on weight sensors."
             },
             "toyota_relock_timeout": {
-                "name": "Časovač zpoždění automatického opětovného uzamčení po dálkovém odemknutí",
-                "desc": "Nastavuje sekundy před automatickým opětovným zamknutím dveří, pokud nejsou otevřeny žádné dveře."
+                "name": "Automatic Re-Lock Delay Timer after Remote Unlock",
+                "desc": "Adjusts seconds before doors auto-relock if no door is opened."
             },
             "lexus_mark_levinson_audio_profile": {
                 "name": "Mark Levinson Surround Sound DSP Audio Profile",
-                "desc": "Optimalizuje 3D prostorové akustické ladění pro prémiové reproduktory Mark Levinson."
+                "desc": "Optimizes 3D spatial acoustic tuning for Mark Levinson premium speakers."
             },
             "lexus_ev_mode_beeper_mute": {
-                "name": "Ztlumení akustického výstražného bzučáku EV pro nízkorychlostní chodce",
-                "desc": "Potlačuje nízkorychlostní syntetický vnější zvonek v elektrickém režimu."
+                "name": "Low-Speed Pedestrian EV Acoustic Alert Beeper Mute",
+                "desc": "Suppresses low speed electric mode synthetic exterior chime."
             },
             "lexus_easy_access_seat": {
-                "name": "Volant se snadným přístupem a elektricky ovládaná posuvná opěrka sedadel",
-                "desc": "Posune opěradlo sedadla řidiče a odklopí volant pro snadné nastupování/vystupování."
+                "name": "Easy Access Steering Wheel & Power Seat Slide-Back",
+                "desc": "Slides driver seat back and tilts steering wheel away for easy entry/exit."
             },
             "nissan_epower_regen_mode": {
-                "name": "e-POWER Regenerativní brzdový režim s jedním pedálem",
-                "desc": "Nastavuje výchozí úroveň zpomalení regenerativního brzdění e-Pedal."
+                "name": "e-POWER One-Pedal Regenerative Braking Mode",
+                "desc": "Sets default e-Pedal regenerative braking deceleration level."
             },
             "nissan_propilot_assist_timing": {
-                "name": "Citlivost řízení asistenta pro centrování jízdního pruhu ProPILOT",
-                "desc": "Konfiguruje ostrost zásahu řízení ProPILOT."
+                "name": "ProPILOT Lane Centering Assist Steering Sensitivity",
+                "desc": "Configures ProPILOT steering intervention sharpness."
             },
             "nissan_intelligent_around_view": {
-                "name": "Automatické vyskakování monitoru při nízké rychlosti",
-                "desc": "Spustí 360stupňové zobrazení kamery, když přední parkovací senzory detekují překážky."
+                "name": "Around View Monitor Auto-Pop-Up at Low Speed",
+                "desc": "Triggers 360-degree camera display when front parking sensors detect obstacles."
             },
             "mazda_g_vectoring_display": {
                 "name": "G-Vectoring Control Plus Dynamic Visualizer",
-                "desc": "Zobrazuje graf vektorování točivého momentu v zatáčkách GVC+ v reálném čase na přístrojové desce."
+                "desc": "Displays real-time GVC+ cornering torque vectoring graph on instrument panel."
             },
             "mazda_ieloop_capacitor_monitor": {
-                "name": "Měřič kondenzátoru rekuperace brzdné energie i-ELOOP",
-                "desc": "Zobrazuje stav nabití a vybití elektrického kondenzátoru na centrální obrazovce."
+                "name": "i-ELOOP Brake Energy Recovery Capacitor Meter",
+                "desc": "Shows electric capacitor charge & discharge status on central screen."
             },
             "mazda_smart_city_brake_sens": {
-                "name": "Citlivost brzdového asistenta Smart City",
-                "desc": "Nastavuje dosah snímače automatického nouzového brzdění při nízké rychlosti."
+                "name": "Smart City Brake Support Sensitivity",
+                "desc": "Sets low-speed automatic emergency braking sensor range."
             },
             "subaru_eyesight_distance_preset": {
-                "name": "Výchozí vzdálenost adaptivního tempomatu EyeSight",
-                "desc": "Nakonfiguruje výchozí profil průjezdu stereo kamery při spuštění."
+                "name": "EyeSight Adaptive Cruise Control Default Distance",
+                "desc": "Configures stereo camera default cruise gap profile on startup."
             },
             "subaru_xmode_auto_engage": {
                 "name": "X-Mode Off-Road Traction Auto-Engage Threshold",
-                "desc": "Nastavuje práh prokluzu kol pro automatickou aktivaci X-Mode s dvojitou funkcí."
+                "desc": "Sets wheel slip threshold for automatic dual-function X-Mode activation."
             },
             "subaru_steering_responsive_headlights": {
-                "name": "Přepínač světlometů citlivých na řízení",
-                "desc": "Povolí nebo zakáže směrové adaptivní natáčení světlometů."
+                "name": "Steering Responsive Headlights Toggle",
+                "desc": "Enables or disables directional adaptive headlight swivel."
             },
             "genesis_sport_plus_mode": {
                 "name": "Sport+ Powertrain & Electronic Suspension Mode",
-                "desc": "Odblokuje ESC OFF orientovaný na trať a zpevněné mapování tlumičů."
+                "desc": "Unlocks track-oriented ESC OFF and stiffened damper mapping."
             },
             "genesis_ambient_active_light": {
-                "name": "Aktivní okolní osvětlení Synchronizace režimu jízdy",
-                "desc": "Dynamicky mění barvu okolního osvětlení v závislosti na jízdním režimu."
+                "name": "Active Ambient Lighting Drive Mode Sync",
+                "desc": "Changes interior ambient lighting color dynamically based on drive mode."
             },
             "volvo_city_safety_warning": {
-                "name": "Citlivost autonomního nouzového varování City Safety",
-                "desc": "Konfiguruje načasování varování před kolizí radaru a lidaru."
+                "name": "City Safety Autonomous Emergency Warning Sensitivity",
+                "desc": "Configures radar and lidar collision warning alert timing."
             },
             "chery_ar_navigation_hud": {
-                "name": "AR Navigation Projection Overlay na HUD",
-                "desc": "Promítá 3D navigační šipky rozšířené reality na čelní sklo."
+                "name": "AR Navigation Projection Overlay on HUD",
+                "desc": "Projects 3D augmented reality navigation arrows onto windshield."
             },
             "jlr_terrain_response_preset": {
-                "name": "Předvolba automatického režimu terénní odezvy",
-                "desc": "Pamatuje si poslední profil povrchu Terrain Response."
+                "name": "Terrain Response Auto Off-Road Mode Preset",
+                "desc": "Remembers last Terrain Response surface profile."
             },
             "jlr_adaptive_dynamics_firm": {
-                "name": "Profil tuhosti tlumiče adaptivní dynamiky",
-                "desc": "Nastaví výchozí tuhost tlumení elektronického tlumiče."
+                "name": "Adaptive Dynamics Damper Firmness Profile",
+                "desc": "Sets default electronic shock absorber damping stiffness."
             },
             "jlr_wading_sensor_alert": {
-                "name": "Prahová hodnota varovného zvonění při snímání hloubky vlny",
-                "desc": "Konfiguruje citlivost ultrazvukového upozornění na hloubku vody."
+                "name": "Wade Sensing Depth Warning Chime Threshold",
+                "desc": "Configures ultrasonic water depth warning chime sensitivity."
             },
             "alfa_dna_dynamic_memory": {
-                "name": "Paměť spouštění dynamického režimu Alfa DNA Selector",
-                "desc": "Po restartu si zachová odezvu plynu v dynamickém režimu."
+                "name": "Alfa DNA Selector Dynamic Mode Startup Memory",
+                "desc": "Retains Dynamic mode throttle response after restart."
             },
             "alfa_q4_torque_split": {
-                "name": "Graf rozdělení točivého momentu v reálném čase s pohonem všech kol Q4",
-                "desc": "Zobrazuje procento rozdělení výkonu AWD vpředu/vzadu na displeji přístroje."
+                "name": "Q4 All-Wheel Drive Real-Time Torque Split Graph",
+                "desc": "Shows AWD front/rear power split percentage on instrument display."
             },
             "li_auto_range_extender_mode": {
-                "name": "Úroveň udržení nabití baterie generátoru REV",
-                "desc": "Nastavuje prahovou hodnotu startu generátoru spalovacího motoru."
+                "name": "REV Generator Battery Charge Retention Level",
+                "desc": "Adjusts internal combustion engine generator start threshold."
             },
             "li_auto_cinema_seat_position": {
-                "name": "Režim Divadlo / Kino Ergonomická poloha sedadla",
-                "desc": "Skloní zadní sedadla a rozloží opěrky nohou, když je aktivní režim kino."
+                "name": "Theater / Cinema Mode Ergonomic Seat Position",
+                "desc": "Reclines rear seats and unfolds leg rests when cinema mode is active."
             },
             "zeekr_drift_mode_torque": {
-                "name": "Dvojitý výkon motoru Drift Mode Rear Bias",
-                "desc": "Přenáší 100 % točivého momentu na zadní elektromotor pro kontrolované driftování."
+                "name": "Dual Motor Performance Drift Mode Rear Bias",
+                "desc": "Sends 100% torque to rear electric motor for controlled drifting."
             },
             "zeekr_ambient_beat_sync": {
-                "name": "Okolní osvětlení Hudba Rhythm Beat Sync",
-                "desc": "Pulsuje vnitřní osvětlení kabiny v synchronizaci s přehrávanými rytmy hudby."
+                "name": "Ambient Lighting Music Rhythm Beat Sync",
+                "desc": "Pulsates interior cabin lighting in sync with played music beats."
             },
             "tata_drive_mode_voice": {
-                "name": "Hlasové oznámení s přepínačem režimu jízdy",
-                "desc": "Umožňuje zvukové hlasové potvrzení při přepínání jízdních režimů."
+                "name": "Drive Mode Switch Voice Announcement",
+                "desc": "Enables audio voice confirmation when switching drive modes."
             },
             "mahindra_zip_zap_zoom_custom": {
-                "name": "Zip/Zap/Zoom Profil odezvy škrticí klapky hnacího ústrojí",
-                "desc": "Přizpůsobuje křivku zrychlení pro jízdní režimy Zip, Zap a Zoom."
+                "name": "Zip/Zap/Zoom Powertrain Throttle Response Profile",
+                "desc": "Customizes acceleration curve for Zip, Zap, and Zoom driving modes."
             },
             "fun_cyberpunk_cluster_theme": {
-                "name": "Téma neonové grafické kokpitu Cyberpunk 2077",
-                "desc": "Aplikuje futuristický neonový azurový a jantarový digitální styl přístrojové desky."
+                "name": "Cyberpunk 2077 Neon Graphic Cockpit Theme",
+                "desc": "Applies futuristic neon cyan & amber digital dashboard gauge styling."
             },
             "fun_exhaust_flame_sound_effect": {
-                "name": "Stereo systém Pop & Bang výfukový zvuk FX",
-                "desc": "Přehrává realistické zvukové efekty výfuku V8, které se objeví přes reproduktory v kabině."
+                "name": "Stereo System Pop & Bang Exhaust Sound FX",
+                "desc": "Plays realistic V8 exhaust pop & bang audio effects through cabin speakers."
             },
             "fun_matrix_light_show_welcome": {
                 "name": "Custom Headlight Matrix LED Dance Welcome",
-                "desc": "Hraje rytmickou choreografii Light Show pomocí světlometů a indikátorů."
+                "desc": "Plays rhythmic Light Show choreography using headlights & indicators."
             },
             "fun_stealth_fighter_display": {
-                "name": "Stealth Fighter Noční jízda Minimalistický Cluster Mode",
-                "desc": "Při noční jízdě v temné tmě vypne všechna světla sdruženého přístroje kromě rychloměru."
+                "name": "Stealth Fighter Night Driving Minimalist Cluster Mode",
+                "desc": "Turns off all cluster lights except speedometer for pitch-black night driving."
             },
             "vag_lap_timer_oil_temp": {
                 "name": "Lap Timer & Oil Temperature in Gauge Cluster",
@@ -2783,147 +2794,147 @@
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
-        "codeBtn": "KÓD",
-        "removeBtn": "ODSTRANIT",
-        "unsupportedTitle": "Vozidlo není podporováno",
-        "unsupportedMsg": "Tato funkce není podporována verzí hardwaru nebo softwaru ECU vašeho vozidla.",
-        "selectBrand": "Vyberte značku vozidla",
-        "selectCategory": "Vyberte kategorii",
-        "selectMakeTitle": "VYBERTE ZNAČKU VOZU",
-        "selectCategoryTitle": "VYBERTE KATEGORII FUNKCE",
-        "brandAll": "VŠECHNY ZNAČKY",
-        "categoryAll": "VŠECHNY KATEGORIE",
-        "lighting": "OSVĚTLENÍ",
-        "soundAlerts": "ZVUKOVÉ VÝSTRAHY",
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version.",
+        "selectBrand": "Select Vehicle Brand",
+        "selectCategory": "Select Category",
+        "selectMakeTitle": "SELECT VEHICLE BRAND",
+        "selectCategoryTitle": "SELECT FEATURE CATEGORY",
+        "brandAll": "ALL MAKES",
+        "categoryAll": "ALL CATEGORIES",
+        "lighting": "LIGHTING",
+        "soundAlerts": "SOUND ALERTS",
         "displayInstrument": "DISPLAY / CLUSTER",
-        "drivingComfort": "JÍZDNÍ KOMFORT",
-        "securitySafety": "ZABEZPEČENÍ A BEZPEČNOST",
-        "restoreBtn": "OBNOVIT TOVÁRNÍ STAV",
-        "searchPlaceholder": "Vyhledávací funkce, DID nebo cílová ECU...",
-        "restoreSuccessTitle": "Tovární stav obnoven",
-        "restoreSuccessMsg": "Vybraná funkce byla vrácena zpět do původního stavu DID.",
-        "cloneLockedBanner": "Zjištěn klonovací adaptér – kódování uzamčeno",
-        "cloneAlertTitle": "Byl zjištěn klonovací adaptér OBD2",
-        "cloneAlertMsg": "Váš připojený adaptér OBD2 byl označen jako padělaný klonovaný adaptér, kterému chybí přísná přesnost časování požadovaná pro zápis ECU. Můžete procházet a vyhledávat všechny funkce, ale operace zápisu kódování jsou uzamčeny, aby bylo vaše vozidlo chráněno. Pro zápis připojte originální adaptér ELM327 v2.1+ nebo vLinker.",
-        "riskLow": "NÍZKÉ RIZIKO",
-        "riskMedium": "STŘEDNÍ RIZIKO",
-        "riskHigh": "VYSOKÉ RIZIKO",
-        "sfdProtected": "ECU chráněná SFD",
-        "legalDisclaimerUsLights": "Poznámka: Nepřetržitá parkovací světla v USA nemusí být v některých evropských jurisdikcích legální pro ulice.",
-        "legalDisclaimerVim": "Poznámka: Přehrávání videa za jízdy je určeno pouze pro cestující.",
-        "layoutChart": "GRAFİK",
-        "headerCategory": "Skryté funkce a kódování",
-        "vehicleMatched": "{{make}} — SPÁROVÁNO",
-        "demoModeVehicle": "DEMO REŽIM: {{make}}",
-        "waitingVehicle": "ČEKÁNÍ NA PŘIPOJENÉ VOZIDLO",
-        "activeFeaturesCount": "{{count}} OEM funkcí pro vozidlo aktivních",
-        "demoFeaturesCount": "{{count}} demo funkcí zobrazeno",
-        "connectForFeaturesNote": "Připojte se k OBD2 zařízení pro zobrazení funkcí",
-        "codingFailed": "Kódování se nezdařilo.",
-        "engineRunningMsg": "Kódování ECU vyžaduje zapalování zapnuté s vypnutým motorem, aby se zabránilo napěťovým špičkám alternátoru.",
-        "engineRunningTitle": "Motor běží",
-        "lowVoltageMsg": "Napětí baterie je pod bezpečným prahem pro operace zápisu ECU. Před pokračováním nabijte baterii.",
-        "lowVoltageTitle": "Upozornění na nízké napětí baterie",
-        "motionAlertMsg": "Operace zápisu ECU jsou blokovány, když se vozidlo pohybuje. Před kódováním prosím bezpečně zaparkujte.",
-        "motionAlertTitle": "Vozidlo v pohybu",
-        "noMatchingFeatures": "Pro vybrané filtry nebyly nalezeny žádné odpovídající funkce.",
-        "unsafeModuleMsg": "Operace zápisu ECU do modulů ABS/ESP a Airbag/SRS jsou 100% pevně blokovány pro ochranu kritických bezpečnostních systémů vozidla.",
-        "unsafeModuleTitle": "Chráněný bezpečnostní modul",
-        "catMotorcycle": "ECU MOTOCYKLU",
-        "catRetrofit": "RETROFIT A HARDWARE",
-        "catEv": "EV A BATERIE",
-        "catAdas": "KALIBRACE ADAS",
-        "catEasterEgg": "VELIKONOČNÍ VEJCE",
-        "catService": "SERVIS A ÚDRŽBA",
-        "catPerformance": "VÝKON",
-        "segmentAll": "VŠECHNY ZNAČKY",
-        "segmentEuroPremium": "Evropská prémie",
-        "segmentEuroVolume": "Evropský svazek",
-        "segmentAsian": "Asijské",
-        "segmentAmerican": "Americký",
-        "segmentChineseEv": "Čínský EV",
-        "segmentMotorcycle": "Motocykl",
-        "detailTitle": "Podrobnosti funkce a kódování jedním kliknutím",
-        "prePostValues": "Náhled před/po užitečném zatížení",
-        "selectOption": "Vyberte možnost kódování:",
-        "oneClickActivate": "AKTIVACE JEDNÍM KLIKNUTÍM",
-        "expertModeTitle": "Expertní režim",
-        "allMakes": "VŠECHNY ZNAČKY",
-        "techEcuSpecs": "TECHNICKÉ SPECIFIKACE ECU A NÁHLED UŽITEČNÉ ZÁTĚŽE",
-        "targetEcuHeaderLabel": "Cílová hlavička ECU:",
-        "udsDidLabel": "Identifikátor dat UDS:",
-        "bitPositionLabel": "Bitová pozice:",
-        "targetPayloadLabel": "Cílová nosnost UDS:",
-        "byteBitValue": "Bajt {{byte}}, bit {{bit}}",
-        "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
-        "restoreFactoryBtn": "OBNOVIT TOVÁRNÍ NASTAVENÍ",
-        "restoreFactoryTitle": "OBNOVIT TOVÁRNÍ NASTAVENÍ",
-        "enterDidFirst": "Pro obnovení zadejte hexadecimální kód DID.",
-        "restoreConfirmMsg": "Vrátit do původního stavu z výroby pro DID 0x{{didHex}}?",
-        "restoreAction": "OBNOVIT TOVÁRNU",
+        "drivingComfort": "DRIVING COMFORT",
+        "securitySafety": "SECURITY & SAFETY",
+        "restoreBtn": "RESTORE FACTORY STATE",
+        "searchPlaceholder": "Search feature, DID, or target ECU...",
+        "restoreSuccessTitle": "Factory State Restored",
+        "restoreSuccessMsg": "Selected feature has been reverted back to original DID state.",
+        "cloneLockedBanner": "Clone Adapter Detected — Coding Locked",
+        "cloneAlertTitle": "Clone OBD2 Adapter Detected",
+        "cloneAlertMsg": "Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing. You can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.",
+        "riskLow": "LOW RISK",
+        "riskMedium": "MEDIUM RISK",
+        "riskHigh": "HIGH RISK",
+        "sfdProtected": "SFD Protected ECU",
+        "legalDisclaimerUsLights": "Note: Continuous US parking lights may not be street legal in some European jurisdictions.",
+        "legalDisclaimerVim": "Note: Video playback while driving is intended for passenger use only.",
+        "layoutChart": "CHART",
+        "headerCategory": "Hidden Features & Coding",
+        "vehicleMatched": "{{make}} — MATCHED",
+        "demoModeVehicle": "DEMO MODE: {{make}}",
+        "waitingVehicle": "WAITING FOR CONNECTED VEHICLE",
+        "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
+        "demoFeaturesCount": "{{count}} demo features listed",
+        "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
+        "engineRunningTitle": "Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "Protected Safety Module",
+        "catMotorcycle": "MOTORCYCLE ECU",
+        "catRetrofit": "RETROFIT & HARDWARE",
+        "catEv": "EV & BATTERY",
+        "catAdas": "ADAS CALIBRATION",
+        "catEasterEgg": "EASTER EGGS",
+        "catService": "SERVICE & MAINTENANCE",
+        "catPerformance": "PERFORMANCE",
+        "segmentAll": "ALL MAKES",
+        "segmentEuroPremium": "European Premium",
+        "segmentEuroVolume": "European Volume",
+        "segmentAsian": "Asian",
+        "segmentAmerican": "American",
+        "segmentChineseEv": "Chinese EV",
+        "segmentMotorcycle": "Motorcycle",
+        "detailTitle": "Feature Details & One-Click Coding",
+        "prePostValues": "Pre / Post Payload Preview",
+        "selectOption": "Select Coding Option:",
+        "oneClickActivate": "ONE-CLICK ACTIVATE",
+        "expertModeTitle": "Expert Mode",
+        "allMakes": "ALL MAKES",
+        "techEcuSpecs": "TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW",
+        "targetEcuHeaderLabel": "Target ECU Header:",
+        "udsDidLabel": "UDS Data Identifier:",
+        "bitPositionLabel": "Bit Position:",
+        "targetPayloadLabel": "Target UDS Payload:",
+        "byteBitValue": "Byte {{byte}}, Bit {{bit}}",
+        "expertSafetyNote": "For advanced users only. In case of incorrect coding, use 'Restore Factory Settings' below to revert to original state.",
+        "restoreFactoryBtn": "RESTORE FACTORY SETTINGS",
+        "restoreFactoryTitle": "RESTORE FACTORY SETTINGS",
+        "enterDidFirst": "Please enter the DID Hex code to restore.",
+        "restoreConfirmMsg": "Revert to original factory state for DID 0x{{didHex}}?",
+        "restoreAction": "RESTORE FACTORY",
         "expertDidPlaceholder": "DID Hex",
-        "expertValPlaceholder": "Hexadecimální hodnota",
-        "writeRawPayload": "ZAPIŠTE RAW UDS NÁKLAD",
-        "enterValidHex": "Zadejte prosím platné řetězce DID a Value Hex.",
+        "expertValPlaceholder": "Value Hex",
+        "writeRawPayload": "WRITE RAW UDS PAYLOAD",
+        "enterValidHex": "Please enter valid DID and Value Hex strings.",
         "options": {
             "speed85": "85 km/h",
             "speed90": "90 km/h",
             "speed100": "100 km/h",
             "speed110": "110 km/h",
-            "idleOff": "Devre Dışı",
+            "idleOff": "Disabled",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
             "pto900": "900 RPM",
             "pto1100": "1100 RPM",
             "pto1300": "1300 RPM",
-            "retarderLow": "Düşük",
+            "retarderLow": "Low",
             "retarderMed": "Orta",
-            "retarderHigh": "Yüksek",
-            "levelNormal": "Normal Sürüş Seviyesi",
-            "levelRamp1": "Yükleme Rampası Seviyesi 1",
-            "levelRamp2": "Yükleme Rampası Seviyesi 2",
-            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "retarderHigh": "High",
+            "levelNormal": "Normal Driving Level",
+            "levelRamp1": "Loading Ramp Level 1",
+            "levelRamp2": "Loading Ramp Level 2",
+            "regenStart": "Start Static Regeneration",
             "regenStatus": "Kurum Durumunu Sorgula",
             "alarmFull": "Tam Ses",
-            "alarmNight": "Kısık Ses",
+            "alarmNight": "Low Volume",
             "hyst3": "+/- 3 km/h",
             "hyst5": "+/- 5 km/h",
             "hyst10": "+/- 10 km/h",
-            "drl25": "%25 Kısık",
+            "drl25": "25% Dimmed",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
-            "drl100": "%100 Tam Güç",
+            "drl100": "100% Full Power",
             "xdsStandard": "Standart",
-            "xdsStrong": "Güçlü",
-            "blink1": "1 Flaş",
-            "blink3": "3 Flaş",
-            "blink4": "4 Flaş",
-            "blink5": "5 Flaş",
+            "xdsStrong": "Strong",
+            "blink1": "1 Flash",
+            "blink3": "3 Flashes",
+            "blink4": "4 Flashes",
+            "blink5": "5 Flashes",
             "chimeBmw": "BMW Standart",
-            "chimeMini": "MINI Tarzı",
-            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeMini": "MINI Style",
+            "chimeRolls": "Rolls-Royce Luxury",
             "chimeBmwi": "BMW i Elektrik",
             "logoStandard": "Standart",
             "logoMPerf": "M Performance",
             "logoAlpina": "Alpina Mavi"
         },
-        "catSoundAlerts": "Ses & Uyarılar",
-        "catDisplayInstrument": "Gösterge Paneli",
-        "catDrivingComfort": "Sürüş Konforu",
-        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catSoundAlerts": "Sound & Alerts",
+        "catDisplayInstrument": "Instrument Cluster",
+        "catDrivingComfort": "Driving Comfort",
+        "catSecuritySafety": "Security & Safety",
         "catMotorcycleEcu": "Motosiklet ECU",
-        "freeTrialAvailableBadge": "1 KREDIT ZDARMA",
-        "freeTrialUsedBadge": "ODEMČENO",
-        "proRequiredBadge": "VYŽADOVÁNO PRO",
-        "freeTrialExhaustedTitle": "Bezplatný zkušební kredit byl vyčerpán",
-        "freeTrialExhaustedMsg": "Využili jste 1 bezplatný kredit pro aktivaci. Přejděte na PRO pro neomezené odemykání, expertní kódování a resetování servisu!",
-        "freeTrialSuccessTitle": "Gratulujeme! Funkce byla aktivována",
-        "freeTrialSuccessMsg": "Tato funkce byla úspěšně nakódována pomocí vašeho bezplatného kreditu! Kdykoli přejděte na PRO a odemkněte všechny ostatní funkce.",
-        "upgradeToPro": "PŘEJÍT NA PRO",
-        "toastActivated": "Aktivováno",
-        "toastDeactivated": "Deaktivováno",
-        "optionsBadge": "{{count}} MOŽNOSTI"
+        "freeTrialAvailableBadge": "1 FREE CREDIT",
+        "freeTrialUsedBadge": "UNLOCKED",
+        "proRequiredBadge": "PRO REQUIRED",
+        "freeTrialExhaustedTitle": "Free Trial Credit Used",
+        "freeTrialExhaustedMsg": "You have used your 1 free feature activation credit. Upgrade to PRO for unlimited feature unlocking, expert coding, and full service resets!",
+        "freeTrialSuccessTitle": "Congratulations! Feature Activated",
+        "freeTrialSuccessMsg": "This feature was successfully coded to your vehicle using your 1 free trial credit! Upgrade to PRO anytime to unlock all other features with no limits.",
+        "upgradeToPro": "UPGRADE TO PRO",
+        "toastActivated": "Activated",
+        "toastDeactivated": "Deactivated",
+        "optionsBadge": "{{count}} OPTIONS"
     },
     "ignition": {
         "title": "Varování stavu zapalování",
@@ -2937,27 +2948,27 @@
         "batteryVoltage": "Napětí baterie:"
     },
     "hpGauge": {
-        "title": "ŽIVÝ MĚŘIČ VÝKONU A MOMENTU",
-        "subtitle": "Výkon v reálném čase a točivý moment",
-        "horsepower": "KOŇSKÁ SÍLA",
-        "torque": "MOMENT MOTORU",
+        "title": "LIVE POWER & TORQUE GAUGE",
+        "subtitle": "Real-Time Horsepower & Torque",
+        "horsepower": "HORSEPOWER",
+        "torque": "ENGINE TORQUE",
         "peakHp": "PEAK HP",
-        "peakTorque": "ŠPIČKOVÝ MOMENT",
-        "efficiency": "EFEKTIVITA",
-        "methodMaf": "Hava Akış Tabanlı",
-        "methodTorque": "Canlı Tork Tabanlı",
-        "methodLoad": "Motor Yükü Tabanlı",
-        "configWeight": "Hmotnost vozidla:",
-        "configDisplacement": "Zdvihový objem motoru:",
-        "calcMethod": "METODA VÝPOČTU",
-        "methodDiesel": "Dizel Tork & Yakıt Akışı"
+        "peakTorque": "PEAK TORQUE",
+        "efficiency": "EFFICIENCY",
+        "methodMaf": "Mass Airflow Based",
+        "methodTorque": "Live Torque Based",
+        "methodLoad": "Engine Load Based",
+        "configWeight": "Vehicle Weight:",
+        "configDisplacement": "Engine Displacement:",
+        "calcMethod": "CALCULATION METHOD",
+        "methodDiesel": "Diesel Torque & Fuel Flow"
     },
     "fuelTrim": {
-        "title": "ÚPRAVA PALIVA A ANALÝZA SMĚSÍ VZDUCHU A PALIVA",
+        "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
         "subtitle": "STFT & LTFT Diagnostics",
         "stft": "STFT",
         "ltft": "LTFT",
-        "totalTrim": "CELKOVÁ ÚPRAVA PALIVA",
+        "totalTrim": "TOTAL FUEL TRIM",
         "afrRatio": "AIR-FUEL RATIO",
         "lambda": "LAMBDA",
         "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
@@ -2965,38 +2976,38 @@
         "stateCriticalLean": "CRITICAL LEAN MIXTURE",
         "stateMildRich": "MILD RICH MIXTURE",
         "stateCriticalRich": "CRITICAL RICH MIXTURE",
-        "guideTitle": "PŘÍRUČKA LEAN vs. Bohatá směs",
-        "guideDesc": "Bohatá směs indikuje přebytek paliva ve spalovací komoře, zatímco chudá směs indikuje přebytek vzduchu.",
-        "causesTitle": "Možné příčiny:",
-        "actionTitle": "Doporučená akce:",
+        "guideTitle": "LEAN vs RICH MIXTURE GUIDE",
+        "guideDesc": "Rich mixture indicates excess fuel in combustion chamber, while Lean mixture indicates excess air.",
+        "causesTitle": "Potential Causes:",
+        "actionTitle": "Recommended Action:",
         "causeNormal": "System operates within ideal range. No faults.",
-        "actionNormal": "Pokračujte v běžné údržbě.",
-        "causeVacuumLeak": "Netěsnosti podtlaku, utržené hadice nebo těsnění sacího potrubí",
-        "causeDirtyMaf": "Znečištěný nebo vadný snímač MAF.",
-        "causeLowFuelPressure": "Nízký tlak palivového čerpadla nebo ucpaný palivový filtr",
-        "causeCloggedInjectors": "Ucpané nebo znečištěné vstřikovače paliva",
-        "actionCriticalLean": "Proveďte test kouře na úniky sání a vyčistěte snímač MAF.",
-        "causeMinorVacuumLeak": "Menší únik vzduchu nebo stárnutí senzoru O2",
-        "actionMildLean": "Zkontrolujte data čidla O2 pod napětím a sací hadice.",
-        "causeLeakingInjector": "Netěsný/zaseknutý otevřený vstřikovač paliva",
-        "causeStuckEvapPurgeVal": "Zaseknutý otevřený ventil pro čištění nádobky EVAP",
-        "causeDirtyAirFilter": "Silně znečištěný vzduchový filtr",
-        "causeHighFuelPressure": "Vysoký tlak v rozdělovači paliva",
-        "actionCriticalRich": "Zkontrolujte odvzdušňovací ventil EVAP a únik zpětného vstřikovače.",
-        "causeRestrictedAirIntake": "Ucpání vzduchového potrubí",
-        "actionMildRich": "Zkontrolujte nebo vyměňte vzduchový filtr motoru.",
-        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
-        "railPressure": "Rail Basıncı",
-        "fuelRate": "Yakıt Debisi",
-        "widebandSensor": "Geniş Bant Lambda Sensörü",
-        "commonRailStatus": "Common Rail Püskürtme",
-        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
-        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel",
-        "modeGasoline": "Benzinli",
-        "leanNormal": "Fakir Karışım",
-        "railStable": "Basınç Kararlı"
+        "actionNormal": "Continue routine maintenance.",
+        "causeVacuumLeak": "Vacuum leaks, torn hoses, or intake manifold gasket",
+        "causeDirtyMaf": "Dirty or faulty MAF sensor",
+        "causeLowFuelPressure": "Low fuel pump pressure or clogged fuel filter",
+        "causeCloggedInjectors": "Clogged or dirty fuel injectors",
+        "actionCriticalLean": "Perform smoke test for intake leaks and clean MAF sensor.",
+        "causeMinorVacuumLeak": "Minor air leak or aging O2 sensor",
+        "actionMildLean": "Check live O2 sensor data and intake hoses.",
+        "causeLeakingInjector": "Leaking/stuck-open fuel injector",
+        "causeStuckEvapPurgeVal": "Stuck-open EVAP canister purge valve",
+        "causeDirtyAirFilter": "Severely dirty air filter",
+        "causeHighFuelPressure": "High fuel rail pressure",
+        "actionCriticalRich": "Inspect EVAP purge valve and injector return leak-off.",
+        "causeRestrictedAirIntake": "Air intake duct obstruction",
+        "actionMildRich": "Check or replace engine air filter.",
+        "dieselCombustionNormal": "Diesel Injection & Combustion Health Normal",
+        "railPressure": "Rail Pressure",
+        "fuelRate": "Fuel Flow Rate",
+        "widebandSensor": "Wideband Lambda Sensor",
+        "commonRailStatus": "Common Rail Injection",
+        "dieselGuideTitle": "Diesel Combustion & Mixture Guide",
+        "dieselGuideDesc": "Diesel engines operate lean with excess air. Common Rail pressure and Lambda sensor regulate injection balance in real time.",
+        "dieselActionNormal": "System operates within ideal parameters. Continue regular fuel filter maintenance.",
+        "modeDiesel": "Diesel",
+        "modeGasoline": "Gasoline",
+        "leanNormal": "Lean Mixture Normal",
+        "railStable": "Pressure Stable"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER MONITOR",
@@ -3041,42 +3052,42 @@
         "readyTitle": "Diagnostika ECU připravena"
     },
     "dct": {
-        "title": "ADAPTACE DVOJSPOJKY DCT",
-        "subtitle": "Základní nastavení dvouspojkové převodovky DSG / Powershift / EDC",
-        "warningTitle": "BEZPEČNOSTNÍ POŽADAVKY PRO ADAPTACI DCT",
-        "warningDesc": "Před zahájením adaptace se prosím ujistěte, že jsou splněny všechny fyzické předpoklady:",
-        "checkGearPark": "Zařaďte polohu P a zatáhněte ruční brzdu",
-        "checkFootBrake": "Pevně sešlápnutý pedál brzdy",
-        "checkHandBrake": "Zatažená ruční brzda",
-        "checkOilTemp": "Teplota převodového oleje musí být mezi 30°C a 90°C",
-        "startAdaptation": "ZAČNĚTE ADAPTACE",
-        "inProgress": "Provádění základních nastavení převodovky... NEUvolňujte nožní brzdu!",
-        "success": "Reset převodovky DCT a přeučení spojky bylo úspěšně dokončeno!",
-        "step1": "1/3: Provádění kalibrace hydraulického tlaku...",
-        "step2": "2/3: Provedení základního nastavení spojky 1...",
-        "step3": "3/3: Provádění adaptace vidlice spojky 2...",
-        "ensurePreconditions": "Před spuštěním prosím splňte všechny bezpečnostní předpoklady.",
-        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
-        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
-        "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites Sensörü",
-        "reverseSwitch": "Geri Vites Müşürü",
-        "pressed": "BASILI",
-        "released": "SERBEST",
-        "neutral": "BOŞTA",
-        "inGear": "VİTESTE",
-        "active": "AKTİF",
-        "passive": "PASİF",
-        "startManualTest": "Sensör Testini Başlat",
-        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
-        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
-        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
-        "manualStep2": "Boş Vites Sensör Doğrulaması...",
-        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
-        "modeAuto": "Otomatik / DCT Uyarlama",
-        "modeManual": "Manuel Şanzıman Testi",
+        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
+        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
+        "checkGearPark": "Gear selector in 'P'",
+        "checkFootBrake": "Foot brake depressed firmly",
+        "checkHandBrake": "Handbrake engaged",
+        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "startAdaptation": "START ADAPTATION",
+        "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting.",
+        "manualTitle": "MANUAL TRANSMISSION SENSOR CHECK",
+        "manualDesc": "This vehicle has a manual transmission. Automatic TCU adaptation is not required. You can monitor the real-time status of clutch and neutral sensors below.",
+        "clutchSwitch": "Clutch Pedal Switch",
+        "neutralSwitch": "Neutral Gear Sensor",
+        "reverseSwitch": "Reverse Gear Switch",
+        "pressed": "DEPRESSED",
+        "released": "RELEASED",
+        "neutral": "NEUTRAL",
+        "inGear": "IN GEAR",
+        "active": "ACTIVE",
+        "passive": "INACTIVE",
+        "startManualTest": "Start Sensor Test",
+        "manualTestSuccess": "Manual transmission clutch and gear sensor checks completed successfully.",
+        "ensureManualPreconditions": "Please verify clutch and neutral gear positions.",
+        "manualStep1": "Testing Clutch Switch Signal...",
+        "manualStep2": "Verifying Neutral Sensor...",
+        "manualStep3": "Sensor Calibration Completed.",
+        "modeAuto": "Automatic / DCT Adaptation",
+        "modeManual": "Manual Transmission Test",
         "park": "P",
-        "engaged": "ÇEKİLİ"
+        "engaged": "ENGAGED"
     },
     "safeExit": {
         "btn": "BEZPEČNÉ ODPOJENÍ A RESET ADAPTÉRU",
@@ -3167,7 +3178,8 @@
             "manual": "MANUÁL"
         },
         "unknown": "Neznámý",
-        "year": "rok:"
+        "year": "rok:",
+        "transmissionLabel": "Transmission:"
     },
     "sgw": {
         "title": "ODBLOKOVÁNÍ BEZPEČNOSTNÍ BRÁNY",
@@ -3356,7 +3368,7 @@
         "downloadBtn": "STÁHNOUT MÁ DATA",
         "purgeBtn": "VYMAZAT VŠECHNY MÁ DATA",
         "exportSuccessTitle": "Data připravena",
-        "exportSuccessMsg": "Váš datový balíček byl vytvořen dne {{date}}. Obsah: Fronta telemetrie, nastavení aplikace.",
+        "exportSuccessMsg": "Your data package was created on {{date}}. Contents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Chyba",
         "exportErrorMsg": "Vytvoření datového balíčku se nezdařilo.",
         "purgeAlertTitle": "Smazat všechna data",
@@ -3415,8 +3427,8 @@
         "enter_valid_hex": "Zadejte platný DID a sudý počet hexadecimálních znaků."
     },
     "safety": {
-        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
+        "engineRunningTitle": "Engine Running Safety Lock",
+        "engineRunningDesc": "For safety reasons, trouble codes can only be cleared with ignition ON and engine OFF."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3435,7 +3447,12 @@
     "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
     "grid": "Grid",
     "disclaimers": {
-        "safetyNotice": "Safety Notice"
+        "safetyNotice": "Safety Notice",
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
     },
     "Success": "Success",
     "marketplace": {

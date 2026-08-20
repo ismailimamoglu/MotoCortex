@@ -182,11 +182,11 @@
         "feat3Desc": "Registrer de nøjagtige sensortilstande på det tidspunkt, hvor fejlen opstod.",
         "selectPlan": "VÆLG EN PLAN",
         "weekly": "Ugentligt medlemskab",
-        "weeklyDesc": "Ideel til et hurtigt tjek.",
+        "weeklyDesc": "Hurtigt tjek og engangsscanning.",
         "monthly": "Månedligt medlemskab",
-        "monthlyDesc": "Det mest populære valg.",
+        "monthlyDesc": "Fuld fleksibilitet, opsig når som helst.",
         "yearly": "Årligt medlemskab",
-        "yearlyDesc": "Bedste pris garanti.",
+        "yearlyDesc": "Alt-i-én Garage Pas (Bedste Værdi).",
         "restore": "Gendan eksisterende køb",
         "subscribe": "ABONNER NU",
         "bestValue": "BEDSTE VÆRDI",
@@ -227,7 +227,12 @@
         "weeklyNotice": "Engangskøb, fornys ikke automatisk",
         "yearlyNotice": "Årligt automatisk fornybart abonnement",
         "aiDoctorLimitTitle": "AI DOCTOR-GRÆNSE NÅET",
-        "aiDoctorLimitDesc": "Du har brugt din 1 gratis AI-motordiagnosetest. Opgrader til PRO for ubegrænsede AI-analyser."
+        "aiDoctorLimitDesc": "Du har brugt din 1 gratis AI-motordiagnosetest. Opgrader til PRO for ubegrænsede AI-analyser.",
+        "trustNoAds": "100% Reklamefri (Free & PRO)",
+        "trustNoTokens": "Ubegrænset Adgang • Ingen Token-Fælder",
+        "trustUniversal": "Universel BLE-Adapter Frihed",
+        "yearlySavingsBadge": "~.65/md. • Spar 44%",
+        "save44": "Spar 44%"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -306,7 +311,7 @@
         "terminalDesc": "Du kan sende OBD-II eller AT/ST kommandoer direkte til ECU'en. F.eks. \"010C\" eller \"ATRV\".",
         "ecuResponseLabel": "ECU SVAR:",
         "adapterConnected": "ADAPTER TILSLUTET",
-        "lowQualityAdapterWarning": "Adapter af lav kvalitet: Din adapter er en klon af lav kvalitet. Den mangler den timingpræcision, der kræves til ældre køretøjsprotokoller. Vi anbefaler stærkt at opgradere til en højkvalitets OBD2-adapter for at oprette forbindelse.",
+        "lowQualityAdapterWarning": "Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols. We highly recommend upgrading to a high-quality OBD2 adapter to connect successfully.",
         "statusProfiling": "Analyserer OBD2-adapterfunktioner...",
         "statusScanningCan": "Scanner moderne CAN-Bus-protokoller...",
         "statusScanningKline": "Vågnende op K-Line protokoller. Gamle køretøjer kan tage op til 15 sekunder at reagere...",
@@ -449,7 +454,7 @@
         "connRequired": "Tilslutning påkrævet",
         "connRequiredDesc": "Opret forbindelse til køretøjet først for at starte denne proces.",
         "chronicFaultsTitle": "Statistiske kroniske problemer",
-        "chronicFaultsObs": "{{code}}",
+        "chronicFaultsObs": "{{code}} (Observation: {{days}} Unique Days / Total: {{total}} Times)",
         "chronicFaultsPending": "Indsamling af datapulje / Analyse af statistik",
         "notScanned": "Ikke scannet",
         "notScannedDesc": "Tryk venligst på scanningsknappen øverst til højre for at læse diagnosekoder.",
@@ -544,7 +549,7 @@
         "odometer": "Afstand",
         "milDist": "Motorlys tændt",
         "distSinceCleared": "Fejl ryddet",
-        "dtcCount": "FEJLKODER",
+        "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "LIVE SENSORDATA",
         "noData": "Kunne ikke læse data",
         "proApp": "Scannet med Cortex OBD2 Diagnostic Scanner v7 PRO.",
@@ -804,7 +809,13 @@
         "telemetrySub": "Del anonym protokol og fejllogfiler for at forbedre køretøjets kompatibilitet.",
         "restartOnboarding": "Genstart indledende opsætning"
     },
-    "disclaimer": "Alle produktnavne, logoer og mærker tilhører deres respektive ejere. Alle firma-, produkt- og servicenavne, der bruges i denne applikation, er kun til identifikationsformål. Brug af disse navne, logoer og mærker indebærer ikke nogen godkendelse eller sponsorering.",
+    "disclaimer": {
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
+    },
     "hiddenFeatures": {
         "title": "SKJULTE FUNKTIONER",
         "btnLabel": "LÅS OP SKJULTE FUNKTIONER",
@@ -1013,1470 +1024,1470 @@
         "crashTest": "Crash Test"
     },
     "features": {
-        "title": "LÅS SKJULTE FUNKTIONER OP OG UDS-KODNING",
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
         "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
-        "batteryVoltage": "BATTERISPÆNDING",
-        "voltageReady": "Sikker",
-        "voltageLocked": "Lavspænding",
-        "locked": "LÅST",
-        "ready": "KLAR",
-        "allMarks": "ALLE MÆRKER",
-        "writeBtn": "SKRIV",
-        "catLighting": "BELYSNING",
-        "catSound": "LYD OG ADVARSLER",
-        "catDisplay": "INSTRUMENTER",
-        "catComfort": "KOMFORT",
-        "catSafety": "SIKKERHED",
-        "safetyAlertTitle": "Alarm om lav batterispænding",
-        "safetyAlertMsg": "Minimum 12,2V batterispænding påkrævet til kodning.\nTilslut venligst en oplader eller start motoren.",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "Safe",
+        "voltageLocked": "Low Voltage",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
         "items": {
             "vag_staging_needle_sweep": {
-                "name": "Måleindstilling / nålefejning",
-                "desc": "Fejer instrumentnåle til maksimum ved tændingsstart."
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
             },
             "vag_acoustic_lock_confirmation": {
-                "name": "Akustisk lås bekræftelse Chirp",
-                "desc": "Udsender en kort horn-bekræftelses-kvidren, når nøglen låses."
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
             },
             "vag_american_parking_lights": {
-                "name": "Parkeringslys i amerikansk stil",
-                "desc": "Lyser forreste blinklys konstant ved 20% dæmpning med parkeringslys."
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
             },
             "vag_drl_menu_toggle": {
-                "name": "Kørelys Menu Skift",
-                "desc": "Aktiverer DRL ON/OFF afkrydsningsfeltet i infotainment-køretøjets indstillingsmenu."
+                "name": "Daytime Running Lights Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
             },
             "vag_tear_wiping": {
-                "name": "Aftørring af forruden",
-                "desc": "Udfører en ekstra sidste aftørring 5 sekunder efter brug af forrudevasker."
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
             },
             "vag_emergency_brake_flashing": {
-                "name": "Nødbremsefare blinker",
-                "desc": "Hurtigt blinkende bremselys og farer under kraftig nødbremsning."
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
             },
             "vag_cornering_lights": {
-                "name": "Hjørne tågelygter",
-                "desc": "Lyser kurvetågelys på rattets rotationsside."
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
             },
             "vag_comfort_mirror_folding": {
-                "name": "Key Fob Comfort Spejl Foldning",
-                "desc": "Folder automatisk sidespejle sammen, når låseknappen holdes nede på nøglen."
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
             },
             "vag_lap_timer": {
                 "name": "Instrument Cluster Lap Timer",
-                "desc": "Låser op for sporomgangstimer-displayfanen på instrumentpanelets skærm."
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
             },
             "vag_refuel_quantity": {
-                "name": "Visning af brændstofmængde",
-                "desc": "Viser det nøjagtige volumen i liter, der kræves for fuld brændstoftank."
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
             },
             "bmw_start_stop_memory": {
-                "name": "Auto Start-Stop Hukommelsestilstand",
-                "desc": "Husker den sidste automatiske start-stop-tilstand ved genstart af køretøjet."
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state across vehicle restarts."
             },
             "bmw_digital_speedometer": {
-                "name": "Digitalt speedometer display",
-                "desc": "Tilføjer øjeblikkelig digital hastighed numerisk visningsmulighed til klyngeskærmen."
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
             },
             "bmw_sport_displays": {
-                "name": "Sportsskærme",
-                "desc": "Aktiverer levende hestekræfter og drejningsmoment dynamiske drejeknapper på iDrive-skærmen."
+                "name": "Sport Displays",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
             },
             "bmw_acoustic_lock_sound": {
-                "name": "Akustisk lås/lås op lyd",
-                "desc": "Udsender alarmsystemets bip, når bilen låses eller låses op."
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
             },
             "bmw_mirror_fold_delay_zero": {
-                "name": "Øjeblikkelig spejlfoldning",
-                "desc": "Folder sidespejlene ind med det samme ved tryk på låseknappen uden forsinkelse."
+                "name": "Instant Mirror Folding",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
             },
             "bmw_tpms_tire_temperature": {
-                "name": "Display for dæktryk og temperatur",
-                "desc": "Viser dæktemperatur i realtid sammen med trykket på TPMS-skærmen."
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
             },
             "renault_trip_computer_enable": {
-                "name": "Aktivering af kørecomputer om bord",
-                "desc": "Låser op for det gennemsnitlige brændstofforbrug og kørecomputerens rækkevidde."
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
             },
             "renault_external_temp_display": {
-                "name": "Ekstern temperaturdisplay",
-                "desc": "Muliggør aflæsning af omgivende udendørstemperatur i instrumentgruppen."
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
             },
             "renault_automatic_tailgate": {
-                "name": "Nøglebremseudløser",
-                "desc": "Fuldt springer bagagerumslåsemekanismen ind, når du holder nøglebrønden nede."
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
             },
             "renault_alarm_chirp": {
-                "name": "Bekræftelse af alarmlås Chirp",
-                "desc": "Lyder et hornbekræftende bip ved låsning af bilens dør."
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
             },
             "renault_shift_indicator": {
-                "name": "Gearskifteindikator",
-                "desc": "Aktiverer øko-kørsel skift OP/NED pilene i instrumentgruppen."
+                "name": "Gear Shift Indicator",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
             },
             "ford_double_horn_honk_disable": {
-                "name": "Deaktiver dobbelthorn tuden ved dørlukning",
-                "desc": "Deaktiverer dobbelt horntuden, når døren lukkes med motoren i gang."
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
             },
             "ford_auto_door_locking": {
-                "name": "Automatisk dørlås ved 20 km/t",
-                "desc": "Låser automatisk alle døre, når bilens hastighed overstiger 20 km/t."
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
             },
             "ford_tpms_psi_display": {
-                "name": "Numerisk dæktryksvisning",
-                "desc": "Viser nøjagtigt numerisk PSI/BAR-tryk pr. dæk på instrumentskærmen."
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
             },
             "ford_sync_climate_screen": {
                 "name": "SYNC Screen Climate Controls",
-                "desc": "Tilføjer klimakontrol og sædevarme touchscreen-menu til SYNC-displayet."
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
             },
             "stellantis_power_windows_remote": {
-                "name": "Fjernbetjeningsvindue Rul op/ned",
-                "desc": "Ruller alle elruder op eller ned, når du holder låse-/oplåsningsknapperne nede."
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
             },
             "stellantis_cornering_fogs": {
-                "name": "Kørende tågelygter aktiveret",
-                "desc": "Lyser kurvetågelygte under sving med lav hastighed."
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
             },
             "vag_traffic_sign_recognition": {
                 "name": "Traffic Sign Recognition",
-                "desc": "Viser kamera-detekterede hastighedsskilte i instrumentgruppen og HUD."
+                "desc": "Displays camera-detected speed signs in instrument cluster and HUD."
             },
             "vag_ambient_color_palette_30": {
-                "name": "30-farver Ambient Lighting Palette",
-                "desc": "Låser op for 30 RGB interiørbelysningsfarvevælger i MIB infotainmentmenu."
+                "name": "30-Color Ambient Lighting Palette",
+                "desc": "Unlocks 30 RGB interior lighting color picker in MIB infotainment menu."
             },
             "vag_seatbelt_warning_mute": {
-                "name": "Deaktivering af seleklokke",
-                "desc": "Deaktiverer akustisk selelyd i instrumentgruppen."
+                "name": "Seatbelt Chime Deactivation",
+                "desc": "Disables unbuckled seatbelt acoustic chime in instrument cluster."
             },
             "bmw_alpina_cluster_theme": {
                 "name": "Alpina Digital Dash Layout",
-                "desc": "Anvender blåt Alpina-signatur-tema til digitalt instrumentpanel."
+                "desc": "Applies blue Alpina signature theme to digital instrument cluster."
             },
             "bmw_video_in_motion": {
                 "name": "Video In Motion",
-                "desc": "Låser op for USB-videoafspilning på iDrive-skærmen, mens du kører."
+                "desc": "Unlocks USB video playback on iDrive screen while driving."
             },
             "bmw_sport_plus_mode_unlock": {
-                "name": "Aktivér Sport+ Køretilstand",
-                "desc": "Aktiverer Sport+ højtydende dynamisk køretilstand i DEC-vælgeren."
+                "name": "Sport+ Driving Mode Enable",
+                "desc": "Enables Sport+ high-performance dynamic driving mode in DEC selector."
             },
             "mercedes_amg_menu_unlock": {
-                "name": "AMG Performance Telemetri Menu",
-                "desc": "Viser AMG olie temp, transmission temp, lap timer og G-meter."
+                "name": "AMG Performance Telemetry Menu",
+                "desc": "Displays AMG oil temp, transmission temp, lap timer, and G-meter."
             },
             "mercedes_agility_mode_enable": {
-                "name": "Agility Transmissionstilstand",
-                "desc": "Låser op for ultraresponsivt Agility-skifteprogram i 7G/9G-Tronic-transmission."
+                "name": "Agility Transmission Mode",
+                "desc": "Unlocks ultra-responsive Agility shift program in 7G/9G-Tronic transmission."
             },
             "mercedes_drl_brightness_boost": {
-                "name": "Kørelys 100 % intensitet",
-                "desc": "Øger LED-kørelysets output til 100 % fuld lysstyrke."
+                "name": "Daytime Running Lights 100% Intensity",
+                "desc": "Increases LED daytime running lights output to 100% full brightness."
             },
             "mercedes_alarm_lock_chirp": {
-                "name": "Akustisk låsehorn Chirp",
-                "desc": "Udsender kort horn-kvidren, når centrallåsen er aktiveret."
+                "name": "Acoustic Locking Horn Chirp",
+                "desc": "Emits short horn chirp notification when central locking is engaged."
             },
             "mercedes_dpf_adblue_gauge": {
-                "name": "DPF sod & AdBlue niveaumåler",
-                "desc": "Viser nøjagtig DPF-sodmasseprocent og resterende AdBlue-område i IC."
+                "name": "DPF Soot & AdBlue Level Gauge",
+                "desc": "Displays exact DPF soot mass percentage and remaining AdBlue range in IC."
             },
             "renault_rs_monitor_enable": {
-                "name": "Renault Sport RS Monitor Telemetri",
-                "desc": "Aktiverer live G-force, turbo boost og olietemp telemetri på R-Link."
+                "name": "Renault Sport RS Monitor Telemetry",
+                "desc": "Enables live G-force, turbo boost, and oil temp telemetry on R-Link."
             },
             "renault_duster_mirror_fold": {
-                "name": "Duster automatisk spejlfoldning på lås",
-                "desc": "Folder sidespejle automatisk sammen via BCM centrallåskommando."
+                "name": "Duster Auto Mirror Folding on Lock",
+                "desc": "Folds side mirrors automatically via BCM central locking command."
             },
             "ford_bambi_mode_fog_light": {
-                "name": "Bambi-tilstand",
-                "desc": "Tillader tågelygter at forblive ON, når fjernlys forlygter aktiveres."
+                "name": "Bambi Mode",
+                "desc": "Allows fog lights to remain ON when high beam headlights are activated."
             },
             "ford_st_rs_boot_animation": {
                 "name": "ST/RS Performance SYNC Boot Screen",
-                "desc": "Ændrer SYNC-berøringsskærmens startsplash-animation til ST / RS-logo."
+                "desc": "Changes SYNC touchscreen startup splash animation to ST / RS logo."
             },
             "toyota_reverse_beep_mute": {
-                "name": "Bakgear Kontinuerlig kabinebip-dæmpning",
-                "desc": "Dæmper kontinuerlig bakgears klokke inde i kabinen til et enkelt bip."
+                "name": "Reverse Gear Continuous Cabin Beep Mute",
+                "desc": "Mutes continuous reverse gear chime inside cabin to a single beep."
             },
             "toyota_remote_window_drop": {
-                "name": "Key Fob Fjernbetjening vindue Rul ned",
-                "desc": "Ruller alle elruder ned, når du holder oplåsningsknappen til nøglebrikken."
+                "name": "Key Fob Remote Window Roll Down",
+                "desc": "Rolls down all power windows when holding key fob unlock button."
             },
             "toyota_auto_lock_shift_p": {
-                "name": "Autolås døre på gearskifte",
-                "desc": "Låser automatisk alle døre, når der skiftes ud af parkeringsposition."
+                "name": "Auto Lock Doors on Gear Shift",
+                "desc": "Automatically locks all doors when shifting out of Park position."
             },
             "peugeot_icockpit_theme_unlock": {
                 "name": "Peugeot 3D i-Cockpit Performance Theme",
-                "desc": "Låser op for kobber- og sporrød farvedisplaytemaer på 3D digital klynge."
+                "desc": "Unlocks Copper and Track Red color display themes on 3D digital cluster."
             },
             "jeep_offroad_pages_enable": {
                 "name": "Jeep Uconnect Off-Road Pages",
-                "desc": "Aktiverer hældnings-/rullevinkelmålere, hjulled og 4x4-låsestatus."
+                "desc": "Enables pitch/roll angle gauges, wheel articulation, and 4x4 lock status."
             },
             "hyundai_smart_welcome_mirror": {
-                "name": "Smart Key Approach Welcome Mirror Fold ud",
-                "desc": "Folder automatisk sidespejle ud, når du nærmer dig et køretøj med smartnøgle."
+                "name": "Smart Key Approach Welcome Mirror Unfold",
+                "desc": "Automatically unfolds side mirrors when approaching vehicle with smart key."
             },
             "hyundai_one_touch_turn_7_flashes": {
                 "name": "One-Touch Lane Change Signal",
-                "desc": "Indstiller et-tryks vognbaneskift-blink-varighed til 7 blink."
+                "desc": "Sets one-touch lane change blinker duration to 7 flashes."
             },
             "hyundai_svm_camera_speed_extend": {
                 "name": "360° Surround Camera Speed Extension",
-                "desc": "Holder 360-graders parkeringskamera aktivt op til 20 km/t fremad."
+                "desc": "Keeps 360-degree parking camera active up to 20 km/h forward speed."
             },
             "hyundai_n_performance_exhaust_flap": {
-                "name": "N-Performance Udstødningsklap Standard ÅBEN",
-                "desc": "Indstiller den aktive udstødningsventils standardposition til OPEN ved motorstart."
+                "name": "N-Performance Exhaust Flap Default OPEN",
+                "desc": "Sets active exhaust valve default position to OPEN on engine start."
             },
             "vag_rain_closing_sunroof": {
-                "name": "Regn lukning",
-                "desc": "Lukker automatisk soltag og vinduer, når der registreres regn, mens den er parkeret."
+                "name": "Rain Closing",
+                "desc": "Automatically closes sunroof and windows when rain is detected while parked."
             },
             "bmw_launch_control_unlock": {
-                "name": "Start Control Unlock",
-                "desc": "Låser op fra fabrikkens startkontrolaccelerationsprogram i transmissions-ECU."
+                "name": "Launch Control Unlock",
+                "desc": "Unlocks factory launch control acceleration program in transmission ECU."
             },
             "mercedes_ambient_64_multi_zone": {
-                "name": "64-farver Multi-Zone Ambient Profile",
-                "desc": "Låser op for dynamisk multi-zone farvecyklusanimation i MBUX indvendig belysning."
+                "name": "64-Color Multi-Zone Ambient Profile",
+                "desc": "Unlocks dynamic multi-zone color cycle animation in MBUX interior lighting."
             },
             "ford_trailer_brake_activation": {
-                "name": "Trailer Brake Controller Aktiver",
-                "desc": "Aktiverer integreret trailerbremsekontrolmenu i instrumentpanelet."
+                "name": "Trailer Brake Controller Enable",
+                "desc": "Enables integrated trailer brake controller menu in instrument cluster."
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
-                "name": "AFM/DFM V8 Cylinderlås",
-                "desc": "Låser motoren i 8-cylindret tilstand permanent for at forhindre V4-vibrationer."
+                "name": "AFM/DFM V8 Cylinder Lock",
+                "desc": "Locks engine in 8-cylinder mode permanently to prevent V4 vibration."
             },
             "gm_remote_start_time_extend": {
-                "name": "Forlængelse af fjernstartvarighed",
-                "desc": "Forlænger fabriksnøglefjernens motorstarttid fra 10 til 20 minutter."
+                "name": "Remote Start Duration Extension",
+                "desc": "Extends factory key fob remote engine start run time from 10 to 20 minutes."
             },
             "dodge_srt_performance_pages": {
                 "name": "SRT Performance Pages & Drive Modes",
-                "desc": "Låser op for Uconnect 0-100 accelerationstimere, G-kraftmåler og startkontrol."
+                "desc": "Unlocks Uconnect 0-100 acceleration timers, G-force meter, and launch control."
             },
             "ram_bambi_mode_fog": {
-                "name": "RAM Truck tågelygter med fjernlys",
-                "desc": "Tillader RAM-tågelygter at forblive aktive sammen med fjernlys."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Allows RAM fog lights to remain active alongside high beam headlights."
             },
             "byd_avas_pedestrian_siren_mute": {
-                "name": "AVAS EV Low-Speed Sirene Mute",
-                "desc": "Dæmper lavhastigheds kunstig elmotorsirene under 30 km/t."
+                "name": "AVAS EV Low-Speed Siren Mute",
+                "desc": "Mutes low-speed artificial electric motor siren below 30 km/h."
             },
             "chery_isa_overspeed_chime_mute": {
-                "name": "ISA Overhastighed advarselsklokke deaktivering",
-                "desc": "Deaktiverer kontinuerlig 80/120 km/t overhastighed advarselsbip på Tiggo/MG-modeller."
+                "name": "ISA Overspeed Warning Chime Deactivation",
+                "desc": "Disables continuous 80/120 km/h overspeed warning beep on Tiggo/MG models."
             },
             "mg_ev_battery_preconditioning_toggle": {
-                "name": "EV Fast-Charge Batteri Forvarmning Manuel Switch",
-                "desc": "Aktiverer manuel batteriforvarmningskontakt før DC hurtigopladning."
+                "name": "EV Fast-Charge Battery Pre-Heating Manual Switch",
+                "desc": "Enables manual battery pre-heating switch before DC fast charging."
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "Driverovervågning Reduktion af kamerafølsomhed",
-                "desc": "Reducerer overfølsomme øjensporingstræthedsadvarsler på ratstammen."
+                "name": "Driver Monitoring Camera Sensitivity Reduction",
+                "desc": "Reduces over-sensitive eye-tracking fatigue warnings on steering column."
             },
             "honda_walk_away_auto_lock": {
-                "name": "Walk-Away automatisk dørlås",
-                "desc": "Låser automatisk alle døre, når føreren træder 2 meter væk med nøglebrik."
+                "name": "Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when driver steps 2 meters away with key fob."
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "Auto Vehicle Hold Hukommelsestilstand",
-                "desc": "Husker AVH bremsehold ON/OFF tilstand på tværs af tændingscyklusser."
+                "name": "Auto Vehicle Hold Memory Mode",
+                "desc": "Remembers AVH brake hold ON/OFF state across ignition cycles."
             },
             "volvo_start_stop_default_off": {
-                "name": "Auto Start-Stop Standard OFF-tilstand",
-                "desc": "Indstiller Start-Stop-motorslukningssystemets standardtilstand til FRA ved start af køretøjet."
+                "name": "Auto Start-Stop Default OFF Mode",
+                "desc": "Sets Start-Stop engine shutoff system default state to OFF upon vehicle start."
             },
             "volvo_polestar_digital_theme": {
                 "name": "Polestar Blue Digital Cluster Theme",
-                "desc": "Låser op Polestars signatur blå dynamiske måler-tema i Volvos førerdisplay."
+                "desc": "Unlocks Polestar signature blue dynamic gauge theme in Volvo driver display."
             },
             "vag_virtual_cockpit_r_theme": {
                 "name": "Virtual Cockpit R / S / Cupra Performance Themes",
-                "desc": "Låser op til R-Line, S-Line og Cupra centrale omdrejningstæller-temaer i digitalt cockpit."
+                "desc": "Unlocks R-Line, S-Line, and Cupra central tachometer performance themes in digital cockpit."
             },
             "vag_sound_symposer_mute": {
                 "name": "Sound Symposer Fake Engine Noise Deactivation",
-                "desc": "Deaktiverer kabinehøjttaler falsk motorlydgenerator for ren udstødningsnote."
+                "desc": "Deactivates cabin speaker fake engine sound generator for pure exhaust note."
             },
             "vag_wireless_carplay_enable": {
-                "name": "Trådløs Apple CarPlay & Android Auto-aktivering",
-                "desc": "Aktiverer 5GHz Wi-Fi trådløs Apple CarPlay og Android Auto på MIB2.5/MIB3-enheder."
+                "name": "Wireless Apple CarPlay & Android Auto Activation",
+                "desc": "Enables 5GHz Wi-Fi wireless Apple CarPlay and Android Auto on MIB2.5/MIB3 units."
             },
             "vag_offroad_telemetry_menu": {
-                "name": "MIB Offroad Telemetri & Gauge Display",
-                "desc": "Viser styrevinkel, olietemperatur, kølevæsketemperatur og højdemålere på MIB-skærmen."
+                "name": "MIB Offroad Telemetry & Gauge Display",
+                "desc": "Displays steering angle, oil temp, coolant temp, and altitude gauges on MIB screen."
             },
             "vag_easy_entry_driver_seat": {
-                "name": "Automatisk Easy Entry El-sæde Rygtrin",
-                "desc": "Flytter det elektriske førersæde tilbage 5 cm ved døråbning for nem adgang til bilen."
+                "name": "Automatic Easy Entry Power Seat Back-step",
+                "desc": "Moves electric driver seat back 5 cm upon door opening for easy vehicle entry."
             },
             "vag_hba_memory_state": {
-                "name": "High-Beam Assist hukommelsesbevarelse",
-                "desc": "Husker High-Beam Assist ON-status på tværs af tændingsgenstartscyklusser."
+                "name": "High-Beam Assist Memory Retention",
+                "desc": "Remembers High-Beam Assist ON status across ignition restart cycles."
             },
             "vag_battery_soc_display": {
-                "name": "Display for batteriladningstilstand.",
-                "desc": "Viser den nøjagtige batteriopladningsprocent på kombiinstrumentet, når tripknappen holdes nede."
+                "name": "Battery State of Charge Display",
+                "desc": "Shows exact battery charge percentage on instrument cluster when trip button is held."
             },
             "bmw_idrive7_m_animation": {
-                "name": "iDrive 7/8 M-Performance Startup Animation",
-                "desc": "Ændrer iDrive-skærmopstartsgrafik til M-Performance- eller M-GmbH-logoanimation."
+                "name": "iDrive 7 / 8 M-Performance Startup Animation",
+                "desc": "Changes iDrive screen boot graphic to M-Performance or M-GmbH logo animation."
             },
             "bmw_bowers_wilkins_audio_profiles": {
-                "name": "Bowers & Wilkins 3D Sound Engine Lås op",
-                "desc": "Låser op for Bowers & Wilkins Concert-, Studio- og Stage DSP-lydprofiler på HiFi-systemer."
+                "name": "Bowers & Wilkins 3D Sound Engine Unlock",
+                "desc": "Unlocks Bowers & Wilkins Concert, Studio, and Stage DSP audio profiles on HiFi systems."
             },
             "bmw_hitch_zoom_camera": {
-                "name": "Bakkamera anhængertræk Zoomtilstand",
-                "desc": "Låser op top-down zoom-tilstand for anhængertrækjustering på bakkameravisning."
+                "name": "Reverse Camera Trailer Hitch Zoom Mode",
+                "desc": "Unlocks top-down trailer hitch alignment zoom mode on reverse camera view."
             },
             "bmw_secure_idle_protection": {
-                "name": "Sikker tomgangsmotor Shift-Lock-beskyttelse",
-                "desc": "Låser transmissionen i Park, hvis føreren forlader kørende køretøj med nøglebrik."
+                "name": "Secure Idle Engine Shift-Lock Protection",
+                "desc": "Locks transmission in Park if driver leaves running vehicle with key fob."
             },
             "bmw_seatbelt_handover_mute": {
-                "name": "Coupe Elektrisk sikkerhedssele deaktivering af overdragelsesarm",
-                "desc": "Deaktiverer motoriseret sikkerhedsseleforlængerarm på 4-serie og 2-serie coupéer."
+                "name": "Coupe Electric Seatbelt Handover Arm Deactivation",
+                "desc": "Disables motorized seatbelt extender arm on 4 Series and 2 Series Coupes."
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "Automatisk sæde- og ratvarmetemperatur",
-                "desc": "Udløser automatisk sæde- og ratvarme, når den omgivende temperatur falder til under 5°C."
+                "name": "Automatic Seat & Steering Wheel Heating Temperature",
+                "desc": "Triggers automatic seat and steering wheel heating when ambient temp drops below 5°C."
             },
             "mercedes_amg_track_pace_unlock": {
-                "name": "MBUX AMG Track Pace Telemetri & Lap Timer",
-                "desc": "Låser op for omgangstid, accelerationstelemetri og G-kraftgrafer på MBUX-skærmen."
+                "name": "MBUX AMG Track Pace Telemetry & Lap Timer",
+                "desc": "Unlocks lap timing, acceleration telemetry, and G-force graphs on MBUX screen."
             },
             "mercedes_drive_mode_last_memory": {
-                "name": "Dynamisk Vælg Last Drive Mode Memory",
-                "desc": "Husker sidst valgte køretilstand ved genstart af køretøjet."
+                "name": "Dynamic Select Last Drive Mode Memory",
+                "desc": "Remembers last selected Drive Mode across vehicle restart."
             },
             "mercedes_proximity_360_camera_auto": {
-                "name": "Nærhedssensor Auto 360° kameravisning",
-                "desc": "Skifter automatisk skærm til 360-kamera, når frontsensorer registrerer forhindring < 50 cm."
+                "name": "Proximity Sensor Auto 360° Camera View",
+                "desc": "Automatically switches screen to 360 camera when front sensors detect obstacle < 50 cm."
             },
             "ford_sync_climate_screen_unlock": {
-                "name": "SYNC3 / SYNC4 Touchscreen klimakontrolside",
-                "desc": "Aktiverer klimakontrol, sædevarme og berøringsskærmside med luftstrømsretning."
+                "name": "SYNC3 / SYNC4 Touchscreen Climate Control Page",
+                "desc": "Enables climate control, heated seat, and airflow direction touchscreen page."
             },
             "ford_turn_signal_5_flashes": {
                 "name": "One-Touch Lane Change Signal",
-                "desc": "Øger varigheden af blinklys med et enkelt tryk på vognbaneskift fra 3 til 5 blink."
+                "desc": "Increases one-touch lane change turn signal duration from 3 to 5 flashes."
             },
             "ford_auto_engine_shutdown_disable": {
-                "name": "30-minutters tomgang tilsidesættelse af automatisk motornedlukning",
-                "desc": "Forhindrer automatisk motorstop efter 30 minutters tomgang."
+                "name": "30-Minute Idle Auto Engine Shutdown Override",
+                "desc": "Prevents automatic engine shutoff after 30 minutes idle."
             },
             "ev_battery_preheat_manual_switch": {
-                "name": "EV-batteriforvarmning manuel kontakt",
-                "desc": "Tillader manuel batteriforvarmning til 25°C før DC-hurtigopladning uden navigationsrute."
+                "name": "EV Battery Pre-Heating Manual Switch",
+                "desc": "Allows manual battery pre-heating to 25°C before DC fast charging without navigation route."
             },
             "ev_v2l_power_output_expand": {
                 "name": "V2L 220V Outlet Power Expansion",
-                "desc": "Udvider grænsen for V2L ekstern 220V AC strømudtag fra 2,2 kW til 3,6 kW."
+                "desc": "Expands V2L external 220V AC household power outlet limit from 2.2 kW to 3.6 kW."
             },
             "ev_one_pedal_regen_force_level3": {
-                "name": "One-Pedal Drive Maksimal regenerativ bremsestandard",
-                "desc": "Indstiller maksimal regenerativ bremsning som standard ved køretøjets start."
+                "name": "One-Pedal Drive Maximum Regenerative Braking Default",
+                "desc": "Sets maximum regenerative braking as default on vehicle start."
             },
             "byd_soc_max_charge_target_limit": {
-                "name": "BYD Battery Health Protection Max opladningsgrænse",
-                "desc": "Indstiller maks. AC/DC opladningsgrænse til 80 % eller 90 % for at forlænge bladbatteriets levetid."
+                "name": "BYD Battery Health Protection Max Charge Limit",
+                "desc": "Sets max AC/DC charge cutoff limit to 80% or 90% to extend Blade Battery lifespan."
             },
             "byd_dmi_forced_pure_ev_speed_override": {
-                "name": "BYD DM-i Pure EV Mode Benzinmotor Tilsidesættelse",
-                "desc": "Hæmmer benzinmotorstart i EV-tilstand op til 130 km/t selv under acceleration med fuld gas."
+                "name": "BYD DM-i Pure EV Mode Gasoline Engine Override",
+                "desc": "Inhibits gasoline engine start in EV mode up to 130 km/h even during full throttle acceleration."
             },
             "byd_vtol_v2v_rescue_charge_mode": {
                 "name": "BYD VTOL Rescue Charge Mode",
-                "desc": "Låser op for ekstern vekselstrøm for at oplade strandede elektriske køretøjer på vejen."
+                "desc": "Unlocks external AC power output to charge stranded electric vehicles on road."
             },
             "hyundai_ipedal_memory_lock": {
                 "name": "Hyundai / Kia i-PEDAL One-Pedal Drive Memory Lock",
-                "desc": "Forhindrer i-PEDAL et-pedal stop-tilstand i at falde tilbage til niveau 3 efter skift til bakgear."
+                "desc": "Prevents i-PEDAL one-pedal stop mode from dropping back to Level 3 after shifting to Reverse."
             },
             "hyundai_utility_mode_12v_saver": {
-                "name": "Utility Camping Mode Højspænding 12V Saver",
-                "desc": "Forsyner 220V V2L-udtag direkte fra HV-traktionsbatteri for at forhindre ekstra 12V-batteriafladning."
+                "name": "Utility Camping Mode High-Voltage 12V Saver",
+                "desc": "Powers 220V V2L outlet directly from HV traction battery to prevent auxiliary 12V battery drain."
             },
             "hyundai_phev_no_ice_climate_start": {
-                "name": "PHEV EV Mode Klimaopvarmning Benzinmotordæmpning",
-                "desc": "Tvinger varmepumpe / PTC elvarmer til kabineklima uden start af benzinmotor."
+                "name": "PHEV EV Mode Climate Heating Gasoline Engine Suppression",
+                "desc": "Forces heat pump / PTC electric heater for cabin climate without starting gasoline engine."
             },
             "vag_taycan_ess_sound_profile_swap": {
-                "name": "Electric Sport Sound Taycan / RS e-tron profil",
-                "desc": "Ændrer elektrisk kørelydprofil til Porsche Taycan GTS eller Audi RS e-tron GT lydgenerator."
+                "name": "Electric Sport Sound Taycan / RS e-tron Profile",
+                "desc": "Changes electric driving sound profile to Porsche Taycan GTS or Audi RS e-tron GT sound generator."
             },
             "vag_meb_daily_charge_target_menu": {
                 "name": "MEB Battery Daily 80% / Trip 100% Quick Charge Bar",
-                "desc": "Tilføjer hurtig skiftbar på MIB-skærmen for at skifte mellem 80 % daglig batteripleje og 100 % turopladning."
+                "desc": "Adds quick toggle bar on MIB screen to switch between 80% daily battery care and 100% trip charge."
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "GTE / E-Mode Engine Generator Batterikraftopladning",
-                "desc": "Tvinger forbrændingsmotoren til at fungere som generator for at genoplade højspændingsbatteriet op til 80 % under kørsel."
+                "name": "GTE / E-Mode Engine Generator Battery Force Charge",
+                "desc": "Forces combustion engine to act as generator to recharge high-voltage battery up to 80% while driving."
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
                 "name": "Hans Zimmer IconicSounds Electric M-Performance Sound Engine",
-                "desc": "Låser op Hans Zimmer akustiske M-Performance elektriske accelerationslydprofiler på i4 og iX."
+                "desc": "Unlocks Hans Zimmer acoustic M-Performance electric acceleration sound profiles on i4 and iX."
             },
             "bmw_phev_max_edrive_140kmh": {
                 "name": "PHEV MAX eDrive Pure Electric Speed Ceiling",
-                "desc": "Øger maksimalt rent elektrisk hastighedsloft på 330e / 530e Plug-in hybrider til 140 km/t."
+                "desc": "Increases max pure electric speed ceiling on 330e / 530e Plug-in hybrids to 140 km/h."
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "AC Home Charger Maksimal strømgrænsevælger",
-                "desc": "Tilføjer AC-hjemmeopladningsstrømbegrænser for at forhindre overbelastning af hjemmekredsløbet."
+                "name": "AC Home Charger Maximum Current Limit Selector",
+                "desc": "Adds AC home charging current limiter to prevent home circuit overload."
             },
             "toyota_hybrid_ev_mode_override": {
-                "name": "Toyota / Lexus EV Mode Tilsidesættelse af gasspjæld",
-                "desc": "Forhindrer benzinmotoren i at tvinge start under acceleration, når EV-tilstandsknappen er aktiv."
+                "name": "Toyota / Lexus EV Mode Throttle Override Suppression",
+                "desc": "Prevents gasoline engine from forced start during acceleration when EV mode button is active."
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "Toyota / Lexus højspændingsbatteri køleblæser boost",
-                "desc": "Øger hybridtraktionsbatteriets køleventilatorhastighed med +30 % for at forhindre termisk nedbrydning i varmt klima."
+                "name": "Toyota / Lexus High-Voltage Battery Cooling Fan Boost",
+                "desc": "Increases hybrid traction battery cooling fan speed by +30% to prevent thermal degradation in hot climates."
             },
             "tesla_sentry_high_bitrate_video": {
-                "name": "Tesla Sentry Mode Kontinuerlig dashcam-optagelse med høj bitrate",
-                "desc": "Øger Sentry Mode kamera videooptagelse bitrate for krystalklar nummerplade synlighed."
+                "name": "Tesla Sentry Mode High-Bitrate Continuous Dashcam Recording",
+                "desc": "Increases Sentry Mode camera video recording bitrate for crystal-clear license plate visibility."
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "Temperaturtærskel for temperaturtærskel for Tesla-kabine overophedning",
-                "desc": "Sænker kabinens overophedningsbeskyttelses-klimaudløsertemperatur fra 40°C til 30°C for indvendig bevaring."
+                "name": "Tesla Cabin Overheat Protection Temperature Threshold",
+                "desc": "Lowers cabin overheat protection climate trigger temperature from 40°C to 30°C for interior preservation."
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
                 "name": "Shift Assistant Pro Re-Adaptation",
-                "desc": "Nulstiller skiftesensorindlæringsparametre og starter quickshifter-genkalibrering."
+                "desc": "Resets shift sensor learning parameters and initiates quickshifter recalibration."
             },
             "bmwmotorrad_esa_zero_point_calib": {
-                "name": "Dynamisk ESA suspension nulpunktskalibrering",
-                "desc": "Kalibrerer elektroniske affjedringsbelastnings- og rejsesensorer til fabriksnul."
+                "name": "Dynamic ESA Suspension Zero-Point Calibration",
+                "desc": "Calibrates electronic suspension load and travel sensors to factory zero."
             },
             "bmwmotorrad_abs_pro_cornering_toggle": {
                 "name": "ABS Pro Cornering Mode Intervention Threshold",
-                "desc": "Justerer lean-vinkel-afhængig ABS-interventionsfølsomhed til sporbrug."
+                "desc": "Adjusts lean-angle dependent ABS intervention sensitivity for track use."
             },
             "bmwmotorrad_service_interval_reset": {
-                "name": "Nulstilling af års- og fjernservicepåmindelse",
-                "desc": "Nulstiller instrumentgruppens serviceindikator og indstiller brugerdefineret interval."
+                "name": "Annual & Distance Service Reminder Reset",
+                "desc": "Resets instrument cluster service indicator and sets custom interval."
             },
             "bmwmotorrad_headlight_pro_cornering": {
-                "name": "Forlygte Pro Adaptiv kurvelysfølsomhed",
-                "desc": "Justerer hældningsvinkeltærsklen for adaptiv aktivering af forlygter i sving."
+                "name": "Headlight Pro Adaptive Cornering Light Sensitivity",
+                "desc": "Adjusts lean angle threshold for adaptive cornering headlight activation."
             },
             "bmwmotorrad_keyless_ride_range_extend": {
-                "name": "Forlængelse af rækkeviddeforlængelse uden nøgle",
-                "desc": "Optimerer transponderens signalområde til nøglefri tændingsføling."
+                "name": "Keyless Ride Fob Detection Range Extension",
+                "desc": "Optimizes transponder signal range for keyless ignition sensing."
             },
             "bmwmotorrad_reverse_assist_sensitivity": {
-                "name": "Elektrisk bakhjælpsmotorfølsomhed",
-                "desc": "Finjusterer den elektriske startmotors omdrejningshastighed og drejningsmomentgrænse."
+                "name": "Electric Reverse Assist Motor Sensitivity",
+                "desc": "Fine-tunes reverse drive electric starter motor speed and torque limit."
             },
             "ducati_riding_mode_custom_profile": {
-                "name": "Ridetilstand Creator af tilpasset profil",
-                "desc": "Låser op for brugerdefinerede kombinationer til Race-, Sport-, Touring- og Urban-profiler."
+                "name": "Riding Mode Custom Profile Creator",
+                "desc": "Unlocks custom combinations for Race, Sport, Touring, and Urban profiles."
             },
             "ducati_ohlins_suspension_mapping": {
                 "name": "Öhlins Smart EC 2.0 Semi-Active Suspension Mapping",
-                "desc": "Finjusterer dæmpningskurve og stivhedsforudindstillinger til elektronisk affjedring."
+                "desc": "Fine-tunes damping curve and stiffness presets for electronic suspension."
             },
             "ducati_dashboard_lap_timer_gps": {
-                "name": "TFT Dashboard Lap Timer & GPS-sektoropdelinger",
-                "desc": "Låser op for sporomgangstimer og sektoropdelt display på instrumentgruppen."
+                "name": "TFT Dashboard Lap Timer & GPS Sector Splits",
+                "desc": "Unlocks track lap timer and sector split display on instrument cluster."
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "Motorbremsekontrol niveaujustering",
-                "desc": "Justerer baghjulets decelerationsmoment under hård opbremsning i hjørner."
+                "name": "Engine Brake Control Level Adjustment",
+                "desc": "Adjusts rear wheel deceleration torque during hard corner entry braking."
             },
             "ducati_cruise_control_retrofit_enable": {
-                "name": "Aktivering af fartpilot eftermontering",
-                "desc": "Aktiverer ECU-softwareflag for eftermonterede elektroniske fartpilotkontakter."
+                "name": "Cruise Control Retrofit Activation",
+                "desc": "Enables ECU software flag for retrofitted electronic cruise control switches."
             },
             "ducati_exhaust_valve_sound_map": {
-                "name": "Udstødningsservoventil Åbning RPM Kort",
-                "desc": "Justerer den akustiske udstødningsventils åbningstærskel for forbedret udstødningsnote."
+                "name": "Exhaust Servo Valve Opening RPM Map",
+                "desc": "Adjusts acoustic exhaust valve opening threshold for enhanced exhaust note."
             },
             "ducati_pit_lane_limiter_config": {
                 "name": "Pit Lane Speed Limiter Threshold",
-                "desc": "Muliggør 60 km/t pit lane hastighedsbegrænser til at slå på styrkontakterne."
+                "desc": "Enables 60 km/h pit lane speed limiter toggle on handlebar switches."
             },
             "ducati_desmo_service_light_reset": {
-                "name": "Olie & Desmo ventil servicelys nulstillet",
-                "desc": "Rydder advarsel om påmindelse om desmodromisk ventil på kombiinstrumentet."
+                "name": "Oil & Desmo Valve Service Light Reset",
+                "desc": "Clears Desmodromic valve service reminder warning on instrument cluster."
             },
             "ktm_quickshifter_plus_delay_tuning": {
-                "name": "Quickshifter+ Shift Cut Time & Delay Fin-Tuning",
-                "desc": "Tilpasser tændingens varighed pr. gear til problemfri op/ned-skift."
+                "name": "Quickshifter+ Shift Cut Time & Delay Fine-Tuning",
+                "desc": "Customizes ignition cut duration per gear for seamless up/down shifts."
             },
             "ktm_rally_offroad_abs_tc_unlock": {
-                "name": "Rally / Off-Road ABS & TC Mode Lås op",
-                "desc": "Deaktiverer bageste ABS og låser op for 9-trins slipjustering i Rally-tilstand."
+                "name": "Rally / Off-Road ABS & TC Mode Unlock",
+                "desc": "Disables rear ABS and unlocks 9-stage slip adjustment in Rally mode."
             },
             "ktm_my_ktm_connectivity_unlock": {
-                "name": "Aktivering af mit KTM / Husqvarna Connectivity Module",
-                "desc": "Aktiverer Bluetooth-navigation og sving-for-sving-ruting på TFT-skærm."
+                "name": "My KTM / Husqvarna Connectivity Module Activation",
+                "desc": "Enables Bluetooth navigation and turn-by-turn routing on TFT display."
             },
             "ktm_cruise_control_retrofit_enable": {
-                "name": "Oplåsning af software til eftermontering af fartpilot",
-                "desc": "Aktiverer fartpilotfunktionen efter installation af styrkontaktsæt."
+                "name": "Cruise Control Retrofit Software Unlock",
+                "desc": "Activates cruise control function after installing handlebar switch kit."
             },
             "ktm_clutch_pull_map_switch_gesture": {
-                "name": "Kobling-træk-bevægelseskortskift",
-                "desc": "Muliggør hurtig kortskift ved at udføre koblingshåndtag ved opstart."
+                "name": "Clutch-Pull Gesture Map Switching",
+                "desc": "Enables rapid map switching by executing clutch lever gesture on startup."
             },
             "yamaha_quickshifter_cut_time_adjust": {
-                "name": "Quickshifter tænding skæretid og følsomhed",
-                "desc": "Justerer quickshifter-sensorens belastningstærskel og forsinkelse af gnistafbrydelse."
+                "name": "Quickshifter Ignition Cut-Time & Sensitivity",
+                "desc": "Adjusts quickshifter sensor load threshold and spark interruption delay."
             },
             "yamaha_ride_by_wire_throttle_map": {
                 "name": "Ride-by-Wire Throttle Map Preset Selector",
-                "desc": "Skifter mellem A-Mode, STD og B-Mode gasspjældkort."
+                "desc": "Switches between A-Mode, STD, and B-Mode throttle maps."
             },
             "yamaha_tft_track_theme_unlock": {
-                "name": "TFT Track Display Layout & Shift Light Lås op",
-                "desc": "Låser op for R1/MT-09 SP sporklyngelayout og programmerbare skiftende RPM-lys."
+                "name": "TFT Track Display Layout & Shift Light Unlock",
+                "desc": "Unlocks R1/MT-09 SP track cluster layout and programmable shift RPM lights."
             },
             "yamaha_launch_control_sensitivity": {
                 "name": "Launch Control System Rev Ceiling",
-                "desc": "Konfigurerer startkontrol, der holder RPM."
+                "desc": "Configures launch control holding RPM."
             },
             "yamaha_heated_grips_accessory_enable": {
-                "name": "Ægte opvarmede greb TFT-menuintegration",
-                "desc": "Muliggør opvarmet greb og temperaturmåler på TFT-skærm."
+                "name": "Genuine Heated Grips TFT Menu Integration",
+                "desc": "Enables heated grip controls and temperature gauge on TFT screen."
             },
             "honda_hstc_wheelie_control_fine_tune": {
-                "name": "Finjustering af HSTC Traction & Wheelie Control",
-                "desc": "Justerer Honda Selectable Torque Control slipforhold og forhjulsløftstolerance."
+                "name": "HSTC Traction & Wheelie Control Fine-Tuning",
+                "desc": "Adjusts Honda Selectable Torque Control slip ratio and front wheel lift tolerance."
             },
             "honda_bi_directional_quickshifter_enable": {
-                "name": "Tovejs Quickshifter eftermontering Lås op",
-                "desc": "Aktiverer auto-blipper og op/ned quickshifter-kodning i ECU-hukommelsen."
+                "name": "Bi-Directional Quickshifter Retrofit Unlock",
+                "desc": "Enables auto-blipper and up/down quickshifter coding in ECU memory."
             },
             "honda_service_reminder_custom_interval": {
-                "name": "Tilpasning af afstand til olieservicepåmindelse",
-                "desc": "Indstiller brugerdefineret olieskift-kilometerinterval på digitalt instrumentbræt."
+                "name": "Oil Service Reminder Distance Customizer",
+                "desc": "Sets custom oil change mileage interval on digital dash."
             },
             "honda_track_abs_rear_disable": {
-                "name": "Spor ABS-baghjulsdeaktivering",
-                "desc": "Deaktiverer ABS-kanalen på baghjulet, mens ABS i sving foran holdes på banedage."
+                "name": "Track ABS Rear-Wheel Deactivation",
+                "desc": "Disables rear wheel ABS channel while retaining front cornering ABS for track days."
             },
             "honda_cold_start_idle_enrichment": {
-                "name": "Brændstofberigelse ved koldstart og tomgangsmål omdrejningstal",
-                "desc": "Justerer den indledende opvarmnings tomgangshastighed for eftermarkedets udstødningssystemer."
+                "name": "Cold-Start Fuel Enrichment & Idle Target RPM",
+                "desc": "Adjusts initial warm-up idle speed for aftermarket exhaust systems."
             },
             "harley_custom_throttle_curve_editor": {
                 "name": "Custom Throttle Response Curve Editor",
-                "desc": "Justerer Milwaukee-Eight / Revolution Max ride-by-wire gasprogression."
+                "desc": "Adjusts Milwaukee-Eight / Revolution Max ride-by-wire throttle progression."
             },
             "harley_security_alarm_sensitivity": {
-                "name": "Smart sikkerhedssystem nærhed og hældningsfølsomhed",
-                "desc": "Justerer bevægelsessensorens følsomhed og håndfri tilkoblingsforsinkelse."
+                "name": "Smart Security System Proximity & Tilt Sensitivity",
+                "desc": "Adjusts motion sensor sensitivity and hands-free fob arming delay."
             },
             "harley_boom_box_gts_hidden_diagnostics": {
-                "name": "Bom! Box GTS Infotainment Skjult diagnosemenu",
-                "desc": "Låser op for tekniske telemetri-displays, motortemperatur- og olietryksmålere."
+                "name": "Boom! Box GTS Infotainment Hidden Diagnostic Menu",
+                "desc": "Unlocks engineering telemetry displays, engine temp, and oil pressure gauges."
             },
             "harley_rdrs_defensive_system_tune": {
-                "name": "RDRS Drag-Torque Slip-kontrolfølsomhed",
-                "desc": "Finjusterer Reflex Defensive Rider System baghjulsslipreduktion under nedgearinger."
+                "name": "RDRS Drag-Torque Slip Control Sensitivity",
+                "desc": "Fine-tunes Reflex Defensive Rider System rear-wheel slip mitigation during downshifts."
             },
             "byd_avas_low_speed_siren_mute": {
-                "name": "AVAS lavhastigheds EV Fodgængeradvarsel Sirene Mute",
-                "desc": "Dæmper eller sænker det eksterne akustiske køretøjs alarmsystemssirene under 30 km/t."
+                "name": "AVAS Low-Speed EV Pedestrian Warning Siren Mute",
+                "desc": "Mutes or lowers external acoustic vehicle alerting system siren under 30 km/h."
             },
             "byd_ev_battery_preheat_manual_switch": {
-                "name": "Manuel EV-batteriforvarmning",
-                "desc": "Aktiverer manuel batteri termisk konditionering før DC hurtig opladning."
+                "name": "Manual EV Battery Pre-Heating Toggle",
+                "desc": "Enables manual battery thermal conditioning prior to DC fast charging."
             },
             "byd_v2l_220v_outlet_power_expansion": {
                 "name": "V2L 220V Outlet Power Expansion",
-                "desc": "Udvider eksternt V2L-udladningseffektloft fra 2,2 kW til maksimalt 3,6 kW."
+                "desc": "Expands external V2L discharge power ceiling from 2.2 kW to 3.6 kW maximum."
             },
             "byd_one_pedal_regen_default_max": {
-                "name": "One-Pedal Drive Regenerative Braking Standard Maks",
-                "desc": "Låser høj regenerativ bremsning som vedvarende standard ved opstart af køretøjet."
+                "name": "One-Pedal Drive Regenerative Braking Default Max",
+                "desc": "Locks high regenerative braking as persistent default upon vehicle startup."
             },
             "mg_ismart_connectivity_unlock": {
-                "name": "i-SMART-forbindelse og fjernoplåsning af telemetri",
-                "desc": "Aktiverer fjernbetjent klimakontrol og funktioner til sporing af køretøjsstatus."
+                "name": "i-SMART Connectivity & Remote Telemetry Unlock",
+                "desc": "Enables remote climate control and vehicle status tracking features."
             },
             "mg_mg4_xpower_launch_control_enable": {
                 "name": "MG4 XPower Dual-Motor Launch Control Mode",
-                "desc": "Låser op for 3,8s 0-100 km/t startkontrol accelerationstilstand."
+                "desc": "Unlocks 3.8s 0-100 km/h launch control acceleration mode."
             },
             "mg_battery_preheat_manual_trigger": {
-                "name": "Manuel hurtig-opladning af batteri-forkonditionering",
-                "desc": "Tvinger højspændingsbatterivarmelegemer TIL for maksimale DC-opladningshastigheder."
+                "name": "Manual Fast-Charge Battery Pre-Conditioning",
+                "desc": "Forces high-voltage battery heating elements ON for peak DC charge rates."
             },
             "xpeng_xngp_adas_region_unlock": {
-                "name": "XNGP Autonomous Driving Assistant Region Lås op",
-                "desc": "Muliggør avanceret navigationsstyret pilotassistance i ulåste områder."
+                "name": "XNGP Autonomous Driving Assistant Region Unlock",
+                "desc": "Enables advanced navigation-guided pilot assistance in unlocked regions."
             },
             "xpeng_ambient_lighting_music_sync": {
-                "name": "Musik-reaktiv rytme omgivende belysning",
-                "desc": "Synkroniserer kabine LED-omgivende lysimpulser med lydsystemets basbeats."
+                "name": "Music-Reactive Rhythm Ambient Lighting",
+                "desc": "Synchronizes cabin LED ambient lighting pulses with audio system bass beats."
             },
             "xpeng_rear_camera_trailer_hitch_view": {
                 "name": "360° Camera Hitch & Ground Overlay Mode",
-                "desc": "Tilføjer højopløsnings justeringsgitteroverlay til backupkamera."
+                "desc": "Adds high-resolution hitch alignment grid overlay to backup camera."
             },
             "nio_battery_swap_interval_reminder": {
                 "name": "Power Swap Station Pre-Conditioning Mode",
-                "desc": "Sænker automatisk batterilåsestifter og forudsætter pakker før udskiftning."
+                "desc": "Automatically lowers battery lock pins and pre-conditions packs prior to swap."
             },
             "nio_nomi_assistant_custom_voice_phrases": {
                 "name": "NOMI AI Companion Personalization & Wake Words",
-                "desc": "Låser op til brugerdefinerede avatar-animationer og personlige hilsener til NOMI."
+                "desc": "Unlocks custom avatar animations and personalized greeting phrases for NOMI."
             },
             "nio_sentry_watchdog_continuous_recording": {
-                "name": "NIO Sentry Mode 4K-kamerabufferoptagelse",
-                "desc": "Aktiverer surround-kameraoptagelse med høj bithastighed til USB-drev, når det er parkeret."
+                "name": "NIO Sentry Mode 4K Camera Buffer Recording",
+                "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Xiaomi SU7 HyperOS Driver Profil Ecosystem Sync",
-                "desc": "Synkroniserer automatisk sæde-, spejl- og klimaforudindstillinger via Xiaomi-telefonens Bluetooth."
+                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
+                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Boost-tilstand 20-sekunders Overboost Power Unlock",
-                "desc": "Forlænger den maksimale overboost-varighed af elektrisk motor under acceleration med fuld gas."
+                "name": "Boost Mode 20-Second Overboost Power Unlock",
+                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Driftstilstand RWD Torque Vectoring Allocation",
-                "desc": "Tildeler 100 % motormoment til bagakslen med traction control frakoblet."
+                "name": "Drift Mode RWD Torque Vectoring Allocation",
+                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "ISA Intelligent Speed Assist Advarsel Klokkelyd fra",
-                "desc": "Deaktiverer vedvarende akustisk klokke, når den registrerede hastighedsgrænse overskrides."
+                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
+                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "DMS-drivertræthedsovervågning Kamerafølsomhed",
-                "desc": "Reducerer falsk-positive distraktionsadvarsler fra indvendig overvågningskamera."
+                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
+                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Eftermontering for/bag parkeringsafstandskontrol kodning",
-                "desc": "Registrerer eftermarkedet eller OEM parkeringssensormodul i Gateway-installationslisten."
+                "name": "Retrofit Front/Rear Parking Distance Control Coding",
+                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
             },
             "retrofit_360_camera_activation": {
-                "name": "Eftermonter 360° områdevisning surroundkamerasystem",
-                "desc": "Aktiverer surround view-kameracontroller og føjer kameravisning til infotainment."
+                "name": "Retrofit 360° Area View Surround Camera System",
+                "desc": "Activates surround view camera controller and adds camera view to infotainment."
             },
             "retrofit_led_license_plate_light_coding": {
-                "name": "Eftermontering af LED-nummerplade og baglygtefejl Annuller",
-                "desc": "Deaktiverer overvågning af kold pærekontrol for at forhindre falske advarsler om lampeudfald med LED'er."
+                "name": "Retrofit LED License Plate & Tail Light Error Cancel",
+                "desc": "Disables cold bulb check monitoring to prevent false lamp out warnings with LEDs."
             },
             "retrofit_dash_cam_sentry_integration": {
-                "name": "Eftermontering Dash Cam Continuous Ignition Power & Sentry Mode",
-                "desc": "Konfigurerer Body Control Module terminal 30 strømledning til kontinuerlig parkeringsregistrering."
+                "name": "Retrofit Dash Cam Continuous Ignition Power & Sentry Mode",
+                "desc": "Configures Body Control Module terminal 30 power line for continuous parking recording."
             },
             "retrofit_heated_windshield_activation": {
-                "name": "Eftermontering af opvarmet forrudeelementkodning",
-                "desc": "Aktiverer forrudeafrimningsvarmerelæudgang og climatronic skærmknap."
+                "name": "Retrofit Heated Windshield Element Coding",
+                "desc": "Enables windshield defrost heater relay output and climatronic screen button."
             },
             "retrofit_wireless_charger_module_coding": {
-                "name": "Eftermontering af Qi trådløs smartphone opladningsplade integration",
-                "desc": "Aktiverer status-LED for trådløs oplader og pop-up for påmindelse om telefonen."
+                "name": "Retrofit Qi Wireless Smartphone Charging Pad Integration",
+                "desc": "Enables wireless charger status LED and phone left behind reminder popup."
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "Eftermontering af adaptiv fartpilot frontradarmodul",
-                "desc": "Koder eftermonteret frontafstandsradarenhed ind i CAN-bus køretøjsnetværk."
+                "name": "Retrofit Adaptive Cruise Control Front Radar Module",
+                "desc": "Encodes retrofitted front distance radar unit into CAN bus vehicle network."
             },
             "retrofit_traffic_sign_camera_activation": {
-                "name": "Eftermontering af trafikskiltgenkendelse Forrudekamerakodning",
-                "desc": "Aktiverer VZE-skiltgenkendelsesbehandling på eftermonteret forrudekamera."
+                "name": "Retrofit Traffic Sign Recognition Windshield Camera Coding",
+                "desc": "Enables VZE sign recognition processing on retrofitted windshield camera."
             },
             "retrofit_heated_steering_wheel_coding": {
-                "name": "Eftermontering af opvarmet ratmodulaktivering",
-                "desc": "Aktiverer output fra ratvarmeelementet og automatisk tænding af temperaturudløsere."
+                "name": "Retrofit Heated Steering Wheel Module Activation",
+                "desc": "Enables steering wheel heating element output and auto-on temperature triggers."
             },
             "retrofit_fatigue_camera_calibration": {
-                "name": "Eftermontering af drivertræthedsovervågningskameraintegration",
-                "desc": "Kalibrerer førerovervågning infrarød kamerasensor efter montering af ratstamme."
+                "name": "Retrofit Driver Fatigue Monitoring Camera Integration",
+                "desc": "Calibrates driver monitoring infrared camera sensor after steering column install."
             },
             "retrofit_trailer_hitch_module_coding": {
-                "name": "Eftermontering af anhængertræk og trailer elektrisk modulintegration",
-                "desc": "Koder trailermodulet ind i ESP-stabilitetssystem til afbødning af trailersving."
+                "name": "Retrofit Tow Bar & Trailer Electrical Module Integration",
+                "desc": "Encodes trailer module into ESP stability system for trailer sway mitigation."
             },
             "retrofit_power_tailgate_trunk_kit_coding": {
-                "name": "Eftermontering af el-bagklap og fodbevægelsessensorintegration",
-                "desc": "Muliggør elektriske trunk drive-motorer og kodning af kofanger-sparksensor."
+                "name": "Retrofit Power Tailgate & Foot Gesture Sensor Integration",
+                "desc": "Enables electric trunk drive motors and bumper kick sensor coding."
             },
             "easteregg_urban_joke_light_show": {
-                "name": "Urban Joke vekslende baglygteshow",
-                "desc": "Konfigurerer baglygter og blinklys til at blinke skiftevis, når køretøjet låses."
+                "name": "Urban Joke Alternating Rear Light Show",
+                "desc": "Configures tail lights and turn signals to flash alternately when locking vehicle."
             },
             "easteregg_custom_boot_greeting_text": {
-                "name": "Tilpasset boothilsentekst på digital klynge",
-                "desc": "Viser brugerdefineret velkomstmeddelelse på instrumentpanelets skærm, når tændingen er slået til."
+                "name": "Custom Boot Greeting Text on Digital Cluster",
+                "desc": "Displays custom welcome message on instrument cluster screen upon ignition on."
             },
             "easteregg_cluster_mini_game_mode": {
-                "name": "Instrument Cluster Skjult Mini-Game Menu",
-                "desc": "Låser op med knapstyret retro-minispil på displayet, når det er parkeret."
+                "name": "Instrument Cluster Hidden Mini-Game Menu",
+                "desc": "Unlocks steering-wheel button controlled retro mini-game on display when parked."
             },
             "easteregg_custom_horn_melody_package": {
-                "name": "Brugerdefineret akustisk horn velkomstmelodi",
-                "desc": "Spiller kort rytme-kvidrende mønster på hornet, når bilen låses op."
+                "name": "Custom Acoustic Horn Welcome Melody",
+                "desc": "Plays short rhythm chirp pattern on horn when unlocking car."
             },
             "easteregg_welcome_lighting_door_sequence": {
                 "name": "Chasing LED Welcome Light Door Sequence",
-                "desc": "Udfører progressiv LED jagende animation på udvendige dørhåndtag."
+                "desc": "Executes progressive LED chasing animation on exterior door handles."
             },
             "easteregg_developer_service_menu_shortcut": {
-                "name": "Genvej til skærmdiagnostik for udviklere og service",
-                "desc": "Muliggør hurtig bevægelsesgenvej for at få adgang til skjulte tekniske diagnostiske skærme."
+                "name": "Developer & Service Diagnostic Screen Shortcut",
+                "desc": "Enables quick gesture shortcut to access hidden engineering diagnostic screens."
             },
             "easteregg_seasonal_cluster_theme_effect": {
-                "name": "Sæsonbestemt vejrklynge-temaoverlejring",
-                "desc": "Tilføjer animeret snefnug eller regnpartikelbaggrund for at måle klynge om vinteren."
+                "name": "Seasonal Weather Cluster Theme Overlay",
+                "desc": "Adds animated snowflake or rain particle background to gauge cluster in winter."
             },
             "easteregg_valet_mode_prank_warning_message": {
-                "name": "Valet Mode Prank Speed Limit Popup Advarsel",
-                "desc": "Viser humoristisk streng advarselsmeddelelse på instrumentbrættet, hvis betjenttilstand overskrides."
+                "name": "Valet Mode Prank Speed Limit Popup Warning",
+                "desc": "Displays humorously strict warning message on dashboard if valet mode is exceeded."
             },
             "adas_lane_keep_assist_gentle_curve": {
-                "name": "Lane Keep Assist Skånsom styreinterventionskurve",
-                "desc": "Blødgør pludselige træk i rattet ved at anvende progressive momentindgreb."
+                "name": "Lane Keep Assist Gentle Steering Intervention Curve",
+                "desc": "Softens sudden steering wheel tugs by applying progressive torque intervention."
             },
             "adas_lka_last_state_memory_mode": {
                 "name": "Lane Keep Assist Last State Memory Lock",
-                "desc": "Forhindrer LKA i automatisk at tænde igen, hver gang tændingen genstartes."
+                "desc": "Prevents LKA from automatically turning back ON every time ignition is restarted."
             },
             "adas_acc_default_follow_distance": {
-                "name": "Adaptiv fartpilot Standardafstandsforudindstilling",
-                "desc": "Indstiller standard mellemrumsindstilling, når ACC tændes."
+                "name": "Adaptive Cruise Control Default Distance Preset",
+                "desc": "Sets default gap setting whenever ACC is powered on."
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "ACC trinvælger for fartstigningshastighed",
-                "desc": "Ændrer et kort tryk på rathastighedsknaptrin fra 1 km/t til 5 km/t."
+                "name": "ACC Cruise Speed Increment Step Selector",
+                "desc": "Changes short-press steering wheel speed button step from 1 km/h to 5 km/h."
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
-                "name": "Matrix LED-blændingsfrit adaptivt højlysblændingsskjold",
-                "desc": "Låser op for adaptive, stråledannende fjernlys med europæisk specifikationer på nordamerikanske biler."
+                "name": "Matrix LED Glare-Free Adaptive High-Beam Glare Shield",
+                "desc": "Unlocks European-spec adaptive beam-forming high beams on North American cars."
             },
             "adas_traffic_jam_assist_follow_fine_tune": {
-                "name": "Traffic Jam Assist Stop-and-Go Genoptagelsesforsinkelse",
-                "desc": "Forlænger vinduet for automatisk stop-og-gå-genstart fra 3 sekunder til 15 sekunder."
+                "name": "Traffic Jam Assist Stop-and-Go Resume Delay",
+                "desc": "Extends automatic stop-and-go restart window from 3 seconds to 15 seconds."
             },
             "adas_rear_radar_blind_spot_zero_point_reset": {
-                "name": "Bageste blindvinkelradar nulpunktsvinkelkalibrering",
-                "desc": "Kalibrerer bagkofangerradarens azimutvinkel efter kofangerens fjernelse eller reparation."
+                "name": "Rear Blind Spot Radar Zero-Point Angle Calibration",
+                "desc": "Recalibrates rear bumper radar azimuth angle after bumper removal or repair."
             },
             "adas_surround_camera_stitching_recalib": {
-                "name": "Surround View-kamera Dynamisk billedsammensætning",
-                "desc": "Udfører kalibrering af dynamisk kamerabilledsyning under kørsel på vej."
+                "name": "Surround View Camera Dynamic Image Stitching Alignment",
+                "desc": "Executes dynamic camera image stitching calibration while driving on road."
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "Styrevinkelsensor nulpunktskalibrering",
-                "desc": "Nulstiller styrecentrets vinkel til 0,0° efter hjuljusteringsservice."
+                "name": "Steering Angle Sensor Zero-Point Calibration",
+                "desc": "Resets steering center angle to 0.0° following wheel alignment service."
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "Rear Cross-Traffic Alert registreringsområde",
-                "desc": "Øger sideradardetektionsafstand for køretøjer, der nærmer sig, mens de bakker ud."
+                "name": "Rear Cross-Traffic Alert Detection Range",
+                "desc": "Increases side radar detection distance for vehicles approaching while backing out."
             },
             "adas_aeb_emergency_braking_threshold_preview": {
-                "name": "Automatisk nødbremse advarselseffektivitet",
-                "desc": "Justerer tidlig vs sen advarselsklokketid for fremadgående kollisionsalarmer."
+                "name": "Automatic Emergency Braking Warning Efficacy",
+                "desc": "Adjusts early vs late warning chime timing for forward collision alerts."
             },
             "adas_night_vision_camera_alignment": {
-                "name": "Infrarød Night Vision Termisk kamera måljustering",
-                "desc": "Starter verifikationssekvens for infrarød kamerasokkeljustering."
+                "name": "Infrared Night Vision Thermal Camera Target Alignment",
+                "desc": "Initiates infrared camera pedestal alignment verification sequence."
             },
             "adas_dms_driver_monitoring_ir_threshold": {
-                "name": "DMS Driver Attention Kamera Infrarød følsomhed",
-                "desc": "Justerer øjensporingstærskel for bilister, der bærer mørke polariserede solbriller."
+                "name": "DMS Driver Attention Camera Infrared Sensitivity",
+                "desc": "Adjusts eye tracking threshold for drivers wearing dark polarized sunglasses."
             },
             "toyota_soft_close_door_retrofit_coding": {
-                "name": "Power Soft-Close Dør Vakuum Aktuator Kodning",
-                "desc": "Muliggør indtræksaktuatorer med eldørlås i karrosseriets kontrolmodul."
+                "name": "Power Soft-Close Door Vacuum Actuator Coding",
+                "desc": "Enables power door latch pull-in actuators in body control module."
             },
             "toyota_digital_speedometer_display_enable": {
                 "name": "Digital Speedometer Center Gauge Display",
-                "desc": "Tilføjer stor digital hastighedsudlæsning til analog instrumentgruppe LCD."
+                "desc": "Adds large digital speed readout to analog instrument cluster LCD."
             },
             "toyota_walk_away_auto_lock_sensitivity": {
-                "name": "Walk-Away Smart Key Auto Dørlås Følsomhed",
-                "desc": "Justerer afstandstærsklen, før dørene automatisk låses, når de går væk."
+                "name": "Walk-Away Smart Key Auto Door Locking Sensitivity",
+                "desc": "Adjusts distance threshold before doors automatically lock when walking away."
             },
             "toyota_jbl_3d_eq_audio_profile_unlock": {
                 "name": "JBL Premium Surround Sound Equalizer Curves",
-                "desc": "Låser op for 3D-koncertsal-equalizer-profiler i JBL-lydhovedenhed."
+                "desc": "Unlocks 3D concert hall equalizer profiles in JBL audio head unit."
             },
             "toyota_ev_mode_throttle_override_suppression": {
-                "name": "EV Mode Ren elektrisk undertrykkelse af gasspjældgrænse",
-                "desc": "Forhindrer benzinmotoren i at starte under moderat EV-acceleration."
+                "name": "EV Mode Pure Electric Throttle Limit Suppression",
+                "desc": "Prevents gasoline engine from kicking ON during moderate EV acceleration."
             },
             "ford_sync3_engineering_diagnostics_page": {
                 "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostic Screen",
-                "desc": "Aktiverer rå GPS, APIM-test og lydfrekvensdiagnoseskærme på SYNC."
+                "desc": "Enables raw GPS, APIM test, and audio frequency diagnostic screens on SYNC."
             },
             "ford_rear_seat_entertainment_unlock": {
-                "name": "Bagsædet HDMI / Video Entertainment Audio Pass-Through",
-                "desc": "Aktiverer lydstreaming af kabinehovedtelefoner til underholdningsskærme på bagsædet."
+                "name": "Rear Seat HDMI / Video Entertainment Audio Pass-Through",
+                "desc": "Enables cabin headphone audio streaming for rear seat entertainment screens."
             },
             "ford_bambi_mode_fog_light_expansion": {
-                "name": "Bambi-tilstand fjernlys + tågelys samtidig belysning",
-                "desc": "Holder tågeforlygterne tændt, selv når fjernlys forlygter er aktiveret."
+                "name": "Bambi Mode High Beam + Fog Light Simultaneous Illumination",
+                "desc": "Keeps front fog lights powered ON even when high beam headlights are activated."
             },
             "ford_auto_engine_idle_shutdown_30min_override": {
-                "name": "30-minutters tomgang Automatisk nedlukning af motor deaktiveret",
-                "desc": "Forhindrer motoren i at slukke automatisk efter 30 minutter i Park."
+                "name": "30-Minute Idle Auto Engine Shutdown Disable",
+                "desc": "Prevents engine from shutting OFF automatically after 30 minutes in Park."
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "N Grin Shift 20-sekunders Overboost Retrofit Lås op",
-                "desc": "Aktiverer rattets NGS-knap-overboost-funktion i ECU."
+                "name": "N Grin Shift 20-Second Overboost Retrofit Unlock",
+                "desc": "Enables steering wheel NGS button overboost function in ECU."
             },
             "hyundai_smart_tailgate_approach_distance": {
-                "name": "Smart håndfri bagklap nærhedsføling",
-                "desc": "Justerer stående forsinkelsestid, før den smarte bagklap automatisk åbner."
+                "name": "Smart Hands-Free Tailgate Approach Proximity Sensing",
+                "desc": "Adjusts standing delay time before smart tailgate automatically opens."
             },
             "hyundai_digital_cluster_n_performance_theme": {
                 "name": "N Performance Digital Instrument Cluster Gauge Layout",
-                "desc": "Anvender N-Performance rødt skifte-indikator klyngelayout til standard LCD-dash."
+                "desc": "Applies N-Performance red shift-indicator cluster layout to standard LCD dash."
             },
             "stellantis_scr_adblue_warning_threshold_adjust": {
-                "name": "SCR AdBlue Advarselsafstandstærskeljustering",
-                "desc": "Justerer den første advarselsafstand for AdBlue-påmindelse om genopfyldning fra 2400 km til 1000 km."
+                "name": "SCR AdBlue Warning Distance Threshold Adjustment",
+                "desc": "Adjusts first AdBlue refill reminder warning distance from 2400 km to 1000 km."
             },
             "stellantis_jeep_trail_rated_offroad_pages": {
-                "name": "Jeep Uconnect Trail-vurderet off-road telemetri-sider",
-                "desc": "Låser op for siderne for drivlinjestigning, rulning, hjulartikulation og kølevæsketemp på Uconnect."
+                "name": "Jeep Uconnect Trail-Rated Off-Road Telemetry Pages",
+                "desc": "Unlocks drivetrain pitch, roll, wheel articulation, and coolant temp pages on Uconnect."
             },
             "stellantis_peugeot_icockpit_3d_color_schemes": {
-                "name": "Peugeot 3D i-Cockpit brugerdefineret farveskemapalet",
-                "desc": "Låser op kobber- og kvartsfarvetemaer til 3D-holografisk digital instrumentklynge."
+                "name": "Peugeot 3D i-Cockpit Custom Color Scheme Palette",
+                "desc": "Unlocks Copper and Quartz color themes for 3D holographic digital instrument cluster."
             },
             "gm_super_cruise_follow_distance_adjust": {
-                "name": "Super Cruise Håndfri Følgende Distance Offset",
-                "desc": "Tilpasser mellemrum under autonom Super Cruise motorvejskørsel."
+                "name": "Super Cruise Hands-Free Following Distance Offset",
+                "desc": "Customizes gap spacing during autonomous Super Cruise highway driving."
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "Head-Up Display Position & Tilt Nulpunktskalibrering",
-                "desc": "Nulstiller vindskærms HUD-projektor billedvinkel og nul-niveau horisontjustering."
+                "name": "Head-Up Display Position & Tilt Zero-Point Calibration",
+                "desc": "Resets wind-shield HUD projector image angle and zero-level horizon alignment."
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
-                "name": "Tilsidesættelse af AFM/DFM-cylinderdeaktivering",
-                "desc": "Deaktiverer Active Fuel Management cylinderfald for at holde motoren kørende i 8-cylindret tilstand."
+                "name": "AFM / DFM Cylinder Deactivation Override",
+                "desc": "Disables Active Fuel Management cylinder drop to keep engine operating in 8-cylinder mode."
             },
             "dodge_ram_truck_fog_lights_with_high_beam": {
-                "name": "RAM Truck Tågelygter med fjernlys",
-                "desc": "Forhindrer tågelygter i at slukke automatisk, når fjernlys er tændt."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Prevents fog lights from turning OFF automatically when high beams are switched ON."
             },
             "toyota_keyless_window_down": {
-                "name": "Toyota Key Fob-vindue åbent",
-                "desc": "Ruller alle elruder ned, når du holder UNLOCK-knappen nede på fjernbetjeningen."
+                "name": "Toyota Key Fob Window Open",
+                "desc": "Rolls down all power windows when holding UNLOCK button on remote fob."
             },
             "toyota_seatbelt_chime_disable": {
-                "name": "Toyota Passager Sikkerhedssele Alarm Mute",
-                "desc": "Deaktiverer vedvarende akustisk advarselslyd for sikkerhedssele på passagersædet."
+                "name": "Toyota Passenger Seatbelt Alarm Mute",
+                "desc": "Disables persistent acoustic seatbelt warning chime in passenger seat."
             },
             "honda_walkaway_auto_lock": {
-                "name": "Honda Walk-Away automatisk dørlås",
-                "desc": "Låser automatisk alle døre, når Smart Key forlader en køretøjsradius på 2,5 m."
+                "name": "Honda Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when Smart Key leaves 2.5m vehicle radius."
             },
             "volvo_speed_limiter_unlock": {
-                "name": "Volvo 180 km/t Factory Speed Limiter Extended",
-                "desc": "Justerer 180 km/t fabrikshastighedsgrænsen til bane/autobahn-ydelse."
+                "name": "Volvo 180 km/h Factory Speed Limiter Extended",
+                "desc": "Adjusts 180 km/h factory speed cap for Track / Autobahn performance use."
             },
             "byd_v2l_3kw_power_unlock": {
-                "name": "BYD Vehicle-to-Load 3,6 kW AC-udgangstilstand",
-                "desc": "Muliggør ekstern 220V/3,6kW V2L AC-udledningsport til campingapparater."
+                "name": "BYD Vehicle-to-Load 3.6kW AC Output Mode",
+                "desc": "Enables external 220V/3.6kW V2L AC discharge port for camping appliances."
             },
             "xiaomi_su7_drift_mode_unlock": {
                 "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
-                "desc": "Aktiverer 100 % bagmotorens drejningsmomentforspænding og ESC Track Drift Mode."
+                "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset",
-                "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
+                "name": "Oil Service Interval Reset",
+                "desc": "Resets oil change service counter and inspection interval for VAG vehicles."
             },
             "vag_epb_service_mode": {
-                "name": "Elektronisk parkeringsbremse bremseklods servicetilstand",
-                "desc": "Trækker bageste EPB-kaliberstempler tilbage til udskiftning af bagbremseklods og rotor."
+                "name": "Electronic Parking Brake Brake Pad Service Mode",
+                "desc": "Retracts rear EPB caliper pistons for rear brake pad and rotor replacement."
             },
             "bmw_bms_battery_registration": {
-                "name": "Intelligent Battery Sensor Batteriregistrering",
-                "desc": "Registrerer ny 12V AGM/bly-syre batteri udskiftning i DME/DDE motorstyring."
+                "name": "Intelligent Battery Sensor Battery Registration",
+                "desc": "Registers new 12V AGM/Lead-acid battery replacement in DME/DDE engine management."
             },
             "bmw_motorrad_service_indicator_reset": {
-                "name": "BMW Motorrad årlig service og olieindikator nulstilling",
-                "desc": "Rydder årlig servicedato og 10.000 km afstandspåmindelse på TFT-instrumentklynge."
+                "name": "BMW Motorrad Annual Service & Oil Indicator Reset",
+                "desc": "Clears annual service date and 10,000 km distance reminder on TFT instrument cluster."
             },
             "ducati_desmo_service_reset": {
                 "name": "Ducati Desmo Valve Service Reminder Clear",
-                "desc": "Rydder Desmoservice skruenøgleikon på instrumentbrættet efter 15.000 / 30.000 km service."
+                "desc": "Clears Desmoservice wrench icon on dashboard after 15,000 / 30,000 km service."
             },
             "byd_bms_isolation_self_test": {
-                "name": "BYD Blade Batteri Højspændingsisolation Selvtest",
-                "desc": "Udfører højspændingssystem lækage- og modstandsdiagnostik i BMS."
+                "name": "BYD Blade Battery High-Voltage Isolation Self-Test",
+                "desc": "Executes high-voltage system leakage & resistance diagnostics in BMS."
             },
             "vag_drl_brightness_multi": {
-                "name": "Kørelys Lysstyrkejustering",
-                "desc": "Juster LED DRL-intensitetsniveauet for nærlys/parkeringstilstand."
+                "name": "Daytime Running Lights Brightness Adjustment",
+                "desc": "Adjust LED DRL intensity level for low-beam / parking mode."
             },
             "bmw_comfort_turn_signal_cycles": {
-                "name": "One-Touch Comfort Blinksignal Pulse Count",
-                "desc": "Vælg, hvor mange blink der skal ske ved hurtig tryk på blinklyshåndtaget."
+                "name": "One-Touch Comfort Turn Signal Pulse Count",
+                "desc": "Select how many blinks occur on quick tap of turn indicator lever."
             },
             "bmw_oil_service_reset": {
                 "name": "CBS Engine Oil Reset",
-                "desc": "Nulstiller Condition Based Service olielevetid procentdel tilbage til 100%."
+                "desc": "Resets Condition Based Service oil life percentage back to 100%."
             },
             "generic_oil_service_reset": {
-                "name": "Nulstilling af universel olievedligeholdelsesindikator",
-                "desc": "Rydder advarselslampen for vedligeholdelse af instrumentbrætolie på tværs af understøttede OBD2/UDS ECU'er."
+                "name": "Universal Oil Maintenance Indicator Reset",
+                "desc": "Clears dashboard oil maintenance warning light across supported OBD2/UDS ECUs."
             },
             "vag_epb_pad_change": {
-                "name": "EPB bremseklodsudskiftningstilstand",
-                "desc": "Trækker elektroniske parkeringsbremsekalibre tilbage til service af bagbremseklodser."
+                "name": "EPB Brake Pad Replacement Mode",
+                "desc": "Retracts electronic parking brake calipers for rear brake pad servicing."
             },
             "bmw_epb_pad_change": {
                 "name": "EPB Brake Service Mode",
-                "desc": "Åbner parkeringsbremseaktuatoren til serviceposition for udskiftning af bagklods."
+                "desc": "Opens parking brake actuator to service position for rear pad replacement."
             },
             "mb_epb_pad_change": {
-                "name": "EPB-pudetilpasningstilstand",
-                "desc": "Frigør parkeringsbremsespindel til værkstedsposition for bremseservice."
+                "name": "EPB Pad Fitting Mode",
+                "desc": "Releases parking brake spindle to workshop position for brake service."
             },
             "vag_dpf_regen": {
                 "name": "DPF Service Regeneration Trigger",
-                "desc": "Starter stationær dieselpartikelfilter sodafbrændingscyklus."
+                "desc": "Initiates stationary Diesel Particulate Filter soot burn-off cycle."
             },
             "bmw_dpf_regen": {
                 "name": "DPF Forced Regeneration Trigger",
-                "desc": "Anmoder DDE ECU om at starte aktiv partikelfilterregenereringsrutine."
+                "desc": "Requests DDE ECU to start active particulate filter regeneration routine."
             },
             "psa_dpf_regen": {
                 "name": "DPF Regeneration Request",
-                "desc": "Udløser stationær DPF-regenerering til HDi-dieselmotor-ECU'er."
+                "desc": "Triggers stationary DPF regeneration for HDi diesel engine ECUs."
             },
             "bmw_bms_battery_register": {
                 "name": "BMS Battery Replacement Registration",
-                "desc": "Registrerer ny batteriudskiftning med DME/DDE Intelligent Battery Sensor."
+                "desc": "Registers new battery replacement with DME/DDE Intelligent Battery Sensor."
             },
             "mb_bms_battery_register": {
-                "name": "Batteriregistrering og nulstilling",
-                "desc": "Nulstiller batteriets ældningstæller i SAM-modulet efter ny batteriinstallation."
+                "name": "Battery Registration & Reset",
+                "desc": "Resets battery aging counter in SAM module after new battery installation."
             },
             "vag_sas_calibrate": {
-                "name": "Styrevinkelsensor Kalibrering",
-                "desc": "Kalibrerer G85 styrevinkelsensor nulpunktsposition for ABS/ESP ECU."
+                "name": "Steering Angle Sensor Calibration",
+                "desc": "Calibrates G85 steering angle sensor zero-point position for ABS/ESP ECU."
             },
             "toyota_sas_calibrate": {
-                "name": "Styrevinkel nulpunktskalibrering",
-                "desc": "Udfører nulpunktskalibrering af styrevinkelsensor i Skid Control ECU."
+                "name": "Steering Angle Zero Point Calibration",
+                "desc": "Performs zero point calibration of steering angle sensor in Skid Control ECU."
             },
             "generic_tba_adapt": {
-                "name": "Justering og tilpasning af gasspjældet",
-                "desc": "Udfører elektronisk gasspjældstop-indlæringsrutine i motorens ECU."
+                "name": "Throttle Body Alignment & Adaptation",
+                "desc": "Executes electronic throttle body stop learning routine in engine ECU."
             },
             "epb_service_reset": {
-                "name": "Universal EPB-vedligeholdelsesnulstilling",
-                "desc": "Nulstiller den elektroniske parkeringsbremsekalibers slidtæller og kalibrerer luftgabet."
+                "name": "Universal EPB Maintenance Reset",
+                "desc": "Resets electronic park brake caliper wear counter and calibrates air gap."
             },
             "vag_dsg_reset": {
                 "name": "DSG Transmission Basic Settings Reset",
-                "desc": "Nulstiller koblingsindgrebspunkter og skifteventiltilpasninger til DSG/S-Tronic."
+                "desc": "Resets clutch engagement points and shift valve adaptations for DSG/S-Tronic."
             },
             "bmw_zf_reset": {
                 "name": "ZF 8HP Transmission Adaptation Reset",
-                "desc": "Rydder EGS transmissionsskifttids- og tryktilpasningsværdier."
+                "desc": "Clears EGS transmission shift time and pressure adaptation values."
             },
             "bmw_brake_fluid_reset": {
-                "name": "Bremsevæske Service Interval Reset",
-                "desc": "Nulstiller tilstandsbaseret service 2-årig bremsevæskeskifttimer."
+                "name": "Brake Fluid Service Interval Reset",
+                "desc": "Resets Condition Based Service 2-year brake fluid change timer."
             },
             "ford_injector_code": {
-                "name": "Injektorkorrektionsfaktorkodning",
-                "desc": "Programmerer 16-tegns IQA-koder til dieselinjektorer i PCM."
+                "name": "Injector Correction Factor Coding",
+                "desc": "Programs 16-character IQA codes for diesel injectors into PCM."
             },
             "bmw_injector_code": {
                 "name": "Fuel Injector Flow Rate Coding",
-                "desc": "Skriver energikalibreringsværdier for udskiftede brændstofinjektorer i DME."
+                "desc": "Writes energy calibration values for replaced fuel injectors into DME."
             },
             "generic_headlight_aim": {
-                "name": "Forlygte auto-nivellering kalibrering",
-                "desc": "Indstiller referencenulposition for adaptive autonivellerende forlygtemotorer."
+                "name": "Headlight Auto-Leveling Calibration",
+                "desc": "Sets reference zero position for adaptive auto-leveling headlight motors."
             },
             "bmw_12v_battery_reg": {
                 "name": "12V Auxiliary Battery Registration",
-                "desc": "Registrerer ekstra AGM-starter/støttebatteriudskiftning i PCU."
+                "desc": "Registers auxiliary AGM starter/support battery replacement in PCU."
             },
             "vag_comfort_turn_signal": {
-                "name": "Komfort Blinkantal",
-                "desc": "Justerer antallet af blinklys for vognbaneskift mellem 3, 4 og 5 blink."
+                "name": "Comfort Turn Signal Blink Count",
+                "desc": "Adjusts lane change blinker cycle count between 3, 4, and 5 flashes."
             },
             "vag_coming_home_duration": {
                 "name": "Coming/Leaving Home Light Duration",
-                "desc": "Konfigurerer forlygtebelysningstimer efter køretøjslåsning."
+                "desc": "Configures headlight illumination timer after vehicle locking."
             },
             "vag_remote_windows": {
-                "name": "Fjernbetjent vindueskontrol",
-                "desc": "Muliggør åbning og lukning af elruder via fjernbetjening med et langt tryk."
+                "name": "Remote Convenience Window Control",
+                "desc": "Enables opening and closing power windows via remote key fob long press."
             },
             "vag_auto_lock_15kmh": {
-                "name": "Automatisk dørlås ved 15 km/t",
-                "desc": "Låser automatisk alle døre, når bilens hastighed når 15 km/t."
+                "name": "Auto Door Lock at 15 km/h",
+                "desc": "Automatically locks all doors when vehicle speed reaches 15 km/h."
             },
             "vag_sfd_unlock_prep": {
                 "name": "SFD Gateway Protection Status Prep",
-                "desc": "Forbereder MQB-evo SFD-gateway-tokensession til skrivning af beskyttede DID'er."
+                "desc": "Prepares MQB-evo SFD gateway token session for writing protected DIDs."
             },
             "bmw_asd_deactivate": {
-                "name": "Active Sound Design deaktivering",
-                "desc": "Dæmper syntetisk motorlyd afspillet gennem kabinehøjttalere."
+                "name": "Active Sound Design Deactivation",
+                "desc": "Mutes synthetic engine sound played through cabin speakers."
             },
             "bmw_comfort_turn_signal": {
-                "name": "Komfort Blinktal",
-                "desc": "Indstiller one-touch indikator pulstælling."
+                "name": "Comfort Turn Signal Count",
+                "desc": "Sets one-touch indicator pulse count."
             },
             "bmw_mirror_fold_lock": {
                 "name": "Comfort Access Mirror Fold on Lock",
-                "desc": "Folder automatisk sidespejle sammen umiddelbart efter låsning af køretøjet."
+                "desc": "Automatically folds side mirrors immediately upon locking vehicle."
             },
             "toyota_coming_home_duration": {
-                "name": "Forlygte høflighedsforsinkelse / Coming-Home",
-                "desc": "Konfigurerer forsinkelsestimeren for sluk for forlygter efter tændingslukning."
+                "name": "Headlight Courtesy Delay / Coming-Home",
+                "desc": "Configures headlight off delay timer after ignition shutdown."
             },
             "toyota_lane_change_flash": {
-                "name": "Bane-Change Blink blinkantal",
-                "desc": "Justerer antallet af blinkcyklusser med et enkelt tryk på vognbaneskift."
+                "name": "Lane-Change Turn Signal Flash Count",
+                "desc": "Adjusts one-touch lane change blinker cycle count."
             },
             "toyota_remote_window_close": {
-                "name": "Fjernbetjent vindueslukning",
-                "desc": "Tillader lukning af alle elruder ved at holde fjernbetjeningslåseknappen nede."
+                "name": "Remote Power Window Closure",
+                "desc": "Allows closing all power windows by holding remote lock button."
             },
             "toyota_autolock_behavior": {
-                "name": "Tilpasning af automatisk dørlås/oplåsning",
-                "desc": "Indstiller dørlåseudløseren."
+                "name": "Auto Door Lock/Unlock Customization",
+                "desc": "Sets door locking trigger."
             },
             "toyota_approach_welcome_lights": {
-                "name": "Smart Key Approach Velkomstlys",
-                "desc": "Tænder indvendig pyt/kabinelys, når smart-nøglen nærmer sig køretøjet."
+                "name": "Smart Key Approach Welcome Lights",
+                "desc": "Turns on interior puddle/cabin lights when smart key approaches vehicle."
             },
             "hyundai_autolock_behavior": {
-                "name": "Automatisk dørlås/oplåsningsadfærd",
-                "desc": "Låser automatisk døre ved skift eller hastighed og låser op på P eller tænding fra."
+                "name": "Auto Door Lock/Unlock Behavior",
+                "desc": "Automatically locks doors on shift or speed and unlocks on P or Ignition Off."
             },
             "hyundai_window_remote": {
-                "name": "Fjernbetjent vindue åben/luk",
-                "desc": "Gør det muligt at rulle vinduer op/ned ved hjælp af smarte nøglefjerne-knapper."
+                "name": "Remote Window Open/Close",
+                "desc": "Enables rolling windows up/down using smart key fob buttons."
             },
             "hyundai_sport_mode_memory": {
                 "name": "Drive Mode Select Memory",
-                "desc": "Husker sidst valgte køretilstand efter genstart af motoren."
+                "desc": "Remembers last selected Drive Mode after engine restart."
             },
             "tesla_charge_limit_custom": {
-                "name": "Tilpasning af batteriopladningsgrænse",
-                "desc": "Indstiller standard HV-batteriladningsgrænseprocent."
+                "name": "Battery Charge Limit Customization",
+                "desc": "Sets default HV battery charge limit percentage."
             },
             "tesla_mirror_fold_lock": {
-                "name": "Automatisk foldning af spejl på Walk-Away Lock",
-                "desc": "Folder automatisk sidespejle, når telefonens låselås udløses."
+                "name": "Mirror Auto-Fold on Walk-Away Lock",
+                "desc": "Automatically folds side mirrors when phone key walk-away lock triggers."
             },
             "nissan_coming_home": {
-                "name": "Med tilladelse til slukket forlygte",
-                "desc": "Holder forlygterne tændt i 30 sekunder efter at have forladt Nissan-køretøjet."
+                "name": "Courtesy Headlight Off Delay",
+                "desc": "Keeps headlights illuminated for 30 seconds after exiting Nissan vehicle."
             },
             "nissan_lane_change_flash": {
-                "name": "Tap-to-Pass vognbaneskift flashtælling",
-                "desc": "Indstiller blinklysindikatorens pulstæller på let greb."
+                "name": "Tap-to-Pass Lane Change Flash Count",
+                "desc": "Sets turn signal indicator pulse count on light stalk tap."
             },
             "nissan_autolock_behavior": {
-                "name": "Hastighedsafhængig automatisk dørlås",
-                "desc": "Låser alle døre automatisk, når køretøjet når 24 km/t."
+                "name": "Speed-Dependent Automatic Door Lock",
+                "desc": "Locks all doors automatically when vehicle reaches 24 km/h."
             },
             "nissan_window_remote": {
-                "name": "Fjernbetjent nøglebremse El-rudebetjening",
-                "desc": "Åbner/lukker frontvinduer med et langt tryk på nøglefjernens oplåsningsknap."
+                "name": "Remote Key Fob Power Window Control",
+                "desc": "Opens/closes front windows via key fob unlock button long press."
             },
             "nissan_seatbelt_chime_mute": {
-                "name": "Sikkerhedsseleadvarselslyddæmpning",
-                "desc": "Slår den gentagne advarselslyd fra sikkerhedsselen fra, mens klyngeikonet bevares."
+                "name": "Seatbelt Warning Audio Chime Suppress",
+                "desc": "Mutes repetitive seatbelt warning chime while keeping cluster icon."
             },
             "porsche_sport_chrono_launch": {
                 "name": "Sport Chrono Launch Control Response Profile",
-                "desc": "Optimerer PDK transmission start kontrol RPM tærskel og kobling bid."
+                "desc": "Optimizes PDK transmission launch control RPM threshold & clutch bite."
             },
             "porsche_pasm_default": {
                 "name": "PASM Suspension Mode Startup Preset",
-                "desc": "Indstiller PASM adaptive suspension standard stivhed ved tændingsstart."
+                "desc": "Sets PASM adaptive suspension default stiffness on ignition start."
             },
             "porsche_exhaust_flap": {
-                "name": "Sportsudstødningsklap Constant Open Override",
-                "desc": "Tvinger aktive udstødningsventiler til at forblive 100 % åbne i alle omdrejningsområder."
+                "name": "Sport Exhaust Flap Constant Open Override",
+                "desc": "Forces active exhaust valves to stay 100% open across all RPM ranges."
             },
             "audi_drive_select_memory": {
                 "name": "Audi Drive Select Mode Memory Retention",
-                "desc": "Bevarer den sidste aktive Drive Select-profil ved genstart."
+                "desc": "Retains last active Drive Select profile upon restart."
             },
             "audi_virtual_cockpit_themes": {
-                "name": "Audi Virtual Cockpit S/RS Sport grafisk layout",
-                "desc": "Låser op for S/RS centrale omdrejningstæller layout muligheder på Virtual Cockpit."
+                "name": "Audi Virtual Cockpit S/RS Sport Graphic Layout",
+                "desc": "Unlocks S/RS central tachometer layout options on Virtual Cockpit."
             },
             "vag_scandinavian_drl": {
-                "name": "Skandinavisk DRL-tilstand",
-                "desc": "Holder baglygterne oplyst konstant sammen med de forreste DRL'er."
+                "name": "Scandinavian DRL Mode",
+                "desc": "Keeps rear tail lights illuminated continuously alongside front DRLs."
             },
             "vag_mirror_dip_reverse": {
-                "name": "Passagerspejl Dip i bakgear",
-                "desc": "Vipper passagersidespejlet nedad, når bakgear er sat i."
+                "name": "Passenger Mirror Dip in Reverse",
+                "desc": "Tills passenger side mirror downward when reverse gear is engaged."
             },
             "vag_dynamic_turn_signal": {
-                "name": "Dynamisk/sekventiel blinklystilstand",
-                "desc": "Muliggør gennemgribende dynamisk LED-blinkmønster på kompatible baglygtemoduler."
+                "name": "Dynamic / Sequential Turn Signal Mode",
+                "desc": "Enables sweeping dynamic LED blinker pattern on compatible rear light modules."
             },
             "vag_seatbelt_warning_duration": {
-                "name": "Justering af advarselsklokke for sikkerhedssele",
-                "desc": "Forkorter eller undertrykker gentagne advarselstimer for sikkerhedssele."
+                "name": "Seatbelt Warning Chime Duration Adjustment",
+                "desc": "Shortens or suppresses repetitive seatbelt warning chime timer."
             },
             "vag_sunroof_remote": {
-                "name": "Komfortbetjening med soltag",
-                "desc": "Tillader åbning og vipning af panoramasoltag via fjernbetjeningsnøgle."
+                "name": "Sunroof Remote Comfort Control",
+                "desc": "Allows opening and tilting panoramic sunroof via remote key fob hold."
             },
             "vag_acc_distance_preset": {
                 "name": "ACC Adaptive Cruise Default Following Distance",
-                "desc": "Indstiller standard radarfølgeafstandsprofil ved tændingsstart."
+                "desc": "Sets default radar following distance profile on ignition start."
             },
             "vag_infotainment_startup_logo": {
                 "name": "Infotainment Boot Graphic Logo",
-                "desc": "Tilpasser infotainment startup splash screen logo."
+                "desc": "Customizes infotainment startup splash screen logo."
             },
             "vag_ambient_color_cycle": {
-                "name": "Interiør Ambient Light Color Spectrum Unlock",
-                "desc": "Udvider palettens muligheder for omgivende lys i menuen med køretøjsindstillinger."
+                "name": "Interior Ambient Light Color Spectrum Unlock",
+                "desc": "Expands ambient lighting palette options in vehicle settings menu."
             },
             "vag_service_interval_custom": {
                 "name": "Custom Inspection & Service Distance Threshold",
-                "desc": "Konfigurerer brugerdefinerede km- og dagsmål for næste serviceadvarsel."
+                "desc": "Configures custom km and day targets for next service warning."
             },
             "vag_door_handle_lights_reverse": {
-                "name": "Udvendige dørhåndtagslys tændt i omvendt rækkefølge",
-                "desc": "Oplyser dørhåndtags LED-pytlys ved bakning for at få udsyn til jorden."
+                "name": "Exterior Door Handle Lights ON in Reverse",
+                "desc": "Illuminates door handle LED puddle lights when reversing for ground visibility."
             },
             "bmw_msport_exhaust_burble": {
-                "name": "M-Sport Udstødning Burble & Pop Intensity",
-                "desc": "Justerer aggressiviteten af ​​overløbende burble-lyd i Sport-tilstand."
+                "name": "M-Sport Exhaust Burble & Pop Intensity",
+                "desc": "Adjusts overrun burble sound aggressiveness in Sport mode."
             },
             "bmw_welcome_light_sequence": {
                 "name": "Welcome Light Sequence Animation",
-                "desc": "Tilpasser LED-forlygte og Angel Eyes velkomsthilsen."
+                "desc": "Customizes LED headlight and Angel Eyes welcome greeting sequence."
             },
             "bmw_service_history_menu": {
-                "name": "Digital Service History Menu Aktiver",
-                "desc": "Låser op iDrive digital servicebogsmenu på centraldisplayet."
+                "name": "Digital Service History Menu Enable",
+                "desc": "Unlocks iDrive digital service record book menu on central display."
             },
             "bmw_hud_speed_display": {
                 "name": "Head-Up Display Digital Speedometer Overlay",
-                "desc": "Projicerer digital hastighedsudlæsning i realtid på Head-Up Display."
+                "desc": "Projects real-time digital speed readout onto Head-Up Display."
             },
             "bmw_cornering_lights_fog": {
-                "name": "Tågelygte hjørnebelysning",
-                "desc": "Tænder tågeforlygten på blinklys eller styrevinkel ved lav hastighed."
+                "name": "Fog Lamp Cornering Illumination",
+                "desc": "Turns on front fog light on turn signal or low-speed steering angle."
             },
             "bmw_easy_entry_steering": {
                 "name": "Easy Entry Auto-Retracting Steering Column",
-                "desc": "Trækker det elektriske rat opad, når motoren slukkes for nem udstigning."
+                "desc": "Retracts electric steering wheel upward upon engine shutdown for easy exit."
             },
             "bmw_bluetooth_audio_enable": {
-                "name": "Forbedret Bluetooth Audio Streaming Unlock",
-                "desc": "Aktiverer A2DP Bluetooth trådløs musikstreaming i iDrive HU_ENTRYNAV."
+                "name": "Enhanced Bluetooth Audio Streaming Unlock",
+                "desc": "Enables A2DP Bluetooth wireless music streaming in iDrive HU_ENTRYNAV."
             },
             "bmw_door_handle_lights_reverse": {
-                "name": "Udvendigt dørhåndtag Puddle Lights i bakgear",
-                "desc": "Lyser dørhåndtagets LED'er, når bakgear er sat i."
+                "name": "Exterior Door Handle Puddle Lights in Reverse",
+                "desc": "Illuminates door handle LEDs when reverse gear is engaged."
             },
             "toyota_auto_headlight_threshold": {
-                "name": "Automatisk lyssensorfølsomhed for forlygter",
-                "desc": "Justerer skumringstærskel for skumring for automatisk forlygteaktivering."
+                "name": "Auto Headlight Ambient Light Sensor Sensitivity",
+                "desc": "Adjusts twilight dusk threshold for automatic headlight activation."
             },
             "toyota_turn_signal_click_volume": {
-                "name": "Blinklyd, klikhøjttalerlydstyrke",
-                "desc": "Konfigurerer blinklydsrelæets kliklydstyrke."
+                "name": "Turn Signal Audio Clicker Speaker Volume",
+                "desc": "Configures turn signal relay click chime volume."
             },
             "toyota_smart_key_approach_lights": {
                 "name": "Smart Key Proximity Welcome Puddle Lights",
-                "desc": "Tænder spejlpytlys, når smart-nøglen nærmer sig køretøjet."
+                "desc": "Turns on mirror puddle lights when smart key approaches vehicle."
             },
             "toyota_rear_hatch_behavior": {
-                "name": "Elektrisk bagklap løfteklap åben/luk betjeningslogik",
-                "desc": "Konfigurerer fjernbetjeningen og instrumentbrættet, hvor længe du trykker på knappen til lågen."
+                "name": "Power Tailgate Liftgate Open/Close Operation Logic",
+                "desc": "Configures remote and dashboard power hatch button press duration."
             },
             "toyota_open_windows_smart_key": {
-                "name": "Smart Key Remote Vindue Rul ned Langt tryk",
-                "desc": "Tillader åbning af alle vinduer ved at holde fjernbetjeningens oplåsningsknap nede."
+                "name": "Smart Key Remote Window Roll-Down Long Press",
+                "desc": "Allows opening all windows by holding remote unlock button."
             },
             "toyota_interior_light_dim_timer": {
-                "name": "Indvendig kabinelys Auto-dæmpningsforsinkelse",
-                "desc": "Justerer nedlukningstimer for indvendigt kuppellys efter dørlukning."
+                "name": "Interior Cabin Light Auto-Dimming Off Delay",
+                "desc": "Adjusts interior dome light shutdown timer after door closure."
             },
             "toyota_panic_alarm_remote": {
-                "name": "Fjernbetjeningsnøgle Panikalarm Sirenefunktion",
-                "desc": "Aktiverer eller deaktiverer panikalarm for køretøjshorn via fjernnøglehold."
+                "name": "Remote Key Fob Panic Alarm Siren Function",
+                "desc": "Enables or disables vehicle horn panic alarm via remote key hold."
             },
             "toyota_eco_drive_indicator": {
-                "name": "ECO Drive Cluster Zone Indikatorlys",
-                "desc": "Viser miljøvenlig accelerationsbjælke og indikatorlys på klyngen."
+                "name": "ECO Drive Cluster Zone Indicator Light",
+                "desc": "Shows eco-friendly acceleration bar and indicator light on cluster."
             },
             "hyundai_coming_home_duration": {
-                "name": "Escort forlygte slukket forsinkelsestimer",
-                "desc": "Holder nærlys forlygter oplyst efter køretøjets udstigning."
+                "name": "Escort Headlight Off Delay Timer",
+                "desc": "Keeps low beam headlights illuminated after vehicle exit."
             },
             "hyundai_drl_menu_toggle": {
-                "name": "Kørelysmenustyring",
-                "desc": "Tilføjer DRL ON/OFF-indstilling til kombiinstrumentets brugerindstillinger."
+                "name": "Daytime Running Lights Menu Control",
+                "desc": "Adds DRL ON/OFF setting to instrument cluster user options."
             },
             "hyundai_welcome_sequence": {
-                "name": "Smart Key Proximity Welcome Light & Mirror Udfold",
-                "desc": "Folder el-spejle ud og tænder dørhåndtagene, når de nærmer sig."
+                "name": "Smart Key Proximity Welcome Light & Mirror Unfold",
+                "desc": "Unfolds power mirrors and lights up door handles upon approach."
             },
             "hyundai_interior_light_delay": {
-                "name": "Kabine interiør rumlampe Auto-Cut Delay",
-                "desc": "Indstiller timeren, før det indvendige lys automatisk slukkes for at spare på batteriet."
+                "name": "Cabin Interior Room Lamp Auto-Cut Delay",
+                "desc": "Sets timer before interior lights automatically turn off to save battery."
             },
             "hyundai_heat_pump_efficiency": {
-                "name": "EV klimavarmepumpe termisk effektivitetstilstand",
-                "desc": "Optimerer EV-varmepumpens energiforbrug i koldt vintervejr."
+                "name": "EV Climate Heat Pump Thermal Efficiency Mode",
+                "desc": "Optimizes EV heat pump energy consumption in cold winter weather."
             },
             "tesla_track_mode_params": {
-                "name": "Sportilstandsstabilitet og momentbiasprofil",
-                "desc": "Konfigurerer for-/bagmotordrev bias og stabilitetsindgreb."
+                "name": "Track Mode Stability & Torque Bias Profile",
+                "desc": "Configures front/rear motor drive bias and stability intervention."
             },
             "tesla_regen_brake_strength": {
-                "name": "Regenerativ bremsekraftprofil",
-                "desc": "Justerer energigenvindingsintensiteten for gaspedalens løft."
+                "name": "Regenerative Braking Power Profile",
+                "desc": "Adjusts accelerator pedal lift-off energy recovery intensity."
             },
             "tesla_walkaway_door_lock": {
-                "name": "Walk-Away telefonnøgle automatisk dørlås",
-                "desc": "Låser døre og bekræfter med et horn, når telefonens nøgle flytter sig væk."
+                "name": "Walk-Away Phone Key Auto Door Lock",
+                "desc": "Locks doors and confirms with horn chirp when phone key moves away."
             },
             "tesla_acceleration_boost_unlock": {
                 "name": "Powertrain Acceleration Boost Drive Profile",
-                "desc": "Skærper elmotorens inverterrespons for hurtigere 0-100 km/t-tider."
+                "desc": "Sharpens electric motor inverter response for faster 0-100 km/h times."
             },
             "tesla_interior_ambient_color": {
-                "name": "Kabine Footwell Ambient Lighting Color Preset",
-                "desc": "Tilpasser LED-fodrums omgivende lys RGB-farvepalet."
+                "name": "Cabin Footwell Ambient Lighting Color Preset",
+                "desc": "Customizes LED footwell ambient light RGB color palette."
             },
             "audi_matrix_led_animation": {
-                "name": "Matrix LED-forlygte Dynamic Welcome Light Dance",
-                "desc": "Afspiller dynamisk lyskoreografi, når køretøjet låses op."
+                "name": "Matrix LED Headlight Dynamic Welcome Light Dance",
+                "desc": "Plays dynamic light choreography upon vehicle unlocking."
             },
             "audi_mmi_startup_screen": {
                 "name": "MMI Touch Screen Boot Graphic Theme",
-                "desc": "Tilpasser MMI central skærm boot animation."
+                "desc": "Customizes MMI central screen boot animation."
             },
             "audi_drive_select_efficiency": {
-                "name": "Effektiv kørselsprofil i Audi Drive Select",
-                "desc": "Aktiverer brændstofbesparende Efficiency-tilstand i Drive Select-indstillinger."
+                "name": "Efficiency Driving Profile in Audi Drive Select",
+                "desc": "Enables fuel-saving Efficiency mode in Drive Select options."
             },
             "audi_laptimer_boost_display": {
                 "name": "Lap Timer & Turbo Bar Pressure Gauge Overlay",
-                "desc": "Viser sporomgangstimer og turbo-boostmåler i realtid på Virtual Cockpit."
+                "desc": "Displays track lap timer and real-time turbo boost gauge on Virtual Cockpit."
             },
             "audi_needle_sweep_gauge": {
                 "name": "Sport Gauge Needle Sweep Verification",
-                "desc": "Udfører fuld omdrejningstæller og speedometer nålefejetest ved start."
+                "desc": "Performs full tachometer and speedometer needle sweep test on start."
             },
             "skoda_coming_home_lights": {
-                "name": "Forlader hjemmet / Coming Home Lighting Timer",
-                "desc": "Konfigurerer forlygtebelysningstimer efter køretøjets udstigning."
+                "name": "Leaving Home / Coming Home Lighting Timer",
+                "desc": "Configures headlight illumination timer after vehicle exit."
             },
             "skoda_comfort_turn_signal": {
-                "name": "Komfortindikator pulstællerjustering",
-                "desc": "Indstiller et-touch blinklys mellem 3 og 5 blink."
+                "name": "Comfort Indicator Pulse Count Adjustment",
+                "desc": "Sets one-touch turn signal blink count between 3 and 5 flashes."
             },
             "cupra_sport_display_menu": {
                 "name": "Cupra Performance Instrument & G-Meter Menu",
-                "desc": "Låser op for G-kraftmåler, kW effektmåler og olietemperaturdisplay."
+                "desc": "Unlocks G-force meter, kW power gauge, and oil temp display."
             },
             "cupra_virtual_cockpit_copper": {
-                "name": "Kobbertema Dashboard Accent Graphics",
-                "desc": "Anvender signatur-Cupra-kobbermetallic-accent-tema til at måle klynge."
+                "name": "Copper Theme Dashboard Accent Graphics",
+                "desc": "Applies signature Cupra copper metallic accent theme to gauge cluster."
             },
             "vag_brake_disc_drying": {
-                "name": "Bremseskiveaftørrings-/tørringsfunktion i regn",
-                "desc": "Påfører periodisk minimalt pudetryk i vådt vejr på tørre rotorer."
+                "name": "Brake Disc Wiping / Drying Function in Rain",
+                "desc": "Periodically applies minimal pad pressure in wet weather to dry rotors."
             },
             "vag_tourist_mode_lights": {
-                "name": "Tourist Mode forlygtestrålemønster",
-                "desc": "Skifter forlygtens strålemønster mellem LHD og RHD ved kørsel i udlandet."
+                "name": "Tourist Mode Headlight Beam Pattern",
+                "desc": "Switches headlight beam pattern between LHD and RHD for driving abroad."
             },
             "vag_hood_warning_mute": {
-                "name": "Motorhjelm åben instrumentklokke dæmpning",
-                "desc": "Undertrykker vedvarende instrumentadvarselslyd, når hætten er ulåst."
+                "name": "Bonnet Open Instrument Chime Mute",
+                "desc": "Suppresses persistent instrument warning chime when hood is unlatched."
             },
             "vag_emergency_brake_hazard": {
-                "name": "Automatisk nødbremseblinklys",
-                "desc": "Blinker havariblink hurtigt under hårde ABS-nødstop."
+                "name": "Emergency Braking Automatic Hazard Flasher",
+                "desc": "Flashes hazard lights rapidly during hard ABS emergency stops."
             },
             "vag_sunroof_comfort_open": {
-                "name": "Soltag tilt/åben fjernbetjening Comfort Key Fob Logic",
-                "desc": "Konfigurerer fjernbetjening af nøglehold til enten at vippe eller helt åbent soltag."
+                "name": "Sunroof Tilt / Open Remote Comfort Key Fob Logic",
+                "desc": "Configures remote key hold action to either tilt or fully open sunroof."
             },
             "bmw_ecopro_display_variant": {
                 "name": "ECO PRO Instrument Cluster Gauge Styling",
-                "desc": "Tilpasser blåt ECO PRO effektivitetsmåler grafisk tema."
+                "desc": "Customizes blue ECO PRO efficiency gauge graphic theme."
             },
             "bmw_volume_bar_hud": {
                 "name": "Head-Up Display Audio Volume Level Bar Overlay",
-                "desc": "Viser lydstyrkeændringsbjælken direkte på HUD-projektion."
+                "desc": "Shows volume change bar directly on HUD projection."
             },
             "bmw_anti_dazzle_mirror": {
-                "name": "Elektrokromisk anti-blænding spejl dæmpningsfølsomhed",
-                "desc": "Justerer automatisk dæmpning af bakspejls fotosensortærskel."
+                "name": "Electrochromic Anti-Dazzle Mirror Dimming Sensitivity",
+                "desc": "Adjusts automatic rearview mirror dimming photo-sensor threshold."
             },
             "bmw_camera_pdc_warning_mute": {
                 "name": "PDC & Surround View Speed Cut-off Speed Adjustment",
-                "desc": "Justerer køretøjets hastighedstærskel, ved hvilken parkeringskameraer slukker."
+                "desc": "Adjusts vehicle speed threshold at which parking cameras turn off."
             },
             "toyota_pcs_distance_preset": {
-                "name": "Pre-Collision System Standard Alert Distance",
-                "desc": "Indstiller indledende radarforlæns kollisionsadvarselsafstandsfølsomhed."
+                "name": "Pre-Collision System Default Alert Distance",
+                "desc": "Sets initial radar forward collision warning distance sensitivity."
             },
             "toyota_bsm_timing": {
-                "name": "Blind Spot Monitor Advarsel Advarsel Timing",
-                "desc": "Justerer tidspunktet for belysning af advarselslys i blindvinkel sidespejle."
+                "name": "Blind Spot Monitor Warning Warning Timing",
+                "desc": "Adjusts blind spot side mirror warning light illumination timing."
             },
             "toyota_ac_noise_reduction": {
-                "name": "A/C Kompressor Blæser Støjreduktionstilstand",
-                "desc": "Begrænser den maksimale blæserhastighed for klimaanlægget, så kabinen er stille."
+                "name": "A/C Compressor Blower Noise Reduction Mode",
+                "desc": "Limits maximum air conditioning blower fan speed for cabin quietness."
             },
             "toyota_sflow_control": {
-                "name": "S-Flow Smart Climate Single-Coccupant Mode",
-                "desc": "Leder A/C-luftstrømmen udelukkende til besatte sæder baseret på vægtsensorer."
+                "name": "S-Flow Smart Climate Single-Occupant Mode",
+                "desc": "Directs A/C airflow exclusively to occupied seats based on weight sensors."
             },
             "toyota_relock_timeout": {
-                "name": "Automatisk forsinkelsestimer for genlåsning efter fjernoplåsning",
-                "desc": "Justerer sekunder før dørene automatisk genlåser, hvis ingen dør åbnes."
+                "name": "Automatic Re-Lock Delay Timer after Remote Unlock",
+                "desc": "Adjusts seconds before doors auto-relock if no door is opened."
             },
             "lexus_mark_levinson_audio_profile": {
                 "name": "Mark Levinson Surround Sound DSP Audio Profile",
-                "desc": "Optimerer 3D rumlig akustisk tuning for Mark Levinson premium højttalere."
+                "desc": "Optimizes 3D spatial acoustic tuning for Mark Levinson premium speakers."
             },
             "lexus_ev_mode_beeper_mute": {
-                "name": "Lav hastighed fodgænger EV akustisk alarm lyddæmpning",
-                "desc": "Undertrykker lavhastigheds syntetisk udvendig klokke i elektrisk tilstand."
+                "name": "Low-Speed Pedestrian EV Acoustic Alert Beeper Mute",
+                "desc": "Suppresses low speed electric mode synthetic exterior chime."
             },
             "lexus_easy_access_seat": {
-                "name": "Rat med nem adgang og elektrisk sæde med glidende baglæns",
-                "desc": "Skyder førersædet tilbage og vipper rattet væk for nem ind- og udstigning."
+                "name": "Easy Access Steering Wheel & Power Seat Slide-Back",
+                "desc": "Slides driver seat back and tilts steering wheel away for easy entry/exit."
             },
             "nissan_epower_regen_mode": {
-                "name": "e-POWER 1-pedal regenerativ bremsetilstand",
-                "desc": "Indstiller standard e-Pedal regenerativ bremsedecelerationsniveau."
+                "name": "e-POWER One-Pedal Regenerative Braking Mode",
+                "desc": "Sets default e-Pedal regenerative braking deceleration level."
             },
             "nissan_propilot_assist_timing": {
-                "name": "ProPILOT vognbanecentreringsassistent styrefølsomhed",
-                "desc": "Konfigurerer ProPILOT styreinterventionsskarphed."
+                "name": "ProPILOT Lane Centering Assist Steering Sensitivity",
+                "desc": "Configures ProPILOT steering intervention sharpness."
             },
             "nissan_intelligent_around_view": {
-                "name": "Around View Monitor automatisk pop-up ved lav hastighed",
-                "desc": "Udløser 360-graders kameradisplay, når parkeringssensorer foran registrerer forhindringer."
+                "name": "Around View Monitor Auto-Pop-Up at Low Speed",
+                "desc": "Triggers 360-degree camera display when front parking sensors detect obstacles."
             },
             "mazda_g_vectoring_display": {
                 "name": "G-Vectoring Control Plus Dynamic Visualizer",
-                "desc": "Viser GVC+ kurvedrejningsmomentvektorgraf i realtid på instrumentpanelet."
+                "desc": "Displays real-time GVC+ cornering torque vectoring graph on instrument panel."
             },
             "mazda_ieloop_capacitor_monitor": {
-                "name": "i-ELOOP bremseenergigenvindingskondensatormåler",
-                "desc": "Viser elektrisk kondensator opladning og afladningsstatus på centralskærm."
+                "name": "i-ELOOP Brake Energy Recovery Capacitor Meter",
+                "desc": "Shows electric capacitor charge & discharge status on central screen."
             },
             "mazda_smart_city_brake_sens": {
-                "name": "Smart City Brake Support Følsomhed",
-                "desc": "Indstiller automatisk nødbremsesensor ved lav hastighed."
+                "name": "Smart City Brake Support Sensitivity",
+                "desc": "Sets low-speed automatic emergency braking sensor range."
             },
             "subaru_eyesight_distance_preset": {
-                "name": "EyeSight Adaptive Cruise Control Standard Distance",
-                "desc": "Konfigurerer stereokameras standard cruise gap-profil ved opstart."
+                "name": "EyeSight Adaptive Cruise Control Default Distance",
+                "desc": "Configures stereo camera default cruise gap profile on startup."
             },
             "subaru_xmode_auto_engage": {
                 "name": "X-Mode Off-Road Traction Auto-Engage Threshold",
-                "desc": "Indstiller hjulsliptærskel for automatisk dobbeltfunktions X-Mode-aktivering."
+                "desc": "Sets wheel slip threshold for automatic dual-function X-Mode activation."
             },
             "subaru_steering_responsive_headlights": {
-                "name": "Styreresponsive forlygter Vippe",
-                "desc": "Aktiverer eller deaktiverer retningsbestemt adaptiv forlygtedrejning."
+                "name": "Steering Responsive Headlights Toggle",
+                "desc": "Enables or disables directional adaptive headlight swivel."
             },
             "genesis_sport_plus_mode": {
-                "name": "Sport+ drivlinje og elektronisk affjedringstilstand",
-                "desc": "Låser spororienteret ESC OFF og stivnet spjældkortlægning op."
+                "name": "Sport+ Powertrain & Electronic Suspension Mode",
+                "desc": "Unlocks track-oriented ESC OFF and stiffened damper mapping."
             },
             "genesis_ambient_active_light": {
                 "name": "Active Ambient Lighting Drive Mode Sync",
-                "desc": "Ændrer interiørets omgivende belysningsfarve dynamisk baseret på køretilstand."
+                "desc": "Changes interior ambient lighting color dynamically based on drive mode."
             },
             "volvo_city_safety_warning": {
-                "name": "City Safety Autonom Emergency Warning Sensitivity",
-                "desc": "Konfigurerer radar- og lidarkollisionsadvarselstidspunkt."
+                "name": "City Safety Autonomous Emergency Warning Sensitivity",
+                "desc": "Configures radar and lidar collision warning alert timing."
             },
             "chery_ar_navigation_hud": {
-                "name": "AR Navigation Projection Overlay på HUD",
-                "desc": "Projekterer 3D augmented reality navigationspile på forruden."
+                "name": "AR Navigation Projection Overlay on HUD",
+                "desc": "Projects 3D augmented reality navigation arrows onto windshield."
             },
             "jlr_terrain_response_preset": {
-                "name": "Terrænrespons Auto Off-Road Mode Preset",
-                "desc": "Husker sidste Terrain Response overfladeprofil."
+                "name": "Terrain Response Auto Off-Road Mode Preset",
+                "desc": "Remembers last Terrain Response surface profile."
             },
             "jlr_adaptive_dynamics_firm": {
                 "name": "Adaptive Dynamics Damper Firmness Profile",
-                "desc": "Indstiller standard dæmpningsstivhed for elektronisk støddæmper."
+                "desc": "Sets default electronic shock absorber damping stiffness."
             },
             "jlr_wading_sensor_alert": {
                 "name": "Wade Sensing Depth Warning Chime Threshold",
-                "desc": "Konfigurerer ultralyds følsomhed for vanddybdeadvarsel."
+                "desc": "Configures ultrasonic water depth warning chime sensitivity."
             },
             "alfa_dna_dynamic_memory": {
                 "name": "Alfa DNA Selector Dynamic Mode Startup Memory",
-                "desc": "Bevarer gasresponsen i dynamisk tilstand efter genstart."
+                "desc": "Retains Dynamic mode throttle response after restart."
             },
             "alfa_q4_torque_split": {
                 "name": "Q4 All-Wheel Drive Real-Time Torque Split Graph",
-                "desc": "Viser AWD for/bag kraftfordelingsprocent på instrumentdisplayet."
+                "desc": "Shows AWD front/rear power split percentage on instrument display."
             },
             "li_auto_range_extender_mode": {
-                "name": "REV Generator Batteriopladningsniveau",
-                "desc": "Justerer forbrændingsmotorgeneratorens starttærskel."
+                "name": "REV Generator Battery Charge Retention Level",
+                "desc": "Adjusts internal combustion engine generator start threshold."
             },
             "li_auto_cinema_seat_position": {
-                "name": "Teater-/biograftilstand Ergonomisk sædeposition",
-                "desc": "Lægger bagsæderne tilbage og folder benstøtterne ud, når biograftilstand er aktiv."
+                "name": "Theater / Cinema Mode Ergonomic Seat Position",
+                "desc": "Reclines rear seats and unfolds leg rests when cinema mode is active."
             },
             "zeekr_drift_mode_torque": {
                 "name": "Dual Motor Performance Drift Mode Rear Bias",
-                "desc": "Sender 100 % drejningsmoment til den bageste elmotor for kontrolleret drift."
+                "desc": "Sends 100% torque to rear electric motor for controlled drifting."
             },
             "zeekr_ambient_beat_sync": {
                 "name": "Ambient Lighting Music Rhythm Beat Sync",
-                "desc": "Pulserer indvendig kabinebelysning i sync med afspillede musikbeats."
+                "desc": "Pulsates interior cabin lighting in sync with played music beats."
             },
             "tata_drive_mode_voice": {
-                "name": "Stemmemeddelelse om køretilstandsskift",
-                "desc": "Aktiverer stemmebekræftelse med lyd, når du skifter køretilstand."
+                "name": "Drive Mode Switch Voice Announcement",
+                "desc": "Enables audio voice confirmation when switching drive modes."
             },
             "mahindra_zip_zap_zoom_custom": {
                 "name": "Zip/Zap/Zoom Powertrain Throttle Response Profile",
-                "desc": "Tilpasser accelerationskurven til køretilstande Zip, Zap og Zoom."
+                "desc": "Customizes acceleration curve for Zip, Zap, and Zoom driving modes."
             },
             "fun_cyberpunk_cluster_theme": {
-                "name": "Cyberpunk 2077 Neon grafisk cockpittema",
-                "desc": "Anvender futuristisk neon cyan og rav digital instrumentbrætmåler-styling."
+                "name": "Cyberpunk 2077 Neon Graphic Cockpit Theme",
+                "desc": "Applies futuristic neon cyan & amber digital dashboard gauge styling."
             },
             "fun_exhaust_flame_sound_effect": {
-                "name": "Stereosystem Pop & Bang udstødningslyd FX",
-                "desc": "Afspiller realistiske V8-udstødnings-pop & bang-lydeffekter gennem kabinehøjttalere."
+                "name": "Stereo System Pop & Bang Exhaust Sound FX",
+                "desc": "Plays realistic V8 exhaust pop & bang audio effects through cabin speakers."
             },
             "fun_matrix_light_show_welcome": {
-                "name": "Custom Headlight Matrix LED Dance Velkommen",
-                "desc": "Spiller rytmisk lysshow-koreografi ved hjælp af forlygter og indikatorer."
+                "name": "Custom Headlight Matrix LED Dance Welcome",
+                "desc": "Plays rhythmic Light Show choreography using headlights & indicators."
             },
             "fun_stealth_fighter_display": {
-                "name": "Stealth Fighter Night Driving Minimalistisk Cluster Mode",
-                "desc": "Slukker alle klyngelys undtagen speedometer til kulsort natkørsel."
+                "name": "Stealth Fighter Night Driving Minimalist Cluster Mode",
+                "desc": "Turns off all cluster lights except speedometer for pitch-black night driving."
             },
             "vag_lap_timer_oil_temp": {
                 "name": "Lap Timer & Oil Temperature in Gauge Cluster",
@@ -2783,147 +2794,147 @@
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
-        "codeBtn": "KODE",
-        "removeBtn": "FJERN",
-        "unsupportedTitle": "Køretøj ikke understøttet",
-        "unsupportedMsg": "Denne funktion understøttes ikke af dit køretøjs ECU-hardware- eller softwareversion.",
-        "selectBrand": "Vælg køretøjsmærke",
-        "selectCategory": "Vælg Kategori",
-        "selectMakeTitle": "VÆLG KØRETØJSMÆRKE",
-        "selectCategoryTitle": "VÆLG FUNKTIONSKATEGORI",
-        "brandAll": "ALLE MÆRKER",
-        "categoryAll": "ALLE KATEGORIER",
-        "lighting": "BELYSNING",
-        "soundAlerts": "LYDVARER",
-        "displayInstrument": "DISPLAY / KLYNGE",
-        "drivingComfort": "KØREKOMFORT",
-        "securitySafety": "SIKKERHED OG SIKKERHED",
-        "restoreBtn": "GENDAN FABRIKSSTAND",
-        "searchPlaceholder": "Søgefunktion, DID eller mål-ECU...",
-        "restoreSuccessTitle": "Fabrikstilstand restaureret",
-        "restoreSuccessMsg": "Den valgte funktion er blevet vendt tilbage til den oprindelige DID-tilstand.",
-        "cloneLockedBanner": "Klonadapter fundet - kodning låst",
-        "cloneAlertTitle": "Klon OBD2-adapter fundet",
-        "cloneAlertMsg": "Din tilsluttede OBD2-adapter blev markeret som en forfalsket klonadapter, der mangler streng timing-nøjagtighed, der kræves til ECU-skrivning. Du kan gennemse og søge i alle funktioner, men kodeskrivningsfunktioner er låst for at beskytte dit køretøj. Tilslut venligst en ægte ELM327 v2.1+ eller vLinker-adapter til skrivning.",
-        "riskLow": "LAV RISIKO",
-        "riskMedium": "MIDDEL RISIKO",
-        "riskHigh": "HØJ RISIKO",
-        "sfdProtected": "SFD-beskyttet ECU",
-        "legalDisclaimerUsLights": "Bemærk: Kontinuerlige amerikanske parkeringslys er muligvis ikke gadelovlige i nogle europæiske jurisdiktioner.",
-        "legalDisclaimerVim": "Bemærk: Videoafspilning under kørsel er kun beregnet til passagerbrug.",
-        "layoutChart": "GRAFIK",
-        "headerCategory": "Skjulte funktioner og kodning",
-        "vehicleMatched": "{{make}} — MATCHET",
-        "demoModeVehicle": "DEMOTILSTAND: {{make}}",
-        "waitingVehicle": "VENTER PÅ TILSLUTTET KØRETØJ",
-        "activeFeaturesCount": "{{count}} køretøjsspecifikke OEM-funktioner aktive",
-        "demoFeaturesCount": "{{count}} demofunktioner vist",
-        "connectForFeaturesNote": "Tilslut til OBD2-enhed for at vise køretøjsspecifikke funktioner",
-        "codingFailed": "Kodning mislykkedes.",
-        "engineRunningMsg": "ECU-kodning kræver tænding ON med motor slukket for at forhindre generatorspændingsspidser.",
-        "engineRunningTitle": "Motoren kører",
-        "lowVoltageMsg": "Batterispændingen er under sikker tærskel for ECU-skriveoperationer. Oplad batteriet, før du fortsætter.",
-        "lowVoltageTitle": "Alarm om lav batterispænding",
-        "motionAlertMsg": "ECU skriveoperationer er blokeret, mens køretøjet er i bevægelse. Parker venligst sikkert før kodning.",
-        "motionAlertTitle": "Køretøj i bevægelse",
-        "noMatchingFeatures": "Der blev ikke fundet nogen matchende funktioner for udvalgte filtre.",
-        "unsafeModuleMsg": "ECU skriveoperationer til ABS/ESP og Airbag/SRS-moduler er 100 % hårdt blokeret for at beskytte kritiske køretøjssikkerhedssystemer.",
-        "unsafeModuleTitle": "Beskyttet sikkerhedsmodul",
-        "catMotorcycle": "MOTORCYKEL ECU",
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version.",
+        "selectBrand": "Select Vehicle Brand",
+        "selectCategory": "Select Category",
+        "selectMakeTitle": "SELECT VEHICLE BRAND",
+        "selectCategoryTitle": "SELECT FEATURE CATEGORY",
+        "brandAll": "ALL MAKES",
+        "categoryAll": "ALL CATEGORIES",
+        "lighting": "LIGHTING",
+        "soundAlerts": "SOUND ALERTS",
+        "displayInstrument": "DISPLAY / CLUSTER",
+        "drivingComfort": "DRIVING COMFORT",
+        "securitySafety": "SECURITY & SAFETY",
+        "restoreBtn": "RESTORE FACTORY STATE",
+        "searchPlaceholder": "Search feature, DID, or target ECU...",
+        "restoreSuccessTitle": "Factory State Restored",
+        "restoreSuccessMsg": "Selected feature has been reverted back to original DID state.",
+        "cloneLockedBanner": "Clone Adapter Detected — Coding Locked",
+        "cloneAlertTitle": "Clone OBD2 Adapter Detected",
+        "cloneAlertMsg": "Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing. You can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.",
+        "riskLow": "LOW RISK",
+        "riskMedium": "MEDIUM RISK",
+        "riskHigh": "HIGH RISK",
+        "sfdProtected": "SFD Protected ECU",
+        "legalDisclaimerUsLights": "Note: Continuous US parking lights may not be street legal in some European jurisdictions.",
+        "legalDisclaimerVim": "Note: Video playback while driving is intended for passenger use only.",
+        "layoutChart": "CHART",
+        "headerCategory": "Hidden Features & Coding",
+        "vehicleMatched": "{{make}} — MATCHED",
+        "demoModeVehicle": "DEMO MODE: {{make}}",
+        "waitingVehicle": "WAITING FOR CONNECTED VEHICLE",
+        "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
+        "demoFeaturesCount": "{{count}} demo features listed",
+        "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
+        "engineRunningTitle": "Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "Protected Safety Module",
+        "catMotorcycle": "MOTORCYCLE ECU",
         "catRetrofit": "RETROFIT & HARDWARE",
-        "catEv": "EV & BATTERI",
-        "catAdas": "ADAS KALIBRERING",
-        "catEasterEgg": "PÅSKEÆG",
-        "catService": "SERVICE OG VEDLIGEHOLDELSE",
-        "catPerformance": "YDELSE",
-        "segmentAll": "ALLE MÆRKER",
+        "catEv": "EV & BATTERY",
+        "catAdas": "ADAS CALIBRATION",
+        "catEasterEgg": "EASTER EGGS",
+        "catService": "SERVICE & MAINTENANCE",
+        "catPerformance": "PERFORMANCE",
+        "segmentAll": "ALL MAKES",
         "segmentEuroPremium": "European Premium",
-        "segmentEuroVolume": "Europæisk bind",
-        "segmentAsian": "Asiatisk",
-        "segmentAmerican": "Amerikansk",
-        "segmentChineseEv": "Kinesisk EV",
-        "segmentMotorcycle": "Motorcykel",
-        "detailTitle": "Funktionsdetaljer & ét-klik-kodning",
-        "prePostValues": "Forhåndsvisning af nyttelast før/efter",
-        "selectOption": "Vælg kodningsindstilling:",
-        "oneClickActivate": "AKTIVERING MED ET KLIK",
-        "expertModeTitle": "Eksperttilstand",
-        "allMakes": "ALLE MÆRKER",
-        "techEcuSpecs": "TEKNISKE ECU SPECIFIKATIONER OG FORHÅNDSVISNING AF PAYLOAD",
-        "targetEcuHeaderLabel": "Mål ECU-hoved:",
+        "segmentEuroVolume": "European Volume",
+        "segmentAsian": "Asian",
+        "segmentAmerican": "American",
+        "segmentChineseEv": "Chinese EV",
+        "segmentMotorcycle": "Motorcycle",
+        "detailTitle": "Feature Details & One-Click Coding",
+        "prePostValues": "Pre / Post Payload Preview",
+        "selectOption": "Select Coding Option:",
+        "oneClickActivate": "ONE-CLICK ACTIVATE",
+        "expertModeTitle": "Expert Mode",
+        "allMakes": "ALL MAKES",
+        "techEcuSpecs": "TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW",
+        "targetEcuHeaderLabel": "Target ECU Header:",
         "udsDidLabel": "UDS Data Identifier:",
-        "bitPositionLabel": "Bitposition:",
-        "targetPayloadLabel": "Mål UDS nyttelast:",
-        "byteBitValue": "Byte {{byte}}, bit {{bit}}",
-        "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
-        "restoreFactoryBtn": "GENDAN FABRIKSINDSTILLINGER",
-        "restoreFactoryTitle": "GENDAN FABRIKSINDSTILLINGER",
-        "enterDidFirst": "Indtast venligst DID Hex-koden for at gendanne.",
-        "restoreConfirmMsg": "Vend tilbage til den oprindelige fabrikstilstand for DID 0x{{didHex}}?",
-        "restoreAction": "GENDAN FABRIKKET",
+        "bitPositionLabel": "Bit Position:",
+        "targetPayloadLabel": "Target UDS Payload:",
+        "byteBitValue": "Byte {{byte}}, Bit {{bit}}",
+        "expertSafetyNote": "For advanced users only. In case of incorrect coding, use 'Restore Factory Settings' below to revert to original state.",
+        "restoreFactoryBtn": "RESTORE FACTORY SETTINGS",
+        "restoreFactoryTitle": "RESTORE FACTORY SETTINGS",
+        "enterDidFirst": "Please enter the DID Hex code to restore.",
+        "restoreConfirmMsg": "Revert to original factory state for DID 0x{{didHex}}?",
+        "restoreAction": "RESTORE FACTORY",
         "expertDidPlaceholder": "DID Hex",
-        "expertValPlaceholder": "Værdi hex",
-        "writeRawPayload": "SKRIV RÅ UDS-NYTTELAST",
-        "enterValidHex": "Indtast venligst gyldige DID- og Value Hex-strenge.",
+        "expertValPlaceholder": "Value Hex",
+        "writeRawPayload": "WRITE RAW UDS PAYLOAD",
+        "enterValidHex": "Please enter valid DID and Value Hex strings.",
         "options": {
             "speed85": "85 km/h",
             "speed90": "90 km/h",
             "speed100": "100 km/h",
             "speed110": "110 km/h",
-            "idleOff": "Devre Dışı",
+            "idleOff": "Disabled",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
             "pto900": "900 RPM",
             "pto1100": "1100 RPM",
             "pto1300": "1300 RPM",
-            "retarderLow": "Düşük",
+            "retarderLow": "Low",
             "retarderMed": "Orta",
-            "retarderHigh": "Yüksek",
-            "levelNormal": "Normal Sürüş Seviyesi",
-            "levelRamp1": "Yükleme Rampası Seviyesi 1",
-            "levelRamp2": "Yükleme Rampası Seviyesi 2",
-            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "retarderHigh": "High",
+            "levelNormal": "Normal Driving Level",
+            "levelRamp1": "Loading Ramp Level 1",
+            "levelRamp2": "Loading Ramp Level 2",
+            "regenStart": "Start Static Regeneration",
             "regenStatus": "Kurum Durumunu Sorgula",
             "alarmFull": "Tam Ses",
-            "alarmNight": "Kısık Ses",
+            "alarmNight": "Low Volume",
             "hyst3": "+/- 3 km/h",
             "hyst5": "+/- 5 km/h",
             "hyst10": "+/- 10 km/h",
-            "drl25": "%25 Kısık",
+            "drl25": "25% Dimmed",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
-            "drl100": "%100 Tam Güç",
+            "drl100": "100% Full Power",
             "xdsStandard": "Standart",
-            "xdsStrong": "Güçlü",
-            "blink1": "1 Flaş",
-            "blink3": "3 Flaş",
-            "blink4": "4 Flaş",
-            "blink5": "5 Flaş",
+            "xdsStrong": "Strong",
+            "blink1": "1 Flash",
+            "blink3": "3 Flashes",
+            "blink4": "4 Flashes",
+            "blink5": "5 Flashes",
             "chimeBmw": "BMW Standart",
-            "chimeMini": "MINI Tarzı",
-            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeMini": "MINI Style",
+            "chimeRolls": "Rolls-Royce Luxury",
             "chimeBmwi": "BMW i Elektrik",
             "logoStandard": "Standart",
             "logoMPerf": "M Performance",
             "logoAlpina": "Alpina Mavi"
         },
-        "catSoundAlerts": "Ses & Uyarılar",
-        "catDisplayInstrument": "Gösterge Paneli",
-        "catDrivingComfort": "Sürüş Konforu",
-        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catSoundAlerts": "Sound & Alerts",
+        "catDisplayInstrument": "Instrument Cluster",
+        "catDrivingComfort": "Driving Comfort",
+        "catSecuritySafety": "Security & Safety",
         "catMotorcycleEcu": "Motosiklet ECU",
-        "freeTrialAvailableBadge": "1 GRATIS KREDIT",
-        "freeTrialUsedBadge": "LÅST OP",
-        "proRequiredBadge": "PRO PÅKRÆVET",
-        "freeTrialExhaustedTitle": "Gratis prøvekredit er opbrugt",
-        "freeTrialExhaustedMsg": "Du har brugt din 1 gratis kredit til aktivering. Opgrader til PRO for ubegrænset oplåsning, ekspertkodning og service-nulstilling!",
-        "freeTrialSuccessTitle": "Tillykke! Funktionen er aktiveret",
-        "freeTrialSuccessMsg": "Denne funktion blev kodet til dit køretøj med din gratis prøvekredit! Opgrader til PRO når som helst for at låse op for alle andre funktioner.",
-        "upgradeToPro": "OPGRADER TIL PRO",
-        "toastActivated": "Aktiveret",
-        "toastDeactivated": "Deaktiveret",
-        "optionsBadge": "{{count}} VALGMULIGHEDER"
+        "freeTrialAvailableBadge": "1 FREE CREDIT",
+        "freeTrialUsedBadge": "UNLOCKED",
+        "proRequiredBadge": "PRO REQUIRED",
+        "freeTrialExhaustedTitle": "Free Trial Credit Used",
+        "freeTrialExhaustedMsg": "You have used your 1 free feature activation credit. Upgrade to PRO for unlimited feature unlocking, expert coding, and full service resets!",
+        "freeTrialSuccessTitle": "Congratulations! Feature Activated",
+        "freeTrialSuccessMsg": "This feature was successfully coded to your vehicle using your 1 free trial credit! Upgrade to PRO anytime to unlock all other features with no limits.",
+        "upgradeToPro": "UPGRADE TO PRO",
+        "toastActivated": "Activated",
+        "toastDeactivated": "Deactivated",
+        "optionsBadge": "{{count}} OPTIONS"
     },
     "ignition": {
         "title": "Advarsel om tændingsstatus",
@@ -2937,27 +2948,27 @@
         "batteryVoltage": "Batterispænding:"
     },
     "hpGauge": {
-        "title": "LEVENDE EFFEKT & MOMENTMÅLER",
-        "subtitle": "Hestekræfter i realtid og drejningsmoment",
-        "horsepower": "HESTEKRAFT",
-        "torque": "MOTORMOMENT",
+        "title": "LIVE POWER & TORQUE GAUGE",
+        "subtitle": "Real-Time Horsepower & Torque",
+        "horsepower": "HORSEPOWER",
+        "torque": "ENGINE TORQUE",
         "peakHp": "PEAK HP",
-        "peakTorque": "MIDDELMOMENT",
-        "efficiency": "EFFEKTIVITET",
-        "methodMaf": "Hava Akış Tabanlı",
-        "methodTorque": "Canlı Tork Tabanlı",
-        "methodLoad": "Motor Yükü Tabanlı",
-        "configWeight": "Køretøjets vægt:",
-        "configDisplacement": "Motorvolumen:",
-        "calcMethod": "BEREGNINGSMETODE",
-        "methodDiesel": "Dizel Tork & Yakıt Akışı"
+        "peakTorque": "PEAK TORQUE",
+        "efficiency": "EFFICIENCY",
+        "methodMaf": "Mass Airflow Based",
+        "methodTorque": "Live Torque Based",
+        "methodLoad": "Engine Load Based",
+        "configWeight": "Vehicle Weight:",
+        "configDisplacement": "Engine Displacement:",
+        "calcMethod": "CALCULATION METHOD",
+        "methodDiesel": "Diesel Torque & Fuel Flow"
     },
     "fuelTrim": {
-        "title": "BRÆNDSTOFTRIM OG LUFT-BRÆNDSTOF-BLANDINGSANALYSE",
+        "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
         "subtitle": "STFT & LTFT Diagnostics",
         "stft": "STFT",
         "ltft": "LTFT",
-        "totalTrim": "TOTAL BRÆNDSTOF TRIM",
+        "totalTrim": "TOTAL FUEL TRIM",
         "afrRatio": "AIR-FUEL RATIO",
         "lambda": "LAMBDA",
         "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
@@ -2966,37 +2977,37 @@
         "stateMildRich": "MILD RICH MIXTURE",
         "stateCriticalRich": "CRITICAL RICH MIXTURE",
         "guideTitle": "LEAN vs RICH MIXTURE GUIDE",
-        "guideDesc": "Rig blanding indikerer overskydende brændstof i forbrændingskammeret, mens mager blanding indikerer overskydende luft.",
-        "causesTitle": "Potentielle årsager:",
-        "actionTitle": "Anbefalet handling:",
+        "guideDesc": "Rich mixture indicates excess fuel in combustion chamber, while Lean mixture indicates excess air.",
+        "causesTitle": "Potential Causes:",
+        "actionTitle": "Recommended Action:",
         "causeNormal": "System operates within ideal range. No faults.",
-        "actionNormal": "Fortsæt rutinemæssig vedligeholdelse.",
-        "causeVacuumLeak": "Vakuumlækager, iturevne slanger eller indsugningsmanifoldpakning",
-        "causeDirtyMaf": "Snavset eller defekt MAF sensor",
-        "causeLowFuelPressure": "Lavt brændstofpumpetryk eller tilstoppet brændstoffilter",
-        "causeCloggedInjectors": "Tilstoppede eller snavsede brændstofinjektorer",
-        "actionCriticalLean": "Udfør røgtest for indsugningslækager og rengør MAF-sensoren.",
-        "causeMinorVacuumLeak": "Mindre luftlækage eller forældet O2-sensor",
-        "actionMildLean": "Kontroller strømførende O2-sensordata og indsugningsslanger.",
-        "causeLeakingInjector": "Utæt/åben brændstofinjektor",
-        "causeStuckEvapPurgeVal": "EVAP-beholder-udluftningsventil, der sidder fast og åben",
-        "causeDirtyAirFilter": "Meget snavset luftfilter",
-        "causeHighFuelPressure": "Højt brændstofskinnetryk",
-        "actionCriticalRich": "Efterse EVAP-udluftningsventilen og injektorens returlækage.",
-        "causeRestrictedAirIntake": "Blokering af luftindtagskanal",
-        "actionMildRich": "Kontroller eller udskift motorens luftfilter.",
-        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
-        "railPressure": "Rail Basıncı",
-        "fuelRate": "Yakıt Debisi",
-        "widebandSensor": "Geniş Bant Lambda Sensörü",
-        "commonRailStatus": "Common Rail Püskürtme",
-        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
-        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel",
-        "modeGasoline": "Benzinli",
-        "leanNormal": "Fakir Karışım",
-        "railStable": "Basınç Kararlı"
+        "actionNormal": "Continue routine maintenance.",
+        "causeVacuumLeak": "Vacuum leaks, torn hoses, or intake manifold gasket",
+        "causeDirtyMaf": "Dirty or faulty MAF sensor",
+        "causeLowFuelPressure": "Low fuel pump pressure or clogged fuel filter",
+        "causeCloggedInjectors": "Clogged or dirty fuel injectors",
+        "actionCriticalLean": "Perform smoke test for intake leaks and clean MAF sensor.",
+        "causeMinorVacuumLeak": "Minor air leak or aging O2 sensor",
+        "actionMildLean": "Check live O2 sensor data and intake hoses.",
+        "causeLeakingInjector": "Leaking/stuck-open fuel injector",
+        "causeStuckEvapPurgeVal": "Stuck-open EVAP canister purge valve",
+        "causeDirtyAirFilter": "Severely dirty air filter",
+        "causeHighFuelPressure": "High fuel rail pressure",
+        "actionCriticalRich": "Inspect EVAP purge valve and injector return leak-off.",
+        "causeRestrictedAirIntake": "Air intake duct obstruction",
+        "actionMildRich": "Check or replace engine air filter.",
+        "dieselCombustionNormal": "Diesel Injection & Combustion Health Normal",
+        "railPressure": "Rail Pressure",
+        "fuelRate": "Fuel Flow Rate",
+        "widebandSensor": "Wideband Lambda Sensor",
+        "commonRailStatus": "Common Rail Injection",
+        "dieselGuideTitle": "Diesel Combustion & Mixture Guide",
+        "dieselGuideDesc": "Diesel engines operate lean with excess air. Common Rail pressure and Lambda sensor regulate injection balance in real time.",
+        "dieselActionNormal": "System operates within ideal parameters. Continue regular fuel filter maintenance.",
+        "modeDiesel": "Diesel",
+        "modeGasoline": "Gasoline",
+        "leanNormal": "Lean Mixture Normal",
+        "railStable": "Pressure Stable"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER MONITOR",
@@ -3041,42 +3052,42 @@
         "readyTitle": "ECU-diagnostik klar"
     },
     "dct": {
-        "title": "DCT DOBBELTKOBLING TILPASNING",
-        "subtitle": "DSG / Powershift / EDC Dual Clutch Grundindstillinger",
-        "warningTitle": "SIKKERHEDSKRAV TIL DCT-TILPASNING",
-        "warningDesc": "Sørg for, at alle fysiske forudsætninger er opfyldt, før tilpasningen påbegyndes:",
-        "checkGearPark": "Sæt gearet i P og træk håndbremsen helt",
-        "checkFootBrake": "Fodbremsen trykket fast",
-        "checkHandBrake": "Håndbremse aktiveret",
-        "checkOilTemp": "Gearkasseolietemperatur skal være mellem 30°C og 90°C",
-        "startAdaptation": "START TILPASNING",
-        "inProgress": "Udførelse af grundlæggende transmissionsindstillinger... Slip IKKE fodbremsen!",
-        "success": "Nulstilling af DCT-transmission og genindlæring af kobling afsluttet med succes!",
-        "step1": "1/3: Udfører hydraulisk trykkalibrering...",
-        "step2": "2/3: Udførelse af kobling 1 grundlæggende indstillinger...",
-        "step3": "3/3: Udfører kobling 2 geargaffeltilpasning...",
-        "ensurePreconditions": "Opfyld venligst alle sikkerhedsbetingelser før start.",
-        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
-        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
-        "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites Sensörü",
-        "reverseSwitch": "Geri Vites Müşürü",
-        "pressed": "BASILI",
-        "released": "SERBEST",
-        "neutral": "BOŞTA",
-        "inGear": "VİTESTE",
-        "active": "AKTİF",
-        "passive": "PASİF",
-        "startManualTest": "Sensör Testini Başlat",
-        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
-        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
-        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
-        "manualStep2": "Boş Vites Sensör Doğrulaması...",
-        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
-        "modeAuto": "Otomatik / DCT Uyarlama",
-        "modeManual": "Manuel Şanzıman Testi",
+        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
+        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
+        "checkGearPark": "Gear selector in 'P'",
+        "checkFootBrake": "Foot brake depressed firmly",
+        "checkHandBrake": "Handbrake engaged",
+        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "startAdaptation": "START ADAPTATION",
+        "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting.",
+        "manualTitle": "MANUAL TRANSMISSION SENSOR CHECK",
+        "manualDesc": "This vehicle has a manual transmission. Automatic TCU adaptation is not required. You can monitor the real-time status of clutch and neutral sensors below.",
+        "clutchSwitch": "Clutch Pedal Switch",
+        "neutralSwitch": "Neutral Gear Sensor",
+        "reverseSwitch": "Reverse Gear Switch",
+        "pressed": "DEPRESSED",
+        "released": "RELEASED",
+        "neutral": "NEUTRAL",
+        "inGear": "IN GEAR",
+        "active": "ACTIVE",
+        "passive": "INACTIVE",
+        "startManualTest": "Start Sensor Test",
+        "manualTestSuccess": "Manual transmission clutch and gear sensor checks completed successfully.",
+        "ensureManualPreconditions": "Please verify clutch and neutral gear positions.",
+        "manualStep1": "Testing Clutch Switch Signal...",
+        "manualStep2": "Verifying Neutral Sensor...",
+        "manualStep3": "Sensor Calibration Completed.",
+        "modeAuto": "Automatic / DCT Adaptation",
+        "modeManual": "Manual Transmission Test",
         "park": "P",
-        "engaged": "ÇEKİLİ"
+        "engaged": "ENGAGED"
     },
     "safeExit": {
         "btn": "SIKKER FRAKOBLING OG NULSTILLING AF ADAPTER",
@@ -3167,7 +3178,8 @@
             "manual": "MANUAL"
         },
         "unknown": "Ukendt",
-        "year": "år:"
+        "year": "år:",
+        "transmissionLabel": "Transmission:"
     },
     "sgw": {
         "title": "LÅS OP SECURITY GATEWAY",
@@ -3356,7 +3368,7 @@
         "downloadBtn": "DOWNLOAD MINE DATA",
         "purgeBtn": "SLET ALLE MINE DATA",
         "exportSuccessTitle": "Dataklar",
-        "exportSuccessMsg": "Din datapakke blev oprettet den {{date}}. Indhold: Telemetri-kø, App-indstillinger.",
+        "exportSuccessMsg": "Your data package was created on {{date}}. Contents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Fejl",
         "exportErrorMsg": "Kunne ikke oprette datapakke.",
         "purgeAlertTitle": "Slet alle data",
@@ -3415,8 +3427,8 @@
         "enter_valid_hex": "Indtast venligst et gyldigt DID og lige antal hex-tegn."
     },
     "safety": {
-        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
+        "engineRunningTitle": "Engine Running Safety Lock",
+        "engineRunningDesc": "For safety reasons, trouble codes can only be cleared with ignition ON and engine OFF."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3435,7 +3447,12 @@
     "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
     "grid": "Grid",
     "disclaimers": {
-        "safetyNotice": "Safety Notice"
+        "safetyNotice": "Safety Notice",
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
     },
     "Success": "Success",
     "marketplace": {

@@ -65,7 +65,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
                 { color: isDiesel ? '#ffffff' : tc.textSec, fontWeight: isDiesel ? '800' : '600' },
               ]}
             >
-              {t('fuelTrim.modeDiesel', { defaultValue: 'Dizel' })}
+              {t('fuelTrim.modeDiesel', { defaultValue: 'Diesel' })}
             </Text>
           </TouchableOpacity>
 
@@ -85,7 +85,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
                 { color: !isDiesel ? '#ffffff' : tc.textSec, fontWeight: !isDiesel ? '800' : '600' },
               ]}
             >
-              {t('fuelTrim.modeGasoline', { defaultValue: 'Benzinli' })}
+              {t('fuelTrim.modeGasoline', { defaultValue: 'Gasoline' })}
             </Text>
           </TouchableOpacity>
         </View>
@@ -94,14 +94,14 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
         <View style={[styles.statusCard, { backgroundColor: tc.elevated, borderColor: isDiesel ? tc.green : analysis.statusColor }]}>
           <Text style={[styles.statusTitle, { color: isDiesel ? tc.green : analysis.statusColor }]}>
             {isDiesel 
-              ? t('fuelTrim.dieselCombustionNormal', { defaultValue: 'Dizel Enjeksiyon & Yanma Sağlığı Normal' }) 
+              ? t('fuelTrim.dieselCombustionNormal', { defaultValue: 'Diesel Injection & Combustion Health Normal' }) 
               : t(analysis.titleKey)}
           </Text>
 
           <View style={styles.metricsRow}>
             <View style={styles.metricBox}>
               <Text style={[styles.metricLabel, { color: tc.textSec }]}>
-                {isDiesel ? t('fuelTrim.railPressure', { defaultValue: 'Rail Basıncı' }) : t('fuelTrim.afrRatio')}
+                {isDiesel ? t('fuelTrim.railPressure', { defaultValue: 'Rail Pressure' }) : t('fuelTrim.afrRatio')}
               </Text>
               <Text style={[styles.metricVal, { color: tc.textPri }]}>
                 {isDiesel ? `${railPressureBar} Bar` : `${analysis.estimatedAfr}:1`}
@@ -117,7 +117,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
 
             <View style={styles.metricBox}>
               <Text style={[styles.metricLabel, { color: tc.textSec }]}>
-                {isDiesel ? t('fuelTrim.fuelRate', { defaultValue: 'Yakıt Debisi' }) : t('fuelTrim.totalTrim')}
+                {isDiesel ? t('fuelTrim.fuelRate', { defaultValue: 'Fuel Flow Rate' }) : t('fuelTrim.totalTrim')}
               </Text>
               <Text style={[styles.metricVal, { color: isDiesel ? tc.cyan : analysis.statusColor }]}>
                 {isDiesel 
@@ -133,25 +133,25 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
           <View style={styles.dualTrimRow}>
             <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
               <Text style={[styles.trimCardLabel, { color: tc.cyan }]}>
-                {t('fuelTrim.widebandSensor', { defaultValue: 'Geniş Bant Lambda Sensörü' })}
+                {t('fuelTrim.widebandSensor', { defaultValue: 'Wideband Lambda Sensor' })}
               </Text>
               <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
                 λ {lambdaValue}
               </Text>
               <Text style={{ color: tc.green, fontSize: 11, fontWeight: '700', marginTop: 4 }}>
-                {t('fuelTrim.leanNormal', { defaultValue: 'Fakir Karışım' })}
+                {t('fuelTrim.leanNormal', { defaultValue: 'Lean Mixture Normal' })}
               </Text>
             </View>
 
             <View style={[styles.trimCard, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
               <Text style={[styles.trimCardLabel, { color: tc.green }]}>
-                {t('fuelTrim.commonRailStatus', { defaultValue: 'Common Rail Püskürtme' })}
+                {t('fuelTrim.commonRailStatus', { defaultValue: 'Common Rail Injection' })}
               </Text>
               <Text style={[styles.trimCardVal, { color: tc.textPri }]}>
                 {railPressureBar} Bar
               </Text>
               <Text style={{ color: tc.cyan, fontSize: 11, fontWeight: '700', marginTop: 4 }}>
-                {t('fuelTrim.railStable', { defaultValue: 'Basınç Kararlı' })}
+                {t('fuelTrim.railStable', { defaultValue: 'Pressure Stable' })}
               </Text>
             </View>
           </View>
@@ -177,12 +177,12 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
         <View style={[styles.guideBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
           <Text style={[styles.guideTitle, { color: tc.textPri }]}>
             {isDiesel 
-              ? t('fuelTrim.dieselGuideTitle', { defaultValue: 'Dizel Yanma & Karışım Rehberi' }) 
+              ? t('fuelTrim.dieselGuideTitle', { defaultValue: 'Diesel Combustion & Mixture Guide' }) 
               : t('fuelTrim.guideTitle')}
           </Text>
           <Text style={[styles.guideDesc, { color: tc.textSec }]}>
             {isDiesel
-              ? t('fuelTrim.dieselGuideDesc', { defaultValue: 'Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.' })
+              ? t('fuelTrim.dieselGuideDesc', { defaultValue: 'Diesel engines operate lean with excess air. Common Rail pressure and Lambda sensor regulate injection balance in real time.' })
               : t('fuelTrim.guideDesc')}
           </Text>
 
@@ -190,7 +190,7 @@ export const FuelTrimModal: React.FC<FuelTrimModalProps> = ({
             <Text style={[styles.subHeading, { color: tc.cyan }]}>{t('fuelTrim.actionTitle')}</Text>
             <Text style={[styles.actionText, { color: tc.textPri }]}>
               {isDiesel 
-                ? t('fuelTrim.dieselActionNormal', { defaultValue: 'Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.' })
+                ? t('fuelTrim.dieselActionNormal', { defaultValue: 'System operates within ideal parameters. Continue regular fuel filter maintenance.' })
                 : t(analysis.recommendedActionKey)}
             </Text>
           </View>

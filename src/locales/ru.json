@@ -183,11 +183,11 @@
         "feat3Desc": "Запишите точные состояния датчика на момент возникновения ошибки.",
         "selectPlan": "ВЫБЕРИТЕ ПЛАН",
         "weekly": "Еженедельное членство",
-        "weeklyDesc": "Идеально подходит для быстрой проверки.",
+        "weeklyDesc": "Быстрая проверка и разовый сброс ошибок.",
         "monthly": "Ежемесячное членство",
-        "monthlyDesc": "Самый популярный выбор.",
+        "monthlyDesc": "Полная гибкость, отмена в любой момент.",
         "yearly": "Годовое членство",
-        "yearlyDesc": "Гарантия лучшей цены.",
+        "yearlyDesc": "Безлимитный гаражный пропуск (Выгоднее всего).",
         "restore": "Восстановить существующие покупки",
         "subscribe": "ПОДПИСАТЬСЯ СЕЙЧАС",
         "bestValue": "ЛУЧШАЯ ЦЕНА",
@@ -227,7 +227,12 @@
         "weeklyNotice": "Разовая покупка, без автопродления",
         "yearlyNotice": "Годовая автопродляемая подписка",
         "aiDoctorLimitTitle": "ЛИМИТ AI DOCTOR ДОСТИГНУТ",
-        "aiDoctorLimitDesc": "Вы использовали 1 бесплатную ИИ-диагностику двигателя. Обновитесь до PRO для неограниченного ИИ-анализа."
+        "aiDoctorLimitDesc": "Вы использовали 1 бесплатную ИИ-диагностику двигателя. Обновитесь до PRO для неограниченного ИИ-анализа.",
+        "trustNoAds": "100% Без рекламы (Free и PRO)",
+        "trustNoTokens": "Безлимитный доступ • Без скрытых оплат",
+        "trustUniversal": "Свобода с любым BLE-адаптером",
+        "yearlySavingsBadge": "~.65/мес • Скидка 44%",
+        "save44": "Скидка 44%"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -306,7 +311,7 @@
         "terminalDesc": "Вы можете отправлять команды OBD-II или AT/ST непосредственно в ЭБУ. Например, «010C» или «ATRV».",
         "ecuResponseLabel": "ОТВЕТ ЭБУ:",
         "adapterConnected": "АДАПТЕР ПОДКЛЮЧЕН",
-        "lowQualityAdapterWarning": "Адаптер низкого качества: ваш адаптер представляет собой низкокачественный клон. Ему не хватает точности синхронизации, необходимой для старых протоколов транспортных средств. Мы настоятельно рекомендуем перейти на высококачественный адаптер OBD2 для успешного подключения.",
+        "lowQualityAdapterWarning": "Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols. We highly recommend upgrading to a high-quality OBD2 adapter to connect successfully.",
         "statusProfiling": "Анализ возможностей адаптера OBD2...",
         "statusScanningCan": "Сканирование современных протоколов CAN-Bus...",
         "statusScanningKline": "Пробуждение протоколов K-Line. Старым автомобилям ответ может занять до 15 секунд...",
@@ -449,7 +454,7 @@
         "connRequired": "Требуется подключение",
         "connRequiredDesc": "Пожалуйста, сначала подключитесь к автомобилю, чтобы начать этот процесс.",
         "chronicFaultsTitle": "Статистические хронические проблемы",
-        "chronicFaultsObs": "{{code}}",
+        "chronicFaultsObs": "{{code}} (Observation: {{days}} Unique Days / Total: {{total}} Times)",
         "chronicFaultsPending": "Сбор пула данных/анализ статистики",
         "notScanned": "Не сканируется",
         "notScannedDesc": "Нажмите кнопку сканирования в правом верхнем углу, чтобы прочитать диагностические коды.",
@@ -544,7 +549,7 @@
         "odometer": "Расстояние",
         "milDist": "Индикатор двигателя горит",
         "distSinceCleared": "Ошибка устранена",
-        "dtcCount": "КОДЫ ОШИБОК",
+        "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "ЖИВЫЕ ДАННЫЕ С СЕНСОРА",
         "noData": "Не удалось прочитать данные",
         "proApp": "Сканировано с помощью Cortex OBD2 Diagnostic Scanner v7 PRO.",
@@ -804,7 +809,13 @@
         "telemetrySub": "Делитесь анонимным протоколом и журналами ошибок, чтобы улучшить совместимость транспортных средств.",
         "restartOnboarding": "Перезапустить начальную настройку"
     },
-    "disclaimer": "Все названия продуктов, логотипы и бренды являются собственностью их владельцев. Все названия компаний, продуктов и услуг, используемые в этом приложении, предназначены только для целей идентификации. Использование этих названий, логотипов и брендов не подразумевает какого-либо одобрения или спонсорства.",
+    "disclaimer": {
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
+    },
     "hiddenFeatures": {
         "title": "СКРЫТЫЕ ФУНКЦИИ",
         "btnLabel": "РАЗБЛОКИРОВАТЬ СКРЫТЫЕ ФУНКЦИИ",
@@ -1013,1470 +1024,1470 @@
         "crashTest": "Краш-тест"
     },
     "features": {
-        "title": "РАЗБЛОКИРОВКА СКРЫТЫХ ФУНКЦИЙ И UDS КОДИРОВАНИЕ",
-        "subTitle": "ISO 14229 UDS Длинное Кодирование и Адаптация",
-        "batteryVoltage": "НАПРЯЖЕНИЕ АККУМУЛЯТОРА",
-        "voltageReady": "Безопасно",
-        "voltageLocked": "Низкое напряжение",
-        "locked": "ЗАБЛОКИРОВАНО",
-        "ready": "ГОТОВО",
-        "allMarks": "ВСЕ МАРКИ",
-        "writeBtn": "НАПИСАТЬ",
-        "catLighting": "ОСВЕЩЕНИЕ",
-        "catSound": "ЗВУК И ПРЕДУПРЕЖДЕНИЯ",
-        "catDisplay": "ИНСТРУМЕНТЫ",
-        "catComfort": "КОМФОРТ",
-        "catSafety": "БЕЗОПАСНОСТЬ",
-        "safetyAlertTitle": "Оповещение о низком напряжении батареи",
-        "safetyAlertMsg": "Для кодирования требуется минимальное напряжение аккумулятора 12,2 В.\nПожалуйста, подключите зарядное устройство или запустите двигатель.",
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
+        "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "Safe",
+        "voltageLocked": "Low Voltage",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
         "items": {
             "vag_staging_needle_sweep": {
-                "name": "Постановка датчика/развертка иглы",
-                "desc": "Смещает стрелки приборов до максимума при включении зажигания."
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
             },
             "vag_acoustic_lock_confirmation": {
-                "name": "Звуковой сигнал подтверждения блокировки",
-                "desc": "При блокировке брелока издается короткий звуковой сигнал подтверждения."
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
             },
             "vag_american_parking_lights": {
-                "name": "Стояночные огни в стиле США",
-                "desc": "Постоянно горит передние указатели поворота с яркостью 20% при включении габаритных огней."
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
             },
             "vag_drl_menu_toggle": {
-                "name": "Дневные ходовые огни Переключатель меню",
-                "desc": "Включает флажок ВКЛ/ВЫКЛ ДХО в меню настроек информационно-развлекательной системы."
+                "name": "Daytime Running Lights Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
             },
             "vag_tear_wiping": {
-                "name": "Очистка лобового стекла",
-                "desc": "Выполняет дополнительную финальную очистку через 5 секунд после использования омывателя ветрового стекла."
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
             },
             "vag_emergency_brake_flashing": {
-                "name": "Мигание аварийного торможения",
-                "desc": "Быстро мигает стоп-сигналами и сигнализирует об опасности при резком экстренном торможении."
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
             },
             "vag_cornering_lights": {
-                "name": "Противотуманные фары на поворотах",
-                "desc": "Включает поворотный противотуманный фонарь со стороны вращения рулевого колеса."
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
             },
             "vag_comfort_mirror_folding": {
-                "name": "Брелок для ключей Comfort, складное зеркало",
-                "desc": "Автоматически складывает боковые зеркала при нажатии кнопки блокировки на брелоке."
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
             },
             "vag_lap_timer": {
-                "name": "Таймер круга приборной панели",
-                "desc": "Разблокирует вкладку отображения таймера круга на экране комбинации приборов."
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
             },
             "vag_refuel_quantity": {
-                "name": "Отображение количества заправки",
-                "desc": "Отображает точный объем в литрах, необходимый для полной заправки топлива."
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
             },
             "bmw_start_stop_memory": {
-                "name": "Режим автоматического запуска и остановки памяти",
-                "desc": "Запоминает последнее состояние автоматического запуска-остановки при перезапуске автомобиля."
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state across vehicle restarts."
             },
             "bmw_digital_speedometer": {
-                "name": "Цифровой дисплей спидометра",
-                "desc": "Добавляет опцию мгновенного цифрового отображения скорости на экран кластера."
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
             },
             "bmw_sport_displays": {
-                "name": "Спортивные дисплеи",
-                "desc": "Включает динамические шкалы мощности и крутящего момента на экране iDrive."
+                "name": "Sport Displays",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
             },
             "bmw_acoustic_lock_sound": {
-                "name": "Звук акустической блокировки/разблокировки",
-                "desc": "Издает звуковой сигнал системы сигнализации при запирании или отпирании автомобиля."
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
             },
             "bmw_mirror_fold_delay_zero": {
-                "name": "Мгновенное складывание зеркала",
-                "desc": "Складывает боковые зеркала мгновенно при нажатии кнопки блокировки без задержки."
+                "name": "Instant Mirror Folding",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
             },
             "bmw_tpms_tire_temperature": {
-                "name": "Отображение давления и температуры в шинах",
-                "desc": "Отображает температуру шин в реальном времени вместе с давлением на экране TPMS."
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
             },
             "renault_trip_computer_enable": {
-                "name": "Включение бортового путевого компьютера",
-                "desc": "Разблокирует показания бортового компьютера о среднем расходе топлива и запасе хода."
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
             },
             "renault_external_temp_display": {
-                "name": "Внешний дисплей температуры",
-                "desc": "Позволяет считывать температуру наружного воздуха на комбинации приборов."
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
             },
             "renault_automatic_tailgate": {
-                "name": "Брелок для открытия багажника",
-                "desc": "Полностью открывается механизм защелки багажника при удерживании кнопки багажника на брелоке."
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
             },
             "renault_alarm_chirp": {
-                "name": "Звуковой сигнал подтверждения блокировки сигнализации",
-                "desc": "При запирании дверей автомобиля звучит звуковой сигнал подтверждения."
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
             },
             "renault_shift_indicator": {
-                "name": "Индикатор переключения передач",
-                "desc": "Активирует переключение передач в режиме экономичного вождения. Стрелки ВВЕРХ/ВНИЗ на комбинации приборов."
+                "name": "Gear Shift Indicator",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
             },
             "ford_double_horn_honk_disable": {
-                "name": "Отключить двойной звуковой сигнал при закрытии двери",
-                "desc": "Отключает двойной звуковой сигнал при закрытии двери при работающем двигателе."
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
             },
             "ford_auto_door_locking": {
-                "name": "Автоматическое запирание дверей на скорости 20 км/ч",
-                "desc": "Автоматически запирает все двери, когда скорость автомобиля превышает 20 км/ч."
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
             },
             "ford_tpms_psi_display": {
-                "name": "Цифровой дисплей давления в шинах",
-                "desc": "Отображает точное числовое давление PSI/BAR для каждой шины на экране прибора."
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
             },
             "ford_sync_climate_screen": {
-                "name": "Климат-контроль экрана SYNC",
-                "desc": "Добавляет сенсорное меню климат-контроля и обогрева сидений на дисплей SYNC."
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
             },
             "stellantis_power_windows_remote": {
-                "name": "Брелок для дистанционного управления окном вверх/вниз",
-                "desc": "Поднимите или опустите все электрические стеклоподъемники при удержании кнопок блокировки/разблокировки."
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
             },
             "stellantis_cornering_fogs": {
-                "name": "Включение противотуманных фар на поворотах",
-                "desc": "Загорается противотуманная фара при поворотах на низкой скорости."
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
             },
             "vag_traffic_sign_recognition": {
-                "name": "Распознавание дорожных знаков",
-                "desc": "Отображает обнаруженные камерой знаки скорости на комбинации приборов и HUD."
+                "name": "Traffic Sign Recognition",
+                "desc": "Displays camera-detected speed signs in instrument cluster and HUD."
             },
             "vag_ambient_color_palette_30": {
-                "name": "30-цветная палитра окружающего освещения",
-                "desc": "Открывает палитру цветов внутреннего освещения 30 RGB в информационно-развлекательном меню MIB."
+                "name": "30-Color Ambient Lighting Palette",
+                "desc": "Unlocks 30 RGB interior lighting color picker in MIB infotainment menu."
             },
             "vag_seatbelt_warning_mute": {
-                "name": "Отключение звукового сигнала ремня безопасности",
-                "desc": "Отключает звуковой сигнал непристегнутого ремня безопасности в комбинации приборов."
+                "name": "Seatbelt Chime Deactivation",
+                "desc": "Disables unbuckled seatbelt acoustic chime in instrument cluster."
             },
             "bmw_alpina_cluster_theme": {
-                "name": "Компоновка Alpina Digital Dash",
-                "desc": "Применяет синюю фирменную тему Alpina к цифровой комбинации приборов."
+                "name": "Alpina Digital Dash Layout",
+                "desc": "Applies blue Alpina signature theme to digital instrument cluster."
             },
             "bmw_video_in_motion": {
-                "name": "Видео в движении",
-                "desc": "Разблокирует воспроизведение USB-видео на экране iDrive во время вождения."
+                "name": "Video In Motion",
+                "desc": "Unlocks USB video playback on iDrive screen while driving."
             },
             "bmw_sport_plus_mode_unlock": {
-                "name": "Включение режима вождения Sport+",
-                "desc": "Включает высокопроизводительный динамический режим вождения Sport+ в селекторе DEC."
+                "name": "Sport+ Driving Mode Enable",
+                "desc": "Enables Sport+ high-performance dynamic driving mode in DEC selector."
             },
             "mercedes_amg_menu_unlock": {
-                "name": "Меню телеметрии AMG Performance",
-                "desc": "Отображает температуру масла AMG, температуру коробки передач, таймер круга и G-метр."
+                "name": "AMG Performance Telemetry Menu",
+                "desc": "Displays AMG oil temp, transmission temp, lap timer, and G-meter."
             },
             "mercedes_agility_mode_enable": {
-                "name": "Маневренность Режим передачи",
-                "desc": "Открывает сверхчувствительную программу переключения передач Agility в трансмиссии 7G/9G-Tronic."
+                "name": "Agility Transmission Mode",
+                "desc": "Unlocks ultra-responsive Agility shift program in 7G/9G-Tronic transmission."
             },
             "mercedes_drl_brightness_boost": {
-                "name": "Дневные ходовые огни, интенсивность 100%",
-                "desc": "Увеличивает мощность светодиодных дневных ходовых огней до 100 % полной яркости."
+                "name": "Daytime Running Lights 100% Intensity",
+                "desc": "Increases LED daytime running lights output to 100% full brightness."
             },
             "mercedes_alarm_lock_chirp": {
-                "name": "Звуковой звуковой сигнал блокировки",
-                "desc": "При включении центрального замка подается короткий звуковой сигнал."
+                "name": "Acoustic Locking Horn Chirp",
+                "desc": "Emits short horn chirp notification when central locking is engaged."
             },
             "mercedes_dpf_adblue_gauge": {
-                "name": "Указатель уровня сажи DPF и AdBlue",
-                "desc": "Отображает точный процент массы сажи DPF и оставшийся диапазон AdBlue в IC."
+                "name": "DPF Soot & AdBlue Level Gauge",
+                "desc": "Displays exact DPF soot mass percentage and remaining AdBlue range in IC."
             },
             "renault_rs_monitor_enable": {
-                "name": "Телеметрия монитора Renault Sport RS",
-                "desc": "Обеспечивает живую перегрузку, турбонаддув и телеметрию температуры масла на R-Link."
+                "name": "Renault Sport RS Monitor Telemetry",
+                "desc": "Enables live G-force, turbo boost, and oil temp telemetry on R-Link."
             },
             "renault_duster_mirror_fold": {
-                "name": "Дастер Авто Зеркало складывающееся на замок",
-                "desc": "Боковые зеркала складываются автоматически с помощью команды центрального замка BCM."
+                "name": "Duster Auto Mirror Folding on Lock",
+                "desc": "Folds side mirrors automatically via BCM central locking command."
             },
             "ford_bambi_mode_fog_light": {
-                "name": "Режим Бэмби",
-                "desc": "Позволяет противотуманным фарам оставаться включенными при включении дальнего света фар."
+                "name": "Bambi Mode",
+                "desc": "Allows fog lights to remain ON when high beam headlights are activated."
             },
             "ford_st_rs_boot_animation": {
-                "name": "Экран загрузки ST/RS Performance SYNC",
-                "desc": "Заменяет анимацию запуска сенсорного экрана SYNC на логотип ST/RS."
+                "name": "ST/RS Performance SYNC Boot Screen",
+                "desc": "Changes SYNC touchscreen startup splash animation to ST / RS logo."
             },
             "toyota_reverse_beep_mute": {
-                "name": "Задняя передача, непрерывный звуковой сигнал в салоне, отключение звука",
-                "desc": "Отключает непрерывный звуковой сигнал включения задней передачи внутри салона до одного звукового сигнала."
+                "name": "Reverse Gear Continuous Cabin Beep Mute",
+                "desc": "Mutes continuous reverse gear chime inside cabin to a single beep."
             },
             "toyota_remote_window_drop": {
-                "name": "Удаленное окно с брелка сворачивается вниз",
-                "desc": "Опускаются все стеклоподъемники при удерживании кнопки разблокировки брелока."
+                "name": "Key Fob Remote Window Roll Down",
+                "desc": "Rolls down all power windows when holding key fob unlock button."
             },
             "toyota_auto_lock_shift_p": {
-                "name": "Автоматическая блокировка дверей при переключении передач",
-                "desc": "Автоматически запирает все двери при выходе из парковочного положения."
+                "name": "Auto Lock Doors on Gear Shift",
+                "desc": "Automatically locks all doors when shifting out of Park position."
             },
             "peugeot_icockpit_theme_unlock": {
-                "name": "Тема Peugeot 3D i-Cockpit Performance",
-                "desc": "Открывает цветные темы отображения Copper и Track Red в цифровом 3D-кластере."
+                "name": "Peugeot 3D i-Cockpit Performance Theme",
+                "desc": "Unlocks Copper and Track Red color display themes on 3D digital cluster."
             },
             "jeep_offroad_pages_enable": {
-                "name": "Страницы внедорожника Jeep Uconnect",
-                "desc": "Включает датчики угла наклона/крена, шарнирное соединение колес и состояние блокировки 4x4."
+                "name": "Jeep Uconnect Off-Road Pages",
+                "desc": "Enables pitch/roll angle gauges, wheel articulation, and 4x4 lock status."
             },
             "hyundai_smart_welcome_mirror": {
-                "name": "Подход Smart Key Добро пожаловать Зеркало разворачивается",
-                "desc": "Автоматически раскладывает боковые зеркала при приближении к автомобилю с помощью смарт-ключа."
+                "name": "Smart Key Approach Welcome Mirror Unfold",
+                "desc": "Automatically unfolds side mirrors when approaching vehicle with smart key."
             },
             "hyundai_one_touch_turn_7_flashes": {
-                "name": "Сигнал смены полосы движения в одно касание",
-                "desc": "Устанавливает продолжительность мигания мигания в одно касание до 7."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Sets one-touch lane change blinker duration to 7 flashes."
             },
             "hyundai_svm_camera_speed_extend": {
-                "name": "Увеличение скорости камеры кругового обзора 360°",
-                "desc": "Поддерживает 360-градусную парковочную камеру активной на скорости движения до 20 км/ч."
+                "name": "360° Surround Camera Speed Extension",
+                "desc": "Keeps 360-degree parking camera active up to 20 km/h forward speed."
             },
             "hyundai_n_performance_exhaust_flap": {
-                "name": "Выпускная заслонка N-Performance По умолчанию ОТКРЫТА",
-                "desc": "Устанавливает положение активного выпускного клапана по умолчанию на ОТКРЫТО при запуске двигателя."
+                "name": "N-Performance Exhaust Flap Default OPEN",
+                "desc": "Sets active exhaust valve default position to OPEN on engine start."
             },
             "vag_rain_closing_sunroof": {
-                "name": "Дождь приближается",
-                "desc": "Автоматически закрывает люк и окна при обнаружении дождя во время парковки."
+                "name": "Rain Closing",
+                "desc": "Automatically closes sunroof and windows when rain is detected while parked."
             },
             "bmw_launch_control_unlock": {
-                "name": "Разблокировка управления запуском",
-                "desc": "Разблокирует заводскую программу ускорения системы управления запуском в ЭБУ трансмиссии."
+                "name": "Launch Control Unlock",
+                "desc": "Unlocks factory launch control acceleration program in transmission ECU."
             },
             "mercedes_ambient_64_multi_zone": {
-                "name": "64-цветный многозонный профиль Ambient",
-                "desc": "Открывает динамическую анимацию многозонного цветового цикла во внутреннем освещении MBUX."
+                "name": "64-Color Multi-Zone Ambient Profile",
+                "desc": "Unlocks dynamic multi-zone color cycle animation in MBUX interior lighting."
             },
             "ford_trailer_brake_activation": {
-                "name": "Контроллер тормозов прицепа Включить",
-                "desc": "Включает встроенное меню контроллера тормозов прицепа в комбинации приборов."
+                "name": "Trailer Brake Controller Enable",
+                "desc": "Enables integrated trailer brake controller menu in instrument cluster."
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
-                "name": "Цилиндровый замок AFM/DFM V8",
-                "desc": "Постоянно блокирует двигатель в 8-цилиндровом режиме, чтобы предотвратить вибрацию V4."
+                "name": "AFM/DFM V8 Cylinder Lock",
+                "desc": "Locks engine in 8-cylinder mode permanently to prevent V4 vibration."
             },
             "gm_remote_start_time_extend": {
-                "name": "Продление продолжительности удаленного запуска",
-                "desc": "Увеличивает время дистанционного запуска двигателя с заводского брелока с 10 до 20 минут."
+                "name": "Remote Start Duration Extension",
+                "desc": "Extends factory key fob remote engine start run time from 10 to 20 minutes."
             },
             "dodge_srt_performance_pages": {
-                "name": "Страницы производительности SRT и режимы вождения",
-                "desc": "Открывает доступ к таймерам ускорения Uconnect 0–100, измерителю перегрузки и контролю запуска."
+                "name": "SRT Performance Pages & Drive Modes",
+                "desc": "Unlocks Uconnect 0-100 acceleration timers, G-force meter, and launch control."
             },
             "ram_bambi_mode_fog": {
-                "name": "Противотуманные фары для грузовиков RAM с дальним светом",
-                "desc": "Позволяет противотуманным фарам RAM оставаться активными вместе с фарами дальнего света."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Allows RAM fog lights to remain active alongside high beam headlights."
             },
             "byd_avas_pedestrian_siren_mute": {
-                "name": "AVAS EV Отключение низкоскоростной сирены",
-                "desc": "Отключает низкоскоростную сирену искусственного электродвигателя ниже 30 км/ч."
+                "name": "AVAS EV Low-Speed Siren Mute",
+                "desc": "Mutes low-speed artificial electric motor siren below 30 km/h."
             },
             "chery_isa_overspeed_chime_mute": {
-                "name": "Отключение звукового сигнала предупреждения о превышении скорости ISA",
-                "desc": "Отключает непрерывный звуковой сигнал, предупреждающий о превышении скорости 80/120 км/ч на моделях Tiggo/MG."
+                "name": "ISA Overspeed Warning Chime Deactivation",
+                "desc": "Disables continuous 80/120 km/h overspeed warning beep on Tiggo/MG models."
             },
             "mg_ev_battery_preconditioning_toggle": {
-                "name": "Ручной переключатель предварительного нагрева аккумуляторной батареи EV с быстрой зарядкой",
-                "desc": "Включает ручной переключатель предварительного нагрева батареи перед быстрой зарядкой постоянным током."
+                "name": "EV Fast-Charge Battery Pre-Heating Manual Switch",
+                "desc": "Enables manual battery pre-heating switch before DC fast charging."
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "Снижение чувствительности камеры мониторинга водителя",
-                "desc": "Уменьшает чрезмерно чувствительные предупреждения об усталости глаз на рулевой колонке."
+                "name": "Driver Monitoring Camera Sensitivity Reduction",
+                "desc": "Reduces over-sensitive eye-tracking fatigue warnings on steering column."
             },
             "honda_walk_away_auto_lock": {
-                "name": "Автоматический дверной замок Walk-Away",
-                "desc": "Автоматически запирает все двери, когда водитель с помощью брелока отходит на расстояние 2 метров."
+                "name": "Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when driver steps 2 meters away with key fob."
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "Режим памяти автоматического удержания автомобиля",
-                "desc": "Запоминает состояние включения/выключения тормоза AVH во всех циклах зажигания."
+                "name": "Auto Vehicle Hold Memory Mode",
+                "desc": "Remembers AVH brake hold ON/OFF state across ignition cycles."
             },
             "volvo_start_stop_default_off": {
-                "name": "Автоматический старт-стоп Режим ВЫКЛ по умолчанию",
-                "desc": "Устанавливает состояние системы выключения двигателя Start-Stop по умолчанию в положение ВЫКЛ при запуске автомобиля."
+                "name": "Auto Start-Stop Default OFF Mode",
+                "desc": "Sets Start-Stop engine shutoff system default state to OFF upon vehicle start."
             },
             "volvo_polestar_digital_theme": {
-                "name": "Тема Polarstar Blue Digital Cluster",
-                "desc": "Открывает фирменную синюю тему динамической шкалы Polestar на дисплее водителя Volvo."
+                "name": "Polestar Blue Digital Cluster Theme",
+                "desc": "Unlocks Polestar signature blue dynamic gauge theme in Volvo driver display."
             },
             "vag_virtual_cockpit_r_theme": {
-                "name": "Темы производительности Virtual Cockpit R/S/Cupra",
-                "desc": "Разблокирует темы работы центрального тахометра R-Line, S-Line и Cupra в цифровой кабине."
+                "name": "Virtual Cockpit R / S / Cupra Performance Themes",
+                "desc": "Unlocks R-Line, S-Line, and Cupra central tachometer performance themes in digital cockpit."
             },
             "vag_sound_symposer_mute": {
-                "name": "Sound Symposer Деактивация ложного шума двигателя",
-                "desc": "Отключает генератор ложного звука двигателя салонного динамика для чистого звука выхлопа."
+                "name": "Sound Symposer Fake Engine Noise Deactivation",
+                "desc": "Deactivates cabin speaker fake engine sound generator for pure exhaust note."
             },
             "vag_wireless_carplay_enable": {
-                "name": "Беспроводная связь Apple CarPlay и автоматическая активация Android",
-                "desc": "Включает беспроводную связь Wi-Fi 5 ГГц Apple CarPlay и Android Auto на устройствах MIB2.5/MIB3."
+                "name": "Wireless Apple CarPlay & Android Auto Activation",
+                "desc": "Enables 5GHz Wi-Fi wireless Apple CarPlay and Android Auto on MIB2.5/MIB3 units."
             },
             "vag_offroad_telemetry_menu": {
-                "name": "MIB Offroad Телеметрия и дисплей датчиков",
-                "desc": "Отображает угол поворота рулевого колеса, температуру масла, температуру охлаждающей жидкости и указатели высоты на экране MIB."
+                "name": "MIB Offroad Telemetry & Gauge Display",
+                "desc": "Displays steering angle, oil temp, coolant temp, and altitude gauges on MIB screen."
             },
             "vag_easy_entry_driver_seat": {
-                "name": "Автоматическая регулировка спинки сиденья с легким входом и электроприводом",
-                "desc": "При открытии двери водительское сиденье с электроприводом сдвигается назад на 5 см, что облегчает посадку в автомобиль."
+                "name": "Automatic Easy Entry Power Seat Back-step",
+                "desc": "Moves electric driver seat back 5 cm upon door opening for easy vehicle entry."
             },
             "vag_hba_memory_state": {
-                "name": "Сохранение памяти системы управления дальним светом",
-                "desc": "Запоминает состояние включения системы управления дальним светом при каждом перезапуске зажигания."
+                "name": "High-Beam Assist Memory Retention",
+                "desc": "Remembers High-Beam Assist ON status across ignition restart cycles."
             },
             "vag_battery_soc_display": {
-                "name": "Отображение состояния заряда аккумулятора",
-                "desc": "Показывает точный процент заряда аккумулятора на комбинации приборов, когда удерживается кнопка отключения."
+                "name": "Battery State of Charge Display",
+                "desc": "Shows exact battery charge percentage on instrument cluster when trip button is held."
             },
             "bmw_idrive7_m_animation": {
-                "name": "Анимация запуска iDrive 7/8 M-Performance",
-                "desc": "Заменяет изображение экрана загрузки iDrive на анимацию логотипа M-Performance или M-GmbH."
+                "name": "iDrive 7 / 8 M-Performance Startup Animation",
+                "desc": "Changes iDrive screen boot graphic to M-Performance or M-GmbH logo animation."
             },
             "bmw_bowers_wilkins_audio_profiles": {
-                "name": "Разблокировка движка 3D-звука Bowers & Wilkins",
-                "desc": "Разблокирует аудиопрофили Bowers & Wilkins Concert, Studio и Stage DSP в системах HiFi."
+                "name": "Bowers & Wilkins 3D Sound Engine Unlock",
+                "desc": "Unlocks Bowers & Wilkins Concert, Studio, and Stage DSP audio profiles on HiFi systems."
             },
             "bmw_hitch_zoom_camera": {
-                "name": "Камера заднего вида, режим масштабирования прицепного устройства",
-                "desc": "Разблокирует режим масштабирования выравнивания сцепного устройства прицепа сверху вниз при просмотре с камеры заднего вида."
+                "name": "Reverse Camera Trailer Hitch Zoom Mode",
+                "desc": "Unlocks top-down trailer hitch alignment zoom mode on reverse camera view."
             },
             "bmw_secure_idle_protection": {
-                "name": "Надежная защита двигателя на холостом ходу от блокировки переключения передач",
-                "desc": "Блокирует коробку передач в режиме парковки, если водитель покидает работающий автомобиль с брелоком."
+                "name": "Secure Idle Engine Shift-Lock Protection",
+                "desc": "Locks transmission in Park if driver leaves running vehicle with key fob."
             },
             "bmw_seatbelt_handover_mute": {
-                "name": "Деактивация электрического рычага передачи ремня безопасности купе",
-                "desc": "Отключает моторизованный удлинитель ремня безопасности на купе 4-й и 2-й серий."
+                "name": "Coupe Electric Seatbelt Handover Arm Deactivation",
+                "desc": "Disables motorized seatbelt extender arm on 4 Series and 2 Series Coupes."
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "Температура автоматического подогрева сиденья и рулевого колеса",
-                "desc": "Запускает автоматический обогрев сидений и рулевого колеса, когда температура окружающей среды падает ниже 5°C."
+                "name": "Automatic Seat & Steering Wheel Heating Temperature",
+                "desc": "Triggers automatic seat and steering wheel heating when ambient temp drops below 5°C."
             },
             "mercedes_amg_track_pace_unlock": {
-                "name": "MBUX AMG Телеметрия Track Pace и таймер круга",
-                "desc": "Разблокирует время прохождения круга, телеметрию ускорения и графики перегрузки на экране MBUX."
+                "name": "MBUX AMG Track Pace Telemetry & Lap Timer",
+                "desc": "Unlocks lap timing, acceleration telemetry, and G-force graphs on MBUX screen."
             },
             "mercedes_drive_mode_last_memory": {
-                "name": "Динамический выбор последнего режима движения. Память",
-                "desc": "Запоминает последний выбранный режим движения при перезапуске автомобиля."
+                "name": "Dynamic Select Last Drive Mode Memory",
+                "desc": "Remembers last selected Drive Mode across vehicle restart."
             },
             "mercedes_proximity_360_camera_auto": {
-                "name": "Датчик приближения, автоматический обзор камеры на 360°",
-                "desc": "Автоматически переключает экран на камеру 360°, когда передние датчики обнаруживают препятствие высотой менее 50 см."
+                "name": "Proximity Sensor Auto 360° Camera View",
+                "desc": "Automatically switches screen to 360 camera when front sensors detect obstacle < 50 cm."
             },
             "ford_sync_climate_screen_unlock": {
-                "name": "Страница климат-контроля SYNC3 / SYNC4 с сенсорным экраном",
-                "desc": "Включает климат-контроль, подогрев сиденья и сенсорную страницу направления воздушного потока."
+                "name": "SYNC3 / SYNC4 Touchscreen Climate Control Page",
+                "desc": "Enables climate control, heated seat, and airflow direction touchscreen page."
             },
             "ford_turn_signal_5_flashes": {
-                "name": "Сигнал смены полосы движения в одно касание",
-                "desc": "Увеличена длительность сигнала поворота при смене полосы движения в одно касание с 3 до 5 миганий."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Increases one-touch lane change turn signal duration from 3 to 5 flashes."
             },
             "ford_auto_engine_shutdown_disable": {
-                "name": "Отмена автоматического отключения двигателя на 30-минутном холостом ходу",
-                "desc": "Предотвращает автоматическое выключение двигателя после 30 минут простоя."
+                "name": "30-Minute Idle Auto Engine Shutdown Override",
+                "desc": "Prevents automatic engine shutoff after 30 minutes idle."
             },
             "ev_battery_preheat_manual_switch": {
-                "name": "Ручной переключатель предварительного нагрева аккумулятора электромобиля",
-                "desc": "Позволяет вручную предварительно нагреть батарею до 25°C перед быстрой зарядкой постоянным током без навигации по маршруту."
+                "name": "EV Battery Pre-Heating Manual Switch",
+                "desc": "Allows manual battery pre-heating to 25°C before DC fast charging without navigation route."
             },
             "ev_v2l_power_output_expand": {
-                "name": "V2L Расширение выходной мощности 220 В",
-                "desc": "Увеличивает предел мощности внешней бытовой розетки переменного тока 220 В V2L с 2,2 кВт до 3,6 кВт."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands V2L external 220V AC household power outlet limit from 2.2 kW to 3.6 kW."
             },
             "ev_one_pedal_regen_force_level3": {
-                "name": "Привод с одной педалью. Максимальное рекуперативное торможение. По умолчанию.",
-                "desc": "Устанавливает максимальное рекуперативное торможение по умолчанию при запуске автомобиля."
+                "name": "One-Pedal Drive Maximum Regenerative Braking Default",
+                "desc": "Sets maximum regenerative braking as default on vehicle start."
             },
             "byd_soc_max_charge_target_limit": {
-                "name": "Максимальный предел заряда аккумулятора BYD для защиты здоровья аккумулятора",
-                "desc": "Устанавливает максимальный предел заряда переменного/постоянного тока на 80 % или 90 %, чтобы продлить срок службы блейд-аккумулятора."
+                "name": "BYD Battery Health Protection Max Charge Limit",
+                "desc": "Sets max AC/DC charge cutoff limit to 80% or 90% to extend Blade Battery lifespan."
             },
             "byd_dmi_forced_pure_ev_speed_override": {
-                "name": "BYD DM-i Pure EV режим блокировки бензинового двигателя",
-                "desc": "Блокирует запуск бензинового двигателя в режиме EV на скорости до 130 км/ч даже при полном разгоне."
+                "name": "BYD DM-i Pure EV Mode Gasoline Engine Override",
+                "desc": "Inhibits gasoline engine start in EV mode up to 130 km/h even during full throttle acceleration."
             },
             "byd_vtol_v2v_rescue_charge_mode": {
-                "name": "Режим спасательной зарядки BYD VTOL",
-                "desc": "Разблокирует внешний выход переменного тока для зарядки электромобилей, застрявших на дороге."
+                "name": "BYD VTOL Rescue Charge Mode",
+                "desc": "Unlocks external AC power output to charge stranded electric vehicles on road."
             },
             "hyundai_ipedal_memory_lock": {
-                "name": "Hyundai / Kia i-PEDAL Блокировка памяти одной педали привода",
-                "desc": "Предотвращает возврат режима остановки одной педалью i-PEDAL на уровень 3 после переключения на задний ход."
+                "name": "Hyundai / Kia i-PEDAL One-Pedal Drive Memory Lock",
+                "desc": "Prevents i-PEDAL one-pedal stop mode from dropping back to Level 3 after shifting to Reverse."
             },
             "hyundai_utility_mode_12v_saver": {
-                "name": "Режим «Утилиты для кемпинга» Экономия высокого напряжения 12 В",
-                "desc": "Питает розетку V2L напряжением 220 В непосредственно от тяговой аккумуляторной батареи высокого напряжения, чтобы предотвратить разрядку вспомогательной аккумуляторной батареи напряжением 12 В."
+                "name": "Utility Camping Mode High-Voltage 12V Saver",
+                "desc": "Powers 220V V2L outlet directly from HV traction battery to prevent auxiliary 12V battery drain."
             },
             "hyundai_phev_no_ice_climate_start": {
-                "name": "Режим PHEV EV Климатическое отопление Отопление бензинового двигателя Подавление",
-                "desc": "Принудительный тепловой насос / электрический обогреватель PTC для климата в салоне без запуска бензинового двигателя."
+                "name": "PHEV EV Mode Climate Heating Gasoline Engine Suppression",
+                "desc": "Forces heat pump / PTC electric heater for cabin climate without starting gasoline engine."
             },
             "vag_taycan_ess_sound_profile_swap": {
-                "name": "Электрический спортивный звук Taycan / RS e-tron Профиль",
-                "desc": "Изменяет профиль звука электрического вождения на звуковой генератор Porsche Taycan GTS или Audi RS e-tron GT."
+                "name": "Electric Sport Sound Taycan / RS e-tron Profile",
+                "desc": "Changes electric driving sound profile to Porsche Taycan GTS or Audi RS e-tron GT sound generator."
             },
             "vag_meb_daily_charge_target_menu": {
-                "name": "Батарея MEB: ежедневно 80 %/100 % в поездке. Полоса быстрой зарядки.",
-                "desc": "Добавляет панель быстрого переключения на экран MIB для переключения между 80 % ежедневного ухода за аккумулятором и 100 % заряда за поездку."
+                "name": "MEB Battery Daily 80% / Trip 100% Quick Charge Bar",
+                "desc": "Adds quick toggle bar on MIB screen to switch between 80% daily battery care and 100% trip charge."
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "Принудительный заряд аккумулятора генератора двигателя GTE/E-Mode",
-                "desc": "Заставляет двигатель внутреннего сгорания работать в качестве генератора для подзарядки высоковольтной батареи до 80 % во время движения."
+                "name": "GTE / E-Mode Engine Generator Battery Force Charge",
+                "desc": "Forces combustion engine to act as generator to recharge high-voltage battery up to 80% while driving."
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
-                "name": "Ханс Циммер IconicSounds Electric M-Performance Sound Engine",
-                "desc": "Открывает акустические профили электрического ускорения Hans Zimmer M-Performance на i4 и iX."
+                "name": "Hans Zimmer IconicSounds Electric M-Performance Sound Engine",
+                "desc": "Unlocks Hans Zimmer acoustic M-Performance electric acceleration sound profiles on i4 and iX."
             },
             "bmw_phev_max_edrive_140kmh": {
-                "name": "Потолок скорости PHEV MAX eDrive Pure Electric",
-                "desc": "Увеличивает потолок максимальной максимальной электрической скорости на гибридах 330e/530e Plug-in до 140 км/ч."
+                "name": "PHEV MAX eDrive Pure Electric Speed Ceiling",
+                "desc": "Increases max pure electric speed ceiling on 330e / 530e Plug-in hybrids to 140 km/h."
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "Селектор ограничения максимального тока домашнего зарядного устройства переменного тока",
-                "desc": "Добавляет ограничитель тока зарядки дома переменного тока для предотвращения перегрузки домашней сети."
+                "name": "AC Home Charger Maximum Current Limit Selector",
+                "desc": "Adds AC home charging current limiter to prevent home circuit overload."
             },
             "toyota_hybrid_ev_mode_override": {
-                "name": "Подавление блокировки дроссельной заслонки в режиме Toyota/Lexus EV",
-                "desc": "Предотвращает принудительный запуск бензинового двигателя во время ускорения, когда кнопка режима EV активна."
+                "name": "Toyota / Lexus EV Mode Throttle Override Suppression",
+                "desc": "Prevents gasoline engine from forced start during acceleration when EV mode button is active."
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "Усиление вентилятора охлаждения высоковольтной аккумуляторной батареи Toyota/Lexus",
-                "desc": "Увеличивает скорость вентилятора охлаждения гибридной тяговой батареи на +30% для предотвращения термической деградации в жарком климате."
+                "name": "Toyota / Lexus High-Voltage Battery Cooling Fan Boost",
+                "desc": "Increases hybrid traction battery cooling fan speed by +30% to prevent thermal degradation in hot climates."
             },
             "tesla_sentry_high_bitrate_video": {
-                "name": "Режим Tesla Sentry Непрерывная запись с видеорегистратора с высоким битрейтом",
-                "desc": "Увеличивает битрейт видеозаписи камеры в режиме охраны для кристально четкой видимости номерного знака."
+                "name": "Tesla Sentry Mode High-Bitrate Continuous Dashcam Recording",
+                "desc": "Increases Sentry Mode camera video recording bitrate for crystal-clear license plate visibility."
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "Температурный порог защиты кабины Tesla от перегрева",
-                "desc": "Снижает температуру срабатывания климатической защиты кабины от перегрева с 40°C до 30°C для консервации салона."
+                "name": "Tesla Cabin Overheat Protection Temperature Threshold",
+                "desc": "Lowers cabin overheat protection climate trigger temperature from 40°C to 30°C for interior preservation."
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
-                "name": "Реадаптация Shift Assistant Pro",
-                "desc": "Сбрасывает параметры обучения датчика переключения передач и запускает повторную калибровку квикшифтера."
+                "name": "Shift Assistant Pro Re-Adaptation",
+                "desc": "Resets shift sensor learning parameters and initiates quickshifter recalibration."
             },
             "bmwmotorrad_esa_zero_point_calib": {
-                "name": "Калибровка нулевой точки динамической подвески ESA",
-                "desc": "Калибровка электронных датчиков нагрузки и хода подвески до заводского нуля."
+                "name": "Dynamic ESA Suspension Zero-Point Calibration",
+                "desc": "Calibrates electronic suspension load and travel sensors to factory zero."
             },
             "bmwmotorrad_abs_pro_cornering_toggle": {
-                "name": "Порог вмешательства в режиме поворота ABS Pro",
-                "desc": "Регулирует чувствительность вмешательства ABS в зависимости от угла наклона для использования на гусеницах."
+                "name": "ABS Pro Cornering Mode Intervention Threshold",
+                "desc": "Adjusts lean-angle dependent ABS intervention sensitivity for track use."
             },
             "bmwmotorrad_service_interval_reset": {
-                "name": "Сброс напоминаний о ежегодном и дистанционном обслуживании",
-                "desc": "Сбрасывает индикатор обслуживания комбинации приборов и устанавливает индивидуальный интервал."
+                "name": "Annual & Distance Service Reminder Reset",
+                "desc": "Resets instrument cluster service indicator and sets custom interval."
             },
             "bmwmotorrad_headlight_pro_cornering": {
-                "name": "Адаптивная чувствительность адаптивного освещения поворотов Headlight Pro",
-                "desc": "Регулирует порог угла наклона для адаптивного включения фар при поворотах."
+                "name": "Headlight Pro Adaptive Cornering Light Sensitivity",
+                "desc": "Adjusts lean angle threshold for adaptive cornering headlight activation."
             },
             "bmwmotorrad_keyless_ride_range_extend": {
-                "name": "Расширение диапазона обнаружения брелока Keyless Ride",
-                "desc": "Оптимизирует диапазон сигнала транспондера для бесключевого распознавания зажигания."
+                "name": "Keyless Ride Fob Detection Range Extension",
+                "desc": "Optimizes transponder signal range for keyless ignition sensing."
             },
             "bmwmotorrad_reverse_assist_sensitivity": {
-                "name": "Чувствительность двигателя электрического усилителя заднего хода",
-                "desc": "Точная настройка скорости электростартера с реверсивным приводом и ограничения крутящего момента."
+                "name": "Electric Reverse Assist Motor Sensitivity",
+                "desc": "Fine-tunes reverse drive electric starter motor speed and torque limit."
             },
             "ducati_riding_mode_custom_profile": {
-                "name": "Создатель пользовательского профиля режима езды",
-                "desc": "Разблокирует пользовательские комбинации для профилей «Гонка», «Спорт», «Туринг» и «Город»."
+                "name": "Riding Mode Custom Profile Creator",
+                "desc": "Unlocks custom combinations for Race, Sport, Touring, and Urban profiles."
             },
             "ducati_ohlins_suspension_mapping": {
-                "name": "Полуактивное картирование подвески Öhlins Smart EC 2.0",
-                "desc": "Точная настройка кривой демпфирования и предварительные настройки жесткости для электронной подвески."
+                "name": "Öhlins Smart EC 2.0 Semi-Active Suspension Mapping",
+                "desc": "Fine-tunes damping curve and stiffness presets for electronic suspension."
             },
             "ducati_dashboard_lap_timer_gps": {
-                "name": "Таймер круга на TFT-панели и разделение секторов GPS",
-                "desc": "Разблокирует таймер круга и отображение разделения секторов на комбинации приборов."
+                "name": "TFT Dashboard Lap Timer & GPS Sector Splits",
+                "desc": "Unlocks track lap timer and sector split display on instrument cluster."
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "Регулировка уровня управления моторным тормозом",
-                "desc": "Регулирует момент замедления задних колес при торможении на входе в крутой поворот."
+                "name": "Engine Brake Control Level Adjustment",
+                "desc": "Adjusts rear wheel deceleration torque during hard corner entry braking."
             },
             "ducati_cruise_control_retrofit_enable": {
-                "name": "Активация модернизации круиз-контроля",
-                "desc": "Включает флаг программного обеспечения ЭБУ для модернизированных электронных переключателей круиз-контроля."
+                "name": "Cruise Control Retrofit Activation",
+                "desc": "Enables ECU software flag for retrofitted electronic cruise control switches."
             },
             "ducati_exhaust_valve_sound_map": {
-                "name": "Карта оборотов открытия выпускного сервоклапана",
-                "desc": "Регулирует порог открытия акустического выпускного клапана для усиления звука выхлопа."
+                "name": "Exhaust Servo Valve Opening RPM Map",
+                "desc": "Adjusts acoustic exhaust valve opening threshold for enhanced exhaust note."
             },
             "ducati_pit_lane_limiter_config": {
-                "name": "Порог ограничителя скорости на пит-лейне",
-                "desc": "Позволяет включать ограничитель скорости на пит-лейне до 60 км/ч на переключателях на руле."
+                "name": "Pit Lane Speed Limiter Threshold",
+                "desc": "Enables 60 km/h pit lane speed limiter toggle on handlebar switches."
             },
             "ducati_desmo_service_light_reset": {
-                "name": "Сброс сервисного индикатора масляного и десмоклапана",
-                "desc": "Удаляет предупреждение о необходимости обслуживания десмодромного клапана на комбинации приборов."
+                "name": "Oil & Desmo Valve Service Light Reset",
+                "desc": "Clears Desmodromic valve service reminder warning on instrument cluster."
             },
             "ktm_quickshifter_plus_delay_tuning": {
-                "name": "Quickshifter+ Shift Сокращение времени и точная настройка задержки",
-                "desc": "Настраивает длительность отключения зажигания для каждой передачи для плавного переключения вверх/вниз."
+                "name": "Quickshifter+ Shift Cut Time & Delay Fine-Tuning",
+                "desc": "Customizes ignition cut duration per gear for seamless up/down shifts."
             },
             "ktm_rally_offroad_abs_tc_unlock": {
-                "name": "Ралли/внедорожье: разблокировка режима ABS и TC",
-                "desc": "Отключает заднюю ABS и разблокирует 9-ступенчатую регулировку пробуксовки в режиме Rally."
+                "name": "Rally / Off-Road ABS & TC Mode Unlock",
+                "desc": "Disables rear ABS and unlocks 9-stage slip adjustment in Rally mode."
             },
             "ktm_my_ktm_connectivity_unlock": {
-                "name": "Активация модуля подключения My KTM / Husqvarna",
-                "desc": "Включает навигацию по Bluetooth и пошаговую маршрутизацию на TFT-дисплее."
+                "name": "My KTM / Husqvarna Connectivity Module Activation",
+                "desc": "Enables Bluetooth navigation and turn-by-turn routing on TFT display."
             },
             "ktm_cruise_control_retrofit_enable": {
-                "name": "Разблокировка программного обеспечения для модернизации круиз-контроля",
-                "desc": "Активирует функцию круиз-контроля после установки комплекта переключателей на руле."
+                "name": "Cruise Control Retrofit Software Unlock",
+                "desc": "Activates cruise control function after installing handlebar switch kit."
             },
             "ktm_clutch_pull_map_switch_gesture": {
-                "name": "Переключение карты жестов сцепления-тяги",
-                "desc": "Позволяет быстро переключать карты, выполняя жест рычага сцепления при запуске."
+                "name": "Clutch-Pull Gesture Map Switching",
+                "desc": "Enables rapid map switching by executing clutch lever gesture on startup."
             },
             "yamaha_quickshifter_cut_time_adjust": {
-                "name": "Время включения и чувствительность квикшифтера при зажигании",
-                "desc": "Регулирует порог нагрузки датчика квикшифтера и задержку прерывания зажигания."
+                "name": "Quickshifter Ignition Cut-Time & Sensitivity",
+                "desc": "Adjusts quickshifter sensor load threshold and spark interruption delay."
             },
             "yamaha_ride_by_wire_throttle_map": {
-                "name": "Селектор предустановок карты дроссельной заслонки с электронным управлением",
-                "desc": "Переключает режимы A, STD и B."
+                "name": "Ride-by-Wire Throttle Map Preset Selector",
+                "desc": "Switches between A-Mode, STD, and B-Mode throttle maps."
             },
             "yamaha_tft_track_theme_unlock": {
-                "name": "Расположение TFT-дисплея и разблокировка подсветки переключения передач",
-                "desc": "Открывает расположение группы гусениц R1/MT-09 SP и программируемые индикаторы оборотов переключения передач."
+                "name": "TFT Track Display Layout & Shift Light Unlock",
+                "desc": "Unlocks R1/MT-09 SP track cluster layout and programmable shift RPM lights."
             },
             "yamaha_launch_control_sensitivity": {
-                "name": "Система управления запуском Вер. Потолок",
-                "desc": "Настраивает управление запуском, удерживая обороты."
+                "name": "Launch Control System Rev Ceiling",
+                "desc": "Configures launch control holding RPM."
             },
             "yamaha_heated_grips_accessory_enable": {
-                "name": "Интеграция TFT-меню с оригинальными ручками с подогревом",
-                "desc": "Включает элементы управления подогревом рукоятки и указатель температуры на TFT-экране."
+                "name": "Genuine Heated Grips TFT Menu Integration",
+                "desc": "Enables heated grip controls and temperature gauge on TFT screen."
             },
             "honda_hstc_wheelie_control_fine_tune": {
-                "name": "Точная настройка HSTC Traction & Wheelie Control",
-                "desc": "Регулирует коэффициент пробуксовки системы Honda Selectable Torque Control и допуск подъема передних колес."
+                "name": "HSTC Traction & Wheelie Control Fine-Tuning",
+                "desc": "Adjusts Honda Selectable Torque Control slip ratio and front wheel lift tolerance."
             },
             "honda_bi_directional_quickshifter_enable": {
-                "name": "Разблокировка модернизации двунаправленного квикшифтера",
-                "desc": "Включает кодирование автоматического переключения передач и квикшифтера вверх/вниз в памяти ЭБУ."
+                "name": "Bi-Directional Quickshifter Retrofit Unlock",
+                "desc": "Enables auto-blipper and up/down quickshifter coding in ECU memory."
             },
             "honda_service_reminder_custom_interval": {
-                "name": "Настройка расстояния напоминания о сервисном обслуживании нефти",
-                "desc": "Устанавливает индивидуальный интервал замены масла на цифровой приборной панели."
+                "name": "Oil Service Reminder Distance Customizer",
+                "desc": "Sets custom oil change mileage interval on digital dash."
             },
             "honda_track_abs_rear_disable": {
-                "name": "Отключение трековой АБС на задних колесах",
-                "desc": "Отключает канал ABS на задних колесах, сохраняя при этом переднюю ABS на поворотах в трековые дни."
+                "name": "Track ABS Rear-Wheel Deactivation",
+                "desc": "Disables rear wheel ABS channel while retaining front cornering ABS for track days."
             },
             "honda_cold_start_idle_enrichment": {
-                "name": "Обогащение топлива при холодном пуске и целевые обороты холостого хода",
-                "desc": "Регулирует скорость холостого хода при первоначальном прогреве выхлопных систем послепродажного обслуживания."
+                "name": "Cold-Start Fuel Enrichment & Idle Target RPM",
+                "desc": "Adjusts initial warm-up idle speed for aftermarket exhaust systems."
             },
             "harley_custom_throttle_curve_editor": {
-                "name": "Редактор пользовательских кривых отклика дроссельной заслонки",
-                "desc": "Регулирует прогрессию дроссельной заслонки Milwaukee-Eight / Revolution Max с электроприводом."
+                "name": "Custom Throttle Response Curve Editor",
+                "desc": "Adjusts Milwaukee-Eight / Revolution Max ride-by-wire throttle progression."
             },
             "harley_security_alarm_sensitivity": {
-                "name": "Интеллектуальная система безопасности, чувствительность к приближению и наклону",
-                "desc": "Регулирует чувствительность датчика движения и задержку постановки на охрану брелока громкой связи."
+                "name": "Smart Security System Proximity & Tilt Sensitivity",
+                "desc": "Adjusts motion sensor sensitivity and hands-free fob arming delay."
             },
             "harley_boom_box_gts_hidden_diagnostics": {
-                "name": "Бум! Box GTS Infotainment Скрытое диагностическое меню",
-                "desc": "Разблокирует дисплеи инженерной телеметрии, датчики температуры двигателя и давления масла."
+                "name": "Boom! Box GTS Infotainment Hidden Diagnostic Menu",
+                "desc": "Unlocks engineering telemetry displays, engine temp, and oil pressure gauges."
             },
             "harley_rdrs_defensive_system_tune": {
-                "name": "Чувствительность управления проскальзыванием RDRS",
-                "desc": "Точная настройка системы Reflex Defensive Rider System для уменьшения пробуксовки задних колес при переключении на пониженную передачу."
+                "name": "RDRS Drag-Torque Slip Control Sensitivity",
+                "desc": "Fine-tunes Reflex Defensive Rider System rear-wheel slip mitigation during downshifts."
             },
             "byd_avas_low_speed_siren_mute": {
-                "name": "AVAS низкоскоростной электромобиль, предупреждающий о пешеходах, сирена, отключение звука",
-                "desc": "Отключает или приглушает сирену внешней акустической системы оповещения автомобиля при скорости ниже 30 км/ч."
+                "name": "AVAS Low-Speed EV Pedestrian Warning Siren Mute",
+                "desc": "Mutes or lowers external acoustic vehicle alerting system siren under 30 km/h."
             },
             "byd_ev_battery_preheat_manual_switch": {
-                "name": "Ручной переключатель предварительного нагрева аккумулятора электромобиля",
-                "desc": "Обеспечивает ручное термическое кондиционирование аккумулятора перед быстрой зарядкой постоянным током."
+                "name": "Manual EV Battery Pre-Heating Toggle",
+                "desc": "Enables manual battery thermal conditioning prior to DC fast charging."
             },
             "byd_v2l_220v_outlet_power_expansion": {
-                "name": "V2L Расширение выходной мощности 220 В",
-                "desc": "Увеличивает потолок мощности внешнего разряда V2L с 2,2 кВт до максимум 3,6 кВт."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands external V2L discharge power ceiling from 2.2 kW to 3.6 kW maximum."
             },
             "byd_one_pedal_regen_default_max": {
-                "name": "Регенеративное торможение с одной педалью. По умолчанию Макс.",
-                "desc": "Блокирует рекуперативное торможение с высокой степенью рекуперации как постоянное значение по умолчанию при запуске автомобиля."
+                "name": "One-Pedal Drive Regenerative Braking Default Max",
+                "desc": "Locks high regenerative braking as persistent default upon vehicle startup."
             },
             "mg_ismart_connectivity_unlock": {
-                "name": "Подключение i-SMART и удаленная разблокировка телеметрии",
-                "desc": "Включает функции дистанционного климат-контроля и отслеживания состояния автомобиля."
+                "name": "i-SMART Connectivity & Remote Telemetry Unlock",
+                "desc": "Enables remote climate control and vehicle status tracking features."
             },
             "mg_mg4_xpower_launch_control_enable": {
-                "name": "Режим управления запуском с двумя двигателями MG4 XPower",
-                "desc": "Открывает режим ускорения Launch Control за 3,8 с 0–100 км/ч."
+                "name": "MG4 XPower Dual-Motor Launch Control Mode",
+                "desc": "Unlocks 3.8s 0-100 km/h launch control acceleration mode."
             },
             "mg_battery_preheat_manual_trigger": {
-                "name": "Ручная предварительная подготовка аккумулятора для быстрой зарядки",
-                "desc": "Принудительно включает нагревательные элементы высоковольтной батареи для пиковой скорости заряда постоянным током."
+                "name": "Manual Fast-Charge Battery Pre-Conditioning",
+                "desc": "Forces high-voltage battery heating elements ON for peak DC charge rates."
             },
             "xpeng_xngp_adas_region_unlock": {
-                "name": "Разблокировка региона для автономного помощника вождения XNGP",
-                "desc": "Обеспечивает расширенную помощь пилоту с помощью навигации в открытых регионах."
+                "name": "XNGP Autonomous Driving Assistant Region Unlock",
+                "desc": "Enables advanced navigation-guided pilot assistance in unlocked regions."
             },
             "xpeng_ambient_lighting_music_sync": {
-                "name": "Музыкально-реактивное ритмическое окружающее освещение",
-                "desc": "Синхронизирует импульсы светодиодного освещения салона с басами аудиосистемы."
+                "name": "Music-Reactive Rhythm Ambient Lighting",
+                "desc": "Synchronizes cabin LED ambient lighting pulses with audio system bass beats."
             },
             "xpeng_rear_camera_trailer_hitch_view": {
-                "name": "Крепление камеры на 360° и режим наложения на землю",
-                "desc": "Добавляет наложение сетки выравнивания сцепки высокого разрешения на резервную камеру."
+                "name": "360° Camera Hitch & Ground Overlay Mode",
+                "desc": "Adds high-resolution hitch alignment grid overlay to backup camera."
             },
             "nio_battery_swap_interval_reminder": {
-                "name": "Режим предварительного кондиционирования станции смены питания",
-                "desc": "Автоматически опускает стопорные штифты аккумулятора и пакеты предварительных условий перед заменой."
+                "name": "Power Swap Station Pre-Conditioning Mode",
+                "desc": "Automatically lowers battery lock pins and pre-conditions packs prior to swap."
             },
             "nio_nomi_assistant_custom_voice_phrases": {
-                "name": "NOMI AI Companion Персонализация и слова пробуждения",
-                "desc": "Разблокирует пользовательскую анимацию аватара и персонализированные фразы приветствия для NOMI."
+                "name": "NOMI AI Companion Personalization & Wake Words",
+                "desc": "Unlocks custom avatar animations and personalized greeting phrases for NOMI."
             },
             "nio_sentry_watchdog_continuous_recording": {
-                "name": "NIO Sentry Mode Запись в буфер камеры 4K",
-                "desc": "Обеспечивает запись с камеры объемного звучания с высокой скоростью передачи данных на USB-накопитель, когда она припаркована."
+                "name": "NIO Sentry Mode 4K Camera Buffer Recording",
+                "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Синхронизация профиля драйвера Xiaomi SU7 HyperOS с экосистемой",
-                "desc": "Автоматически синхронизирует настройки сиденья, зеркала и климата через Bluetooth телефона Xiaomi."
+                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
+                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Режим Boost: 20-секундная разблокировка мощности Overboost",
-                "desc": "Увеличивает максимальную продолжительность форсирования электродвигателя при полном ускорении."
+                "name": "Boost Mode 20-Second Overboost Power Unlock",
+                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Распределение векторизации крутящего момента заднего привода в режиме дрифта",
-                "desc": "Перераспределяет 100 % крутящего момента двигателя на заднюю ось при отключенной системе контроля тяги."
+                "name": "Drift Mode RWD Torque Vectoring Allocation",
+                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "Отключение звукового сигнала интеллектуальной системы помощи при ускорении ISA",
-                "desc": "Отключает постоянный звуковой сигнал при превышении установленного ограничения скорости."
+                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
+                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "Чувствительность камеры контроля усталости водителя DMS",
-                "desc": "Уменьшает количество ложноположительных отвлекающих сигналов от камеры внутреннего наблюдения."
+                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
+                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Модернизация кодирования переднего/заднего контроля дистанции парковки",
-                "desc": "Регистрирует модуль датчика парковки вторичного рынка или OEM в списке установки шлюза."
+                "name": "Retrofit Front/Rear Parking Distance Control Coding",
+                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
             },
             "retrofit_360_camera_activation": {
-                "name": "Модернизация системы камер кругового обзора с обзором на 360°",
-                "desc": "Активирует контроллер камеры кругового обзора и добавляет вид с камеры в информационно-развлекательную систему."
+                "name": "Retrofit 360° Area View Surround Camera System",
+                "desc": "Activates surround view camera controller and adds camera view to infotainment."
             },
             "retrofit_led_license_plate_light_coding": {
-                "name": "Модернизация светодиодного номерного знака и ошибки заднего фонаря Отмена",
-                "desc": "Отключает мониторинг проверки лампочки на холодную лампу, чтобы предотвратить ложные предупреждения о выходе лампы из строя с помощью светодиодов."
+                "name": "Retrofit LED License Plate & Tail Light Error Cancel",
+                "desc": "Disables cold bulb check monitoring to prevent false lamp out warnings with LEDs."
             },
             "retrofit_dash_cam_sentry_integration": {
-                "name": "Модернизация видеорегистратора с постоянным зажиганием и режимом охраны",
-                "desc": "Настраивает линию электропитания клеммы 30 модуля управления кузовным оборудованием для непрерывной записи при парковке."
+                "name": "Retrofit Dash Cam Continuous Ignition Power & Sentry Mode",
+                "desc": "Configures Body Control Module terminal 30 power line for continuous parking recording."
             },
             "retrofit_heated_windshield_activation": {
-                "name": "Кодирование элемента обогрева лобового стекла для модернизации",
-                "desc": "Включает выход реле обогревателя обогрева ветрового стекла и кнопку экрана системы климат-контроля."
+                "name": "Retrofit Heated Windshield Element Coding",
+                "desc": "Enables windshield defrost heater relay output and climatronic screen button."
             },
             "retrofit_wireless_charger_module_coding": {
-                "name": "Модернизация беспроводной зарядки смартфона Qi, интеграция с зарядным устройством",
-                "desc": "Включает светодиодный индикатор состояния беспроводного зарядного устройства и всплывающее окно с напоминанием об оставленном телефоне."
+                "name": "Retrofit Qi Wireless Smartphone Charging Pad Integration",
+                "desc": "Enables wireless charger status LED and phone left behind reminder popup."
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "Модернизация переднего радарного модуля адаптивного круиз-контроля",
-                "desc": "Кодирует модернизированный передний радар дальнего радиуса действия в сеть CAN-шины автомобиля."
+                "name": "Retrofit Adaptive Cruise Control Front Radar Module",
+                "desc": "Encodes retrofitted front distance radar unit into CAN bus vehicle network."
             },
             "retrofit_traffic_sign_camera_activation": {
-                "name": "Модернизация, распознавание дорожных знаков, кодирование камеры на лобовом стекле",
-                "desc": "Обеспечивает обработку распознавания знаков VZE на модернизированной камере на лобовом стекле."
+                "name": "Retrofit Traffic Sign Recognition Windshield Camera Coding",
+                "desc": "Enables VZE sign recognition processing on retrofitted windshield camera."
             },
             "retrofit_heated_steering_wheel_coding": {
-                "name": "Модернизация модуля подогрева рулевого колеса, активация",
-                "desc": "Включает выход нагревательного элемента рулевого колеса и автоматическое включение температурных триггеров."
+                "name": "Retrofit Heated Steering Wheel Module Activation",
+                "desc": "Enables steering wheel heating element output and auto-on temperature triggers."
             },
             "retrofit_fatigue_camera_calibration": {
-                "name": "Модернизация, интеграция камеры контроля усталости водителя",
-                "desc": "Калибровка датчика инфракрасной камеры наблюдения за водителем после установки рулевой колонки."
+                "name": "Retrofit Driver Fatigue Monitoring Camera Integration",
+                "desc": "Calibrates driver monitoring infrared camera sensor after steering column install."
             },
             "retrofit_trailer_hitch_module_coding": {
-                "name": "Модернизация электрического модуля фаркопа и прицепа",
-                "desc": "Кодирует модуль прицепа в систему стабилизации ESP для уменьшения раскачивания прицепа."
+                "name": "Retrofit Tow Bar & Trailer Electrical Module Integration",
+                "desc": "Encodes trailer module into ESP stability system for trailer sway mitigation."
             },
             "retrofit_power_tailgate_trunk_kit_coding": {
-                "name": "Модернизация задней двери с электроприводом и интеграция датчика жестов ног",
-                "desc": "Включает электрические двигатели привода багажника и кодирование датчика удара в бампер."
+                "name": "Retrofit Power Tailgate & Foot Gesture Sensor Integration",
+                "desc": "Enables electric trunk drive motors and bumper kick sensor coding."
             },
             "easteregg_urban_joke_light_show": {
-                "name": "Шоу переменного заднего света Urban Joke",
-                "desc": "Настраивает задние фонари и указатели поворота на поочередное мигание при запирании автомобиля."
+                "name": "Urban Joke Alternating Rear Light Show",
+                "desc": "Configures tail lights and turn signals to flash alternately when locking vehicle."
             },
             "easteregg_custom_boot_greeting_text": {
-                "name": "Пользовательский текст приветствия при загрузке в цифровом кластере",
-                "desc": "Отображает специальное приветственное сообщение на экране комбинации приборов при включении зажигания."
+                "name": "Custom Boot Greeting Text on Digital Cluster",
+                "desc": "Displays custom welcome message on instrument cluster screen upon ignition on."
             },
             "easteregg_cluster_mini_game_mode": {
-                "name": "Скрытое меню мини-игры на приборной панели",
-                "desc": "Открывает ретро-мини-игру, управляемую кнопкой на рулевом колесе, на дисплее, когда вы припаркованы."
+                "name": "Instrument Cluster Hidden Mini-Game Menu",
+                "desc": "Unlocks steering-wheel button controlled retro mini-game on display when parked."
             },
             "easteregg_custom_horn_melody_package": {
-                "name": "Приветственная мелодия акустического рожка на заказ",
-                "desc": "При отпирании автомобиля воспроизводится короткий ритмичный звуковой сигнал."
+                "name": "Custom Acoustic Horn Welcome Melody",
+                "desc": "Plays short rhythm chirp pattern on horn when unlocking car."
             },
             "easteregg_welcome_lighting_door_sequence": {
-                "name": "Последовательность дверей светодиодного приветственного света в погоне",
-                "desc": "Выполняет прогрессивную анимацию преследования светодиодов на наружных дверных ручках."
+                "name": "Chasing LED Welcome Light Door Sequence",
+                "desc": "Executes progressive LED chasing animation on exterior door handles."
             },
             "easteregg_developer_service_menu_shortcut": {
-                "name": "Ярлык экрана диагностики разработчиков и служб",
-                "desc": "Обеспечивает быстрый доступ к скрытым экранам инженерной диагностики с помощью жестов."
+                "name": "Developer & Service Diagnostic Screen Shortcut",
+                "desc": "Enables quick gesture shortcut to access hidden engineering diagnostic screens."
             },
             "easteregg_seasonal_cluster_theme_effect": {
-                "name": "Наложение темы сезонного кластера погоды",
-                "desc": "Добавляет анимированный фон из снежинок или частиц дождя в кластер датчиков зимой."
+                "name": "Seasonal Weather Cluster Theme Overlay",
+                "desc": "Adds animated snowflake or rain particle background to gauge cluster in winter."
             },
             "easteregg_valet_mode_prank_warning_message": {
-                "name": "Всплывающее предупреждение об ограничении скорости в режиме служебного розыгрыша",
-                "desc": "Отображает юмористическое строгое предупреждающее сообщение на приборной панели, если превышен режим камердинера."
+                "name": "Valet Mode Prank Speed Limit Popup Warning",
+                "desc": "Displays humorously strict warning message on dashboard if valet mode is exceeded."
             },
             "adas_lane_keep_assist_gentle_curve": {
-                "name": "Система удержания полосы движения Кривая плавного рулевого управления",
-                "desc": "Смягчает резкие рывки рулевого колеса за счет постепенного изменения крутящего момента."
+                "name": "Lane Keep Assist Gentle Steering Intervention Curve",
+                "desc": "Softens sudden steering wheel tugs by applying progressive torque intervention."
             },
             "adas_lka_last_state_memory_mode": {
-                "name": "Функция удержания полосы движения, блокировка памяти последнего состояния",
-                "desc": "Предотвращает автоматическое включение LKA при каждом повторном включении зажигания."
+                "name": "Lane Keep Assist Last State Memory Lock",
+                "desc": "Prevents LKA from automatically turning back ON every time ignition is restarted."
             },
             "adas_acc_default_follow_distance": {
-                "name": "Адаптивный круиз-контроль Предварительная настройка расстояния по умолчанию",
-                "desc": "Устанавливает настройку зазора по умолчанию при каждом включении ACC."
+                "name": "Adaptive Cruise Control Default Distance Preset",
+                "desc": "Sets default gap setting whenever ACC is powered on."
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "Переключатель шага приращения крейсерской скорости ACC",
-                "desc": "Изменяет шаг кнопки скорости при кратковременном нажатии на рулевом колесе с 1 км/ч до 5 км/ч."
+                "name": "ACC Cruise Speed Increment Step Selector",
+                "desc": "Changes short-press steering wheel speed button step from 1 km/h to 5 km/h."
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
-                "name": "Матричный светодиодный антибликовый адаптивный экран дальнего света",
-                "desc": "Открывает адаптивный дальний свет европейского стандарта на североамериканских автомобилях."
+                "name": "Matrix LED Glare-Free Adaptive High-Beam Glare Shield",
+                "desc": "Unlocks European-spec adaptive beam-forming high beams on North American cars."
             },
             "adas_traffic_jam_assist_follow_fine_tune": {
-                "name": "Задержка возобновления системы помощи в пробке",
-                "desc": "Увеличивает окно автоматического перезапуска с остановкой и движением с 3 до 15 секунд."
+                "name": "Traffic Jam Assist Stop-and-Go Resume Delay",
+                "desc": "Extends automatic stop-and-go restart window from 3 seconds to 15 seconds."
             },
             "adas_rear_radar_blind_spot_zero_point_reset": {
-                "name": "Калибровка угла нулевой точки заднего радара слепых зон",
-                "desc": "Перекалибровка угла азимута радара заднего бампера после снятия или ремонта бампера."
+                "name": "Rear Blind Spot Radar Zero-Point Angle Calibration",
+                "desc": "Recalibrates rear bumper radar azimuth angle after bumper removal or repair."
             },
             "adas_surround_camera_stitching_recalib": {
-                "name": "Камера кругового обзора. Выравнивание динамического изображения.",
-                "desc": "Выполняет динамическую калибровку сшивания изображения камеры во время движения по дороге."
+                "name": "Surround View Camera Dynamic Image Stitching Alignment",
+                "desc": "Executes dynamic camera image stitching calibration while driving on road."
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "Датчик угла поворота рулевого колеса Калибровка нулевой точки",
-                "desc": "Сбрасывает центральный угол поворота рулевого колеса на 0,0° после проведения обслуживания по сход-развалу."
+                "name": "Steering Angle Sensor Zero-Point Calibration",
+                "desc": "Resets steering center angle to 0.0° following wheel alignment service."
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "Диапазон обнаружения системы оповещения о перекрестном движении сзади",
-                "desc": "Увеличивает дальность обнаружения боковым радаром транспортных средств, приближающихся при движении задним ходом."
+                "name": "Rear Cross-Traffic Alert Detection Range",
+                "desc": "Increases side radar detection distance for vehicles approaching while backing out."
             },
             "adas_aeb_emergency_braking_threshold_preview": {
-                "name": "Эффективность предупреждения об автоматическом экстренном торможении",
-                "desc": "Регулирует время раннего и позднего предупреждения о столкновении вперед."
+                "name": "Automatic Emergency Braking Warning Efficacy",
+                "desc": "Adjusts early vs late warning chime timing for forward collision alerts."
             },
             "adas_night_vision_camera_alignment": {
-                "name": "Выравнивание цели инфракрасной тепловизионной камеры ночного видения",
-                "desc": "Запускает последовательность проверки выравнивания подставки инфракрасной камеры."
+                "name": "Infrared Night Vision Thermal Camera Target Alignment",
+                "desc": "Initiates infrared camera pedestal alignment verification sequence."
             },
             "adas_dms_driver_monitoring_ir_threshold": {
-                "name": "Инфракрасная чувствительность камеры внимания водителя DMS",
-                "desc": "Регулирует порог отслеживания глаз для водителей, носящих темные поляризационные солнцезащитные очки."
+                "name": "DMS Driver Attention Camera Infrared Sensitivity",
+                "desc": "Adjusts eye tracking threshold for drivers wearing dark polarized sunglasses."
             },
             "toyota_soft_close_door_retrofit_coding": {
-                "name": "Кодирование вакуумного привода двери Power Soft-Close",
-                "desc": "Включает приводы дверной защелки с электроприводом в модуле управления кузовным оборудованием."
+                "name": "Power Soft-Close Door Vacuum Actuator Coding",
+                "desc": "Enables power door latch pull-in actuators in body control module."
             },
             "toyota_digital_speedometer_display_enable": {
-                "name": "Цифровой дисплей центрального указателя спидометра",
-                "desc": "Добавляет большие цифровые показания скорости на аналоговый ЖК-дисплей комбинации приборов."
+                "name": "Digital Speedometer Center Gauge Display",
+                "desc": "Adds large digital speed readout to analog instrument cluster LCD."
             },
             "toyota_walk_away_auto_lock_sensitivity": {
-                "name": "Чувствительность автоматического запирания дверей с помощью смарт-ключа Walk-Away",
-                "desc": "Регулирует порог расстояния, прежде чем двери автоматически закроются при уходе."
+                "name": "Walk-Away Smart Key Auto Door Locking Sensitivity",
+                "desc": "Adjusts distance threshold before doors automatically lock when walking away."
             },
             "toyota_jbl_3d_eq_audio_profile_unlock": {
-                "name": "Кривые эквалайзера JBL Premium Surround Sound",
-                "desc": "Разблокирует 3D-профили эквалайзера концертного зала в головном аудиоустройстве JBL."
+                "name": "JBL Premium Surround Sound Equalizer Curves",
+                "desc": "Unlocks 3D concert hall equalizer profiles in JBL audio head unit."
             },
             "toyota_ev_mode_throttle_override_suppression": {
-                "name": "Режим EV: чисто электрическое подавление ограничения дроссельной заслонки",
-                "desc": "Предотвращает включение бензинового двигателя при умеренном ускорении электромобиля."
+                "name": "EV Mode Pure Electric Throttle Limit Suppression",
+                "desc": "Prevents gasoline engine from kicking ON during moderate EV acceleration."
             },
             "ford_sync3_engineering_diagnostics_page": {
-                "name": "Сенсорный экран SYNC3/SYNC4, инженерный диагностический экран",
-                "desc": "Включает необработанные экраны GPS, теста APIM и диагностики звуковой частоты в SYNC."
+                "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostic Screen",
+                "desc": "Enables raw GPS, APIM test, and audio frequency diagnostic screens on SYNC."
             },
             "ford_rear_seat_entertainment_unlock": {
-                "name": "Сквозной переход для HDMI/видеоразвлечений на задних сиденьях",
-                "desc": "Обеспечивает потоковую передачу звука через наушники в салоне на развлекательные экраны на задних сиденьях."
+                "name": "Rear Seat HDMI / Video Entertainment Audio Pass-Through",
+                "desc": "Enables cabin headphone audio streaming for rear seat entertainment screens."
             },
             "ford_bambi_mode_fog_light_expansion": {
-                "name": "Режим Бэмби Дальний свет + одновременное освещение противотуманных фар",
-                "desc": "Сохраняет включенными передние противотуманные фары даже при включении дальнего света фар."
+                "name": "Bambi Mode High Beam + Fog Light Simultaneous Illumination",
+                "desc": "Keeps front fog lights powered ON even when high beam headlights are activated."
             },
             "ford_auto_engine_idle_shutdown_30min_override": {
-                "name": "Автоматическое выключение двигателя на 30-минутном холостом ходу отключено",
-                "desc": "Предотвращает автоматическое выключение двигателя после 30 минут стоянки."
+                "name": "30-Minute Idle Auto Engine Shutdown Disable",
+                "desc": "Prevents engine from shutting OFF automatically after 30 minutes in Park."
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "N Grin Shift Разблокировка 20-секундной модернизации Overboost",
-                "desc": "Включает функцию ускорения кнопки NGS на рулевом колесе в ЭБУ."
+                "name": "N Grin Shift 20-Second Overboost Retrofit Unlock",
+                "desc": "Enables steering wheel NGS button overboost function in ECU."
             },
             "hyundai_smart_tailgate_approach_distance": {
-                "name": "Интеллектуальное определение приближения к задней двери без помощи рук",
-                "desc": "Регулирует время задержки стояния, прежде чем интеллектуальная задняя дверь автоматически откроется."
+                "name": "Smart Hands-Free Tailgate Approach Proximity Sensing",
+                "desc": "Adjusts standing delay time before smart tailgate automatically opens."
             },
             "hyundai_digital_cluster_n_performance_theme": {
-                "name": "Расположение приборов цифровой приборной панели N Performance",
-                "desc": "Применяет компоновку кластера красного индикатора смещения N-Performance к стандартной приборной панели с ЖК-дисплеем."
+                "name": "N Performance Digital Instrument Cluster Gauge Layout",
+                "desc": "Applies N-Performance red shift-indicator cluster layout to standard LCD dash."
             },
             "stellantis_scr_adblue_warning_threshold_adjust": {
-                "name": "Регулировка порогового значения расстояния предупреждения SCR AdBlue",
-                "desc": "Регулирует расстояние предупреждения о первой дозаправке AdBlue с 2400 км до 1000 км."
+                "name": "SCR AdBlue Warning Distance Threshold Adjustment",
+                "desc": "Adjusts first AdBlue refill reminder warning distance from 2400 km to 1000 km."
             },
             "stellantis_jeep_trail_rated_offroad_pages": {
-                "name": "Страницы телеметрии для бездорожья Jeep Uconnect Trail-Rated",
-                "desc": "Открывает страницы шага, крена, сочленения колес и температуры охлаждающей жидкости в Uconnect."
+                "name": "Jeep Uconnect Trail-Rated Off-Road Telemetry Pages",
+                "desc": "Unlocks drivetrain pitch, roll, wheel articulation, and coolant temp pages on Uconnect."
             },
             "stellantis_peugeot_icockpit_3d_color_schemes": {
-                "name": "Палитра индивидуальной цветовой схемы Peugeot 3D i-Cockpit",
-                "desc": "Открывает цветовые темы «Медь» и «Кварц» для голографической 3D-цифровой приборной панели."
+                "name": "Peugeot 3D i-Cockpit Custom Color Scheme Palette",
+                "desc": "Unlocks Copper and Quartz color themes for 3D holographic digital instrument cluster."
             },
             "gm_super_cruise_follow_distance_adjust": {
-                "name": "Смещение расстояния следования Super Cruise без помощи рук",
-                "desc": "Настраивает зазор во время автономного вождения по шоссе Super Cruise."
+                "name": "Super Cruise Hands-Free Following Distance Offset",
+                "desc": "Customizes gap spacing during autonomous Super Cruise highway driving."
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "Калибровка нулевой точки положения и наклона проекционного дисплея",
-                "desc": "Сбрасывает угол изображения проектора HUD на лобовом стекле и выравнивание горизонта по нулевому уровню."
+                "name": "Head-Up Display Position & Tilt Zero-Point Calibration",
+                "desc": "Resets wind-shield HUD projector image angle and zero-level horizon alignment."
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
-                "name": "Блокировка деактивации цилиндра AFM/DFM",
-                "desc": "Отключает систему Active Fuel Management, обеспечивающую работу двигателя в 8-цилиндровом режиме."
+                "name": "AFM / DFM Cylinder Deactivation Override",
+                "desc": "Disables Active Fuel Management cylinder drop to keep engine operating in 8-cylinder mode."
             },
             "dodge_ram_truck_fog_lights_with_high_beam": {
-                "name": "Противотуманные фары для грузовиков RAM с дальним светом",
-                "desc": "Предотвращает автоматическое выключение противотуманных фар при включении дальнего света."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Prevents fog lights from turning OFF automatically when high beams are switched ON."
             },
             "toyota_keyless_window_down": {
-                "name": "Окно с брелка Toyota открыто",
-                "desc": "Опускает все стеклоподъемники при удержании кнопки РАЗБЛОКИРОВАТЬ на брелоке."
+                "name": "Toyota Key Fob Window Open",
+                "desc": "Rolls down all power windows when holding UNLOCK button on remote fob."
             },
             "toyota_seatbelt_chime_disable": {
-                "name": "Отключение сигнала тревоги ремня безопасности пассажира Toyota",
-                "desc": "Отключает постоянный звуковой сигнал непристегнутого ремня безопасности на пассажирском сиденье."
+                "name": "Toyota Passenger Seatbelt Alarm Mute",
+                "desc": "Disables persistent acoustic seatbelt warning chime in passenger seat."
             },
             "honda_walkaway_auto_lock": {
-                "name": "Автоматический дверной замок Honda Walk-Away",
-                "desc": "Автоматически запирает все двери, когда смарт-ключ покидает радиус автомобиля в радиусе 2,5 м."
+                "name": "Honda Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when Smart Key leaves 2.5m vehicle radius."
             },
             "volvo_speed_limiter_unlock": {
-                "name": "Заводской ограничитель скорости Volvo 180 км/ч расширенный",
-                "desc": "Регулирует заводское ограничение скорости 180 км/ч для использования на треке/автобане."
+                "name": "Volvo 180 km/h Factory Speed Limiter Extended",
+                "desc": "Adjusts 180 km/h factory speed cap for Track / Autobahn performance use."
             },
             "byd_v2l_3kw_power_unlock": {
-                "name": "BYD «Автомобиль-нагрузка», режим выхода переменного тока мощностью 3,6 кВт",
-                "desc": "Обеспечивает внешний разрядный порт переменного тока 220 В/3,6 кВт V2L для кемпинговой техники."
+                "name": "BYD Vehicle-to-Load 3.6kW AC Output Mode",
+                "desc": "Enables external 220V/3.6kW V2L AC discharge port for camping appliances."
             },
             "xiaomi_su7_drift_mode_unlock": {
-                "name": "Xiaomi SU7 Режим трекового дрифта и смещение заднего крутящего момента",
-                "desc": "Активирует 100%-ное смещение крутящего момента заднего двигателя и режим ESC Track Drift."
+                "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
+                "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset",
-                "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
+                "name": "Oil Service Interval Reset",
+                "desc": "Resets oil change service counter and inspection interval for VAG vehicles."
             },
             "vag_epb_service_mode": {
-                "name": "Электронный стояночный тормоз Режим обслуживания тормозных колодок",
-                "desc": "Втягивает поршни заднего суппорта EPB для замены задних тормозных колодок и ротора."
+                "name": "Electronic Parking Brake Brake Pad Service Mode",
+                "desc": "Retracts rear EPB caliper pistons for rear brake pad and rotor replacement."
             },
             "bmw_bms_battery_registration": {
-                "name": "Интеллектуальный датчик батареи Регистрация батареи",
-                "desc": "Регистрирует замену новой AGM/свинцово-кислотной батареи 12 В в системе управления двигателем DME/DDE."
+                "name": "Intelligent Battery Sensor Battery Registration",
+                "desc": "Registers new 12V AGM/Lead-acid battery replacement in DME/DDE engine management."
             },
             "bmw_motorrad_service_indicator_reset": {
-                "name": "Ежегодное обслуживание BMW Motorrad и сброс индикатора масла",
-                "desc": "Удаляет дату ежегодного обслуживания и напоминание о пробеге в 10 000 км на панели приборов TFT."
+                "name": "BMW Motorrad Annual Service & Oil Indicator Reset",
+                "desc": "Clears annual service date and 10,000 km distance reminder on TFT instrument cluster."
             },
             "ducati_desmo_service_reset": {
-                "name": "Очистить напоминание о сервисном обслуживании клапана Ducati Desmo",
-                "desc": "Удаляет значок гаечного ключа Desmoservice на приборной панели после пробега 15 000/30 000 км."
+                "name": "Ducati Desmo Valve Service Reminder Clear",
+                "desc": "Clears Desmoservice wrench icon on dashboard after 15,000 / 30,000 km service."
             },
             "byd_bms_isolation_self_test": {
-                "name": "Самопроверка изоляции высокого напряжения батареи BYD Blade",
-                "desc": "Выполняет диагностику утечек и сопротивления высоковольтной системы в BMS."
+                "name": "BYD Blade Battery High-Voltage Isolation Self-Test",
+                "desc": "Executes high-voltage system leakage & resistance diagnostics in BMS."
             },
             "vag_drl_brightness_multi": {
-                "name": "Регулировка яркости дневных ходовых огней",
-                "desc": "Отрегулируйте уровень интенсивности светодиодов ДХО для режима ближнего света/парковки."
+                "name": "Daytime Running Lights Brightness Adjustment",
+                "desc": "Adjust LED DRL intensity level for low-beam / parking mode."
             },
             "bmw_comfort_turn_signal_cycles": {
-                "name": "Комфортный подсчет импульсов указателя поворота в одно касание",
-                "desc": "Выберите количество миганий при быстром нажатии рычага указателя поворота."
+                "name": "One-Touch Comfort Turn Signal Pulse Count",
+                "desc": "Select how many blinks occur on quick tap of turn indicator lever."
             },
             "bmw_oil_service_reset": {
-                "name": "Сброс моторного масла CBS",
-                "desc": "Сбрасывает процент срока службы масла при обслуживании по состоянию обратно на 100%."
+                "name": "CBS Engine Oil Reset",
+                "desc": "Resets Condition Based Service oil life percentage back to 100%."
             },
             "generic_oil_service_reset": {
-                "name": "Сброс универсального индикатора уровня масла",
-                "desc": "Убирает сигнальную лампочку необходимости замены масла на приборной панели во всех поддерживаемых ЭБУ OBD2/UDS."
+                "name": "Universal Oil Maintenance Indicator Reset",
+                "desc": "Clears dashboard oil maintenance warning light across supported OBD2/UDS ECUs."
             },
             "vag_epb_pad_change": {
-                "name": "Режим замены тормозных колодок EPB",
-                "desc": "Втягивает электронные суппорты стояночного тормоза для обслуживания задних тормозных колодок."
+                "name": "EPB Brake Pad Replacement Mode",
+                "desc": "Retracts electronic parking brake calipers for rear brake pad servicing."
             },
             "bmw_epb_pad_change": {
-                "name": "Режим обслуживания тормозов EPB",
-                "desc": "Открывает привод стояночного тормоза в сервисное положение для замены задних колодок."
+                "name": "EPB Brake Service Mode",
+                "desc": "Opens parking brake actuator to service position for rear pad replacement."
             },
             "mb_epb_pad_change": {
-                "name": "Режим установки колодок EPB",
-                "desc": "Освобождает шпиндель стояночного тормоза в положение мастерской для обслуживания тормозов."
+                "name": "EPB Pad Fitting Mode",
+                "desc": "Releases parking brake spindle to workshop position for brake service."
             },
             "vag_dpf_regen": {
-                "name": "Триггер сервисной регенерации DPF",
-                "desc": "Запускает цикл сжигания сажи в стационарном сажевом фильтре."
+                "name": "DPF Service Regeneration Trigger",
+                "desc": "Initiates stationary Diesel Particulate Filter soot burn-off cycle."
             },
             "bmw_dpf_regen": {
-                "name": "Триггер принудительной регенерации DPF",
-                "desc": "Запрашивает ЭБУ DDE запустить процедуру регенерации активного сажевого фильтра."
+                "name": "DPF Forced Regeneration Trigger",
+                "desc": "Requests DDE ECU to start active particulate filter regeneration routine."
             },
             "psa_dpf_regen": {
-                "name": "Запрос на регенерацию DPF",
-                "desc": "Запускает стационарную регенерацию DPF для ЭБУ дизельных двигателей HDi."
+                "name": "DPF Regeneration Request",
+                "desc": "Triggers stationary DPF regeneration for HDi diesel engine ECUs."
             },
             "bmw_bms_battery_register": {
-                "name": "Регистрация замены аккумулятора BMS",
-                "desc": "Регистрирует замену новой батареи с помощью интеллектуального датчика батареи DME/DDE."
+                "name": "BMS Battery Replacement Registration",
+                "desc": "Registers new battery replacement with DME/DDE Intelligent Battery Sensor."
             },
             "mb_bms_battery_register": {
-                "name": "Регистрация и сброс аккумулятора",
-                "desc": "Сбрасывает счетчик старения батареи в модуле SAM после установки новой батареи."
+                "name": "Battery Registration & Reset",
+                "desc": "Resets battery aging counter in SAM module after new battery installation."
             },
             "vag_sas_calibrate": {
-                "name": "Калибровка датчика угла поворота рулевого колеса",
-                "desc": "Калибрует нулевую точку датчика угла поворота рулевого колеса G85 для ЭБУ ABS/ESP."
+                "name": "Steering Angle Sensor Calibration",
+                "desc": "Calibrates G85 steering angle sensor zero-point position for ABS/ESP ECU."
             },
             "toyota_sas_calibrate": {
-                "name": "Калибровка нулевой точки угла поворота рулевого колеса",
-                "desc": "Выполняет калибровку нулевой точки датчика угла поворота рулевого колеса в ЭБУ системы противоскольжения."
+                "name": "Steering Angle Zero Point Calibration",
+                "desc": "Performs zero point calibration of steering angle sensor in Skid Control ECU."
             },
             "generic_tba_adapt": {
-                "name": "Выравнивание и адаптация корпуса дроссельной заслонки",
-                "desc": "Выполняет процедуру обучения остановке электронного корпуса дроссельной заслонки в ЭБУ двигателя."
+                "name": "Throttle Body Alignment & Adaptation",
+                "desc": "Executes electronic throttle body stop learning routine in engine ECU."
             },
             "epb_service_reset": {
-                "name": "Универсальный сброс обслуживания EPB",
-                "desc": "Сбрасывает электронный счетчик износа суппорта стояночного тормоза и калибрует воздушный зазор."
+                "name": "Universal EPB Maintenance Reset",
+                "desc": "Resets electronic park brake caliper wear counter and calibrates air gap."
             },
             "vag_dsg_reset": {
-                "name": "Сброс основных настроек коробки передач DSG",
-                "desc": "Сбрасывает точки включения сцепления и адаптации клапанов переключения передач для DSG/S-Tronic."
+                "name": "DSG Transmission Basic Settings Reset",
+                "desc": "Resets clutch engagement points and shift valve adaptations for DSG/S-Tronic."
             },
             "bmw_zf_reset": {
-                "name": "Сброс адаптации коробки передач ZF 8HP",
-                "desc": "Сбрасывает значения времени переключения коробки передач EGS и значений адаптации давления."
+                "name": "ZF 8HP Transmission Adaptation Reset",
+                "desc": "Clears EGS transmission shift time and pressure adaptation values."
             },
             "bmw_brake_fluid_reset": {
-                "name": "Сброс интервала обслуживания тормозной жидкости",
-                "desc": "Сбрасывает таймер обслуживания по состоянию на 2 года."
+                "name": "Brake Fluid Service Interval Reset",
+                "desc": "Resets Condition Based Service 2-year brake fluid change timer."
             },
             "ford_injector_code": {
-                "name": "Кодирование поправочного коэффициента форсунки",
-                "desc": "Программирует 16-значные коды IQA для дизельных форсунок в PCM."
+                "name": "Injector Correction Factor Coding",
+                "desc": "Programs 16-character IQA codes for diesel injectors into PCM."
             },
             "bmw_injector_code": {
-                "name": "Кодирование расхода топливных форсунок",
-                "desc": "Записывает значения калибровки энергии для замененных топливных форсунок в DME."
+                "name": "Fuel Injector Flow Rate Coding",
+                "desc": "Writes energy calibration values for replaced fuel injectors into DME."
             },
             "generic_headlight_aim": {
-                "name": "Калибровка автокорректора фар",
-                "desc": "Устанавливает исходное нулевое положение для электродвигателей адаптивного автоматического регулирования фар."
+                "name": "Headlight Auto-Leveling Calibration",
+                "desc": "Sets reference zero position for adaptive auto-leveling headlight motors."
             },
             "bmw_12v_battery_reg": {
-                "name": "Регистрация вспомогательной батареи 12 В",
-                "desc": "Регистрирует замену вспомогательной стартерной/вспомогательной батареи AGM в PCU."
+                "name": "12V Auxiliary Battery Registration",
+                "desc": "Registers auxiliary AGM starter/support battery replacement in PCU."
             },
             "vag_comfort_turn_signal": {
-                "name": "Комфортный счетчик миганий указателей поворота",
-                "desc": "Регулирует количество циклов мигания поворотника при смене полосы движения в пределах 3, 4 или 5."
+                "name": "Comfort Turn Signal Blink Count",
+                "desc": "Adjusts lane change blinker cycle count between 3, 4, and 5 flashes."
             },
             "vag_coming_home_duration": {
-                "name": "Продолжительность освещения при входе/выходе из дома",
-                "desc": "Настраивает таймер включения фар после запирания автомобиля."
+                "name": "Coming/Leaving Home Light Duration",
+                "desc": "Configures headlight illumination timer after vehicle locking."
             },
             "vag_remote_windows": {
-                "name": "Дистанционное комфортное управление стеклоподъемниками",
-                "desc": "Позволяет открывать и закрывать электрические стеклоподъемники с помощью длительного нажатия дистанционного брелока."
+                "name": "Remote Convenience Window Control",
+                "desc": "Enables opening and closing power windows via remote key fob long press."
             },
             "vag_auto_lock_15kmh": {
-                "name": "Автоматическая блокировка дверей на скорости 15 км/ч",
-                "desc": "Автоматически запирает все двери, когда скорость автомобиля достигает 15 км/ч."
+                "name": "Auto Door Lock at 15 km/h",
+                "desc": "Automatically locks all doors when vehicle speed reaches 15 km/h."
             },
             "vag_sfd_unlock_prep": {
-                "name": "Подготовка статуса защиты шлюза SFD",
-                "desc": "Подготавливает сеанс токена шлюза MQB-evo SFD для записи защищенных DID."
+                "name": "SFD Gateway Protection Status Prep",
+                "desc": "Prepares MQB-evo SFD gateway token session for writing protected DIDs."
             },
             "bmw_asd_deactivate": {
-                "name": "Деактивация Active Sound Design",
-                "desc": "Отключает синтетический звук двигателя, воспроизводимый через динамики салона."
+                "name": "Active Sound Design Deactivation",
+                "desc": "Mutes synthetic engine sound played through cabin speakers."
             },
             "bmw_comfort_turn_signal": {
-                "name": "Комфортный счетчик поворотов",
-                "desc": "Устанавливает количество импульсов индикатора в одно касание."
+                "name": "Comfort Turn Signal Count",
+                "desc": "Sets one-touch indicator pulse count."
             },
             "bmw_mirror_fold_lock": {
-                "name": "Зеркало с комфортным доступом, складывающееся с замком",
-                "desc": "Автоматически складывает боковые зеркала сразу после запирания автомобиля."
+                "name": "Comfort Access Mirror Fold on Lock",
+                "desc": "Automatically folds side mirrors immediately upon locking vehicle."
             },
             "toyota_coming_home_duration": {
-                "name": "Задержка включения фар/возвращение домой",
-                "desc": "Настраивает таймер задержки выключения фар после выключения зажигания."
+                "name": "Headlight Courtesy Delay / Coming-Home",
+                "desc": "Configures headlight off delay timer after ignition shutdown."
             },
             "toyota_lane_change_flash": {
-                "name": "Счетчик миганий сигнала поворота при смене полосы движения",
-                "desc": "Регулирует количество циклов поворота мигалки при смене полосы движения в одно касание."
+                "name": "Lane-Change Turn Signal Flash Count",
+                "desc": "Adjusts one-touch lane change blinker cycle count."
             },
             "toyota_remote_window_close": {
-                "name": "Дистанционное закрытие электрических стеклоподъемников",
-                "desc": "Позволяет закрыть все электрические стеклоподъемники, удерживая кнопку дистанционного замка."
+                "name": "Remote Power Window Closure",
+                "desc": "Allows closing all power windows by holding remote lock button."
             },
             "toyota_autolock_behavior": {
-                "name": "Настройка автоматического запирания/разблокировки дверей",
-                "desc": "Устанавливает триггер блокировки двери."
+                "name": "Auto Door Lock/Unlock Customization",
+                "desc": "Sets door locking trigger."
             },
             "toyota_approach_welcome_lights": {
-                "name": "Приветственные огни с технологией Smart Key",
-                "desc": "Включает освещение салона/салона при приближении смарт-ключа к автомобилю."
+                "name": "Smart Key Approach Welcome Lights",
+                "desc": "Turns on interior puddle/cabin lights when smart key approaches vehicle."
             },
             "hyundai_autolock_behavior": {
-                "name": "Режим автоматической блокировки/разблокировки дверей",
-                "desc": "Автоматически запирает двери при переключении передач или скорости и отпирает их при нажатии P или выключении зажигания."
+                "name": "Auto Door Lock/Unlock Behavior",
+                "desc": "Automatically locks doors on shift or speed and unlocks on P or Ignition Off."
             },
             "hyundai_window_remote": {
-                "name": "Дистанционное открытие/закрытие окон",
-                "desc": "Позволяет поворачивать окна вверх/вниз с помощью кнопок смарт-брелока."
+                "name": "Remote Window Open/Close",
+                "desc": "Enables rolling windows up/down using smart key fob buttons."
             },
             "hyundai_sport_mode_memory": {
-                "name": "Память выбора режима движения",
-                "desc": "Запоминает последний выбранный режим движения после перезапуска двигателя."
+                "name": "Drive Mode Select Memory",
+                "desc": "Remembers last selected Drive Mode after engine restart."
             },
             "tesla_charge_limit_custom": {
-                "name": "Настройка предела заряда аккумулятора",
-                "desc": "Устанавливает процент ограничения заряда высоковольтной аккумуляторной батареи по умолчанию."
+                "name": "Battery Charge Limit Customization",
+                "desc": "Sets default HV battery charge limit percentage."
             },
             "tesla_mirror_fold_lock": {
-                "name": "Зеркало с автоматическим складыванием и замком Walk-Away Lock",
-                "desc": "Автоматически складывает боковые зеркала при срабатывании блокировки ключа телефона."
+                "name": "Mirror Auto-Fold on Walk-Away Lock",
+                "desc": "Automatically folds side mirrors when phone key walk-away lock triggers."
             },
             "nissan_coming_home": {
-                "name": "Предоставлено задержкой выключения фар",
-                "desc": "Сохраняет фары включенными в течение 30 секунд после выхода из автомобиля Nissan."
+                "name": "Courtesy Headlight Off Delay",
+                "desc": "Keeps headlights illuminated for 30 seconds after exiting Nissan vehicle."
             },
             "nissan_lane_change_flash": {
-                "name": "Счетчик миганий при смене полосы движения в режиме Tap-to-Pass",
-                "desc": "Устанавливает количество импульсов указателя поворота при нажатии переключателя света."
+                "name": "Tap-to-Pass Lane Change Flash Count",
+                "desc": "Sets turn signal indicator pulse count on light stalk tap."
             },
             "nissan_autolock_behavior": {
-                "name": "Автоматический замок дверей в зависимости от скорости",
-                "desc": "Автоматически запирает все двери, когда автомобиль достигает скорости 24 км/ч."
+                "name": "Speed-Dependent Automatic Door Lock",
+                "desc": "Locks all doors automatically when vehicle reaches 24 km/h."
             },
             "nissan_window_remote": {
-                "name": "Дистанционное управление стеклоподъемниками с брелока",
-                "desc": "Открывает/закрывает передние окна долгим нажатием кнопки разблокировки брелока."
+                "name": "Remote Key Fob Power Window Control",
+                "desc": "Opens/closes front windows via key fob unlock button long press."
             },
             "nissan_seatbelt_chime_mute": {
-                "name": "Звуковой сигнал предупреждения о непристегнутых ремнях безопасности",
-                "desc": "Отключает повторяющийся сигнал предупреждения о непристегнутых ремнях безопасности, сохраняя при этом значок кластера."
+                "name": "Seatbelt Warning Audio Chime Suppress",
+                "desc": "Mutes repetitive seatbelt warning chime while keeping cluster icon."
             },
             "porsche_sport_chrono_launch": {
-                "name": "Профиль реакции системы управления запуском Sport Chrono",
-                "desc": "Оптимизирует порог оборотов управления запуском трансмиссии PDK и сцепление сцепления."
+                "name": "Sport Chrono Launch Control Response Profile",
+                "desc": "Optimizes PDK transmission launch control RPM threshold & clutch bite."
             },
             "porsche_pasm_default": {
-                "name": "Предварительная настройка режима подвески PASM",
-                "desc": "Устанавливает жесткость адаптивной подвески PASM по умолчанию при включении зажигания."
+                "name": "PASM Suspension Mode Startup Preset",
+                "desc": "Sets PASM adaptive suspension default stiffness on ignition start."
             },
             "porsche_exhaust_flap": {
-                "name": "Спортивная заслонка выхлопной системы с постоянным открытым положением",
-                "desc": "Заставляет активные выпускные клапаны оставаться открытыми на 100% во всех диапазонах оборотов."
+                "name": "Sport Exhaust Flap Constant Open Override",
+                "desc": "Forces active exhaust valves to stay 100% open across all RPM ranges."
             },
             "audi_drive_select_memory": {
-                "name": "Сохранение памяти режима Audi Drive Select",
-                "desc": "Сохраняет последний активный профиль выбора диска после перезапуска."
+                "name": "Audi Drive Select Mode Memory Retention",
+                "desc": "Retains last active Drive Select profile upon restart."
             },
             "audi_virtual_cockpit_themes": {
-                "name": "Графический макет Audi Virtual Cockpit S/RS Sport",
-                "desc": "Разблокирует варианты расположения центрального тахометра S/RS в виртуальной кабине."
+                "name": "Audi Virtual Cockpit S/RS Sport Graphic Layout",
+                "desc": "Unlocks S/RS central tachometer layout options on Virtual Cockpit."
             },
             "vag_scandinavian_drl": {
-                "name": "Скандинавский режим ДХО",
-                "desc": "Обеспечивает постоянное освещение задних фонарей рядом с передними ДХО."
+                "name": "Scandinavian DRL Mode",
+                "desc": "Keeps rear tail lights illuminated continuously alongside front DRLs."
             },
             "vag_mirror_dip_reverse": {
-                "name": "Провал зеркала пассажира при заднем ходе",
-                "desc": "Опускает зеркало со стороны пассажира вниз при включении задней передачи."
+                "name": "Passenger Mirror Dip in Reverse",
+                "desc": "Tills passenger side mirror downward when reverse gear is engaged."
             },
             "vag_dynamic_turn_signal": {
-                "name": "Динамический/последовательный режим указателя поворота",
-                "desc": "Обеспечивает широкий динамический рисунок светодиодных миганий на совместимых модулях задних фонарей."
+                "name": "Dynamic / Sequential Turn Signal Mode",
+                "desc": "Enables sweeping dynamic LED blinker pattern on compatible rear light modules."
             },
             "vag_seatbelt_warning_duration": {
-                "name": "Регулировка длительности звукового сигнала предупреждения о непристегнутых ремнях безопасности",
-                "desc": "Сокращает или подавляет повторяющийся таймер предупреждения о непристегнутых ремнях безопасности."
+                "name": "Seatbelt Warning Chime Duration Adjustment",
+                "desc": "Shortens or suppresses repetitive seatbelt warning chime timer."
             },
             "vag_sunroof_remote": {
-                "name": "Дистанционное управление комфортом люка на крыше",
-                "desc": "Позволяет открывать и наклонять панорамный люк с помощью дистанционного удержания брелока."
+                "name": "Sunroof Remote Comfort Control",
+                "desc": "Allows opening and tilting panoramic sunroof via remote key fob hold."
             },
             "vag_acc_distance_preset": {
-                "name": "Адаптивный круиз-контроль ACC по умолчанию, отслеживание дистанции",
-                "desc": "Устанавливает радар по умолчанию, следующий за профилем расстояния при включении зажигания."
+                "name": "ACC Adaptive Cruise Default Following Distance",
+                "desc": "Sets default radar following distance profile on ignition start."
             },
             "vag_infotainment_startup_logo": {
-                "name": "Графический логотип информационно-развлекательной системы",
-                "desc": "Настраивает логотип заставки информационно-развлекательной системы."
+                "name": "Infotainment Boot Graphic Logo",
+                "desc": "Customizes infotainment startup splash screen logo."
             },
             "vag_ambient_color_cycle": {
-                "name": "Разблокировка цветового спектра внутреннего освещения",
-                "desc": "Расширяет параметры палитры окружающего освещения в меню настроек автомобиля."
+                "name": "Interior Ambient Light Color Spectrum Unlock",
+                "desc": "Expands ambient lighting palette options in vehicle settings menu."
             },
             "vag_service_interval_custom": {
-                "name": "Пороговое расстояние для индивидуального осмотра и обслуживания",
-                "desc": "Настраивает пользовательские цели в километрах и днях для следующего предупреждения об обслуживании."
+                "name": "Custom Inspection & Service Distance Threshold",
+                "desc": "Configures custom km and day targets for next service warning."
             },
             "vag_door_handle_lights_reverse": {
-                "name": "Подсветка наружной ручки двери включена при движении задним ходом",
-                "desc": "Подсвечивает светодиодные фонари на дверной ручке при движении задним ходом для улучшения видимости на земле."
+                "name": "Exterior Door Handle Lights ON in Reverse",
+                "desc": "Illuminates door handle LED puddle lights when reversing for ground visibility."
             },
             "bmw_msport_exhaust_burble": {
-                "name": "M-Sport Выхлопная система Burble & Pop Intensity",
-                "desc": "Регулирует агрессивность звука бормотания в спортивном режиме."
+                "name": "M-Sport Exhaust Burble & Pop Intensity",
+                "desc": "Adjusts overrun burble sound aggressiveness in Sport mode."
             },
             "bmw_welcome_light_sequence": {
-                "name": "Приветственная световая анимация",
-                "desc": "Настраивает светодиодную фару и приветственное приветствие «ангельские глазки»."
+                "name": "Welcome Light Sequence Animation",
+                "desc": "Customizes LED headlight and Angel Eyes welcome greeting sequence."
             },
             "bmw_service_history_menu": {
-                "name": "Включение меню истории цифровых услуг",
-                "desc": "Разблокирует меню цифровой сервисной книжки iDrive на центральном дисплее."
+                "name": "Digital Service History Menu Enable",
+                "desc": "Unlocks iDrive digital service record book menu on central display."
             },
             "bmw_hud_speed_display": {
-                "name": "Наложение цифрового спидометра на проекционный дисплей",
-                "desc": "Проецирует цифровые показания скорости в реальном времени на проекционный дисплей."
+                "name": "Head-Up Display Digital Speedometer Overlay",
+                "desc": "Projects real-time digital speed readout onto Head-Up Display."
             },
             "bmw_cornering_lights_fog": {
-                "name": "Противотуманные фары освещения поворотов",
-                "desc": "Включает передний противотуманный фонарь при включении указателя поворота или повороте поворота на малой скорости."
+                "name": "Fog Lamp Cornering Illumination",
+                "desc": "Turns on front fog light on turn signal or low-speed steering angle."
             },
             "bmw_easy_entry_steering": {
-                "name": "Рулевая колонка с автоматическим складыванием Easy Entry",
-                "desc": "Убирает электрическое рулевое колесо вверх при выключении двигателя для облегчения выхода."
+                "name": "Easy Entry Auto-Retracting Steering Column",
+                "desc": "Retracts electric steering wheel upward upon engine shutdown for easy exit."
             },
             "bmw_bluetooth_audio_enable": {
-                "name": "Улучшенная разблокировка потокового аудио по Bluetooth",
-                "desc": "Включает беспроводную потоковую передачу музыки через A2DP Bluetooth в iDrive HU_ENTRYNAV."
+                "name": "Enhanced Bluetooth Audio Streaming Unlock",
+                "desc": "Enables A2DP Bluetooth wireless music streaming in iDrive HU_ENTRYNAV."
             },
             "bmw_door_handle_lights_reverse": {
-                "name": "Подсветка лужи на наружных дверных ручках заднего хода",
-                "desc": "Загорается светодиод на дверной ручке при включении задней передачи."
+                "name": "Exterior Door Handle Puddle Lights in Reverse",
+                "desc": "Illuminates door handle LEDs when reverse gear is engaged."
             },
             "toyota_auto_headlight_threshold": {
-                "name": "Чувствительность датчика внешней освещенности автоматических фар",
-                "desc": "Регулирует порог сумерек для автоматического включения фар."
+                "name": "Auto Headlight Ambient Light Sensor Sensitivity",
+                "desc": "Adjusts twilight dusk threshold for automatic headlight activation."
             },
             "toyota_turn_signal_click_volume": {
-                "name": "Громкость динамика звукового сигнала поворота",
-                "desc": "Настраивает громкость звукового сигнала реле указателей поворота."
+                "name": "Turn Signal Audio Clicker Speaker Volume",
+                "desc": "Configures turn signal relay click chime volume."
             },
             "toyota_smart_key_approach_lights": {
-                "name": "Приветственная подсветка луж с функцией приближения смарт-ключа",
-                "desc": "Включает подсветку зеркальных луж, когда смарт-ключ приближается к автомобилю."
+                "name": "Smart Key Proximity Welcome Puddle Lights",
+                "desc": "Turns on mirror puddle lights when smart key approaches vehicle."
             },
             "toyota_rear_hatch_behavior": {
-                "name": "Логика открытия/закрытия задней двери с электроприводом",
-                "desc": "Настраивает продолжительность нажатия кнопки электропривода люка на пульте дистанционного управления и на приборной панели."
+                "name": "Power Tailgate Liftgate Open/Close Operation Logic",
+                "desc": "Configures remote and dashboard power hatch button press duration."
             },
             "toyota_open_windows_smart_key": {
-                "name": "Удаленный смарт-ключ с открыванием окна и длительным нажатием",
-                "desc": "Позволяет открывать все окна, удерживая кнопку удаленной разблокировки."
+                "name": "Smart Key Remote Window Roll-Down Long Press",
+                "desc": "Allows opening all windows by holding remote unlock button."
             },
             "toyota_interior_light_dim_timer": {
-                "name": "Задержка выключения автоматического затемнения внутреннего освещения салона",
-                "desc": "Регулирует таймер отключения плафона внутреннего освещения после закрытия двери."
+                "name": "Interior Cabin Light Auto-Dimming Off Delay",
+                "desc": "Adjusts interior dome light shutdown timer after door closure."
             },
             "toyota_panic_alarm_remote": {
-                "name": "Дистанционный брелок с функцией тревожной сирены",
-                "desc": "Включает или отключает сигнал тревоги при панике с помощью звукового сигнала автомобиля с помощью дистанционного удержания ключа."
+                "name": "Remote Key Fob Panic Alarm Siren Function",
+                "desc": "Enables or disables vehicle horn panic alarm via remote key hold."
             },
             "toyota_eco_drive_indicator": {
-                "name": "Индикатор зоны комбинации приборов ECO Drive",
-                "desc": "Показывает экологически чистую полосу ускорения и световой индикатор на приборной панели."
+                "name": "ECO Drive Cluster Zone Indicator Light",
+                "desc": "Shows eco-friendly acceleration bar and indicator light on cluster."
             },
             "hyundai_coming_home_duration": {
-                "name": "Таймер задержки выключения фар Escort",
-                "desc": "Сохраняет включенным ближний свет фар после выхода из автомобиля."
+                "name": "Escort Headlight Off Delay Timer",
+                "desc": "Keeps low beam headlights illuminated after vehicle exit."
             },
             "hyundai_drl_menu_toggle": {
-                "name": "Управление меню дневных ходовых огней",
-                "desc": "Добавлена настройка включения/выключения DRL в пользовательские параметры комбинации приборов."
+                "name": "Daytime Running Lights Menu Control",
+                "desc": "Adds DRL ON/OFF setting to instrument cluster user options."
             },
             "hyundai_welcome_sequence": {
-                "name": "Приветственная подсветка и раскрытие зеркал с функцией приближения к интеллектуальному ключу",
-                "desc": "Раскладывает зеркала с электроприводом и подсвечивает дверные ручки при приближении."
+                "name": "Smart Key Proximity Welcome Light & Mirror Unfold",
+                "desc": "Unfolds power mirrors and lights up door handles upon approach."
             },
             "hyundai_interior_light_delay": {
-                "name": "Задержка автоматического отключения лампы внутреннего освещения салона",
-                "desc": "Устанавливает таймер перед автоматическим выключением внутреннего освещения для экономии заряда батареи."
+                "name": "Cabin Interior Room Lamp Auto-Cut Delay",
+                "desc": "Sets timer before interior lights automatically turn off to save battery."
             },
             "hyundai_heat_pump_efficiency": {
-                "name": "Режим термической эффективности теплового насоса EV Climate",
-                "desc": "Оптимизирует энергопотребление теплового насоса электромобиля в холодную зимнюю погоду."
+                "name": "EV Climate Heat Pump Thermal Efficiency Mode",
+                "desc": "Optimizes EV heat pump energy consumption in cold winter weather."
             },
             "tesla_track_mode_params": {
-                "name": "Стабильность режима трека и профиль смещения крутящего момента",
-                "desc": "Настраивает смещение привода переднего/заднего двигателя и вмешательство в стабилизацию."
+                "name": "Track Mode Stability & Torque Bias Profile",
+                "desc": "Configures front/rear motor drive bias and stability intervention."
             },
             "tesla_regen_brake_strength": {
-                "name": "Профиль рекуперативной тормозной мощности",
-                "desc": "Регулирует интенсивность восстановления энергии при нажатии педали акселератора."
+                "name": "Regenerative Braking Power Profile",
+                "desc": "Adjusts accelerator pedal lift-off energy recovery intensity."
             },
             "tesla_walkaway_door_lock": {
-                "name": "Автоматический дверной замок с дистанционным телефонным ключом",
-                "desc": "Запирает двери и подтверждает звуковым сигналом, когда ключ телефона уходит."
+                "name": "Walk-Away Phone Key Auto Door Lock",
+                "desc": "Locks doors and confirms with horn chirp when phone key moves away."
             },
             "tesla_acceleration_boost_unlock": {
-                "name": "Профиль ускорения трансмиссии",
-                "desc": "Улучшает реакцию инвертора электродвигателя, ускоряя разгон с 0 до 100 км/ч."
+                "name": "Powertrain Acceleration Boost Drive Profile",
+                "desc": "Sharpens electric motor inverter response for faster 0-100 km/h times."
             },
             "tesla_interior_ambient_color": {
-                "name": "Предварительная настройка цвета окружающего освещения в пространстве для ног в салоне",
-                "desc": "Настраивает цветовую палитру RGB светодиодного освещения пространства для ног."
+                "name": "Cabin Footwell Ambient Lighting Color Preset",
+                "desc": "Customizes LED footwell ambient light RGB color palette."
             },
             "audi_matrix_led_animation": {
-                "name": "Матричные светодиодные фары Dynamic Welcome Light Dance",
-                "desc": "Воспроизводит динамическую световую хореографию при разблокировке автомобиля."
+                "name": "Matrix LED Headlight Dynamic Welcome Light Dance",
+                "desc": "Plays dynamic light choreography upon vehicle unlocking."
             },
             "audi_mmi_startup_screen": {
-                "name": "Графическая тема загрузки сенсорного экрана MMI",
-                "desc": "Настраивает анимацию загрузки центрального экрана MMI."
+                "name": "MMI Touch Screen Boot Graphic Theme",
+                "desc": "Customizes MMI central screen boot animation."
             },
             "audi_drive_select_efficiency": {
-                "name": "Профиль Efficiency Driving в Audi Drive Select",
-                "desc": "Включает режим экономии топлива в опциях Drive Select."
+                "name": "Efficiency Driving Profile in Audi Drive Select",
+                "desc": "Enables fuel-saving Efficiency mode in Drive Select options."
             },
             "audi_laptimer_boost_display": {
-                "name": "Накладка на таймер круга и манометр турбобара",
-                "desc": "Отображает таймер круга и индикатор турбонаддува в режиме реального времени в виртуальной кабине."
+                "name": "Lap Timer & Turbo Bar Pressure Gauge Overlay",
+                "desc": "Displays track lap timer and real-time turbo boost gauge on Virtual Cockpit."
             },
             "audi_needle_sweep_gauge": {
-                "name": "Проверка хода стрелки спортивного манометра",
-                "desc": "При запуске выполняет полную проверку стрелок тахометра и спидометра."
+                "name": "Sport Gauge Needle Sweep Verification",
+                "desc": "Performs full tachometer and speedometer needle sweep test on start."
             },
             "skoda_coming_home_lights": {
-                "name": "Таймер освещения при выходе из дома/при возвращении домой",
-                "desc": "Настраивает таймер включения фар после выезда из автомобиля."
+                "name": "Leaving Home / Coming Home Lighting Timer",
+                "desc": "Configures headlight illumination timer after vehicle exit."
             },
             "skoda_comfort_turn_signal": {
-                "name": "Регулировка количества импульсов индикатора комфорта",
-                "desc": "Устанавливает количество миганий указателей поворота в одно касание от 3 до 5."
+                "name": "Comfort Indicator Pulse Count Adjustment",
+                "desc": "Sets one-touch turn signal blink count between 3 and 5 flashes."
             },
             "cupra_sport_display_menu": {
-                "name": "Инструмент Cupra Performance и меню G-метра",
-                "desc": "Открывает измеритель перегрузки, указатель мощности в кВт и дисплей температуры масла."
+                "name": "Cupra Performance Instrument & G-Meter Menu",
+                "desc": "Unlocks G-force meter, kW power gauge, and oil temp display."
             },
             "cupra_virtual_cockpit_copper": {
-                "name": "Акцентная графика приборной панели на медную тему",
-                "desc": "Применяет фирменную медно-металлическую тему Cupra к приборной панели."
+                "name": "Copper Theme Dashboard Accent Graphics",
+                "desc": "Applies signature Cupra copper metallic accent theme to gauge cluster."
             },
             "vag_brake_disc_drying": {
-                "name": "Функция очистки/сушки тормозного диска во время дождя",
-                "desc": "Периодически прикладывает минимальное давление на колодки во влажную погоду к сухим роторам."
+                "name": "Brake Disc Wiping / Drying Function in Rain",
+                "desc": "Periodically applies minimal pad pressure in wet weather to dry rotors."
             },
             "vag_tourist_mode_lights": {
-                "name": "Диаграмма света фар в туристическом режиме",
-                "desc": "Переключает диаграмму направленности света фар между левым и правым рулем для езды за границу."
+                "name": "Tourist Mode Headlight Beam Pattern",
+                "desc": "Switches headlight beam pattern between LHD and RHD for driving abroad."
             },
             "vag_hood_warning_mute": {
-                "name": "Отключение звука приборов при открытом капоте",
-                "desc": "Подавляет постоянный предупреждающий сигнал приборов, когда капот открыт."
+                "name": "Bonnet Open Instrument Chime Mute",
+                "desc": "Suppresses persistent instrument warning chime when hood is unlatched."
             },
             "vag_emergency_brake_hazard": {
-                "name": "Автоматическая аварийная сигнализация при экстренном торможении",
-                "desc": "Быстро мигает аварийная сигнализация во время экстренной остановки с ABS."
+                "name": "Emergency Braking Automatic Hazard Flasher",
+                "desc": "Flashes hazard lights rapidly during hard ABS emergency stops."
             },
             "vag_sunroof_comfort_open": {
-                "name": "Логика брелка наклона/открытия люка в крыше с дистанционным комфортом",
-                "desc": "Настраивает действие дистанционного удержания ключа для наклона или полного открытия люка."
+                "name": "Sunroof Tilt / Open Remote Comfort Key Fob Logic",
+                "desc": "Configures remote key hold action to either tilt or fully open sunroof."
             },
             "bmw_ecopro_display_variant": {
-                "name": "Стиль приборной панели ECO PRO",
-                "desc": "Настраивает синюю графическую тему индикатора эффективности ECO PRO."
+                "name": "ECO PRO Instrument Cluster Gauge Styling",
+                "desc": "Customizes blue ECO PRO efficiency gauge graphic theme."
             },
             "bmw_volume_bar_hud": {
-                "name": "Наложение шкалы уровня громкости звука на проекционном дисплее",
-                "desc": "Показывает полосу изменения громкости прямо на проекции HUD."
+                "name": "Head-Up Display Audio Volume Level Bar Overlay",
+                "desc": "Shows volume change bar directly on HUD projection."
             },
             "bmw_anti_dazzle_mirror": {
-                "name": "Электрохромная противоослепляющая чувствительность затемнения зеркал",
-                "desc": "Регулирует порог фотодатчика автоматического затемнения зеркала заднего вида."
+                "name": "Electrochromic Anti-Dazzle Mirror Dimming Sensitivity",
+                "desc": "Adjusts automatic rearview mirror dimming photo-sensor threshold."
             },
             "bmw_camera_pdc_warning_mute": {
-                "name": "PDC и регулировка скорости отключения кругового обзора",
-                "desc": "Регулирует порог скорости автомобиля, при котором парковочные камеры отключаются."
+                "name": "PDC & Surround View Speed Cut-off Speed Adjustment",
+                "desc": "Adjusts vehicle speed threshold at which parking cameras turn off."
             },
             "toyota_pcs_distance_preset": {
-                "name": "Система предупреждения столкновений Расстояние оповещения по умолчанию",
-                "desc": "Устанавливает начальную чувствительность радара для предупреждения о прямом столкновении."
+                "name": "Pre-Collision System Default Alert Distance",
+                "desc": "Sets initial radar forward collision warning distance sensitivity."
             },
             "toyota_bsm_timing": {
-                "name": "Система контроля слепых зон Время предупреждения",
-                "desc": "Регулирует время включения контрольной лампы бокового зеркала слепой зоны."
+                "name": "Blind Spot Monitor Warning Warning Timing",
+                "desc": "Adjusts blind spot side mirror warning light illumination timing."
             },
             "toyota_ac_noise_reduction": {
-                "name": "Режим снижения шума вентилятора компрессора кондиционера",
-                "desc": "Ограничивает максимальную скорость вентилятора кондиционера для обеспечения тишины в салоне."
+                "name": "A/C Compressor Blower Noise Reduction Mode",
+                "desc": "Limits maximum air conditioning blower fan speed for cabin quietness."
             },
             "toyota_sflow_control": {
-                "name": "Режим S-Flow Smart Climate для одного пассажира",
-                "desc": "Направляет поток воздуха кондиционера исключительно на занятые сиденья на основе датчиков веса."
+                "name": "S-Flow Smart Climate Single-Occupant Mode",
+                "desc": "Directs A/C airflow exclusively to occupied seats based on weight sensors."
             },
             "toyota_relock_timeout": {
-                "name": "Таймер задержки автоматической повторной блокировки после удаленной разблокировки",
-                "desc": "Регулирует секунды до автоматической блокировки дверей, если ни одна дверь не открывается."
+                "name": "Automatic Re-Lock Delay Timer after Remote Unlock",
+                "desc": "Adjusts seconds before doors auto-relock if no door is opened."
             },
             "lexus_mark_levinson_audio_profile": {
-                "name": "Аудиопрофиль Марка Левинсона Surround Sound DSP",
-                "desc": "Оптимизирует трехмерную пространственную акустическую настройку для динамиков премиум-класса Mark Levinson."
+                "name": "Mark Levinson Surround Sound DSP Audio Profile",
+                "desc": "Optimizes 3D spatial acoustic tuning for Mark Levinson premium speakers."
             },
             "lexus_ev_mode_beeper_mute": {
-                "name": "Акустический звуковой сигнал для низкоскоростного пешеходного электромобиля",
-                "desc": "Подавляет синтетический внешний звуковой сигнал в низкоскоростном электрическом режиме."
+                "name": "Low-Speed Pedestrian EV Acoustic Alert Beeper Mute",
+                "desc": "Suppresses low speed electric mode synthetic exterior chime."
             },
             "lexus_easy_access_seat": {
-                "name": "Рулевое колесо с легким доступом и электрорегулировка спинки сиденья",
-                "desc": "Сдвигается спинка водительского сиденья и откидывается рулевое колесо для облегчения посадки/высадки."
+                "name": "Easy Access Steering Wheel & Power Seat Slide-Back",
+                "desc": "Slides driver seat back and tilts steering wheel away for easy entry/exit."
             },
             "nissan_epower_regen_mode": {
-                "name": "Режим рекуперативного торможения одной педалью e-POWER",
-                "desc": "Устанавливает уровень замедления при рекуперативном торможении электронной педали по умолчанию."
+                "name": "e-POWER One-Pedal Regenerative Braking Mode",
+                "desc": "Sets default e-Pedal regenerative braking deceleration level."
             },
             "nissan_propilot_assist_timing": {
-                "name": "ProPILOT Система помощи при центрировании полосы движения, чувствительность рулевого управления",
-                "desc": "Настраивает резкость вмешательства рулевого управления ProPILOT."
+                "name": "ProPILOT Lane Centering Assist Steering Sensitivity",
+                "desc": "Configures ProPILOT steering intervention sharpness."
             },
             "nissan_intelligent_around_view": {
-                "name": "Автоматическое всплывающее окно монитора кругового обзора на низкой скорости",
-                "desc": "Включает отображение камеры с обзором на 360 градусов, когда передние датчики парковки обнаруживают препятствия."
+                "name": "Around View Monitor Auto-Pop-Up at Low Speed",
+                "desc": "Triggers 360-degree camera display when front parking sensors detect obstacles."
             },
             "mazda_g_vectoring_display": {
-                "name": "Динамический визуализатор G-Vectoring Control Plus",
-                "desc": "Отображает график векторизации крутящего момента GVC+ в режиме реального времени на приборной панели."
+                "name": "G-Vectoring Control Plus Dynamic Visualizer",
+                "desc": "Displays real-time GVC+ cornering torque vectoring graph on instrument panel."
             },
             "mazda_ieloop_capacitor_monitor": {
-                "name": "i-ELOOP Измеритель конденсатора рекуперации энергии тормоза",
-                "desc": "Показывает состояние заряда и разряда электрического конденсатора на центральном экране."
+                "name": "i-ELOOP Brake Energy Recovery Capacitor Meter",
+                "desc": "Shows electric capacitor charge & discharge status on central screen."
             },
             "mazda_smart_city_brake_sens": {
-                "name": "Чувствительность системы поддержки торможения Smart City",
-                "desc": "Устанавливает диапазон действия датчика автоматического экстренного торможения на низкой скорости."
+                "name": "Smart City Brake Support Sensitivity",
+                "desc": "Sets low-speed automatic emergency braking sensor range."
             },
             "subaru_eyesight_distance_preset": {
-                "name": "Расстояние по умолчанию адаптивного круиз-контроля EyeSight",
-                "desc": "Настраивает профиль круизного интервала стереокамеры по умолчанию при запуске."
+                "name": "EyeSight Adaptive Cruise Control Default Distance",
+                "desc": "Configures stereo camera default cruise gap profile on startup."
             },
             "subaru_xmode_auto_engage": {
-                "name": "Порог автоматического включения тяги для бездорожья X-Mode",
-                "desc": "Устанавливает порог пробуксовки колес для автоматической активации двойного режима X-Mode."
+                "name": "X-Mode Off-Road Traction Auto-Engage Threshold",
+                "desc": "Sets wheel slip threshold for automatic dual-function X-Mode activation."
             },
             "subaru_steering_responsive_headlights": {
-                "name": "Переключатель адаптивных фар",
-                "desc": "Включает или выключает адаптивный поворот фар."
+                "name": "Steering Responsive Headlights Toggle",
+                "desc": "Enables or disables directional adaptive headlight swivel."
             },
             "genesis_sport_plus_mode": {
-                "name": "Трансмиссия Sport+ и режим электронной подвески",
-                "desc": "Открывает функцию ESC OFF, ориентированную на трек, и усиленную настройку амортизаторов."
+                "name": "Sport+ Powertrain & Electronic Suspension Mode",
+                "desc": "Unlocks track-oriented ESC OFF and stiffened damper mapping."
             },
             "genesis_ambient_active_light": {
-                "name": "Синхронизация режима активного внешнего освещения",
-                "desc": "Динамически меняет цвет внутреннего освещения в зависимости от режима вождения."
+                "name": "Active Ambient Lighting Drive Mode Sync",
+                "desc": "Changes interior ambient lighting color dynamically based on drive mode."
             },
             "volvo_city_safety_warning": {
-                "name": "Чувствительность автономного аварийного оповещения городской безопасности",
-                "desc": "Настраивает время предупреждения о столкновении с помощью радара и лидара."
+                "name": "City Safety Autonomous Emergency Warning Sensitivity",
+                "desc": "Configures radar and lidar collision warning alert timing."
             },
             "chery_ar_navigation_hud": {
-                "name": "Наложение проекции AR-навигации на HUD",
-                "desc": "Проецирует трехмерные навигационные стрелки дополненной реальности на лобовое стекло."
+                "name": "AR Navigation Projection Overlay on HUD",
+                "desc": "Projects 3D augmented reality navigation arrows onto windshield."
             },
             "jlr_terrain_response_preset": {
-                "name": "Автоматическая предустановка режима бездорожья Terrain Response",
-                "desc": "Запоминает последний профиль поверхности Terrain Response."
+                "name": "Terrain Response Auto Off-Road Mode Preset",
+                "desc": "Remembers last Terrain Response surface profile."
             },
             "jlr_adaptive_dynamics_firm": {
-                "name": "Профиль жесткости амортизаторов Adaptive Dynamics",
-                "desc": "Устанавливает жесткость демпфирования электронного амортизатора по умолчанию."
+                "name": "Adaptive Dynamics Damper Firmness Profile",
+                "desc": "Sets default electronic shock absorber damping stiffness."
             },
             "jlr_wading_sensor_alert": {
-                "name": "Порог звукового сигнала предупреждения о глубине обнаружения Wade",
-                "desc": "Настраивает чувствительность звукового сигнала ультразвукового предупреждения о глубине воды."
+                "name": "Wade Sensing Depth Warning Chime Threshold",
+                "desc": "Configures ultrasonic water depth warning chime sensitivity."
             },
             "alfa_dna_dynamic_memory": {
-                "name": "Память запуска динамического режима Alfa DNA Selector",
-                "desc": "Сохраняет реакцию дроссельной заслонки в динамическом режиме после перезапуска."
+                "name": "Alfa DNA Selector Dynamic Mode Startup Memory",
+                "desc": "Retains Dynamic mode throttle response after restart."
             },
             "alfa_q4_torque_split": {
-                "name": "График распределения крутящего момента в режиме реального времени для полноприводного автомобиля Q4",
-                "desc": "Показывает процентное соотношение мощности переднего/заднего привода AWD на дисплее прибора."
+                "name": "Q4 All-Wheel Drive Real-Time Torque Split Graph",
+                "desc": "Shows AWD front/rear power split percentage on instrument display."
             },
             "li_auto_range_extender_mode": {
-                "name": "Уровень сохранения заряда батареи генератора REV",
-                "desc": "Регулирует порог запуска генератора двигателя внутреннего сгорания."
+                "name": "REV Generator Battery Charge Retention Level",
+                "desc": "Adjusts internal combustion engine generator start threshold."
             },
             "li_auto_cinema_seat_position": {
-                "name": "Режим «Театр/Кино» Эргономичное положение сиденья",
-                "desc": "Задние сиденья откидываются и подножки раскладываются, когда активен режим кино."
+                "name": "Theater / Cinema Mode Ergonomic Seat Position",
+                "desc": "Reclines rear seats and unfolds leg rests when cinema mode is active."
             },
             "zeekr_drift_mode_torque": {
-                "name": "Двойной мотор с задним смещением в режиме дрифта",
-                "desc": "Передает 100 % крутящего момента на задний электродвигатель для контролируемого дрифта."
+                "name": "Dual Motor Performance Drift Mode Rear Bias",
+                "desc": "Sends 100% torque to rear electric motor for controlled drifting."
             },
             "zeekr_ambient_beat_sync": {
-                "name": "Окружающее освещение Музыка Ритм Бит Синхронизация",
-                "desc": "Освещение салона пульсирует синхронно с ритмами воспроизводимой музыки."
+                "name": "Ambient Lighting Music Rhythm Beat Sync",
+                "desc": "Pulsates interior cabin lighting in sync with played music beats."
             },
             "tata_drive_mode_voice": {
-                "name": "Голосовое оповещение при переключении режима движения",
-                "desc": "Включает звуковое голосовое подтверждение при переключении режимов движения."
+                "name": "Drive Mode Switch Voice Announcement",
+                "desc": "Enables audio voice confirmation when switching drive modes."
             },
             "mahindra_zip_zap_zoom_custom": {
-                "name": "Профиль отклика дроссельной заслонки трансмиссии Zip/Zap/Zoom",
-                "desc": "Настраивает кривую ускорения для режимов движения Zip, Zap и Zoom."
+                "name": "Zip/Zap/Zoom Powertrain Throttle Response Profile",
+                "desc": "Customizes acceleration curve for Zip, Zap, and Zoom driving modes."
             },
             "fun_cyberpunk_cluster_theme": {
-                "name": "Cyberpunk 2077 Неоновая графическая тема кабины",
-                "desc": "Применяет футуристический неоновый голубой и янтарный стиль цифровой приборной панели."
+                "name": "Cyberpunk 2077 Neon Graphic Cockpit Theme",
+                "desc": "Applies futuristic neon cyan & amber digital dashboard gauge styling."
             },
             "fun_exhaust_flame_sound_effect": {
-                "name": "Стереосистема Pop & Bang Exhaust Sound FX",
-                "desc": "Воспроизводит реалистичные звуковые эффекты выхлопа V8 через динамики салона."
+                "name": "Stereo System Pop & Bang Exhaust Sound FX",
+                "desc": "Plays realistic V8 exhaust pop & bang audio effects through cabin speakers."
             },
             "fun_matrix_light_show_welcome": {
-                "name": "Изготовленная на заказ матричная светодиодная фара Dance Добро пожаловать",
-                "desc": "Исполняет ритмичное световое шоу с использованием фар и указателей поворота."
+                "name": "Custom Headlight Matrix LED Dance Welcome",
+                "desc": "Plays rhythmic Light Show choreography using headlights & indicators."
             },
             "fun_stealth_fighter_display": {
-                "name": "Стелс-истребитель Ночное вождение Минималистичный кластерный режим",
-                "desc": "Отключает все лампочки приборной панели, кроме спидометра, для вождения в кромешную тьму ночью."
+                "name": "Stealth Fighter Night Driving Minimalist Cluster Mode",
+                "desc": "Turns off all cluster lights except speedometer for pitch-black night driving."
             },
             "vag_lap_timer_oil_temp": {
                 "name": "Lap Timer & Oil Temperature in Gauge Cluster",
@@ -2783,147 +2794,147 @@
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
-        "codeBtn": "КОДИРОВАТЬ",
-        "removeBtn": "УДАЛИТЬ",
-        "unsupportedTitle": "Автомобиль Не Поддерживается",
-        "unsupportedMsg": "Эта функция не поддерживается оборудованием или ПО ЭБУ вашего автомобиля.",
-        "layoutChart": "ГРАФИК",
-        "selectBrand": "Выберите марку автомобиля",
-        "selectCategory": "Выберите категорию",
-        "selectMakeTitle": "ВЫБЕРИТЕ МАРКУ АВТОМОБИЛЯ",
-        "selectCategoryTitle": "ВЫБЕРИТЕ КАТЕГОРИЮ ФУНКЦИИ",
-        "brandAll": "ВСЕ МАРКИ",
-        "categoryAll": "ВСЕ КАТЕГОРИИ",
-        "lighting": "ОСВЕЩЕНИЕ",
-        "soundAlerts": "ЗВУКИ И СИГНАЛЫ",
-        "displayInstrument": "ДИСПЛЕЙ / ПРИБОРНАЯ ПАНЕЛЬ",
-        "drivingComfort": "КОМФОРТ ВИТАНИЯ",
-        "securitySafety": "БЕЗОПАСНОСТЬ И ЗАЩИТА",
-        "restoreBtn": "СБРОС К ЗАВОДСКИМ НАСТРОЙКАМ",
-        "searchPlaceholder": "Поиск функции, DID или ЭБУ...",
-        "restoreSuccessTitle": "Заводские настройки восстановлены",
-        "restoreSuccessMsg": "Выбранная функция сброшена к исходному значению DID.",
-        "cloneLockedBanner": "Обнаружен клонированный адаптер — кодирование заблокировано",
-        "cloneAlertTitle": "Обнаружен клон адаптера OBD2",
-        "cloneAlertMsg": "Подключенный адаптер OBD2 был помечен как поддельный адаптер-клон, в котором отсутствует строгая точность синхронизации, необходимая для записи в ЭБУ. Вы можете просматривать и искать все функции, но операции записи кодов заблокированы для защиты вашего автомобиля. Для записи подключите оригинальный адаптер ELM327 v2.1+ или vLinker.",
-        "riskLow": "НИЗКИЙ РИСК",
-        "riskMedium": "СРЕДНИЙ РИСК",
-        "riskHigh": "ВЫСОКИЙ РИСК",
-        "sfdProtected": "Защищенный ЭБУ SFD",
-        "legalDisclaimerUsLights": "Примечание. Непрерывные парковочные огни в США могут быть незаконными в некоторых европейских юрисдикциях.",
-        "legalDisclaimerVim": "Примечание. Воспроизведение видео во время вождения предназначено только для использования пассажирами.",
-        "headerCategory": "Скрытые функции и кодирование",
-        "vehicleMatched": "{{make}} — СОПРЯЖЕНО",
-        "demoModeVehicle": "ДЕМО-РЕЖИМ: {{make}}",
-        "waitingVehicle": "ОЖИДАНИЕ ПОДКЛЮЧЕННОГО ТРАНСПОРТА",
-        "activeFeaturesCount": "{{count}} функций OEM для автомобиля активно",
-        "demoFeaturesCount": "{{count}} демо-функций отображается",
-        "connectForFeaturesNote": "Подключитесь к OBD2 для вывода функций автомобиля",
-        "codingFailed": "Кодирование не удалось.",
-        "engineRunningMsg": "Кодирование ЭБУ требует зажигание ВКЛ при двигателе ВЫКЛ.",
-        "engineRunningTitle": "Двигатель работает",
-        "lowVoltageMsg": "Напряжение батареи ниже безопасного порога.",
-        "lowVoltageTitle": "Предупреждение о низком напряжении",
-        "motionAlertMsg": "Операции записи ЭБУ заблокированы при движении автомобиля.",
-        "motionAlertTitle": "Автомобиль в движении",
-        "noMatchingFeatures": "Не найдено функций для выбранных фильтров.",
-        "unsafeModuleMsg": "Запись в модули ABS/ESP и подушек безопасности заблокирована на 100%.",
-        "unsafeModuleTitle": "Защищённый модуль безопасности",
-        "catMotorcycle": "ЭБУ МОТОЦИКЛА",
-        "catRetrofit": "МОДЕРНИЗАЦИЯ И ОБОРУДОВАНИЕ",
-        "catEv": "ЭЛЕКТРОМОБИЛЬ И АККУМУЛЯТОР",
-        "catAdas": "КАЛИБРОВКА ADAS",
-        "catEasterEgg": "ПАСХАЛЬНЫЕ ЯЙЦА",
-        "catService": "СЕРВИС И ОБСЛУЖИВАНИЕ",
-        "catPerformance": "ПРОИЗВОДИТЕЛЬНОСТЬ",
-        "segmentAll": "ВСЕ МАРКИ",
-        "segmentEuroPremium": "Европейский Премиум",
-        "segmentEuroVolume": "Европейский объем",
-        "segmentAsian": "Азиатский",
-        "segmentAmerican": "Американский",
-        "segmentChineseEv": "Китайский электромобиль",
-        "segmentMotorcycle": "Мотоцикл",
-        "detailTitle": "Подробности функций и кодирование в один клик",
-        "prePostValues": "Предварительный и пост-предварительный просмотр полезной нагрузки",
-        "selectOption": "Выберите вариант кодирования:",
-        "oneClickActivate": "АКТИВАЦИЯ ОДНИМ ЩЕЛЧКОМ",
-        "expertModeTitle": "Экспертный режим",
-        "allMakes": "ВСЕ МАРКИ",
-        "techEcuSpecs": "ТЕХНИЧЕСКИЕ ХАРАКТЕРИСТИКИ ЭБУ И ОБЗОР ПОЛЕЗНОЙ НАГРУЗКИ",
-        "targetEcuHeaderLabel": "Целевой заголовок ЭБУ:",
-        "udsDidLabel": "Идентификатор данных UDS:",
-        "bitPositionLabel": "Битовая позиция:",
-        "targetPayloadLabel": "Целевая полезная нагрузка UDS:",
-        "byteBitValue": "Байт {{byte}}, бит {{bit}}",
-        "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
-        "restoreFactoryBtn": "ВОССТАНОВИТЬ ЗАВОДСКИЕ НАСТРОЙКИ",
-        "restoreFactoryTitle": "ВОССТАНОВИТЬ ЗАВОДСКИЕ НАСТРОЙКИ",
-        "enterDidFirst": "Пожалуйста, введите шестнадцатеричный код DID для восстановления.",
-        "restoreConfirmMsg": "Вернуться к исходному заводскому состоянию для DID 0x{{didHex}}?",
-        "restoreAction": "ВОССТАНОВЛЕНИЕ ЗАВОДА",
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version.",
+        "layoutChart": "CHART",
+        "selectBrand": "Select Vehicle Brand",
+        "selectCategory": "Select Category",
+        "selectMakeTitle": "SELECT VEHICLE BRAND",
+        "selectCategoryTitle": "SELECT FEATURE CATEGORY",
+        "brandAll": "ALL MAKES",
+        "categoryAll": "ALL CATEGORIES",
+        "lighting": "LIGHTING",
+        "soundAlerts": "SOUND ALERTS",
+        "displayInstrument": "DISPLAY / CLUSTER",
+        "drivingComfort": "DRIVING COMFORT",
+        "securitySafety": "SECURITY & SAFETY",
+        "restoreBtn": "RESTORE FACTORY STATE",
+        "searchPlaceholder": "Search feature, DID, or target ECU...",
+        "restoreSuccessTitle": "Factory State Restored",
+        "restoreSuccessMsg": "Selected feature has been reverted back to original DID state.",
+        "cloneLockedBanner": "Clone Adapter Detected — Coding Locked",
+        "cloneAlertTitle": "Clone OBD2 Adapter Detected",
+        "cloneAlertMsg": "Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing. You can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.",
+        "riskLow": "LOW RISK",
+        "riskMedium": "MEDIUM RISK",
+        "riskHigh": "HIGH RISK",
+        "sfdProtected": "SFD Protected ECU",
+        "legalDisclaimerUsLights": "Note: Continuous US parking lights may not be street legal in some European jurisdictions.",
+        "legalDisclaimerVim": "Note: Video playback while driving is intended for passenger use only.",
+        "headerCategory": "Hidden Features & Coding",
+        "vehicleMatched": "{{make}} — MATCHED",
+        "demoModeVehicle": "DEMO MODE: {{make}}",
+        "waitingVehicle": "WAITING FOR CONNECTED VEHICLE",
+        "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
+        "demoFeaturesCount": "{{count}} demo features listed",
+        "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
+        "engineRunningTitle": "Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "Protected Safety Module",
+        "catMotorcycle": "MOTORCYCLE ECU",
+        "catRetrofit": "RETROFIT & HARDWARE",
+        "catEv": "EV & BATTERY",
+        "catAdas": "ADAS CALIBRATION",
+        "catEasterEgg": "EASTER EGGS",
+        "catService": "SERVICE & MAINTENANCE",
+        "catPerformance": "PERFORMANCE",
+        "segmentAll": "ALL MAKES",
+        "segmentEuroPremium": "European Premium",
+        "segmentEuroVolume": "European Volume",
+        "segmentAsian": "Asian",
+        "segmentAmerican": "American",
+        "segmentChineseEv": "Chinese EV",
+        "segmentMotorcycle": "Motorcycle",
+        "detailTitle": "Feature Details & One-Click Coding",
+        "prePostValues": "Pre / Post Payload Preview",
+        "selectOption": "Select Coding Option:",
+        "oneClickActivate": "ONE-CLICK ACTIVATE",
+        "expertModeTitle": "Expert Mode",
+        "allMakes": "ALL MAKES",
+        "techEcuSpecs": "TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW",
+        "targetEcuHeaderLabel": "Target ECU Header:",
+        "udsDidLabel": "UDS Data Identifier:",
+        "bitPositionLabel": "Bit Position:",
+        "targetPayloadLabel": "Target UDS Payload:",
+        "byteBitValue": "Byte {{byte}}, Bit {{bit}}",
+        "expertSafetyNote": "For advanced users only. In case of incorrect coding, use 'Restore Factory Settings' below to revert to original state.",
+        "restoreFactoryBtn": "RESTORE FACTORY SETTINGS",
+        "restoreFactoryTitle": "RESTORE FACTORY SETTINGS",
+        "enterDidFirst": "Please enter the DID Hex code to restore.",
+        "restoreConfirmMsg": "Revert to original factory state for DID 0x{{didHex}}?",
+        "restoreAction": "RESTORE FACTORY",
         "expertDidPlaceholder": "DID Hex",
-        "expertValPlaceholder": "Шестнадцатеричное значение",
-        "writeRawPayload": "ЗАПИСЬ ПОЛЕЗНОЙ НАГРУЗКИ RAW UDS",
-        "enterValidHex": "Введите действительные строки DID и шестнадцатеричное значение.",
+        "expertValPlaceholder": "Value Hex",
+        "writeRawPayload": "WRITE RAW UDS PAYLOAD",
+        "enterValidHex": "Please enter valid DID and Value Hex strings.",
         "options": {
             "speed85": "85 km/h",
             "speed90": "90 km/h",
             "speed100": "100 km/h",
             "speed110": "110 km/h",
-            "idleOff": "Devre Dışı",
+            "idleOff": "Disabled",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
             "pto900": "900 RPM",
             "pto1100": "1100 RPM",
             "pto1300": "1300 RPM",
-            "retarderLow": "Düşük",
+            "retarderLow": "Low",
             "retarderMed": "Orta",
-            "retarderHigh": "Yüksek",
-            "levelNormal": "Normal Sürüş Seviyesi",
-            "levelRamp1": "Yükleme Rampası Seviyesi 1",
-            "levelRamp2": "Yükleme Rampası Seviyesi 2",
-            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "retarderHigh": "High",
+            "levelNormal": "Normal Driving Level",
+            "levelRamp1": "Loading Ramp Level 1",
+            "levelRamp2": "Loading Ramp Level 2",
+            "regenStart": "Start Static Regeneration",
             "regenStatus": "Kurum Durumunu Sorgula",
             "alarmFull": "Tam Ses",
-            "alarmNight": "Kısık Ses",
+            "alarmNight": "Low Volume",
             "hyst3": "+/- 3 km/h",
             "hyst5": "+/- 5 km/h",
             "hyst10": "+/- 10 km/h",
-            "drl25": "%25 Kısık",
+            "drl25": "25% Dimmed",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
-            "drl100": "%100 Tam Güç",
+            "drl100": "100% Full Power",
             "xdsStandard": "Standart",
-            "xdsStrong": "Güçlü",
-            "blink1": "1 Flaş",
-            "blink3": "3 Flaş",
-            "blink4": "4 Flaş",
-            "blink5": "5 Flaş",
+            "xdsStrong": "Strong",
+            "blink1": "1 Flash",
+            "blink3": "3 Flashes",
+            "blink4": "4 Flashes",
+            "blink5": "5 Flashes",
             "chimeBmw": "BMW Standart",
-            "chimeMini": "MINI Tarzı",
-            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeMini": "MINI Style",
+            "chimeRolls": "Rolls-Royce Luxury",
             "chimeBmwi": "BMW i Elektrik",
             "logoStandard": "Standart",
             "logoMPerf": "M Performance",
             "logoAlpina": "Alpina Mavi"
         },
-        "catSoundAlerts": "Ses & Uyarılar",
-        "catDisplayInstrument": "Gösterge Paneli",
-        "catDrivingComfort": "Sürüş Konforu",
-        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catSoundAlerts": "Sound & Alerts",
+        "catDisplayInstrument": "Instrument Cluster",
+        "catDrivingComfort": "Driving Comfort",
+        "catSecuritySafety": "Security & Safety",
         "catMotorcycleEcu": "Motosiklet ECU",
-        "freeTrialAvailableBadge": "1 БЕСПЛАТНЫЙ КРЕДИТ",
-        "freeTrialUsedBadge": "РАЗБЛОКИРОВАНО",
-        "proRequiredBadge": "ТРЕБУЕТСЯ PRO",
-        "freeTrialExhaustedTitle": "Бесплатный пробный кредит использован",
-        "freeTrialExhaustedMsg": "Вы использовали 1 бесплатный кредит активации. Перейдите на PRO для безлимитной активации функций, экспертного кодирования и сброса ТО!",
-        "freeTrialSuccessTitle": "Поздравляем! Функция активирована",
-        "freeTrialSuccessMsg": "Эта функция успешно закодирована с использованием 1 бесплатного кредита! Перейдите на PRO в любое время для доступа ко всем функциям.",
-        "upgradeToPro": "ПЕРЕЙТИ НА PRO",
-        "toastActivated": "Активировано",
-        "toastDeactivated": "Деактивировано",
-        "optionsBadge": "{{count}} ВАРИАНТА"
+        "freeTrialAvailableBadge": "1 FREE CREDIT",
+        "freeTrialUsedBadge": "UNLOCKED",
+        "proRequiredBadge": "PRO REQUIRED",
+        "freeTrialExhaustedTitle": "Free Trial Credit Used",
+        "freeTrialExhaustedMsg": "You have used your 1 free feature activation credit. Upgrade to PRO for unlimited feature unlocking, expert coding, and full service resets!",
+        "freeTrialSuccessTitle": "Congratulations! Feature Activated",
+        "freeTrialSuccessMsg": "This feature was successfully coded to your vehicle using your 1 free trial credit! Upgrade to PRO anytime to unlock all other features with no limits.",
+        "upgradeToPro": "UPGRADE TO PRO",
+        "toastActivated": "Activated",
+        "toastDeactivated": "Deactivated",
+        "optionsBadge": "{{count}} OPTIONS"
     },
     "ignition": {
         "title": "Предупреждение о состоянии зажигания",
@@ -2937,27 +2948,27 @@
         "batteryVoltage": "Напряжение батареи:"
     },
     "hpGauge": {
-        "title": "ЖИВАЯ МОЩНОСТЬ И ИЗМЕРИТЕЛЬ КРУТЯЩЕГО МОМЕНТА",
-        "subtitle": "Мощность в реальном времени и крутящий момент",
-        "horsepower": "ЛОШАДИНАЯ СИЛА",
-        "torque": "МОМЕНТ ДВИГАТЕЛЯ",
-        "peakHp": "ПИКОВАЯ ХП",
-        "peakTorque": "ПИКОВЫЙ КРУТЯЩИЙ МОМЕНТ",
-        "efficiency": "ЭФФЕКТИВНОСТЬ",
-        "methodMaf": "Hava Akış Tabanlı",
-        "methodTorque": "Canlı Tork Tabanlı",
-        "methodLoad": "Motor Yükü Tabanlı",
-        "configWeight": "Вес автомобиля:",
-        "configDisplacement": "Объем двигателя:",
-        "calcMethod": "МЕТОД РАСЧЁТА",
-        "methodDiesel": "Dizel Tork & Yakıt Akışı"
+        "title": "LIVE POWER & TORQUE GAUGE",
+        "subtitle": "Real-Time Horsepower & Torque",
+        "horsepower": "HORSEPOWER",
+        "torque": "ENGINE TORQUE",
+        "peakHp": "PEAK HP",
+        "peakTorque": "PEAK TORQUE",
+        "efficiency": "EFFICIENCY",
+        "methodMaf": "Mass Airflow Based",
+        "methodTorque": "Live Torque Based",
+        "methodLoad": "Engine Load Based",
+        "configWeight": "Vehicle Weight:",
+        "configDisplacement": "Engine Displacement:",
+        "calcMethod": "CALCULATION METHOD",
+        "methodDiesel": "Diesel Torque & Fuel Flow"
     },
     "fuelTrim": {
-        "title": "КОРРЕКЦИЯ ТОПЛИВА И АНАЛИЗ ВОЗДУШНО-ТОПЛИВНОЙ СМЕСИ",
+        "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
         "subtitle": "STFT & LTFT Diagnostics",
         "stft": "STFT",
         "ltft": "LTFT",
-        "totalTrim": "ОБЩАЯ КОРРЕКЦИЯ ТОПЛИВА",
+        "totalTrim": "TOTAL FUEL TRIM",
         "afrRatio": "AIR-FUEL RATIO",
         "lambda": "LAMBDA",
         "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
@@ -2965,38 +2976,38 @@
         "stateCriticalLean": "CRITICAL LEAN MIXTURE",
         "stateMildRich": "MILD RICH MIXTURE",
         "stateCriticalRich": "CRITICAL RICH MIXTURE",
-        "guideTitle": "РУКОВОДСТВО ПО БЕДНОЙ И БОГАТОЙ СМЕСИ",
-        "guideDesc": "Богатая смесь указывает на избыток топлива в камере сгорания, а бедная смесь указывает на избыток воздуха.",
-        "causesTitle": "Возможные причины:",
-        "actionTitle": "Рекомендуемое действие:",
+        "guideTitle": "LEAN vs RICH MIXTURE GUIDE",
+        "guideDesc": "Rich mixture indicates excess fuel in combustion chamber, while Lean mixture indicates excess air.",
+        "causesTitle": "Potential Causes:",
+        "actionTitle": "Recommended Action:",
         "causeNormal": "System operates within ideal range. No faults.",
-        "actionNormal": "Продолжайте плановое техническое обслуживание.",
-        "causeVacuumLeak": "Утечка вакуума, порванные шланги или прокладка впускного коллектора.",
-        "causeDirtyMaf": "Грязный или неисправный датчик MAF",
-        "causeLowFuelPressure": "Низкое давление топливного насоса или засорен топливный фильтр.",
-        "causeCloggedInjectors": "Засоренные или грязные топливные форсунки",
-        "actionCriticalLean": "Выполните проверку дыма на наличие утечек во впускном коллекторе и очистите датчик массового расхода воздуха.",
-        "causeMinorVacuumLeak": "Незначительная утечка воздуха или старение датчика O2",
-        "actionMildLean": "Проверьте текущие данные датчика O2 и впускных шлангов.",
-        "causeLeakingInjector": "Утечка/заклинивание топливной форсунки",
-        "causeStuckEvapPurgeVal": "Застрял в открытом положении клапан продувки адсорбера EVAP",
-        "causeDirtyAirFilter": "Сильно загрязнен воздушный фильтр.",
-        "causeHighFuelPressure": "Высокое давление в топливной рампе",
-        "actionCriticalRich": "Осмотрите клапан продувки EVAP и утечку обратного потока форсунки.",
-        "causeRestrictedAirIntake": "Закупорка воздухозаборника",
-        "actionMildRich": "Проверьте или замените воздушный фильтр двигателя.",
-        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
-        "railPressure": "Rail Basıncı",
-        "fuelRate": "Yakıt Debisi",
-        "widebandSensor": "Geniş Bant Lambda Sensörü",
-        "commonRailStatus": "Common Rail Püskürtme",
-        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
-        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel",
-        "modeGasoline": "Benzinli",
-        "leanNormal": "Fakir Karışım",
-        "railStable": "Basınç Kararlı"
+        "actionNormal": "Continue routine maintenance.",
+        "causeVacuumLeak": "Vacuum leaks, torn hoses, or intake manifold gasket",
+        "causeDirtyMaf": "Dirty or faulty MAF sensor",
+        "causeLowFuelPressure": "Low fuel pump pressure or clogged fuel filter",
+        "causeCloggedInjectors": "Clogged or dirty fuel injectors",
+        "actionCriticalLean": "Perform smoke test for intake leaks and clean MAF sensor.",
+        "causeMinorVacuumLeak": "Minor air leak or aging O2 sensor",
+        "actionMildLean": "Check live O2 sensor data and intake hoses.",
+        "causeLeakingInjector": "Leaking/stuck-open fuel injector",
+        "causeStuckEvapPurgeVal": "Stuck-open EVAP canister purge valve",
+        "causeDirtyAirFilter": "Severely dirty air filter",
+        "causeHighFuelPressure": "High fuel rail pressure",
+        "actionCriticalRich": "Inspect EVAP purge valve and injector return leak-off.",
+        "causeRestrictedAirIntake": "Air intake duct obstruction",
+        "actionMildRich": "Check or replace engine air filter.",
+        "dieselCombustionNormal": "Diesel Injection & Combustion Health Normal",
+        "railPressure": "Rail Pressure",
+        "fuelRate": "Fuel Flow Rate",
+        "widebandSensor": "Wideband Lambda Sensor",
+        "commonRailStatus": "Common Rail Injection",
+        "dieselGuideTitle": "Diesel Combustion & Mixture Guide",
+        "dieselGuideDesc": "Diesel engines operate lean with excess air. Common Rail pressure and Lambda sensor regulate injection balance in real time.",
+        "dieselActionNormal": "System operates within ideal parameters. Continue regular fuel filter maintenance.",
+        "modeDiesel": "Diesel",
+        "modeGasoline": "Gasoline",
+        "leanNormal": "Lean Mixture Normal",
+        "railStable": "Pressure Stable"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER MONITOR",
@@ -3041,42 +3052,42 @@
         "readyTitle": "Диагностика ЭБУ готова"
     },
     "dct": {
-        "title": "АДАПТАЦИЯ ДВОЙНОГО СЦЕПЛЕНИЯ DCT",
-        "subtitle": "Базовые настройки DSG/Powershift/EDC с двойным сцеплением",
-        "warningTitle": "ТРЕБОВАНИЯ БЕЗОПАСНОСТИ ПРИ АДАПТАЦИИ DCT",
-        "warningDesc": "Перед началом адаптации убедитесь, что соблюдены все физические условия:",
-        "checkGearPark": "Установите селектор в положение P и затяните стояночный тормоз",
-        "checkFootBrake": "Ножной тормоз сильно нажат",
-        "checkHandBrake": "Ручной тормоз включен",
-        "checkOilTemp": "Температура масла КПП должна быть от 30°C до 90°C",
-        "startAdaptation": "НАЧАЛО АДАПТАЦИИ",
-        "inProgress": "Выполнение основных настроек коробки передач... НЕ отпускайте ножной тормоз!",
-        "success": "Сброс трансмиссии DCT и повторное обучение сцепления завершены успешно!",
-        "step1": "1/3: Выполнение калибровки гидравлического давления...",
-        "step2": "2/3: Выполнение основных настроек сцепления 1...",
-        "step3": "3/3: Выполнение адаптации вилки сцепления 2...",
-        "ensurePreconditions": "Перед началом работы выполните все предварительные условия безопасности.",
-        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
-        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
-        "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites Sensörü",
-        "reverseSwitch": "Geri Vites Müşürü",
-        "pressed": "BASILI",
-        "released": "SERBEST",
-        "neutral": "BOŞTA",
-        "inGear": "VİTESTE",
-        "active": "AKTİF",
-        "passive": "PASİF",
-        "startManualTest": "Sensör Testini Başlat",
-        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
-        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
-        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
-        "manualStep2": "Boş Vites Sensör Doğrulaması...",
-        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
-        "modeAuto": "Otomatik / DCT Uyarlama",
-        "modeManual": "Manuel Şanzıman Testi",
+        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
+        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
+        "checkGearPark": "Gear selector in 'P'",
+        "checkFootBrake": "Foot brake depressed firmly",
+        "checkHandBrake": "Handbrake engaged",
+        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "startAdaptation": "START ADAPTATION",
+        "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting.",
+        "manualTitle": "MANUAL TRANSMISSION SENSOR CHECK",
+        "manualDesc": "This vehicle has a manual transmission. Automatic TCU adaptation is not required. You can monitor the real-time status of clutch and neutral sensors below.",
+        "clutchSwitch": "Clutch Pedal Switch",
+        "neutralSwitch": "Neutral Gear Sensor",
+        "reverseSwitch": "Reverse Gear Switch",
+        "pressed": "DEPRESSED",
+        "released": "RELEASED",
+        "neutral": "NEUTRAL",
+        "inGear": "IN GEAR",
+        "active": "ACTIVE",
+        "passive": "INACTIVE",
+        "startManualTest": "Start Sensor Test",
+        "manualTestSuccess": "Manual transmission clutch and gear sensor checks completed successfully.",
+        "ensureManualPreconditions": "Please verify clutch and neutral gear positions.",
+        "manualStep1": "Testing Clutch Switch Signal...",
+        "manualStep2": "Verifying Neutral Sensor...",
+        "manualStep3": "Sensor Calibration Completed.",
+        "modeAuto": "Automatic / DCT Adaptation",
+        "modeManual": "Manual Transmission Test",
         "park": "P",
-        "engaged": "ÇEKİLİ"
+        "engaged": "ENGAGED"
     },
     "safeExit": {
         "btn": "БЕЗОПАСНОЕ ОТКЛЮЧЕНИЕ И СБРОС АДАПТЕРА",
@@ -3167,7 +3178,8 @@
             "manual": "МЕХАНИКА"
         },
         "unknown": "Неизвестно",
-        "year": "Год:"
+        "year": "Год:",
+        "transmissionLabel": "Transmission:"
     },
     "sgw": {
         "title": "РАЗБЛОКИРОВКА SECURITY GATEWAY",
@@ -3356,7 +3368,7 @@
         "downloadBtn": "СКАЧАТЬ МОИ ДАННЫЕ",
         "purgeBtn": "УДАЛИТЬ ВСЕ МОИ ДАННЫЕ",
         "exportSuccessTitle": "Готовность данных",
-        "exportSuccessMsg": "Ваш пакет данных был создан {{date}}. Содержание: очередь телеметрии, настройки приложения.",
+        "exportSuccessMsg": "Your data package was created on {{date}}. Contents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Ошибка",
         "exportErrorMsg": "Не удалось создать пакет данных.",
         "purgeAlertTitle": "Удалить все данные",
@@ -3415,8 +3427,8 @@
         "enter_valid_hex": "Пожалуйста, введите корректный DID и четное количество символов HEX."
     },
     "safety": {
-        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
+        "engineRunningTitle": "Engine Running Safety Lock",
+        "engineRunningDesc": "For safety reasons, trouble codes can only be cleared with ignition ON and engine OFF."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3435,7 +3447,12 @@
     "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
     "grid": "Grid",
     "disclaimers": {
-        "safetyNotice": "Safety Notice"
+        "safetyNotice": "Safety Notice",
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
     },
     "Success": "Success",
     "marketplace": {

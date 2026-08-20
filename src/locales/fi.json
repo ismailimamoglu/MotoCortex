@@ -182,11 +182,11 @@
         "feat3Desc": "Tallenna tarkat anturin tilat virheen ilmenemishetkellä.",
         "selectPlan": "VALITSE SUUNNITELMA",
         "weekly": "Viikkojäsenyys",
-        "weeklyDesc": "Ihanteellinen nopeaan tarkastukseen.",
+        "weeklyDesc": "Pikakatsastus ja kertadiagnostiikka.",
         "monthly": "Kuukausittainen jäsenyys",
-        "monthlyDesc": "Suosituin valinta.",
+        "monthlyDesc": "Täysi joustavuus, peru milloin tahansa.",
         "yearly": "Vuosittainen jäsenyys",
-        "yearlyDesc": "Parhaan hinnan takuu.",
+        "yearlyDesc": "Kaiken Kattava Autotallipassi (Paras Arvo).",
         "restore": "Palauta nykyiset ostokset",
         "subscribe": "TILAA NYT",
         "bestValue": "PARAS ARVO",
@@ -227,7 +227,12 @@
         "weeklyNotice": "Kertaostos, ei uusiudu automaattisesti",
         "yearlyNotice": "Vuosittainen automaattisesti uusiutuva tilaus",
         "aiDoctorLimitTitle": "AI DOCTOR -RAJA SAAVUTETTU",
-        "aiDoctorLimitDesc": "Olet käyttänyt 1 ilmaisen tekoälymoottoridiagnoosikokeilun. Päivitä PRO-versioon saadaksesi rajattomat tekoälyanalyysit."
+        "aiDoctorLimitDesc": "Olet käyttänyt 1 ilmaisen tekoälymoottoridiagnoosikokeilun. Päivitä PRO-versioon saadaksesi rajattomat tekoälyanalyysit.",
+        "trustNoAds": "100% Mainokseton (Free & PRO)",
+        "trustNoTokens": "Rajoittamaton Pääsy • Ei Token-Maksuja",
+        "trustUniversal": "Universaali BLE-Adapterin Vapaus",
+        "yearlySavingsBadge": "~.65/kk • Säästä 44%",
+        "save44": "Säästä 44%"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -306,7 +311,7 @@
         "terminalDesc": "Voit lähettää OBD-II- tai AT/ST-komennot suoraan ECU:lle. Esim. \"010C\" tai \"ATRV\".",
         "ecuResponseLabel": "ECU-VASTAUS:",
         "adapterConnected": "SOVITIN LIITETTY",
-        "lowQualityAdapterWarning": "Huonolaatuinen sovitin: Sovittimesi on heikkolaatuinen klooni. Siitä puuttuu vanhemmille ajoneuvoprotokolleille vaadittava ajoitustarkkuus. Suosittelemme päivittämään korkealaatuiseen OBD2-sovittimeen, jotta yhdistäminen onnistuu.",
+        "lowQualityAdapterWarning": "Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols. We highly recommend upgrading to a high-quality OBD2 adapter to connect successfully.",
         "statusProfiling": "Analysoidaan OBD2-sovittimen ominaisuuksia...",
         "statusScanningCan": "Selataan nykyaikaisia CAN-Bus-protokollia...",
         "statusScanningKline": "K-Linen protokollien herättäminen. Vanhoilla ajoneuvoilla vastaaminen voi kestää jopa 15 sekuntia...",
@@ -449,7 +454,7 @@
         "connRequired": "Yhteys vaaditaan",
         "connRequiredDesc": "Yhdistä ensin ajoneuvoon aloittaaksesi tämän prosessin.",
         "chronicFaultsTitle": "Tilastolliset krooniset ongelmat",
-        "chronicFaultsObs": "{{code}}",
+        "chronicFaultsObs": "{{code}} (Observation: {{days}} Unique Days / Total: {{total}} Times)",
         "chronicFaultsPending": "Tietopankin kerääminen / tilastojen analysointi",
         "notScanned": "Ei skannattu",
         "notScannedDesc": "Paina skannauspainiketta oikeassa yläkulmassa lukeaksesi diagnostiikkakoodit.",
@@ -544,7 +549,7 @@
         "odometer": "Etäisyys",
         "milDist": "Moottorin valo päällä",
         "distSinceCleared": "Virhe poistettu",
-        "dtcCount": "VIRHEKOODIT",
+        "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "SUORAT ANTURIT",
         "noData": "Tietojen lukeminen epäonnistui",
         "proApp": "Skannattu Cortex OBD2 Diagnostic Scanner v7 PRO:lla.",
@@ -804,7 +809,13 @@
         "telemetrySub": "Jaa anonyymit protokollat ja virhelokit parantaaksesi ajoneuvojen yhteensopivuutta.",
         "restartOnboarding": "Käynnistä alkuasennus uudelleen"
     },
-    "disclaimer": "Kaikki tuotenimet, logot ja tuotemerkit ovat omistajiensa omaisuutta. Kaikki tässä sovelluksessa käytetyt yritysten, tuotteiden ja palveluiden nimet ovat vain tunnistamistarkoituksiin. Näiden nimien, logojen ja tuotemerkkien käyttö ei tarkoita minkäänlaista tukea tai sponsorointia.",
+    "disclaimer": {
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
+    },
     "hiddenFeatures": {
         "title": "PIILOTETUT OMINAISUUDET",
         "btnLabel": "AVAA PIILOTETUT OMINAISUUDET",
@@ -1013,1470 +1024,1470 @@
         "crashTest": "Törmäystesti"
     },
     "features": {
-        "title": "AVAA PIILOTUT OMINAISUUDET JA UDS-KOOODAUS",
-        "subTitle": "ISO 14229 UDS pitkä koodaus- ja mukautusmoottori",
-        "batteryVoltage": "AKKUJÄNNITE",
-        "voltageReady": "Turvallinen",
-        "voltageLocked": "Pieni jännite",
-        "locked": "LUKITTU",
-        "ready": "VALMIS",
-        "allMarks": "KAIKKI MERKIT",
-        "writeBtn": "KIRJOITA",
-        "catLighting": "VALOTUS",
-        "catSound": "ÄÄNI & HÄLYTYKSET",
-        "catDisplay": "INSTRUMENTIT",
-        "catComfort": "MUKAVUUS",
-        "catSafety": "TURVALLISUUS",
-        "safetyAlertTitle": "Alhaisen akun jännitteen varoitus",
-        "safetyAlertMsg": "Koodaukseen vaaditaan vähintään 12,2 V akkujännite.\nLiitä laturi tai käynnistä moottori.",
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
+        "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "Safe",
+        "voltageLocked": "Low Voltage",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
         "items": {
             "vag_staging_needle_sweep": {
-                "name": "Mittarin asettaminen / neulan lakaisu",
-                "desc": "Lakaisee instrumentin neulat maksimiin sytytyksen käynnistettäessä."
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
             },
             "vag_acoustic_lock_confirmation": {
-                "name": "Akustisen lukon vahvistus sirkutus",
-                "desc": "Lähettää lyhyen torven vahvistusäänen avaimenperän lukituksesta."
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
             },
             "vag_american_parking_lights": {
-                "name": "Yhdysvaltalaistyyliset pysäköintivalot",
-                "desc": "Palaa etusuuntavilkut jatkuvasti 20 % himmennyksellä pysäköintivaloilla."
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
             },
             "vag_drl_menu_toggle": {
-                "name": "Päiväajovalot -valikon vaihto",
-                "desc": "Ottaa käyttöön DRL ON/OFF -valintaruudun infotainment-ajoneuvon asetusvalikossa."
+                "name": "Daytime Running Lights Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
             },
             "vag_tear_wiping": {
-                "name": "Tuulilasin repeämien pyyhkiminen",
-                "desc": "Suorittaa ylimääräisen viimeisen pyyhkimisen 5 sekuntia tuulilasin pesun jälkeen."
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
             },
             "vag_emergency_brake_flashing": {
-                "name": "Hätäjarrutusvaara Vilkkuu",
-                "desc": "Vilkkuu nopeasti jarruvalot ja vaarat voimakkaassa hätäjarrutuksessa."
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
             },
             "vag_cornering_lights": {
-                "name": "Kulmassa sumuvalot",
-                "desc": "Sytyttää kaarresumuvalon ohjauspyörän kääntöpuolella."
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
             },
             "vag_comfort_mirror_folding": {
-                "name": "Avaimenperän mukavuuspeili taitettava",
-                "desc": "Taittaa sivupeilit automaattisesti, kun lukituspainiketta painetaan avaimenperässä."
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
             },
             "vag_lap_timer": {
-                "name": "Instrumenttiryhmän kierrosajastin",
-                "desc": "Avaa radan kierrosajastimen näyttövälilehden mittariston näytössä."
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
             },
             "vag_refuel_quantity": {
-                "name": "Tankkausmäärän näyttö",
-                "desc": "Näyttää tarkan tilavuuden litroina, jotka tarvitaan täyteen polttoaineen täyttöön."
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
             },
             "bmw_start_stop_memory": {
-                "name": "Auto Start-Stop -muistitila",
-                "desc": "Muistaa viimeisen automaattisen käynnistys-pysäytystilan ajoneuvon uudelleenkäynnistyksen aikana."
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state across vehicle restarts."
             },
             "bmw_digital_speedometer": {
-                "name": "Digitaalinen nopeusmittarin näyttö",
-                "desc": "Lisää välittömän digitaalisen nopeuden numeerisen näyttövaihtoehdon klusterin näyttöön."
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
             },
             "bmw_sport_displays": {
-                "name": "Urheilunäytöt",
-                "desc": "Mahdollistaa elävät hevosvoimat ja vääntömomentin dynaamiset valitsimet iDrive-näytössä."
+                "name": "Sport Displays",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
             },
             "bmw_acoustic_lock_sound": {
-                "name": "Akustinen lukitus/avaa ääni",
-                "desc": "Lähettää hälytysjärjestelmän piippauksen, kun autoa lukitaan tai avataan."
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
             },
             "bmw_mirror_fold_delay_zero": {
-                "name": "Välitön peilin taitto",
-                "desc": "Taittaa sivupeilit heti lukituspainikkeen painalluksella ilman viivettä."
+                "name": "Instant Mirror Folding",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
             },
             "bmw_tpms_tire_temperature": {
-                "name": "Rengaspaineen ja lämpötilan näyttö",
-                "desc": "Näyttää reaaliaikaisen rengaslämpötilan paineen ohella TPMS-näytössä."
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
             },
             "renault_trip_computer_enable": {
-                "name": "Ajotietokone käytössä",
-                "desc": "Avaa keskimääräisen polttoaineenkulutuksen ja ajotietokoneen näytön."
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
             },
             "renault_external_temp_display": {
-                "name": "Ulkoinen lämpötilanäyttö",
-                "desc": "Mahdollistaa ympäristön ulkolämpötilan lukemisen mittaristossa."
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
             },
             "renault_automatic_tailgate": {
-                "name": "Avaimenperän tavaratilan vapautus",
-                "desc": "Nostaa tavaratilan salpamekanismin kokonaan auki, kun avaimenperän takakontin painiketta pidetään painettuna."
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
             },
             "renault_alarm_chirp": {
-                "name": "Hälytyslukon vahvistus piippaus",
-                "desc": "Kuuluu äänitorven vahvistusääni, kun ajoneuvon ovea lukitaan."
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
             },
             "renault_shift_indicator": {
                 "name": "Gear Shift Indicator",
-                "desc": "Aktivoi ekologisen ajon vaihteen YLÖS/ALAS-nuolet mittaristossa."
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
             },
             "ford_double_horn_honk_disable": {
-                "name": "Poista kaksoistorviääni käytöstä oven sulkemisen yhteydessä",
-                "desc": "Poistaa käytöstä kaksoistorviäänen, kun ovi suljetaan moottorin käydessä."
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
             },
             "ford_auto_door_locking": {
-                "name": "Automaattinen ovien lukitus nopeudella 20 km/h",
-                "desc": "Lukitsee automaattisesti kaikki ovet, kun ajoneuvon nopeus ylittää 20 km/h."
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
             },
             "ford_tpms_psi_display": {
-                "name": "Numeerinen rengaspainenäyttö",
-                "desc": "Näyttää tarkan numeerisen PSI/BAR-paineen rengasta kohti mittaristossa."
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
             },
             "ford_sync_climate_screen": {
                 "name": "SYNC Screen Climate Controls",
-                "desc": "Lisää ilmastointi- ja istuinlämmityksen kosketusnäyttövalikon SYNC-näyttöön."
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
             },
             "stellantis_power_windows_remote": {
-                "name": "Avaimenperän kauko-ohjainikkunan rullaa ylös/alas",
-                "desc": "Rullaa ylös tai alas kaikki sähköiset ikkunat, kun pidät lukitus-/lukituksen avauspainikkeita painettuna."
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
             },
             "stellantis_cornering_fogs": {
-                "name": "Käynnistyssumuvalot käytössä",
-                "desc": "Sytyttää kaarresumuvalon hitaissa käännöksissä."
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
             },
             "vag_traffic_sign_recognition": {
-                "name": "Liikennemerkkien tunnistus",
-                "desc": "Näyttää kameran havaitsemat nopeusmerkit mittaristossa ja HUDissa."
+                "name": "Traffic Sign Recognition",
+                "desc": "Displays camera-detected speed signs in instrument cluster and HUD."
             },
             "vag_ambient_color_palette_30": {
-                "name": "30 värin ympäristövalaistuspaletti",
-                "desc": "Avaa 30 RGB-sisävalaistuksen värivalitsin MIB-infotainment-valikossa."
+                "name": "30-Color Ambient Lighting Palette",
+                "desc": "Unlocks 30 RGB interior lighting color picker in MIB infotainment menu."
             },
             "vag_seatbelt_warning_mute": {
-                "name": "Turvavyön äänimerkin poisto",
-                "desc": "Poistaa lukitsemattoman turvavyön akustisen äänimerkin mittaristossa."
+                "name": "Seatbelt Chime Deactivation",
+                "desc": "Disables unbuckled seatbelt acoustic chime in instrument cluster."
             },
             "bmw_alpina_cluster_theme": {
                 "name": "Alpina Digital Dash Layout",
-                "desc": "Käyttää sinistä Alpina-allekirjoitusteemaa digitaaliseen instrumenttiryhmään."
+                "desc": "Applies blue Alpina signature theme to digital instrument cluster."
             },
             "bmw_video_in_motion": {
                 "name": "Video In Motion",
-                "desc": "Avaa USB-videon toiston iDrive-näytöllä ajon aikana."
+                "desc": "Unlocks USB video playback on iDrive screen while driving."
             },
             "bmw_sport_plus_mode_unlock": {
-                "name": "Sport+-ajotila käyttöön",
-                "desc": "Ottaa käyttöön dynaamisen Sport+-ajotilan DEC-valitsimessa."
+                "name": "Sport+ Driving Mode Enable",
+                "desc": "Enables Sport+ high-performance dynamic driving mode in DEC selector."
             },
             "mercedes_amg_menu_unlock": {
-                "name": "AMG Performance Telemetria -valikko",
-                "desc": "Näyttää AMG-öljyn lämpötilan, vaihteiston lämpötilan, kierrosajastimen ja G-mittarin."
+                "name": "AMG Performance Telemetry Menu",
+                "desc": "Displays AMG oil temp, transmission temp, lap timer, and G-meter."
             },
             "mercedes_agility_mode_enable": {
-                "name": "Agility Lähetystila",
-                "desc": "Avaa erittäin herkän Agility-vaihtoohjelman 7G/9G-Tronic-vaihteistossa."
+                "name": "Agility Transmission Mode",
+                "desc": "Unlocks ultra-responsive Agility shift program in 7G/9G-Tronic transmission."
             },
             "mercedes_drl_brightness_boost": {
-                "name": "Päiväajovalot 100 % voimakkuudella",
-                "desc": "Lisää LED-päiväajovalojen tehoa 100 % täyteen kirkkauteen."
+                "name": "Daytime Running Lights 100% Intensity",
+                "desc": "Increases LED daytime running lights output to 100% full brightness."
             },
             "mercedes_alarm_lock_chirp": {
-                "name": "Akustinen lukitustorvi Chirp",
-                "desc": "Lähettää lyhyen torviäänen, kun keskuslukitus on kytkettynä."
+                "name": "Acoustic Locking Horn Chirp",
+                "desc": "Emits short horn chirp notification when central locking is engaged."
             },
             "mercedes_dpf_adblue_gauge": {
-                "name": "DPF-noki- ja AdBlue-tasomittari",
-                "desc": "Näyttää tarkan DPF-nokimassaprosentin ja jäljellä olevan AdBlue-alueen IC:ssä."
+                "name": "DPF Soot & AdBlue Level Gauge",
+                "desc": "Displays exact DPF soot mass percentage and remaining AdBlue range in IC."
             },
             "renault_rs_monitor_enable": {
-                "name": "Renault Sport RS Monitor Telemetria",
-                "desc": "Mahdollistaa reaaliaikaisen G-force-, turboboost- ja öljylämpötila-telemetrian R-Linkissä."
+                "name": "Renault Sport RS Monitor Telemetry",
+                "desc": "Enables live G-force, turbo boost, and oil temp telemetry on R-Link."
             },
             "renault_duster_mirror_fold": {
-                "name": "Duster Auto Mirror taittuva lukossa",
-                "desc": "Taittaa sivupeilit automaattisesti BCM-keskuslukituskomennolla."
+                "name": "Duster Auto Mirror Folding on Lock",
+                "desc": "Folds side mirrors automatically via BCM central locking command."
             },
             "ford_bambi_mode_fog_light": {
-                "name": "Bambi-tila",
-                "desc": "Sallii sumuvalojen pysymisen päällä, kun kaukovalot kytketään päälle."
+                "name": "Bambi Mode",
+                "desc": "Allows fog lights to remain ON when high beam headlights are activated."
             },
             "ford_st_rs_boot_animation": {
-                "name": "ST/RS Performance SYNC -käynnistysnäyttö",
-                "desc": "Muuttaa SYNC-kosketusnäytön käynnistysanimaatiota ST/RS-logoksi."
+                "name": "ST/RS Performance SYNC Boot Screen",
+                "desc": "Changes SYNC touchscreen startup splash animation to ST / RS logo."
             },
             "toyota_reverse_beep_mute": {
-                "name": "Peruutusvaihde Jatkuva ohjaamon piippaus vaimennus",
-                "desc": "Mykistää jatkuvan peruutusvaihteen äänimerkin ohjaamossa yhdeksi piippaukseksi."
+                "name": "Reverse Gear Continuous Cabin Beep Mute",
+                "desc": "Mutes continuous reverse gear chime inside cabin to a single beep."
             },
             "toyota_remote_window_drop": {
-                "name": "Avaimenperän kaukosäätimen ikkuna rullaa alas",
-                "desc": "Rullaa kaikki sähköikkunat alas, kun pidät avaimenperän lukituksen avauspainiketta painettuna."
+                "name": "Key Fob Remote Window Roll Down",
+                "desc": "Rolls down all power windows when holding key fob unlock button."
             },
             "toyota_auto_lock_shift_p": {
-                "name": "Ovien automaattinen lukitus vaihteistossa",
-                "desc": "Lukitsee automaattisesti kaikki ovet, kun vaihde vaihdetaan Park-asennosta."
+                "name": "Auto Lock Doors on Gear Shift",
+                "desc": "Automatically locks all doors when shifting out of Park position."
             },
             "peugeot_icockpit_theme_unlock": {
-                "name": "Peugeot 3D i-Cockpit Performance -teema",
-                "desc": "Avaa Copperin ja Track Redin värinäyttöteemat 3D-digitaaliklusterissa."
+                "name": "Peugeot 3D i-Cockpit Performance Theme",
+                "desc": "Unlocks Copper and Track Red color display themes on 3D digital cluster."
             },
             "jeep_offroad_pages_enable": {
-                "name": "Jeep Uconnect Off-Road sivut",
-                "desc": "Ottaa käyttöön nousu-/kallistuskulmamittarit, pyörän nivelen ja 4x4-lukituksen."
+                "name": "Jeep Uconnect Off-Road Pages",
+                "desc": "Enables pitch/roll angle gauges, wheel articulation, and 4x4 lock status."
             },
             "hyundai_smart_welcome_mirror": {
-                "name": "Smart Key Approach Tervetuloa Mirror Avaa",
-                "desc": "Avautuu automaattisesti sivupeilit, kun lähestyt ajoneuvoa älyavaimella."
+                "name": "Smart Key Approach Welcome Mirror Unfold",
+                "desc": "Automatically unfolds side mirrors when approaching vehicle with smart key."
             },
             "hyundai_one_touch_turn_7_flashes": {
-                "name": "Yhden kosketuksen kaistanvaihtosignaali",
-                "desc": "Asettaa yhden kosketuksen kaistanvaihdon vilkkujen kestoksi 7 välähdystä."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Sets one-touch lane change blinker duration to 7 flashes."
             },
             "hyundai_svm_camera_speed_extend": {
-                "name": "360° Surround-kameran nopeuden lisäys",
-                "desc": "Pitää 360 asteen pysäköintikameran aktiivisena 20 km/h eteenpäin nopeuteen asti."
+                "name": "360° Surround Camera Speed Extension",
+                "desc": "Keeps 360-degree parking camera active up to 20 km/h forward speed."
             },
             "hyundai_n_performance_exhaust_flap": {
-                "name": "N-Performance Pakokaasuläppä Oletus AUKI",
-                "desc": "Asettaa aktiivisen pakoventtiilin oletusasennon AUKI moottorin käynnistyksen yhteydessä."
+                "name": "N-Performance Exhaust Flap Default OPEN",
+                "desc": "Sets active exhaust valve default position to OPEN on engine start."
             },
             "vag_rain_closing_sunroof": {
-                "name": "Sateen sulkeminen",
-                "desc": "Sulkee automaattisesti kattoluukun ja ikkunat, kun sade havaitaan pysäköinnin aikana."
+                "name": "Rain Closing",
+                "desc": "Automatically closes sunroof and windows when rain is detected while parked."
             },
             "bmw_launch_control_unlock": {
-                "name": "Käynnistä Control Unlock",
-                "desc": "Avaa tehdaskäynnistyksen ohjauskiihdytysohjelman vaihteiston ECU:ssa."
+                "name": "Launch Control Unlock",
+                "desc": "Unlocks factory launch control acceleration program in transmission ECU."
             },
             "mercedes_ambient_64_multi_zone": {
-                "name": "64-värinen monialueinen ympäristöprofiili",
-                "desc": "Avaa dynaamisen monivyöhykkeen värisyklin animaation MBUX-sisävalaistuksessa."
+                "name": "64-Color Multi-Zone Ambient Profile",
+                "desc": "Unlocks dynamic multi-zone color cycle animation in MBUX interior lighting."
             },
             "ford_trailer_brake_activation": {
-                "name": "Trailer Brake Controller käytössä",
-                "desc": "Mahdollistaa integroidun perävaunun jarrusäätimen valikon kojeryhmässä."
+                "name": "Trailer Brake Controller Enable",
+                "desc": "Enables integrated trailer brake controller menu in instrument cluster."
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
-                "name": "AFM/DFM V8-sylinterilukko",
-                "desc": "Lukitsee moottorin 8-sylinteriseen tilaan pysyvästi estääkseen V4-värähtelyn."
+                "name": "AFM/DFM V8 Cylinder Lock",
+                "desc": "Locks engine in 8-cylinder mode permanently to prevent V4 vibration."
             },
             "gm_remote_start_time_extend": {
-                "name": "Etäkäynnistyksen keston pidennys",
-                "desc": "Pidentää tehdasavaimen kaukosäätimen moottorin käynnistysaikaa 10 minuutista 20 minuuttiin."
+                "name": "Remote Start Duration Extension",
+                "desc": "Extends factory key fob remote engine start run time from 10 to 20 minutes."
             },
             "dodge_srt_performance_pages": {
-                "name": "SRT-suorituskykysivut ja ajotilat",
-                "desc": "Avaa Uconnect 0-100 -kiihtyvyysajastimet, G-voimamittarin ja laukaisuohjauksen."
+                "name": "SRT Performance Pages & Drive Modes",
+                "desc": "Unlocks Uconnect 0-100 acceleration timers, G-force meter, and launch control."
             },
             "ram_bambi_mode_fog": {
-                "name": "RAM-kuorma-auton sumuvalot kaukovaloilla",
-                "desc": "Sallii RAM-sumuvalojen pysymisen aktiivisina kaukovalojen rinnalla."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Allows RAM fog lights to remain active alongside high beam headlights."
             },
             "byd_avas_pedestrian_siren_mute": {
-                "name": "AVAS EV Hidas Sireeni Mykistys",
-                "desc": "Mykistää matalan nopeuden keinotekoisen sähkömoottorin sireenin alle 30 km/h."
+                "name": "AVAS EV Low-Speed Siren Mute",
+                "desc": "Mutes low-speed artificial electric motor siren below 30 km/h."
             },
             "chery_isa_overspeed_chime_mute": {
-                "name": "ISA:n ylinopeuden varoitusäänen deaktivointi",
-                "desc": "Poistaa käytöstä jatkuvan 80/120 km/h ylinopeuden varoitusäänen Tiggo/MG-malleissa."
+                "name": "ISA Overspeed Warning Chime Deactivation",
+                "desc": "Disables continuous 80/120 km/h overspeed warning beep on Tiggo/MG models."
             },
             "mg_ev_battery_preconditioning_toggle": {
-                "name": "Sähköauton pikalatausakun esilämmityksen manuaalinen kytkin",
-                "desc": "Mahdollistaa manuaalisen akun esilämmityskytkimen ennen tasavirta-pikalatausta."
+                "name": "EV Fast-Charge Battery Pre-Heating Manual Switch",
+                "desc": "Enables manual battery pre-heating switch before DC fast charging."
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "Driver Monitoring -kameran herkkyyden vähennys",
-                "desc": "Vähentää liian herkkiä katseenseurantavaroituksia ohjauspylvään väsymisestä."
+                "name": "Driver Monitoring Camera Sensitivity Reduction",
+                "desc": "Reduces over-sensitive eye-tracking fatigue warnings on steering column."
             },
             "honda_walk_away_auto_lock": {
-                "name": "Kävelevä automaattinen oven lukko",
-                "desc": "Lukitsee automaattisesti kaikki ovet, kun kuljettaja astuu 2 metrin päähän avaimenperällä."
+                "name": "Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when driver steps 2 meters away with key fob."
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "Automaattinen ajoneuvon pito -muistitila",
-                "desc": "Muistaa AVH-jarrun pito ON/OFF -tilan sytytysjaksojen aikana."
+                "name": "Auto Vehicle Hold Memory Mode",
+                "desc": "Remembers AVH brake hold ON/OFF state across ignition cycles."
             },
             "volvo_start_stop_default_off": {
-                "name": "Automaattinen käynnistys-pysäytys Oletuspois päältä -tila",
-                "desc": "Asettaa Start-Stop-moottorin sammutusjärjestelmän oletustilan OFF-tilaan ajoneuvon käynnistettäessä."
+                "name": "Auto Start-Stop Default OFF Mode",
+                "desc": "Sets Start-Stop engine shutoff system default state to OFF upon vehicle start."
             },
             "volvo_polestar_digital_theme": {
-                "name": "Polestar Blue Digital Cluster -teema",
-                "desc": "Avaa Polestarille ominaisen sinisen dynaamisen mittariteeman Volvon kuljettajan näytössä."
+                "name": "Polestar Blue Digital Cluster Theme",
+                "desc": "Unlocks Polestar signature blue dynamic gauge theme in Volvo driver display."
             },
             "vag_virtual_cockpit_r_theme": {
-                "name": "Virtual Cockpit R / S / Cupra Performance Teemat",
-                "desc": "Avaa R-Line-, S-Line- ja Cupra-keskikierroslukumittarin suorituskykyteemat digitaalisessa ohjaamossa."
+                "name": "Virtual Cockpit R / S / Cupra Performance Themes",
+                "desc": "Unlocks R-Line, S-Line, and Cupra central tachometer performance themes in digital cockpit."
             },
             "vag_sound_symposer_mute": {
-                "name": "Sound Symposer Fake Engine Noise Deaktivointi",
-                "desc": "Poistaa ohjaamon kaiuttimen väärennetyn moottorin äänigeneraattorin käytöstä saadakseen puhtaan pakokaasun."
+                "name": "Sound Symposer Fake Engine Noise Deactivation",
+                "desc": "Deactivates cabin speaker fake engine sound generator for pure exhaust note."
             },
             "vag_wireless_carplay_enable": {
-                "name": "Langaton Apple CarPlay & Android Auto -aktivointi",
-                "desc": "Ottaa käyttöön 5 GHz Wi-Fi langattoman Apple CarPlayn ja Android Auton MIB2.5/MIB3-yksiköissä."
+                "name": "Wireless Apple CarPlay & Android Auto Activation",
+                "desc": "Enables 5GHz Wi-Fi wireless Apple CarPlay and Android Auto on MIB2.5/MIB3 units."
             },
             "vag_offroad_telemetry_menu": {
-                "name": "MIB Offroad Telemetria ja mittarinäyttö",
-                "desc": "Näyttää ohjauskulman, öljyn lämpötilan, jäähdytysnesteen lämpötilan ja korkeusmittarit MIB-näytöllä."
+                "name": "MIB Offroad Telemetry & Gauge Display",
+                "desc": "Displays steering angle, oil temp, coolant temp, and altitude gauges on MIB screen."
             },
             "vag_easy_entry_driver_seat": {
-                "name": "Automaattinen Easy Entry sähkökäyttöinen istuin Taka-askel",
-                "desc": "Siirtää sähkökäyttöisen kuljettajan istuimen selkänojan 5 cm ovea avattaessa helpottaakseen sisäänpääsyä."
+                "name": "Automatic Easy Entry Power Seat Back-step",
+                "desc": "Moves electric driver seat back 5 cm upon door opening for easy vehicle entry."
             },
             "vag_hba_memory_state": {
-                "name": "High-Beam Assist -muistin säilyttäminen",
-                "desc": "Muistaa High-Beam Assist ON -tilan sytytyksen uudelleenkäynnistysjaksojen aikana."
+                "name": "High-Beam Assist Memory Retention",
+                "desc": "Remembers High-Beam Assist ON status across ignition restart cycles."
             },
             "vag_battery_soc_display": {
-                "name": "Akun lataustilan näyttö",
-                "desc": "Näyttää tarkan akun latausprosentin mittaristossa, kun laukaisupainiketta pidetään painettuna."
+                "name": "Battery State of Charge Display",
+                "desc": "Shows exact battery charge percentage on instrument cluster when trip button is held."
             },
             "bmw_idrive7_m_animation": {
-                "name": "iDrive 7/8 M-Performance Startup Animation",
-                "desc": "Muuttaa iDrive-näytön käynnistysgrafiikan M-Performance- tai M-GmbH-logoanimaatioksi."
+                "name": "iDrive 7 / 8 M-Performance Startup Animation",
+                "desc": "Changes iDrive screen boot graphic to M-Performance or M-GmbH logo animation."
             },
             "bmw_bowers_wilkins_audio_profiles": {
-                "name": "Bowers & Wilkins 3D Sound Engine Avaa",
-                "desc": "Avaa Bowers & Wilkins Concert-, Studio- ja Stage DSP -ääniprofiilit HiFi-järjestelmissä."
+                "name": "Bowers & Wilkins 3D Sound Engine Unlock",
+                "desc": "Unlocks Bowers & Wilkins Concert, Studio, and Stage DSP audio profiles on HiFi systems."
             },
             "bmw_hitch_zoom_camera": {
-                "name": "Peruutuskameran perävaunun Hitch Zoom -tila",
-                "desc": "Avaa ylhäältä alas perävaunun vetokoukun kohdistuksen zoomaustilan peruutuskameranäkymässä."
+                "name": "Reverse Camera Trailer Hitch Zoom Mode",
+                "desc": "Unlocks top-down trailer hitch alignment zoom mode on reverse camera view."
             },
             "bmw_secure_idle_protection": {
-                "name": "Suojattu tyhjäkäynnin moottorin vaihteenlukitussuoja",
-                "desc": "Lukitsee vaihteiston Parkissa, jos kuljettaja poistuu käynnissä olevasta ajoneuvosta avaimenperän kanssa."
+                "name": "Secure Idle Engine Shift-Lock Protection",
+                "desc": "Locks transmission in Park if driver leaves running vehicle with key fob."
             },
             "bmw_seatbelt_handover_mute": {
-                "name": "Coupe sähköisen turvavyön vaihtovarren deaktivointi",
-                "desc": "Poistaa käytöstä moottoroidun turvavyön jatkovarren 4-sarjan ja 2-sarjan coupe-malleissa."
+                "name": "Coupe Electric Seatbelt Handover Arm Deactivation",
+                "desc": "Disables motorized seatbelt extender arm on 4 Series and 2 Series Coupes."
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "Automaattinen istuimen ja ohjauspyörän lämmitys",
-                "desc": "Laukaisee automaattisen istuimen ja ohjauspyörän lämmityksen, kun ympäristön lämpötila laskee alle 5°C."
+                "name": "Automatic Seat & Steering Wheel Heating Temperature",
+                "desc": "Triggers automatic seat and steering wheel heating when ambient temp drops below 5°C."
             },
             "mercedes_amg_track_pace_unlock": {
-                "name": "MBUX AMG Track Pace Telemetria ja kierrosajastin",
-                "desc": "Avaa kierrosajan, kiihtyvyystelemetrian ja G-voimakäyrät MBUX-näytöllä."
+                "name": "MBUX AMG Track Pace Telemetry & Lap Timer",
+                "desc": "Unlocks lap timing, acceleration telemetry, and G-force graphs on MBUX screen."
             },
             "mercedes_drive_mode_last_memory": {
-                "name": "Dynamic Select Last Drive Mode -muisti",
-                "desc": "Muistaa viimeksi valitun ajotilan ajoneuvon uudelleenkäynnistyksen ajan."
+                "name": "Dynamic Select Last Drive Mode Memory",
+                "desc": "Remembers last selected Drive Mode across vehicle restart."
             },
             "mercedes_proximity_360_camera_auto": {
-                "name": "Automaattinen läheisyysanturi 360° kameranäkymä",
-                "desc": "Vaihtaa automaattisesti näytön 360-kameraan, kun etuanturit havaitsevat esteen < 50 cm."
+                "name": "Proximity Sensor Auto 360° Camera View",
+                "desc": "Automatically switches screen to 360 camera when front sensors detect obstacle < 50 cm."
             },
             "ford_sync_climate_screen_unlock": {
-                "name": "SYNC3 / SYNC4 Kosketusnäytön ilmastoinnin sivu",
-                "desc": "Mahdollistaa ilmastoinnin, istuimen lämmityksen ja ilmavirran suunnan kosketusnäytön."
+                "name": "SYNC3 / SYNC4 Touchscreen Climate Control Page",
+                "desc": "Enables climate control, heated seat, and airflow direction touchscreen page."
             },
             "ford_turn_signal_5_flashes": {
-                "name": "Yhden kosketuksen kaistanvaihtosignaali",
-                "desc": "Pidentää yhden kosketuksen kaistanvaihdon suuntavilkun kestoa 3:sta 5 välähdystä."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Increases one-touch lane change turn signal duration from 3 to 5 flashes."
             },
             "ford_auto_engine_shutdown_disable": {
-                "name": "30 minuutin tyhjäkäynnin automaattisen sammutuksen ohitus",
-                "desc": "Estää moottorin automaattisen sammumisen 30 minuutin joutokäynnin jälkeen."
+                "name": "30-Minute Idle Auto Engine Shutdown Override",
+                "desc": "Prevents automatic engine shutoff after 30 minutes idle."
             },
             "ev_battery_preheat_manual_switch": {
-                "name": "Sähköauton akun esilämmityksen manuaalinen kytkin",
-                "desc": "Mahdollistaa akun manuaalisen esilämmityksen 25 °C:seen ennen tasavirtapikalatausta ilman navigointireittiä."
+                "name": "EV Battery Pre-Heating Manual Switch",
+                "desc": "Allows manual battery pre-heating to 25°C before DC fast charging without navigation route."
             },
             "ev_v2l_power_output_expand": {
-                "name": "V2L 220 V ulostulon teholaajennus",
-                "desc": "Laajentaa V2L:n ulkoisen 220 V AC kotitalouden pistorasiarajan 2,2 kW:sta 3,6 kW:iin."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands V2L external 220V AC household power outlet limit from 2.2 kW to 3.6 kW."
             },
             "ev_one_pedal_regen_force_level3": {
-                "name": "One-Pedal Drive Maksimi regeneratiivisen jarrutuksen oletusarvo",
-                "desc": "Asettaa maksimaalisen regeneratiivisen jarrutuksen oletusarvoksi ajoneuvon käynnistyksen yhteydessä."
+                "name": "One-Pedal Drive Maximum Regenerative Braking Default",
+                "desc": "Sets maximum regenerative braking as default on vehicle start."
             },
             "byd_soc_max_charge_target_limit": {
-                "name": "BYD-akun terveydensuojan enimmäislatausraja",
-                "desc": "Asettaa AC/DC-latauksen enimmäisrajan 80 %:iin tai 90 %:iin Blade Akun käyttöiän pidentämiseksi."
+                "name": "BYD Battery Health Protection Max Charge Limit",
+                "desc": "Sets max AC/DC charge cutoff limit to 80% or 90% to extend Blade Battery lifespan."
             },
             "byd_dmi_forced_pure_ev_speed_override": {
-                "name": "BYD DM-i Pure EV Mode Bensiinimoottorin ohitus",
-                "desc": "Estää bensiinimoottorin käynnistymisen EV-tilassa 130 km/h asti jopa täyskaasukiihdytyksen aikana."
+                "name": "BYD DM-i Pure EV Mode Gasoline Engine Override",
+                "desc": "Inhibits gasoline engine start in EV mode up to 130 km/h even during full throttle acceleration."
             },
             "byd_vtol_v2v_rescue_charge_mode": {
-                "name": "BYD VTOL -pelastuslataustila",
-                "desc": "Avaa ulkoisen vaihtovirtalähteen jumiutuneiden sähköajoneuvojen lataamiseksi tiellä."
+                "name": "BYD VTOL Rescue Charge Mode",
+                "desc": "Unlocks external AC power output to charge stranded electric vehicles on road."
             },
             "hyundai_ipedal_memory_lock": {
-                "name": "Hyundai / Kia i-PEDAL One-Pedal Drive -muistilukko",
-                "desc": "Estää i-PEDAL yhden polkimen pysäytystilaa putoamasta takaisin tasolle 3 peruutuksen vaihtamisen jälkeen."
+                "name": "Hyundai / Kia i-PEDAL One-Pedal Drive Memory Lock",
+                "desc": "Prevents i-PEDAL one-pedal stop mode from dropping back to Level 3 after shifting to Reverse."
             },
             "hyundai_utility_mode_12v_saver": {
-                "name": "Utility Camping Mode High Voltage 12V Saver",
-                "desc": "Antaa virran 220 V V2L -pistorasiasta suoraan HV-akkuakusta estäen 12 V:n lisäakun tyhjenemisen."
+                "name": "Utility Camping Mode High-Voltage 12V Saver",
+                "desc": "Powers 220V V2L outlet directly from HV traction battery to prevent auxiliary 12V battery drain."
             },
             "hyundai_phev_no_ice_climate_start": {
-                "name": "PHEV EV Mode Ilmastolämmitys Bensiinimoottorin vaimennus",
-                "desc": "Pakottaa lämpöpumppua / PTC-sähkölämmitintä ohjaamon ilmastoon ilman bensiinimoottorin käynnistämistä."
+                "name": "PHEV EV Mode Climate Heating Gasoline Engine Suppression",
+                "desc": "Forces heat pump / PTC electric heater for cabin climate without starting gasoline engine."
             },
             "vag_taycan_ess_sound_profile_swap": {
-                "name": "Electric Sport Sound Taycan / RS e-tron -profiili",
-                "desc": "Muuttaa sähköisen ajoääniprofiilin Porsche Taycan GTS- tai Audi RS e-tron GT -äänigeneraattoriksi."
+                "name": "Electric Sport Sound Taycan / RS e-tron Profile",
+                "desc": "Changes electric driving sound profile to Porsche Taycan GTS or Audi RS e-tron GT sound generator."
             },
             "vag_meb_daily_charge_target_menu": {
                 "name": "MEB Battery Daily 80% / Trip 100% Quick Charge Bar",
-                "desc": "Lisää nopean vaihtopalkin MIB-näytölle vaihtaaksesi 80 % päivittäisen akun hoidon ja 100 % matkalatauksen välillä."
+                "desc": "Adds quick toggle bar on MIB screen to switch between 80% daily battery care and 100% trip charge."
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "GTE / E-Mode moottorin generaattorin akun latausvoima",
-                "desc": "Pakottaa polttomoottorin toimimaan generaattorina, joka lataa suurjänniteakun jopa 80 % ajon aikana."
+                "name": "GTE / E-Mode Engine Generator Battery Force Charge",
+                "desc": "Forces combustion engine to act as generator to recharge high-voltage battery up to 80% while driving."
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
                 "name": "Hans Zimmer IconicSounds Electric M-Performance Sound Engine",
-                "desc": "Avaa Hans Zimmerin akustiset M-Performancen sähkökiihdytysääniprofiilit i4:ssä ja iX:ssä."
+                "desc": "Unlocks Hans Zimmer acoustic M-Performance electric acceleration sound profiles on i4 and iX."
             },
             "bmw_phev_max_edrive_140kmh": {
                 "name": "PHEV MAX eDrive Pure Electric Speed Ceiling",
-                "desc": "Nostaa puhtaasti sähköisen enimmäisnopeuden 330e / 530e Plug-in hybrideissä 140 km/h."
+                "desc": "Increases max pure electric speed ceiling on 330e / 530e Plug-in hybrids to 140 km/h."
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "AC-kotilaturin maksimivirran rajan valitsin",
-                "desc": "Lisää AC-kotilatausvirran rajoittimen kotipiirin ylikuormituksen estämiseksi."
+                "name": "AC Home Charger Maximum Current Limit Selector",
+                "desc": "Adds AC home charging current limiter to prevent home circuit overload."
             },
             "toyota_hybrid_ev_mode_override": {
-                "name": "Toyota / Lexus EV Mode Kaasun ohituksen vaimennus",
-                "desc": "Estää bensiinimoottorin pakkokäynnistyksen kiihdytyksen aikana, kun EV-tilan painike on aktiivinen."
+                "name": "Toyota / Lexus EV Mode Throttle Override Suppression",
+                "desc": "Prevents gasoline engine from forced start during acceleration when EV mode button is active."
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "Toyota / Lexus korkeajänniteakun jäähdytystuulettimen tehostus",
-                "desc": "Nostaa hybridivetoakun jäähdytystuulettimen nopeutta +30 % lämmön heikkenemisen estämiseksi kuumissa ilmastoissa."
+                "name": "Toyota / Lexus High-Voltage Battery Cooling Fan Boost",
+                "desc": "Increases hybrid traction battery cooling fan speed by +30% to prevent thermal degradation in hot climates."
             },
             "tesla_sentry_high_bitrate_video": {
-                "name": "Tesla Sentry Mode High-Bitrate jatkuva Dashcam-tallennus",
-                "desc": "Lisää Sentry Mode -kameran videotallennusbittinopeutta, mikä takaa kristallinkirkkaan rekisterikilven näkyvyyden."
+                "name": "Tesla Sentry Mode High-Bitrate Continuous Dashcam Recording",
+                "desc": "Increases Sentry Mode camera video recording bitrate for crystal-clear license plate visibility."
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "Teslan ohjaamon ylikuumenemissuojan lämpötilakynnys",
-                "desc": "Alentaa ohjaamon ylikuumenemissuojan ilmaston laukaisulämpötilaa 40 °C:sta 30 °C:seen sisätilojen säilyttämiseksi."
+                "name": "Tesla Cabin Overheat Protection Temperature Threshold",
+                "desc": "Lowers cabin overheat protection climate trigger temperature from 40°C to 30°C for interior preservation."
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
-                "name": "Shift Assistant Pro -uudelleensopeutuminen",
-                "desc": "Nollaa vaihtoanturin oppimisparametrit ja käynnistää pikavaihteen uudelleenkalibroinnin."
+                "name": "Shift Assistant Pro Re-Adaptation",
+                "desc": "Resets shift sensor learning parameters and initiates quickshifter recalibration."
             },
             "bmwmotorrad_esa_zero_point_calib": {
-                "name": "Dynaaminen ESA-jousituksen nollapistekalibrointi",
-                "desc": "Kalibroi elektroniset jousituksen kuormitus- ja matka-anturit tehdasnollauksiin."
+                "name": "Dynamic ESA Suspension Zero-Point Calibration",
+                "desc": "Calibrates electronic suspension load and travel sensors to factory zero."
             },
             "bmwmotorrad_abs_pro_cornering_toggle": {
-                "name": "ABS Pro Cornering Mode -interventiokynnys",
-                "desc": "Säätää kallistuskulmasta riippuvaa ABS-interventioherkkyyttä radan käyttöä varten."
+                "name": "ABS Pro Cornering Mode Intervention Threshold",
+                "desc": "Adjusts lean-angle dependent ABS intervention sensitivity for track use."
             },
             "bmwmotorrad_service_interval_reset": {
-                "name": "Vuosi- ja etäisyyspalvelumuistutuksen nollaus",
-                "desc": "Nollaa mittariston huoltoilmaisimen ja asettaa mukautetun intervallin."
+                "name": "Annual & Distance Service Reminder Reset",
+                "desc": "Resets instrument cluster service indicator and sets custom interval."
             },
             "bmwmotorrad_headlight_pro_cornering": {
-                "name": "Ajovalo Pro Adaptive Cornering Light Sensitivity",
-                "desc": "Säätää kallistuskulman kynnystä mukautuvaa kaarreajovalojen aktivointia varten."
+                "name": "Headlight Pro Adaptive Cornering Light Sensitivity",
+                "desc": "Adjusts lean angle threshold for adaptive cornering headlight activation."
             },
             "bmwmotorrad_keyless_ride_range_extend": {
                 "name": "Keyless Ride Fob Detection Range Extension",
-                "desc": "Optimoi transponderin signaalialueen avaimettomaan sytytyksen tunnistukseen."
+                "desc": "Optimizes transponder signal range for keyless ignition sensing."
             },
             "bmwmotorrad_reverse_assist_sensitivity": {
-                "name": "Sähköinen peruutusapumoottorin herkkyys",
-                "desc": "Hienosäätää peruutusajon sähköisen käynnistysmoottorin nopeuden ja vääntömomentin rajan."
+                "name": "Electric Reverse Assist Motor Sensitivity",
+                "desc": "Fine-tunes reverse drive electric starter motor speed and torque limit."
             },
             "ducati_riding_mode_custom_profile": {
-                "name": "Ratsastustilan mukautetun profiilin luoja",
-                "desc": "Avaa mukautetut yhdistelmät Race-, Sport-, Touring- ja Urban-profiileille."
+                "name": "Riding Mode Custom Profile Creator",
+                "desc": "Unlocks custom combinations for Race, Sport, Touring, and Urban profiles."
             },
             "ducati_ohlins_suspension_mapping": {
                 "name": "Öhlins Smart EC 2.0 Semi-Active Suspension Mapping",
-                "desc": "Hienosäätää elektronisen jousituksen vaimennuskäyrän ja jäykkyyden esiasetukset."
+                "desc": "Fine-tunes damping curve and stiffness presets for electronic suspension."
             },
             "ducati_dashboard_lap_timer_gps": {
-                "name": "TFT-kojelaudan kierrosajastin ja GPS-sektorin jaot",
-                "desc": "Avaa radan kierrosajastimen ja sektorijaetun näytön mittaristossa."
+                "name": "TFT Dashboard Lap Timer & GPS Sector Splits",
+                "desc": "Unlocks track lap timer and sector split display on instrument cluster."
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "Moottorijarrun säätimen tason säätö",
-                "desc": "Säätää takapyörän hidastusmomenttia kovan kaaren sisääntulojarrutuksen aikana."
+                "name": "Engine Brake Control Level Adjustment",
+                "desc": "Adjusts rear wheel deceleration torque during hard corner entry braking."
             },
             "ducati_cruise_control_retrofit_enable": {
-                "name": "Vakionopeudensäätimen jälkiasennuksen aktivointi",
-                "desc": "Mahdollistaa ECU-ohjelmistolipun jälkiasennetuille elektronisille vakionopeussäätimen kytkimille."
+                "name": "Cruise Control Retrofit Activation",
+                "desc": "Enables ECU software flag for retrofitted electronic cruise control switches."
             },
             "ducati_exhaust_valve_sound_map": {
-                "name": "Pakokaasun servoventtiilin avautumiskierroslukukartta",
-                "desc": "Säätää akustisen pakoventtiilin avautumiskynnystä tehostaakseen pakokaasujen ääniä."
+                "name": "Exhaust Servo Valve Opening RPM Map",
+                "desc": "Adjusts acoustic exhaust valve opening threshold for enhanced exhaust note."
             },
             "ducati_pit_lane_limiter_config": {
-                "name": "Varikkokaistan nopeudenrajoittimen kynnys",
-                "desc": "Mahdollistaa 60 km/h varikkokaistan nopeudenrajoittimen vaihtamisen ohjaustangon kytkimillä."
+                "name": "Pit Lane Speed Limiter Threshold",
+                "desc": "Enables 60 km/h pit lane speed limiter toggle on handlebar switches."
             },
             "ducati_desmo_service_light_reset": {
                 "name": "Oil & Desmo Valve Service Light Reset",
-                "desc": "Poistaa Desmodromic-venttiilin huoltomuistutuksen kojeryhmästä."
+                "desc": "Clears Desmodromic valve service reminder warning on instrument cluster."
             },
             "ktm_quickshifter_plus_delay_tuning": {
-                "name": "Quickshifter+ Vaihteen leikkausajan ja viiveen hienosäätö",
-                "desc": "Mukauttaa sytytyksen katkaisun keston vaihdetta kohden saumattoman ylös/alas vaihtamisen varmistamiseksi."
+                "name": "Quickshifter+ Shift Cut Time & Delay Fine-Tuning",
+                "desc": "Customizes ignition cut duration per gear for seamless up/down shifts."
             },
             "ktm_rally_offroad_abs_tc_unlock": {
-                "name": "Rally / Off-Road ABS- ja TC-tilan avaus",
-                "desc": "Poistaa käytöstä taka-ABS:n ja avaa 9-portaisen luistosäädön rallitilassa."
+                "name": "Rally / Off-Road ABS & TC Mode Unlock",
+                "desc": "Disables rear ABS and unlocks 9-stage slip adjustment in Rally mode."
             },
             "ktm_my_ktm_connectivity_unlock": {
-                "name": "Oma KTM / Husqvarna-yhteysmoduulin aktivointi",
-                "desc": "Ottaa käyttöön Bluetooth-navigoinnin ja vaiheittaisen reitityksen TFT-näytössä."
+                "name": "My KTM / Husqvarna Connectivity Module Activation",
+                "desc": "Enables Bluetooth navigation and turn-by-turn routing on TFT display."
             },
             "ktm_cruise_control_retrofit_enable": {
-                "name": "Vakionopeudensäätimen jälkiasennusohjelmiston lukituksen avaaminen",
-                "desc": "Aktivoi vakionopeussäätimen ohjaustangon kytkinsarjan asennuksen jälkeen."
+                "name": "Cruise Control Retrofit Software Unlock",
+                "desc": "Activates cruise control function after installing handlebar switch kit."
             },
             "ktm_clutch_pull_map_switch_gesture": {
-                "name": "Kytkin-veto-elekartan vaihto",
-                "desc": "Mahdollistaa nopean kartan vaihtamisen suorittamalla kytkinvivun eleen käynnistyksen yhteydessä."
+                "name": "Clutch-Pull Gesture Map Switching",
+                "desc": "Enables rapid map switching by executing clutch lever gesture on startup."
             },
             "yamaha_quickshifter_cut_time_adjust": {
-                "name": "Quickshifter Ignition Katkaisuaika ja herkkyys",
-                "desc": "Säätää Quickshifter-anturin kuormituskynnystä ja kipinänkatkosviivettä."
+                "name": "Quickshifter Ignition Cut-Time & Sensitivity",
+                "desc": "Adjusts quickshifter sensor load threshold and spark interruption delay."
             },
             "yamaha_ride_by_wire_throttle_map": {
-                "name": "Ride-by-Wire-kaasukartan esiasetuksen valitsin",
-                "desc": "Vaihtaa A-tilan, STD- ja B-tilan kaasukarttojen välillä."
+                "name": "Ride-by-Wire Throttle Map Preset Selector",
+                "desc": "Switches between A-Mode, STD, and B-Mode throttle maps."
             },
             "yamaha_tft_track_theme_unlock": {
-                "name": "TFT-raitanäytön asettelu ja vaihtovalon lukituksen avaus",
-                "desc": "Avaa R1/MT-09 SP -raitaklusterin asettelun ja ohjelmoitavat vaihteen RPM-valot."
+                "name": "TFT Track Display Layout & Shift Light Unlock",
+                "desc": "Unlocks R1/MT-09 SP track cluster layout and programmable shift RPM lights."
             },
             "yamaha_launch_control_sensitivity": {
                 "name": "Launch Control System Rev Ceiling",
-                "desc": "Konfiguroi käynnistyksen ohjauksen pitonopeuden kierrosluvulla."
+                "desc": "Configures launch control holding RPM."
             },
             "yamaha_heated_grips_accessory_enable": {
-                "name": "Aidot lämmitetyt kahvat TFT-valikkointegraatio",
-                "desc": "Mahdollistaa lämmitetyn kädensijan säätimet ja lämpötilamittarin TFT-näytöllä."
+                "name": "Genuine Heated Grips TFT Menu Integration",
+                "desc": "Enables heated grip controls and temperature gauge on TFT screen."
             },
             "honda_hstc_wheelie_control_fine_tune": {
-                "name": "HSTC Traction & Wheelie Control -hienosäätö",
-                "desc": "Säätää Honda Selectable Torque Control -liukusuhdetta ja etupyörän nostotoleranssia."
+                "name": "HSTC Traction & Wheelie Control Fine-Tuning",
+                "desc": "Adjusts Honda Selectable Torque Control slip ratio and front wheel lift tolerance."
             },
             "honda_bi_directional_quickshifter_enable": {
-                "name": "Kaksisuuntainen Quickshifter Retrofit Unlock",
-                "desc": "Mahdollistaa automaattisen blipper- ja ylös/alas Quickshift-koodauksen ECU-muistissa."
+                "name": "Bi-Directional Quickshifter Retrofit Unlock",
+                "desc": "Enables auto-blipper and up/down quickshifter coding in ECU memory."
             },
             "honda_service_reminder_custom_interval": {
-                "name": "Öljypalvelun muistutusetäisyyden mukautus",
-                "desc": "Asettaa mukautetun öljynvaihdon mittarilukemavälin digitaaliseen kojetauluun."
+                "name": "Oil Service Reminder Distance Customizer",
+                "desc": "Sets custom oil change mileage interval on digital dash."
             },
             "honda_track_abs_rear_disable": {
-                "name": "Telaketjun ABS-takapyörän deaktivointi",
-                "desc": "Poistaa käytöstä takapyörän ABS-kanavan, mutta säilyttää etukulma-ABS:n ratapäivinä."
+                "name": "Track ABS Rear-Wheel Deactivation",
+                "desc": "Disables rear wheel ABS channel while retaining front cornering ABS for track days."
             },
             "honda_cold_start_idle_enrichment": {
-                "name": "Kylmäkäynnistyksen polttoaineen rikastus ja tyhjäkäynnin tavoitekierrosluku",
-                "desc": "Säätää jälkimarkkinoiden pakojärjestelmien alkulämmityksen joutokäyntinopeutta."
+                "name": "Cold-Start Fuel Enrichment & Idle Target RPM",
+                "desc": "Adjusts initial warm-up idle speed for aftermarket exhaust systems."
             },
             "harley_custom_throttle_curve_editor": {
                 "name": "Custom Throttle Response Curve Editor",
-                "desc": "Säätää Milwaukee-Eight / Revolution Max -kaasuvivun etenemistä."
+                "desc": "Adjusts Milwaukee-Eight / Revolution Max ride-by-wire throttle progression."
             },
             "harley_security_alarm_sensitivity": {
-                "name": "Älykäs turvajärjestelmä läheisyys ja kallistusherkkyys",
-                "desc": "Säätää liiketunnistimen herkkyyttä ja handsfree-kaukosäätimen virityksen viivettä."
+                "name": "Smart Security System Proximity & Tilt Sensitivity",
+                "desc": "Adjusts motion sensor sensitivity and hands-free fob arming delay."
             },
             "harley_boom_box_gts_hidden_diagnostics": {
-                "name": "Boom! Box GTS Infotainmentin piilotettu diagnostiikkavalikko",
-                "desc": "Avaa tekniset telemetrianäytöt, moottorin lämpötila- ja öljynpainemittarit."
+                "name": "Boom! Box GTS Infotainment Hidden Diagnostic Menu",
+                "desc": "Unlocks engineering telemetry displays, engine temp, and oil pressure gauges."
             },
             "harley_rdrs_defensive_system_tune": {
-                "name": "RDRS Drag-Torque Slip Control -herkkyys",
-                "desc": "Hienosäätää Reflex Defensive Rider System -takapyörien luiston vaimennusta pienemmille vaihteille."
+                "name": "RDRS Drag-Torque Slip Control Sensitivity",
+                "desc": "Fine-tunes Reflex Defensive Rider System rear-wheel slip mitigation during downshifts."
             },
             "byd_avas_low_speed_siren_mute": {
-                "name": "AVAS:n hitaiden sähköautojen jalankulkijoiden varoitussireenin mykistys",
-                "desc": "Mykistää tai laskee ulkoisen akustisen ajoneuvon hälytysjärjestelmän sireenin alle 30 km/h."
+                "name": "AVAS Low-Speed EV Pedestrian Warning Siren Mute",
+                "desc": "Mutes or lowers external acoustic vehicle alerting system siren under 30 km/h."
             },
             "byd_ev_battery_preheat_manual_switch": {
-                "name": "Manuaalinen EV-akun esilämmityksen kytkin",
-                "desc": "Mahdollistaa akun manuaalisen lämpökäsittelyn ennen DC-pikalatausta."
+                "name": "Manual EV Battery Pre-Heating Toggle",
+                "desc": "Enables manual battery thermal conditioning prior to DC fast charging."
             },
             "byd_v2l_220v_outlet_power_expansion": {
-                "name": "V2L 220 V ulostulon teholaajennus",
-                "desc": "Laajentaa ulkoisen V2L-purkaustehokaton 2,2 kW:sta enintään 3,6 kW:iin."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands external V2L discharge power ceiling from 2.2 kW to 3.6 kW maximum."
             },
             "byd_one_pedal_regen_default_max": {
-                "name": "One-Pedal Drive regeneratiivisen jarrutuksen oletusarvo max",
-                "desc": "Lukitsee korkean hyötyjarrutuksen pysyväksi oletukseksi ajoneuvon käynnistyksen yhteydessä."
+                "name": "One-Pedal Drive Regenerative Braking Default Max",
+                "desc": "Locks high regenerative braking as persistent default upon vehicle startup."
             },
             "mg_ismart_connectivity_unlock": {
                 "name": "i-SMART Connectivity & Remote Telemetry Unlock",
-                "desc": "Mahdollistaa kauko-ilmastoinnin ja ajoneuvon tilan seurantaominaisuudet."
+                "desc": "Enables remote climate control and vehicle status tracking features."
             },
             "mg_mg4_xpower_launch_control_enable": {
                 "name": "MG4 XPower Dual-Motor Launch Control Mode",
-                "desc": "Avaa 3,8 s 0-100 km/h laukaisuohjauksen kiihdytystilan."
+                "desc": "Unlocks 3.8s 0-100 km/h launch control acceleration mode."
             },
             "mg_battery_preheat_manual_trigger": {
-                "name": "Manuaalinen pikalatausakun esikäsittely",
-                "desc": "Pakottaa korkeajännitteiset akun lämmityselementit PÄÄLLE DC-lataushuippujen saavuttamiseksi."
+                "name": "Manual Fast-Charge Battery Pre-Conditioning",
+                "desc": "Forces high-voltage battery heating elements ON for peak DC charge rates."
             },
             "xpeng_xngp_adas_region_unlock": {
-                "name": "XNGP Autonomous Driving Assistant -alueen lukituksen avaaminen",
-                "desc": "Mahdollistaa edistyneen navigointiohjatun pilottiavun lukitsemattomilla alueilla."
+                "name": "XNGP Autonomous Driving Assistant Region Unlock",
+                "desc": "Enables advanced navigation-guided pilot assistance in unlocked regions."
             },
             "xpeng_ambient_lighting_music_sync": {
-                "name": "Musiikkireaktiivinen rytmiympäristön valaistus",
-                "desc": "Synkronoi ohjaamon LED-ympäristön valaistuspulssit audiojärjestelmän bassoäänien kanssa."
+                "name": "Music-Reactive Rhythm Ambient Lighting",
+                "desc": "Synchronizes cabin LED ambient lighting pulses with audio system bass beats."
             },
             "xpeng_rear_camera_trailer_hitch_view": {
-                "name": "360° kameran kiinnitys ja maan päällekkäisyystila",
-                "desc": "Lisää korkearesoluutioisen vetokoukun kohdistusruudukon peittokuvan varakameraan."
+                "name": "360° Camera Hitch & Ground Overlay Mode",
+                "desc": "Adds high-resolution hitch alignment grid overlay to backup camera."
             },
             "nio_battery_swap_interval_reminder": {
-                "name": "Tehonvaihtoaseman esikäsittelytila",
-                "desc": "Laskee automaattisesti akun lukitustapit ja esiasennuspaketit ennen vaihtoa."
+                "name": "Power Swap Station Pre-Conditioning Mode",
+                "desc": "Automatically lowers battery lock pins and pre-conditions packs prior to swap."
             },
             "nio_nomi_assistant_custom_voice_phrases": {
-                "name": "NOMI AI Companion -muokkaus ja herätyssanat",
-                "desc": "Avaa mukautetut avatar-animaatiot ja henkilökohtaiset tervehdyslauseet NOMI:lle."
+                "name": "NOMI AI Companion Personalization & Wake Words",
+                "desc": "Unlocks custom avatar animations and personalized greeting phrases for NOMI."
             },
             "nio_sentry_watchdog_continuous_recording": {
-                "name": "NIO Sentry Mode 4K-kamerapuskuritallennus",
-                "desc": "Mahdollistaa suuren bittinopeuden surround-kameran tallennuksen USB-asemaan pysäköitynä."
+                "name": "NIO Sentry Mode 4K Camera Buffer Recording",
+                "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Xiaomi SU7 HyperOS -ohjainprofiilin ekosysteemin synkronointi",
-                "desc": "Synkronoi istuimen, peilin ja ilmastoinnin esiasetukset automaattisesti Xiaomi-puhelimen Bluetoothin kautta."
+                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
+                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Boost Mode 20 sekunnin Overboost Power Unlock",
-                "desc": "Pidentää sähkömoottorin ylivoiman maksimikestoa täyskaasukiihdytyksen aikana."
+                "name": "Boost Mode 20-Second Overboost Power Unlock",
+                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Drift-tilan RWD-momenttivektorin allokointi",
-                "desc": "Kohdistaa 100 % moottorin vääntömomentin taka-akselille luistonesto kytkettynä pois päältä."
+                "name": "Drift Mode RWD Torque Vectoring Allocation",
+                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "ISA Intelligent Speed Assist varoitusäänen mykistys",
-                "desc": "Poistaa käytöstä jatkuvan äänimerkin, kun havaittu nopeusrajoitus ylitetään."
+                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
+                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "DMS-ohjaimen väsymyksen valvontakameran herkkyys",
-                "desc": "Vähentää sisävalvontakameran vääriä positiivisia häiriöhälytyksiä."
+                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
+                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Jälkiasennettava etu/takapysäköintietäisyyden säätimen koodaus",
-                "desc": "Rekisteröi jälkimarkkina- tai OEM-pysäköintitunnistimen moduulin Gatewayn asennusluetteloon."
+                "name": "Retrofit Front/Rear Parking Distance Control Coding",
+                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
             },
             "retrofit_360_camera_activation": {
-                "name": "Jälkiasenna 360° aluenäkymä surround-kamerajärjestelmä",
-                "desc": "Aktivoi surround-kameraohjaimen ja lisää kameranäkymän infotainmentiin."
+                "name": "Retrofit 360° Area View Surround Camera System",
+                "desc": "Activates surround view camera controller and adds camera view to infotainment."
             },
             "retrofit_led_license_plate_light_coding": {
-                "name": "Jälkiasennettava LED-rekisterikilpi ja takavalovirhe Peruuta",
-                "desc": "Poistaa käytöstä kylmälamppujen tarkistuksen valvonnan estääkseen virheelliset lampun sammumisvaroitukset LED-valoilla."
+                "name": "Retrofit LED License Plate & Tail Light Error Cancel",
+                "desc": "Disables cold bulb check monitoring to prevent false lamp out warnings with LEDs."
             },
             "retrofit_dash_cam_sentry_integration": {
-                "name": "Jälkiasenna Dash Cam jatkuva sytytysvirta ja sentry-tila",
-                "desc": "Konfiguroi Body Control Module -liittimen 30 virtajohdon jatkuvaa pysäköintitallennusta varten."
+                "name": "Retrofit Dash Cam Continuous Ignition Power & Sentry Mode",
+                "desc": "Configures Body Control Module terminal 30 power line for continuous parking recording."
             },
             "retrofit_heated_windshield_activation": {
-                "name": "Jälkiasenna lämmitettävän tuulilasin elementtikoodaus",
-                "desc": "Ottaa käyttöön tuulilasin huurteenpoistolämmittimen relelähdön ja climatronic-näytön painikkeen."
+                "name": "Retrofit Heated Windshield Element Coding",
+                "desc": "Enables windshield defrost heater relay output and climatronic screen button."
             },
             "retrofit_wireless_charger_module_coding": {
-                "name": "Jälkiasennettava langattoman Qi-älypuhelimen latausalustan integrointi",
-                "desc": "Ottaa käyttöön langattoman laturin tila-LEDin ja puhelimen jääneen muistutusikkunan taakse."
+                "name": "Retrofit Qi Wireless Smartphone Charging Pad Integration",
+                "desc": "Enables wireless charger status LED and phone left behind reminder popup."
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "Jälkiasennettu mukautuva vakionopeudensäädin etututkamoduuli",
-                "desc": "Koodaa jälkiasennetun etuetäisyystutkayksikön CAN-väylän ajoneuvoverkkoon."
+                "name": "Retrofit Adaptive Cruise Control Front Radar Module",
+                "desc": "Encodes retrofitted front distance radar unit into CAN bus vehicle network."
             },
             "retrofit_traffic_sign_camera_activation": {
-                "name": "Jälkiasenna liikennemerkkien tunnistus tuulilasin kamerakoodaus",
-                "desc": "Ottaa käyttöön VZE-kyltintunnistuksen jälkiasennetussa tuulilasikamerassa."
+                "name": "Retrofit Traffic Sign Recognition Windshield Camera Coding",
+                "desc": "Enables VZE sign recognition processing on retrofitted windshield camera."
             },
             "retrofit_heated_steering_wheel_coding": {
-                "name": "Jälkiasenna lämmitetyn ohjauspyörän moduulin aktivointi",
-                "desc": "Mahdollistaa ohjauspyörän lämmityselementin lähdön ja automaattiset lämpötilan liipaisimet."
+                "name": "Retrofit Heated Steering Wheel Module Activation",
+                "desc": "Enables steering wheel heating element output and auto-on temperature triggers."
             },
             "retrofit_fatigue_camera_calibration": {
-                "name": "Jälkiasenna kuljettajan väsymyksen valvontakameran integrointi",
-                "desc": "Kalibroi kuljettajaa valvovan infrapunakamera-anturin ohjauspylvään asennuksen jälkeen."
+                "name": "Retrofit Driver Fatigue Monitoring Camera Integration",
+                "desc": "Calibrates driver monitoring infrared camera sensor after steering column install."
             },
             "retrofit_trailer_hitch_module_coding": {
-                "name": "Jälkiasennettava vetokoukun ja perävaunun sähkömoduulin integrointi",
-                "desc": "Koodaa perävaunumoduulin ESP-vakausjärjestelmään perävaunun heilahtelun vaimentamiseksi."
+                "name": "Retrofit Tow Bar & Trailer Electrical Module Integration",
+                "desc": "Encodes trailer module into ESP stability system for trailer sway mitigation."
             },
             "retrofit_power_tailgate_trunk_kit_coding": {
-                "name": "Jälkiasennettu sähkökäyttöinen takaluukku ja jalkaliiketunnistin",
-                "desc": "Mahdollistaa sähköisten takamoottorien ja puskurin potkutunnistimen koodauksen."
+                "name": "Retrofit Power Tailgate & Foot Gesture Sensor Integration",
+                "desc": "Enables electric trunk drive motors and bumper kick sensor coding."
             },
             "easteregg_urban_joke_light_show": {
-                "name": "Urban Joke vuorotteleva takavaloshow",
-                "desc": "Säätää takavalot ja suuntavilkut vilkkumaan vuorotellen autoa lukittaessa."
+                "name": "Urban Joke Alternating Rear Light Show",
+                "desc": "Configures tail lights and turn signals to flash alternately when locking vehicle."
             },
             "easteregg_custom_boot_greeting_text": {
-                "name": "Mukautettu käynnistystervehdys digitaalisessa klusterissa",
-                "desc": "Näyttää mukautetun tervetuloviestin mittariston näytöllä, kun sytytys kytketään."
+                "name": "Custom Boot Greeting Text on Digital Cluster",
+                "desc": "Displays custom welcome message on instrument cluster screen upon ignition on."
             },
             "easteregg_cluster_mini_game_mode": {
-                "name": "Instrumenttiryhmän piilotettu minipelivalikko",
-                "desc": "Avaa ohjauspyörän painikkeella ohjatun retro-minipelin, joka on esillä pysäköitynä."
+                "name": "Instrument Cluster Hidden Mini-Game Menu",
+                "desc": "Unlocks steering-wheel button controlled retro mini-game on display when parked."
             },
             "easteregg_custom_horn_melody_package": {
-                "name": "Mukautettu akustinen torvi tervetulomelodia",
-                "desc": "Toistaa lyhyen rytmin sirkutuskuvion äänitorvessa auton lukitusta avattaessa."
+                "name": "Custom Acoustic Horn Welcome Melody",
+                "desc": "Plays short rhythm chirp pattern on horn when unlocking car."
             },
             "easteregg_welcome_lighting_door_sequence": {
-                "name": "Chasing LED-tervetulovaloovisarja",
-                "desc": "Suorittaa progressiivisen LED-ajo-animoinnin ulkoovien kahvoissa."
+                "name": "Chasing LED Welcome Light Door Sequence",
+                "desc": "Executes progressive LED chasing animation on exterior door handles."
             },
             "easteregg_developer_service_menu_shortcut": {
-                "name": "Kehittäjän ja palvelun diagnostiikkanäytön pikakuvake",
-                "desc": "Mahdollistaa nopean ele-pikakuvakkeen päästäksesi piilotettuihin teknisen diagnostiikan näyttöihin."
+                "name": "Developer & Service Diagnostic Screen Shortcut",
+                "desc": "Enables quick gesture shortcut to access hidden engineering diagnostic screens."
             },
             "easteregg_seasonal_cluster_theme_effect": {
-                "name": "Vuodenajan sääklusteriteeman peittokuva",
-                "desc": "Lisää animoidun lumihiutale- tai sadehiukkastaustan mittariklusteriin talvella."
+                "name": "Seasonal Weather Cluster Theme Overlay",
+                "desc": "Adds animated snowflake or rain particle background to gauge cluster in winter."
             },
             "easteregg_valet_mode_prank_warning_message": {
-                "name": "Valet-tilan kepposen nopeusrajoituksen ponnahdusikkunan varoitus",
-                "desc": "Näyttää humoristisen tiukan varoitusviestin kojelaudassa, jos valet-tila ylittyy."
+                "name": "Valet Mode Prank Speed Limit Popup Warning",
+                "desc": "Displays humorously strict warning message on dashboard if valet mode is exceeded."
             },
             "adas_lane_keep_assist_gentle_curve": {
                 "name": "Lane Keep Assist Gentle Steering Intervention Curve",
-                "desc": "Pehmentää äkillisiä ohjauspyörän hinauksia käyttämällä progressiivista vääntömomenttia."
+                "desc": "Softens sudden steering wheel tugs by applying progressive torque intervention."
             },
             "adas_lka_last_state_memory_mode": {
                 "name": "Lane Keep Assist Last State Memory Lock",
-                "desc": "Estää LKA:ta kytkeytymästä automaattisesti takaisin PÄÄLLE aina, kun sytytysvirta käynnistetään uudelleen."
+                "desc": "Prevents LKA from automatically turning back ON every time ignition is restarted."
             },
             "adas_acc_default_follow_distance": {
-                "name": "Mukautuvan vakionopeudensäätimen oletusetäisyyden esiasetus",
-                "desc": "Asettaa oletusväliasetuksen, kun ACC on päällä."
+                "name": "Adaptive Cruise Control Default Distance Preset",
+                "desc": "Sets default gap setting whenever ACC is powered on."
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "ACC-risteilynopeuden lisäyksen valitsin",
-                "desc": "Muuttaa ohjauspyörän nopeuspainikkeen lyhyen painalluksen askeleen 1 km/h:sta 5 km/h:iin."
+                "name": "ACC Cruise Speed Increment Step Selector",
+                "desc": "Changes short-press steering wheel speed button step from 1 km/h to 5 km/h."
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
-                "name": "Matrix-LED-häikäisysvapaa mukautuva kaukovalohäikäisysuoja",
-                "desc": "Avaa eurooppalaiskohtaiset mukautuvat valokeilan muodostavat kaukovalot pohjoisamerikkalaisissa autoissa."
+                "name": "Matrix LED Glare-Free Adaptive High-Beam Glare Shield",
+                "desc": "Unlocks European-spec adaptive beam-forming high beams on North American cars."
             },
             "adas_traffic_jam_assist_follow_fine_tune": {
-                "name": "Liikenneruuhka-avustimen Stop-and-Go-jatkamisviive",
-                "desc": "Pidentää automaattisen pysäytys-ja-käynnistysikkunan 3 sekunnista 15 sekuntiin."
+                "name": "Traffic Jam Assist Stop-and-Go Resume Delay",
+                "desc": "Extends automatic stop-and-go restart window from 3 seconds to 15 seconds."
             },
             "adas_rear_radar_blind_spot_zero_point_reset": {
-                "name": "Takakuolleen kulman tutkan nollapisteen kulman kalibrointi",
-                "desc": "Kalibroi uudelleen takapuskurin tutkan atsimuuttikulman puskurin poistamisen tai korjauksen jälkeen."
+                "name": "Rear Blind Spot Radar Zero-Point Angle Calibration",
+                "desc": "Recalibrates rear bumper radar azimuth angle after bumper removal or repair."
             },
             "adas_surround_camera_stitching_recalib": {
-                "name": "Surround View -kameran dynaaminen kuvan yhdistäminen",
-                "desc": "Suorittaa dynaamisen kameran kuvan ompelemisen kalibroinnin tiellä ajettaessa."
+                "name": "Surround View Camera Dynamic Image Stitching Alignment",
+                "desc": "Executes dynamic camera image stitching calibration while driving on road."
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "Ohjauskulmaanturin nollapisteen kalibrointi",
-                "desc": "Palauttaa ohjauksen keskikulman 0,0°:een pyörien kohdistushuollon jälkeen."
+                "name": "Steering Angle Sensor Zero-Point Calibration",
+                "desc": "Resets steering center angle to 0.0° following wheel alignment service."
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "Rear Cross-Traffic Alert -tunnistusalue",
-                "desc": "Lisää sivututkan tunnistusetäisyyttä ajoneuvoille, jotka lähestyvät perääntyessään."
+                "name": "Rear Cross-Traffic Alert Detection Range",
+                "desc": "Increases side radar detection distance for vehicles approaching while backing out."
             },
             "adas_aeb_emergency_braking_threshold_preview": {
-                "name": "Automaattisen hätäjarrutuksen varoitusteho",
-                "desc": "Säätää aikaisen ja myöhäisen varoitusäänen ajoitusta eteenpäin törmäysvaroituksiin."
+                "name": "Automatic Emergency Braking Warning Efficacy",
+                "desc": "Adjusts early vs late warning chime timing for forward collision alerts."
             },
             "adas_night_vision_camera_alignment": {
-                "name": "Infrapuna-yönäkölämpökameran kohteen kohdistus",
-                "desc": "Aloittaa infrapunakameran jalustan kohdistuksen varmistusjakson."
+                "name": "Infrared Night Vision Thermal Camera Target Alignment",
+                "desc": "Initiates infrared camera pedestal alignment verification sequence."
             },
             "adas_dms_driver_monitoring_ir_threshold": {
-                "name": "DMS-kuljettajan huomiokameran infrapunaherkkyys",
-                "desc": "Säätää katseen seurantakynnystä kuljettajille, jotka käyttävät tummia polarisoituja aurinkolaseja."
+                "name": "DMS Driver Attention Camera Infrared Sensitivity",
+                "desc": "Adjusts eye tracking threshold for drivers wearing dark polarized sunglasses."
             },
             "toyota_soft_close_door_retrofit_coding": {
-                "name": "Power Soft-Close Door -tyhjiötoimilaitteen koodaus",
-                "desc": "Mahdollistaa sähkökäyttöiset oven salvan sisäänvedettävät toimilaitteet rungon ohjausmoduulissa."
+                "name": "Power Soft-Close Door Vacuum Actuator Coding",
+                "desc": "Enables power door latch pull-in actuators in body control module."
             },
             "toyota_digital_speedometer_display_enable": {
-                "name": "Digitaalinen nopeusmittarin keskimittarin näyttö",
-                "desc": "Lisää suuren digitaalisen nopeuslukeman analogisen mittariston LCD-näytölle."
+                "name": "Digital Speedometer Center Gauge Display",
+                "desc": "Adds large digital speed readout to analog instrument cluster LCD."
             },
             "toyota_walk_away_auto_lock_sensitivity": {
-                "name": "Walk-Away Smart Key -oven automaattisen lukituksen herkkyys",
-                "desc": "Säätää etäisyyskynnystä ennen kuin ovet lukittuvat automaattisesti kävellessäsi pois."
+                "name": "Walk-Away Smart Key Auto Door Locking Sensitivity",
+                "desc": "Adjusts distance threshold before doors automatically lock when walking away."
             },
             "toyota_jbl_3d_eq_audio_profile_unlock": {
                 "name": "JBL Premium Surround Sound Equalizer Curves",
-                "desc": "Avaa 3D-konserttisalin taajuuskorjainprofiilit JBL-äänipääyksikössä."
+                "desc": "Unlocks 3D concert hall equalizer profiles in JBL audio head unit."
             },
             "toyota_ev_mode_throttle_override_suppression": {
-                "name": "EV-tila Puhdas sähköinen kaasun rajan vaimennus",
-                "desc": "Estää bensiinimoottorin käynnistymisen kohtalaisen sähköauton kiihdytyksen aikana."
+                "name": "EV Mode Pure Electric Throttle Limit Suppression",
+                "desc": "Prevents gasoline engine from kicking ON during moderate EV acceleration."
             },
             "ford_sync3_engineering_diagnostics_page": {
-                "name": "SYNC3 / SYNC4 kosketusnäytön suunnittelun diagnostiikkanäyttö",
-                "desc": "Ottaa käyttöön raaka-GPS:n, APIM-testin ja äänitaajuuden diagnostiikkanäytöt SYNC:ssä."
+                "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostic Screen",
+                "desc": "Enables raw GPS, APIM test, and audio frequency diagnostic screens on SYNC."
             },
             "ford_rear_seat_entertainment_unlock": {
-                "name": "Takaistuimen HDMI / Video Entertainment Audio Pass Through",
-                "desc": "Mahdollistaa matkustamon kuulokkeiden äänen suoratoiston takaistuimen viihdenäytöille."
+                "name": "Rear Seat HDMI / Video Entertainment Audio Pass-Through",
+                "desc": "Enables cabin headphone audio streaming for rear seat entertainment screens."
             },
             "ford_bambi_mode_fog_light_expansion": {
-                "name": "Bambi-tilan kaukovalot + sumuvalon samanaikainen valaistus",
-                "desc": "Pitää etusumuvalot päällä, vaikka kaukovalot ovat päällä."
+                "name": "Bambi Mode High Beam + Fog Light Simultaneous Illumination",
+                "desc": "Keeps front fog lights powered ON even when high beam headlights are activated."
             },
             "ford_auto_engine_idle_shutdown_30min_override": {
-                "name": "30 minuutin tyhjäkäynnin automaattinen moottorin sammutus pois käytöstä",
-                "desc": "Estää moottoria sammumasta automaattisesti 30 minuutin pysäköinnin jälkeen."
+                "name": "30-Minute Idle Auto Engine Shutdown Disable",
+                "desc": "Prevents engine from shutting OFF automatically after 30 minutes in Park."
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "N Grin Shift 20 sekunnin Overboost Jälkiasennuksen avaus",
-                "desc": "Ottaa käyttöön ohjauspyörän NGS-painikkeen overboost-toiminnon ECU:ssa."
+                "name": "N Grin Shift 20-Second Overboost Retrofit Unlock",
+                "desc": "Enables steering wheel NGS button overboost function in ECU."
             },
             "hyundai_smart_tailgate_approach_distance": {
-                "name": "Älykäs handsfree-takaluukun lähestymisläheisyystunnistus",
-                "desc": "Säätää seisomisen viiveaikaa, ennen kuin älykäs takaluukku avautuu automaattisesti."
+                "name": "Smart Hands-Free Tailgate Approach Proximity Sensing",
+                "desc": "Adjusts standing delay time before smart tailgate automatically opens."
             },
             "hyundai_digital_cluster_n_performance_theme": {
                 "name": "N Performance Digital Instrument Cluster Gauge Layout",
-                "desc": "Käyttää N-Performancen punaisen siirtymän ilmaisinklusteriasettelua tavalliseen LCD-kojeeseen."
+                "desc": "Applies N-Performance red shift-indicator cluster layout to standard LCD dash."
             },
             "stellantis_scr_adblue_warning_threshold_adjust": {
-                "name": "SCR AdBlue -varoitusetäisyyden kynnyksen säätö",
-                "desc": "Säätää ensimmäisen AdBlue-täyttömuistutuksen varoitusetäisyyden 2400 km:stä 1000 km:iin."
+                "name": "SCR AdBlue Warning Distance Threshold Adjustment",
+                "desc": "Adjusts first AdBlue refill reminder warning distance from 2400 km to 1000 km."
             },
             "stellantis_jeep_trail_rated_offroad_pages": {
-                "name": "Jeep Uconnect Trail -luokitellut off-road-telemetriasivut",
-                "desc": "Avaa Uconnectin voimansiirron nousu-, kallistus-, pyöränivel- ja jäähdytysnesteen lämpötilasivut."
+                "name": "Jeep Uconnect Trail-Rated Off-Road Telemetry Pages",
+                "desc": "Unlocks drivetrain pitch, roll, wheel articulation, and coolant temp pages on Uconnect."
             },
             "stellantis_peugeot_icockpit_3d_color_schemes": {
-                "name": "Peugeot 3D i-Cockpit mukautettu värimallipaletti",
-                "desc": "Avaa kupari- ja kvartsiväriteemot 3D-holografiseen digitaaliseen instrumenttiklusteriin."
+                "name": "Peugeot 3D i-Cockpit Custom Color Scheme Palette",
+                "desc": "Unlocks Copper and Quartz color themes for 3D holographic digital instrument cluster."
             },
             "gm_super_cruise_follow_distance_adjust": {
-                "name": "Super Cruise Hands-Free-seuraava etäisyys",
-                "desc": "Räätälöi etäisyyksiä autonomisen Super Cruise -maantieajon aikana."
+                "name": "Super Cruise Hands-Free Following Distance Offset",
+                "desc": "Customizes gap spacing during autonomous Super Cruise highway driving."
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "Head-Up-näytön sijainti ja kallistuksen nollapisteen kalibrointi",
-                "desc": "Nollaa tuulilasin HUD-projektorin kuvakulman ja nollatason horisontin kohdistuksen."
+                "name": "Head-Up Display Position & Tilt Zero-Point Calibration",
+                "desc": "Resets wind-shield HUD projector image angle and zero-level horizon alignment."
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
-                "name": "AFM / DFM sylinterin deaktivoinnin ohitus",
-                "desc": "Poistaa aktiivisen polttoaineenhallinnan sylinterin pudotuksen käytöstä, jotta moottori pysyy 8-sylinterisessä tilassa."
+                "name": "AFM / DFM Cylinder Deactivation Override",
+                "desc": "Disables Active Fuel Management cylinder drop to keep engine operating in 8-cylinder mode."
             },
             "dodge_ram_truck_fog_lights_with_high_beam": {
-                "name": "RAM-kuorma-auton sumuvalot kaukovaloilla",
-                "desc": "Estää sumuvaloja sammumasta automaattisesti, kun kaukovalot kytketään päälle."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Prevents fog lights from turning OFF automatically when high beams are switched ON."
             },
             "toyota_keyless_window_down": {
-                "name": "Toyota-avaimenperän ikkuna auki",
-                "desc": "Rullaa kaikki sähköikkunat alas, kun pidät kaukosäätimen UNLOCK-painiketta painettuna."
+                "name": "Toyota Key Fob Window Open",
+                "desc": "Rolls down all power windows when holding UNLOCK button on remote fob."
             },
             "toyota_seatbelt_chime_disable": {
-                "name": "Toyota matkustajan turvavyön hälytyksen mykistys",
-                "desc": "Poistaa käytöstä jatkuvan akustisen turvavyön varoitusäänen matkustajan istuimelta."
+                "name": "Toyota Passenger Seatbelt Alarm Mute",
+                "desc": "Disables persistent acoustic seatbelt warning chime in passenger seat."
             },
             "honda_walkaway_auto_lock": {
-                "name": "Honda Walk-Away automaattinen ovenlukko",
-                "desc": "Lukitsee automaattisesti kaikki ovet, kun Smart Key poistuu 2,5 metrin säteeltä ajoneuvosta."
+                "name": "Honda Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when Smart Key leaves 2.5m vehicle radius."
             },
             "volvo_speed_limiter_unlock": {
-                "name": "Volvon 180 km/h Tehdasnopeudenrajoitin laajennettu",
-                "desc": "Säätää tehtaalla 180 km/h nopeusrajoitusta radan / Autobahnin suorituskykyä varten."
+                "name": "Volvo 180 km/h Factory Speed Limiter Extended",
+                "desc": "Adjusts 180 km/h factory speed cap for Track / Autobahn performance use."
             },
             "byd_v2l_3kw_power_unlock": {
-                "name": "BYD Vehicle-to Load 3,6 kW AC-lähtötila",
-                "desc": "Mahdollistaa ulkoisen 220V/3.6kW V2L AC purkausportin retkeilyvarusteille."
+                "name": "BYD Vehicle-to-Load 3.6kW AC Output Mode",
+                "desc": "Enables external 220V/3.6kW V2L AC discharge port for camping appliances."
             },
             "xiaomi_su7_drift_mode_unlock": {
                 "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
-                "desc": "Aktivoi 100 % takamoottorin vääntömomentin ja ESC Track Drift -tilan."
+                "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset",
-                "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
+                "name": "Oil Service Interval Reset",
+                "desc": "Resets oil change service counter and inspection interval for VAG vehicles."
             },
             "vag_epb_service_mode": {
-                "name": "Elektronisen seisontajarrun jarrupalojen huoltotila",
-                "desc": "Vetää takaosan EPB-satulan männät takajarrupalojen ja -roottorin vaihtoa varten."
+                "name": "Electronic Parking Brake Brake Pad Service Mode",
+                "desc": "Retracts rear EPB caliper pistons for rear brake pad and rotor replacement."
             },
             "bmw_bms_battery_registration": {
-                "name": "Älykäs akkutunnistin akun rekisteröinti",
-                "desc": "Rekisteröi uuden 12V AGM/lyijyakun vaihdon DME/DDE-moottorin hallintaan."
+                "name": "Intelligent Battery Sensor Battery Registration",
+                "desc": "Registers new 12V AGM/Lead-acid battery replacement in DME/DDE engine management."
             },
             "bmw_motorrad_service_indicator_reset": {
-                "name": "BMW Motorrad vuosihuolto- ja öljyilmaisimen nollaus",
-                "desc": "Tyhjentää TFT-mittariston vuosihuoltopäivämäärän ja 10 000 km:n matkamuistutuksen."
+                "name": "BMW Motorrad Annual Service & Oil Indicator Reset",
+                "desc": "Clears annual service date and 10,000 km distance reminder on TFT instrument cluster."
             },
             "ducati_desmo_service_reset": {
-                "name": "Ducati Desmo -venttiilihuoltomuistutus tyhjennetty",
-                "desc": "Tyhjentää Desmoservicen jakoavainkuvakkeen kojelaudassa 15 000 / 30 000 km huollon jälkeen."
+                "name": "Ducati Desmo Valve Service Reminder Clear",
+                "desc": "Clears Desmoservice wrench icon on dashboard after 15,000 / 30,000 km service."
             },
             "byd_bms_isolation_self_test": {
-                "name": "BYD Blade -akun korkeajänniteeristyksen itsetesti",
-                "desc": "Suorittaa korkeajännitejärjestelmän vuotojen ja vastusdiagnoosin BMS:ssä."
+                "name": "BYD Blade Battery High-Voltage Isolation Self-Test",
+                "desc": "Executes high-voltage system leakage & resistance diagnostics in BMS."
             },
             "vag_drl_brightness_multi": {
-                "name": "Päiväajovalojen kirkkauden säätö",
-                "desc": "Säädä LEDin DRL-intensiteettitaso lähivalo-/pysäköintitilassa."
+                "name": "Daytime Running Lights Brightness Adjustment",
+                "desc": "Adjust LED DRL intensity level for low-beam / parking mode."
             },
             "bmw_comfort_turn_signal_cycles": {
-                "name": "Yhden kosketuksen mukavuussuuntavilkun pulssilaskenta",
-                "desc": "Valitse kuinka monta vilkkumista tapahtuu, kun suuntavilkun vipua painetaan nopeasti."
+                "name": "One-Touch Comfort Turn Signal Pulse Count",
+                "desc": "Select how many blinks occur on quick tap of turn indicator lever."
             },
             "bmw_oil_service_reset": {
-                "name": "CBS-moottoriöljyn nollaus",
-                "desc": "Palauttaa CBS -öljyn käyttöiän prosenttiosuuden takaisin 100 prosenttiin."
+                "name": "CBS Engine Oil Reset",
+                "desc": "Resets Condition Based Service oil life percentage back to 100%."
             },
             "generic_oil_service_reset": {
                 "name": "Universal Oil Maintenance Indicator Reset",
-                "desc": "Poistaa kojelaudan öljyhuollon varoitusvalon tuetuista OBD2/UDS ECU:ista."
+                "desc": "Clears dashboard oil maintenance warning light across supported OBD2/UDS ECUs."
             },
             "vag_epb_pad_change": {
-                "name": "EPB jarrupalan vaihtotila",
-                "desc": "Vedä sisään elektroniset seisontajarrusatulat takajarrupalojen huoltoa varten."
+                "name": "EPB Brake Pad Replacement Mode",
+                "desc": "Retracts electronic parking brake calipers for rear brake pad servicing."
             },
             "bmw_epb_pad_change": {
                 "name": "EPB Brake Service Mode",
-                "desc": "Avaa seisontajarrun toimilaitteen huoltoasentoon takalevyn vaihtoa varten."
+                "desc": "Opens parking brake actuator to service position for rear pad replacement."
             },
             "mb_epb_pad_change": {
-                "name": "EPB-tyynyn asennustila",
-                "desc": "Vapauttaa seisontajarrun karan korjaamoasentoon jarruhuoltoa varten."
+                "name": "EPB Pad Fitting Mode",
+                "desc": "Releases parking brake spindle to workshop position for brake service."
             },
             "vag_dpf_regen": {
                 "name": "DPF Service Regeneration Trigger",
-                "desc": "Käynnistää kiinteän dieselhiukkassuodattimen noenpolttojakson."
+                "desc": "Initiates stationary Diesel Particulate Filter soot burn-off cycle."
             },
             "bmw_dpf_regen": {
                 "name": "DPF Forced Regeneration Trigger",
-                "desc": "Pyytää DDE ECU:ta käynnistämään aktiivisen hiukkassuodattimen regenerointirutiinin."
+                "desc": "Requests DDE ECU to start active particulate filter regeneration routine."
             },
             "psa_dpf_regen": {
-                "name": "DPF:n regenerointipyyntö",
-                "desc": "Laukaisee kiinteän DPF:n regeneraation HDi-dieselmoottorien ECU:ille."
+                "name": "DPF Regeneration Request",
+                "desc": "Triggers stationary DPF regeneration for HDi diesel engine ECUs."
             },
             "bmw_bms_battery_register": {
-                "name": "BMS-akun vaihtorekisteröinti",
-                "desc": "Rekisteröi uuden pariston vaihdon älykkäällä DME/DDE-akkutunnistimella."
+                "name": "BMS Battery Replacement Registration",
+                "desc": "Registers new battery replacement with DME/DDE Intelligent Battery Sensor."
             },
             "mb_bms_battery_register": {
-                "name": "Akun rekisteröinti ja nollaus",
-                "desc": "Nollaa akun ikääntymislaskuri SAM-moduulissa uuden akun asennuksen jälkeen."
+                "name": "Battery Registration & Reset",
+                "desc": "Resets battery aging counter in SAM module after new battery installation."
             },
             "vag_sas_calibrate": {
-                "name": "Ohjauskulmaanturin kalibrointi",
-                "desc": "Kalibroi G85-ohjauskulmaanturin nollapisteen ABS/ESP ECU:lle."
+                "name": "Steering Angle Sensor Calibration",
+                "desc": "Calibrates G85 steering angle sensor zero-point position for ABS/ESP ECU."
             },
             "toyota_sas_calibrate": {
-                "name": "Ohjauskulman nollapisteen kalibrointi",
-                "desc": "Suorittaa ohjauskulma-anturin nollapisteen kalibroinnin Skid Control ECU:ssa."
+                "name": "Steering Angle Zero Point Calibration",
+                "desc": "Performs zero point calibration of steering angle sensor in Skid Control ECU."
             },
             "generic_tba_adapt": {
-                "name": "Kaasuvivun rungon kohdistus ja mukauttaminen",
-                "desc": "Suorittaa elektronisen kaasuläpän rungon lopetusoppimisrutiinin moottorin ECU:ssa."
+                "name": "Throttle Body Alignment & Adaptation",
+                "desc": "Executes electronic throttle body stop learning routine in engine ECU."
             },
             "epb_service_reset": {
                 "name": "Universal EPB Maintenance Reset",
-                "desc": "Nollaa elektronisen seisontajarrusatulan kulumislaskurin ja kalibroi ilmavälin."
+                "desc": "Resets electronic park brake caliper wear counter and calibrates air gap."
             },
             "vag_dsg_reset": {
-                "name": "DSG-vaihteiston perusasetusten palautus",
-                "desc": "Nollaa DSG/S-Tronicin kytkimen kytkentäpisteet ja vaihdeventtiilin sovitukset."
+                "name": "DSG Transmission Basic Settings Reset",
+                "desc": "Resets clutch engagement points and shift valve adaptations for DSG/S-Tronic."
             },
             "bmw_zf_reset": {
-                "name": "ZF 8HP Transmission Adaption Reset",
-                "desc": "Tyhjentää EGS-vaihteiston vaihtoajan ja paineen sovitusarvot."
+                "name": "ZF 8HP Transmission Adaptation Reset",
+                "desc": "Clears EGS transmission shift time and pressure adaptation values."
             },
             "bmw_brake_fluid_reset": {
-                "name": "Jarrunesteen huoltovälin nollaus",
-                "desc": "Nollaa CBS 2 vuoden jarrunesteen vaihtoajastimen."
+                "name": "Brake Fluid Service Interval Reset",
+                "desc": "Resets Condition Based Service 2-year brake fluid change timer."
             },
             "ford_injector_code": {
-                "name": "Suuttimen korjauskertoimen koodaus",
-                "desc": "Ohjelmoi 16-merkkiset IQA-koodit dieselsuuttimille PCM:ään."
+                "name": "Injector Correction Factor Coding",
+                "desc": "Programs 16-character IQA codes for diesel injectors into PCM."
             },
             "bmw_injector_code": {
-                "name": "Polttoainesuuttimen virtausnopeuden koodaus",
-                "desc": "Kirjoittaa vaihdettujen polttoainesuuttimien energiakalibrointiarvot DME:hen."
+                "name": "Fuel Injector Flow Rate Coding",
+                "desc": "Writes energy calibration values for replaced fuel injectors into DME."
             },
             "generic_headlight_aim": {
-                "name": "Ajovalojen automaattinen vaaituskalibrointi",
-                "desc": "Asettaa mukautuvien automaattisesti säätyvien ajovalomoottoreiden referenssinolla-asennon."
+                "name": "Headlight Auto-Leveling Calibration",
+                "desc": "Sets reference zero position for adaptive auto-leveling headlight motors."
             },
             "bmw_12v_battery_reg": {
                 "name": "12V Auxiliary Battery Registration",
-                "desc": "Rekisteröi ylimääräisen AGM-käynnistimen/tukiakun vaihdon PCU:ssa."
+                "desc": "Registers auxiliary AGM starter/support battery replacement in PCU."
             },
             "vag_comfort_turn_signal": {
-                "name": "Mukavuussuuntavilkun vilkkujen määrä",
-                "desc": "Säätää kaistanvaihdon vilkkujen jaksolukua 3, 4 ja 5 välähdyksen välillä."
+                "name": "Comfort Turn Signal Blink Count",
+                "desc": "Adjusts lane change blinker cycle count between 3, 4, and 5 flashes."
             },
             "vag_coming_home_duration": {
-                "name": "Kotiintulon/kotoa lähtemisen valon kesto",
-                "desc": "Konfiguroi ajovalojen valaistuksen ajastimen ajoneuvon lukituksen jälkeen."
+                "name": "Coming/Leaving Home Light Duration",
+                "desc": "Configures headlight illumination timer after vehicle locking."
             },
             "vag_remote_windows": {
-                "name": "Kaukosäädin",
-                "desc": "Mahdollistaa sähköisten ikkunoiden avaamisen ja sulkemisen kauko-ohjaimen pitkällä painalluksella."
+                "name": "Remote Convenience Window Control",
+                "desc": "Enables opening and closing power windows via remote key fob long press."
             },
             "vag_auto_lock_15kmh": {
-                "name": "Automaattinen oven lukitus nopeudella 15 km/h",
-                "desc": "Lukitsee automaattisesti kaikki ovet, kun auton nopeus saavuttaa 15 km/h."
+                "name": "Auto Door Lock at 15 km/h",
+                "desc": "Automatically locks all doors when vehicle speed reaches 15 km/h."
             },
             "vag_sfd_unlock_prep": {
                 "name": "SFD Gateway Protection Status Prep",
-                "desc": "Valmistelee MQB-evo SFD -yhdyskäytävätunnisteen istunnon suojattujen DID-tunnusten kirjoittamista varten."
+                "desc": "Prepares MQB-evo SFD gateway token session for writing protected DIDs."
             },
             "bmw_asd_deactivate": {
-                "name": "Active Sound Design deaktivointi",
-                "desc": "Mykistää ohjaamon kaiuttimista toistetun synteettisen moottorin äänen."
+                "name": "Active Sound Design Deactivation",
+                "desc": "Mutes synthetic engine sound played through cabin speakers."
             },
             "bmw_comfort_turn_signal": {
-                "name": "Comfort-vilkkujen määrä",
-                "desc": "Asettaa yhden kosketuksen ilmaisimen pulssimäärän."
+                "name": "Comfort Turn Signal Count",
+                "desc": "Sets one-touch indicator pulse count."
             },
             "bmw_mirror_fold_lock": {
-                "name": "Comfort Access -peili taittuva lukossa",
-                "desc": "Taittaa sivupeilit automaattisesti heti auton lukituksen jälkeen."
+                "name": "Comfort Access Mirror Fold on Lock",
+                "desc": "Automatically folds side mirrors immediately upon locking vehicle."
             },
             "toyota_coming_home_duration": {
-                "name": "Ajovalojen viive / Coming-Home",
-                "desc": "Konfiguroi ajovalojen sammutusviiveen sytytysvirran sammuttamisen jälkeen."
+                "name": "Headlight Courtesy Delay / Coming-Home",
+                "desc": "Configures headlight off delay timer after ignition shutdown."
             },
             "toyota_lane_change_flash": {
-                "name": "Kaistanvaihdon vilkkujen määrä",
-                "desc": "Säätää yhdellä kosketuksella kaistanvaihdon vilkkujen lukumäärää."
+                "name": "Lane-Change Turn Signal Flash Count",
+                "desc": "Adjusts one-touch lane change blinker cycle count."
             },
             "toyota_remote_window_close": {
-                "name": "Kaukosäätöinen sähköikkunan sulkeminen",
-                "desc": "Mahdollistaa kaikkien sähkötoimisten ikkunoiden sulkemisen pitämällä kaukosäätimen lukituspainiketta painettuna."
+                "name": "Remote Power Window Closure",
+                "desc": "Allows closing all power windows by holding remote lock button."
             },
             "toyota_autolock_behavior": {
-                "name": "Automaattinen oven lukituksen/lukituksen avauksen räätälöinti",
-                "desc": "Asettaa oven lukituksen liipaisimen."
+                "name": "Auto Door Lock/Unlock Customization",
+                "desc": "Sets door locking trigger."
             },
             "toyota_approach_welcome_lights": {
-                "name": "Smart Key Approach -tervetulovalot",
-                "desc": "Sytyttää sisävalot, kun älyavain lähestyy ajoneuvoa."
+                "name": "Smart Key Approach Welcome Lights",
+                "desc": "Turns on interior puddle/cabin lights when smart key approaches vehicle."
             },
             "hyundai_autolock_behavior": {
-                "name": "Automaattinen ovien lukitus/lukituksen avaaminen",
-                "desc": "Lukitsee ovet automaattisesti vaihteen tai nopeuden aikana ja avaa lukituksen P- tai sytytysvirran ollessa pois päältä."
+                "name": "Auto Door Lock/Unlock Behavior",
+                "desc": "Automatically locks doors on shift or speed and unlocks on P or Ignition Off."
             },
             "hyundai_window_remote": {
-                "name": "Kaukosäätimen ikkuna auki/sulje",
-                "desc": "Mahdollistaa ikkunoiden kääntämisen ylös/alas käyttämällä älykäs avaimenperän painikkeita."
+                "name": "Remote Window Open/Close",
+                "desc": "Enables rolling windows up/down using smart key fob buttons."
             },
             "hyundai_sport_mode_memory": {
-                "name": "Ajotilan valintamuisti",
-                "desc": "Muistaa viimeksi valitun ajotilan moottorin uudelleenkäynnistyksen jälkeen."
+                "name": "Drive Mode Select Memory",
+                "desc": "Remembers last selected Drive Mode after engine restart."
             },
             "tesla_charge_limit_custom": {
-                "name": "Akun latausrajan mukauttaminen",
-                "desc": "Asettaa oletusarvoisen HV-akun latausrajan prosenttiosuuden."
+                "name": "Battery Charge Limit Customization",
+                "desc": "Sets default HV battery charge limit percentage."
             },
             "tesla_mirror_fold_lock": {
-                "name": "Peilin automaattinen taitto Walk-Away Lockissa",
-                "desc": "Taittaa sivupeilit automaattisesti, kun puhelimen avaimen poissulku laukeaa."
+                "name": "Mirror Auto-Fold on Walk-Away Lock",
+                "desc": "Automatically folds side mirrors when phone key walk-away lock triggers."
             },
             "nissan_coming_home": {
-                "name": "Ajovalojen sammumisviive",
-                "desc": "Pitää ajovalot palavana 30 sekuntia Nissan-autosta poistumisen jälkeen."
+                "name": "Courtesy Headlight Off Delay",
+                "desc": "Keeps headlights illuminated for 30 seconds after exiting Nissan vehicle."
             },
             "nissan_lane_change_flash": {
-                "name": "Tap-to-Pass kaistanvaihdon salamamäärä",
-                "desc": "Asettaa suuntavilkkujen pulssilaskennan valovivun napaan."
+                "name": "Tap-to-Pass Lane Change Flash Count",
+                "desc": "Sets turn signal indicator pulse count on light stalk tap."
             },
             "nissan_autolock_behavior": {
-                "name": "Nopeudesta riippuva automaattinen ovenlukko",
-                "desc": "Lukitsee kaikki ovet automaattisesti, kun ajoneuvo saavuttaa 24 km/h."
+                "name": "Speed-Dependent Automatic Door Lock",
+                "desc": "Locks all doors automatically when vehicle reaches 24 km/h."
             },
             "nissan_window_remote": {
-                "name": "Kaukosäädin avaimenperän sähköikkunan ohjaus",
-                "desc": "Avaa/sulkee etuikkunat avaimenperän avauspainikkeella pitkään."
+                "name": "Remote Key Fob Power Window Control",
+                "desc": "Opens/closes front windows via key fob unlock button long press."
             },
             "nissan_seatbelt_chime_mute": {
-                "name": "Turvavyön varoitusäänen vaimennus",
-                "desc": "Mykistää toistuvan turvavyön varoitusäänen pitäen samalla ryhmäkuvaketta."
+                "name": "Seatbelt Warning Audio Chime Suppress",
+                "desc": "Mutes repetitive seatbelt warning chime while keeping cluster icon."
             },
             "porsche_sport_chrono_launch": {
-                "name": "Sport Chrono Launch Control -vasteprofiili",
-                "desc": "Optimoi PDK-vaihteiston käynnistysohjauksen RPM-kynnyksen ja kytkimen pureman."
+                "name": "Sport Chrono Launch Control Response Profile",
+                "desc": "Optimizes PDK transmission launch control RPM threshold & clutch bite."
             },
             "porsche_pasm_default": {
-                "name": "PASM-jousitustilan käynnistyksen esiasetus",
-                "desc": "Asettaa mukautuvan PASM-jousituksen oletusjäykkyyden sytytystä käynnistettäessä."
+                "name": "PASM Suspension Mode Startup Preset",
+                "desc": "Sets PASM adaptive suspension default stiffness on ignition start."
             },
             "porsche_exhaust_flap": {
-                "name": "Sport-pakokaasuläpän jatkuva auki ohitus",
-                "desc": "Pakottaa aktiiviset pakoventtiilit pysymään 100 % auki kaikilla kierroslukualueilla."
+                "name": "Sport Exhaust Flap Constant Open Override",
+                "desc": "Forces active exhaust valves to stay 100% open across all RPM ranges."
             },
             "audi_drive_select_memory": {
-                "name": "Audi Drive Select Mode -muistin säilytys",
-                "desc": "Säilyttää viimeisen aktiivisen Drive Select -profiilin uudelleenkäynnistettäessä."
+                "name": "Audi Drive Select Mode Memory Retention",
+                "desc": "Retains last active Drive Select profile upon restart."
             },
             "audi_virtual_cockpit_themes": {
                 "name": "Audi Virtual Cockpit S/RS Sport Graphic Layout",
-                "desc": "Avaa S/RS-keskikierroslukumittarin asetteluvaihtoehdot Virtual Cockpitissa."
+                "desc": "Unlocks S/RS central tachometer layout options on Virtual Cockpit."
             },
             "vag_scandinavian_drl": {
                 "name": "Scandinavian DRL Mode",
-                "desc": "Pitää takatakavalot jatkuvasti valaistuna edessä olevien DRL-valojen rinnalla."
+                "desc": "Keeps rear tail lights illuminated continuously alongside front DRLs."
             },
             "vag_mirror_dip_reverse": {
-                "name": "Matkustajan peilin lasku peruutettaessa",
-                "desc": "Kallistaa matkustajan puoleisen peilin alaspäin, kun peruutusvaihde on kytketty."
+                "name": "Passenger Mirror Dip in Reverse",
+                "desc": "Tills passenger side mirror downward when reverse gear is engaged."
             },
             "vag_dynamic_turn_signal": {
-                "name": "Dynaaminen / peräkkäinen suuntavilkkutila",
-                "desc": "Mahdollistaa pyyhkäisevän dynaamisen LED-vilkkukuvion yhteensopivissa takavalomoduuleissa."
+                "name": "Dynamic / Sequential Turn Signal Mode",
+                "desc": "Enables sweeping dynamic LED blinker pattern on compatible rear light modules."
             },
             "vag_seatbelt_warning_duration": {
-                "name": "Turvavyön varoitusäänen keston säätö",
-                "desc": "Lyhentää tai vaimentaa toistuvaa turvavyön varoitusäänen ajastinta."
+                "name": "Seatbelt Warning Chime Duration Adjustment",
+                "desc": "Shortens or suppresses repetitive seatbelt warning chime timer."
             },
             "vag_sunroof_remote": {
-                "name": "Kattoluukun kaukosäädin",
-                "desc": "Mahdollistaa panoraamakattoluukun avaamisen ja kallistamisen kauko-ohjaimella."
+                "name": "Sunroof Remote Comfort Control",
+                "desc": "Allows opening and tilting panoramic sunroof via remote key fob hold."
             },
             "vag_acc_distance_preset": {
-                "name": "ACC Adaptive Cruise -oletusseuraava matka",
-                "desc": "Asettaa oletusarvoisen tutkan seurantaetäisyysprofiilin sytytyksen käynnistyessä."
+                "name": "ACC Adaptive Cruise Default Following Distance",
+                "desc": "Sets default radar following distance profile on ignition start."
             },
             "vag_infotainment_startup_logo": {
                 "name": "Infotainment Boot Graphic Logo",
-                "desc": "Mukauta infotainmentin käynnistyksen aloitusnäytön logoa."
+                "desc": "Customizes infotainment startup splash screen logo."
             },
             "vag_ambient_color_cycle": {
-                "name": "Sisätilojen ympäristövalon värispektrin avaus",
-                "desc": "Laajentaa ympäristön valaistuspaletin vaihtoehtoja ajoneuvon asetusvalikossa."
+                "name": "Interior Ambient Light Color Spectrum Unlock",
+                "desc": "Expands ambient lighting palette options in vehicle settings menu."
             },
             "vag_service_interval_custom": {
-                "name": "Mukautetun tarkastuksen ja huoltoetäisyyden kynnys",
-                "desc": "Määrittää mukautetut kilometrit ja päivätavoitteet seuraavaa huoltovaroitusta varten."
+                "name": "Custom Inspection & Service Distance Threshold",
+                "desc": "Configures custom km and day targets for next service warning."
             },
             "vag_door_handle_lights_reverse": {
-                "name": "Ulko-oven kahvan valot PÄÄLLÄ peruutettaessa",
-                "desc": "Sytyttää ovenkahvan LED-lätävalot peruutettaessa näkyvyyden maahan."
+                "name": "Exterior Door Handle Lights ON in Reverse",
+                "desc": "Illuminates door handle LED puddle lights when reversing for ground visibility."
             },
             "bmw_msport_exhaust_burble": {
                 "name": "M-Sport Exhaust Burble & Pop Intensity",
-                "desc": "Säätää ylivuotoäänen aggressiivisuutta Sport-tilassa."
+                "desc": "Adjusts overrun burble sound aggressiveness in Sport mode."
             },
             "bmw_welcome_light_sequence": {
-                "name": "Tervetuloa Light Sequence Animation",
-                "desc": "Mukauta LED-ajovalot ja Angel Eyes -tervehdyssarja."
+                "name": "Welcome Light Sequence Animation",
+                "desc": "Customizes LED headlight and Angel Eyes welcome greeting sequence."
             },
             "bmw_service_history_menu": {
-                "name": "Digital Service History -valikko Ota käyttöön",
-                "desc": "Avaa iDriven digitaalisen huoltokirjavalikon keskusnäytössä."
+                "name": "Digital Service History Menu Enable",
+                "desc": "Unlocks iDrive digital service record book menu on central display."
             },
             "bmw_hud_speed_display": {
                 "name": "Head-Up Display Digital Speedometer Overlay",
-                "desc": "Projisoi reaaliaikaisen digitaalisen nopeuslukeman Head-Up-näyttöön."
+                "desc": "Projects real-time digital speed readout onto Head-Up Display."
             },
             "bmw_cornering_lights_fog": {
-                "name": "Sumuvalon kulmavalot",
-                "desc": "Sytyttää etusumuvalon suuntavilkun tai matalan nopeuden ohjauskulman yhteydessä."
+                "name": "Fog Lamp Cornering Illumination",
+                "desc": "Turns on front fog light on turn signal or low-speed steering angle."
             },
             "bmw_easy_entry_steering": {
-                "name": "Easy Entry automaattisesti sisäänvetyvä ohjauspylväs",
-                "desc": "Nostaa sähköisen ohjauspyörän ylös, kun moottori sammutetaan, mikä helpottaa poistumista."
+                "name": "Easy Entry Auto-Retracting Steering Column",
+                "desc": "Retracts electric steering wheel upward upon engine shutdown for easy exit."
             },
             "bmw_bluetooth_audio_enable": {
                 "name": "Enhanced Bluetooth Audio Streaming Unlock",
-                "desc": "Ottaa käyttöön langattoman A2DP Bluetooth -musiikin suoratoiston iDrivessa HU_ENTRYNAV."
+                "desc": "Enables A2DP Bluetooth wireless music streaming in iDrive HU_ENTRYNAV."
             },
             "bmw_door_handle_lights_reverse": {
-                "name": "Ulko-oven kahvan lätäkkövalot taaksepäin",
-                "desc": "Sytyttää ovenkahvan LEDit, kun peruutusvaihde on kytkettynä."
+                "name": "Exterior Door Handle Puddle Lights in Reverse",
+                "desc": "Illuminates door handle LEDs when reverse gear is engaged."
             },
             "toyota_auto_headlight_threshold": {
-                "name": "Automaattisten ajovalojen ympäristön valotunnistimen herkkyys",
-                "desc": "Säätää hämärän hämärän kynnystä ajovalojen automaattista aktivointia varten."
+                "name": "Auto Headlight Ambient Light Sensor Sensitivity",
+                "desc": "Adjusts twilight dusk threshold for automatic headlight activation."
             },
             "toyota_turn_signal_click_volume": {
-                "name": "Suuntasignaalin äänen napsautuksen kaiuttimen äänenvoimakkuus",
-                "desc": "Konfiguroi suuntavilkkureleen napsautusäänen voimakkuuden."
+                "name": "Turn Signal Audio Clicker Speaker Volume",
+                "desc": "Configures turn signal relay click chime volume."
             },
             "toyota_smart_key_approach_lights": {
-                "name": "Smart Key -läheisyysvalot",
-                "desc": "Sytyttää peilivalot, kun älyavain lähestyy ajoneuvoa."
+                "name": "Smart Key Proximity Welcome Puddle Lights",
+                "desc": "Turns on mirror puddle lights when smart key approaches vehicle."
             },
             "toyota_rear_hatch_behavior": {
-                "name": "Sähkötoimisen takaluukun nostoluukun avaus-/sulkemislogiikka",
-                "desc": "Määrittää kaukosäätimen ja kojelaudan virtaluukun painikkeen painalluksen keston."
+                "name": "Power Tailgate Liftgate Open/Close Operation Logic",
+                "desc": "Configures remote and dashboard power hatch button press duration."
             },
             "toyota_open_windows_smart_key": {
-                "name": "Smart Key -kaukosäätimen ikkunan rullaava pitkä painallus",
-                "desc": "Mahdollistaa kaikkien ikkunoiden avaamisen pitämällä lukituksen avauspainiketta painettuna."
+                "name": "Smart Key Remote Window Roll-Down Long Press",
+                "desc": "Allows opening all windows by holding remote unlock button."
             },
             "toyota_interior_light_dim_timer": {
-                "name": "Ohjaamovalon automaattisen himmennysviive",
-                "desc": "Säätää sisäkupolin valon sammutusajastinta oven sulkemisen jälkeen."
+                "name": "Interior Cabin Light Auto-Dimming Off Delay",
+                "desc": "Adjusts interior dome light shutdown timer after door closure."
             },
             "toyota_panic_alarm_remote": {
-                "name": "Kaukosäätimen avaimenperän paniikkihälytyssireenitoiminto",
-                "desc": "Ottaa käyttöön tai poistaa käytöstä ajoneuvon äänitorven paniikkihälytyksen kauko-avaimen pidolla."
+                "name": "Remote Key Fob Panic Alarm Siren Function",
+                "desc": "Enables or disables vehicle horn panic alarm via remote key hold."
             },
             "toyota_eco_drive_indicator": {
-                "name": "ECO Drive Cluster Zone -merkkivalo",
-                "desc": "Näyttää ympäristöystävällisen kiihdytyspalkin ja merkkivalon klusterissa."
+                "name": "ECO Drive Cluster Zone Indicator Light",
+                "desc": "Shows eco-friendly acceleration bar and indicator light on cluster."
             },
             "hyundai_coming_home_duration": {
-                "name": "Escort-ajovalojen sammutuksen viiveajastin",
-                "desc": "Pitää lähivalot palavana ajoneuvosta poistumisen jälkeen."
+                "name": "Escort Headlight Off Delay Timer",
+                "desc": "Keeps low beam headlights illuminated after vehicle exit."
             },
             "hyundai_drl_menu_toggle": {
-                "name": "Päiväajovalojen valikkohallinta",
-                "desc": "Lisää DRL ON/OFF -asetuksen mittariston käyttäjän valintoihin."
+                "name": "Daytime Running Lights Menu Control",
+                "desc": "Adds DRL ON/OFF setting to instrument cluster user options."
             },
             "hyundai_welcome_sequence": {
-                "name": "Smart Key Proximity Light & Mirror Unfold",
-                "desc": "Avaa sähköpeilit ja sytyttää ovenkahvat lähestyessä."
+                "name": "Smart Key Proximity Welcome Light & Mirror Unfold",
+                "desc": "Unfolds power mirrors and lights up door handles upon approach."
             },
             "hyundai_interior_light_delay": {
-                "name": "Ohjaamon sisätilojen lampun automaattisen katkaisun viive",
-                "desc": "Asettaa ajastimen ennen kuin sisävalot sammuvat automaattisesti akun säästämiseksi."
+                "name": "Cabin Interior Room Lamp Auto-Cut Delay",
+                "desc": "Sets timer before interior lights automatically turn off to save battery."
             },
             "hyundai_heat_pump_efficiency": {
-                "name": "Sähköauton ilmastoinnin lämpöpumpun lämpötehokkuustila",
-                "desc": "Optimoi EV-lämpöpumpun energiankulutuksen kylmällä talvisäällä."
+                "name": "EV Climate Heat Pump Thermal Efficiency Mode",
+                "desc": "Optimizes EV heat pump energy consumption in cold winter weather."
             },
             "tesla_track_mode_params": {
-                "name": "Seurantatilan vakaus- ja vääntömomenttiprofiili",
-                "desc": "Konfiguroi etu-/takamoottorin säätöjännitteen ja vakaustoimenpiteet."
+                "name": "Track Mode Stability & Torque Bias Profile",
+                "desc": "Configures front/rear motor drive bias and stability intervention."
             },
             "tesla_regen_brake_strength": {
-                "name": "Regeneratiivisen jarrutuksen tehoprofiili",
-                "desc": "Säätää kaasupolkimen noston energian talteenoton voimakkuutta."
+                "name": "Regenerative Braking Power Profile",
+                "desc": "Adjusts accelerator pedal lift-off energy recovery intensity."
             },
             "tesla_walkaway_door_lock": {
-                "name": "Kävelevä puhelinavain, automaattinen oven lukko",
-                "desc": "Lukitsee ovet ja vahvistaa torviäänellä, kun puhelimen avain siirtyy pois."
+                "name": "Walk-Away Phone Key Auto Door Lock",
+                "desc": "Locks doors and confirms with horn chirp when phone key moves away."
             },
             "tesla_acceleration_boost_unlock": {
-                "name": "Voimansiirtokiihdytyksen tehostuksen profiili",
-                "desc": "Teroittaa sähkömoottorin invertterin vastetta nopeammille 0-100 km/h-ajoille."
+                "name": "Powertrain Acceleration Boost Drive Profile",
+                "desc": "Sharpens electric motor inverter response for faster 0-100 km/h times."
             },
             "tesla_interior_ambient_color": {
-                "name": "Ohjaamon jalkatilan ympäristövalon värien esiasetus",
-                "desc": "Mukauttaa LED-jalkatilan ympäristövalon RGB-väripaletin."
+                "name": "Cabin Footwell Ambient Lighting Color Preset",
+                "desc": "Customizes LED footwell ambient light RGB color palette."
             },
             "audi_matrix_led_animation": {
-                "name": "Matrix LED -ajovalojen dynaaminen tervetulovalotanssi",
-                "desc": "Toistaa dynaamista valokoreografiaa ajoneuvoa avattaessa."
+                "name": "Matrix LED Headlight Dynamic Welcome Light Dance",
+                "desc": "Plays dynamic light choreography upon vehicle unlocking."
             },
             "audi_mmi_startup_screen": {
-                "name": "MMI-kosketusnäytön käynnistyksen graafinen teema",
-                "desc": "Mukauta MMI-keskinäytön käynnistysanimaatiota."
+                "name": "MMI Touch Screen Boot Graphic Theme",
+                "desc": "Customizes MMI central screen boot animation."
             },
             "audi_drive_select_efficiency": {
-                "name": "Tehokas ajoprofiili Audi Drive Selectissa",
-                "desc": "Ottaa käyttöön polttoainetta säästävän tehokkuustilan Drive Select -asetuksissa."
+                "name": "Efficiency Driving Profile in Audi Drive Select",
+                "desc": "Enables fuel-saving Efficiency mode in Drive Select options."
             },
             "audi_laptimer_boost_display": {
-                "name": "Kierrosajastin ja turbotangon painemittarin päällys",
-                "desc": "Näyttää radan kierrosajastimen ja reaaliaikaisen turbotehostuksen mittarin Virtual Cockpitissa."
+                "name": "Lap Timer & Turbo Bar Pressure Gauge Overlay",
+                "desc": "Displays track lap timer and real-time turbo boost gauge on Virtual Cockpit."
             },
             "audi_needle_sweep_gauge": {
-                "name": "Urheilumittarin neulan lakaisutarkistus",
-                "desc": "Suorittaa täyden kierroslukumittarin ja nopeusmittarin neulalakaisutestin käynnistyksen yhteydessä."
+                "name": "Sport Gauge Needle Sweep Verification",
+                "desc": "Performs full tachometer and speedometer needle sweep test on start."
             },
             "skoda_coming_home_lights": {
-                "name": "Lähdön kotoa / Coming Home Valaistusajastin",
-                "desc": "Konfiguroi ajovalojen valaistuksen ajastimen ajoneuvosta poistumisen jälkeen."
+                "name": "Leaving Home / Coming Home Lighting Timer",
+                "desc": "Configures headlight illumination timer after vehicle exit."
             },
             "skoda_comfort_turn_signal": {
-                "name": "Mukavuusilmaisimen pulssilaskennan säätö",
-                "desc": "Asettaa yhden kosketuksen suuntavilkun vilkkujen määrän 3 ja 5 välähdyksen välille."
+                "name": "Comfort Indicator Pulse Count Adjustment",
+                "desc": "Sets one-touch turn signal blink count between 3 and 5 flashes."
             },
             "cupra_sport_display_menu": {
                 "name": "Cupra Performance Instrument & G-Meter Menu",
-                "desc": "Avaa G-voimamittarin, kW-tehomittarin ja öljyn lämpötilan näytön."
+                "desc": "Unlocks G-force meter, kW power gauge, and oil temp display."
             },
             "cupra_virtual_cockpit_copper": {
                 "name": "Copper Theme Dashboard Accent Graphics",
-                "desc": "Käyttää mittariklusteriin ominaista Cupra-kuparimetallin korostusteemaa."
+                "desc": "Applies signature Cupra copper metallic accent theme to gauge cluster."
             },
             "vag_brake_disc_drying": {
-                "name": "Jarrulevyn pyyhintä/kuivaustoiminto sateessa",
-                "desc": "Käytä ajoittain minimaalista tyynypainetta märällä säällä kuiviin roottoreihin."
+                "name": "Brake Disc Wiping / Drying Function in Rain",
+                "desc": "Periodically applies minimal pad pressure in wet weather to dry rotors."
             },
             "vag_tourist_mode_lights": {
-                "name": "Turistitilan ajovalojen valokuvio",
-                "desc": "Vaihtaa ajovalojen valokuvion LHD:n ja RHD:n välillä ulkomailla ajamista varten."
+                "name": "Tourist Mode Headlight Beam Pattern",
+                "desc": "Switches headlight beam pattern between LHD and RHD for driving abroad."
             },
             "vag_hood_warning_mute": {
-                "name": "Konepellin avoimen soittimen soittoäänen mykistys",
-                "desc": "Vaimentaa instrumentin jatkuvan varoitusäänen, kun konepelti on auki."
+                "name": "Bonnet Open Instrument Chime Mute",
+                "desc": "Suppresses persistent instrument warning chime when hood is unlatched."
             },
             "vag_emergency_brake_hazard": {
-                "name": "Hätäjarrutuksen automaattinen varoitusvilkku",
-                "desc": "Vilkkuu hätävilkut nopeasti kovien ABS-hätäpysäytysten aikana."
+                "name": "Emergency Braking Automatic Hazard Flasher",
+                "desc": "Flashes hazard lights rapidly during hard ABS emergency stops."
             },
             "vag_sunroof_comfort_open": {
-                "name": "Kattoluukun kallistus/avoin Remote Comfort Key Fob Logic",
-                "desc": "Konfiguroi kauko-avaimen pitämisen joko kallistamaan tai täysin auki kattoluukkua."
+                "name": "Sunroof Tilt / Open Remote Comfort Key Fob Logic",
+                "desc": "Configures remote key hold action to either tilt or fully open sunroof."
             },
             "bmw_ecopro_display_variant": {
-                "name": "ECO PRO -mittariston mittariston muotoilu",
-                "desc": "Mukauta sinisen ECO PRO -tehokkuusmittarin graafista teemaa."
+                "name": "ECO PRO Instrument Cluster Gauge Styling",
+                "desc": "Customizes blue ECO PRO efficiency gauge graphic theme."
             },
             "bmw_volume_bar_hud": {
-                "name": "Head-Up-näytön äänenvoimakkuuspalkin peittokuva",
-                "desc": "Näyttää äänenvoimakkuuden muutospalkin suoraan HUD-projektiossa."
+                "name": "Head-Up Display Audio Volume Level Bar Overlay",
+                "desc": "Shows volume change bar directly on HUD projection."
             },
             "bmw_anti_dazzle_mirror": {
-                "name": "Sähkökrominen häikäisyä estävän peilin himmennysherkkyys",
-                "desc": "Säätää automaattisesti taustapeilin himmenemisen valotunnistimen kynnystä."
+                "name": "Electrochromic Anti-Dazzle Mirror Dimming Sensitivity",
+                "desc": "Adjusts automatic rearview mirror dimming photo-sensor threshold."
             },
             "bmw_camera_pdc_warning_mute": {
-                "name": "PDC & Surround View -nopeuden katkaisunopeuden säätö",
-                "desc": "Säätää ajoneuvon nopeuskynnystä, jolla pysäköintikamerat sammuvat."
+                "name": "PDC & Surround View Speed Cut-off Speed Adjustment",
+                "desc": "Adjusts vehicle speed threshold at which parking cameras turn off."
             },
             "toyota_pcs_distance_preset": {
-                "name": "Pre-Collision System -oletushälytysetäisyys",
-                "desc": "Asettaa tutkan alustavan törmäysvaroituksen etäisyysherkkyyden."
+                "name": "Pre-Collision System Default Alert Distance",
+                "desc": "Sets initial radar forward collision warning distance sensitivity."
             },
             "toyota_bsm_timing": {
-                "name": "Kuolleen kulman monitorin varoitusvaroituksen ajoitus",
-                "desc": "Säätää kuolleen kulman sivupeilin varoitusvalon ajoituksen."
+                "name": "Blind Spot Monitor Warning Warning Timing",
+                "desc": "Adjusts blind spot side mirror warning light illumination timing."
             },
             "toyota_ac_noise_reduction": {
-                "name": "Ilmastointikompressoripuhaltimen äänenvaimennustila",
-                "desc": "Rajoittaa ilmastointilaitteen puhaltimen enimmäisnopeutta matkustamon hiljaisuuden vuoksi."
+                "name": "A/C Compressor Blower Noise Reduction Mode",
+                "desc": "Limits maximum air conditioning blower fan speed for cabin quietness."
             },
             "toyota_sflow_control": {
-                "name": "S-Flow Smart Climate yhden hengen tila",
-                "desc": "Ohjaa ilmastoinnin ilmavirran yksinomaan miehitetyille istuimille painotunnistimien perusteella."
+                "name": "S-Flow Smart Climate Single-Occupant Mode",
+                "desc": "Directs A/C airflow exclusively to occupied seats based on weight sensors."
             },
             "toyota_relock_timeout": {
-                "name": "Automaattinen uudelleenlukituksen viiveajastin kauko-avauksen jälkeen",
-                "desc": "Säätää sekunteja ennen ovien automaattista uudelleenlukitsemista, jos mitään ovea ei avata."
+                "name": "Automatic Re-Lock Delay Timer after Remote Unlock",
+                "desc": "Adjusts seconds before doors auto-relock if no door is opened."
             },
             "lexus_mark_levinson_audio_profile": {
-                "name": "Mark Levinson Surround Sound DSP -ääniprofiili",
-                "desc": "Optimoi 3D-tilaakustisen virityksen Mark Levinsonin premium-kaiuttimille."
+                "name": "Mark Levinson Surround Sound DSP Audio Profile",
+                "desc": "Optimizes 3D spatial acoustic tuning for Mark Levinson premium speakers."
             },
             "lexus_ev_mode_beeper_mute": {
-                "name": "Hitaiden nopeuksien jalankulkijoiden sähköauton akustinen äänimerkin mykistys",
-                "desc": "Vaimentaa hitaiden sähköisten toimintojen synteettistä ulkoa."
+                "name": "Low-Speed Pedestrian EV Acoustic Alert Beeper Mute",
+                "desc": "Suppresses low speed electric mode synthetic exterior chime."
             },
             "lexus_easy_access_seat": {
-                "name": "Helppopääsyinen ohjauspyörä ja sähkökäyttöinen istuimen liukupala",
-                "desc": "Liu'uttaa kuljettajan istuimen selkänojan ja kallistaa ohjauspyörää poispäin helpottamaan sisään- ja poistumista."
+                "name": "Easy Access Steering Wheel & Power Seat Slide-Back",
+                "desc": "Slides driver seat back and tilts steering wheel away for easy entry/exit."
             },
             "nissan_epower_regen_mode": {
-                "name": "e-POWER yhden pedaalin regeneratiivinen jarrutustila",
-                "desc": "Asettaa oletusarvoisen e-Pedal regeneratiivisen jarrutuksen hidastustason."
+                "name": "e-POWER One-Pedal Regenerative Braking Mode",
+                "desc": "Sets default e-Pedal regenerative braking deceleration level."
             },
             "nissan_propilot_assist_timing": {
-                "name": "ProPILOT Lane Centering Assist ohjausherkkyys",
-                "desc": "Konfiguroi ProPILOT-ohjauksen terävyyden."
+                "name": "ProPILOT Lane Centering Assist Steering Sensitivity",
+                "desc": "Configures ProPILOT steering intervention sharpness."
             },
             "nissan_intelligent_around_view": {
-                "name": "Näytön automaattinen ponnahdusikkuna alhaisella nopeudella",
-                "desc": "Laukaisee 360 asteen kameranäytön, kun etupysäköintitunnistimet havaitsevat esteitä."
+                "name": "Around View Monitor Auto-Pop-Up at Low Speed",
+                "desc": "Triggers 360-degree camera display when front parking sensors detect obstacles."
             },
             "mazda_g_vectoring_display": {
                 "name": "G-Vectoring Control Plus Dynamic Visualizer",
-                "desc": "Näyttää reaaliaikaisen GVC+ kaarrevääntömomentin vektorikaavion kojetaulussa."
+                "desc": "Displays real-time GVC+ cornering torque vectoring graph on instrument panel."
             },
             "mazda_ieloop_capacitor_monitor": {
-                "name": "i-ELOOP jarruenergian talteenottokondensaattorimittari",
-                "desc": "Näyttää sähkökondensaattorin lataus- ja purkaustilan keskinäytöllä."
+                "name": "i-ELOOP Brake Energy Recovery Capacitor Meter",
+                "desc": "Shows electric capacitor charge & discharge status on central screen."
             },
             "mazda_smart_city_brake_sens": {
-                "name": "Smart City Brake Support -herkkyys",
-                "desc": "Asettaa hitaan automaattisen hätäjarrutusanturin alueen."
+                "name": "Smart City Brake Support Sensitivity",
+                "desc": "Sets low-speed automatic emergency braking sensor range."
             },
             "subaru_eyesight_distance_preset": {
-                "name": "EyeSight Adaptive Cruise Control -oletusetäisyys",
-                "desc": "Konfiguroi stereokameran oletusristeilyväliprofiilin käynnistyksen yhteydessä."
+                "name": "EyeSight Adaptive Cruise Control Default Distance",
+                "desc": "Configures stereo camera default cruise gap profile on startup."
             },
             "subaru_xmode_auto_engage": {
-                "name": "X-tilan off-road-pitoautomatiikkakynnys",
-                "desc": "Asettaa pyörän luistokynnyksen automaattista kaksitoimista X-Mode-aktivointia varten."
+                "name": "X-Mode Off-Road Traction Auto-Engage Threshold",
+                "desc": "Sets wheel slip threshold for automatic dual-function X-Mode activation."
             },
             "subaru_steering_responsive_headlights": {
-                "name": "Ohjaukseen reagoivat ajovalot kytkin",
-                "desc": "Ottaa käyttöön tai poistaa käytöstä suunnatun mukautuvan ajovalojen kääntymisen."
+                "name": "Steering Responsive Headlights Toggle",
+                "desc": "Enables or disables directional adaptive headlight swivel."
             },
             "genesis_sport_plus_mode": {
-                "name": "Sport+ voimansiirto ja elektroninen jousitustila",
-                "desc": "Avaa telasuuntaisen ESC OFF -toiminnon ja jäykistetyn vaimenninkartoituksen."
+                "name": "Sport+ Powertrain & Electronic Suspension Mode",
+                "desc": "Unlocks track-oriented ESC OFF and stiffened damper mapping."
             },
             "genesis_ambient_active_light": {
-                "name": "Active Ambient Lighting -ajotilan synkronointi",
-                "desc": "Muuttaa sisätilojen valaistuksen väriä dynaamisesti ajotilan mukaan."
+                "name": "Active Ambient Lighting Drive Mode Sync",
+                "desc": "Changes interior ambient lighting color dynamically based on drive mode."
             },
             "volvo_city_safety_warning": {
-                "name": "City Safetyn autonomisen hätävaroituksen herkkyys",
-                "desc": "Konfiguroi tutkan ja lidarin törmäysvaroitusten ajoituksen."
+                "name": "City Safety Autonomous Emergency Warning Sensitivity",
+                "desc": "Configures radar and lidar collision warning alert timing."
             },
             "chery_ar_navigation_hud": {
-                "name": "AR Navigation Projection Overlay HUD:ssa",
-                "desc": "Projisoi 3D-lisätyn todellisuuden navigointinuolet tuulilasiin."
+                "name": "AR Navigation Projection Overlay on HUD",
+                "desc": "Projects 3D augmented reality navigation arrows onto windshield."
             },
             "jlr_terrain_response_preset": {
-                "name": "Maaston vasteen automaattinen off-road-tilan esiasetus",
-                "desc": "Muistaa viimeisen Terrain Response -pintaprofiilin."
+                "name": "Terrain Response Auto Off-Road Mode Preset",
+                "desc": "Remembers last Terrain Response surface profile."
             },
             "jlr_adaptive_dynamics_firm": {
                 "name": "Adaptive Dynamics Damper Firmness Profile",
-                "desc": "Asettaa oletusarvoisen elektronisen iskunvaimentimen vaimennusjäykkyyden."
+                "desc": "Sets default electronic shock absorber damping stiffness."
             },
             "jlr_wading_sensor_alert": {
                 "name": "Wade Sensing Depth Warning Chime Threshold",
-                "desc": "Konfiguroi ultraääniveden syvyyden varoitusäänen herkkyyden."
+                "desc": "Configures ultrasonic water depth warning chime sensitivity."
             },
             "alfa_dna_dynamic_memory": {
-                "name": "Alfa DNA Selector Dynaamisen tilan käynnistysmuisti",
-                "desc": "Säilyttää dynaamisen tilan kaasuvasteen uudelleenkäynnistyksen jälkeen."
+                "name": "Alfa DNA Selector Dynamic Mode Startup Memory",
+                "desc": "Retains Dynamic mode throttle response after restart."
             },
             "alfa_q4_torque_split": {
-                "name": "Q4 neliveto reaaliaikainen vääntömomentin jakokaavio",
-                "desc": "Näyttää AWD:n etu/taka tehonjaon prosenttiosuuden instrumentin näytössä."
+                "name": "Q4 All-Wheel Drive Real-Time Torque Split Graph",
+                "desc": "Shows AWD front/rear power split percentage on instrument display."
             },
             "li_auto_range_extender_mode": {
-                "name": "REV-generaattorin akun latauksen säilyvyystaso",
-                "desc": "Säätää polttomoottorin generaattorin käynnistyskynnystä."
+                "name": "REV Generator Battery Charge Retention Level",
+                "desc": "Adjusts internal combustion engine generator start threshold."
             },
             "li_auto_cinema_seat_position": {
-                "name": "Teatteri/elokuvatila Ergonominen istuimen asento",
-                "desc": "Kallistaa takaistuimet ja avaa jalkatuet, kun elokuvatila on aktiivinen."
+                "name": "Theater / Cinema Mode Ergonomic Seat Position",
+                "desc": "Reclines rear seats and unfolds leg rests when cinema mode is active."
             },
             "zeekr_drift_mode_torque": {
                 "name": "Dual Motor Performance Drift Mode Rear Bias",
-                "desc": "Lähettää 100 % vääntömomentin takasähkömoottoriin hallittua ajamista varten."
+                "desc": "Sends 100% torque to rear electric motor for controlled drifting."
             },
             "zeekr_ambient_beat_sync": {
                 "name": "Ambient Lighting Music Rhythm Beat Sync",
-                "desc": "Pulsoi ohjaamon sisävalaistus synkronoituna soitetun musiikin kanssa."
+                "desc": "Pulsates interior cabin lighting in sync with played music beats."
             },
             "tata_drive_mode_voice": {
-                "name": "Ajotilan kytkimen ääniilmoitus",
-                "desc": "Ottaa käyttöön äänivahvistuksen ajotilaa vaihdettaessa."
+                "name": "Drive Mode Switch Voice Announcement",
+                "desc": "Enables audio voice confirmation when switching drive modes."
             },
             "mahindra_zip_zap_zoom_custom": {
-                "name": "Zip/Zap/Zoom voimansiirron kaasun vasteprofiili",
-                "desc": "Mukauta kiihtyvyyskäyrää Zip-, Zap- ja Zoom-ajotiloihin."
+                "name": "Zip/Zap/Zoom Powertrain Throttle Response Profile",
+                "desc": "Customizes acceleration curve for Zip, Zap, and Zoom driving modes."
             },
             "fun_cyberpunk_cluster_theme": {
-                "name": "Cyberpunk 2077 Neon Graphic Cockpit -teema",
-                "desc": "Käytä futuristista neon syaania ja ruskeaa digitaalista kojelaudan mittaristoa."
+                "name": "Cyberpunk 2077 Neon Graphic Cockpit Theme",
+                "desc": "Applies futuristic neon cyan & amber digital dashboard gauge styling."
             },
             "fun_exhaust_flame_sound_effect": {
-                "name": "Stereojärjestelmä Pop & Bang Exhaust Sound FX",
-                "desc": "Toistaa realistisia V8 pakokaasun pop & bang -äänitehosteita ohjaamon kaiuttimista."
+                "name": "Stereo System Pop & Bang Exhaust Sound FX",
+                "desc": "Plays realistic V8 exhaust pop & bang audio effects through cabin speakers."
             },
             "fun_matrix_light_show_welcome": {
-                "name": "Custom Headlight Matrix LED Dance Tervetuloa",
-                "desc": "Toistaa rytmistä Light Show -koreografiaa ajovalojen ja merkkivalojen avulla."
+                "name": "Custom Headlight Matrix LED Dance Welcome",
+                "desc": "Plays rhythmic Light Show choreography using headlights & indicators."
             },
             "fun_stealth_fighter_display": {
-                "name": "Stealth Fighter Night Driving -minimalistinen klusteritila",
-                "desc": "Sammuttaa kaikki valot, paitsi nopeusmittarin pimeässä yöajossa."
+                "name": "Stealth Fighter Night Driving Minimalist Cluster Mode",
+                "desc": "Turns off all cluster lights except speedometer for pitch-black night driving."
             },
             "vag_lap_timer_oil_temp": {
                 "name": "Lap Timer & Oil Temperature in Gauge Cluster",
@@ -2783,147 +2794,147 @@
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
-        "codeBtn": "KOODI",
-        "removeBtn": "POISTA",
-        "unsupportedTitle": "Ajoneuvoa ei tueta",
-        "unsupportedMsg": "Autosi ECU-laitteisto- tai ohjelmistoversio ei tue tätä ominaisuutta.",
-        "selectBrand": "Valitse ajoneuvon merkki",
-        "selectCategory": "Valitse Luokka",
-        "selectMakeTitle": "VALITSE AJONEUVOMERKKI",
-        "selectCategoryTitle": "VALITSE OMINAISUUDET",
-        "brandAll": "KAIKKI TEKEE",
-        "categoryAll": "KAIKKI KATEGORIAT",
-        "lighting": "VALOTUS",
-        "soundAlerts": "ÄÄNIVAROITUKSET",
-        "displayInstrument": "NÄYTTÖ / RYPPI",
-        "drivingComfort": "AJOMUKAVUUS",
-        "securitySafety": "TURVALLISUUS",
-        "restoreBtn": "PALAUTTA TEHDASTILA",
-        "searchPlaceholder": "Hakuominaisuus, DID tai kohde-ECU...",
-        "restoreSuccessTitle": "Tehdastila palautettu",
-        "restoreSuccessMsg": "Valittu ominaisuus on palautettu alkuperäiseen DID-tilaan.",
-        "cloneLockedBanner": "Kloonisovitin havaittu – koodaus lukittu",
-        "cloneAlertTitle": "Klooni OBD2-sovitin havaittu",
-        "cloneAlertMsg": "Kytketty OBD2-sovittimesi merkittiin väärennetyksi kloonisovittimeksi, jolta puuttui ECU-kirjoituksen edellyttämä tiukka ajoitustarkkuus. Voit selata ja etsiä kaikkia ominaisuuksia, mutta koodauksen kirjoitustoiminnot on lukittu ajoneuvosi suojaamiseksi. Liitä aito ELM327 v2.1+ tai vLinker-sovitin kirjoittamista varten.",
-        "riskLow": "ALHAINEN RISKI",
-        "riskMedium": "KESKIPÄINEN RISKI",
-        "riskHigh": "KORKEA RISKI",
-        "sfdProtected": "SFD suojattu ECU",
-        "legalDisclaimerUsLights": "Huomautus: USA:n jatkuvat pysäköintivalot eivät välttämättä ole laillisia joillakin Euroopan lainkäyttöalueilla.",
-        "legalDisclaimerVim": "Huomautus: Videon toisto ajon aikana on tarkoitettu vain matkustajien käyttöön.",
-        "layoutChart": "GRAFİK",
-        "headerCategory": "Piilotetut ominaisuudet ja koodaus",
-        "vehicleMatched": "{{make}} — YHDISTETTY",
-        "demoModeVehicle": "DEMOTILA: {{make}}",
-        "waitingVehicle": "ODOTETAAN YHDISTETTYÄ AONEVOA",
-        "activeFeaturesCount": "{{count}} ajoneuvokohtaista OEM-ominaisuutta aktiivisena",
-        "demoFeaturesCount": "{{count}} demo-ominaisuutta lueteltu",
-        "connectForFeaturesNote": "Yhdistä OBD2-laitteeseen luetteloidaksesi ominaisuudet",
-        "codingFailed": "Koodaus epäonnistui.",
-        "engineRunningMsg": "ECU-koodaus edellyttää, että sytytysvirta on ON-tilassa moottorin ollessa sammutettuna, jotta vältetään laturin jännitepiikit.",
-        "engineRunningTitle": "Moottori käynnissä",
-        "lowVoltageMsg": "Akun jännite on alle turvallisen kynnyksen ECU:n kirjoitustoiminnoille. Lataa akku ennen kuin jatkat.",
-        "lowVoltageTitle": "Alhaisen akun jännitteen varoitus",
-        "motionAlertMsg": "ECU-kirjoitustoiminnot estetään ajoneuvon liikkuessa. Pysäköi turvallisesti ennen koodaamista.",
-        "motionAlertTitle": "Ajoneuvo liikkeessä",
-        "noMatchingFeatures": "Valituille suodattimille ei löytynyt vastaavia ominaisuuksia.",
-        "unsafeModuleMsg": "ECU-kirjoitustoiminnot ABS/ESP- ja Airbag/SRS-moduuleille on 100 % lujasti estetty kriittisten ajoneuvojen turvajärjestelmien suojaamiseksi.",
-        "unsafeModuleTitle": "Suojattu turvamoduuli",
-        "catMotorcycle": "MOOTTORIPYÖRÄ ECU",
-        "catRetrofit": "RETROFIT & LAITTEISTOT",
-        "catEv": "EV & AKKU",
-        "catAdas": "ADAS-KALIBROINTI",
-        "catEasterEgg": "PÄÄSÄISMUNAT",
-        "catService": "HUOLTO & HUOLTO",
-        "catPerformance": "SUORITUSKYKY",
-        "segmentAll": "KAIKKI TEKEE",
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version.",
+        "selectBrand": "Select Vehicle Brand",
+        "selectCategory": "Select Category",
+        "selectMakeTitle": "SELECT VEHICLE BRAND",
+        "selectCategoryTitle": "SELECT FEATURE CATEGORY",
+        "brandAll": "ALL MAKES",
+        "categoryAll": "ALL CATEGORIES",
+        "lighting": "LIGHTING",
+        "soundAlerts": "SOUND ALERTS",
+        "displayInstrument": "DISPLAY / CLUSTER",
+        "drivingComfort": "DRIVING COMFORT",
+        "securitySafety": "SECURITY & SAFETY",
+        "restoreBtn": "RESTORE FACTORY STATE",
+        "searchPlaceholder": "Search feature, DID, or target ECU...",
+        "restoreSuccessTitle": "Factory State Restored",
+        "restoreSuccessMsg": "Selected feature has been reverted back to original DID state.",
+        "cloneLockedBanner": "Clone Adapter Detected — Coding Locked",
+        "cloneAlertTitle": "Clone OBD2 Adapter Detected",
+        "cloneAlertMsg": "Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing. You can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.",
+        "riskLow": "LOW RISK",
+        "riskMedium": "MEDIUM RISK",
+        "riskHigh": "HIGH RISK",
+        "sfdProtected": "SFD Protected ECU",
+        "legalDisclaimerUsLights": "Note: Continuous US parking lights may not be street legal in some European jurisdictions.",
+        "legalDisclaimerVim": "Note: Video playback while driving is intended for passenger use only.",
+        "layoutChart": "CHART",
+        "headerCategory": "Hidden Features & Coding",
+        "vehicleMatched": "{{make}} — MATCHED",
+        "demoModeVehicle": "DEMO MODE: {{make}}",
+        "waitingVehicle": "WAITING FOR CONNECTED VEHICLE",
+        "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
+        "demoFeaturesCount": "{{count}} demo features listed",
+        "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
+        "engineRunningTitle": "Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "Protected Safety Module",
+        "catMotorcycle": "MOTORCYCLE ECU",
+        "catRetrofit": "RETROFIT & HARDWARE",
+        "catEv": "EV & BATTERY",
+        "catAdas": "ADAS CALIBRATION",
+        "catEasterEgg": "EASTER EGGS",
+        "catService": "SERVICE & MAINTENANCE",
+        "catPerformance": "PERFORMANCE",
+        "segmentAll": "ALL MAKES",
         "segmentEuroPremium": "European Premium",
-        "segmentEuroVolume": "Euroopan volyymi",
-        "segmentAsian": "Aasialainen",
-        "segmentAmerican": "amerikkalainen",
-        "segmentChineseEv": "Kiinalainen sähköauto",
-        "segmentMotorcycle": "Moottoripyörä",
-        "detailTitle": "Ominaisuuden tiedot ja yhden napsautuksen koodaus",
-        "prePostValues": "Pre / Post hyötykuorman esikatselu",
-        "selectOption": "Valitse koodausvaihtoehto:",
-        "oneClickActivate": "AKTIVOI YHDELLÄ NAPSAUKSELLA",
-        "expertModeTitle": "Asiantuntijatila",
-        "allMakes": "KAIKKI TEKEE",
-        "techEcuSpecs": "TEKNISET ECU:N TEKNISET TIEDOT & HYÖDYKUORMAN ESIKATSAUS",
-        "targetEcuHeaderLabel": "Kohde-ECU:n otsikko:",
-        "udsDidLabel": "UDS-datatunniste:",
-        "bitPositionLabel": "Bitin sijainti:",
-        "targetPayloadLabel": "Kohde-UDS-hyötykuorma:",
-        "byteBitValue": "Tavu {{byte}}, bitti {{bit}}",
-        "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
-        "restoreFactoryBtn": "PALAUTTA TEHDASASETUKSET",
-        "restoreFactoryTitle": "PALAUTTA TEHDASASETUKSET",
-        "enterDidFirst": "Syötä DID Hex-koodi palauttaaksesi.",
-        "restoreConfirmMsg": "Palautetaanko DID 0x{{didHex}} alkuperäiseen tehdastilaan?",
-        "restoreAction": "PALAUTTA TEHDAS",
+        "segmentEuroVolume": "European Volume",
+        "segmentAsian": "Asian",
+        "segmentAmerican": "American",
+        "segmentChineseEv": "Chinese EV",
+        "segmentMotorcycle": "Motorcycle",
+        "detailTitle": "Feature Details & One-Click Coding",
+        "prePostValues": "Pre / Post Payload Preview",
+        "selectOption": "Select Coding Option:",
+        "oneClickActivate": "ONE-CLICK ACTIVATE",
+        "expertModeTitle": "Expert Mode",
+        "allMakes": "ALL MAKES",
+        "techEcuSpecs": "TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW",
+        "targetEcuHeaderLabel": "Target ECU Header:",
+        "udsDidLabel": "UDS Data Identifier:",
+        "bitPositionLabel": "Bit Position:",
+        "targetPayloadLabel": "Target UDS Payload:",
+        "byteBitValue": "Byte {{byte}}, Bit {{bit}}",
+        "expertSafetyNote": "For advanced users only. In case of incorrect coding, use 'Restore Factory Settings' below to revert to original state.",
+        "restoreFactoryBtn": "RESTORE FACTORY SETTINGS",
+        "restoreFactoryTitle": "RESTORE FACTORY SETTINGS",
+        "enterDidFirst": "Please enter the DID Hex code to restore.",
+        "restoreConfirmMsg": "Revert to original factory state for DID 0x{{didHex}}?",
+        "restoreAction": "RESTORE FACTORY",
         "expertDidPlaceholder": "DID Hex",
-        "expertValPlaceholder": "Arvo Hex",
-        "writeRawPayload": "KIRJOITA RAW UDS HYVÄKSY",
-        "enterValidHex": "Anna kelvolliset DID- ja Value Hex-merkkijonot.",
+        "expertValPlaceholder": "Value Hex",
+        "writeRawPayload": "WRITE RAW UDS PAYLOAD",
+        "enterValidHex": "Please enter valid DID and Value Hex strings.",
         "options": {
             "speed85": "85 km/h",
             "speed90": "90 km/h",
             "speed100": "100 km/h",
             "speed110": "110 km/h",
-            "idleOff": "Devre Dışı",
+            "idleOff": "Disabled",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
             "pto900": "900 RPM",
             "pto1100": "1100 RPM",
             "pto1300": "1300 RPM",
-            "retarderLow": "Düşük",
+            "retarderLow": "Low",
             "retarderMed": "Orta",
-            "retarderHigh": "Yüksek",
-            "levelNormal": "Normal Sürüş Seviyesi",
-            "levelRamp1": "Yükleme Rampası Seviyesi 1",
-            "levelRamp2": "Yükleme Rampası Seviyesi 2",
-            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "retarderHigh": "High",
+            "levelNormal": "Normal Driving Level",
+            "levelRamp1": "Loading Ramp Level 1",
+            "levelRamp2": "Loading Ramp Level 2",
+            "regenStart": "Start Static Regeneration",
             "regenStatus": "Kurum Durumunu Sorgula",
             "alarmFull": "Tam Ses",
-            "alarmNight": "Kısık Ses",
+            "alarmNight": "Low Volume",
             "hyst3": "+/- 3 km/h",
             "hyst5": "+/- 5 km/h",
             "hyst10": "+/- 10 km/h",
-            "drl25": "%25 Kısık",
+            "drl25": "25% Dimmed",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
-            "drl100": "%100 Tam Güç",
+            "drl100": "100% Full Power",
             "xdsStandard": "Standart",
-            "xdsStrong": "Güçlü",
-            "blink1": "1 Flaş",
-            "blink3": "3 Flaş",
-            "blink4": "4 Flaş",
-            "blink5": "5 Flaş",
+            "xdsStrong": "Strong",
+            "blink1": "1 Flash",
+            "blink3": "3 Flashes",
+            "blink4": "4 Flashes",
+            "blink5": "5 Flashes",
             "chimeBmw": "BMW Standart",
-            "chimeMini": "MINI Tarzı",
-            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeMini": "MINI Style",
+            "chimeRolls": "Rolls-Royce Luxury",
             "chimeBmwi": "BMW i Elektrik",
             "logoStandard": "Standart",
             "logoMPerf": "M Performance",
             "logoAlpina": "Alpina Mavi"
         },
-        "catSoundAlerts": "Ses & Uyarılar",
-        "catDisplayInstrument": "Gösterge Paneli",
-        "catDrivingComfort": "Sürüş Konforu",
-        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catSoundAlerts": "Sound & Alerts",
+        "catDisplayInstrument": "Instrument Cluster",
+        "catDrivingComfort": "Driving Comfort",
+        "catSecuritySafety": "Security & Safety",
         "catMotorcycleEcu": "Motosiklet ECU",
-        "freeTrialAvailableBadge": "1 ILMAINEN KREDITTI",
-        "freeTrialUsedBadge": "AVATTU",
-        "proRequiredBadge": "PRO VAADITAAN",
-        "freeTrialExhaustedTitle": "Ilmainen kokeilukrediitti käytetty",
-        "freeTrialExhaustedMsg": "Olet käyttänyt 1 ilmaisen toiminnon aktivointikrediittisi. Päivitä PRO-versioon saadaksesi rajattoman aktivoinnin, asiantuntijakoodauksen ja huoltonollaukset!",
-        "freeTrialSuccessTitle": "Onnittelut! Toiminto aktivoitu",
-        "freeTrialSuccessMsg": "Tämä toiminto koodattiin ajoneuvoosi ilmaisen kokeilukrediittisi avulla! Päivitä PRO-versioon milloin tahansa avataksesi kaikki muut toiminnot.",
-        "upgradeToPro": "PÄIVITÄ PRO-VERSIOON",
-        "toastActivated": "Aktivoitu",
-        "toastDeactivated": "Poistettu käytöstä",
-        "optionsBadge": "{{count}} VAIHTOEHTOA"
+        "freeTrialAvailableBadge": "1 FREE CREDIT",
+        "freeTrialUsedBadge": "UNLOCKED",
+        "proRequiredBadge": "PRO REQUIRED",
+        "freeTrialExhaustedTitle": "Free Trial Credit Used",
+        "freeTrialExhaustedMsg": "You have used your 1 free feature activation credit. Upgrade to PRO for unlimited feature unlocking, expert coding, and full service resets!",
+        "freeTrialSuccessTitle": "Congratulations! Feature Activated",
+        "freeTrialSuccessMsg": "This feature was successfully coded to your vehicle using your 1 free trial credit! Upgrade to PRO anytime to unlock all other features with no limits.",
+        "upgradeToPro": "UPGRADE TO PRO",
+        "toastActivated": "Activated",
+        "toastDeactivated": "Deactivated",
+        "optionsBadge": "{{count}} OPTIONS"
     },
     "ignition": {
         "title": "Sytytystilan varoitus",
@@ -2937,27 +2948,27 @@
         "batteryVoltage": "Akun jännite:"
     },
     "hpGauge": {
-        "title": "ELÄMÄTEHO JA VÄÄNTÖMOMENTTI",
-        "subtitle": "Reaaliaikainen hevosvoima ja vääntömomentti",
-        "horsepower": "HEVOSVOIMA",
-        "torque": "MOOTTORIN VÄÄNTÖ",
-        "peakHp": "HUIPPU HP",
-        "peakTorque": "HUIPPUVÄÄNTÖ",
-        "efficiency": "TEHOKKUUS",
-        "methodMaf": "Hava Akış Tabanlı",
-        "methodTorque": "Canlı Tork Tabanlı",
-        "methodLoad": "Motor Yükü Tabanlı",
-        "configWeight": "Ajoneuvon paino:",
-        "configDisplacement": "Moottorin iskutilavuus:",
-        "calcMethod": "LASKENTAMENETELMÄ",
-        "methodDiesel": "Dizel Tork & Yakıt Akışı"
+        "title": "LIVE POWER & TORQUE GAUGE",
+        "subtitle": "Real-Time Horsepower & Torque",
+        "horsepower": "HORSEPOWER",
+        "torque": "ENGINE TORQUE",
+        "peakHp": "PEAK HP",
+        "peakTorque": "PEAK TORQUE",
+        "efficiency": "EFFICIENCY",
+        "methodMaf": "Mass Airflow Based",
+        "methodTorque": "Live Torque Based",
+        "methodLoad": "Engine Load Based",
+        "configWeight": "Vehicle Weight:",
+        "configDisplacement": "Engine Displacement:",
+        "calcMethod": "CALCULATION METHOD",
+        "methodDiesel": "Diesel Torque & Fuel Flow"
     },
     "fuelTrim": {
-        "title": "POLTTOAINEEN SISÄLTÖ & ILMA-POLTTOAINSEOSANALYYSI",
+        "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
         "subtitle": "STFT & LTFT Diagnostics",
         "stft": "STFT",
         "ltft": "LTFT",
-        "totalTrim": "POLTTOAINEEN VÄLITYS YHTEENSÄ",
+        "totalTrim": "TOTAL FUEL TRIM",
         "afrRatio": "AIR-FUEL RATIO",
         "lambda": "LAMBDA",
         "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
@@ -2966,37 +2977,37 @@
         "stateMildRich": "MILD RICH MIXTURE",
         "stateCriticalRich": "CRITICAL RICH MIXTURE",
         "guideTitle": "LEAN vs RICH MIXTURE GUIDE",
-        "guideDesc": "Rikas seos osoittaa ylimääräistä polttoainetta polttokammiossa, kun taas laiha seos osoittaa ylimääräistä ilmaa.",
-        "causesTitle": "Mahdolliset syyt:",
-        "actionTitle": "Suositeltu toimenpide:",
+        "guideDesc": "Rich mixture indicates excess fuel in combustion chamber, while Lean mixture indicates excess air.",
+        "causesTitle": "Potential Causes:",
+        "actionTitle": "Recommended Action:",
         "causeNormal": "System operates within ideal range. No faults.",
-        "actionNormal": "Jatka rutiinihuoltoa.",
-        "causeVacuumLeak": "Imuvuodot, repeytyneet letkut tai imusarjan tiiviste",
-        "causeDirtyMaf": "Likainen tai viallinen MAF -anturi",
-        "causeLowFuelPressure": "Alhainen polttoainepumpun paine tai tukkeutunut polttoainesuodatin",
-        "causeCloggedInjectors": "Tukkeutuneet tai likaiset polttoainesuuttimet",
-        "actionCriticalLean": "Suorita savutesti imuvuotojen varalta ja puhdista MAF-anturi.",
-        "causeMinorVacuumLeak": "Pieni ilmavuoto tai vanhentunut O2-anturi",
-        "actionMildLean": "Tarkista jännitteelliset O2-anturin tiedot ja imuletkut.",
-        "causeLeakingInjector": "Vuotava/jumittunut polttoainesuutin",
-        "causeStuckEvapPurgeVal": "Jumissa auki EVAP-säiliön tyhjennysventtiili",
-        "causeDirtyAirFilter": "Erittäin likainen ilmansuodatin",
-        "causeHighFuelPressure": "Korkea polttoaineen kiskon paine",
-        "actionCriticalRich": "Tarkasta EVAP-tyhjennysventtiili ja suuttimen paluuvuoto.",
-        "causeRestrictedAirIntake": "Ilmanottokanavan tukos",
-        "actionMildRich": "Tarkista tai vaihda moottorin ilmansuodatin.",
-        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
-        "railPressure": "Rail Basıncı",
-        "fuelRate": "Yakıt Debisi",
-        "widebandSensor": "Geniş Bant Lambda Sensörü",
-        "commonRailStatus": "Common Rail Püskürtme",
-        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
-        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel",
-        "modeGasoline": "Benzinli",
-        "leanNormal": "Fakir Karışım",
-        "railStable": "Basınç Kararlı"
+        "actionNormal": "Continue routine maintenance.",
+        "causeVacuumLeak": "Vacuum leaks, torn hoses, or intake manifold gasket",
+        "causeDirtyMaf": "Dirty or faulty MAF sensor",
+        "causeLowFuelPressure": "Low fuel pump pressure or clogged fuel filter",
+        "causeCloggedInjectors": "Clogged or dirty fuel injectors",
+        "actionCriticalLean": "Perform smoke test for intake leaks and clean MAF sensor.",
+        "causeMinorVacuumLeak": "Minor air leak or aging O2 sensor",
+        "actionMildLean": "Check live O2 sensor data and intake hoses.",
+        "causeLeakingInjector": "Leaking/stuck-open fuel injector",
+        "causeStuckEvapPurgeVal": "Stuck-open EVAP canister purge valve",
+        "causeDirtyAirFilter": "Severely dirty air filter",
+        "causeHighFuelPressure": "High fuel rail pressure",
+        "actionCriticalRich": "Inspect EVAP purge valve and injector return leak-off.",
+        "causeRestrictedAirIntake": "Air intake duct obstruction",
+        "actionMildRich": "Check or replace engine air filter.",
+        "dieselCombustionNormal": "Diesel Injection & Combustion Health Normal",
+        "railPressure": "Rail Pressure",
+        "fuelRate": "Fuel Flow Rate",
+        "widebandSensor": "Wideband Lambda Sensor",
+        "commonRailStatus": "Common Rail Injection",
+        "dieselGuideTitle": "Diesel Combustion & Mixture Guide",
+        "dieselGuideDesc": "Diesel engines operate lean with excess air. Common Rail pressure and Lambda sensor regulate injection balance in real time.",
+        "dieselActionNormal": "System operates within ideal parameters. Continue regular fuel filter maintenance.",
+        "modeDiesel": "Diesel",
+        "modeGasoline": "Gasoline",
+        "leanNormal": "Lean Mixture Normal",
+        "railStable": "Pressure Stable"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER MONITOR",
@@ -3041,42 +3052,42 @@
         "readyTitle": "ECU-diagnostiikka valmis"
     },
     "dct": {
-        "title": "DCT-KAKSOISKYTKIMEN SOVUTUS",
-        "subtitle": "DSG / Powershift / EDC kaksoiskytkin perusasetukset",
-        "warningTitle": "DCT-SOVUTUKSEN TURVALLISUUSVAATIMUKSET",
-        "warningDesc": "Varmista, että kaikki fyysiset edellytykset täyttyvät ennen mukautuksen aloittamista:",
-        "checkGearPark": "Kytke P-asento ja vedä seisontajarru päälle",
-        "checkFootBrake": "Jalkajarru painettuna tiukasti",
-        "checkHandBrake": "Käsijarru kytkettynä",
-        "checkOilTemp": "Vaihteistoöljyn lämpötilan on oltava 30°C - 90°C",
-        "startAdaptation": "ALOITA MUKAUTUMINEN",
-        "inProgress": "Vaihteiston perusasetusten suorittaminen... ÄLÄ vapauta jalkajarrua!",
-        "success": "DCT-vaihteiston nollaus ja kytkimen uudelleenopetus suoritettu onnistuneesti!",
-        "step1": "1/3: Suoritetaan hydraulipaineen kalibrointi...",
-        "step2": "2/3: Suoritetaan kytkimen 1 perusasetukset...",
-        "step3": "3/3: Suoritetaan kytkimen 2 vaihteistohaarukan sovitus...",
-        "ensurePreconditions": "Täytä kaikki turvallisuusehdot ennen kuin aloitat.",
-        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
-        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
-        "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites Sensörü",
-        "reverseSwitch": "Geri Vites Müşürü",
-        "pressed": "BASILI",
-        "released": "SERBEST",
-        "neutral": "BOŞTA",
-        "inGear": "VİTESTE",
-        "active": "AKTİF",
-        "passive": "PASİF",
-        "startManualTest": "Sensör Testini Başlat",
-        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
-        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
-        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
-        "manualStep2": "Boş Vites Sensör Doğrulaması...",
-        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
-        "modeAuto": "Otomatik / DCT Uyarlama",
-        "modeManual": "Manuel Şanzıman Testi",
+        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
+        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
+        "checkGearPark": "Gear selector in 'P'",
+        "checkFootBrake": "Foot brake depressed firmly",
+        "checkHandBrake": "Handbrake engaged",
+        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "startAdaptation": "START ADAPTATION",
+        "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting.",
+        "manualTitle": "MANUAL TRANSMISSION SENSOR CHECK",
+        "manualDesc": "This vehicle has a manual transmission. Automatic TCU adaptation is not required. You can monitor the real-time status of clutch and neutral sensors below.",
+        "clutchSwitch": "Clutch Pedal Switch",
+        "neutralSwitch": "Neutral Gear Sensor",
+        "reverseSwitch": "Reverse Gear Switch",
+        "pressed": "DEPRESSED",
+        "released": "RELEASED",
+        "neutral": "NEUTRAL",
+        "inGear": "IN GEAR",
+        "active": "ACTIVE",
+        "passive": "INACTIVE",
+        "startManualTest": "Start Sensor Test",
+        "manualTestSuccess": "Manual transmission clutch and gear sensor checks completed successfully.",
+        "ensureManualPreconditions": "Please verify clutch and neutral gear positions.",
+        "manualStep1": "Testing Clutch Switch Signal...",
+        "manualStep2": "Verifying Neutral Sensor...",
+        "manualStep3": "Sensor Calibration Completed.",
+        "modeAuto": "Automatic / DCT Adaptation",
+        "modeManual": "Manual Transmission Test",
         "park": "P",
-        "engaged": "ÇEKİLİ"
+        "engaged": "ENGAGED"
     },
     "safeExit": {
         "btn": "TURVALLINEN IRTI JA SOVITIN NOLLAUS",
@@ -3167,7 +3178,8 @@
             "manual": "MANUAALINEN"
         },
         "unknown": "Tuntematon",
-        "year": "Vuosi:"
+        "year": "Vuosi:",
+        "transmissionLabel": "Transmission:"
     },
     "sgw": {
         "title": "SECURITY GATEWAY LUKITUKSEN AVUS",
@@ -3356,7 +3368,7 @@
         "downloadBtn": "LATAA OMAT TIEDOT",
         "purgeBtn": "POISTA KAIKKI OMAT TIEDOT",
         "exportSuccessTitle": "Data valmiina",
-        "exportSuccessMsg": "Tietopakettisi luotiin {{date}}. Sisältö: Telemetriajono, Sovellusasetukset.",
+        "exportSuccessMsg": "Your data package was created on {{date}}. Contents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Virhe",
         "exportErrorMsg": "Tietopaketin luominen epäonnistui.",
         "purgeAlertTitle": "Poista kaikki tiedot",
@@ -3415,8 +3427,8 @@
         "enter_valid_hex": "Syötä kelvollinen DID ja parillisen pituinen heksadesimaali."
     },
     "safety": {
-        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
+        "engineRunningTitle": "Engine Running Safety Lock",
+        "engineRunningDesc": "For safety reasons, trouble codes can only be cleared with ignition ON and engine OFF."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3435,7 +3447,12 @@
     "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
     "grid": "Grid",
     "disclaimers": {
-        "safetyNotice": "Safety Notice"
+        "safetyNotice": "Safety Notice",
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
     },
     "Success": "Success",
     "marketplace": {

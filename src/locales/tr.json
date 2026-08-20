@@ -1,6 +1,12 @@
 {
     "4202": "4202",
-    "disclaimer": "Tüm ürün adları, logolar ve markalar ilgili sahiplerinin mülkiyetindedir. Bu uygulamada kullanılan tüm şirket, ürün ve hizmet adları yalnızca tanımlama amaçlıdır. Bu isimlerin, logoların ve markaların kullanılması, herhangi bir onay veya sponsorluk anlamına gelmez.",
+    "disclaimer": {
+        "subtitle": "Araç ECU'suna konfigürasyon yazmadan önce lütfen dikkatle okuyun.",
+        "p1": "ECU kodlama ve parametre yazma işlemi doğrudan aracınızın Elektronik Kontrol Ünitesi bellek yapılandırmasını değiştirir. MotoCortex çok aşamalı günlük yedeklemesi alır; ancak güvenlik kurallarına uyulmaması modül kilitlenme riskine yol açabilir.",
+        "check1": "Araç aküsünün kararlı (>= 12.4V) ve kontağın AÇIK olduğunu onaylıyorum.",
+        "check2": "Hatalı kodlamanın fabrika ayarlarına sıfırlama gerektirebileceğini anlıyor ve tüm sorumluluğu kabul ediyorum.",
+        "proceed": "PARAMETRELERİ YAZ"
+    },
     "tabs": {
         "dashboard": "İZLEME",
         "expertise": "EKSPERTİZ & ARIZA TEŞHİSİ",
@@ -174,6 +180,7 @@
         "simMode": "Sim Mode"
     },
     "paywall": {
+        "crownBadge": "MOTO CORTEX PRO",
         "subtitle": "En derin diyagnostik özelliklerin ve tüm parametrelerin kilidini açın.",
         "feat1Title": "Gelişmiş Canlı Veriler",
         "feat1Desc": "Gerçek zamanlı takograf, özel analog göstergeler ve grafikler.",
@@ -181,13 +188,17 @@
         "feat2Desc": "Araç profillerini saklayın, tam raporları dışa aktarın ve paylaşın.",
         "feat3Title": "Dondurulmuş Kare Kaydı",
         "feat3Desc": "Hata oluştuğu andaki sensör durumlarını tam olarak kaydedin.",
+        "trustNoAds": "Sıfır Reklam Garantisi (Free & PRO)",
+        "trustNoTokens": "Sınırsız Kodlama • Jeton/Kredi Tuzağı Yok",
+        "trustUniversal": "Evrensel BLE Adaptör Özgürlüğü",
         "selectPlan": "PLAN SEÇİN",
         "weekly": "Haftalık Üyelik",
-        "weeklyDesc": "Hızlı bir kontrol için ideal.",
+        "weeklyDesc": "Hızlı kontrol ve anlık arıza silme.",
         "monthly": "Aylık Üyelik",
-        "monthlyDesc": "En popüler seçim.",
+        "monthlyDesc": "Tam esneklik, istediğiniz zaman iptal edin.",
         "yearly": "Yıllık Üyelik",
-        "yearlyDesc": "En iyi fiyat garantisi.",
+        "yearlyDesc": "Tüm Özellikler Dahil En Avantajlı Garaj Paketi.",
+        "yearlySavingsBadge": "~.65/ay • %44 Tasarruf",
         "restore": "Mevcut Satın Alımları Geri Yükle",
         "subscribe": "ŞİMDİ ABONE OL",
         "bestValue": "EN İYİ DEĞER",
@@ -207,7 +218,6 @@
         "errorDesc": "Ürünler yüklenirken bir hata oluştu, lütfen internet bağlantınızı kontrol edip tekrar deneyin.",
         "retryBtn": "Tekrar Dene",
         "loadingPrices": "Fiyatlar yükleniyor...",
-        "crownBadge": "MOTO CORTEX PRO",
         "actionLocked": "PRO KİLİTLİ ÖZELLİK",
         "congratsMsg": "Cortex OBD2 PRO üyeliğiniz başarıyla etkinleştirildi. Tüm profesyonel özelliklerin keyfini çıkarın!",
         "congratsTitle": "Tebrikler!",
@@ -228,7 +238,8 @@
         "weeklyNotice": "Tek seferlik satın alma, otomatik yenilenmez",
         "yearlyNotice": "Yıllık otomatik yenilenen abonelik",
         "aiDoctorLimitTitle": "AI DOCTOR LİMİTİNE ULAŞILDI",
-        "aiDoctorLimitDesc": "Ücretsiz 1 adet AI motor teşhis hakkınızı kullandınız. Sınırsız AI analizi ve derin detaylar için PRO paketine yükseltin."
+        "aiDoctorLimitDesc": "Ücretsiz 1 adet AI motor teşhis hakkınızı kullandınız. Sınırsız AI analizi ve derin detaylar için PRO paketine yükseltin.",
+        "save44": "%44 Tasarruf"
     },
     "connection": {
         "statusScanningProtocol": "OBD2 Otomatik Protokol Taraması Yapılıyor...",
@@ -291,7 +302,7 @@
         "ecuNotFound": "ARAÇ BEYNİ YANIT VERMİYOR!",
         "hardwareCapabilityScore": "Adaptör Donanım Yetenek Skoru: {{score}}/100",
         "hardwareFatal": "Kritik Hata: Donanımınız eski araç protokollerini desteklemeyen sahte bir klondur. Araç ECU'suna bağlanılamaz. Lütfen kaliteli bir adaptör edinin.",
-        "lowQualityAdapterWarning": "Düşük Kaliteli Adaptör: Kullandığınız cihaz düşük kaliteli bir klondur. Eski nesil araç protokollerinin gerektirdiği hassas zamanlama kararlılığına sahip değildir. Sorunsuz bağlantı için kaliteli bir OBD2 adaptörü kullanmanızı öneririz.",
+        "lowQualityAdapterWarning": "Düşük Kaliteli Adaptör (Skor: {{score}}/100): Kullandığınız cihaz düşük kaliteli bir klondur. Eski nesil araç protokollerinin gerektirdiği hassas zamanlama kararlılığına sahip değildir. Sorunsuz bağlantı için kaliteli bir OBD2 adaptörü kullanmanızı öneririz.",
         "statusProfiling": "OBD2 adaptör yetenekleri analiz ediliyor...",
         "statusScanningCan": "Modern CAN-Bus protokolleri taranıyor...",
         "statusScanningKline": "K-Line protokolleri uyandırılıyor. Eski nesil araçların yanıt vermesi 15 saniye kadar sürebilir...",
@@ -533,7 +544,7 @@
         "connRequired": "Bağlantı Gerekli",
         "connRequiredDesc": "Lütfen bu işlemi başlatmak için önce araca bağlanın.",
         "chronicFaultsTitle": "İstatistiksel Kronik Sorunlar",
-        "chronicFaultsObs": "{{code}}",
+        "chronicFaultsObs": "{{code}} (Gözlem: {{days}} Farklı Gün / Toplam: {{total}} Kez)",
         "chronicFaultsPending": "Veri Havuzu Toplanıyor / İstatistikler Analiz Ediliyor",
         "notScanned": "Tarama Yapılmadı",
         "notScannedDesc": "Arıza kodlarını okumak için lütfen sağ üstteki tarama butonuna basın.",
@@ -628,7 +639,7 @@
         "odometer": "Mesafe",
         "milDist": "Motor Işığı Yanık",
         "distSinceCleared": "Arıza Silineli",
-        "dtcCount": "ARIZA KODLARI",
+        "dtcCount": "ARIZA KODLARI ({{count}} ADET)",
         "sensorData": "CANLI SENSÖR VERİLERİ",
         "noData": "Veri okunamadı",
         "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO ile taranmıştır.",
@@ -3192,7 +3203,8 @@
             "manual": "MANUEL"
         },
         "unknown": "Bilinmiyor",
-        "year": "Yıl:"
+        "year": "Yıl:",
+        "transmissionLabel": "Şanzıman:"
     },
     "sgw": {
         "title": "Security Gateway Kilit Açma",
@@ -3356,7 +3368,7 @@
         "downloadBtn": "Verilerimi İndir / Dışa Aktar",
         "purgeBtn": "Tüm Verilerimi Sil",
         "exportSuccessTitle": "Verileriniz Hazır",
-        "exportSuccessMsg": "Veri Paketiniz {{date}} tarihinde başarıyla oluşturuldu. İçerik: Telemetri kuyruğu, Uygulama ayarları.",
+        "exportSuccessMsg": "Veri Paketiniz {{date}} tarihinde başarıyla oluşturuldu. İçerik: Telemetri kuyruğu ({{count}} kayıt), Uygulama ayarları.",
         "exportErrorTitle": "Hata",
         "exportErrorMsg": "Veri paketi oluşturulamadı.",
         "purgeAlertTitle": "Tüm Verileri Sil",
@@ -3435,7 +3447,12 @@
     "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
     "grid": "Grid",
     "disclaimers": {
-        "safetyNotice": "Safety Notice"
+        "safetyNotice": "Güvenlik Bildirimi",
+        "subtitle": "Araç ECU'suna konfigürasyon yazmadan önce lütfen dikkatle okuyun.",
+        "p1": "ECU kodlama ve parametre yazma işlemi doğrudan aracınızın Elektronik Kontrol Ünitesi bellek yapılandırmasını değiştirir. MotoCortex çok aşamalı günlük yedeklemesi alır; ancak güvenlik kurallarına uyulmaması modül kilitlenme riskine yol açabilir.",
+        "check1": "Araç aküsünün kararlı (>= 12.4V) ve kontağın AÇIK olduğunu onaylıyorum.",
+        "check2": "Hatalı kodlamanın fabrika ayarlarına sıfırlama gerektirebileceğini anlıyor ve tüm sorumluluğu kabul ediyorum.",
+        "proceed": "PARAMETRELERİ YAZ"
     },
     "Success": "Success",
     "marketplace": {

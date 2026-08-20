@@ -182,11 +182,11 @@
         "feat3Desc": "Înregistrați stările exacte ale senzorului la momentul în care a apărut eroarea.",
         "selectPlan": "SELECTAȚI UN PLAN",
         "weekly": "Abonament săptămânal",
-        "weeklyDesc": "Ideal pentru o verificare rapidă.",
+        "weeklyDesc": "Verificare rapidă și diagnoză unică.",
         "monthly": "Abonament lunar",
-        "monthlyDesc": "Cea mai populară alegere.",
+        "monthlyDesc": "Flexibilitate completă, anulare oricând.",
         "yearly": "Abonament anual",
-        "yearlyDesc": "Cel mai bun preț garantat.",
+        "yearlyDesc": "Abonament Garaj All-Inclusive (Cea mai bună valoare).",
         "restore": "Restaurați achizițiile existente",
         "subscribe": "ABONAȚI-VĂ ACUM",
         "bestValue": "CEL MAI BUN VALOARE",
@@ -227,7 +227,12 @@
         "weeklyNotice": "Achiziție unică, nu se reînnoiește automat",
         "yearlyNotice": "Abonament anual cu reînnoire automată",
         "aiDoctorLimitTitle": "LIMITĂ AI DOCTOR ATINSĂ",
-        "aiDoctorLimitDesc": "Ați folosit 1 test gratuit de diagnosticare motor AI. Faceți upgrade la PRO pentru analize AI nelimitate."
+        "aiDoctorLimitDesc": "Ați folosit 1 test gratuit de diagnosticare motor AI. Faceți upgrade la PRO pentru analize AI nelimitate.",
+        "trustNoAds": "100% Fără Reclame (Free & PRO)",
+        "trustNoTokens": "Acces Nelimitat • Fără Costuri Ascunse de Token",
+        "trustUniversal": "Libertate Adaptor BLE Universal",
+        "yearlySavingsBadge": "~.65/lună • Economisiți 44%",
+        "save44": "Economisiți 44%"
     },
     "connection": {
         "logoSub": "v7PRO",
@@ -306,7 +311,7 @@
         "terminalDesc": "Puteți trimite comenzi OBD-II sau AT/ST direct la ECU. De exemplu, „010C” sau „ATRV”.",
         "ecuResponseLabel": "RĂSPUNS ECU:",
         "adapterConnected": "ADAPTATOR CONECTAT",
-        "lowQualityAdapterWarning": "Adaptor de calitate scăzută: adaptorul dvs. este o clonă de calitate scăzută. Îi lipsește precizia de sincronizare necesară pentru protocoalele mai vechi de vehicule. Vă recomandăm cu căldură să faceți upgrade la un adaptor OBD2 de înaltă calitate pentru a vă conecta cu succes.",
+        "lowQualityAdapterWarning": "Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols. We highly recommend upgrading to a high-quality OBD2 adapter to connect successfully.",
         "statusProfiling": "Se analizează capabilitățile adaptorului OBD2...",
         "statusScanningCan": "Scanarea protocoalelor CAN-Bus moderne...",
         "statusScanningKline": "Trezirea protocoalelor K-Line. Vehiculele vechi pot dura până la 15 secunde să răspundă...",
@@ -449,7 +454,7 @@
         "connRequired": "Conexiune necesară",
         "connRequiredDesc": "Vă rugăm să vă conectați mai întâi la vehicul pentru a începe acest proces.",
         "chronicFaultsTitle": "Probleme cronice statistice",
-        "chronicFaultsObs": "{{code}}",
+        "chronicFaultsObs": "{{code}} (Observation: {{days}} Unique Days / Total: {{total}} Times)",
         "chronicFaultsPending": "Colectarea grupului de date / analiza statisticilor",
         "notScanned": "Nu a fost scanat",
         "notScannedDesc": "Vă rugăm să apăsați butonul de scanare din dreapta sus pentru a citi codurile de diagnosticare.",
@@ -544,7 +549,7 @@
         "odometer": "Distanță",
         "milDist": "Lumina motorului aprins",
         "distSinceCleared": "Eroare ștearsă",
-        "dtcCount": "CODURI DE EROARE",
+        "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "DATE LIVE DE LA SENZOR",
         "noData": "Nu s-au putut citi datele",
         "proApp": "Scanat cu Cortex OBD2 Diagnostic Scanner v7 PRO.",
@@ -804,7 +809,13 @@
         "telemetrySub": "Partajați protocolul anonim și jurnalele de erori pentru a îmbunătăți compatibilitatea vehiculului.",
         "restartOnboarding": "Repornește configurarea inițială"
     },
-    "disclaimer": "Toate numele de produse, siglele și mărcile sunt proprietatea proprietarilor respectivi. Toate denumirile de companii, produse și servicii utilizate în această aplicație sunt doar în scop de identificare. Utilizarea acestor nume, logo-uri și mărci nu implică nicio aprobare sau sponsorizare.",
+    "disclaimer": {
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
+    },
     "hiddenFeatures": {
         "title": "FUNCȚII ASCUNSE",
         "btnLabel": "DEBLOCHEAZĂ FUNCȚII ASCUNSE",
@@ -1013,1470 +1024,1470 @@
         "crashTest": "Test de accident"
     },
     "features": {
-        "title": "DEBLOCARE CARACTERISTICI ASCUNCATE ȘI CODARE UDS",
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
         "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
-        "batteryVoltage": "TENSIUNEA BATERIEI",
-        "voltageReady": "Sigur",
-        "voltageLocked": "Tensiune joasă",
-        "locked": "BLOCAT",
-        "ready": "GATA",
-        "allMarks": "TOATE MARCELE",
-        "writeBtn": "SCRIE",
-        "catLighting": "ILUMINAT",
-        "catSound": "SUNET ȘI ALERTE",
-        "catDisplay": "INSTRUMENTE",
-        "catComfort": "CONFORT",
-        "catSafety": "SIGURANȚĂ",
-        "safetyAlertTitle": "Alertă de tensiune scăzută a bateriei",
-        "safetyAlertMsg": "Tensiune minimă a bateriei de 12,2 V necesară pentru codare.\nVă rugăm să conectați un încărcător sau să porniți motorul.",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "Safe",
+        "voltageLocked": "Low Voltage",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
         "items": {
             "vag_staging_needle_sweep": {
-                "name": "Etalonarea ecartamentului / Măturarea acului",
-                "desc": "Mătură acele instrumente la maximum la pornirea aprinderii."
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
             },
             "vag_acoustic_lock_confirmation": {
-                "name": "Ciripit de confirmare a blocării acustice",
-                "desc": "Emite un ciripit scurt de confirmare a claxonului la blocarea cheii."
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
             },
             "vag_american_parking_lights": {
-                "name": "Lumini de parcare în stil american",
-                "desc": "Iluminează semnalele de direcție față în mod continuu la 20% diminuare cu lumini de parcare."
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
             },
             "vag_drl_menu_toggle": {
-                "name": "Lumini de zi Comutare meniu",
-                "desc": "Activează caseta de selectare DRL ON/OFF din meniul de setări ale vehiculului infotainment."
+                "name": "Daytime Running Lights Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
             },
             "vag_tear_wiping": {
-                "name": "Stergerea lacrimilor de parbriz",
-                "desc": "Execută o ștergere finală suplimentară la 5 secunde după utilizarea spălării parbrizului."
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
             },
             "vag_emergency_brake_flashing": {
-                "name": "Pericol de frână de urgență",
-                "desc": "Aprinde rapid luminile de frână și pericole în cazul frânării puternice de urgență."
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
             },
             "vag_cornering_lights": {
-                "name": "Lumini de ceață pentru viraj",
-                "desc": "Aprinde lumina de ceață în viraje pe partea de rotație a volanului."
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
             },
             "vag_comfort_mirror_folding": {
-                "name": "Key Fob Comfort Oglinda Pliabila",
-                "desc": "Pliază automat oglinzile laterale când butonul de blocare este apăsat pe telecomanda."
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
             },
             "vag_lap_timer": {
-                "name": "Cronometru pentru turul grupului de instrumente",
-                "desc": "Deblochează fila de afișare a cronometrului de tură pe ecranul grupului de instrumente."
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
             },
             "vag_refuel_quantity": {
-                "name": "Afișarea cantității de combustibil",
-                "desc": "Afișează volumul exact în litri necesar pentru o realimentare completă."
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
             },
             "bmw_start_stop_memory": {
-                "name": "Modul de memorie pornire-oprire automată",
-                "desc": "Își amintește ultima stare de pornire și oprire automată la repornirile vehiculului."
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state across vehicle restarts."
             },
             "bmw_digital_speedometer": {
-                "name": "Afișaj digital vitezometru",
-                "desc": "Adaugă opțiunea de afișare numerică a vitezei digitale instantanee pe ecranul grupului."
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
             },
             "bmw_sport_displays": {
-                "name": "Afișaje sport",
-                "desc": "Activează cadranele dinamice ale cailor putere și cuplului în timp real pe ecranul iDrive."
+                "name": "Sport Displays",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
             },
             "bmw_acoustic_lock_sound": {
-                "name": "Sunet de blocare/deblocare acustică",
-                "desc": "Emite semnale de alarmă la încuierea sau deblocarea vehiculului."
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
             },
             "bmw_mirror_fold_delay_zero": {
-                "name": "Pliere instantanee a oglinzii",
-                "desc": "Pliază oglinzile laterale instantaneu la apăsarea butonului de blocare fără întârziere."
+                "name": "Instant Mirror Folding",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
             },
             "bmw_tpms_tire_temperature": {
-                "name": "Afișarea presiunii și temperaturii anvelopelor",
-                "desc": "Afișează în timp real temperatura anvelopelor împreună cu presiunea pe ecranul TPMS."
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
             },
             "renault_trip_computer_enable": {
-                "name": "Activare computer de bord de bord",
-                "desc": "Deblochează consumul mediu de combustibil și afișajele computerului de bord."
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
             },
             "renault_external_temp_display": {
-                "name": "Afișare externă a temperaturii",
-                "desc": "Permite citirea temperaturii ambientale exterioare în tabloul de instrumente."
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
             },
             "renault_automatic_tailgate": {
-                "name": "Eliberarea portbagajului cheie",
-                "desc": "Aprinde complet mecanismul de blocare a portbagajului când țineți apăsat butonul pentru portbagaj."
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
             },
             "renault_alarm_chirp": {
-                "name": "Ciripit de confirmare a blocării alarmei",
-                "desc": "Se aude un ciripit de confirmare a claxonului la blocarea ușii vehiculului."
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
             },
             "renault_shift_indicator": {
-                "name": "Indicator de schimbare a vitezelor",
-                "desc": "Activează săgețile SUS/JOS pentru schimbarea vitezei de conducere ecologică din grupul de instrumente."
+                "name": "Gear Shift Indicator",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
             },
             "ford_double_horn_honk_disable": {
-                "name": "Dezactivați claxonul dublu la închiderea ușii",
-                "desc": "Dezactivează claxonul dublu la închiderea ușii cu motorul pornit."
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
             },
             "ford_auto_door_locking": {
-                "name": "Blocare automată a ușilor la 20 km/h",
-                "desc": "Închide automat toate ușile când viteza vehiculului depășește 20 km/h."
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
             },
             "ford_tpms_psi_display": {
-                "name": "Afișaj numeric al presiunii în anvelope",
-                "desc": "Afișează presiunea numerică exactă PSI/BAR pe anvelopă pe ecranul instrumentului."
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
             },
             "ford_sync_climate_screen": {
-                "name": "Controlul climatizării ecranului SYNC",
-                "desc": "Adaugă controlul climatizării și meniul ecranului tactil pentru încălzirea scaunelor la afișajul SYNC."
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
             },
             "stellantis_power_windows_remote": {
-                "name": "Telecomandă cu cheie derulează/în jos",
-                "desc": "Derulează în sus sau în jos toate geamurile electrice când țineți apăsat butoanele de blocare/deblocare."
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
             },
             "stellantis_cornering_fogs": {
-                "name": "Activare lumini de ceață pentru viraj",
-                "desc": "Aprinde lampa de ceață în viraje în timpul virajelor cu viteză redusă."
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
             },
             "vag_traffic_sign_recognition": {
-                "name": "Recunoașterea semnelor de circulație",
-                "desc": "Afișează semnele de viteză detectate de cameră în panoul de instrumente și HUD."
+                "name": "Traffic Sign Recognition",
+                "desc": "Displays camera-detected speed signs in instrument cluster and HUD."
             },
             "vag_ambient_color_palette_30": {
-                "name": "Paleta de iluminare ambientală cu 30 de culori",
-                "desc": "Deblochează 30 de culori RGB pentru iluminarea interioară în meniul de infotainment MIB."
+                "name": "30-Color Ambient Lighting Palette",
+                "desc": "Unlocks 30 RGB interior lighting color picker in MIB infotainment menu."
             },
             "vag_seatbelt_warning_mute": {
-                "name": "Dezactivarea soneriei centurii de siguranță",
-                "desc": "Dezactivează soneria acustică a centurii de siguranță dezactivate în grupul de instrumente."
+                "name": "Seatbelt Chime Deactivation",
+                "desc": "Disables unbuckled seatbelt acoustic chime in instrument cluster."
             },
             "bmw_alpina_cluster_theme": {
                 "name": "Alpina Digital Dash Layout",
-                "desc": "Aplică tema semnăturii albastre Alpina pe tabloul de instrumente digital."
+                "desc": "Applies blue Alpina signature theme to digital instrument cluster."
             },
             "bmw_video_in_motion": {
-                "name": "Video în mișcare",
-                "desc": "Deblochează redarea video USB pe ecranul iDrive în timp ce conduceți."
+                "name": "Video In Motion",
+                "desc": "Unlocks USB video playback on iDrive screen while driving."
             },
             "bmw_sport_plus_mode_unlock": {
-                "name": "Activare mod de conducere Sport+",
-                "desc": "Activează modul de conducere dinamic de înaltă performanță Sport+ în selectorul DEC."
+                "name": "Sport+ Driving Mode Enable",
+                "desc": "Enables Sport+ high-performance dynamic driving mode in DEC selector."
             },
             "mercedes_amg_menu_unlock": {
-                "name": "Meniul de telemetrie AMG Performance",
-                "desc": "Afișează temperatura uleiului AMG, temperatura transmisiei, cronometrul turei și G-metrul."
+                "name": "AMG Performance Telemetry Menu",
+                "desc": "Displays AMG oil temp, transmission temp, lap timer, and G-meter."
             },
             "mercedes_agility_mode_enable": {
-                "name": "Mod de transmisie Agilitate.",
-                "desc": "Deblochează programul de schimbare a vitezei Agility ultra-responsiv în transmisia 7G/9G-Tronic."
+                "name": "Agility Transmission Mode",
+                "desc": "Unlocks ultra-responsive Agility shift program in 7G/9G-Tronic transmission."
             },
             "mercedes_drl_brightness_boost": {
-                "name": "Lumini de zi 100% intensitate",
-                "desc": "Mărește puterea luminilor de zi cu LED-uri la 100% luminozitate maximă."
+                "name": "Daytime Running Lights 100% Intensity",
+                "desc": "Increases LED daytime running lights output to 100% full brightness."
             },
             "mercedes_alarm_lock_chirp": {
-                "name": "Ciripit claxon de blocare acustică",
-                "desc": "Emite o notificare scurtă de claxon când închiderea centralizată este activată."
+                "name": "Acoustic Locking Horn Chirp",
+                "desc": "Emits short horn chirp notification when central locking is engaged."
             },
             "mercedes_dpf_adblue_gauge": {
-                "name": "Indicator de nivel de funingine și AdBlue DPF",
-                "desc": "Afișează procentul exact de masă de funingine DPF și intervalul de AdBlue rămas în IC."
+                "name": "DPF Soot & AdBlue Level Gauge",
+                "desc": "Displays exact DPF soot mass percentage and remaining AdBlue range in IC."
             },
             "renault_rs_monitor_enable": {
-                "name": "Telemetrie monitor Renault Sport RS",
-                "desc": "Permite telemetria live G-force, turbo boost și temperatura uleiului pe R-Link."
+                "name": "Renault Sport RS Monitor Telemetry",
+                "desc": "Enables live G-force, turbo boost, and oil temp telemetry on R-Link."
             },
             "renault_duster_mirror_fold": {
-                "name": "Oglinda automată Duster pliabilă pe blocare",
-                "desc": "Pliază automat oglinzile laterale prin comanda de închidere centralizată BCM."
+                "name": "Duster Auto Mirror Folding on Lock",
+                "desc": "Folds side mirrors automatically via BCM central locking command."
             },
             "ford_bambi_mode_fog_light": {
-                "name": "Modul Bambi",
-                "desc": "Permite luminilor de ceață să rămână aprinse atunci când sunt activate farurile pentru faza lungă."
+                "name": "Bambi Mode",
+                "desc": "Allows fog lights to remain ON when high beam headlights are activated."
             },
             "ford_st_rs_boot_animation": {
-                "name": "Ecranul de pornire ST/RS Performance SYNC",
-                "desc": "Schimbă animația de pornire a ecranului tactil SYNC în logo-ul ST / RS."
+                "name": "ST/RS Performance SYNC Boot Screen",
+                "desc": "Changes SYNC touchscreen startup splash animation to ST / RS logo."
             },
             "toyota_reverse_beep_mute": {
-                "name": "Treapta de marșarier continuu bip cabină Dezactivare",
-                "desc": "Dezactivează sunetul continuu al treptei de marșarier din interiorul cabinei la un singur bip."
+                "name": "Reverse Gear Continuous Cabin Beep Mute",
+                "desc": "Mutes continuous reverse gear chime inside cabin to a single beep."
             },
             "toyota_remote_window_drop": {
-                "name": "Geamul telecomandă cu cheie rotiți în jos",
-                "desc": "Derulează toate geamurile electrice când țineți apăsat butonul de deblocare a cheii."
+                "name": "Key Fob Remote Window Roll Down",
+                "desc": "Rolls down all power windows when holding key fob unlock button."
             },
             "toyota_auto_lock_shift_p": {
-                "name": "Blocare automată a ușilor la schimbarea vitezelor",
-                "desc": "Blocează automat toate ușile atunci când ieși din poziția Parcare."
+                "name": "Auto Lock Doors on Gear Shift",
+                "desc": "Automatically locks all doors when shifting out of Park position."
             },
             "peugeot_icockpit_theme_unlock": {
-                "name": "Tema de performanță Peugeot 3D i-Cockpit",
-                "desc": "Deblochează temele de afișare color Copper și Track Red pe clusterul digital 3D."
+                "name": "Peugeot 3D i-Cockpit Performance Theme",
+                "desc": "Unlocks Copper and Track Red color display themes on 3D digital cluster."
             },
             "jeep_offroad_pages_enable": {
-                "name": "Pagini off-road Jeep Uconnect",
-                "desc": "Permite indicatori de unghi de înclinare/ruliu, articulația roților și starea de blocare 4x4."
+                "name": "Jeep Uconnect Off-Road Pages",
+                "desc": "Enables pitch/roll angle gauges, wheel articulation, and 4x4 lock status."
             },
             "hyundai_smart_welcome_mirror": {
-                "name": "Smart Key Approach Oglinda de bun venit Desfășoară",
-                "desc": "Desface automat oglinzile laterale când se apropie de vehicul cu cheia inteligentă."
+                "name": "Smart Key Approach Welcome Mirror Unfold",
+                "desc": "Automatically unfolds side mirrors when approaching vehicle with smart key."
             },
             "hyundai_one_touch_turn_7_flashes": {
-                "name": "Semnal de schimbare a benzii cu o singură atingere",
-                "desc": "Setează durata intermitentului pentru schimbarea benzii cu o singură atingere la 7 clipiri."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Sets one-touch lane change blinker duration to 7 flashes."
             },
             "hyundai_svm_camera_speed_extend": {
-                "name": "Extensie de viteză a camerei surround 360°",
-                "desc": "Păstrează camera de parcare la 360 de grade activă până la o viteză înainte de până la 20 km/h."
+                "name": "360° Surround Camera Speed Extension",
+                "desc": "Keeps 360-degree parking camera active up to 20 km/h forward speed."
             },
             "hyundai_n_performance_exhaust_flap": {
-                "name": "Clapeta de evacuare N-Performance implicită DESCHIS",
-                "desc": "Setează poziția implicită a supapei de evacuare activă la DESCHIS la pornirea motorului."
+                "name": "N-Performance Exhaust Flap Default OPEN",
+                "desc": "Sets active exhaust valve default position to OPEN on engine start."
             },
             "vag_rain_closing_sunroof": {
-                "name": "Închiderea ploii",
-                "desc": "Închide automat trapa și geamurile când se detectează ploaie în timp ce stați parcat."
+                "name": "Rain Closing",
+                "desc": "Automatically closes sunroof and windows when rain is detected while parked."
             },
             "bmw_launch_control_unlock": {
-                "name": "Lansați Control Unlock",
-                "desc": "Deblochează programul de accelerare pentru controlul lansării din fabrică în ECU de transmisie."
+                "name": "Launch Control Unlock",
+                "desc": "Unlocks factory launch control acceleration program in transmission ECU."
             },
             "mercedes_ambient_64_multi_zone": {
-                "name": "Profil ambiental multizonă cu 64 de culori",
-                "desc": "Deblochează animația dinamică a ciclului de culoare cu mai multe zone în iluminarea interioară MBUX."
+                "name": "64-Color Multi-Zone Ambient Profile",
+                "desc": "Unlocks dynamic multi-zone color cycle animation in MBUX interior lighting."
             },
             "ford_trailer_brake_activation": {
-                "name": "Activare controler frână remorcă.",
-                "desc": "Activează meniul integrat al controlerului frânei remorcii în grupul de instrumente."
+                "name": "Trailer Brake Controller Enable",
+                "desc": "Enables integrated trailer brake controller menu in instrument cluster."
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
-                "name": "Blocare cilindru AFM/DFM V8",
-                "desc": "Blocează permanent motorul în modul cu 8 cilindri pentru a preveni vibrațiile V4."
+                "name": "AFM/DFM V8 Cylinder Lock",
+                "desc": "Locks engine in 8-cylinder mode permanently to prevent V4 vibration."
             },
             "gm_remote_start_time_extend": {
-                "name": "Prelungire a duratei pornirii de la distanță",
-                "desc": "Prelungește timpul de pornire a motorului de la distanță cu cheia din fabrică de la 10 la 20 de minute."
+                "name": "Remote Start Duration Extension",
+                "desc": "Extends factory key fob remote engine start run time from 10 to 20 minutes."
             },
             "dodge_srt_performance_pages": {
-                "name": "Pagini de performanță SRT și moduri de conducere",
-                "desc": "Deblochează temporizatoarele de accelerație Uconnect 0-100, contorul de forță G și controlul lansării."
+                "name": "SRT Performance Pages & Drive Modes",
+                "desc": "Unlocks Uconnect 0-100 acceleration timers, G-force meter, and launch control."
             },
             "ram_bambi_mode_fog": {
-                "name": "Faruri de ceață pentru camion RAM cu faza lungă",
-                "desc": "Permite farurilor de ceață RAM să rămână active alături de farurile cu faza lungă."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Allows RAM fog lights to remain active alongside high beam headlights."
             },
             "byd_avas_pedestrian_siren_mute": {
-                "name": "Sirenă de viteză redusă AVAS EV",
-                "desc": "Dezactivează sirena cu motor electric artificial de viteză redusă sub 30 km/h."
+                "name": "AVAS EV Low-Speed Siren Mute",
+                "desc": "Mutes low-speed artificial electric motor siren below 30 km/h."
             },
             "chery_isa_overspeed_chime_mute": {
-                "name": "Dezactivarea soneriei de avertizare de supraviteză ISA",
-                "desc": "Dezactivează semnalul sonor continuu de avertizare de supraviteză de 80/120 km/h pe modelele Tiggo/MG."
+                "name": "ISA Overspeed Warning Chime Deactivation",
+                "desc": "Disables continuous 80/120 km/h overspeed warning beep on Tiggo/MG models."
             },
             "mg_ev_battery_preconditioning_toggle": {
-                "name": "Comutator manual de preîncălzire a bateriei cu încărcare rapidă EV",
-                "desc": "Activează comutatorul manual de preîncălzire a bateriei înainte de încărcarea rapidă DC."
+                "name": "EV Fast-Charge Battery Pre-Heating Manual Switch",
+                "desc": "Enables manual battery pre-heating switch before DC fast charging."
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "Reducerea sensibilității camerei de monitorizare a șoferului.",
-                "desc": "Reduce avertismentele de oboseală suprasensibile ale urmăririi ochilor pe coloana de direcție."
+                "name": "Driver Monitoring Camera Sensitivity Reduction",
+                "desc": "Reduces over-sensitive eye-tracking fatigue warnings on steering column."
             },
             "honda_walk_away_auto_lock": {
-                "name": "Închidere automată a ușii",
-                "desc": "Încuie automat toate ușile atunci când șoferul pășește la 2 metri cu telecomanda."
+                "name": "Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when driver steps 2 meters away with key fob."
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "Modul de memorie Auto Vehicle Hold.",
-                "desc": "Își amintește starea de oprire a frânei AVH ON/OFF pe parcursul ciclurilor de aprindere."
+                "name": "Auto Vehicle Hold Memory Mode",
+                "desc": "Remembers AVH brake hold ON/OFF state across ignition cycles."
             },
             "volvo_start_stop_default_off": {
-                "name": "Auto Start-Stop implicit OFF",
-                "desc": "Setează starea implicită a sistemului de oprire a motorului Start-Stop la OFF la pornirea vehiculului."
+                "name": "Auto Start-Stop Default OFF Mode",
+                "desc": "Sets Start-Stop engine shutoff system default state to OFF upon vehicle start."
             },
             "volvo_polestar_digital_theme": {
-                "name": "Tema Clusterului digital Polestar Blue",
-                "desc": "Deblochează tema indicatorului dinamic albastru semnătură Polestar pe afișajul șoferului Volvo."
+                "name": "Polestar Blue Digital Cluster Theme",
+                "desc": "Unlocks Polestar signature blue dynamic gauge theme in Volvo driver display."
             },
             "vag_virtual_cockpit_r_theme": {
-                "name": "Teme de performanță Virtual Cockpit R / S / Cupra",
-                "desc": "Deblochează temele de performanță ale tahometrului central R-Line, S-Line și Cupra în cabina digitală."
+                "name": "Virtual Cockpit R / S / Cupra Performance Themes",
+                "desc": "Unlocks R-Line, S-Line, and Cupra central tachometer performance themes in digital cockpit."
             },
             "vag_sound_symposer_mute": {
                 "name": "Sound Symposer Fake Engine Noise Deactivation",
-                "desc": "Dezactivează difuzorul de cabină generatorul de sunet al motorului fals pentru o notă pură de evacuare."
+                "desc": "Deactivates cabin speaker fake engine sound generator for pure exhaust note."
             },
             "vag_wireless_carplay_enable": {
-                "name": "Activare wireless Apple CarPlay și Android Auto",
-                "desc": "Activează Wi-Fi wireless de 5 GHz Apple CarPlay și Android Auto pe unitățile MIB2.5/MIB3."
+                "name": "Wireless Apple CarPlay & Android Auto Activation",
+                "desc": "Enables 5GHz Wi-Fi wireless Apple CarPlay and Android Auto on MIB2.5/MIB3 units."
             },
             "vag_offroad_telemetry_menu": {
-                "name": "MIB Offroad Telemetrie și afișaj de măsurare",
-                "desc": "Afișează unghiul de virare, temperatura uleiului, temperatura lichidului de răcire și indicatori de altitudine pe ecranul MIB."
+                "name": "MIB Offroad Telemetry & Gauge Display",
+                "desc": "Displays steering angle, oil temp, coolant temp, and altitude gauges on MIB screen."
             },
             "vag_easy_entry_driver_seat": {
-                "name": "Scaun electric cu intrare ușoară automată",
-                "desc": "Mută electric scaunul șoferului cu 5 cm la deschiderea ușii pentru a intra ușor în vehicul."
+                "name": "Automatic Easy Entry Power Seat Back-step",
+                "desc": "Moves electric driver seat back 5 cm upon door opening for easy vehicle entry."
             },
             "vag_hba_memory_state": {
-                "name": "Reținerea memoriei de asistență pentru faza lungă.",
-                "desc": "Își amintește starea de asistență pentru faza lungă ON pe parcursul ciclurilor de repornire a contactului."
+                "name": "High-Beam Assist Memory Retention",
+                "desc": "Remembers High-Beam Assist ON status across ignition restart cycles."
             },
             "vag_battery_soc_display": {
-                "name": "Afișaj starea de încărcare a bateriei.",
-                "desc": "Afișează procentul exact de încărcare a bateriei pe grupul de instrumente atunci când butonul de deplasare este apăsat."
+                "name": "Battery State of Charge Display",
+                "desc": "Shows exact battery charge percentage on instrument cluster when trip button is held."
             },
             "bmw_idrive7_m_animation": {
-                "name": "Animație de pornire iDrive 7/8 M-Performance",
-                "desc": "Schimbă grafica de pornire a ecranului iDrive în animația logo-ului M-Performance sau M-GmbH."
+                "name": "iDrive 7 / 8 M-Performance Startup Animation",
+                "desc": "Changes iDrive screen boot graphic to M-Performance or M-GmbH logo animation."
             },
             "bmw_bowers_wilkins_audio_profiles": {
-                "name": "Deblocarea motorului de sunet 3D Bowers & Wilkins",
-                "desc": "Deblochează profilurile audio Bowers & Wilkins Concert, Studio și Stage DSP pe sistemele HiFi."
+                "name": "Bowers & Wilkins 3D Sound Engine Unlock",
+                "desc": "Unlocks Bowers & Wilkins Concert, Studio, and Stage DSP audio profiles on HiFi systems."
             },
             "bmw_hitch_zoom_camera": {
-                "name": "Cameră inversă, remorcă, modul zoom",
-                "desc": "Deblochează modul de zoom de aliniere a cârligului de remorcă de sus în jos pe vizualizarea inversă a camerei."
+                "name": "Reverse Camera Trailer Hitch Zoom Mode",
+                "desc": "Unlocks top-down trailer hitch alignment zoom mode on reverse camera view."
             },
             "bmw_secure_idle_protection": {
-                "name": "Protecție securizată de blocare a vitezelor la motor la ralanti",
-                "desc": "Blocează transmisia în Parcare dacă șoferul părăsește vehiculul în funcțiune cu telecomanda."
+                "name": "Secure Idle Engine Shift-Lock Protection",
+                "desc": "Locks transmission in Park if driver leaves running vehicle with key fob."
             },
             "bmw_seatbelt_handover_mute": {
-                "name": "Dezactivarea brațului de predare a centurii de siguranță electrice Coupe",
-                "desc": "Dezactivează brațul motorizat de prelungire a centurii de siguranță pe Seria 4 și Seria 2 Coupe."
+                "name": "Coupe Electric Seatbelt Handover Arm Deactivation",
+                "desc": "Disables motorized seatbelt extender arm on 4 Series and 2 Series Coupes."
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "Temperatura automată de încălzire a scaunului și a volanului",
-                "desc": "Declanșează încălzirea automată a scaunelor și a volanului atunci când temperatura ambientală scade sub 5°C."
+                "name": "Automatic Seat & Steering Wheel Heating Temperature",
+                "desc": "Triggers automatic seat and steering wheel heating when ambient temp drops below 5°C."
             },
             "mercedes_amg_track_pace_unlock": {
-                "name": "MBUX AMG Track Pace Telemetrie și Lap Timer",
-                "desc": "Deblochează cronometrarea turului, telemetria accelerației și graficele G-force pe ecranul MBUX."
+                "name": "MBUX AMG Track Pace Telemetry & Lap Timer",
+                "desc": "Unlocks lap timing, acceleration telemetry, and G-force graphs on MBUX screen."
             },
             "mercedes_drive_mode_last_memory": {
                 "name": "Dynamic Select Last Drive Mode Memory",
-                "desc": "Își amintește ultimul mod de conducere selectat la repornirea vehiculului."
+                "desc": "Remembers last selected Drive Mode across vehicle restart."
             },
             "mercedes_proximity_360_camera_auto": {
-                "name": "Senzor de proximitate Vizualizare automată a camerei la 360°",
-                "desc": "Comută automat ecranul la camera 360 atunci când senzorii frontali detectează un obstacol < 50 cm."
+                "name": "Proximity Sensor Auto 360° Camera View",
+                "desc": "Automatically switches screen to 360 camera when front sensors detect obstacle < 50 cm."
             },
             "ford_sync_climate_screen_unlock": {
-                "name": "Pagina de control al climatizării cu ecran tactil SYNC3 / SYNC4",
-                "desc": "Activează controlul climatizării, scaunul încălzit și pagina cu ecran tactil pentru direcția fluxului de aer."
+                "name": "SYNC3 / SYNC4 Touchscreen Climate Control Page",
+                "desc": "Enables climate control, heated seat, and airflow direction touchscreen page."
             },
             "ford_turn_signal_5_flashes": {
-                "name": "Semnal de schimbare a benzii cu o singură atingere",
-                "desc": "Mărește durata semnalului de direcție pentru schimbarea benzii cu o singură atingere de la 3 la 5 clipiri."
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Increases one-touch lane change turn signal duration from 3 to 5 flashes."
             },
             "ford_auto_engine_shutdown_disable": {
-                "name": "Oprire automată a motorului la ralanti de 30 de minute",
-                "desc": "Împiedică oprirea automată a motorului după 30 de minute de mers în gol."
+                "name": "30-Minute Idle Auto Engine Shutdown Override",
+                "desc": "Prevents automatic engine shutoff after 30 minutes idle."
             },
             "ev_battery_preheat_manual_switch": {
-                "name": "Comutator manual pentru preîncălzirea bateriei EV",
-                "desc": "Permite preîncălzirea manuală a bateriei la 25°C înainte de încărcarea rapidă DC fără rută de navigare."
+                "name": "EV Battery Pre-Heating Manual Switch",
+                "desc": "Allows manual battery pre-heating to 25°C before DC fast charging without navigation route."
             },
             "ev_v2l_power_output_expand": {
-                "name": "V2L 220V extindere a puterii prizei",
-                "desc": "Extinde limita de priză externă V2L de 220 V AC de la 2,2 kW la 3,6 kW."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands V2L external 220V AC household power outlet limit from 2.2 kW to 3.6 kW."
             },
             "ev_one_pedal_regen_force_level3": {
-                "name": "Frânare regenerativă maximă cu o singură pedală implicită",
-                "desc": "Setează frânarea regenerativă maximă ca implicită la pornirea vehiculului."
+                "name": "One-Pedal Drive Maximum Regenerative Braking Default",
+                "desc": "Sets maximum regenerative braking as default on vehicle start."
             },
             "byd_soc_max_charge_target_limit": {
-                "name": "Limita maximă de încărcare pentru protecția sănătății bateriei BYD",
-                "desc": "Setează limita maximă de întrerupere a încărcării AC/DC la 80% sau 90% pentru a prelungi durata de viață a bateriei Blade."
+                "name": "BYD Battery Health Protection Max Charge Limit",
+                "desc": "Sets max AC/DC charge cutoff limit to 80% or 90% to extend Blade Battery lifespan."
             },
             "byd_dmi_forced_pure_ev_speed_override": {
-                "name": "Anularea motorului pe benzină BYD DM-i Pure EV",
-                "desc": "Inhibă pornirea motorului pe benzină în modul EV până la 130 km/h chiar și în timpul accelerației maxime."
+                "name": "BYD DM-i Pure EV Mode Gasoline Engine Override",
+                "desc": "Inhibits gasoline engine start in EV mode up to 130 km/h even during full throttle acceleration."
             },
             "byd_vtol_v2v_rescue_charge_mode": {
-                "name": "Modul de încărcare de salvare BYD VTOL.",
-                "desc": "Deblochează ieșirea externă de curent alternativ pentru a încărca vehiculele electrice blocate pe drum."
+                "name": "BYD VTOL Rescue Charge Mode",
+                "desc": "Unlocks external AC power output to charge stranded electric vehicles on road."
             },
             "hyundai_ipedal_memory_lock": {
-                "name": "Blocare memorie Hyundai / Kia i-PEDAL cu o singură pedală",
-                "desc": "Împiedică modul de oprire cu o singură pedală i-PEDAL să scadă înapoi la nivelul 3 după trecerea la invers."
+                "name": "Hyundai / Kia i-PEDAL One-Pedal Drive Memory Lock",
+                "desc": "Prevents i-PEDAL one-pedal stop mode from dropping back to Level 3 after shifting to Reverse."
             },
             "hyundai_utility_mode_12v_saver": {
-                "name": "Mod de camping utilitar Economizor de 12 V de înaltă tensiune",
-                "desc": "Alimentează o priză V2L de 220 V direct de la bateria de tracțiune HV pentru a preveni descărcarea bateriei auxiliare de 12 V."
+                "name": "Utility Camping Mode High-Voltage 12V Saver",
+                "desc": "Powers 220V V2L outlet directly from HV traction battery to prevent auxiliary 12V battery drain."
             },
             "hyundai_phev_no_ice_climate_start": {
-                "name": "Modul PHEV EV Climatizare Încălzire Suprimare motor pe benzină",
-                "desc": "Forțează pompa de căldură / încălzire electrică PTC pentru clima cabină fără pornirea motorului pe benzină."
+                "name": "PHEV EV Mode Climate Heating Gasoline Engine Suppression",
+                "desc": "Forces heat pump / PTC electric heater for cabin climate without starting gasoline engine."
             },
             "vag_taycan_ess_sound_profile_swap": {
                 "name": "Electric Sport Sound Taycan / RS e-tron Profile",
-                "desc": "Schimbă profilul de sunet al condusului electric la generatorul de sunet Porsche Taycan GTS sau Audi RS e-tron GT."
+                "desc": "Changes electric driving sound profile to Porsche Taycan GTS or Audi RS e-tron GT sound generator."
             },
             "vag_meb_daily_charge_target_menu": {
-                "name": "Baterie MEB Zilnic 80% / Trip 100% Bară de încărcare rapidă",
-                "desc": "Adaugă bară de comutare rapidă pe ecranul MIB pentru a comuta între 80% îngrijire zilnică a bateriei și 100% încărcare de călătorie."
+                "name": "MEB Battery Daily 80% / Trip 100% Quick Charge Bar",
+                "desc": "Adds quick toggle bar on MIB screen to switch between 80% daily battery care and 100% trip charge."
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "Încărcare forță a bateriei generatorului de motor GTE / E-Mode",
-                "desc": "Forțează motorul cu ardere să acționeze ca generator pentru a reîncărca bateria de înaltă tensiune până la 80% în timpul conducerii."
+                "name": "GTE / E-Mode Engine Generator Battery Force Charge",
+                "desc": "Forces combustion engine to act as generator to recharge high-voltage battery up to 80% while driving."
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
-                "name": "Motor de sunet electric M-Performance IconicSounds Hans Zimmer",
-                "desc": "Deblochează profilele sonore de accelerație electrică M-Performance acustică Hans Zimmer pe i4 și iX."
+                "name": "Hans Zimmer IconicSounds Electric M-Performance Sound Engine",
+                "desc": "Unlocks Hans Zimmer acoustic M-Performance electric acceleration sound profiles on i4 and iX."
             },
             "bmw_phev_max_edrive_140kmh": {
-                "name": "Plafon de viteză pur electric PHEV MAX eDrive",
-                "desc": "Mărește plafonul maxim de viteză pur electrică la 330e / 530e hibride plug-in la 140 km/h."
+                "name": "PHEV MAX eDrive Pure Electric Speed Ceiling",
+                "desc": "Increases max pure electric speed ceiling on 330e / 530e Plug-in hybrids to 140 km/h."
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "Selector de limită de curent maxim al încărcătorului de acasă AC",
-                "desc": "Adaugă un limitator de curent de încărcare AC acasă pentru a preveni supraîncărcarea circuitului de acasă."
+                "name": "AC Home Charger Maximum Current Limit Selector",
+                "desc": "Adds AC home charging current limiter to prevent home circuit overload."
             },
             "toyota_hybrid_ev_mode_override": {
-                "name": "Suprimarea anulării accelerației în mod Toyota / Lexus EV",
-                "desc": "Împiedică pornirea forțată a motorului pe benzină în timpul accelerării când butonul pentru modul EV este activ."
+                "name": "Toyota / Lexus EV Mode Throttle Override Suppression",
+                "desc": "Prevents gasoline engine from forced start during acceleration when EV mode button is active."
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "Ventilator de răcire a bateriei de înaltă tensiune Toyota / Lexus",
-                "desc": "Mărește viteza ventilatorului de răcire a bateriei de tracțiune hibridă cu +30% pentru a preveni degradarea termică în climatele calde."
+                "name": "Toyota / Lexus High-Voltage Battery Cooling Fan Boost",
+                "desc": "Increases hybrid traction battery cooling fan speed by +30% to prevent thermal degradation in hot climates."
             },
             "tesla_sentry_high_bitrate_video": {
-                "name": "Înregistrare continuă în modul Tesla Sentry cu debit ridicat de biți",
-                "desc": "Mărește rata de biți de înregistrare video a camerei în modul Sentry pentru o vizibilitate clară a plăcuței de înmatriculare."
+                "name": "Tesla Sentry Mode High-Bitrate Continuous Dashcam Recording",
+                "desc": "Increases Sentry Mode camera video recording bitrate for crystal-clear license plate visibility."
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "Pragul de temperatură de protecție împotriva supraîncălzirii cabinei Tesla",
-                "desc": "Reduce temperatura de declanșare a climatului de protecție împotriva supraîncălzirii cabinei de la 40°C la 30°C pentru conservarea interioară."
+                "name": "Tesla Cabin Overheat Protection Temperature Threshold",
+                "desc": "Lowers cabin overheat protection climate trigger temperature from 40°C to 30°C for interior preservation."
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
-                "name": "Readaptare Shift Assistant Pro",
-                "desc": "Resetează parametrii de învățare a senzorului de schimbare și inițiază recalibrarea mașinii de schimbare rapidă."
+                "name": "Shift Assistant Pro Re-Adaptation",
+                "desc": "Resets shift sensor learning parameters and initiates quickshifter recalibration."
             },
             "bmwmotorrad_esa_zero_point_calib": {
-                "name": "Calibrare la punctul zero al suspensiei ESA dinamice",
-                "desc": "Calibrează senzorii electronici de sarcină și de deplasare a suspensiei la zero din fabrică."
+                "name": "Dynamic ESA Suspension Zero-Point Calibration",
+                "desc": "Calibrates electronic suspension load and travel sensors to factory zero."
             },
             "bmwmotorrad_abs_pro_cornering_toggle": {
-                "name": "Pragul de intervenție al modului de viraj ABS Pro",
-                "desc": "Reglează sensibilitatea de intervenție ABS în funcție de unghiul de înclinare pentru utilizarea pe pistă."
+                "name": "ABS Pro Cornering Mode Intervention Threshold",
+                "desc": "Adjusts lean-angle dependent ABS intervention sensitivity for track use."
             },
             "bmwmotorrad_service_interval_reset": {
-                "name": "Resetare memento anual și la distanță",
-                "desc": "Resetează indicatorul de service al grupului de instrumente și setează intervalul personalizat."
+                "name": "Annual & Distance Service Reminder Reset",
+                "desc": "Resets instrument cluster service indicator and sets custom interval."
             },
             "bmwmotorrad_headlight_pro_cornering": {
-                "name": "Faruri Pro Adaptive Viraj Sensibilitate la lumina",
-                "desc": "Reglează pragul unghiului de înclinare pentru activarea adaptivă a farurilor în viraje."
+                "name": "Headlight Pro Adaptive Cornering Light Sensitivity",
+                "desc": "Adjusts lean angle threshold for adaptive cornering headlight activation."
             },
             "bmwmotorrad_keyless_ride_range_extend": {
-                "name": "Extensie de rază de detectare a telecomenzii fără cheie",
-                "desc": "Optimizează intervalul de semnal al transponderului pentru detectarea aprinderii fără cheie."
+                "name": "Keyless Ride Fob Detection Range Extension",
+                "desc": "Optimizes transponder signal range for keyless ignition sensing."
             },
             "bmwmotorrad_reverse_assist_sensitivity": {
-                "name": "Sensibilitatea motorului electric de asistență inversă",
-                "desc": "Reglează fin turația și limita de cuplu a motorului demarorului electric de acționare inversă."
+                "name": "Electric Reverse Assist Motor Sensitivity",
+                "desc": "Fine-tunes reverse drive electric starter motor speed and torque limit."
             },
             "ducati_riding_mode_custom_profile": {
-                "name": "Creator de profil personalizat pentru modul de călătorie",
-                "desc": "Deblochează combinații personalizate pentru profilurile Race, Sport, Touring și Urban."
+                "name": "Riding Mode Custom Profile Creator",
+                "desc": "Unlocks custom combinations for Race, Sport, Touring, and Urban profiles."
             },
             "ducati_ohlins_suspension_mapping": {
-                "name": "Maparea suspensiei Öhlins Smart EC 2.0 semi-activă",
-                "desc": "Reglează fin curba de amortizare și presetări de rigiditate pentru suspensia electronică."
+                "name": "Öhlins Smart EC 2.0 Semi-Active Suspension Mapping",
+                "desc": "Fine-tunes damping curve and stiffness presets for electronic suspension."
             },
             "ducati_dashboard_lap_timer_gps": {
-                "name": "Tabloul de bord TFT Lap Timer & GPS Sector Splits",
-                "desc": "Deblochează cronometrul turei pe pistă și afișajul divizat pe sector pe grupul de instrumente."
+                "name": "TFT Dashboard Lap Timer & GPS Sector Splits",
+                "desc": "Unlocks track lap timer and sector split display on instrument cluster."
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "Reglarea nivelului de control al frânei motorului.",
-                "desc": "Reglează cuplul de decelerare al roții din spate în timpul frânării la intrarea în viraje grele."
+                "name": "Engine Brake Control Level Adjustment",
+                "desc": "Adjusts rear wheel deceleration torque during hard corner entry braking."
             },
             "ducati_cruise_control_retrofit_enable": {
-                "name": "Activare retrofit control croazieră",
-                "desc": "Activează marcajul software ECU pentru comutatoarele electronice pentru controlul vitezei de croazieră montate ulterior."
+                "name": "Cruise Control Retrofit Activation",
+                "desc": "Enables ECU software flag for retrofitted electronic cruise control switches."
             },
             "ducati_exhaust_valve_sound_map": {
-                "name": "Harta RPM de deschidere a servovalvei de evacuare",
-                "desc": "Reglează pragul de deschidere a supapei de evacuare acustică pentru o notă de evacuare îmbunătățită."
+                "name": "Exhaust Servo Valve Opening RPM Map",
+                "desc": "Adjusts acoustic exhaust valve opening threshold for enhanced exhaust note."
             },
             "ducati_pit_lane_limiter_config": {
-                "name": "Pragul limitatorului de viteză al benzilor",
-                "desc": "Permite comutarea limitatorului de viteză a benzii de boxe la 60 km/h pe comutatoarele ghidonului."
+                "name": "Pit Lane Speed Limiter Threshold",
+                "desc": "Enables 60 km/h pit lane speed limiter toggle on handlebar switches."
             },
             "ducati_desmo_service_light_reset": {
-                "name": "Resetarea luminii de service pentru supapa de ulei și desmo",
-                "desc": "Șterge avertismentul de memento de service al supapei desmodromice de pe grupul de instrumente."
+                "name": "Oil & Desmo Valve Service Light Reset",
+                "desc": "Clears Desmodromic valve service reminder warning on instrument cluster."
             },
             "ktm_quickshifter_plus_delay_tuning": {
                 "name": "Quickshifter+ Shift Cut Time & Delay Fine-Tuning",
-                "desc": "Personalizează durata de tăiere a aprinderii per treaptă de viteză pentru schimburi fără întreruperi sus/jos."
+                "desc": "Customizes ignition cut duration per gear for seamless up/down shifts."
             },
             "ktm_rally_offroad_abs_tc_unlock": {
-                "name": "Deblocare mod Rally/Off-Road ABS și TC",
-                "desc": "Dezactivează ABS-ul din spate și deblochează reglarea alunecării în 9 trepte în modul Rally."
+                "name": "Rally / Off-Road ABS & TC Mode Unlock",
+                "desc": "Disables rear ABS and unlocks 9-stage slip adjustment in Rally mode."
             },
             "ktm_my_ktm_connectivity_unlock": {
-                "name": "Activarea modulului meu de conectivitate KTM / Husqvarna",
-                "desc": "Activează navigarea prin Bluetooth și rutarea pas cu pas pe afișajul TFT."
+                "name": "My KTM / Husqvarna Connectivity Module Activation",
+                "desc": "Enables Bluetooth navigation and turn-by-turn routing on TFT display."
             },
             "ktm_cruise_control_retrofit_enable": {
-                "name": "Deblocare software de adaptare a controlului croazierului",
-                "desc": "Activează funcția de control al vitezei de croazieră după instalarea setului de comutare pe ghidon."
+                "name": "Cruise Control Retrofit Software Unlock",
+                "desc": "Activates cruise control function after installing handlebar switch kit."
             },
             "ktm_clutch_pull_map_switch_gesture": {
-                "name": "Comutarea hărții cu gesturi de tragere-ambrei",
-                "desc": "Permite comutarea rapidă a hărții prin executarea gestului manetei ambreiajului la pornire."
+                "name": "Clutch-Pull Gesture Map Switching",
+                "desc": "Enables rapid map switching by executing clutch lever gesture on startup."
             },
             "yamaha_quickshifter_cut_time_adjust": {
-                "name": "Timp de tăiere și sensibilitate a aprinderii Quickshifter",
-                "desc": "Reglează pragul de încărcare a senzorului de schimbare rapidă și întârzierea întreruperii scânteii."
+                "name": "Quickshifter Ignition Cut-Time & Sensitivity",
+                "desc": "Adjusts quickshifter sensor load threshold and spark interruption delay."
             },
             "yamaha_ride_by_wire_throttle_map": {
-                "name": "Selector de presetare a hărții de accelerație Ride-by-Wire",
-                "desc": "Comută între hărțile de accelerație A-Mode, STD și B-Mode."
+                "name": "Ride-by-Wire Throttle Map Preset Selector",
+                "desc": "Switches between A-Mode, STD, and B-Mode throttle maps."
             },
             "yamaha_tft_track_theme_unlock": {
-                "name": "Aspect de afișare a piesei TFT și deblocare a luminii Shift",
-                "desc": "Deblochează aspectul grupului de șenile R1/MT-09 SP și luminile programabile pentru schimbarea RPM."
+                "name": "TFT Track Display Layout & Shift Light Unlock",
+                "desc": "Unlocks R1/MT-09 SP track cluster layout and programmable shift RPM lights."
             },
             "yamaha_launch_control_sensitivity": {
-                "name": "Sistemul de control al lansării Rev Ceiling",
-                "desc": "Configurați controlul de lansare menținând RPM."
+                "name": "Launch Control System Rev Ceiling",
+                "desc": "Configures launch control holding RPM."
             },
             "yamaha_heated_grips_accessory_enable": {
-                "name": "Integrarea meniului TFT cu mânere încălzite autentice",
-                "desc": "Activează comenzile de prindere încălzită și indicatorul de temperatură pe ecranul TFT."
+                "name": "Genuine Heated Grips TFT Menu Integration",
+                "desc": "Enables heated grip controls and temperature gauge on TFT screen."
             },
             "honda_hstc_wheelie_control_fine_tune": {
-                "name": "Reglare fină HSTC Traction & Wheelie Control",
-                "desc": "Reglează raportul de alunecare Honda Selectable Torque Control și toleranța de ridicare a roții din față."
+                "name": "HSTC Traction & Wheelie Control Fine-Tuning",
+                "desc": "Adjusts Honda Selectable Torque Control slip ratio and front wheel lift tolerance."
             },
             "honda_bi_directional_quickshifter_enable": {
-                "name": "Deblocare bidirecțională a mașinii de schimbare rapidă",
-                "desc": "Activează codarea auto-blipper și sus/jos quickshifter în memoria ECU."
+                "name": "Bi-Directional Quickshifter Retrofit Unlock",
+                "desc": "Enables auto-blipper and up/down quickshifter coding in ECU memory."
             },
             "honda_service_reminder_custom_interval": {
-                "name": "Personalizator de distanță pentru memento de service ulei",
-                "desc": "Setează intervalul de kilometraj personalizat pentru schimbarea uleiului pe tabloul digital."
+                "name": "Oil Service Reminder Distance Customizer",
+                "desc": "Sets custom oil change mileage interval on digital dash."
             },
             "honda_track_abs_rear_disable": {
-                "name": "Dezactivarea roților din spate ABS pe cale",
-                "desc": "Dezactivează canalul ABS al roții din spate, păstrând în același timp ABS la viraje față pentru zilele de pistă."
+                "name": "Track ABS Rear-Wheel Deactivation",
+                "desc": "Disables rear wheel ABS channel while retaining front cornering ABS for track days."
             },
             "honda_cold_start_idle_enrichment": {
-                "name": "Îmbogățirea combustibilului cu pornire la rece și RPM țintă la ralanti",
-                "desc": "Reglează viteza inițială de ralanti la încălzire pentru sistemele de evacuare aftermarket."
+                "name": "Cold-Start Fuel Enrichment & Idle Target RPM",
+                "desc": "Adjusts initial warm-up idle speed for aftermarket exhaust systems."
             },
             "harley_custom_throttle_curve_editor": {
-                "name": "Editor personalizat de curbe de răspuns la accelerație",
-                "desc": "Reglează progresia accelerației Milwaukee-Eight / Revolution Max ride-by-wire."
+                "name": "Custom Throttle Response Curve Editor",
+                "desc": "Adjusts Milwaukee-Eight / Revolution Max ride-by-wire throttle progression."
             },
             "harley_security_alarm_sensitivity": {
-                "name": "Sistem de securitate inteligent de proximitate și sensibilitate la înclinare",
-                "desc": "Reglează sensibilitatea senzorului de mișcare și întârzierea de armare a telecomenzii hands-free."
+                "name": "Smart Security System Proximity & Tilt Sensitivity",
+                "desc": "Adjusts motion sensor sensitivity and hands-free fob arming delay."
             },
             "harley_boom_box_gts_hidden_diagnostics": {
-                "name": "Bum! Meniu de diagnostic ascuns pentru Infotainment Box GTS",
-                "desc": "Deblochează afișajele de telemetrie de inginerie, temperatura motorului și manometrele de presiune a uleiului."
+                "name": "Boom! Box GTS Infotainment Hidden Diagnostic Menu",
+                "desc": "Unlocks engineering telemetry displays, engine temp, and oil pressure gauges."
             },
             "harley_rdrs_defensive_system_tune": {
-                "name": "Sensibilitatea controlului alunecării cu drag-cuplu RDRS",
-                "desc": "Ajustează fin Reflex Defensive Rider System atenuarea alunecării roților din spate în timpul trecerii trepte de viteză."
+                "name": "RDRS Drag-Torque Slip Control Sensitivity",
+                "desc": "Fine-tunes Reflex Defensive Rider System rear-wheel slip mitigation during downshifts."
             },
             "byd_avas_low_speed_siren_mute": {
-                "name": "Sirenă de avertizare pentru pietoni AVAS de viteză redusă EV",
-                "desc": "Dezactivează sau coboară sirena sistemului acustic extern de alertă a vehiculului sub 30 km/h."
+                "name": "AVAS Low-Speed EV Pedestrian Warning Siren Mute",
+                "desc": "Mutes or lowers external acoustic vehicle alerting system siren under 30 km/h."
             },
             "byd_ev_battery_preheat_manual_switch": {
-                "name": "Comutator manual de preîncălzire a bateriei EV",
-                "desc": "Permite condiționarea termică manuală a bateriei înainte de încărcarea rapidă DC."
+                "name": "Manual EV Battery Pre-Heating Toggle",
+                "desc": "Enables manual battery thermal conditioning prior to DC fast charging."
             },
             "byd_v2l_220v_outlet_power_expansion": {
-                "name": "V2L 220V extindere a puterii prizei",
-                "desc": "Extinde plafonul extern de putere de descărcare V2L de la 2,2 kW la 3,6 kW maxim."
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands external V2L discharge power ceiling from 2.2 kW to 3.6 kW maximum."
             },
             "byd_one_pedal_regen_default_max": {
-                "name": "Acționare cu o singură pedală Frânare regenerativă Implicit Max",
-                "desc": "Blocează frânarea cu regenerare ridicată ca implicită persistentă la pornirea vehiculului."
+                "name": "One-Pedal Drive Regenerative Braking Default Max",
+                "desc": "Locks high regenerative braking as persistent default upon vehicle startup."
             },
             "mg_ismart_connectivity_unlock": {
-                "name": "Conectivitate i-SMART și deblocare prin telemetrie de la distanță",
-                "desc": "Permite controlul climatului de la distanță și funcțiile de urmărire a stării vehiculului."
+                "name": "i-SMART Connectivity & Remote Telemetry Unlock",
+                "desc": "Enables remote climate control and vehicle status tracking features."
             },
             "mg_mg4_xpower_launch_control_enable": {
-                "name": "Modul de control al lansării MG4 XPower cu dublu motor",
-                "desc": "Deblochează 3,8 s, 0-100 km/h, modul de accelerare pentru controlul lansării."
+                "name": "MG4 XPower Dual-Motor Launch Control Mode",
+                "desc": "Unlocks 3.8s 0-100 km/h launch control acceleration mode."
             },
             "mg_battery_preheat_manual_trigger": {
-                "name": "Precondiționare manuală a bateriei cu încărcare rapidă",
-                "desc": "Forțează elementele de încălzire a bateriei de înaltă tensiune ON pentru ratele de încărcare DC de vârf."
+                "name": "Manual Fast-Charge Battery Pre-Conditioning",
+                "desc": "Forces high-voltage battery heating elements ON for peak DC charge rates."
             },
             "xpeng_xngp_adas_region_unlock": {
-                "name": "Deblocare regiune XNGP Autonomous Driving Assistant",
-                "desc": "Permite asistență avansată pentru pilot ghidată de navigație în regiunile deblocate."
+                "name": "XNGP Autonomous Driving Assistant Region Unlock",
+                "desc": "Enables advanced navigation-guided pilot assistance in unlocked regions."
             },
             "xpeng_ambient_lighting_music_sync": {
-                "name": "Iluminare ambientală cu ritm reactiv la muzică",
-                "desc": "Sincronizează impulsurile de iluminare ambientală cu LED-uri din cabină cu bătăile de bas ale sistemului audio."
+                "name": "Music-Reactive Rhythm Ambient Lighting",
+                "desc": "Synchronizes cabin LED ambient lighting pulses with audio system bass beats."
             },
             "xpeng_rear_camera_trailer_hitch_view": {
-                "name": "Modul de cuplare a camerei la 360° și suprapunere la sol",
-                "desc": "Adaugă grila de aliniere a cârligului de înaltă rezoluție la camera de rezervă."
+                "name": "360° Camera Hitch & Ground Overlay Mode",
+                "desc": "Adds high-resolution hitch alignment grid overlay to backup camera."
             },
             "nio_battery_swap_interval_reminder": {
-                "name": "Modul de precondiționare al stației de schimb de energie",
-                "desc": "Coboară automat știfturile de blocare a bateriei și pachetele de precondiții înainte de schimbare."
+                "name": "Power Swap Station Pre-Conditioning Mode",
+                "desc": "Automatically lowers battery lock pins and pre-conditions packs prior to swap."
             },
             "nio_nomi_assistant_custom_voice_phrases": {
-                "name": "NOMI AI Companion Personalizare și Wake Words",
-                "desc": "Deblochează animații personalizate cu avatar și fraze de salut personalizate pentru NOMI."
+                "name": "NOMI AI Companion Personalization & Wake Words",
+                "desc": "Unlocks custom avatar animations and personalized greeting phrases for NOMI."
             },
             "nio_sentry_watchdog_continuous_recording": {
                 "name": "NIO Sentry Mode 4K Camera Buffer Recording",
-                "desc": "Permite înregistrarea camerei surround cu viteză mare de biți pe unitatea USB când este parcat."
+                "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Sincronizarea ecosistemului profilului driverului Xiaomi SU7 HyperOS",
-                "desc": "Sincronizează automat presetările pentru scaun, oglindă și climat prin Bluetooth al telefonului Xiaomi."
+                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
+                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Modul Boost 20 de secunde Overboost Power Deblocare",
-                "desc": "Prelungește durata maximă a supraalimentării motorului electric în timpul accelerației la accelerație maximă."
+                "name": "Boost Mode 20-Second Overboost Power Unlock",
+                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Alocarea vectorizării cuplului RWD în modul Drift",
-                "desc": "Aloca un cuplu motor de 100% la puntea spate cu controlul tracțiunii dezactivat."
+                "name": "Drift Mode RWD Torque Vectoring Allocation",
+                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "ISA Asistență inteligentă pentru viteză Avertizare sunet Mute",
-                "desc": "Dezactivează soneria acustică persistentă când depășește limita de viteză detectată."
+                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
+                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "Sensibilitatea camerei de monitorizare a oboselii șoferului DMS",
-                "desc": "Reduce alertele fals pozitive de distragere a atenției de la camera de monitorizare interioară."
+                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
+                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Modificare codificare pentru controlul distanței de parcare față/spate.",
-                "desc": "Înregistrează piața de schimb sau modulul senzorului de parcare OEM în lista de instalare Gateway."
+                "name": "Retrofit Front/Rear Parking Distance Control Coding",
+                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
             },
             "retrofit_360_camera_activation": {
-                "name": "Modernizare sistem de cameră surround 360° cu vedere zonă",
-                "desc": "Activează controlerul camerei de vizualizare surround și adaugă vizualizarea camerei la infotainment."
+                "name": "Retrofit 360° Area View Surround Camera System",
+                "desc": "Activates surround view camera controller and adds camera view to infotainment."
             },
             "retrofit_led_license_plate_light_coding": {
-                "name": "Eroare pentru plăcuța de înmatriculare și farul spate cu LED-uri ulterioare Anulați",
-                "desc": "Dezactivează monitorizarea verificării becului rece pentru a preveni avertismentele false de stingere a lămpii cu LED-uri."
+                "name": "Retrofit LED License Plate & Tail Light Error Cancel",
+                "desc": "Disables cold bulb check monitoring to prevent false lamp out warnings with LEDs."
             },
             "retrofit_dash_cam_sentry_integration": {
-                "name": "Putere de aprindere continuă pentru Dash Cam și modul Sentry",
-                "desc": "Configurați linia de alimentare terminală 30 a modulului de control al caroseriei pentru înregistrarea continuă a parcării."
+                "name": "Retrofit Dash Cam Continuous Ignition Power & Sentry Mode",
+                "desc": "Configures Body Control Module terminal 30 power line for continuous parking recording."
             },
             "retrofit_heated_windshield_activation": {
-                "name": "Codificarea elementului de parbriz încălzit ulterioară",
-                "desc": "Activează ieșirea releului încălzitorului de dezghețare a parbrizului și butonul de pe ecranul climatronic."
+                "name": "Retrofit Heated Windshield Element Coding",
+                "desc": "Enables windshield defrost heater relay output and climatronic screen button."
             },
             "retrofit_wireless_charger_module_coding": {
-                "name": "Integrare retrofit Qi wireless pentru încărcarea smartphone-ului",
-                "desc": "Activează LED-ul de stare a încărcătorului fără fir și telefonul lăsat în urmă pop-up de memento."
+                "name": "Retrofit Qi Wireless Smartphone Charging Pad Integration",
+                "desc": "Enables wireless charger status LED and phone left behind reminder popup."
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "Modernizare Adaptive Cruise Control Modul radar frontal",
-                "desc": "Codifică unitatea radar de distanță frontală modernizată în rețeaua de vehicule CAN bus."
+                "name": "Retrofit Adaptive Cruise Control Front Radar Module",
+                "desc": "Encodes retrofitted front distance radar unit into CAN bus vehicle network."
             },
             "retrofit_traffic_sign_camera_activation": {
-                "name": "Renovare Recunoașterea semnelor de circulație Codificarea camerei de parbriz",
-                "desc": "Permite procesarea recunoașterii semnelor VZE pe camera de parbriz modernizată."
+                "name": "Retrofit Traffic Sign Recognition Windshield Camera Coding",
+                "desc": "Enables VZE sign recognition processing on retrofitted windshield camera."
             },
             "retrofit_heated_steering_wheel_coding": {
-                "name": "Activare ulterioară a modulului volanului încălzit",
-                "desc": "Permite ieșirea elementului de încălzire al volanului și declanșarea automată a temperaturii."
+                "name": "Retrofit Heated Steering Wheel Module Activation",
+                "desc": "Enables steering wheel heating element output and auto-on temperature triggers."
             },
             "retrofit_fatigue_camera_calibration": {
-                "name": "Integrarea camerei de monitorizare a oboselii șoferului",
-                "desc": "Calibrează senzorul camerei infraroșu pentru monitorizarea șoferului după instalarea coloanei de direcție."
+                "name": "Retrofit Driver Fatigue Monitoring Camera Integration",
+                "desc": "Calibrates driver monitoring infrared camera sensor after steering column install."
             },
             "retrofit_trailer_hitch_module_coding": {
-                "name": "Integrare cu bară de remorcare și modul electric al remorcii",
-                "desc": "Codifică modulul remorcii în sistemul de stabilitate ESP pentru atenuarea balansării remorcii."
+                "name": "Retrofit Tow Bar & Trailer Electrical Module Integration",
+                "desc": "Encodes trailer module into ESP stability system for trailer sway mitigation."
             },
             "retrofit_power_tailgate_trunk_kit_coding": {
-                "name": "Integrare retrofit pentru hayon și senzor de gesturi ale piciorului",
-                "desc": "Activează motoarele electrice de antrenare a portbagajului și codarea senzorului de lovire a barei de protecție."
+                "name": "Retrofit Power Tailgate & Foot Gesture Sensor Integration",
+                "desc": "Enables electric trunk drive motors and bumper kick sensor coding."
             },
             "easteregg_urban_joke_light_show": {
-                "name": "Glumă urbană Spectacol alternativ de lumini spate",
-                "desc": "Configurează luminile spate și semnalizatoarele să clipească alternativ atunci când încuie vehiculul."
+                "name": "Urban Joke Alternating Rear Light Show",
+                "desc": "Configures tail lights and turn signals to flash alternately when locking vehicle."
             },
             "easteregg_custom_boot_greeting_text": {
-                "name": "Text de întâmpinare personalizat de pornire pe Digital Cluster",
-                "desc": "Afișează mesajul personalizat de bun venit pe ecranul grupului de instrumente la punerea contactului."
+                "name": "Custom Boot Greeting Text on Digital Cluster",
+                "desc": "Displays custom welcome message on instrument cluster screen upon ignition on."
             },
             "easteregg_cluster_mini_game_mode": {
-                "name": "Meniul mini-joc ascuns pentru grupul de instrumente",
-                "desc": "Deblochează un mini-joc retro controlat de butoanele de pe volan, afișat atunci când este parcat."
+                "name": "Instrument Cluster Hidden Mini-Game Menu",
+                "desc": "Unlocks steering-wheel button controlled retro mini-game on display when parked."
             },
             "easteregg_custom_horn_melody_package": {
-                "name": "Corn acustic personalizat Melodie de bun venit",
-                "desc": "Redă un model de ciripit de ritm scurt pe claxon la deblocarea mașinii."
+                "name": "Custom Acoustic Horn Welcome Melody",
+                "desc": "Plays short rhythm chirp pattern on horn when unlocking car."
             },
             "easteregg_welcome_lighting_door_sequence": {
-                "name": "Urmărirea secvenței ușii luminii de bun venit cu LED-uri",
-                "desc": "Execută animație progresivă de urmărire cu LED-uri pe mânerele ușilor exterioare."
+                "name": "Chasing LED Welcome Light Door Sequence",
+                "desc": "Executes progressive LED chasing animation on exterior door handles."
             },
             "easteregg_developer_service_menu_shortcut": {
-                "name": "Comandă rapidă pentru ecranul de diagnosticare pentru dezvoltatori și servicii",
-                "desc": "Activează o comandă rapidă prin gesturi pentru a accesa ecranele de diagnosticare inginerească ascunse."
+                "name": "Developer & Service Diagnostic Screen Shortcut",
+                "desc": "Enables quick gesture shortcut to access hidden engineering diagnostic screens."
             },
             "easteregg_seasonal_cluster_theme_effect": {
-                "name": "Suprapunere tematică a grupului meteo sezonier",
-                "desc": "Adaugă un fundal animat cu fulgi de zăpadă sau particule de ploaie pentru a măsura clusterul în timpul iernii."
+                "name": "Seasonal Weather Cluster Theme Overlay",
+                "desc": "Adds animated snowflake or rain particle background to gauge cluster in winter."
             },
             "easteregg_valet_mode_prank_warning_message": {
-                "name": "Avertisment pop-up pentru farsă în modul Valet Limită viteză",
-                "desc": "Afișează un mesaj de avertizare umoristic strict pe tabloul de bord dacă modul valet este depășit."
+                "name": "Valet Mode Prank Speed Limit Popup Warning",
+                "desc": "Displays humorously strict warning message on dashboard if valet mode is exceeded."
             },
             "adas_lane_keep_assist_gentle_curve": {
-                "name": "Curba de intervenție a direcției blânde de asistență pentru menținerea benzii.",
-                "desc": "Înmoaie remorcherele bruște ale volanului prin aplicarea intervenției progresive cuplului."
+                "name": "Lane Keep Assist Gentle Steering Intervention Curve",
+                "desc": "Softens sudden steering wheel tugs by applying progressive torque intervention."
             },
             "adas_lka_last_state_memory_mode": {
-                "name": "Blocarea memoriei la ultima stare de asistență pentru păstrarea benzii",
-                "desc": "Împiedică LKA să se repornească automat de fiecare dată când contactul este repornit."
+                "name": "Lane Keep Assist Last State Memory Lock",
+                "desc": "Prevents LKA from automatically turning back ON every time ignition is restarted."
             },
             "adas_acc_default_follow_distance": {
-                "name": "Controlul adaptiv al vitezei de croazieră Distanță prestabilită",
-                "desc": "Setează setarea implicită a intervalului de fiecare dată când ACC este pornit."
+                "name": "Adaptive Cruise Control Default Distance Preset",
+                "desc": "Sets default gap setting whenever ACC is powered on."
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "Selector de trepte pentru creșterea vitezei de croazieră ACC",
-                "desc": "Schimbă treapta butonului de viteză pe volan cu apăsare scurtă de la 1 km/h la 5 km/h."
+                "name": "ACC Cruise Speed Increment Step Selector",
+                "desc": "Changes short-press steering wheel speed button step from 1 km/h to 5 km/h."
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
-                "name": "Scut antiorbire adaptiv pentru faza lungă Matrix LED fără orbire",
-                "desc": "Deblochează fazele lungi adaptive cu specificații europene pe mașinile nord-americane."
+                "name": "Matrix LED Glare-Free Adaptive High-Beam Glare Shield",
+                "desc": "Unlocks European-spec adaptive beam-forming high beams on North American cars."
             },
             "adas_traffic_jam_assist_follow_fine_tune": {
-                "name": "Întârziere de reluare a asistenței pentru blocajele în trafic",
-                "desc": "Extinde fereastra de repornire automată stop-and-go de la 3 secunde la 15 secunde."
+                "name": "Traffic Jam Assist Stop-and-Go Resume Delay",
+                "desc": "Extends automatic stop-and-go restart window from 3 seconds to 15 seconds."
             },
             "adas_rear_radar_blind_spot_zero_point_reset": {
-                "name": "Calibrarea unghiului cu punct mort al radarului pentru unghiul mort din spate",
-                "desc": "Recalibrează unghiul de azimut al radarului barei de protecție spate după îndepărtarea sau repararea barei de protecție."
+                "name": "Rear Blind Spot Radar Zero-Point Angle Calibration",
+                "desc": "Recalibrates rear bumper radar azimuth angle after bumper removal or repair."
             },
             "adas_surround_camera_stitching_recalib": {
-                "name": "Aliniere dinamică a cusăturii imaginii camerei de vedere înconjurătoare",
-                "desc": "Execută calibrarea dinamică a cusăturii imaginii camerei în timp ce conduceți pe drum."
+                "name": "Surround View Camera Dynamic Image Stitching Alignment",
+                "desc": "Executes dynamic camera image stitching calibration while driving on road."
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "Calibrarea punctului zero al senzorului unghiului de virare .",
-                "desc": "Resetează unghiul centrului de direcție la 0,0° după serviciul de aliniere a roților."
+                "name": "Steering Angle Sensor Zero-Point Calibration",
+                "desc": "Resets steering center angle to 0.0° following wheel alignment service."
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "Interval de detectare a alertei de trafic transversal din spate.",
-                "desc": "Mărește distanța de detectare a radarului lateral pentru vehiculele care se apropie în timp ce ies înapoi."
+                "name": "Rear Cross-Traffic Alert Detection Range",
+                "desc": "Increases side radar detection distance for vehicles approaching while backing out."
             },
             "adas_aeb_emergency_braking_threshold_preview": {
-                "name": "Eficacitatea avertismentelor pentru frânarea automată de urgență.",
-                "desc": "Reglează sincronizarea soneriei de avertizare timpurie și târzie pentru alertele de coliziune directă."
+                "name": "Automatic Emergency Braking Warning Efficacy",
+                "desc": "Adjusts early vs late warning chime timing for forward collision alerts."
             },
             "adas_night_vision_camera_alignment": {
-                "name": "Alinierea țintei camerei termice cu vedere nocturnă în infraroșu",
-                "desc": "Inițiază secvența de verificare a alinierii piedestalului camerei în infraroșu."
+                "name": "Infrared Night Vision Thermal Camera Target Alignment",
+                "desc": "Initiates infrared camera pedestal alignment verification sequence."
             },
             "adas_dms_driver_monitoring_ir_threshold": {
-                "name": "DMS Atenția șoferului Sensibilitatea camerei la infraroșu",
-                "desc": "Reglează pragul de urmărire a ochilor pentru șoferii care poartă ochelari de soare polarizați de culoare închisă."
+                "name": "DMS Driver Attention Camera Infrared Sensitivity",
+                "desc": "Adjusts eye tracking threshold for drivers wearing dark polarized sunglasses."
             },
             "toyota_soft_close_door_retrofit_coding": {
-                "name": "Codificarea actuatorului de vid pentru ușă cu închidere uşoară",
-                "desc": "Activează dispozitivele de tragere a zăvorului ușii electrice în modulul de control al caroseriei."
+                "name": "Power Soft-Close Door Vacuum Actuator Coding",
+                "desc": "Enables power door latch pull-in actuators in body control module."
             },
             "toyota_digital_speedometer_display_enable": {
-                "name": "Afișaj al ecartamentului central al vitezometrului digital",
-                "desc": "Adaugă citire digitală mare a vitezei LCD-ului panoului de instrumente analogic."
+                "name": "Digital Speedometer Center Gauge Display",
+                "desc": "Adds large digital speed readout to analog instrument cluster LCD."
             },
             "toyota_walk_away_auto_lock_sensitivity": {
-                "name": "Sensibilitate de blocare automată a ușii cu cheie inteligentă Walk-Away",
-                "desc": "Reglează pragul de distanță înainte ca ușile să se blocheze automat la plecare."
+                "name": "Walk-Away Smart Key Auto Door Locking Sensitivity",
+                "desc": "Adjusts distance threshold before doors automatically lock when walking away."
             },
             "toyota_jbl_3d_eq_audio_profile_unlock": {
-                "name": "Curbe de egalizare a sunetului surround JBL Premium",
-                "desc": "Deblochează profilele de egalizare 3D a sălii de concerte în unitatea principală audio JBL."
+                "name": "JBL Premium Surround Sound Equalizer Curves",
+                "desc": "Unlocks 3D concert hall equalizer profiles in JBL audio head unit."
             },
             "toyota_ev_mode_throttle_override_suppression": {
-                "name": "Suprimarea limitei de accelerație electrică pură în modul EV",
-                "desc": "Împiedică motorul pe benzină să pornească în timpul accelerării moderate EV."
+                "name": "EV Mode Pure Electric Throttle Limit Suppression",
+                "desc": "Prevents gasoline engine from kicking ON during moderate EV acceleration."
             },
             "ford_sync3_engineering_diagnostics_page": {
-                "name": "SYNC3 / SYNC4 Ecran de diagnosticare de inginerie cu ecran tactil",
-                "desc": "Activează GPS brut, testul APIM și ecranele de diagnosticare a frecvenței audio pe SYNC."
+                "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostic Screen",
+                "desc": "Enables raw GPS, APIM test, and audio frequency diagnostic screens on SYNC."
             },
             "ford_rear_seat_entertainment_unlock": {
-                "name": "Scaunul din spate HDMI / Video Entertainment Audio Pass-Through",
-                "desc": "Permite streaming audio la căștile din cabină pentru ecranele de divertisment de pe locurile din spate."
+                "name": "Rear Seat HDMI / Video Entertainment Audio Pass-Through",
+                "desc": "Enables cabin headphone audio streaming for rear seat entertainment screens."
             },
             "ford_bambi_mode_fog_light_expansion": {
-                "name": "Modul Bambi Faza lungă + Lumină de ceață Iluminare simultană",
-                "desc": "Menține luminile de ceață față aprinse chiar și atunci când farurile cu faza lungă sunt activate."
+                "name": "Bambi Mode High Beam + Fog Light Simultaneous Illumination",
+                "desc": "Keeps front fog lights powered ON even when high beam headlights are activated."
             },
             "ford_auto_engine_idle_shutdown_30min_override": {
-                "name": "Oprire automată a motorului la ralanti de 30 de minute Dezactivare",
-                "desc": "Împiedică oprirea automată a motorului după 30 de minute de parcare."
+                "name": "30-Minute Idle Auto Engine Shutdown Disable",
+                "desc": "Prevents engine from shutting OFF automatically after 30 minutes in Park."
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "N Grin Shift Deblocare 20 de secunde Overboost Retrofit",
-                "desc": "Activează funcția de supraalimentare a butonului NGS de pe volan în ECU."
+                "name": "N Grin Shift 20-Second Overboost Retrofit Unlock",
+                "desc": "Enables steering wheel NGS button overboost function in ECU."
             },
             "hyundai_smart_tailgate_approach_distance": {
-                "name": "Sensare inteligentă de proximitate pentru apropierea hayonului, fără mâini",
-                "desc": "Reglează timpul de întârziere în picioare înainte ca hayonul inteligent să se deschidă automat."
+                "name": "Smart Hands-Free Tailgate Approach Proximity Sensing",
+                "desc": "Adjusts standing delay time before smart tailgate automatically opens."
             },
             "hyundai_digital_cluster_n_performance_theme": {
                 "name": "N Performance Digital Instrument Cluster Gauge Layout",
-                "desc": "Aplică aspectul cluster al indicatorului de schimbare roșu N-Performance pe tabloul LCD standard."
+                "desc": "Applies N-Performance red shift-indicator cluster layout to standard LCD dash."
             },
             "stellantis_scr_adblue_warning_threshold_adjust": {
-                "name": "Ajustarea pragului distanței de avertizare SCR AdBlue",
-                "desc": "Reglează prima distanță de avertizare a mementoului de reumplere cu AdBlue de la 2400 km la 1000 km."
+                "name": "SCR AdBlue Warning Distance Threshold Adjustment",
+                "desc": "Adjusts first AdBlue refill reminder warning distance from 2400 km to 1000 km."
             },
             "stellantis_jeep_trail_rated_offroad_pages": {
-                "name": "Pagini de telemetrie off-road pentru Jeep Uconnect",
-                "desc": "Deblochează paginile de pas, ruliu, articulația roților și temperatura lichidului de răcire pe Uconnect."
+                "name": "Jeep Uconnect Trail-Rated Off-Road Telemetry Pages",
+                "desc": "Unlocks drivetrain pitch, roll, wheel articulation, and coolant temp pages on Uconnect."
             },
             "stellantis_peugeot_icockpit_3d_color_schemes": {
-                "name": "Paleta de culori personalizată Peugeot 3D i-Cockpit",
-                "desc": "Deblochează temele de culoare Cupru și Cuarț pentru instrumentele digitale holografice 3D."
+                "name": "Peugeot 3D i-Cockpit Custom Color Scheme Palette",
+                "desc": "Unlocks Copper and Quartz color themes for 3D holographic digital instrument cluster."
             },
             "gm_super_cruise_follow_distance_adjust": {
-                "name": "Compensarea distanței de urmărire a mâinilor libere Super Cruise",
-                "desc": "Personalizează distanța dintre distanțe în timpul conducerii autonome pe autostradă Super Cruise."
+                "name": "Super Cruise Hands-Free Following Distance Offset",
+                "desc": "Customizes gap spacing during autonomous Super Cruise highway driving."
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "Calibrarea poziției și înclinării punctului zero de afișare Head-Up Display.",
-                "desc": "Resetează unghiul de imagine al proiectorului HUD al parbrizului și alinierea orizontului la nivel zero."
+                "name": "Head-Up Display Position & Tilt Zero-Point Calibration",
+                "desc": "Resets wind-shield HUD projector image angle and zero-level horizon alignment."
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
-                "name": "Anulare dezactivare cilindr AFM / DFM",
-                "desc": "Dezactivează scăderea cilindrului Active Fuel Management pentru a menține motorul să funcționeze în modul cu 8 cilindri."
+                "name": "AFM / DFM Cylinder Deactivation Override",
+                "desc": "Disables Active Fuel Management cylinder drop to keep engine operating in 8-cylinder mode."
             },
             "dodge_ram_truck_fog_lights_with_high_beam": {
-                "name": "Faruri de ceață pentru camion RAM cu faza lungă",
-                "desc": "Împiedică stingerea automată a luminilor de ceață când luminile lungi sunt aprinse."
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Prevents fog lights from turning OFF automatically when high beams are switched ON."
             },
             "toyota_keyless_window_down": {
-                "name": "Fereastra cheie Toyota deschisă",
-                "desc": "Derulează toate geamurile electrice când țineți apăsat butonul DEBLOCARE de pe telecomandă."
+                "name": "Toyota Key Fob Window Open",
+                "desc": "Rolls down all power windows when holding UNLOCK button on remote fob."
             },
             "toyota_seatbelt_chime_disable": {
-                "name": "Dezactivarea alarmei pentru centura de siguranță pasager Toyota",
-                "desc": "Dezactivează soneria acustică persistentă de avertizare a centurii de siguranță pe scaunul pasagerului."
+                "name": "Toyota Passenger Seatbelt Alarm Mute",
+                "desc": "Disables persistent acoustic seatbelt warning chime in passenger seat."
             },
             "honda_walkaway_auto_lock": {
-                "name": "Încuietoare automată Honda Walk-Away",
-                "desc": "Încuie automat toate ușile când cheia inteligentă părăsește o rază de 2,5 m a vehiculului."
+                "name": "Honda Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when Smart Key leaves 2.5m vehicle radius."
             },
             "volvo_speed_limiter_unlock": {
-                "name": "Limitator de viteză din fabrică Volvo 180 km/h extins",
-                "desc": "Reglează limita de viteză din fabrică de 180 km/h pentru utilizarea performanței pe cale/Autobahn."
+                "name": "Volvo 180 km/h Factory Speed Limiter Extended",
+                "desc": "Adjusts 180 km/h factory speed cap for Track / Autobahn performance use."
             },
             "byd_v2l_3kw_power_unlock": {
-                "name": "BYD Vehicle-to-Load 3.6kW AC ieșire Mod",
-                "desc": "Permite portul de descărcare extern V2L AC de 220 V/3,6 kW pentru aparatele de camping."
+                "name": "BYD Vehicle-to-Load 3.6kW AC Output Mode",
+                "desc": "Enables external 220V/3.6kW V2L AC discharge port for camping appliances."
             },
             "xiaomi_su7_drift_mode_unlock": {
                 "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
-                "desc": "Activează 100% polarizarea cuplului motorului din spate și modul ESC Track Drift."
+                "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset",
-                "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
+                "name": "Oil Service Interval Reset",
+                "desc": "Resets oil change service counter and inspection interval for VAG vehicles."
             },
             "vag_epb_service_mode": {
-                "name": "Frâna de parcare electronică Modul service plăcuțe de frână",
-                "desc": "Retrage pistoanele etrierului EPB din spate pentru înlocuirea plăcuței de frână spate și a rotorului."
+                "name": "Electronic Parking Brake Brake Pad Service Mode",
+                "desc": "Retracts rear EPB caliper pistons for rear brake pad and rotor replacement."
             },
             "bmw_bms_battery_registration": {
-                "name": "Înregistrarea bateriei cu senzor inteligent de baterie.",
-                "desc": "Înregistrează noua înlocuire a bateriei de 12V AGM/plumb-acid în managementul motorului DME/DDE."
+                "name": "Intelligent Battery Sensor Battery Registration",
+                "desc": "Registers new 12V AGM/Lead-acid battery replacement in DME/DDE engine management."
             },
             "bmw_motorrad_service_indicator_reset": {
-                "name": "Service anual BMW Motorrad și resetarea indicatorului de ulei",
-                "desc": "Șterge data de service anuală și memento-ul de distanță de 10.000 km pe tabloul de instrumente TFT."
+                "name": "BMW Motorrad Annual Service & Oil Indicator Reset",
+                "desc": "Clears annual service date and 10,000 km distance reminder on TFT instrument cluster."
             },
             "ducati_desmo_service_reset": {
-                "name": "Memento de service supapă Ducati Desmo Șterge",
-                "desc": "Șterge pictograma cheie Desmoservice de pe tabloul de bord după 15.000 / 30.000 km de service."
+                "name": "Ducati Desmo Valve Service Reminder Clear",
+                "desc": "Clears Desmoservice wrench icon on dashboard after 15,000 / 30,000 km service."
             },
             "byd_bms_isolation_self_test": {
-                "name": "Autotest pentru izolarea de înaltă tensiune a bateriei BYD Blade",
-                "desc": "Efectuează diagnosticarea scurgerilor și rezistenței sistemului de înaltă tensiune în BMS."
+                "name": "BYD Blade Battery High-Voltage Isolation Self-Test",
+                "desc": "Executes high-voltage system leakage & resistance diagnostics in BMS."
             },
             "vag_drl_brightness_multi": {
-                "name": "Reglarea luminozității luminilor de zi .",
-                "desc": "Reglați nivelul de intensitate LED DRL pentru faza scurtă / modul de parcare."
+                "name": "Daytime Running Lights Brightness Adjustment",
+                "desc": "Adjust LED DRL intensity level for low-beam / parking mode."
             },
             "bmw_comfort_turn_signal_cycles": {
-                "name": "Număr de impulsuri pentru semnalul de întoarcere confortabil cu o singură atingere",
-                "desc": "Selectați câte clipituri apar la atingerea rapidă a pârghiei indicatorului de viraj."
+                "name": "One-Touch Comfort Turn Signal Pulse Count",
+                "desc": "Select how many blinks occur on quick tap of turn indicator lever."
             },
             "bmw_oil_service_reset": {
-                "name": "Resetarea uleiului de motor CBS",
-                "desc": "Resetează procentul de viață al uleiului de service bazat pe condiții la 100%."
+                "name": "CBS Engine Oil Reset",
+                "desc": "Resets Condition Based Service oil life percentage back to 100%."
             },
             "generic_oil_service_reset": {
-                "name": "Resetare indicator universal de întreținere a uleiului",
-                "desc": "Șterge ledul de avertizare pentru întreținerea uleiului de bord pe ECU-urile OBD2/UDS acceptate."
+                "name": "Universal Oil Maintenance Indicator Reset",
+                "desc": "Clears dashboard oil maintenance warning light across supported OBD2/UDS ECUs."
             },
             "vag_epb_pad_change": {
-                "name": "Modul de înlocuire a plăcuțelor de frână EPB",
-                "desc": "Retrage etrierele electronice de frână de parcare pentru întreținerea plăcuțelor de frână spate."
+                "name": "EPB Brake Pad Replacement Mode",
+                "desc": "Retracts electronic parking brake calipers for rear brake pad servicing."
             },
             "bmw_epb_pad_change": {
-                "name": "Modul service frânare EPB",
-                "desc": "Deschide dispozitivul de acţionare a frânei de mână în poziţia de service pentru înlocuirea plăcuţei din spate."
+                "name": "EPB Brake Service Mode",
+                "desc": "Opens parking brake actuator to service position for rear pad replacement."
             },
             "mb_epb_pad_change": {
-                "name": "Modul de montare a plăcuțelor EPB",
-                "desc": "Eliberează axul frânei de mână în poziția atelierului pentru service-ul de frână."
+                "name": "EPB Pad Fitting Mode",
+                "desc": "Releases parking brake spindle to workshop position for brake service."
             },
             "vag_dpf_regen": {
-                "name": "Declanșator de regenerare a serviciului DPF",
-                "desc": "Inițiază ciclul staționar de ardere a funinginei filtrului de particule diesel."
+                "name": "DPF Service Regeneration Trigger",
+                "desc": "Initiates stationary Diesel Particulate Filter soot burn-off cycle."
             },
             "bmw_dpf_regen": {
-                "name": "Trigger de regenerare forțată DPF",
-                "desc": "Solicită ECU DDE să pornească rutina activă de regenerare a filtrului de particule."
+                "name": "DPF Forced Regeneration Trigger",
+                "desc": "Requests DDE ECU to start active particulate filter regeneration routine."
             },
             "psa_dpf_regen": {
-                "name": "Cerere de regenerare DPF",
-                "desc": "Declanșează regenerarea DPF staționară pentru ECU-urile motoarelor diesel HDi."
+                "name": "DPF Regeneration Request",
+                "desc": "Triggers stationary DPF regeneration for HDi diesel engine ECUs."
             },
             "bmw_bms_battery_register": {
-                "name": "Înregistrare BMS pentru înlocuirea bateriei",
-                "desc": "Înregistrează înlocuirea bateriei noi cu senzorul inteligent de baterie DME/DDE."
+                "name": "BMS Battery Replacement Registration",
+                "desc": "Registers new battery replacement with DME/DDE Intelligent Battery Sensor."
             },
             "mb_bms_battery_register": {
-                "name": "Înregistrarea și resetarea bateriei",
-                "desc": "Resetează contorul de îmbătrânire a bateriei în modulul SAM după instalarea bateriei noi."
+                "name": "Battery Registration & Reset",
+                "desc": "Resets battery aging counter in SAM module after new battery installation."
             },
             "vag_sas_calibrate": {
-                "name": "Calibrarea senzorului unghiului de virare",
-                "desc": "Calibrează poziția punctului zero a senzorului unghiului de virare G85 pentru ABS/ESP ECU."
+                "name": "Steering Angle Sensor Calibration",
+                "desc": "Calibrates G85 steering angle sensor zero-point position for ABS/ESP ECU."
             },
             "toyota_sas_calibrate": {
-                "name": "Calibrarea punctului zero al unghiului de virare",
-                "desc": "Efectuează calibrarea punctului zero a senzorului unghiului de virare în ECU de control al derapajului."
+                "name": "Steering Angle Zero Point Calibration",
+                "desc": "Performs zero point calibration of steering angle sensor in Skid Control ECU."
             },
             "generic_tba_adapt": {
-                "name": "Alinierea și adaptarea corpului clapetei",
-                "desc": "Execută rutina de învățare a opririi corpului clapetei electronice în ECU al motorului."
+                "name": "Throttle Body Alignment & Adaptation",
+                "desc": "Executes electronic throttle body stop learning routine in engine ECU."
             },
             "epb_service_reset": {
-                "name": "Resetare întreținere EPB universală",
-                "desc": "Resetează contorul electronic de uzură a etrierului de frână de mână și calibrează spațiul de aer."
+                "name": "Universal EPB Maintenance Reset",
+                "desc": "Resets electronic park brake caliper wear counter and calibrates air gap."
             },
             "vag_dsg_reset": {
-                "name": "Resetarea setărilor de bază ale transmisiei DSG",
-                "desc": "Resetează punctele de cuplare a ambreiajului și adaptările supapei de schimbare pentru DSG/S-Tronic."
+                "name": "DSG Transmission Basic Settings Reset",
+                "desc": "Resets clutch engagement points and shift valve adaptations for DSG/S-Tronic."
             },
             "bmw_zf_reset": {
-                "name": "Resetarea adaptării transmisiei ZF 8HP",
-                "desc": "Șterge timpul de schimbare a transmisiei EGS și valorile de adaptare la presiune."
+                "name": "ZF 8HP Transmission Adaptation Reset",
+                "desc": "Clears EGS transmission shift time and pressure adaptation values."
             },
             "bmw_brake_fluid_reset": {
-                "name": "Resetarea intervalului de service lichid de frână",
-                "desc": "Resetează cronometrul de schimbare a lichidului de frână de 2 ani."
+                "name": "Brake Fluid Service Interval Reset",
+                "desc": "Resets Condition Based Service 2-year brake fluid change timer."
             },
             "ford_injector_code": {
-                "name": "Codificarea factorului de corecție a injectorului",
-                "desc": "Programează coduri IQA de 16 caractere pentru injectoare diesel în PCM."
+                "name": "Injector Correction Factor Coding",
+                "desc": "Programs 16-character IQA codes for diesel injectors into PCM."
             },
             "bmw_injector_code": {
-                "name": "Codarea debitului injectorului de combustibil",
-                "desc": "Scrie valorile de calibrare a energiei pentru injectoarele de combustibil înlocuite în DME."
+                "name": "Fuel Injector Flow Rate Coding",
+                "desc": "Writes energy calibration values for replaced fuel injectors into DME."
             },
             "generic_headlight_aim": {
-                "name": "Calibrare auto-nivelare faruri",
-                "desc": "Setează poziţia zero de referinţă pentru motoarele farurilor cu autonivelare adaptivă."
+                "name": "Headlight Auto-Leveling Calibration",
+                "desc": "Sets reference zero position for adaptive auto-leveling headlight motors."
             },
             "bmw_12v_battery_reg": {
-                "name": "Înregistrare baterie auxiliară de 12 V",
-                "desc": "Înregistrează înlocuirea bateriei de pornire/suport AGM auxiliară în PCU."
+                "name": "12V Auxiliary Battery Registration",
+                "desc": "Registers auxiliary AGM starter/support battery replacement in PCU."
             },
             "vag_comfort_turn_signal": {
-                "name": "Număr de clipiri ale semnalului de întoarcere confort",
-                "desc": "Reglează numărul ciclului de schimbare a benzii intermitent între 3, 4 și 5 clipiri."
+                "name": "Comfort Turn Signal Blink Count",
+                "desc": "Adjusts lane change blinker cycle count between 3, 4, and 5 flashes."
             },
             "vag_coming_home_duration": {
-                "name": "Durata luminii la venirea/plecarea acasă",
-                "desc": "Configurați temporizatorul de iluminare a farurilor după blocarea vehiculului."
+                "name": "Coming/Leaving Home Light Duration",
+                "desc": "Configures headlight illumination timer after vehicle locking."
             },
             "vag_remote_windows": {
-                "name": "Control de la distanță al ferestrei",
-                "desc": "Permite deschiderea și închiderea geamurilor electrice prin apăsare lungă a telecomenzii."
+                "name": "Remote Convenience Window Control",
+                "desc": "Enables opening and closing power windows via remote key fob long press."
             },
             "vag_auto_lock_15kmh": {
-                "name": "Blocare automată a ușii la 15 km/h",
-                "desc": "Închide automat toate ușile când viteza vehiculului atinge 15 km/h."
+                "name": "Auto Door Lock at 15 km/h",
+                "desc": "Automatically locks all doors when vehicle speed reaches 15 km/h."
             },
             "vag_sfd_unlock_prep": {
-                "name": "Pregătirea stării protecției SFD Gateway",
-                "desc": "Pregătește sesiunea de simboluri gateway MQB-evo SFD pentru scrierea DID-urilor protejate."
+                "name": "SFD Gateway Protection Status Prep",
+                "desc": "Prepares MQB-evo SFD gateway token session for writing protected DIDs."
             },
             "bmw_asd_deactivate": {
-                "name": "Dezactivare Active Sound Design",
-                "desc": "Dezactivează sunetul sintetic al motorului redat prin difuzoarele din cabină."
+                "name": "Active Sound Design Deactivation",
+                "desc": "Mutes synthetic engine sound played through cabin speakers."
             },
             "bmw_comfort_turn_signal": {
-                "name": "Număr de semnale de viraj confort",
-                "desc": "Setează numărul de impulsuri al indicatorului cu o singură atingere."
+                "name": "Comfort Turn Signal Count",
+                "desc": "Sets one-touch indicator pulse count."
             },
             "bmw_mirror_fold_lock": {
-                "name": "Oglindă cu acces confortabil rabatabil pe blocare",
-                "desc": "Pliază automat oglinzile laterale imediat după blocarea vehiculului."
+                "name": "Comfort Access Mirror Fold on Lock",
+                "desc": "Automatically folds side mirrors immediately upon locking vehicle."
             },
             "toyota_coming_home_duration": {
-                "name": "Întârziere de curtoazie pentru faruri/Întoarcere acasă",
-                "desc": "Configurați temporizatorul de întârziere pentru oprirea farurilor după oprirea contactului."
+                "name": "Headlight Courtesy Delay / Coming-Home",
+                "desc": "Configures headlight off delay timer after ignition shutdown."
             },
             "toyota_lane_change_flash": {
-                "name": "Număr bliț pentru semnalul de viraj pentru schimbarea benzii",
-                "desc": "Reglează numărul de cicluri de schimbare a benzii cu o singură atingere."
+                "name": "Lane-Change Turn Signal Flash Count",
+                "desc": "Adjusts one-touch lane change blinker cycle count."
             },
             "toyota_remote_window_close": {
-                "name": "Închidere geam electric la distanță",
-                "desc": "Permite închiderea tuturor geamurilor electrice ținând apăsat butonul de blocare de la distanță."
+                "name": "Remote Power Window Closure",
+                "desc": "Allows closing all power windows by holding remote lock button."
             },
             "toyota_autolock_behavior": {
-                "name": "Personalizare blocare/deblocare automată a ușilor",
-                "desc": "Setează declanșatorul de blocare a ușilor."
+                "name": "Auto Door Lock/Unlock Customization",
+                "desc": "Sets door locking trigger."
             },
             "toyota_approach_welcome_lights": {
-                "name": "Lumini de întâmpinare Smart Key Approach",
-                "desc": "Aprinde luminile interioare ale bălții/cabinei când cheia inteligentă se apropie de vehicul."
+                "name": "Smart Key Approach Welcome Lights",
+                "desc": "Turns on interior puddle/cabin lights when smart key approaches vehicle."
             },
             "hyundai_autolock_behavior": {
-                "name": "Comportament de blocare/deblocare automată a ușilor",
-                "desc": "Încuie automat ușile în schimbare sau viteză și se deblochează pe P sau cu contactul oprit."
+                "name": "Auto Door Lock/Unlock Behavior",
+                "desc": "Automatically locks doors on shift or speed and unlocks on P or Ignition Off."
             },
             "hyundai_window_remote": {
-                "name": "Deschidere/Închidere fereastră de la distanță",
-                "desc": "Permite rularea ferestrelor în sus/în jos, folosind butoanele inteligente pentru chei."
+                "name": "Remote Window Open/Close",
+                "desc": "Enables rolling windows up/down using smart key fob buttons."
             },
             "hyundai_sport_mode_memory": {
-                "name": "Memorie de selectare a modului de conducere",
-                "desc": "Își amintește ultimul mod de conducere selectat după repornirea motorului."
+                "name": "Drive Mode Select Memory",
+                "desc": "Remembers last selected Drive Mode after engine restart."
             },
             "tesla_charge_limit_custom": {
-                "name": "Personalizare limită de încărcare a bateriei",
-                "desc": "Setează procentul implicit de încărcare a bateriei HV."
+                "name": "Battery Charge Limit Customization",
+                "desc": "Sets default HV battery charge limit percentage."
             },
             "tesla_mirror_fold_lock": {
-                "name": "Pliere automată în oglindă pe blocarea Walk-Away",
-                "desc": "Pliază automat oglinzile laterale atunci când se declanșează blocarea cheii telefonului."
+                "name": "Mirror Auto-Fold on Walk-Away Lock",
+                "desc": "Automatically folds side mirrors when phone key walk-away lock triggers."
             },
             "nissan_coming_home": {
-                "name": "Întârziere pentru oprirea farurilor de curtoazie",
-                "desc": "Păstrează farurile aprinse timp de 30 de secunde după ieșirea din vehiculul Nissan."
+                "name": "Courtesy Headlight Off Delay",
+                "desc": "Keeps headlights illuminated for 30 seconds after exiting Nissan vehicle."
             },
             "nissan_lane_change_flash": {
-                "name": "Număr de lumini pentru schimbarea benzii de la atingere pentru trecere",
-                "desc": "Setează numărul de puls al indicatorului de semnalizare la robinetul luminii."
+                "name": "Tap-to-Pass Lane Change Flash Count",
+                "desc": "Sets turn signal indicator pulse count on light stalk tap."
             },
             "nissan_autolock_behavior": {
-                "name": "Blocare automată a ușii în funcție de viteză",
-                "desc": "Încuie automat toate ușile când vehiculul atinge 24 km/h."
+                "name": "Speed-Dependent Automatic Door Lock",
+                "desc": "Locks all doors automatically when vehicle reaches 24 km/h."
             },
             "nissan_window_remote": {
-                "name": "Telecomandă cu telecomandă pentru geam electric",
-                "desc": "Deschide/închide geamurile din față prin apăsarea lungă a butonului de deblocare a cheii."
+                "name": "Remote Key Fob Power Window Control",
+                "desc": "Opens/closes front windows via key fob unlock button long press."
             },
             "nissan_seatbelt_chime_mute": {
-                "name": "Suprimare sonoră audio de avertizare centură de siguranță",
-                "desc": "Dezactivează sunetul repetitiv de avertizare pentru centura de siguranță, păstrând pictograma grupului."
+                "name": "Seatbelt Warning Audio Chime Suppress",
+                "desc": "Mutes repetitive seatbelt warning chime while keeping cluster icon."
             },
             "porsche_sport_chrono_launch": {
-                "name": "Profil de răspuns la controlul lansării Sport Chrono",
-                "desc": "Optimizează controlul lansării transmisiei PDK pragul RPM și muşcătura ambreiajului."
+                "name": "Sport Chrono Launch Control Response Profile",
+                "desc": "Optimizes PDK transmission launch control RPM threshold & clutch bite."
             },
             "porsche_pasm_default": {
-                "name": "Presetare de pornire a modului de suspensie PASM",
-                "desc": "Setează rigiditatea implicită a suspensiei adaptive PASM la pornirea contactului."
+                "name": "PASM Suspension Mode Startup Preset",
+                "desc": "Sets PASM adaptive suspension default stiffness on ignition start."
             },
             "porsche_exhaust_flap": {
-                "name": "Clapeta de evacuare sport Compensare deschisă constantă",
-                "desc": "Forțează supapele de evacuare active să rămână deschise 100% în toate intervalele de turații."
+                "name": "Sport Exhaust Flap Constant Open Override",
+                "desc": "Forces active exhaust valves to stay 100% open across all RPM ranges."
             },
             "audi_drive_select_memory": {
                 "name": "Audi Drive Select Mode Memory Retention",
-                "desc": "Păstrează ultimul profil activ Drive Select la repornire."
+                "desc": "Retains last active Drive Select profile upon restart."
             },
             "audi_virtual_cockpit_themes": {
                 "name": "Audi Virtual Cockpit S/RS Sport Graphic Layout",
-                "desc": "Deblochează opțiunile de aranjare a tahometrului central S/RS pe Virtual Cockpit."
+                "desc": "Unlocks S/RS central tachometer layout options on Virtual Cockpit."
             },
             "vag_scandinavian_drl": {
-                "name": "Modul DRL scandinav",
-                "desc": "Menține luminile spate aprinse în mod continuu alături de DRL-urile din față."
+                "name": "Scandinavian DRL Mode",
+                "desc": "Keeps rear tail lights illuminated continuously alongside front DRLs."
             },
             "vag_mirror_dip_reverse": {
-                "name": "Coborârea oglinzii pasagerului în marșarier",
-                "desc": "Pune oglinda pasagerului în jos când treapta de marșarier este cuplată."
+                "name": "Passenger Mirror Dip in Reverse",
+                "desc": "Tills passenger side mirror downward when reverse gear is engaged."
             },
             "vag_dynamic_turn_signal": {
-                "name": "Mod de semnalizare dinamic/secvential",
-                "desc": "Permite modelul de intermitent dinamic cu LED-uri pe modulele de lumini spate compatibile."
+                "name": "Dynamic / Sequential Turn Signal Mode",
+                "desc": "Enables sweeping dynamic LED blinker pattern on compatible rear light modules."
             },
             "vag_seatbelt_warning_duration": {
-                "name": "Reglarea duratei soneriei de avertizare a centurii de siguranță",
-                "desc": "Scurtează sau suprimă temporizatorul de sonerie repetitivă de avertizare a centurii de siguranță."
+                "name": "Seatbelt Warning Chime Duration Adjustment",
+                "desc": "Shortens or suppresses repetitive seatbelt warning chime timer."
             },
             "vag_sunroof_remote": {
-                "name": "Control de confort de la distanță",
-                "desc": "Permite deschiderea și înclinarea trapei panoramice prin menținerea telecomenzii pentru chei."
+                "name": "Sunroof Remote Comfort Control",
+                "desc": "Allows opening and tilting panoramic sunroof via remote key fob hold."
             },
             "vag_acc_distance_preset": {
-                "name": "ACC Adaptive Cruise Distanța de urmărire implicită",
-                "desc": "Setează profilul de distanță de urmărire a radarului implicit la pornirea contactului."
+                "name": "ACC Adaptive Cruise Default Following Distance",
+                "desc": "Sets default radar following distance profile on ignition start."
             },
             "vag_infotainment_startup_logo": {
                 "name": "Infotainment Boot Graphic Logo",
-                "desc": "Personalizează logo-ul ecranului de pornire infotainment."
+                "desc": "Customizes infotainment startup splash screen logo."
             },
             "vag_ambient_color_cycle": {
-                "name": "Deblocarea spectrului de culori a luminii ambientale interioare",
-                "desc": "Extinde opțiunile paletei de iluminare ambientală în meniul de setări ale vehiculului."
+                "name": "Interior Ambient Light Color Spectrum Unlock",
+                "desc": "Expands ambient lighting palette options in vehicle settings menu."
             },
             "vag_service_interval_custom": {
-                "name": "Pragul de distanță personalizat de inspecție și service",
-                "desc": "Configurați km personalizate și obiective zilnice pentru următorul avertisment de service."
+                "name": "Custom Inspection & Service Distance Threshold",
+                "desc": "Configures custom km and day targets for next service warning."
             },
             "vag_door_handle_lights_reverse": {
-                "name": "Luminile exterioare ale mânerului ușii aprinse în marșarier",
-                "desc": "Iluminează luminile LED pentru mânerul ușii atunci când mergeți înapoi pentru vizibilitate la sol."
+                "name": "Exterior Door Handle Lights ON in Reverse",
+                "desc": "Illuminates door handle LED puddle lights when reversing for ground visibility."
             },
             "bmw_msport_exhaust_burble": {
-                "name": "Evacuare M-Sport Burble & Pop Intensity",
-                "desc": "Reglează agresivitatea sunetului burble în modul Sport."
+                "name": "M-Sport Exhaust Burble & Pop Intensity",
+                "desc": "Adjusts overrun burble sound aggressiveness in Sport mode."
             },
             "bmw_welcome_light_sequence": {
-                "name": "Animație de secvență de lumini de bun venit",
-                "desc": "Personalizează farul LED și secvența de salut de bun venit Angel Eyes."
+                "name": "Welcome Light Sequence Animation",
+                "desc": "Customizes LED headlight and Angel Eyes welcome greeting sequence."
             },
             "bmw_service_history_menu": {
-                "name": "Activare meniul istoric al serviciilor digitale",
-                "desc": "Deblochează meniul cărții de înregistrare a serviciului digital iDrive de pe afișajul central."
+                "name": "Digital Service History Menu Enable",
+                "desc": "Unlocks iDrive digital service record book menu on central display."
             },
             "bmw_hud_speed_display": {
-                "name": "Suprapunere a vitezometrului digital cu afișaj head-up",
-                "desc": "Proiectează citirea vitezei digitale în timp real pe afișajul Head-Up."
+                "name": "Head-Up Display Digital Speedometer Overlay",
+                "desc": "Projects real-time digital speed readout onto Head-Up Display."
             },
             "bmw_cornering_lights_fog": {
-                "name": "Lampă de ceață pentru viraj",
-                "desc": "Aprinde lumina de ceață față la semnalul de direcție sau la unghiul de virare la viteză mică."
+                "name": "Fog Lamp Cornering Illumination",
+                "desc": "Turns on front fog light on turn signal or low-speed steering angle."
             },
             "bmw_easy_entry_steering": {
-                "name": "Coloană de direcție cu intrare ușoară cu retractare automată",
-                "desc": "Retrage volanul electric în sus la oprirea motorului pentru o ieșire ușoară."
+                "name": "Easy Entry Auto-Retracting Steering Column",
+                "desc": "Retracts electric steering wheel upward upon engine shutdown for easy exit."
             },
             "bmw_bluetooth_audio_enable": {
-                "name": "Deblocare îmbunătățită a fluxului audio Bluetooth",
-                "desc": "Activează streamingul de muzică fără fir Bluetooth A2DP în iDrive HU_ENTRYNAV."
+                "name": "Enhanced Bluetooth Audio Streaming Unlock",
+                "desc": "Enables A2DP Bluetooth wireless music streaming in iDrive HU_ENTRYNAV."
             },
             "bmw_door_handle_lights_reverse": {
-                "name": "Lumini de baltă în marșarier pentru mânerul ușii exterioare",
-                "desc": "Aprinde LED-urile mânerului ușii când este cuplată marșarierul."
+                "name": "Exterior Door Handle Puddle Lights in Reverse",
+                "desc": "Illuminates door handle LEDs when reverse gear is engaged."
             },
             "toyota_auto_headlight_threshold": {
-                "name": "Sensibilitatea senzorului de lumină ambientală a farurilor automate",
-                "desc": "Reglează pragul de amurg pentru activarea automată a farurilor."
+                "name": "Auto Headlight Ambient Light Sensor Sensitivity",
+                "desc": "Adjusts twilight dusk threshold for automatic headlight activation."
             },
             "toyota_turn_signal_click_volume": {
-                "name": "Volumul difuzorului semnalizator audio Clicker",
-                "desc": "Configurați volumul soneriei de clic a releului semnalizatorului."
+                "name": "Turn Signal Audio Clicker Speaker Volume",
+                "desc": "Configures turn signal relay click chime volume."
             },
             "toyota_smart_key_approach_lights": {
-                "name": "Lumini pentru bălți de bun venit cu cheie inteligentă de proximitate",
-                "desc": "Aprinde luminile din oglindă când cheia inteligentă se apropie de vehicul."
+                "name": "Smart Key Proximity Welcome Puddle Lights",
+                "desc": "Turns on mirror puddle lights when smart key approaches vehicle."
             },
             "toyota_rear_hatch_behavior": {
-                "name": "Logică de funcționare a hayonului electric, deschidere/închidere",
-                "desc": "Configurați durata de apăsare a butonului de trapă de alimentare de la telecomandă și de pe tabloul de bord."
+                "name": "Power Tailgate Liftgate Open/Close Operation Logic",
+                "desc": "Configures remote and dashboard power hatch button press duration."
             },
             "toyota_open_windows_smart_key": {
-                "name": "Apăsare lungă de derulare a ferestrei de la distanță cu cheie inteligentă",
-                "desc": "Permite deschiderea tuturor ferestrelor ținând apăsat butonul de deblocare de la distanță."
+                "name": "Smart Key Remote Window Roll-Down Long Press",
+                "desc": "Allows opening all windows by holding remote unlock button."
             },
             "toyota_interior_light_dim_timer": {
-                "name": "Întârziere la oprire automată a luminii interioare a cabinei",
-                "desc": "Reglează temporizatorul de oprire a luminii interioare după închiderea ușii."
+                "name": "Interior Cabin Light Auto-Dimming Off Delay",
+                "desc": "Adjusts interior dome light shutdown timer after door closure."
             },
             "toyota_panic_alarm_remote": {
-                "name": "Telecomanda cu telecomandă pentru alarmă de panică Funcția sirenă",
-                "desc": "Activează sau dezactivează alarma de panică a claxonului vehiculului prin menținerea cheii de la distanță."
+                "name": "Remote Key Fob Panic Alarm Siren Function",
+                "desc": "Enables or disables vehicle horn panic alarm via remote key hold."
             },
             "toyota_eco_drive_indicator": {
-                "name": "Indicator luminos pentru zona ECO Drive Cluster",
-                "desc": "Afișează bara de accelerație ecologică și indicatorul luminos pe grup."
+                "name": "ECO Drive Cluster Zone Indicator Light",
+                "desc": "Shows eco-friendly acceleration bar and indicator light on cluster."
             },
             "hyundai_coming_home_duration": {
-                "name": "Temporizator de întârziere pentru oprirea farurilor pentru escortă",
-                "desc": "Păstrează farurile de fază scurtă aprinse după ieșirea din vehicul."
+                "name": "Escort Headlight Off Delay Timer",
+                "desc": "Keeps low beam headlights illuminated after vehicle exit."
             },
             "hyundai_drl_menu_toggle": {
-                "name": "Controlul meniului luminilor de zi",
-                "desc": "Adaugă setarea DRL ON/OFF la opțiunile utilizatorului grupului de instrumente."
+                "name": "Daytime Running Lights Menu Control",
+                "desc": "Adds DRL ON/OFF setting to instrument cluster user options."
             },
             "hyundai_welcome_sequence": {
-                "name": "Lumină de bun venit pentru proximitate cheie inteligentă și deschidere a oglinzii",
-                "desc": "Desface oglinzile electrice și luminează mânerele ușilor la apropiere."
+                "name": "Smart Key Proximity Welcome Light & Mirror Unfold",
+                "desc": "Unfolds power mirrors and lights up door handles upon approach."
             },
             "hyundai_interior_light_delay": {
-                "name": "Întârzierea tăierii automate a lămpii de cameră din interiorul cabinei",
-                "desc": "Setează temporizatorul înainte ca luminile interioare să se stingă automat pentru a economisi bateria."
+                "name": "Cabin Interior Room Lamp Auto-Cut Delay",
+                "desc": "Sets timer before interior lights automatically turn off to save battery."
             },
             "hyundai_heat_pump_efficiency": {
-                "name": "Modul de eficiență termică a pompei de căldură EV Climate",
-                "desc": "Optimizează consumul de energie al pompei de căldură EV pe vreme rece de iarnă."
+                "name": "EV Climate Heat Pump Thermal Efficiency Mode",
+                "desc": "Optimizes EV heat pump energy consumption in cold winter weather."
             },
             "tesla_track_mode_params": {
-                "name": "Stabilitate mod pistă și profil de polarizare a cuplului",
-                "desc": "Configurați polarizarea motorului față/spate și intervenția de stabilitate."
+                "name": "Track Mode Stability & Torque Bias Profile",
+                "desc": "Configures front/rear motor drive bias and stability intervention."
             },
             "tesla_regen_brake_strength": {
-                "name": "Profilul puterii de frânare regenerativă",
-                "desc": "Reglează intensitatea recuperării energiei la ridicarea pedalei de accelerație."
+                "name": "Regenerative Braking Power Profile",
+                "desc": "Adjusts accelerator pedal lift-off energy recovery intensity."
             },
             "tesla_walkaway_door_lock": {
-                "name": "Blocare automată a ușii",
-                "desc": "Încuie ușile și confirmă cu un claxon când tasta telefonului se îndepărtează."
+                "name": "Walk-Away Phone Key Auto Door Lock",
+                "desc": "Locks doors and confirms with horn chirp when phone key moves away."
             },
             "tesla_acceleration_boost_unlock": {
-                "name": "Profil de propulsie pentru accelerarea grupului motopropulsor",
-                "desc": "Mărește răspunsul invertorului motorului electric pentru timpi mai rapidi de la 0 la 100 km/h."
+                "name": "Powertrain Acceleration Boost Drive Profile",
+                "desc": "Sharpens electric motor inverter response for faster 0-100 km/h times."
             },
             "tesla_interior_ambient_color": {
-                "name": "Presetați culori pentru iluminarea ambientală a zonei picioarelor cabinei",
-                "desc": "Personalizează paleta de culori RGB pentru lumină ambientală LED pentru picioare."
+                "name": "Cabin Footwell Ambient Lighting Color Preset",
+                "desc": "Customizes LED footwell ambient light RGB color palette."
             },
             "audi_matrix_led_animation": {
-                "name": "Faruri Matrix LED Dynamic Welcome Light Dance",
-                "desc": "Redă coregrafie luminoasă dinamică la deblocarea vehiculului."
+                "name": "Matrix LED Headlight Dynamic Welcome Light Dance",
+                "desc": "Plays dynamic light choreography upon vehicle unlocking."
             },
             "audi_mmi_startup_screen": {
-                "name": "Tema grafică de pornire cu ecran tactil MMI",
-                "desc": "Personalizează animația de pornire a ecranului central MMI."
+                "name": "MMI Touch Screen Boot Graphic Theme",
+                "desc": "Customizes MMI central screen boot animation."
             },
             "audi_drive_select_efficiency": {
-                "name": "Profil de eficiență de conducere în Audi Drive Select",
-                "desc": "Activează modul Eficiență de economisire a combustibilului în opțiunile Drive Select."
+                "name": "Efficiency Driving Profile in Audi Drive Select",
+                "desc": "Enables fuel-saving Efficiency mode in Drive Select options."
             },
             "audi_laptimer_boost_display": {
-                "name": "Suprapunere cronometru și turbobar pentru manometru",
-                "desc": "Afișează cronometrul turei pe pistă și indicatorul turbo boost în timp real pe Virtual Cockpit."
+                "name": "Lap Timer & Turbo Bar Pressure Gauge Overlay",
+                "desc": "Displays track lap timer and real-time turbo boost gauge on Virtual Cockpit."
             },
             "audi_needle_sweep_gauge": {
-                "name": "Verificare măturare ac al indicatorului sport",
-                "desc": "Efectuează testul complet de măturare a acului tahometrului și vitezometrului la pornire."
+                "name": "Sport Gauge Needle Sweep Verification",
+                "desc": "Performs full tachometer and speedometer needle sweep test on start."
             },
             "skoda_coming_home_lights": {
-                "name": "Temporizator de iluminare pentru plecarea de acasă/venirea acasă",
-                "desc": "Configurați temporizatorul de iluminare a farurilor după ieșirea din vehicul."
+                "name": "Leaving Home / Coming Home Lighting Timer",
+                "desc": "Configures headlight illumination timer after vehicle exit."
             },
             "skoda_comfort_turn_signal": {
-                "name": "Reglarea numărului de puls al indicatorului de confort",
-                "desc": "Setează numărul de clipiri ale semnalului de întoarcere cu o singură atingere între 3 și 5 clipiri."
+                "name": "Comfort Indicator Pulse Count Adjustment",
+                "desc": "Sets one-touch turn signal blink count between 3 and 5 flashes."
             },
             "cupra_sport_display_menu": {
-                "name": "Instrument de performanță Cupra și meniul G-Meter",
-                "desc": "Deblochează contorul de forță G, indicatorul de putere kW și afișajul temperaturii uleiului."
+                "name": "Cupra Performance Instrument & G-Meter Menu",
+                "desc": "Unlocks G-force meter, kW power gauge, and oil temp display."
             },
             "cupra_virtual_cockpit_copper": {
-                "name": "Grafică de accent pentru tabloul de bord cu temă de cupru",
-                "desc": "Aplică tema cu accent metalic Cupra cupru la clusterul de măsurare."
+                "name": "Copper Theme Dashboard Accent Graphics",
+                "desc": "Applies signature Cupra copper metallic accent theme to gauge cluster."
             },
             "vag_brake_disc_drying": {
-                "name": "Funcția de ștergere/uscare a discului de frână în ploaie",
-                "desc": "Aplică periodic o presiune minimă pe tampon pe vreme umedă rotoarelor uscate."
+                "name": "Brake Disc Wiping / Drying Function in Rain",
+                "desc": "Periodically applies minimal pad pressure in wet weather to dry rotors."
             },
             "vag_tourist_mode_lights": {
-                "name": "Modelul fasciculului farurilor pentru modul turistic",
-                "desc": "Comută modelul fasciculului farurilor între LHD și RHD pentru a conduce în străinătate."
+                "name": "Tourist Mode Headlight Beam Pattern",
+                "desc": "Switches headlight beam pattern between LHD and RHD for driving abroad."
             },
             "vag_hood_warning_mute": {
-                "name": "Capota deschisă pentru instrumentul Chime Mute",
-                "desc": "Suprimă soneria persistentă de avertizare a instrumentului când capota este deblocată."
+                "name": "Bonnet Open Instrument Chime Mute",
+                "desc": "Suppresses persistent instrument warning chime when hood is unlatched."
             },
             "vag_emergency_brake_hazard": {
-                "name": "Intermitent automat de pericol pentru frânare de urgență",
-                "desc": "Aprinde intermitent luminile de avarie rapid în timpul opririlor dure de urgență ABS."
+                "name": "Emergency Braking Automatic Hazard Flasher",
+                "desc": "Flashes hazard lights rapidly during hard ABS emergency stops."
             },
             "vag_sunroof_comfort_open": {
-                "name": "Înclinarea trapei/Deschiderea telecomenzii Comfort Key Fob Logic",
-                "desc": "Configurați acțiunea de menținere a tastei de la distanță pentru a înclina sau a deschide complet trapa."
+                "name": "Sunroof Tilt / Open Remote Comfort Key Fob Logic",
+                "desc": "Configures remote key hold action to either tilt or fully open sunroof."
             },
             "bmw_ecopro_display_variant": {
-                "name": "Stilul instrumentului de bord ECO PRO",
-                "desc": "Personalizează tema grafică albastră a indicatorului de eficiență ECO PRO."
+                "name": "ECO PRO Instrument Cluster Gauge Styling",
+                "desc": "Customizes blue ECO PRO efficiency gauge graphic theme."
             },
             "bmw_volume_bar_hud": {
-                "name": "Afișaj Head-Up Bara nivel de volum audio",
-                "desc": "Afișează bara de modificare a volumului direct pe proiecția HUD."
+                "name": "Head-Up Display Audio Volume Level Bar Overlay",
+                "desc": "Shows volume change bar directly on HUD projection."
             },
             "bmw_anti_dazzle_mirror": {
-                "name": "Sensibilitate la diminuarea oglinzii anti-orbire electrocromă",
-                "desc": "Reglează automat oglinda retrovizoare atenuarea pragului foto-senzor."
+                "name": "Electrochromic Anti-Dazzle Mirror Dimming Sensitivity",
+                "desc": "Adjusts automatic rearview mirror dimming photo-sensor threshold."
             },
             "bmw_camera_pdc_warning_mute": {
-                "name": "Reglarea vitezei PDC și Vizualizare Surround",
-                "desc": "Reglează pragul de viteză a vehiculului la care se opresc camerele de parcare."
+                "name": "PDC & Surround View Speed Cut-off Speed Adjustment",
+                "desc": "Adjusts vehicle speed threshold at which parking cameras turn off."
             },
             "toyota_pcs_distance_preset": {
-                "name": "Distanța de alertă implicită a sistemului de pre-coliziune",
-                "desc": "Setează sensibilitatea inițială a distanței de avertizare de coliziune directă a radarului."
+                "name": "Pre-Collision System Default Alert Distance",
+                "desc": "Sets initial radar forward collision warning distance sensitivity."
             },
             "toyota_bsm_timing": {
-                "name": "Monitorizarea punctului mort Timpul avertismentului de avertizare",
-                "desc": "Reglează sincronizarea iluminării luminii de avertizare a unghiului mort al oglinzii laterale."
+                "name": "Blind Spot Monitor Warning Warning Timing",
+                "desc": "Adjusts blind spot side mirror warning light illumination timing."
             },
             "toyota_ac_noise_reduction": {
-                "name": "Modul de reducere a zgomotului compresorului de aer condiționat",
-                "desc": "Limitează viteza maximă a suflantei de aer condiționat pentru liniștea cabinei."
+                "name": "A/C Compressor Blower Noise Reduction Mode",
+                "desc": "Limits maximum air conditioning blower fan speed for cabin quietness."
             },
             "toyota_sflow_control": {
-                "name": "S-Flow Smart Climate Modul pentru un singur ocupant",
-                "desc": "Direcționează fluxul de aer A/C exclusiv către locurile ocupate pe baza senzorilor de greutate."
+                "name": "S-Flow Smart Climate Single-Occupant Mode",
+                "desc": "Directs A/C airflow exclusively to occupied seats based on weight sensors."
             },
             "toyota_relock_timeout": {
-                "name": "Temporizator de întârziere pentru reblocarea automată după deblocarea de la distanță",
-                "desc": "Reglează cu secunde înainte de reblocarea automată a ușilor dacă nu este deschisă nicio ușă."
+                "name": "Automatic Re-Lock Delay Timer after Remote Unlock",
+                "desc": "Adjusts seconds before doors auto-relock if no door is opened."
             },
             "lexus_mark_levinson_audio_profile": {
-                "name": "Mark Levinson Sunet surround DSP Audio Profil",
-                "desc": "Optimizează reglarea acustică spațială 3D pentru difuzoarele premium Mark Levinson."
+                "name": "Mark Levinson Surround Sound DSP Audio Profile",
+                "desc": "Optimizes 3D spatial acoustic tuning for Mark Levinson premium speakers."
             },
             "lexus_ev_mode_beeper_mute": {
-                "name": "Avertisment acustic EV pentru pietoni de viteză mică Dezactivare semnal sonor",
-                "desc": "Suprimă sunetul exterior sintetic în modul electric de viteză mică."
+                "name": "Low-Speed Pedestrian EV Acoustic Alert Beeper Mute",
+                "desc": "Suppresses low speed electric mode synthetic exterior chime."
             },
             "lexus_easy_access_seat": {
-                "name": "Volan cu acces ușor și spate al scaunului electric",
-                "desc": "Glisează scaunul șoferului și înclină volanul pentru o intrare/ieșire ușoară."
+                "name": "Easy Access Steering Wheel & Power Seat Slide-Back",
+                "desc": "Slides driver seat back and tilts steering wheel away for easy entry/exit."
             },
             "nissan_epower_regen_mode": {
-                "name": "Modul de frânare regenerativă e-POWER cu o singură pedală",
-                "desc": "Setează nivelul implicit de decelerare a frânării regenerative e-Pedal."
+                "name": "e-POWER One-Pedal Regenerative Braking Mode",
+                "desc": "Sets default e-Pedal regenerative braking deceleration level."
             },
             "nissan_propilot_assist_timing": {
-                "name": "Sensibilitatea direcției de asistență la centrarea benzii ProPILOT",
-                "desc": "Configurați claritatea intervenției de direcție ProPILOT."
+                "name": "ProPILOT Lane Centering Assist Steering Sensitivity",
+                "desc": "Configures ProPILOT steering intervention sharpness."
             },
             "nissan_intelligent_around_view": {
-                "name": "Afișare automată a monitorului Vizualizare în jurul valorii la viteză mică",
-                "desc": "Declanșează afișarea camerei la 360 de grade atunci când senzorii de parcare din față detectează obstacole."
+                "name": "Around View Monitor Auto-Pop-Up at Low Speed",
+                "desc": "Triggers 360-degree camera display when front parking sensors detect obstacles."
             },
             "mazda_g_vectoring_display": {
                 "name": "G-Vectoring Control Plus Dynamic Visualizer",
-                "desc": "Afișează graficul vectorial al cuplului în viraje GVC+ în timp real pe tabloul de bord."
+                "desc": "Displays real-time GVC+ cornering torque vectoring graph on instrument panel."
             },
             "mazda_ieloop_capacitor_monitor": {
-                "name": "Contor de condensator de recuperare a energiei de frânare i-ELOOP",
-                "desc": "Afișează starea de încărcare și descărcare a condensatorului electric pe ecranul central."
+                "name": "i-ELOOP Brake Energy Recovery Capacitor Meter",
+                "desc": "Shows electric capacitor charge & discharge status on central screen."
             },
             "mazda_smart_city_brake_sens": {
-                "name": "Sensibilitate Smart City Brake Support",
-                "desc": "Setează intervalul senzorului de frânare de urgență automată la viteză mică."
+                "name": "Smart City Brake Support Sensitivity",
+                "desc": "Sets low-speed automatic emergency braking sensor range."
             },
             "subaru_eyesight_distance_preset": {
-                "name": "Distanța implicită EyeSight Adaptive Cruise Control",
-                "desc": "Configurați profilul implicit al intervalului de croazieră al camerei stereo la pornire."
+                "name": "EyeSight Adaptive Cruise Control Default Distance",
+                "desc": "Configures stereo camera default cruise gap profile on startup."
             },
             "subaru_xmode_auto_engage": {
-                "name": "Pragul de activare automată a tracțiunii off-road în modul X",
-                "desc": "Setează pragul de alunecare a roților pentru activarea automată a modului X cu dublă funcție."
+                "name": "X-Mode Off-Road Traction Auto-Engage Threshold",
+                "desc": "Sets wheel slip threshold for automatic dual-function X-Mode activation."
             },
             "subaru_steering_responsive_headlights": {
-                "name": "Comutator faruri sensibile la direcție",
-                "desc": "Activează sau dezactivează rotirea direcțională adaptivă a farurilor."
+                "name": "Steering Responsive Headlights Toggle",
+                "desc": "Enables or disables directional adaptive headlight swivel."
             },
             "genesis_sport_plus_mode": {
-                "name": "Sistemul de propulsie Sport+ și modul suspensie electronică",
-                "desc": "Deblochează ESC OFF orientat pe pistă și maparea amortizoare rigidă."
+                "name": "Sport+ Powertrain & Electronic Suspension Mode",
+                "desc": "Unlocks track-oriented ESC OFF and stiffened damper mapping."
             },
             "genesis_ambient_active_light": {
-                "name": "Sincronizarea modului de acționare a iluminatului ambiental activ",
-                "desc": "Schimbă dinamic culoarea luminii ambientale interioare în funcție de modul de conducere."
+                "name": "Active Ambient Lighting Drive Mode Sync",
+                "desc": "Changes interior ambient lighting color dynamically based on drive mode."
             },
             "volvo_city_safety_warning": {
-                "name": "Sensibilitate autonomă de avertizare de urgență pentru siguranța orașului",
-                "desc": "Configurați temporizarea alertei de avertizare de coliziune radar și lidar."
+                "name": "City Safety Autonomous Emergency Warning Sensitivity",
+                "desc": "Configures radar and lidar collision warning alert timing."
             },
             "chery_ar_navigation_hud": {
-                "name": "Suprapunere de proiecție pentru navigație AR pe HUD",
-                "desc": "Proiectează săgeți de navigare în realitate augmentată 3D pe parbriz."
+                "name": "AR Navigation Projection Overlay on HUD",
+                "desc": "Projects 3D augmented reality navigation arrows onto windshield."
             },
             "jlr_terrain_response_preset": {
-                "name": "Presetare pentru modul Terrain Response Auto Off-Road",
-                "desc": "Își amintește ultimul profil de suprafață Terrain Response."
+                "name": "Terrain Response Auto Off-Road Mode Preset",
+                "desc": "Remembers last Terrain Response surface profile."
             },
             "jlr_adaptive_dynamics_firm": {
-                "name": "Profil de fermitate al amortizorului dinamic adaptiv",
-                "desc": "Setează rigiditatea de amortizare a amortizorului electronic implicit."
+                "name": "Adaptive Dynamics Damper Firmness Profile",
+                "desc": "Sets default electronic shock absorber damping stiffness."
             },
             "jlr_wading_sensor_alert": {
-                "name": "Pragul soneriei de avertizare a adâncimii de detectare a vadăului",
-                "desc": "Configurați sensibilitatea soneriei de avertizare cu ultrasunete la adâncimea apei."
+                "name": "Wade Sensing Depth Warning Chime Threshold",
+                "desc": "Configures ultrasonic water depth warning chime sensitivity."
             },
             "alfa_dna_dynamic_memory": {
-                "name": "Memorie de pornire în modul dinamic al selectorului Alfa DNA",
-                "desc": "Păstrează răspunsul accelerației în modul dinamic după repornire."
+                "name": "Alfa DNA Selector Dynamic Mode Startup Memory",
+                "desc": "Retains Dynamic mode throttle response after restart."
             },
             "alfa_q4_torque_split": {
-                "name": "Grafic împărțit în timp real cu tracțiunea integrală Q4",
-                "desc": "Afișează procentul de împărțire a puterii AWD față/spate pe afișajul instrumentului."
+                "name": "Q4 All-Wheel Drive Real-Time Torque Split Graph",
+                "desc": "Shows AWD front/rear power split percentage on instrument display."
             },
             "li_auto_range_extender_mode": {
-                "name": "Nivelul de reținere a încărcării bateriei generator REV",
-                "desc": "Reglează pragul de pornire a generatorului motorului cu ardere internă."
+                "name": "REV Generator Battery Charge Retention Level",
+                "desc": "Adjusts internal combustion engine generator start threshold."
             },
             "li_auto_cinema_seat_position": {
-                "name": "Poziție ergonomică a scaunului în modul teatru / cinema",
-                "desc": "Înclină scaunele din spate și desfășoară suporturile pentru picioare atunci când modul cinema este activ."
+                "name": "Theater / Cinema Mode Ergonomic Seat Position",
+                "desc": "Reclines rear seats and unfolds leg rests when cinema mode is active."
             },
             "zeekr_drift_mode_torque": {
-                "name": "Motor dual de performanță în modul Drift Bias spate",
-                "desc": "Trimite un cuplu de 100% către motorul electric din spate pentru o deplasare controlată."
+                "name": "Dual Motor Performance Drift Mode Rear Bias",
+                "desc": "Sends 100% torque to rear electric motor for controlled drifting."
             },
             "zeekr_ambient_beat_sync": {
-                "name": "Iluminare ambientală Muzică Rhythm Beat Sync",
-                "desc": "Pulsează iluminarea interioară a cabinei în sincronizare cu ritmurile muzicii redate."
+                "name": "Ambient Lighting Music Rhythm Beat Sync",
+                "desc": "Pulsates interior cabin lighting in sync with played music beats."
             },
             "tata_drive_mode_voice": {
-                "name": "Anunț vocal comutator mod de conducere",
-                "desc": "Activează confirmarea audio vocală la schimbarea modurilor de conducere."
+                "name": "Drive Mode Switch Voice Announcement",
+                "desc": "Enables audio voice confirmation when switching drive modes."
             },
             "mahindra_zip_zap_zoom_custom": {
-                "name": "Profil de răspuns la accelerația Zip/Zap/Zoom",
-                "desc": "Personalizează curba de accelerație pentru modurile de conducere Zip, Zap și Zoom."
+                "name": "Zip/Zap/Zoom Powertrain Throttle Response Profile",
+                "desc": "Customizes acceleration curve for Zip, Zap, and Zoom driving modes."
             },
             "fun_cyberpunk_cluster_theme": {
                 "name": "Cyberpunk 2077 Neon Graphic Cockpit Theme",
-                "desc": "Aplică stilul futurist neon cyan și chihlimbar al indicatorului digital al tabloului de bord."
+                "desc": "Applies futuristic neon cyan & amber digital dashboard gauge styling."
             },
             "fun_exhaust_flame_sound_effect": {
-                "name": "Sistem stereo Pop & Bang Exhaust Sound FX",
-                "desc": "Redă efecte audio realiste pop & bang de evacuare V8 prin difuzoarele din cabină."
+                "name": "Stereo System Pop & Bang Exhaust Sound FX",
+                "desc": "Plays realistic V8 exhaust pop & bang audio effects through cabin speakers."
             },
             "fun_matrix_light_show_welcome": {
-                "name": "Faruri personalizate Matrix LED Dance Bun venit",
-                "desc": "Redă coregrafie ritmică Light Show folosind faruri și indicatoare."
+                "name": "Custom Headlight Matrix LED Dance Welcome",
+                "desc": "Plays rhythmic Light Show choreography using headlights & indicators."
             },
             "fun_stealth_fighter_display": {
-                "name": "Stealth Fighter Night Driving Modul Cluster minimalist",
-                "desc": "Oprește toate luminile de grup, cu excepția vitezometrului pentru conducerea pe timp de noapte întuneric."
+                "name": "Stealth Fighter Night Driving Minimalist Cluster Mode",
+                "desc": "Turns off all cluster lights except speedometer for pitch-black night driving."
             },
             "vag_lap_timer_oil_temp": {
                 "name": "Lap Timer & Oil Temperature in Gauge Cluster",
@@ -2783,147 +2794,147 @@
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
-        "codeBtn": "COD",
-        "removeBtn": "ELIMINAȚI",
-        "unsupportedTitle": "Vehicul nu este acceptat",
-        "unsupportedMsg": "Această caracteristică nu este acceptată de versiunea hardware sau software ECU a vehiculului dumneavoastră.",
-        "selectBrand": "Selectați marca vehiculului",
-        "selectCategory": "Selectați Categorie",
-        "selectMakeTitle": "SELECTAȚI MARCA VEHICULUI",
-        "selectCategoryTitle": "SELECTAȚI CATEGORIA DE CARACTERISTICI",
-        "brandAll": "TOATE MARCILE",
-        "categoryAll": "TOATE CATEGORIILE",
-        "lighting": "ILUMINAT",
-        "soundAlerts": "ALERTE SONORE",
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version.",
+        "selectBrand": "Select Vehicle Brand",
+        "selectCategory": "Select Category",
+        "selectMakeTitle": "SELECT VEHICLE BRAND",
+        "selectCategoryTitle": "SELECT FEATURE CATEGORY",
+        "brandAll": "ALL MAKES",
+        "categoryAll": "ALL CATEGORIES",
+        "lighting": "LIGHTING",
+        "soundAlerts": "SOUND ALERTS",
         "displayInstrument": "DISPLAY / CLUSTER",
-        "drivingComfort": "CONFORT LA CONDUCERE",
-        "securitySafety": "SECURITATE ȘI SIGURANȚĂ",
-        "restoreBtn": "RESTAURĂ STARE FABRICĂ",
-        "searchPlaceholder": "Funcția de căutare, DID sau ECU țintă...",
-        "restoreSuccessTitle": "Starea fabricii a fost restaurată",
-        "restoreSuccessMsg": "Caracteristica selectată a fost revenită la starea DID inițială.",
-        "cloneLockedBanner": "Adaptor de clonare a fost detectat - Codare blocată",
-        "cloneAlertTitle": "Clonează adaptorul OBD2 detectat",
-        "cloneAlertMsg": "Adaptorul dvs. OBD2 conectat a fost marcat ca un adaptor clon contrafăcut, lipsit de exactitatea strictă a temporizării necesară pentru scrierea ECU. Puteți răsfoi și căuta în toate funcțiile, dar operațiunile de scriere de codare sunt blocate pentru a vă proteja vehiculul. Vă rugăm să conectați un adaptor ELM327 v2.1+ sau vLinker autentic pentru scriere.",
-        "riskLow": "RISC MIC",
-        "riskMedium": "RISC MEDIU",
-        "riskHigh": "RISC MARE",
-        "sfdProtected": "ECU protejat SFD",
-        "legalDisclaimerUsLights": "Notă: este posibil ca luminile de parcare continue din SUA să nu fie legale pe stradă în unele jurisdicții europene.",
-        "legalDisclaimerVim": "Notă: Redarea videoclipurilor în timpul conducerii este destinată exclusiv pasagerilor.",
-        "layoutChart": "GRAFİK",
-        "headerCategory": "Caracteristici ascunse și codare",
-        "vehicleMatched": "{{make}} — CONECTAT",
-        "demoModeVehicle": "MOD DEMO: {{make}}",
-        "waitingVehicle": "SE AȘTEAPTĂ VEHICULUL CONECTAT",
-        "activeFeaturesCount": "{{count}} funcții OEM specifice vehiculului active",
-        "demoFeaturesCount": "{{count}} funcții demo afișate",
-        "connectForFeaturesNote": "Conectați-vă la dispozitivul OBD2 pentru funcții specifice",
-        "codingFailed": "Codarea a eșuat.",
-        "engineRunningMsg": "Codarea ECU necesită aprinderea ON cu motorul oprit pentru a preveni creșterile de tensiune ale alternatorului.",
-        "engineRunningTitle": "Motorul pornește",
-        "lowVoltageMsg": "Tensiunea bateriei este sub pragul de siguranță pentru operațiunile de scriere a ECU. Încărcați bateria înainte de a continua.",
-        "lowVoltageTitle": "Alertă de tensiune scăzută a bateriei",
-        "motionAlertMsg": "Operațiunile de scriere ECU sunt blocate în timp ce vehiculul este în mișcare. Vă rugăm să parcați în siguranță înainte de a codifica.",
-        "motionAlertTitle": "Vehicul în mișcare",
-        "noMatchingFeatures": "Nu s-au găsit caracteristici care se potrivesc pentru filtrele selectate.",
-        "unsafeModuleMsg": "Operațiunile de scriere a ECU în modulele ABS/ESP și Airbag/SRS sunt blocate 100% pentru a proteja sistemele critice de siguranță ale vehiculului.",
-        "unsafeModuleTitle": "Modul de siguranță protejat",
-        "catMotorcycle": "ECU MOTOCICLETA",
-        "catRetrofit": "RETROFIT ȘI HARDWARE",
-        "catEv": "EV & BATERIE",
-        "catAdas": "CALIBRAREA ADAS",
-        "catEasterEgg": "OUĂ DE PAȘTE",
-        "catService": "SERVICE ȘI ÎNTREȚINERE",
-        "catPerformance": "PERFORMANȚA",
-        "segmentAll": "TOATE MARCILE",
+        "drivingComfort": "DRIVING COMFORT",
+        "securitySafety": "SECURITY & SAFETY",
+        "restoreBtn": "RESTORE FACTORY STATE",
+        "searchPlaceholder": "Search feature, DID, or target ECU...",
+        "restoreSuccessTitle": "Factory State Restored",
+        "restoreSuccessMsg": "Selected feature has been reverted back to original DID state.",
+        "cloneLockedBanner": "Clone Adapter Detected — Coding Locked",
+        "cloneAlertTitle": "Clone OBD2 Adapter Detected",
+        "cloneAlertMsg": "Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing. You can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.",
+        "riskLow": "LOW RISK",
+        "riskMedium": "MEDIUM RISK",
+        "riskHigh": "HIGH RISK",
+        "sfdProtected": "SFD Protected ECU",
+        "legalDisclaimerUsLights": "Note: Continuous US parking lights may not be street legal in some European jurisdictions.",
+        "legalDisclaimerVim": "Note: Video playback while driving is intended for passenger use only.",
+        "layoutChart": "CHART",
+        "headerCategory": "Hidden Features & Coding",
+        "vehicleMatched": "{{make}} — MATCHED",
+        "demoModeVehicle": "DEMO MODE: {{make}}",
+        "waitingVehicle": "WAITING FOR CONNECTED VEHICLE",
+        "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
+        "demoFeaturesCount": "{{count}} demo features listed",
+        "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
+        "engineRunningTitle": "Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "Protected Safety Module",
+        "catMotorcycle": "MOTORCYCLE ECU",
+        "catRetrofit": "RETROFIT & HARDWARE",
+        "catEv": "EV & BATTERY",
+        "catAdas": "ADAS CALIBRATION",
+        "catEasterEgg": "EASTER EGGS",
+        "catService": "SERVICE & MAINTENANCE",
+        "catPerformance": "PERFORMANCE",
+        "segmentAll": "ALL MAKES",
         "segmentEuroPremium": "European Premium",
-        "segmentEuroVolume": "Volumul European",
-        "segmentAsian": "asiatic",
+        "segmentEuroVolume": "European Volume",
+        "segmentAsian": "Asian",
         "segmentAmerican": "American",
-        "segmentChineseEv": "Chineză EV",
-        "segmentMotorcycle": "Motocicletă",
-        "detailTitle": "Detalii caracteristici și codare cu un singur clic",
-        "prePostValues": "Previzualizare pre/post încărcare utilă",
-        "selectOption": "Selectați opțiunea de codare:",
-        "oneClickActivate": "ACTIVARE CU UN CLIC",
-        "expertModeTitle": "Modul Expert",
-        "allMakes": "TOATE MARCILE",
-        "techEcuSpecs": "SPECIFICAȚII TEHNICE ECU ȘI PREVIZUALIZARE A ÎNCĂRCĂRII UTILE",
-        "targetEcuHeaderLabel": "Antet ECU țintă:",
-        "udsDidLabel": "Identificator de date UDS:",
-        "bitPositionLabel": "Poziția biților:",
-        "targetPayloadLabel": "Sarcina utilă UDS țintă:",
-        "byteBitValue": "Octet {{byte}}, Bit {{bit}}",
-        "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
-        "restoreFactoryBtn": "RESTAURĂ SETĂRILE DIN FABRICA",
-        "restoreFactoryTitle": "RESTAURĂ SETĂRILE DIN FABRICA",
-        "enterDidFirst": "Vă rugăm să introduceți codul hexadecimal DID pentru restaurare.",
-        "restoreConfirmMsg": "Reveniți la starea inițială din fabrică pentru DID 0x{{didHex}}?",
-        "restoreAction": "RESTAURĂ FABRICA",
+        "segmentChineseEv": "Chinese EV",
+        "segmentMotorcycle": "Motorcycle",
+        "detailTitle": "Feature Details & One-Click Coding",
+        "prePostValues": "Pre / Post Payload Preview",
+        "selectOption": "Select Coding Option:",
+        "oneClickActivate": "ONE-CLICK ACTIVATE",
+        "expertModeTitle": "Expert Mode",
+        "allMakes": "ALL MAKES",
+        "techEcuSpecs": "TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW",
+        "targetEcuHeaderLabel": "Target ECU Header:",
+        "udsDidLabel": "UDS Data Identifier:",
+        "bitPositionLabel": "Bit Position:",
+        "targetPayloadLabel": "Target UDS Payload:",
+        "byteBitValue": "Byte {{byte}}, Bit {{bit}}",
+        "expertSafetyNote": "For advanced users only. In case of incorrect coding, use 'Restore Factory Settings' below to revert to original state.",
+        "restoreFactoryBtn": "RESTORE FACTORY SETTINGS",
+        "restoreFactoryTitle": "RESTORE FACTORY SETTINGS",
+        "enterDidFirst": "Please enter the DID Hex code to restore.",
+        "restoreConfirmMsg": "Revert to original factory state for DID 0x{{didHex}}?",
+        "restoreAction": "RESTORE FACTORY",
         "expertDidPlaceholder": "DID Hex",
-        "expertValPlaceholder": "Valoare Hex",
-        "writeRawPayload": "SCRIEȚI SĂRĂ UTILĂ RAW UDS",
-        "enterValidHex": "Vă rugăm să introduceți șiruri valide DID și Value Hex.",
+        "expertValPlaceholder": "Value Hex",
+        "writeRawPayload": "WRITE RAW UDS PAYLOAD",
+        "enterValidHex": "Please enter valid DID and Value Hex strings.",
         "options": {
             "speed85": "85 km/h",
             "speed90": "90 km/h",
             "speed100": "100 km/h",
             "speed110": "110 km/h",
-            "idleOff": "Devre Dışı",
+            "idleOff": "Disabled",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
             "pto900": "900 RPM",
             "pto1100": "1100 RPM",
             "pto1300": "1300 RPM",
-            "retarderLow": "Düşük",
+            "retarderLow": "Low",
             "retarderMed": "Orta",
-            "retarderHigh": "Yüksek",
-            "levelNormal": "Normal Sürüş Seviyesi",
-            "levelRamp1": "Yükleme Rampası Seviyesi 1",
-            "levelRamp2": "Yükleme Rampası Seviyesi 2",
-            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "retarderHigh": "High",
+            "levelNormal": "Normal Driving Level",
+            "levelRamp1": "Loading Ramp Level 1",
+            "levelRamp2": "Loading Ramp Level 2",
+            "regenStart": "Start Static Regeneration",
             "regenStatus": "Kurum Durumunu Sorgula",
             "alarmFull": "Tam Ses",
-            "alarmNight": "Kısık Ses",
+            "alarmNight": "Low Volume",
             "hyst3": "+/- 3 km/h",
             "hyst5": "+/- 5 km/h",
             "hyst10": "+/- 10 km/h",
-            "drl25": "%25 Kısık",
+            "drl25": "25% Dimmed",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
-            "drl100": "%100 Tam Güç",
+            "drl100": "100% Full Power",
             "xdsStandard": "Standart",
-            "xdsStrong": "Güçlü",
-            "blink1": "1 Flaş",
-            "blink3": "3 Flaş",
-            "blink4": "4 Flaş",
-            "blink5": "5 Flaş",
+            "xdsStrong": "Strong",
+            "blink1": "1 Flash",
+            "blink3": "3 Flashes",
+            "blink4": "4 Flashes",
+            "blink5": "5 Flashes",
             "chimeBmw": "BMW Standart",
-            "chimeMini": "MINI Tarzı",
-            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeMini": "MINI Style",
+            "chimeRolls": "Rolls-Royce Luxury",
             "chimeBmwi": "BMW i Elektrik",
             "logoStandard": "Standart",
             "logoMPerf": "M Performance",
             "logoAlpina": "Alpina Mavi"
         },
-        "catSoundAlerts": "Ses & Uyarılar",
-        "catDisplayInstrument": "Gösterge Paneli",
-        "catDrivingComfort": "Sürüş Konforu",
-        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catSoundAlerts": "Sound & Alerts",
+        "catDisplayInstrument": "Instrument Cluster",
+        "catDrivingComfort": "Driving Comfort",
+        "catSecuritySafety": "Security & Safety",
         "catMotorcycleEcu": "Motosiklet ECU",
-        "freeTrialAvailableBadge": "1 CREDIT GRATUIT",
-        "freeTrialUsedBadge": "DEBLOCAT",
-        "proRequiredBadge": "NECESITĂ PRO",
-        "freeTrialExhaustedTitle": "Creditul de probă gratuită a fost utilizat",
-        "freeTrialExhaustedMsg": "Ați utilizat creditul gratuit pentru activarea unei funcții. Faceți upgrade la PRO pentru deblocare nelimitată, codare avansată și resetări de service!",
-        "freeTrialSuccessTitle": "Felicitări! Funcția a fost activată",
-        "freeTrialSuccessMsg": "Această funcție a fost codată cu succes pe vehiculul dvs. folosind creditul gratuit! Faceți upgrade la PRO oricând pentru acces complet.",
-        "upgradeToPro": "UPGRADE LA PRO",
-        "toastActivated": "Activat",
-        "toastDeactivated": "Dezactivat",
-        "optionsBadge": "{{count}} OPȚIUNI"
+        "freeTrialAvailableBadge": "1 FREE CREDIT",
+        "freeTrialUsedBadge": "UNLOCKED",
+        "proRequiredBadge": "PRO REQUIRED",
+        "freeTrialExhaustedTitle": "Free Trial Credit Used",
+        "freeTrialExhaustedMsg": "You have used your 1 free feature activation credit. Upgrade to PRO for unlimited feature unlocking, expert coding, and full service resets!",
+        "freeTrialSuccessTitle": "Congratulations! Feature Activated",
+        "freeTrialSuccessMsg": "This feature was successfully coded to your vehicle using your 1 free trial credit! Upgrade to PRO anytime to unlock all other features with no limits.",
+        "upgradeToPro": "UPGRADE TO PRO",
+        "toastActivated": "Activated",
+        "toastDeactivated": "Deactivated",
+        "optionsBadge": "{{count}} OPTIONS"
     },
     "ignition": {
         "title": "Avertizare privind starea aprinderii",
@@ -2937,27 +2948,27 @@
         "batteryVoltage": "Tensiune baterie:"
     },
     "hpGauge": {
-        "title": "INDICATUL DE PUTERE ȘI CUPLU LIVE",
-        "subtitle": "Putere în timp real și cuplu",
-        "horsepower": "CAI-PUTERE",
-        "torque": "CUPLUL MOTOR",
-        "peakHp": "Vârf CP",
-        "peakTorque": "CUPLU DE VÂRF",
-        "efficiency": "EFICIENTA",
-        "methodMaf": "Hava Akış Tabanlı",
-        "methodTorque": "Canlı Tork Tabanlı",
-        "methodLoad": "Motor Yükü Tabanlı",
-        "configWeight": "Greutatea vehiculului:",
-        "configDisplacement": "Deplasare motor:",
-        "calcMethod": "METODA DE CALCUL",
-        "methodDiesel": "Dizel Tork & Yakıt Akışı"
+        "title": "LIVE POWER & TORQUE GAUGE",
+        "subtitle": "Real-Time Horsepower & Torque",
+        "horsepower": "HORSEPOWER",
+        "torque": "ENGINE TORQUE",
+        "peakHp": "PEAK HP",
+        "peakTorque": "PEAK TORQUE",
+        "efficiency": "EFFICIENCY",
+        "methodMaf": "Mass Airflow Based",
+        "methodTorque": "Live Torque Based",
+        "methodLoad": "Engine Load Based",
+        "configWeight": "Vehicle Weight:",
+        "configDisplacement": "Engine Displacement:",
+        "calcMethod": "CALCULATION METHOD",
+        "methodDiesel": "Diesel Torque & Fuel Flow"
     },
     "fuelTrim": {
-        "title": "ANALIZA AMESTECULUI AER-COMBUSTIBIL",
+        "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
         "subtitle": "STFT & LTFT Diagnostics",
         "stft": "STFT",
         "ltft": "LTFT",
-        "totalTrim": "TRIM TOTAL DE COMBUSTIBIL",
+        "totalTrim": "TOTAL FUEL TRIM",
         "afrRatio": "AIR-FUEL RATIO",
         "lambda": "LAMBDA",
         "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
@@ -2965,38 +2976,38 @@
         "stateCriticalLean": "CRITICAL LEAN MIXTURE",
         "stateMildRich": "MILD RICH MIXTURE",
         "stateCriticalRich": "CRITICAL RICH MIXTURE",
-        "guideTitle": "GHID DE AMESTEC SĂCAR vs BOGAT",
-        "guideDesc": "Amestecul bogat indică excesul de combustibil în camera de ardere, în timp ce amestecul slab indică excesul de aer.",
-        "causesTitle": "Cauze potențiale:",
-        "actionTitle": "Acțiune recomandată:",
+        "guideTitle": "LEAN vs RICH MIXTURE GUIDE",
+        "guideDesc": "Rich mixture indicates excess fuel in combustion chamber, while Lean mixture indicates excess air.",
+        "causesTitle": "Potential Causes:",
+        "actionTitle": "Recommended Action:",
         "causeNormal": "System operates within ideal range. No faults.",
-        "actionNormal": "Continuați întreținerea de rutină.",
-        "causeVacuumLeak": "Scurgeri de vid, furtunuri rupte sau garnitura galeriei de admisie",
-        "causeDirtyMaf": "Senzor MAF murdar sau defect",
-        "causeLowFuelPressure": "Presiune scăzută a pompei de combustibil sau filtru de combustibil înfundat",
-        "causeCloggedInjectors": "Injectoare de combustibil înfundate sau murdare",
-        "actionCriticalLean": "Efectuați testul de fum pentru scurgeri de admisie și curățați senzorul MAF.",
-        "causeMinorVacuumLeak": "Scurgeri minore de aer sau senzor O2 îmbătrânit",
-        "actionMildLean": "Verificați datele senzorului de O2 activ și furtunurile de admisie.",
-        "causeLeakingInjector": "Injector de combustibil cu scurgeri/blocat-deschis",
-        "causeStuckEvapPurgeVal": "Supapă de purjare a recipientului EVAP blocat-deschis",
-        "causeDirtyAirFilter": "Filtru de aer foarte murdar",
-        "causeHighFuelPressure": "Presiune mare în conducta de combustibil",
-        "actionCriticalRich": "Inspectați supapa de purjare EVAP și scurgerea de retur a injectorului.",
-        "causeRestrictedAirIntake": "Obstrucția conductei de admisie a aerului",
-        "actionMildRich": "Verificați sau înlocuiți filtrul de aer al motorului.",
-        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
-        "railPressure": "Rail Basıncı",
-        "fuelRate": "Yakıt Debisi",
-        "widebandSensor": "Geniş Bant Lambda Sensörü",
-        "commonRailStatus": "Common Rail Püskürtme",
-        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
-        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel",
-        "modeGasoline": "Benzinli",
-        "leanNormal": "Fakir Karışım",
-        "railStable": "Basınç Kararlı"
+        "actionNormal": "Continue routine maintenance.",
+        "causeVacuumLeak": "Vacuum leaks, torn hoses, or intake manifold gasket",
+        "causeDirtyMaf": "Dirty or faulty MAF sensor",
+        "causeLowFuelPressure": "Low fuel pump pressure or clogged fuel filter",
+        "causeCloggedInjectors": "Clogged or dirty fuel injectors",
+        "actionCriticalLean": "Perform smoke test for intake leaks and clean MAF sensor.",
+        "causeMinorVacuumLeak": "Minor air leak or aging O2 sensor",
+        "actionMildLean": "Check live O2 sensor data and intake hoses.",
+        "causeLeakingInjector": "Leaking/stuck-open fuel injector",
+        "causeStuckEvapPurgeVal": "Stuck-open EVAP canister purge valve",
+        "causeDirtyAirFilter": "Severely dirty air filter",
+        "causeHighFuelPressure": "High fuel rail pressure",
+        "actionCriticalRich": "Inspect EVAP purge valve and injector return leak-off.",
+        "causeRestrictedAirIntake": "Air intake duct obstruction",
+        "actionMildRich": "Check or replace engine air filter.",
+        "dieselCombustionNormal": "Diesel Injection & Combustion Health Normal",
+        "railPressure": "Rail Pressure",
+        "fuelRate": "Fuel Flow Rate",
+        "widebandSensor": "Wideband Lambda Sensor",
+        "commonRailStatus": "Common Rail Injection",
+        "dieselGuideTitle": "Diesel Combustion & Mixture Guide",
+        "dieselGuideDesc": "Diesel engines operate lean with excess air. Common Rail pressure and Lambda sensor regulate injection balance in real time.",
+        "dieselActionNormal": "System operates within ideal parameters. Continue regular fuel filter maintenance.",
+        "modeDiesel": "Diesel",
+        "modeGasoline": "Gasoline",
+        "leanNormal": "Lean Mixture Normal",
+        "railStable": "Pressure Stable"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER MONITOR",
@@ -3041,42 +3052,42 @@
         "readyTitle": "Diagnosticare ECU gata"
     },
     "dct": {
-        "title": "ADAPTARE DUBLU AMBREIAJ DCT",
-        "subtitle": "Setări de bază DSG / Powershift / EDC dublu ambreiaj",
-        "warningTitle": "CERINȚE DE SIGURANȚĂ PENTRU ADAPTARE DCT",
-        "warningDesc": "Vă rugăm să vă asigurați că sunt îndeplinite toate condițiile fizice prealabile înainte de a iniția adaptarea:",
-        "checkGearPark": "Cuplați poziția P și trageti frâna de mână",
-        "checkFootBrake": "Frâna de picior apăsată ferm",
-        "checkHandBrake": "Frâna de mână cuplată",
-        "checkOilTemp": "Temperatura uleiului de cutie trebuie să fie între 30°C și 90°C",
-        "startAdaptation": "ÎNCEPE ADAPTAREA",
-        "inProgress": "Efectuarea setărilor de bază ale transmisiei... NU eliberați piciorul de frână!",
-        "success": "Resetarea transmisiei DCT și reînvățarea ambreiajului au fost finalizate cu succes!",
-        "step1": "1/3: Efectuarea calibrării presiunii hidraulice...",
-        "step2": "2/3: Efectuarea setărilor de bază ale ambreiajului 1...",
-        "step3": "3/3: Efectuarea adaptării furcii angrenajului ambreiajului 2...",
-        "ensurePreconditions": "Vă rugăm să îndepliniți toate condițiile prealabile de siguranță înainte de a începe.",
-        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
-        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
-        "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites Sensörü",
-        "reverseSwitch": "Geri Vites Müşürü",
-        "pressed": "BASILI",
-        "released": "SERBEST",
-        "neutral": "BOŞTA",
-        "inGear": "VİTESTE",
-        "active": "AKTİF",
-        "passive": "PASİF",
-        "startManualTest": "Sensör Testini Başlat",
-        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
-        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
-        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
-        "manualStep2": "Boş Vites Sensör Doğrulaması...",
-        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
-        "modeAuto": "Otomatik / DCT Uyarlama",
-        "modeManual": "Manuel Şanzıman Testi",
+        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
+        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
+        "checkGearPark": "Gear selector in 'P'",
+        "checkFootBrake": "Foot brake depressed firmly",
+        "checkHandBrake": "Handbrake engaged",
+        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "startAdaptation": "START ADAPTATION",
+        "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting.",
+        "manualTitle": "MANUAL TRANSMISSION SENSOR CHECK",
+        "manualDesc": "This vehicle has a manual transmission. Automatic TCU adaptation is not required. You can monitor the real-time status of clutch and neutral sensors below.",
+        "clutchSwitch": "Clutch Pedal Switch",
+        "neutralSwitch": "Neutral Gear Sensor",
+        "reverseSwitch": "Reverse Gear Switch",
+        "pressed": "DEPRESSED",
+        "released": "RELEASED",
+        "neutral": "NEUTRAL",
+        "inGear": "IN GEAR",
+        "active": "ACTIVE",
+        "passive": "INACTIVE",
+        "startManualTest": "Start Sensor Test",
+        "manualTestSuccess": "Manual transmission clutch and gear sensor checks completed successfully.",
+        "ensureManualPreconditions": "Please verify clutch and neutral gear positions.",
+        "manualStep1": "Testing Clutch Switch Signal...",
+        "manualStep2": "Verifying Neutral Sensor...",
+        "manualStep3": "Sensor Calibration Completed.",
+        "modeAuto": "Automatic / DCT Adaptation",
+        "modeManual": "Manual Transmission Test",
         "park": "P",
-        "engaged": "ÇEKİLİ"
+        "engaged": "ENGAGED"
     },
     "safeExit": {
         "btn": "DECONECTARE SIGURANTA SI RESETARE ADAPTOR",
@@ -3167,7 +3178,8 @@
             "manual": "MANUAL"
         },
         "unknown": "Necunoscut",
-        "year": "Anul:"
+        "year": "Anul:",
+        "transmissionLabel": "Transmission:"
     },
     "sgw": {
         "title": "DEBLOCARE SECURITY GATEWAY",
@@ -3356,7 +3368,7 @@
         "downloadBtn": "DESCARCĂ DATELE MELE",
         "purgeBtn": "ȘTERGE TOATE DATELE MELE",
         "exportSuccessTitle": "Pregătit pentru date",
-        "exportSuccessMsg": "Pachetul dvs. de date a fost creat pe {{date}}. Conținut: coadă de telemetrie, setări aplicație.",
+        "exportSuccessMsg": "Your data package was created on {{date}}. Contents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "Eroare",
         "exportErrorMsg": "Nu s-a putut crea pachetul de date.",
         "purgeAlertTitle": "Ștergeți toate datele",
@@ -3415,8 +3427,8 @@
         "enter_valid_hex": "Introduceți un DID valid și date hexazecimale de lungime pară."
     },
     "safety": {
-        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
+        "engineRunningTitle": "Engine Running Safety Lock",
+        "engineRunningDesc": "For safety reasons, trouble codes can only be cleared with ignition ON and engine OFF."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3435,7 +3447,12 @@
     "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
     "grid": "Grid",
     "disclaimers": {
-        "safetyNotice": "Safety Notice"
+        "safetyNotice": "Safety Notice",
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
     },
     "Success": "Success",
     "marketplace": {

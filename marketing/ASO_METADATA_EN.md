@@ -53,20 +53,23 @@ Unlock hidden manufacturer features on supported VAG (Volkswagen, Audi, SEAT, Š
 • Daytime running light customizations
 • Digital lap timer & performance displays
 
+► ADVANCED TRANSMISSION (DCT / DSG) ADAPTATION & SENSORS
+Perform basic settings and clutch adaptation on automated manual transmissions (DSG, Powershift, EDC) or monitor live clutch switch and neutral sensors on manual gearboxes.
+
+► FUEL TRIM & COMMON RAIL LIVE ANALYZER
+Inspect real-time air-fuel ratio (AFR), Short-Term (STFT) and Long-Term (LTFT) fuel trim for gasoline engines, or track Common Rail pressure (Bar) and Wideband Lambda on modern diesel engines.
+
 ► REAL-TIME RACING TELEMETRY & DIGITAL GAUGES
 Monitor live sensor data streaming at high refresh rates:
 • Precision digital RPM tachometer with redline indicator
-• Live Turbo Boost pressure gauge
-• Engine oil & coolant temperatures
-• Air-fuel ratio (AFR) & fuel trim (STFT/LTFT)
+• Vehicle speed, engine coolant and battery voltage
 • High-speed sensor waveforms & dynamic charting
 
-► USED CAR APPRAISAL & HEALTH REPORT
-Buying a pre-owned vehicle? MotoCortex performs deep-scan audits:
-• Odometer & mileage fraud detection checks
-• Shadow memory & historical DTC fault log recovery
-• Freeze-frame trigger snapshot inspection
-• I/M emissions readiness test for state inspections
+► 100% AD-FREE & TRANSPARENT PRICING
+Enjoy a completely distraction-free cockpit experience. MotoCortex is 100% AD-FREE on both Free and PRO tiers. Zero banner ads, zero video interruptions, and NO annoying in-app credit/token systems. Everything in PRO is all-inclusive and unlimited.
+
+► DIRECT IN-APP SUPPORT & FEEDBACK
+Have a question, device compatibility request, or feature idea? Send one-tap diagnostic messages directly to the engineering team with automated vehicle telemetry attached.
 
 ► UNIVERSAL ADAPTER FREEDOM
 No need for expensive, locked proprietary hardware. MotoCortex connects seamlessly to all standard Bluetooth Low Energy (BLE 4.0+) and classic Bluetooth OBD2 dongles worldwide, including:
@@ -80,11 +83,31 @@ Download MotoCortex today and take complete control of your vehicle's performanc
 
 ---
 
-## 🖼️ Included Showcase Visuals
+## 💳 App Store Connect & Google Play In-App Purchase Configuration
+
+| Plan Identifier (SKU) | Type | Tier / Standard Price | Value Proposition & Policy |
+| :--- | :--- | :--- | :--- |
+| `motocortex_pro_weekly_nonrenew` | Weekly Non-Renewing / Sub | **$9.99** | Fast one-time check-up and immediate code clearance. |
+| `motocortex_pro_monthly` | Auto-Renewable Subscription | **$29.99** | Full flexibility, cancel anytime. |
+| `motocortex_pro_yearly` | Auto-Renewable Subscription | **$199.99** | **Best Value / ~$16.65/mo (Save 44%)**. Unlimited garage pass. |
+
+> **Key Business Guarantees:**
+> - **100% Ad-Free:** Zero advertising in both Free and PRO versions.
+> - **All-Inclusive PRO:** No tokens, no credits, no pay-per-coding microtransactions.
+> - **Hardware Independence:** Compatible with all standard BLE/ELM327 adapters.
+
+---
+
+## 🖼️ Included 10 Store Showcase Screenshots
 Stored in `marketing/store_screenshots/`:
-1. `01_hero_diagnostics.jpg` — Instant OBD2 Scanner & Diagnostics
-2. `02_ai_doctor_faults.jpg` — AI-Powered Fault Intelligence
-3. `03_ecu_hidden_features.jpg` — Unlock Hidden Car Features
-4. `04_live_telemetry_gauges.jpg` — Real-Time Engine Telemetry
-5. `05_used_car_appraisal.jpg` — Used Car Health & Appraisal
-6. `06_universal_hardware.jpg` — Works With Any OBD2 Adapter
+1. `01_hero_bento_hub.jpg` — ALL-IN-ONE OBD2 CONTROL HUB
+2. `02_dtc_diagnostics.jpg` — READ & CLEAR FAULT CODES
+3. `03_live_sensor_gauges.jpg` — REAL-TIME LIVE GAUGES
+4. `04_one_click_ecu_coding.jpg` — UNLOCK HIDDEN CAR FEATURES
+5. `05_expert_long_coding.jpg` — EXPERT LONG CODING & BYTES
+6. `06_fuel_trim_gasoline.jpg` — ADVANCED FUEL TRIM & AFR
+7. `07_diesel_common_rail.jpg` — DIESEL COMMON RAIL INJECTION
+8. `08_dct_transmission_adapt.jpg` — DCT & DSG TRANSMISSION RESET
+9. `09_manual_gearbox_sensors.jpg` — MANUAL TRANSMISSION AUDIT
+10. `10_technical_support_feedback.jpg` — DIRECT DEVELOPER SUPPORT
+

@@ -62,15 +62,15 @@ describe('Live Diagnostic & Modal Screens QA Suite', () => {
       />
     );
 
-    expect(getByText('Dizel (Common Rail & Lambda)')).toBeTruthy();
-    expect(getByText('Benzinli (STFT / LTFT)')).toBeTruthy();
-    expect(getByText('Dizel Enjeksiyon & Yanma Sağlığı Normal')).toBeTruthy();
+    expect(getByText('Diesel')).toBeTruthy();
+    expect(getByText('Gasoline')).toBeTruthy();
+    expect(getByText('Diesel Injection & Combustion Health Normal')).toBeTruthy();
 
     // Switch to Gasoline
-    fireEvent.press(getByText('Benzinli (STFT / LTFT)'));
+    fireEvent.press(getByText('Gasoline'));
     // Switch back to Diesel
-    fireEvent.press(getByText('Dizel (Common Rail & Lambda)'));
-    expect(getByText('Dizel Yanma & Karışım Rehberi')).toBeTruthy();
+    fireEvent.press(getByText('Diesel'));
+    expect(getByText('Diesel Combustion & Mixture Guide')).toBeTruthy();
   });
 
   it('renders DctResetModal correctly and switches between Auto DCT and Manual modes', () => {
@@ -82,19 +82,19 @@ describe('Live Diagnostic & Modal Screens QA Suite', () => {
       />
     );
 
-    expect(getByText('Otomatik / DCT Uyarlama')).toBeTruthy();
-    expect(getByText('Manuel Şanzıman Testi')).toBeTruthy();
+    expect(getByText('Automatic / DCT Adaptation')).toBeTruthy();
+    expect(getByText('Manual Transmission Test')).toBeTruthy();
 
     // Switch to Manual Transmission mode
-    fireEvent.press(getByText('Manuel Şanzıman Testi'));
-    expect(getByText('MANUEL ŞANZIMAN SENSÖR KONTROLÜ')).toBeTruthy();
-    expect(getByText('Debriyaj Pedalı Müşürü')).toBeTruthy();
-    expect(getByText('Boş Vites (Nötr) Sensörü')).toBeTruthy();
-    expect(getByText('Sensör Testini Başlat')).toBeTruthy();
+    fireEvent.press(getByText('Manual Transmission Test'));
+    expect(getByText('MANUAL TRANSMISSION SENSOR CHECK')).toBeTruthy();
+    expect(getByText('Clutch Pedal Switch')).toBeTruthy();
+    expect(getByText('Neutral Gear Sensor')).toBeTruthy();
+    expect(getByText('Start Sensor Test')).toBeTruthy();
 
     // Switch back to Auto mode
-    fireEvent.press(getByText('Otomatik / DCT Uyarlama'));
-    expect(getByText('GÜVENLİK VE ÖN KOŞUL KONTROLÜ')).toBeTruthy();
+    fireEvent.press(getByText('Automatic / DCT Adaptation'));
+    expect(getByText('SAFETY & PRECONDITION CHECK')).toBeTruthy();
   });
 
   it('renders DpfMonitorModal correctly with soot, ash, and EGT stats', () => {

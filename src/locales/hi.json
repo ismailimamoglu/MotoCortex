@@ -183,11 +183,11 @@
         "feat3Desc": "त्रुटि उत्पन्न होने के समय सेंसर की सटीक स्थिति रिकॉर्ड करें।",
         "selectPlan": "एक योजना चुनें",
         "weekly": "साप्ताहिक सदस्यता",
-        "weeklyDesc": "त्वरित जांच के लिए आदर्श.",
+        "weeklyDesc": "त्वरित जांच और एकल कोड रीसेट।",
         "monthly": "मासिक सदस्यता",
-        "monthlyDesc": "सबसे लोकप्रिय विकल्प.",
+        "monthlyDesc": "पूर्ण लचीलापन, कभी भी रद्द करें।",
         "yearly": "वार्षिक सदस्यता",
-        "yearlyDesc": "सर्वोत्तम मूल्य की गारंटी.",
+        "yearlyDesc": "ऑल-इनक्लूसिव गैराज पास (सर्वोत्तम मूल्य)।",
         "restore": "मौजूदा खरीदारी पुनर्स्थापित करें",
         "subscribe": "अभी सदस्यता लें",
         "bestValue": "सर्वोत्तम मूल्य",
@@ -227,7 +227,12 @@
         "weeklyNotice": "एक बार की खरीदारी, स्वत: नवीनीकरण नहीं करती",
         "yearlyNotice": "वार्षिक स्वतः-नवीकरणीय सदस्यता",
         "aiDoctorLimitTitle": "एआई डॉक्टर सीमा समाप्त",
-        "aiDoctorLimitDesc": "आपने अपने 1 मुफ़्त एआई इंजन निदान परीक्षण का उपयोग कर लिया है। असीमित एआई विश्लेषण के लिए PRO में अपग्रेड करें।"
+        "aiDoctorLimitDesc": "आपने अपने 1 मुफ़्त एआई इंजन निदान परीक्षण का उपयोग कर लिया है। असीमित एआई विश्लेषण के लिए PRO में अपग्रेड करें।",
+        "trustNoAds": "100% विज्ञापन-मुक्त (Free और PRO)",
+        "trustNoTokens": "असीमित एक्सेस • कोई टोकन शुल्क नहीं",
+        "trustUniversal": "यूनिवर्सल BLE एडॉप्टर स्वतंत्रता",
+        "yearlySavingsBadge": "~.65/माह • 44% की बचत",
+        "save44": "44% की बचत"
     },
     "connection": {
         "logoSub": "v7प्रो",
@@ -306,7 +311,7 @@
         "terminalDesc": "आप OBD-II या AT/ST कमांड सीधे ECU को भेज सकते हैं। उदाहरण के लिए, \"010C\" या \"ATRV\"।",
         "ecuResponseLabel": "ईसीयू प्रतिक्रिया:",
         "adapterConnected": "एडाप्टर कनेक्टेड",
-        "lowQualityAdapterWarning": "निम्न गुणवत्ता वाला एडाप्टर: आपका एडाप्टर निम्न-श्रेणी का क्लोन है। इसमें पुराने वाहन प्रोटोकॉल के लिए आवश्यक समय सटीकता का अभाव है। हम सफलतापूर्वक कनेक्ट करने के लिए उच्च-गुणवत्ता वाले OBD2 एडाप्टर में अपग्रेड करने की अत्यधिक अनुशंसा करते हैं।",
+        "lowQualityAdapterWarning": "Low Quality Adapter (Score: {{score}}/100): Your adapter is a low-grade clone. It lacks the timing precision required for older vehicle protocols. We highly recommend upgrading to a high-quality OBD2 adapter to connect successfully.",
         "statusProfiling": "OBD2 एडाप्टर क्षमताओं का विश्लेषण किया जा रहा है...",
         "statusScanningCan": "आधुनिक CAN-बस प्रोटोकॉल को स्कैन करना...",
         "statusScanningKline": "के-लाइन प्रोटोकॉल को जागृत करना। पुराने वाहनों को प्रतिक्रिया देने में 15 सेकंड तक का समय लग सकता है...",
@@ -449,7 +454,7 @@
         "connRequired": "कनेक्शन आवश्यक है",
         "connRequiredDesc": "कृपया इस प्रक्रिया को शुरू करने के लिए पहले वाहन से कनेक्ट करें।",
         "chronicFaultsTitle": "सांख्यिकीय जीर्ण समस्याएँ",
-        "chronicFaultsObs": "{{code}}",
+        "chronicFaultsObs": "{{code}} (Observation: {{days}} Unique Days / Total: {{total}} Times)",
         "chronicFaultsPending": "डेटा पूल एकत्रित करना/सांख्यिकी का विश्लेषण करना",
         "notScanned": "स्कैन नहीं किया गया",
         "notScannedDesc": "कृपया डायग्नोस्टिक कोड पढ़ने के लिए ऊपर दाईं ओर स्कैन बटन दबाएं।",
@@ -544,7 +549,7 @@
         "odometer": "दूरी",
         "milDist": "इंजन लाइट चालू",
         "distSinceCleared": "त्रुटि साफ़ की गई",
-        "dtcCount": "त्रुटि कोड",
+        "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "लाइव सेंसर डेटा",
         "noData": "डेटा पढ़ने में विफल",
         "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO के साथ स्कैन किया गया।",
@@ -804,7 +809,13 @@
         "telemetrySub": "वाहन अनुकूलता में सुधार के लिए अनाम प्रोटोकॉल और त्रुटि लॉग साझा करें।",
         "restartOnboarding": "प्रारंभिक सेटअप पुनः आरंभ करें"
     },
-    "disclaimer": "सभी उत्पाद नाम, लोगो और ब्रांड उनके संबंधित स्वामियों की संपत्ति हैं। इस एप्लिकेशन में उपयोग किए गए सभी कंपनी, उत्पाद और सेवा नाम केवल पहचान उद्देश्यों के लिए हैं। इन नामों, लोगो और ब्रांडों का उपयोग कोई समर्थन या प्रायोजन नहीं दर्शाता है।",
+    "disclaimer": {
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
+    },
     "hiddenFeatures": {
         "title": "छुपी हुई विशेषताएं",
         "btnLabel": "छुपी हुई विशेषताएं अनलॉक करें",
@@ -1013,1470 +1024,1470 @@
         "crashTest": "क्रैश टेस्ट"
     },
     "features": {
-        "title": "हिडن फीचर्स अनलॉक और यूडीएस कोडिंग",
-        "subTitle": "आईएसओ 14229 यूडीएस एडैप्टेशन इंजन",
-        "batteryVoltage": "बैचरी वोल्टेज",
-        "voltageReady": "सुरक्षित",
-        "voltageLocked": "कम वोल्टेज",
-        "locked": "लॉक है",
-        "ready": "तैयार",
-        "allMarks": "सभी ब्रांड",
-        "writeBtn": "लिखें",
-        "catLighting": "प्रकाश",
-        "catSound": "ध्वनि और अलर्ट",
-        "catDisplay": "उपकरण",
-        "catComfort": "आराम",
-        "catSafety": "सुरक्षा",
-        "safetyAlertTitle": "कम बैटरी वोल्टेज चेतावनी",
-        "safetyAlertMsg": "कोडिंग के लिए न्यूनतम 12.2V बैटरी वोल्टेज आवश्यक है।\nकृपया चार्जर कनेक्ट करें या इंजन चालू करें।",
+        "title": "UNLOCK HIDDEN FEATURES & UDS CODING",
+        "subTitle": "ISO 14229 UDS Long Coding & Adaptation Engine",
+        "batteryVoltage": "BATTERY VOLTAGE",
+        "voltageReady": "Safe",
+        "voltageLocked": "Low Voltage",
+        "locked": "LOCKED",
+        "ready": "READY",
+        "allMarks": "ALL MARKS",
+        "writeBtn": "WRITE",
+        "catLighting": "LIGHTING",
+        "catSound": "SOUND & ALERTS",
+        "catDisplay": "INSTRUMENTS",
+        "catComfort": "COMFORT",
+        "catSafety": "SAFETY",
+        "safetyAlertTitle": "Low Battery Voltage Alert",
+        "safetyAlertMsg": "Minimum 12.2V battery voltage required for coding.\nPlease connect a charger or start the engine.",
         "items": {
             "vag_staging_needle_sweep": {
-                "name": "गेज स्टेजिंग/सुई स्वीप",
-                "desc": "इग्निशन शुरू होने पर उपकरण की सुइयों को अधिकतम तक स्वीप करना।"
+                "name": "Gauge Staging / Needle Sweep",
+                "desc": "Sweeps instrument needles to maximum upon ignition start."
             },
             "vag_acoustic_lock_confirmation": {
-                "name": "ध्वनिक लॉक पुष्टिकरण चिरप",
-                "desc": "कुंजी फ़ॉब लॉक करने पर एक छोटी हॉर्न पुष्टिकरण ध्वनि का उत्सर्जन करता है।"
+                "name": "Acoustic Lock Confirmation Chirp",
+                "desc": "Emits a short horn confirmation chirp upon key fob locking."
             },
             "vag_american_parking_lights": {
-                "name": "यूएस स्टाइल पार्किंग लाइट्स",
-                "desc": "पार्किंग लाइट के साथ फ्रंट टर्न सिग्नल को 20% डिमिंग पर लगातार रोशन करता है।"
+                "name": "US Style Parking Lights",
+                "desc": "Illuminates front turn signals continuously at 20% dimming with parking lights."
             },
             "vag_drl_menu_toggle": {
-                "name": "डेटाइम रनिंग लाइट्स मेनू टॉगल करें",
-                "desc": "इंफोटेनमेंट वाहन सेटिंग मेनू में डीआरएल चालू/बंद चेकबॉक्स सक्षम करता है।"
+                "name": "Daytime Running Lights Menu Toggle",
+                "desc": "Enables DRL ON/OFF checkbox in infotainment vehicle settings menu."
             },
             "vag_tear_wiping": {
-                "name": "विंडशील्ड आंसू पोंछना",
-                "desc": "विंडशील्ड वॉशर के उपयोग के 5 सेकंड बाद एक अतिरिक्त अंतिम वाइप निष्पादित करता है।"
+                "name": "Windshield Tear Wiping",
+                "desc": "Executes an additional final wipe 5 seconds after windshield washer use."
             },
             "vag_emergency_brake_flashing": {
-                "name": "आपातकालीन ब्रेक खतरा चमक रहा है",
-                "desc": "भारी आपातकालीन ब्रेकिंग के दौरान तेजी से चमकती ब्रेक लाइट और खतरे।"
+                "name": "Emergency Brake Hazard Flashing",
+                "desc": "Rapidly flashes brake lights and hazards under heavy emergency braking."
             },
             "vag_cornering_lights": {
-                "name": "कॉर्नरिंग फ़ॉग लाइट्स",
-                "desc": "स्टीयरिंग व्हील रोटेशन साइड पर कॉर्नरिंग फ़ॉग लाइट को रोशन करता है।"
+                "name": "Cornering Fog Lights",
+                "desc": "Illuminates cornering fog light on steering wheel rotation side."
             },
             "vag_comfort_mirror_folding": {
-                "name": "की फोब कम्फर्ट मिरर फोल्डिंग",
-                "desc": "कुंजी फ़ॉब पर लॉक बटन दबाए रखने पर साइड मिरर स्वचालित रूप से मुड़ जाते हैं।"
+                "name": "Key Fob Comfort Mirror Folding",
+                "desc": "Automatically folds side mirrors when lock button is held on key fob."
             },
             "vag_lap_timer": {
-                "name": "उपकरण क्लस्टर लैप टाइमर",
-                "desc": "इंस्ट्रूमेंट क्लस्टर स्क्रीन में ट्रैक लैप टाइमर डिस्प्ले टैब को अनलॉक करता है।"
+                "name": "Instrument Cluster Lap Timer",
+                "desc": "Unlocks track lap timer display tab in instrument cluster screen."
             },
             "vag_refuel_quantity": {
-                "name": "ईंधन मात्रा प्रदर्शन",
-                "desc": "पूर्ण ईंधन ईंधन भरने के लिए आवश्यक लीटर में सटीक मात्रा प्रदर्शित करता है।"
+                "name": "Refuel Quantity Display",
+                "desc": "Displays exact volume in liters required for a full fuel refuel."
             },
             "bmw_start_stop_memory": {
-                "name": "ऑटो स्टार्ट-स्टॉप मेमोरी मोड",
-                "desc": "वाहन पुनः प्रारंभ होने पर अंतिम ऑटो स्टार्ट-स्टॉप स्थिति को याद रखता है।"
+                "name": "Auto Start-Stop Memory Mode",
+                "desc": "Remembers last Auto Start-Stop state across vehicle restarts."
             },
             "bmw_digital_speedometer": {
-                "name": "डिजिटल स्पीडोमीटर डिस्प्ले",
-                "desc": "क्लस्टर स्क्रीन पर तत्काल डिजिटल गति संख्यात्मक प्रदर्शन विकल्प जोड़ता है।"
+                "name": "Digital Speedometer Display",
+                "desc": "Adds instant digital speed numerical display option to cluster screen."
             },
             "bmw_sport_displays": {
-                "name": "स्पोर्ट डिस्प्ले",
-                "desc": "आईड्राइव स्क्रीन में लाइव हॉर्सपावर और टॉर्क डायनेमिक डायल सक्षम करता है।"
+                "name": "Sport Displays",
+                "desc": "Enables live horsepower and torque dynamic dials in iDrive screen."
             },
             "bmw_acoustic_lock_sound": {
-                "name": "ध्वनिक लॉक/अनलॉक ध्वनि",
-                "desc": "वाहन को लॉक या अनलॉक करते समय अलार्म सिस्टम बजता है।"
+                "name": "Acoustic Lock/Unlock Sound",
+                "desc": "Emits alarm system chirps when locking or unlocking the vehicle."
             },
             "bmw_mirror_fold_delay_zero": {
-                "name": "इंस्टेंट मिरर फोल्डिंग",
-                "desc": "बिना देर किए लॉक बटन दबाने पर साइड मिरर तुरंत मुड़ जाते हैं।"
+                "name": "Instant Mirror Folding",
+                "desc": "Folds side mirrors instantly upon lock button press without holding delay."
             },
             "bmw_tpms_tire_temperature": {
-                "name": "टायर का दबाव और तापमान प्रदर्शन",
-                "desc": "टीपीएमएस स्क्रीन में दबाव के साथ-साथ वास्तविक समय टायर तापमान प्रदर्शित करता है।"
+                "name": "Tire Pressure & Temperature Display",
+                "desc": "Displays real-time tire temperature alongside pressure in TPMS screen."
             },
             "renault_trip_computer_enable": {
-                "name": "ऑन-बोर्ड ट्रिप कंप्यूटर सक्षम करें",
-                "desc": "औसत ईंधन खपत और रेंज ट्रिप कंप्यूटर डिस्प्ले को अनलॉक करता है।"
+                "name": "On-Board Trip Computer Enable",
+                "desc": "Unlocks average fuel consumption and range trip computer displays."
             },
             "renault_external_temp_display": {
-                "name": "बाहरी तापमान प्रदर्शन",
-                "desc": "उपकरण क्लस्टर में परिवेश के बाहरी तापमान को पढ़ने में सक्षम बनाता है।"
+                "name": "External Temperature Display",
+                "desc": "Enables ambient outdoor temperature reading in instrument cluster."
             },
             "renault_automatic_tailgate": {
-                "name": "कुंजी फ़ॉब ट्रंक रिलीज़",
-                "desc": "कुंजी फ़ॉब ट्रंक बटन को दबाए रखने पर ट्रंक लैच तंत्र पूरी तरह से पॉप हो जाता है।"
+                "name": "Key Fob Trunk Release",
+                "desc": "Fully pops trunk latch mechanism upon holding key fob trunk button."
             },
             "renault_alarm_chirp": {
-                "name": "अलार्म लॉक पुष्टिकरण चिरप",
-                "desc": "वाहन का दरवाज़ा लॉक होने पर हॉर्न की पुष्टि की आवाज़ सुनाई देती है।"
+                "name": "Alarm Lock Confirmation Chirp",
+                "desc": "Sounds horn confirmation chirp upon vehicle door locking."
             },
             "renault_shift_indicator": {
-                "name": "गियर शिफ्ट संकेतक",
-                "desc": "उपकरण क्लस्टर में इको-ड्राइविंग शिफ्ट ऊपर/नीचे तीर सक्रिय करता है।"
+                "name": "Gear Shift Indicator",
+                "desc": "Activates eco-driving shift UP/DOWN arrows in instrument cluster."
             },
             "ford_double_horn_honk_disable": {
-                "name": "दरवाज़ा बंद होने पर डबल हॉर्न हॉर्न अक्षम करें",
-                "desc": "इंजन चालू होने पर दरवाज़ा बंद करते समय डबल हॉर्न बजाना अक्षम कर देता है।"
+                "name": "Disable Double Horn Honk on Door Close",
+                "desc": "Disables double horn honk when closing door with engine running."
             },
             "ford_auto_door_locking": {
-                "name": "20 किमी/घंटा पर ऑटो डोर लॉकिंग",
-                "desc": "वाहन की गति 20 किमी/घंटा से अधिक होने पर सभी दरवाजे स्वचालित रूप से लॉक हो जाते हैं।"
+                "name": "Auto Door Locking at 20 km/h",
+                "desc": "Automatically locks all doors when vehicle speed exceeds 20 km/h."
             },
             "ford_tpms_psi_display": {
-                "name": "संख्यात्मक टायर दबाव प्रदर्शन",
-                "desc": "उपकरण स्क्रीन में प्रति टायर सटीक संख्यात्मक PSI/BAR दबाव प्रदर्शित करता है।"
+                "name": "Numerical Tire Pressure Display",
+                "desc": "Displays exact numerical PSI/BAR pressure per tire in instrument screen."
             },
             "ford_sync_climate_screen": {
-                "name": "सिंक स्क्रीन जलवायु नियंत्रण",
-                "desc": "SYNC डिस्प्ले में जलवायु नियंत्रण और सीट हीटिंग टचस्क्रीन मेनू जोड़ता है।"
+                "name": "SYNC Screen Climate Controls",
+                "desc": "Adds climate control and seat heating touchscreen menu to SYNC display."
             },
             "stellantis_power_windows_remote": {
-                "name": "कुंजी फ़ॉब रिमोट विंडो रोल ऊपर/नीचे",
-                "desc": "लॉक/अनलॉक बटन दबाए रखने पर सभी पावर विंडो को ऊपर या नीचे रोल करता है।"
+                "name": "Key Fob Remote Window Roll Up/Down",
+                "desc": "Rolls up or down all power windows when holding lock/unlock buttons."
             },
             "stellantis_cornering_fogs": {
-                "name": "कॉर्नरिंग फ़ॉग लाइट सक्षम करें",
-                "desc": "कम गति वाले मोड़ों के दौरान कॉर्नरिंग फॉग लैंप को रोशन करता है।"
+                "name": "Cornering Fog Lights Enable",
+                "desc": "Illuminates cornering fog lamp during low-speed turns."
             },
             "vag_traffic_sign_recognition": {
-                "name": "यातायात चिह्न पहचान",
-                "desc": "उपकरण क्लस्टर और HUD में कैमरे द्वारा पहचाने गए गति चिह्न प्रदर्शित करता है।"
+                "name": "Traffic Sign Recognition",
+                "desc": "Displays camera-detected speed signs in instrument cluster and HUD."
             },
             "vag_ambient_color_palette_30": {
-                "name": "30-रंग परिवेश प्रकाश पैलेट",
-                "desc": "एमआईबी इंफोटेनमेंट मेनू में 30 आरजीबी इंटीरियर लाइटिंग कलर पिकर को अनलॉक करता है।"
+                "name": "30-Color Ambient Lighting Palette",
+                "desc": "Unlocks 30 RGB interior lighting color picker in MIB infotainment menu."
             },
             "vag_seatbelt_warning_mute": {
-                "name": "सीटबेल्ट चाइम निष्क्रियकरण",
-                "desc": "उपकरण क्लस्टर में बिना बकल वाली सीटबेल्ट ध्वनिक झंकार को अक्षम करता है।"
+                "name": "Seatbelt Chime Deactivation",
+                "desc": "Disables unbuckled seatbelt acoustic chime in instrument cluster."
             },
             "bmw_alpina_cluster_theme": {
-                "name": "अल्पाइना डिजिटल डैश लेआउट",
-                "desc": "डिजिटल इंस्ट्रूमेंट क्लस्टर पर नीली अल्पाइना सिग्नेचर थीम लागू करता है।"
+                "name": "Alpina Digital Dash Layout",
+                "desc": "Applies blue Alpina signature theme to digital instrument cluster."
             },
             "bmw_video_in_motion": {
-                "name": "वीडियो इन मोशन",
-                "desc": "गाड़ी चलाते समय iDrive स्क्रीन पर USB वीडियो प्लेबैक को अनलॉक करता है।"
+                "name": "Video In Motion",
+                "desc": "Unlocks USB video playback on iDrive screen while driving."
             },
             "bmw_sport_plus_mode_unlock": {
-                "name": "स्पोर्ट+ ड्राइविंग मोड सक्षम करें",
-                "desc": "DEC चयनकर्ता में स्पोर्ट+ उच्च-प्रदर्शन गतिशील ड्राइविंग मोड सक्षम करता है।"
+                "name": "Sport+ Driving Mode Enable",
+                "desc": "Enables Sport+ high-performance dynamic driving mode in DEC selector."
             },
             "mercedes_amg_menu_unlock": {
-                "name": "एएमजी प्रदर्शन टेलीमेट्री मेनू",
-                "desc": "एएमजी तेल तापमान, ट्रांसमिशन तापमान, लैप टाइमर और जी-मीटर प्रदर्शित करता है।"
+                "name": "AMG Performance Telemetry Menu",
+                "desc": "Displays AMG oil temp, transmission temp, lap timer, and G-meter."
             },
             "mercedes_agility_mode_enable": {
-                "name": "चपलता ट्रांसमिशन मोड",
-                "desc": "7जी/9जी-ट्रॉनिक ट्रांसमिशन में अल्ट्रा-रेस्पॉन्सिव एजिलिटी शिफ्ट प्रोग्राम को अनलॉक करता है।"
+                "name": "Agility Transmission Mode",
+                "desc": "Unlocks ultra-responsive Agility shift program in 7G/9G-Tronic transmission."
             },
             "mercedes_drl_brightness_boost": {
-                "name": "दिन के समय चलने वाली लाइटें 100% तीव्रता",
-                "desc": "एलईडी डे-टाइम रनिंग लाइट आउटपुट को 100% पूर्ण चमक तक बढ़ा देता है।"
+                "name": "Daytime Running Lights 100% Intensity",
+                "desc": "Increases LED daytime running lights output to 100% full brightness."
             },
             "mercedes_alarm_lock_chirp": {
-                "name": "ध्वनिक लॉकिंग हॉर्न चिरप",
-                "desc": "सेंट्रल लॉकिंग चालू होने पर शॉर्ट हॉर्न की ध्वनि की सूचना उत्सर्जित होती है।"
+                "name": "Acoustic Locking Horn Chirp",
+                "desc": "Emits short horn chirp notification when central locking is engaged."
             },
             "mercedes_dpf_adblue_gauge": {
-                "name": "डीपीएफ सूट और एडब्लू लेवल गेज",
-                "desc": "आईसी में सटीक डीपीएफ कालिख द्रव्यमान प्रतिशत और शेष एडब्लू रेंज प्रदर्शित करता है।"
+                "name": "DPF Soot & AdBlue Level Gauge",
+                "desc": "Displays exact DPF soot mass percentage and remaining AdBlue range in IC."
             },
             "renault_rs_monitor_enable": {
-                "name": "रेनॉल्ट स्पोर्ट आरएस मॉनिटर टेलीमेट्री",
-                "desc": "आर-लिंक पर लाइव जी-फोर्स, टर्बो बूस्ट और ऑयल टेम्प टेलीमेट्री सक्षम करता है।"
+                "name": "Renault Sport RS Monitor Telemetry",
+                "desc": "Enables live G-force, turbo boost, and oil temp telemetry on R-Link."
             },
             "renault_duster_mirror_fold": {
-                "name": "लॉक पर डस्टर ऑटो मिरर फोल्डिंग",
-                "desc": "बीसीएम सेंट्रल लॉकिंग कमांड के माध्यम से साइड मिरर को स्वचालित रूप से मोड़ता है।"
+                "name": "Duster Auto Mirror Folding on Lock",
+                "desc": "Folds side mirrors automatically via BCM central locking command."
             },
             "ford_bambi_mode_fog_light": {
-                "name": "बांबी मोड",
-                "desc": "हाई बीम हेडलाइट सक्रिय होने पर फॉग लाइट को चालू रहने देता है।"
+                "name": "Bambi Mode",
+                "desc": "Allows fog lights to remain ON when high beam headlights are activated."
             },
             "ford_st_rs_boot_animation": {
-                "name": "एसटी/आरएस प्रदर्शन सिंक बूट स्क्रीन",
-                "desc": "SYNC टचस्क्रीन स्टार्टअप स्प्लैश एनीमेशन को ST/RS लोगो में बदलता है।"
+                "name": "ST/RS Performance SYNC Boot Screen",
+                "desc": "Changes SYNC touchscreen startup splash animation to ST / RS logo."
             },
             "toyota_reverse_beep_mute": {
-                "name": "रिवर्स गियर सतत केबिन बीप म्यूट",
-                "desc": "केबिन के अंदर निरंतर रिवर्स गियर की घंटी को एक बीप पर म्यूट कर देता है।"
+                "name": "Reverse Gear Continuous Cabin Beep Mute",
+                "desc": "Mutes continuous reverse gear chime inside cabin to a single beep."
             },
             "toyota_remote_window_drop": {
-                "name": "कुंजी फ़ॉब रिमोट विंडो रोल डाउन",
-                "desc": "कुंजी फ़ॉब अनलॉक बटन दबाए रखने पर सभी पावर विंडो बंद हो जाती हैं।"
+                "name": "Key Fob Remote Window Roll Down",
+                "desc": "Rolls down all power windows when holding key fob unlock button."
             },
             "toyota_auto_lock_shift_p": {
-                "name": "गियर शिफ्ट पर ऑटो लॉक दरवाजे",
-                "desc": "पार्क की स्थिति से बाहर जाने पर सभी दरवाजे स्वचालित रूप से लॉक हो जाते हैं।"
+                "name": "Auto Lock Doors on Gear Shift",
+                "desc": "Automatically locks all doors when shifting out of Park position."
             },
             "peugeot_icockpit_theme_unlock": {
-                "name": "प्यूज़ो 3डी आई-कॉकपिट प्रदर्शन थीम",
-                "desc": "3डी डिजिटल क्लस्टर पर कॉपर और ट्रैक रेड कलर डिस्प्ले थीम को अनलॉक करता है।"
+                "name": "Peugeot 3D i-Cockpit Performance Theme",
+                "desc": "Unlocks Copper and Track Red color display themes on 3D digital cluster."
             },
             "jeep_offroad_pages_enable": {
-                "name": "जीप यूकनेक्ट ऑफ-रोड पेज",
-                "desc": "पिच/रोल एंगल गेज, व्हील आर्टिक्यूलेशन और 4x4 लॉक स्थिति सक्षम करता है।"
+                "name": "Jeep Uconnect Off-Road Pages",
+                "desc": "Enables pitch/roll angle gauges, wheel articulation, and 4x4 lock status."
             },
             "hyundai_smart_welcome_mirror": {
-                "name": "स्मार्ट की एप्रोच वेलकम मिरर अनफोल्ड",
-                "desc": "स्मार्ट कुंजी के साथ वाहन के पास आने पर स्वचालित रूप से साइड मिरर खुल जाते हैं।"
+                "name": "Smart Key Approach Welcome Mirror Unfold",
+                "desc": "Automatically unfolds side mirrors when approaching vehicle with smart key."
             },
             "hyundai_one_touch_turn_7_flashes": {
-                "name": "वन-टच लेन चेंज सिग्नल",
-                "desc": "वन-टच लेन परिवर्तन ब्लिंकर अवधि को 7 फ़्लैश पर सेट करता है।"
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Sets one-touch lane change blinker duration to 7 flashes."
             },
             "hyundai_svm_camera_speed_extend": {
-                "name": "360° सराउंड कैमरा स्पीड एक्सटेंशन",
-                "desc": "360-डिग्री पार्किंग कैमरा को 20 किमी/घंटा आगे की गति तक सक्रिय रखता है।"
+                "name": "360° Surround Camera Speed Extension",
+                "desc": "Keeps 360-degree parking camera active up to 20 km/h forward speed."
             },
             "hyundai_n_performance_exhaust_flap": {
-                "name": "एन-परफॉर्मेंस एग्जॉस्ट फ्लैप डिफ़ॉल्ट ओपन",
-                "desc": "इंजन शुरू होने पर सक्रिय निकास वाल्व की डिफ़ॉल्ट स्थिति को खोलने के लिए सेट करता है।"
+                "name": "N-Performance Exhaust Flap Default OPEN",
+                "desc": "Sets active exhaust valve default position to OPEN on engine start."
             },
             "vag_rain_closing_sunroof": {
-                "name": "बारिश का समापन",
-                "desc": "पार्क करते समय बारिश का पता चलने पर सनरूफ और खिड़कियाँ स्वचालित रूप से बंद हो जाती हैं।"
+                "name": "Rain Closing",
+                "desc": "Automatically closes sunroof and windows when rain is detected while parked."
             },
             "bmw_launch_control_unlock": {
-                "name": "नियंत्रण अनलॉक लॉन्च करें",
-                "desc": "ट्रांसमिशन ईसीयू में फ़ैक्टरी लॉन्च कंट्रोल एक्सेलेरेशन प्रोग्राम को अनलॉक करता है।"
+                "name": "Launch Control Unlock",
+                "desc": "Unlocks factory launch control acceleration program in transmission ECU."
             },
             "mercedes_ambient_64_multi_zone": {
-                "name": "64-रंग मल्टी-ज़ोन परिवेश प्रोफ़ाइल",
-                "desc": "एमबीयूएक्स आंतरिक प्रकाश व्यवस्था में गतिशील बहु-क्षेत्र रंग चक्र एनीमेशन को अनलॉक करता है।"
+                "name": "64-Color Multi-Zone Ambient Profile",
+                "desc": "Unlocks dynamic multi-zone color cycle animation in MBUX interior lighting."
             },
             "ford_trailer_brake_activation": {
-                "name": "ट्रेलर ब्रेक नियंत्रक सक्षम करें",
-                "desc": "इंस्ट्रूमेंट क्लस्टर में एकीकृत ट्रेलर ब्रेक नियंत्रक मेनू सक्षम करता है।"
+                "name": "Trailer Brake Controller Enable",
+                "desc": "Enables integrated trailer brake controller menu in instrument cluster."
             },
             "gm_afm_dfm_cylinder_deactivation_disable": {
-                "name": "एएफएम/डीएफएम वी8 सिलेंडर लॉक",
-                "desc": "V4 कंपन को रोकने के लिए इंजन को 8-सिलेंडर मोड में स्थायी रूप से लॉक कर देता है।"
+                "name": "AFM/DFM V8 Cylinder Lock",
+                "desc": "Locks engine in 8-cylinder mode permanently to prevent V4 vibration."
             },
             "gm_remote_start_time_extend": {
-                "name": "दूरस्थ प्रारंभ अवधि विस्तार",
-                "desc": "फ़ैक्टरी कुंजी फ़ॉब रिमोट इंजन स्टार्ट रन टाइम को 10 से 20 मिनट तक बढ़ाता है।"
+                "name": "Remote Start Duration Extension",
+                "desc": "Extends factory key fob remote engine start run time from 10 to 20 minutes."
             },
             "dodge_srt_performance_pages": {
-                "name": "एसआरटी प्रदर्शन पृष्ठ और ड्राइव मोड",
-                "desc": "यूकनेक्ट 0-100 एक्सेलेरेशन टाइमर, जी-फोर्स मीटर और लॉन्च कंट्रोल को अनलॉक करता है।"
+                "name": "SRT Performance Pages & Drive Modes",
+                "desc": "Unlocks Uconnect 0-100 acceleration timers, G-force meter, and launch control."
             },
             "ram_bambi_mode_fog": {
-                "name": "हाई बीम के साथ रैम ट्रक फॉग लाइट्स",
-                "desc": "रैम फॉग लाइट को हाई बीम हेडलाइट के साथ सक्रिय रहने की अनुमति देता है।"
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Allows RAM fog lights to remain active alongside high beam headlights."
             },
             "byd_avas_pedestrian_siren_mute": {
-                "name": "AVAS EV लो-स्पीड सायरन म्यूट",
-                "desc": "30 किमी/घंटा से कम गति वाले कृत्रिम इलेक्ट्रिक मोटर सायरन को म्यूट करता है।"
+                "name": "AVAS EV Low-Speed Siren Mute",
+                "desc": "Mutes low-speed artificial electric motor siren below 30 km/h."
             },
             "chery_isa_overspeed_chime_mute": {
-                "name": "आईएसए ओवरस्पीड चेतावनी झंकार निष्क्रियकरण",
-                "desc": "टिग्गो/एमजी मॉडल पर लगातार 80/120 किमी/घंटा ओवरस्पीड चेतावनी बीप को अक्षम करता है।"
+                "name": "ISA Overspeed Warning Chime Deactivation",
+                "desc": "Disables continuous 80/120 km/h overspeed warning beep on Tiggo/MG models."
             },
             "mg_ev_battery_preconditioning_toggle": {
-                "name": "ईवी फास्ट-चार्ज बैटरी प्री-हीटिंग मैनुअल स्विच",
-                "desc": "डीसी फास्ट चार्जिंग से पहले मैनुअल बैटरी प्री-हीटिंग स्विच सक्षम करता है।"
+                "name": "EV Fast-Charge Battery Pre-Heating Manual Switch",
+                "desc": "Enables manual battery pre-heating switch before DC fast charging."
             },
             "chery_dms_fatigue_camera_mute": {
-                "name": "ड्राइवर मॉनिटरिंग कैमरा संवेदनशीलता में कमी",
-                "desc": "स्टीयरिंग कॉलम पर अति-संवेदनशील नेत्र-ट्रैकिंग थकान चेतावनियों को कम करता है।"
+                "name": "Driver Monitoring Camera Sensitivity Reduction",
+                "desc": "Reduces over-sensitive eye-tracking fatigue warnings on steering column."
             },
             "honda_walk_away_auto_lock": {
-                "name": "वॉक-अवे ऑटो डोर लॉक",
-                "desc": "जब ड्राइवर 2 मीटर की दूरी पर चला जाता है तो कुंजी फ़ॉब के साथ सभी दरवाजे स्वचालित रूप से लॉक हो जाते हैं।"
+                "name": "Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when driver steps 2 meters away with key fob."
             },
             "subaru_avh_auto_hold_memory": {
-                "name": "ऑटो व्हीकल होल्ड मेमोरी मोड",
-                "desc": "इग्निशन चक्रों में AVH ब्रेक होल्ड चालू/बंद स्थिति को याद रखता है।"
+                "name": "Auto Vehicle Hold Memory Mode",
+                "desc": "Remembers AVH brake hold ON/OFF state across ignition cycles."
             },
             "volvo_start_stop_default_off": {
-                "name": "ऑटो स्टार्ट-स्टॉप डिफ़ॉल्ट ऑफ मोड",
-                "desc": "वाहन स्टार्ट होने पर स्टार्ट-स्टॉप इंजन शटऑफ़ सिस्टम की डिफ़ॉल्ट स्थिति को बंद पर सेट करता है।"
+                "name": "Auto Start-Stop Default OFF Mode",
+                "desc": "Sets Start-Stop engine shutoff system default state to OFF upon vehicle start."
             },
             "volvo_polestar_digital_theme": {
-                "name": "पोलस्टार ब्लू डिजिटल क्लस्टर थीम",
-                "desc": "वोल्वो ड्राइवर डिस्प्ले में पोलस्टार सिग्नेचर ब्लू डायनेमिक गेज थीम को अनलॉक करता है।"
+                "name": "Polestar Blue Digital Cluster Theme",
+                "desc": "Unlocks Polestar signature blue dynamic gauge theme in Volvo driver display."
             },
             "vag_virtual_cockpit_r_theme": {
-                "name": "वर्चुअल कॉकपिट आर/एस/कपरा परफॉर्मेंस थीम्स",
-                "desc": "डिजिटल कॉकपिट में आर-लाइन, एस-लाइन और कपरा सेंट्रल टैकोमीटर प्रदर्शन थीम को अनलॉक करता है।"
+                "name": "Virtual Cockpit R / S / Cupra Performance Themes",
+                "desc": "Unlocks R-Line, S-Line, and Cupra central tachometer performance themes in digital cockpit."
             },
             "vag_sound_symposer_mute": {
-                "name": "ध्वनि सिम्पोजर नकली इंजन शोर निष्क्रियकरण",
-                "desc": "शुद्ध निकास नोट के लिए केबिन स्पीकर नकली इंजन ध्वनि जनरेटर को निष्क्रिय करता है।"
+                "name": "Sound Symposer Fake Engine Noise Deactivation",
+                "desc": "Deactivates cabin speaker fake engine sound generator for pure exhaust note."
             },
             "vag_wireless_carplay_enable": {
-                "name": "वायरलेस एप्पल कारप्ले और एंड्रॉइड ऑटो एक्टिवेशन",
-                "desc": "MIB2.5/MIB3 इकाइयों पर 5GHz वाई-फाई वायरलेस Apple CarPlay और Android Auto सक्षम करता है।"
+                "name": "Wireless Apple CarPlay & Android Auto Activation",
+                "desc": "Enables 5GHz Wi-Fi wireless Apple CarPlay and Android Auto on MIB2.5/MIB3 units."
             },
             "vag_offroad_telemetry_menu": {
-                "name": "एमआईबी ऑफरोड टेलीमेट्री और गेज डिस्प्ले",
-                "desc": "एमआईबी स्क्रीन पर स्टीयरिंग कोण, तेल तापमान, शीतलक तापमान और ऊंचाई गेज प्रदर्शित करता है।"
+                "name": "MIB Offroad Telemetry & Gauge Display",
+                "desc": "Displays steering angle, oil temp, coolant temp, and altitude gauges on MIB screen."
             },
             "vag_easy_entry_driver_seat": {
-                "name": "स्वचालित आसान प्रवेश पावर सीट बैक-स्टेप",
-                "desc": "वाहन के आसान प्रवेश के लिए दरवाजा खुलने पर इलेक्ट्रिक ड्राइवर सीट को 5 सेमी पीछे ले जाता है।"
+                "name": "Automatic Easy Entry Power Seat Back-step",
+                "desc": "Moves electric driver seat back 5 cm upon door opening for easy vehicle entry."
             },
             "vag_hba_memory_state": {
-                "name": "हाई-बीम असिस्ट मेमोरी रिटेंशन",
-                "desc": "इग्निशन पुनरारंभ चक्रों में हाई-बीम असिस्ट ऑन स्थिति को याद रखता है।"
+                "name": "High-Beam Assist Memory Retention",
+                "desc": "Remembers High-Beam Assist ON status across ignition restart cycles."
             },
             "vag_battery_soc_display": {
-                "name": "बैटरी चार्ज की स्थिति डिस्प्ले",
-                "desc": "ट्रिप बटन दबाए रखने पर उपकरण क्लस्टर पर सटीक बैटरी चार्ज प्रतिशत दिखाता है।"
+                "name": "Battery State of Charge Display",
+                "desc": "Shows exact battery charge percentage on instrument cluster when trip button is held."
             },
             "bmw_idrive7_m_animation": {
-                "name": "आईड्राइव 7/8 एम-परफॉर्मेंस स्टार्टअप एनिमेशन",
-                "desc": "आईड्राइव स्क्रीन बूट ग्राफ़िक को एम-परफॉर्मेंस या एम-जीएमबीएच लोगो एनीमेशन में बदलता है।"
+                "name": "iDrive 7 / 8 M-Performance Startup Animation",
+                "desc": "Changes iDrive screen boot graphic to M-Performance or M-GmbH logo animation."
             },
             "bmw_bowers_wilkins_audio_profiles": {
-                "name": "बोवर्स एंड विल्किंस 3डी साउंड इंजन अनलॉक",
-                "desc": "HiFi सिस्टम पर बोवर्स एंड विल्किंस कॉन्सर्ट, स्टूडियो और स्टेज DSP ऑडियो प्रोफाइल को अनलॉक करता है।"
+                "name": "Bowers & Wilkins 3D Sound Engine Unlock",
+                "desc": "Unlocks Bowers & Wilkins Concert, Studio, and Stage DSP audio profiles on HiFi systems."
             },
             "bmw_hitch_zoom_camera": {
-                "name": "रिवर्स कैमरा ट्रेलर हिच ज़ूम मोड",
-                "desc": "रिवर्स कैमरा व्यू पर टॉप-डाउन ट्रेलर हिच अलाइनमेंट ज़ूम मोड को अनलॉक करता है।"
+                "name": "Reverse Camera Trailer Hitch Zoom Mode",
+                "desc": "Unlocks top-down trailer hitch alignment zoom mode on reverse camera view."
             },
             "bmw_secure_idle_protection": {
-                "name": "सुरक्षित निष्क्रिय इंजन शिफ्ट-लॉक सुरक्षा",
-                "desc": "यदि ड्राइवर चालू वाहन को चाबी के साथ छोड़ देता है तो पार्क में ट्रांसमिशन लॉक हो जाता है।"
+                "name": "Secure Idle Engine Shift-Lock Protection",
+                "desc": "Locks transmission in Park if driver leaves running vehicle with key fob."
             },
             "bmw_seatbelt_handover_mute": {
-                "name": "कूप इलेक्ट्रिक सीटबेल्ट हैंडओवर आर्म डिएक्टिवेशन",
-                "desc": "4 सीरीज और 2 सीरीज कूपों पर मोटर चालित सीटबेल्ट एक्सटेंडर आर्म को अक्षम करता है।"
+                "name": "Coupe Electric Seatbelt Handover Arm Deactivation",
+                "desc": "Disables motorized seatbelt extender arm on 4 Series and 2 Series Coupes."
             },
             "bmw_auto_heat_threshold_5c": {
-                "name": "स्वचालित सीट और स्टीयरिंग व्हील ताप तापमान",
-                "desc": "जब परिवेश का तापमान 5°C से नीचे चला जाता है तो स्वचालित सीट और स्टीयरिंग व्हील हीटिंग चालू हो जाती है।"
+                "name": "Automatic Seat & Steering Wheel Heating Temperature",
+                "desc": "Triggers automatic seat and steering wheel heating when ambient temp drops below 5°C."
             },
             "mercedes_amg_track_pace_unlock": {
-                "name": "एमबीयूएक्स एएमजी ट्रैक पेस टेलीमेट्री और लैप टाइमर",
-                "desc": "एमबीयूएक्स स्क्रीन पर लैप टाइमिंग, एक्सेलेरेशन टेलीमेट्री और जी-फोर्स ग्राफ को अनलॉक करता है।"
+                "name": "MBUX AMG Track Pace Telemetry & Lap Timer",
+                "desc": "Unlocks lap timing, acceleration telemetry, and G-force graphs on MBUX screen."
             },
             "mercedes_drive_mode_last_memory": {
-                "name": "डायनामिक सेलेक्ट लास्ट ड्राइव मोड मेमोरी",
-                "desc": "वाहन पुनरारंभ के दौरान अंतिम चयनित ड्राइव मोड को याद रखता है।"
+                "name": "Dynamic Select Last Drive Mode Memory",
+                "desc": "Remembers last selected Drive Mode across vehicle restart."
             },
             "mercedes_proximity_360_camera_auto": {
-                "name": "प्रॉक्सिमिटी सेंसर ऑटो 360° कैमरा दृश्य",
-                "desc": "जब फ्रंट सेंसर <50 सेमी बाधा का पता लगाता है तो स्क्रीन स्वचालित रूप से 360 कैमरे पर स्विच हो जाती है।"
+                "name": "Proximity Sensor Auto 360° Camera View",
+                "desc": "Automatically switches screen to 360 camera when front sensors detect obstacle < 50 cm."
             },
             "ford_sync_climate_screen_unlock": {
-                "name": "SYNC3 / SYNC4 टचस्क्रीन जलवायु नियंत्रण पृष्ठ",
-                "desc": "जलवायु नियंत्रण, गर्म सीट और वायु प्रवाह दिशा टचस्क्रीन पेज को सक्षम करता है।"
+                "name": "SYNC3 / SYNC4 Touchscreen Climate Control Page",
+                "desc": "Enables climate control, heated seat, and airflow direction touchscreen page."
             },
             "ford_turn_signal_5_flashes": {
-                "name": "वन-टच लेन चेंज सिग्नल",
-                "desc": "वन-टच लेन परिवर्तन टर्न सिग्नल अवधि को 3 से 5 फ़्लैश तक बढ़ाता है।"
+                "name": "One-Touch Lane Change Signal",
+                "desc": "Increases one-touch lane change turn signal duration from 3 to 5 flashes."
             },
             "ford_auto_engine_shutdown_disable": {
-                "name": "30-मिनट निष्क्रिय ऑटो इंजन शटडाउन ओवरराइड",
-                "desc": "30 मिनट निष्क्रिय रहने के बाद स्वचालित इंजन बंद होने से रोकता है।"
+                "name": "30-Minute Idle Auto Engine Shutdown Override",
+                "desc": "Prevents automatic engine shutoff after 30 minutes idle."
             },
             "ev_battery_preheat_manual_switch": {
-                "name": "ईवी बैटरी प्री-हीटिंग मैनुअल स्विच",
-                "desc": "नेविगेशन मार्ग के बिना डीसी फास्ट चार्जिंग से पहले मैन्युअल बैटरी को 25 डिग्री सेल्सियस तक प्री-हीटिंग की अनुमति देता है।"
+                "name": "EV Battery Pre-Heating Manual Switch",
+                "desc": "Allows manual battery pre-heating to 25°C before DC fast charging without navigation route."
             },
             "ev_v2l_power_output_expand": {
-                "name": "V2L 220V आउटलेट पावर विस्तार",
-                "desc": "V2L बाहरी 220V AC घरेलू बिजली आउटलेट सीमा को 2.2 किलोवाट से बढ़ाकर 3.6 किलोवाट तक करता है।"
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands V2L external 220V AC household power outlet limit from 2.2 kW to 3.6 kW."
             },
             "ev_one_pedal_regen_force_level3": {
-                "name": "एक-पेडल ड्राइव अधिकतम पुनर्योजी ब्रेकिंग डिफ़ॉल्ट",
-                "desc": "वाहन स्टार्ट पर अधिकतम पुनर्योजी ब्रेकिंग को डिफ़ॉल्ट के रूप में सेट करता है।"
+                "name": "One-Pedal Drive Maximum Regenerative Braking Default",
+                "desc": "Sets maximum regenerative braking as default on vehicle start."
             },
             "byd_soc_max_charge_target_limit": {
-                "name": "BYD बैटरी स्वास्थ्य सुरक्षा अधिकतम चार्ज सीमा",
-                "desc": "ब्लेड बैटरी के जीवनकाल को बढ़ाने के लिए अधिकतम एसी/डीसी चार्ज कटऑफ सीमा को 80% या 90% पर सेट करता है।"
+                "name": "BYD Battery Health Protection Max Charge Limit",
+                "desc": "Sets max AC/DC charge cutoff limit to 80% or 90% to extend Blade Battery lifespan."
             },
             "byd_dmi_forced_pure_ev_speed_override": {
-                "name": "BYD DM-i प्योर ईवी मोड गैसोलीन इंजन ओवरराइड",
-                "desc": "फुल थ्रॉटल एक्सेलेरेशन के दौरान भी ईवी मोड में गैसोलीन इंजन स्टार्ट को 130 किमी/घंटा तक रोकता है।"
+                "name": "BYD DM-i Pure EV Mode Gasoline Engine Override",
+                "desc": "Inhibits gasoline engine start in EV mode up to 130 km/h even during full throttle acceleration."
             },
             "byd_vtol_v2v_rescue_charge_mode": {
-                "name": "BYD VTOL रेस्क्यू चार्ज मोड",
-                "desc": "सड़क पर फंसे इलेक्ट्रिक वाहनों को चार्ज करने के लिए बाहरी एसी पावर आउटपुट को अनलॉक करता है।"
+                "name": "BYD VTOL Rescue Charge Mode",
+                "desc": "Unlocks external AC power output to charge stranded electric vehicles on road."
             },
             "hyundai_ipedal_memory_lock": {
-                "name": "हुंडई/किआ आई-पेडल वन-पेडल ड्राइव मेमोरी लॉक",
-                "desc": "i-PEDAL वन-पेडल स्टॉप मोड को रिवर्स में शिफ्ट करने के बाद लेवल 3 पर वापस जाने से रोकता है।"
+                "name": "Hyundai / Kia i-PEDAL One-Pedal Drive Memory Lock",
+                "desc": "Prevents i-PEDAL one-pedal stop mode from dropping back to Level 3 after shifting to Reverse."
             },
             "hyundai_utility_mode_12v_saver": {
-                "name": "यूटिलिटी कैम्पिंग मोड हाई-वोल्टेज 12V सेवर",
-                "desc": "सहायक 12V बैटरी की खपत को रोकने के लिए सीधे HV ट्रैक्शन बैटरी से 220V V2L आउटलेट को पावर देता है।"
+                "name": "Utility Camping Mode High-Voltage 12V Saver",
+                "desc": "Powers 220V V2L outlet directly from HV traction battery to prevent auxiliary 12V battery drain."
             },
             "hyundai_phev_no_ice_climate_start": {
-                "name": "पीएचईवी ईवी मोड क्लाइमेट हीटिंग गैसोलीन इंजन दमन",
-                "desc": "गैसोलीन इंजन शुरू किए बिना केबिन जलवायु के लिए हीट पंप / पीटीसी इलेक्ट्रिक हीटर को मजबूर करता है।"
+                "name": "PHEV EV Mode Climate Heating Gasoline Engine Suppression",
+                "desc": "Forces heat pump / PTC electric heater for cabin climate without starting gasoline engine."
             },
             "vag_taycan_ess_sound_profile_swap": {
-                "name": "इलेक्ट्रिक स्पोर्ट साउंड टायकन / आरएस ई-ट्रॉन प्रोफाइल",
-                "desc": "इलेक्ट्रिक ड्राइविंग साउंड प्रोफाइल को पोर्शे टेक्कन जीटीएस या ऑडी आरएस ई-ट्रॉन जीटी साउंड जनरेटर में बदलता है।"
+                "name": "Electric Sport Sound Taycan / RS e-tron Profile",
+                "desc": "Changes electric driving sound profile to Porsche Taycan GTS or Audi RS e-tron GT sound generator."
             },
             "vag_meb_daily_charge_target_menu": {
-                "name": "एमईबी बैटरी दैनिक 80% / ट्रिप 100% त्वरित चार्ज बार",
-                "desc": "80% दैनिक बैटरी देखभाल और 100% ट्रिप चार्ज के बीच स्विच करने के लिए एमआईबी स्क्रीन पर त्वरित टॉगल बार जोड़ता है।"
+                "name": "MEB Battery Daily 80% / Trip 100% Quick Charge Bar",
+                "desc": "Adds quick toggle bar on MIB screen to switch between 80% daily battery care and 100% trip charge."
             },
             "vag_gte_generator_charge_reserve": {
-                "name": "जीटीई / ई-मोड इंजन जेनरेटर बैटरी फोर्स चार्ज",
-                "desc": "वाहन चलाते समय दहन इंजन को हाई-वोल्टेज बैटरी को 80% तक रिचार्ज करने के लिए जनरेटर के रूप में कार्य करने के लिए मजबूर करता है।"
+                "name": "GTE / E-Mode Engine Generator Battery Force Charge",
+                "desc": "Forces combustion engine to act as generator to recharge high-voltage battery up to 80% while driving."
             },
             "bmw_hans_zimmer_iconic_sounds_m": {
-                "name": "हंस ज़िमर आइकोनिकसाउंड्स इलेक्ट्रिक एम-परफॉर्मेंस साउंड इंजन",
-                "desc": "i4 और iX पर हंस ज़िमर ध्वनिक एम-परफॉर्मेंस इलेक्ट्रिक एक्सेलेरेशन ध्वनि प्रोफाइल को अनलॉक करता है।"
+                "name": "Hans Zimmer IconicSounds Electric M-Performance Sound Engine",
+                "desc": "Unlocks Hans Zimmer acoustic M-Performance electric acceleration sound profiles on i4 and iX."
             },
             "bmw_phev_max_edrive_140kmh": {
-                "name": "पीएचईवी मैक्स ईड्राइव प्योर इलेक्ट्रिक स्पीड सीलिंग",
-                "desc": "330e / 530e प्लग-इन हाइब्रिड पर अधिकतम शुद्ध विद्युत गति सीमा को 140 किमी/घंटा तक बढ़ाता है।"
+                "name": "PHEV MAX eDrive Pure Electric Speed Ceiling",
+                "desc": "Increases max pure electric speed ceiling on 330e / 530e Plug-in hybrids to 140 km/h."
             },
             "bmw_ac_charging_current_limit_menu": {
-                "name": "एसी होम चार्जर अधिकतम वर्तमान सीमा चयनकर्ता",
-                "desc": "होम सर्किट ओवरलोड को रोकने के लिए एसी होम चार्जिंग करंट लिमिटर जोड़ता है।"
+                "name": "AC Home Charger Maximum Current Limit Selector",
+                "desc": "Adds AC home charging current limiter to prevent home circuit overload."
             },
             "toyota_hybrid_ev_mode_override": {
-                "name": "टोयोटा/लेक्सस ईवी मोड थ्रॉटल ओवरराइड सप्रेशन",
-                "desc": "ईवी मोड बटन सक्रिय होने पर त्वरण के दौरान गैसोलीन इंजन को जबरन चालू होने से रोकता है।"
+                "name": "Toyota / Lexus EV Mode Throttle Override Suppression",
+                "desc": "Prevents gasoline engine from forced start during acceleration when EV mode button is active."
             },
             "toyota_hybrid_battery_fan_speed_boost": {
-                "name": "टोयोटा/लेक्सस हाई-वोल्टेज बैटरी कूलिंग फैन बूस्ट",
-                "desc": "गर्म जलवायु में थर्मल गिरावट को रोकने के लिए हाइब्रिड ट्रैक्शन बैटरी कूलिंग फैन की गति +30% बढ़ा देता है।"
+                "name": "Toyota / Lexus High-Voltage Battery Cooling Fan Boost",
+                "desc": "Increases hybrid traction battery cooling fan speed by +30% to prevent thermal degradation in hot climates."
             },
             "tesla_sentry_high_bitrate_video": {
-                "name": "टेस्ला सेंट्री मोड हाई-बिटरेट सतत डैशकैम रिकॉर्डिंग",
-                "desc": "क्रिस्टल-क्लियर लाइसेंस प्लेट दृश्यता के लिए सेंट्री मोड कैमरा वीडियो रिकॉर्डिंग बिटरेट बढ़ाता है।"
+                "name": "Tesla Sentry Mode High-Bitrate Continuous Dashcam Recording",
+                "desc": "Increases Sentry Mode camera video recording bitrate for crystal-clear license plate visibility."
             },
             "tesla_cabin_overheat_threshold_30c": {
-                "name": "टेस्ला केबिन ओवरहीट प्रोटेक्शन तापमान सीमा",
-                "desc": "आंतरिक संरक्षण के लिए केबिन के अति ताप संरक्षण जलवायु ट्रिगर तापमान को 40°C से 30°C तक कम करता है।"
+                "name": "Tesla Cabin Overheat Protection Temperature Threshold",
+                "desc": "Lowers cabin overheat protection climate trigger temperature from 40°C to 30°C for interior preservation."
             },
             "bmwmotorrad_quickshifter_pro_readapt": {
-                "name": "शिफ्ट असिस्टेंट प्रो पुनः अनुकूलन",
-                "desc": "शिफ्ट सेंसर लर्निंग पैरामीटर्स को रीसेट करता है और क्विकशिफ्टर रीकैलिब्रेशन शुरू करता है।"
+                "name": "Shift Assistant Pro Re-Adaptation",
+                "desc": "Resets shift sensor learning parameters and initiates quickshifter recalibration."
             },
             "bmwmotorrad_esa_zero_point_calib": {
-                "name": "डायनेमिक ईएसए सस्पेंशन जीरो-प्वाइंट कैलिब्रेशन",
-                "desc": "इलेक्ट्रॉनिक सस्पेंशन लोड और ट्रैवल सेंसर को फ़ैक्टरी शून्य पर कैलिब्रेट करता है।"
+                "name": "Dynamic ESA Suspension Zero-Point Calibration",
+                "desc": "Calibrates electronic suspension load and travel sensors to factory zero."
             },
             "bmwmotorrad_abs_pro_cornering_toggle": {
-                "name": "एबीएस प्रो कॉर्नरिंग मोड इंटरवेंशन थ्रेशोल्ड",
-                "desc": "ट्रैक उपयोग के लिए लीन-एंगल निर्भर एबीएस हस्तक्षेप संवेदनशीलता को समायोजित करता है।"
+                "name": "ABS Pro Cornering Mode Intervention Threshold",
+                "desc": "Adjusts lean-angle dependent ABS intervention sensitivity for track use."
             },
             "bmwmotorrad_service_interval_reset": {
-                "name": "वार्षिक एवं दूरस्थ सेवा अनुस्मारक रीसेट",
-                "desc": "इंस्ट्रूमेंट क्लस्टर सर्विस इंडिकेटर को रीसेट करता है और कस्टम अंतराल सेट करता है।"
+                "name": "Annual & Distance Service Reminder Reset",
+                "desc": "Resets instrument cluster service indicator and sets custom interval."
             },
             "bmwmotorrad_headlight_pro_cornering": {
-                "name": "हेडलाइट प्रो अनुकूली कॉर्नरिंग प्रकाश संवेदनशीलता",
-                "desc": "अनुकूली कॉर्नरिंग हेडलाइट सक्रियण के लिए लीन कोण सीमा को समायोजित करता है।"
+                "name": "Headlight Pro Adaptive Cornering Light Sensitivity",
+                "desc": "Adjusts lean angle threshold for adaptive cornering headlight activation."
             },
             "bmwmotorrad_keyless_ride_range_extend": {
-                "name": "बिना चाबी वाली राइड फ़ॉब डिटेक्शन रेंज एक्सटेंशन",
-                "desc": "बिना चाबी के इग्निशन सेंसिंग के लिए ट्रांसपोंडर सिग्नल रेंज को अनुकूलित करता है।"
+                "name": "Keyless Ride Fob Detection Range Extension",
+                "desc": "Optimizes transponder signal range for keyless ignition sensing."
             },
             "bmwmotorrad_reverse_assist_sensitivity": {
-                "name": "इलेक्ट्रिक रिवर्स असिस्ट मोटर संवेदनशीलता",
-                "desc": "रिवर्स ड्राइव इलेक्ट्रिक स्टार्टर मोटर की गति और टॉर्क सीमा को फाइन-ट्यून करता है।"
+                "name": "Electric Reverse Assist Motor Sensitivity",
+                "desc": "Fine-tunes reverse drive electric starter motor speed and torque limit."
             },
             "ducati_riding_mode_custom_profile": {
-                "name": "राइडिंग मोड कस्टम प्रोफ़ाइल निर्माता",
-                "desc": "रेस, स्पोर्ट, टूरिंग और शहरी प्रोफाइल के लिए कस्टम संयोजन अनलॉक करता है।"
+                "name": "Riding Mode Custom Profile Creator",
+                "desc": "Unlocks custom combinations for Race, Sport, Touring, and Urban profiles."
             },
             "ducati_ohlins_suspension_mapping": {
-                "name": "ओहलिन्स स्मार्ट ईसी 2.0 सेमी-एक्टिव सस्पेंशन मैपिंग",
-                "desc": "इलेक्ट्रॉनिक सस्पेंशन के लिए डंपिंग कर्व और कठोरता प्रीसेट को फाइन-ट्यून करता है।"
+                "name": "Öhlins Smart EC 2.0 Semi-Active Suspension Mapping",
+                "desc": "Fine-tunes damping curve and stiffness presets for electronic suspension."
             },
             "ducati_dashboard_lap_timer_gps": {
-                "name": "टीएफटी डैशबोर्ड लैप टाइमर और जीपीएस सेक्टर स्प्लिट्स",
-                "desc": "इंस्ट्रूमेंट क्लस्टर पर ट्रैक लैप टाइमर और सेक्टर स्प्लिट डिस्प्ले को अनलॉक करता है।"
+                "name": "TFT Dashboard Lap Timer & GPS Sector Splits",
+                "desc": "Unlocks track lap timer and sector split display on instrument cluster."
             },
             "ducati_engine_brake_control_ebc": {
-                "name": "इंजन ब्रेक नियंत्रण स्तर समायोजन",
-                "desc": "हार्ड कॉर्नर एंट्री ब्रेकिंग के दौरान रियर व्हील डेसेलेरेशन टॉर्क को समायोजित करता है।"
+                "name": "Engine Brake Control Level Adjustment",
+                "desc": "Adjusts rear wheel deceleration torque during hard corner entry braking."
             },
             "ducati_cruise_control_retrofit_enable": {
-                "name": "क्रूज़ नियंत्रण रेट्रोफ़िट सक्रियण",
-                "desc": "रेट्रोफ़िटेड इलेक्ट्रॉनिक क्रूज़ नियंत्रण स्विच के लिए ईसीयू सॉफ़्टवेयर फ़्लैग सक्षम करता है।"
+                "name": "Cruise Control Retrofit Activation",
+                "desc": "Enables ECU software flag for retrofitted electronic cruise control switches."
             },
             "ducati_exhaust_valve_sound_map": {
-                "name": "निकास सर्वो वाल्व खोलने वाला आरपीएम मानचित्र",
-                "desc": "उन्नत निकास नोट के लिए ध्वनिक निकास वाल्व खोलने की सीमा को समायोजित करता है।"
+                "name": "Exhaust Servo Valve Opening RPM Map",
+                "desc": "Adjusts acoustic exhaust valve opening threshold for enhanced exhaust note."
             },
             "ducati_pit_lane_limiter_config": {
-                "name": "पिट लेन स्पीड लिमिटर थ्रेशोल्ड",
-                "desc": "हैंडलबार स्विच पर 60 किमी/घंटा पिट लेन स्पीड लिमिटर टॉगल सक्षम करता है।"
+                "name": "Pit Lane Speed Limiter Threshold",
+                "desc": "Enables 60 km/h pit lane speed limiter toggle on handlebar switches."
             },
             "ducati_desmo_service_light_reset": {
-                "name": "तेल और डेस्मो वाल्व सर्विस लाइट रीसेट",
-                "desc": "उपकरण क्लस्टर पर डेस्मोड्रोमिक वाल्व सेवा अनुस्मारक चेतावनी साफ़ करता है।"
+                "name": "Oil & Desmo Valve Service Light Reset",
+                "desc": "Clears Desmodromic valve service reminder warning on instrument cluster."
             },
             "ktm_quickshifter_plus_delay_tuning": {
-                "name": "क्विकशिफ्टर+ शिफ्ट कट टाइम और विलंब फाइन-ट्यूनिंग",
-                "desc": "निर्बाध अप/डाउन शिफ्ट के लिए प्रति गियर इग्निशन कट अवधि को अनुकूलित करता है।"
+                "name": "Quickshifter+ Shift Cut Time & Delay Fine-Tuning",
+                "desc": "Customizes ignition cut duration per gear for seamless up/down shifts."
             },
             "ktm_rally_offroad_abs_tc_unlock": {
-                "name": "रैली/ऑफ-रोड एबीएस और टीसी मोड अनलॉक",
-                "desc": "रियर एबीएस को अक्षम करता है और रैली मोड में 9-स्टेज स्लिप समायोजन को अनलॉक करता है।"
+                "name": "Rally / Off-Road ABS & TC Mode Unlock",
+                "desc": "Disables rear ABS and unlocks 9-stage slip adjustment in Rally mode."
             },
             "ktm_my_ktm_connectivity_unlock": {
-                "name": "मेरा केटीएम/हुस्क्वर्ना कनेक्टिविटी मॉड्यूल सक्रियण",
-                "desc": "टीएफटी डिस्प्ले पर ब्लूटूथ नेविगेशन और टर्न-बाय-टर्न रूटिंग सक्षम करता है।"
+                "name": "My KTM / Husqvarna Connectivity Module Activation",
+                "desc": "Enables Bluetooth navigation and turn-by-turn routing on TFT display."
             },
             "ktm_cruise_control_retrofit_enable": {
-                "name": "क्रूज़ कंट्रोल रेट्रोफिट सॉफ़्टवेयर अनलॉक",
-                "desc": "हैंडलबार स्विच किट स्थापित करने के बाद क्रूज़ नियंत्रण फ़ंक्शन सक्रिय हो जाता है।"
+                "name": "Cruise Control Retrofit Software Unlock",
+                "desc": "Activates cruise control function after installing handlebar switch kit."
             },
             "ktm_clutch_pull_map_switch_gesture": {
-                "name": "क्लच-पुल जेस्चर मैप स्विचिंग",
-                "desc": "स्टार्टअप पर क्लच लीवर जेस्चर निष्पादित करके तेजी से मानचित्र स्विचिंग सक्षम करता है।"
+                "name": "Clutch-Pull Gesture Map Switching",
+                "desc": "Enables rapid map switching by executing clutch lever gesture on startup."
             },
             "yamaha_quickshifter_cut_time_adjust": {
-                "name": "क्विकशिफ्टर इग्निशन कट-टाइम और संवेदनशीलता",
-                "desc": "क्विकशिफ्टर सेंसर लोड थ्रेशोल्ड और स्पार्क रुकावट विलंब को समायोजित करता है।"
+                "name": "Quickshifter Ignition Cut-Time & Sensitivity",
+                "desc": "Adjusts quickshifter sensor load threshold and spark interruption delay."
             },
             "yamaha_ride_by_wire_throttle_map": {
-                "name": "राइड-बाय-वायर थ्रॉटल मैप प्रीसेट चयनकर्ता",
-                "desc": "ए-मोड, एसटीडी, और बी-मोड थ्रॉटल मानचित्रों के बीच स्विच।"
+                "name": "Ride-by-Wire Throttle Map Preset Selector",
+                "desc": "Switches between A-Mode, STD, and B-Mode throttle maps."
             },
             "yamaha_tft_track_theme_unlock": {
-                "name": "टीएफटी ट्रैक डिस्प्ले लेआउट और शिफ्ट लाइट अनलॉक",
-                "desc": "R1/MT-09 SP ट्रैक क्लस्टर लेआउट और प्रोग्रामेबल शिफ्ट RPM लाइट्स को अनलॉक करता है।"
+                "name": "TFT Track Display Layout & Shift Light Unlock",
+                "desc": "Unlocks R1/MT-09 SP track cluster layout and programmable shift RPM lights."
             },
             "yamaha_launch_control_sensitivity": {
-                "name": "लॉन्च कंट्रोल सिस्टम रेव सीलिंग",
-                "desc": "लॉन्च कंट्रोल होल्डिंग RPM को कॉन्फ़िगर करता है।"
+                "name": "Launch Control System Rev Ceiling",
+                "desc": "Configures launch control holding RPM."
             },
             "yamaha_heated_grips_accessory_enable": {
-                "name": "असली हीटेड ग्रिप्स टीएफटी मेनू एकीकरण",
-                "desc": "टीएफटी स्क्रीन पर गर्म पकड़ नियंत्रण और तापमान गेज सक्षम करता है।"
+                "name": "Genuine Heated Grips TFT Menu Integration",
+                "desc": "Enables heated grip controls and temperature gauge on TFT screen."
             },
             "honda_hstc_wheelie_control_fine_tune": {
-                "name": "एचएसटीसी ट्रैक्शन और व्हीली कंट्रोल फाइन-ट्यूनिंग",
-                "desc": "होंडा सेलेक्टेबल टॉर्क कंट्रोल स्लिप अनुपात और फ्रंट व्हील लिफ्ट टॉलरेंस को समायोजित करता है।"
+                "name": "HSTC Traction & Wheelie Control Fine-Tuning",
+                "desc": "Adjusts Honda Selectable Torque Control slip ratio and front wheel lift tolerance."
             },
             "honda_bi_directional_quickshifter_enable": {
-                "name": "द्वि-दिशात्मक क्विकशिफ्टर रेट्रोफिट अनलॉक",
-                "desc": "ईसीयू मेमोरी में ऑटो-ब्लिपर और अप/डाउन क्विकशिफ्टर कोडिंग सक्षम करता है।"
+                "name": "Bi-Directional Quickshifter Retrofit Unlock",
+                "desc": "Enables auto-blipper and up/down quickshifter coding in ECU memory."
             },
             "honda_service_reminder_custom_interval": {
-                "name": "तेल सेवा अनुस्मारक दूरी कस्टमाइज़र",
-                "desc": "डिजिटल डैश पर कस्टम तेल परिवर्तन माइलेज अंतराल सेट करता है।"
+                "name": "Oil Service Reminder Distance Customizer",
+                "desc": "Sets custom oil change mileage interval on digital dash."
             },
             "honda_track_abs_rear_disable": {
-                "name": "एबीएस रियर-व्हील निष्क्रियकरण को ट्रैक करें",
-                "desc": "ट्रैक के दिनों के लिए फ्रंट कॉर्नरिंग एबीएस को बरकरार रखते हुए रियर व्हील एबीएस चैनल को अक्षम कर देता है।"
+                "name": "Track ABS Rear-Wheel Deactivation",
+                "desc": "Disables rear wheel ABS channel while retaining front cornering ABS for track days."
             },
             "honda_cold_start_idle_enrichment": {
-                "name": "कोल्ड-स्टार्ट ईंधन संवर्धन और निष्क्रिय लक्ष्य आरपीएम",
-                "desc": "आफ्टरमार्केट निकास प्रणालियों के लिए प्रारंभिक वार्म-अप निष्क्रिय गति को समायोजित करता है।"
+                "name": "Cold-Start Fuel Enrichment & Idle Target RPM",
+                "desc": "Adjusts initial warm-up idle speed for aftermarket exhaust systems."
             },
             "harley_custom_throttle_curve_editor": {
-                "name": "कस्टम थ्रॉटल रिस्पांस कर्व संपादक",
-                "desc": "मिल्वौकी-आठ/रिवॉल्यूशन मैक्स राइड-बाय-वायर थ्रॉटल प्रगति को समायोजित करता है।"
+                "name": "Custom Throttle Response Curve Editor",
+                "desc": "Adjusts Milwaukee-Eight / Revolution Max ride-by-wire throttle progression."
             },
             "harley_security_alarm_sensitivity": {
-                "name": "स्मार्ट सुरक्षा प्रणाली निकटता और झुकाव संवेदनशीलता",
-                "desc": "मोशन सेंसर संवेदनशीलता और हैंड्स-फ़्री फ़ॉब आर्मिंग विलंब को समायोजित करता है।"
+                "name": "Smart Security System Proximity & Tilt Sensitivity",
+                "desc": "Adjusts motion sensor sensitivity and hands-free fob arming delay."
             },
             "harley_boom_box_gts_hidden_diagnostics": {
-                "name": "बूम! बॉक्स जीटीएस इंफोटेनमेंट हिडन डायग्नोस्टिक मेनू",
-                "desc": "इंजीनियरिंग टेलीमेट्री डिस्प्ले, इंजन तापमान और तेल दबाव गेज को अनलॉक करता है।"
+                "name": "Boom! Box GTS Infotainment Hidden Diagnostic Menu",
+                "desc": "Unlocks engineering telemetry displays, engine temp, and oil pressure gauges."
             },
             "harley_rdrs_defensive_system_tune": {
-                "name": "आरडीआरएस ड्रैग-टॉर्क स्लिप नियंत्रण संवेदनशीलता",
-                "desc": "डाउनशिफ्ट के दौरान रिफ्लेक्स डिफेंसिव राइडर सिस्टम रियर-व्हील स्लिप शमन को फाइन-ट्यून्स करता है।"
+                "name": "RDRS Drag-Torque Slip Control Sensitivity",
+                "desc": "Fine-tunes Reflex Defensive Rider System rear-wheel slip mitigation during downshifts."
             },
             "byd_avas_low_speed_siren_mute": {
-                "name": "AVAS लो-स्पीड ईवी पैदल यात्री चेतावनी सायरन म्यूट",
-                "desc": "बाहरी ध्वनिक वाहन चेतावनी प्रणाली सायरन को 30 किमी/घंटा से कम या कम कर देता है।"
+                "name": "AVAS Low-Speed EV Pedestrian Warning Siren Mute",
+                "desc": "Mutes or lowers external acoustic vehicle alerting system siren under 30 km/h."
             },
             "byd_ev_battery_preheat_manual_switch": {
-                "name": "मैनुअल ईवी बैटरी प्री-हीटिंग टॉगल",
-                "desc": "डीसी फास्ट चार्जिंग से पहले मैनुअल बैटरी थर्मल कंडीशनिंग सक्षम करता है।"
+                "name": "Manual EV Battery Pre-Heating Toggle",
+                "desc": "Enables manual battery thermal conditioning prior to DC fast charging."
             },
             "byd_v2l_220v_outlet_power_expansion": {
-                "name": "V2L 220V आउटलेट पावर विस्तार",
-                "desc": "बाहरी V2L डिस्चार्ज पावर सीलिंग को 2.2 किलोवाट से अधिकतम 3.6 किलोवाट तक विस्तारित करता है।"
+                "name": "V2L 220V Outlet Power Expansion",
+                "desc": "Expands external V2L discharge power ceiling from 2.2 kW to 3.6 kW maximum."
             },
             "byd_one_pedal_regen_default_max": {
-                "name": "वन-पेडल ड्राइव रीजनरेटिव ब्रेकिंग डिफॉल्ट मैक्स",
-                "desc": "वाहन स्टार्टअप पर लगातार डिफ़ॉल्ट के रूप में उच्च पुनर्योजी ब्रेकिंग को लॉक कर देता है।"
+                "name": "One-Pedal Drive Regenerative Braking Default Max",
+                "desc": "Locks high regenerative braking as persistent default upon vehicle startup."
             },
             "mg_ismart_connectivity_unlock": {
-                "name": "आई-स्मार्ट कनेक्टिविटी और रिमोट टेलीमेट्री अनलॉक",
-                "desc": "दूरस्थ जलवायु नियंत्रण और वाहन स्थिति ट्रैकिंग सुविधाओं को सक्षम करता है।"
+                "name": "i-SMART Connectivity & Remote Telemetry Unlock",
+                "desc": "Enables remote climate control and vehicle status tracking features."
             },
             "mg_mg4_xpower_launch_control_enable": {
-                "name": "MG4 XPower डुअल-मोटर लॉन्च कंट्रोल मोड",
-                "desc": "3.8s 0-100 किमी/घंटा लॉन्च नियंत्रण त्वरण मोड को अनलॉक करता है।"
+                "name": "MG4 XPower Dual-Motor Launch Control Mode",
+                "desc": "Unlocks 3.8s 0-100 km/h launch control acceleration mode."
             },
             "mg_battery_preheat_manual_trigger": {
-                "name": "मैनुअल फास्ट-चार्ज बैटरी प्री-कंडीशनिंग",
-                "desc": "अधिकतम डीसी चार्ज दरों के लिए हाई-वोल्टेज बैटरी हीटिंग तत्वों को चालू करता है।"
+                "name": "Manual Fast-Charge Battery Pre-Conditioning",
+                "desc": "Forces high-voltage battery heating elements ON for peak DC charge rates."
             },
             "xpeng_xngp_adas_region_unlock": {
-                "name": "XNGP स्वायत्त ड्राइविंग सहायक क्षेत्र अनलॉक",
-                "desc": "अनलॉक किए गए क्षेत्रों में उन्नत नेविगेशन-निर्देशित पायलट सहायता सक्षम करता है।"
+                "name": "XNGP Autonomous Driving Assistant Region Unlock",
+                "desc": "Enables advanced navigation-guided pilot assistance in unlocked regions."
             },
             "xpeng_ambient_lighting_music_sync": {
-                "name": "संगीत-प्रतिक्रियाशील लय परिवेश प्रकाश",
-                "desc": "ऑडियो सिस्टम बास बीट्स के साथ केबिन एलईडी परिवेश प्रकाश दालों को सिंक्रनाइज़ करता है।"
+                "name": "Music-Reactive Rhythm Ambient Lighting",
+                "desc": "Synchronizes cabin LED ambient lighting pulses with audio system bass beats."
             },
             "xpeng_rear_camera_trailer_hitch_view": {
-                "name": "360° कैमरा हिच और ग्राउंड ओवरले मोड",
-                "desc": "बैकअप कैमरे में उच्च-रिज़ॉल्यूशन हिच संरेखण ग्रिड ओवरले जोड़ता है।"
+                "name": "360° Camera Hitch & Ground Overlay Mode",
+                "desc": "Adds high-resolution hitch alignment grid overlay to backup camera."
             },
             "nio_battery_swap_interval_reminder": {
-                "name": "पावर स्वैप स्टेशन प्री-कंडीशनिंग मोड",
-                "desc": "स्वैप से पहले स्वचालित रूप से बैटरी लॉक पिन और प्री-कंडीशन पैक को कम कर देता है।"
+                "name": "Power Swap Station Pre-Conditioning Mode",
+                "desc": "Automatically lowers battery lock pins and pre-conditions packs prior to swap."
             },
             "nio_nomi_assistant_custom_voice_phrases": {
-                "name": "NOMI AI कंपेनियन वैयक्तिकरण और वेक वर्ड्स",
-                "desc": "NOMI के लिए कस्टम अवतार एनिमेशन और वैयक्तिकृत अभिवादन वाक्यांशों को अनलॉक करता है।"
+                "name": "NOMI AI Companion Personalization & Wake Words",
+                "desc": "Unlocks custom avatar animations and personalized greeting phrases for NOMI."
             },
             "nio_sentry_watchdog_continuous_recording": {
-                "name": "एनआईओ सेंट्री मोड 4के कैमरा बफर रिकॉर्डिंग",
-                "desc": "पार्क किए जाने पर यूएसबी ड्राइव पर हाई-बिटरेट सराउंड कैमरा रिकॉर्डिंग सक्षम करता है।"
+                "name": "NIO Sentry Mode 4K Camera Buffer Recording",
+                "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Xiaomi SU7 हाइपरOS ड्राइवर प्रोफ़ाइल इकोसिस्टम सिंक",
-                "desc": "Xiaomi फ़ोन ब्लूटूथ के माध्यम से सीट, दर्पण और जलवायु प्रीसेट को स्वचालित रूप से सिंक्रोनाइज़ करता है।"
+                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
+                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "बूस्ट मोड 20-सेकंड ओवरबूस्ट पावर अनलॉक",
-                "desc": "पूर्ण थ्रॉटल त्वरण के दौरान अधिकतम इलेक्ट्रिक मोटर ओवरबूस्ट अवधि बढ़ाता है।"
+                "name": "Boost Mode 20-Second Overboost Power Unlock",
+                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "ड्रिफ्ट मोड आरडब्ल्यूडी टॉर्क वेक्टरिंग आवंटन",
-                "desc": "ट्रैक्शन कंट्रोल बंद होने के साथ रियर एक्सल को 100% मोटर टॉर्क आवंटित करता है।"
+                "name": "Drift Mode RWD Torque Vectoring Allocation",
+                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "आईएसए इंटेलिजेंट स्पीड असिस्ट वार्निंग चाइम म्यूट",
-                "desc": "ज्ञात गति सीमा से अधिक होने पर लगातार ध्वनिक झंकार को अक्षम कर देता है।"
+                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
+                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "डीएमएस ड्राइवर थकान निगरानी कैमरा संवेदनशीलता",
-                "desc": "आंतरिक निगरानी कैमरे से झूठी-सकारात्मक व्याकुलता अलर्ट को कम करता है।"
+                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
+                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "रेट्रोफिट फ्रंट/रियर पार्किंग डिस्टेंस कंट्रोल कोडिंग",
-                "desc": "गेटवे इंस्टालेशन सूची में आफ्टरमार्केट या ओईएम पार्किंग सेंसर मॉड्यूल पंजीकृत करता है।"
+                "name": "Retrofit Front/Rear Parking Distance Control Coding",
+                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
             },
             "retrofit_360_camera_activation": {
-                "name": "रेट्रोफिट 360° एरिया व्यू सराउंड कैमरा सिस्टम",
-                "desc": "सराउंड व्यू कैमरा कंट्रोलर को सक्रिय करता है और इंफोटेनमेंट में कैमरा व्यू जोड़ता है।"
+                "name": "Retrofit 360° Area View Surround Camera System",
+                "desc": "Activates surround view camera controller and adds camera view to infotainment."
             },
             "retrofit_led_license_plate_light_coding": {
-                "name": "रेट्रोफिट एलईडी लाइसेंस प्लेट और टेल लाइट त्रुटि रद्द",
-                "desc": "एलईडी के साथ गलत लैंप आउट चेतावनियों को रोकने के लिए कोल्ड बल्ब चेक मॉनिटरिंग को अक्षम करता है।"
+                "name": "Retrofit LED License Plate & Tail Light Error Cancel",
+                "desc": "Disables cold bulb check monitoring to prevent false lamp out warnings with LEDs."
             },
             "retrofit_dash_cam_sentry_integration": {
-                "name": "रेट्रोफिट डैश कैम सतत इग्निशन पावर और सेंट्री मोड",
-                "desc": "निरंतर पार्किंग रिकॉर्डिंग के लिए बॉडी कंट्रोल मॉड्यूल टर्मिनल 30 पावर लाइन को कॉन्फ़िगर करता है।"
+                "name": "Retrofit Dash Cam Continuous Ignition Power & Sentry Mode",
+                "desc": "Configures Body Control Module terminal 30 power line for continuous parking recording."
             },
             "retrofit_heated_windshield_activation": {
-                "name": "रेट्रोफिट हीटेड विंडशील्ड एलिमेंट कोडिंग",
-                "desc": "विंडशील्ड डिफ्रॉस्ट हीटर रिले आउटपुट और क्लाइमेट्रोनिक स्क्रीन बटन को सक्षम करता है।"
+                "name": "Retrofit Heated Windshield Element Coding",
+                "desc": "Enables windshield defrost heater relay output and climatronic screen button."
             },
             "retrofit_wireless_charger_module_coding": {
-                "name": "रेट्रोफिट क्यूई वायरलेस स्मार्टफ़ोन चार्जिंग पैड एकीकरण",
-                "desc": "वायरलेस चार्जर स्थिति एलईडी और फोन के पीछे छूटे रिमाइंडर पॉपअप को सक्षम करता है।"
+                "name": "Retrofit Qi Wireless Smartphone Charging Pad Integration",
+                "desc": "Enables wireless charger status LED and phone left behind reminder popup."
             },
             "retrofit_acc_radar_module_coding": {
-                "name": "रेट्रोफिट एडेप्टिव क्रूज़ कंट्रोल फ्रंट रडार मॉड्यूल",
-                "desc": "रेट्रोफिटेड फ्रंट डिस्टेंस रडार यूनिट को CAN बस वाहन नेटवर्क में एनकोड करता है।"
+                "name": "Retrofit Adaptive Cruise Control Front Radar Module",
+                "desc": "Encodes retrofitted front distance radar unit into CAN bus vehicle network."
             },
             "retrofit_traffic_sign_camera_activation": {
-                "name": "रेट्रोफिट ट्रैफिक साइन रिकॉग्निशन विंडशील्ड कैमरा कोडिंग",
-                "desc": "रेट्रोफ़िटेड विंडशील्ड कैमरे पर VZE साइन पहचान प्रसंस्करण सक्षम करता है।"
+                "name": "Retrofit Traffic Sign Recognition Windshield Camera Coding",
+                "desc": "Enables VZE sign recognition processing on retrofitted windshield camera."
             },
             "retrofit_heated_steering_wheel_coding": {
-                "name": "रेट्रोफिट हीटेड स्टीयरिंग व्हील मॉड्यूल सक्रियण",
-                "desc": "स्टीयरिंग व्हील हीटिंग एलिमेंट आउटपुट और ऑटो-ऑन तापमान ट्रिगर को सक्षम करता है।"
+                "name": "Retrofit Heated Steering Wheel Module Activation",
+                "desc": "Enables steering wheel heating element output and auto-on temperature triggers."
             },
             "retrofit_fatigue_camera_calibration": {
-                "name": "रेट्रोफिट ड्राइवर थकान निगरानी कैमरा एकीकरण",
-                "desc": "स्टीयरिंग कॉलम स्थापित करने के बाद ड्राइवर मॉनिटरिंग इन्फ्रारेड कैमरा सेंसर को कैलिब्रेट करता है।"
+                "name": "Retrofit Driver Fatigue Monitoring Camera Integration",
+                "desc": "Calibrates driver monitoring infrared camera sensor after steering column install."
             },
             "retrofit_trailer_hitch_module_coding": {
-                "name": "रेट्रोफिट टो बार और ट्रेलर इलेक्ट्रिकल मॉड्यूल एकीकरण",
-                "desc": "ट्रेलर स्वे शमन के लिए ट्रेलर मॉड्यूल को ईएसपी स्थिरता प्रणाली में एनकोड करता है।"
+                "name": "Retrofit Tow Bar & Trailer Electrical Module Integration",
+                "desc": "Encodes trailer module into ESP stability system for trailer sway mitigation."
             },
             "retrofit_power_tailgate_trunk_kit_coding": {
-                "name": "रेट्रोफिट पावर टेलगेट और फुट जेस्चर सेंसर इंटीग्रेशन",
-                "desc": "इलेक्ट्रिक ट्रंक ड्राइव मोटर और बम्पर किक सेंसर कोडिंग सक्षम करता है।"
+                "name": "Retrofit Power Tailgate & Foot Gesture Sensor Integration",
+                "desc": "Enables electric trunk drive motors and bumper kick sensor coding."
             },
             "easteregg_urban_joke_light_show": {
-                "name": "अर्बन जोक अल्टरनेटिंग रियर लाइट शो",
-                "desc": "वाहन को लॉक करते समय बारी-बारी से चमकने के लिए टेल लाइट और टर्न सिग्नल को कॉन्फ़िगर करता है।"
+                "name": "Urban Joke Alternating Rear Light Show",
+                "desc": "Configures tail lights and turn signals to flash alternately when locking vehicle."
             },
             "easteregg_custom_boot_greeting_text": {
-                "name": "डिजिटल क्लस्टर पर कस्टम बूट ग्रीटिंग टेक्स्ट",
-                "desc": "इग्निशन चालू होने पर उपकरण क्लस्टर स्क्रीन पर कस्टम स्वागत संदेश प्रदर्शित करता है।"
+                "name": "Custom Boot Greeting Text on Digital Cluster",
+                "desc": "Displays custom welcome message on instrument cluster screen upon ignition on."
             },
             "easteregg_cluster_mini_game_mode": {
-                "name": "इंस्ट्रूमेंट क्लस्टर हिडन मिनी-गेम मेनू",
-                "desc": "पार्क करने पर डिस्प्ले पर स्टीयरिंग-व्हील बटन नियंत्रित रेट्रो मिनी-गेम को अनलॉक करता है।"
+                "name": "Instrument Cluster Hidden Mini-Game Menu",
+                "desc": "Unlocks steering-wheel button controlled retro mini-game on display when parked."
             },
             "easteregg_custom_horn_melody_package": {
-                "name": "कस्टम ध्वनिक हॉर्न स्वागत मेलोडी",
-                "desc": "कार को अनलॉक करते समय हॉर्न पर छोटी लय में चहकने का पैटर्न बजाता है।"
+                "name": "Custom Acoustic Horn Welcome Melody",
+                "desc": "Plays short rhythm chirp pattern on horn when unlocking car."
             },
             "easteregg_welcome_lighting_door_sequence": {
-                "name": "चेज़िंग एलईडी वेलकम लाइट डोर सीक्वेंस",
-                "desc": "बाहरी दरवाज़े के हैंडल पर प्रगतिशील एलईडी चेज़िंग एनीमेशन निष्पादित करता है।"
+                "name": "Chasing LED Welcome Light Door Sequence",
+                "desc": "Executes progressive LED chasing animation on exterior door handles."
             },
             "easteregg_developer_service_menu_shortcut": {
-                "name": "डेवलपर एवं सेवा डायग्नोस्टिक स्क्रीन शॉर्टकट",
-                "desc": "छिपी हुई इंजीनियरिंग डायग्नोस्टिक स्क्रीन तक पहुंचने के लिए त्वरित जेस्चर शॉर्टकट सक्षम करता है।"
+                "name": "Developer & Service Diagnostic Screen Shortcut",
+                "desc": "Enables quick gesture shortcut to access hidden engineering diagnostic screens."
             },
             "easteregg_seasonal_cluster_theme_effect": {
-                "name": "मौसमी मौसम क्लस्टर थीम ओवरले",
-                "desc": "सर्दियों में क्लस्टर को मापने के लिए एनिमेटेड स्नोफ्लेक या वर्षा कण पृष्ठभूमि जोड़ता है।"
+                "name": "Seasonal Weather Cluster Theme Overlay",
+                "desc": "Adds animated snowflake or rain particle background to gauge cluster in winter."
             },
             "easteregg_valet_mode_prank_warning_message": {
-                "name": "वैलेट मोड शरारत गति सीमा पॉपअप चेतावनी",
-                "desc": "यदि वैलेट मोड पार हो जाता है तो डैशबोर्ड पर विनोदपूर्वक सख्त चेतावनी संदेश प्रदर्शित करता है।"
+                "name": "Valet Mode Prank Speed Limit Popup Warning",
+                "desc": "Displays humorously strict warning message on dashboard if valet mode is exceeded."
             },
             "adas_lane_keep_assist_gentle_curve": {
-                "name": "लेन कीप असिस्ट जेंटल स्टीयरिंग इंटरवेंशन कर्व",
-                "desc": "प्रगतिशील टॉर्क हस्तक्षेप लागू करके स्टीयरिंग व्हील के अचानक खिंचाव को नरम करता है।"
+                "name": "Lane Keep Assist Gentle Steering Intervention Curve",
+                "desc": "Softens sudden steering wheel tugs by applying progressive torque intervention."
             },
             "adas_lka_last_state_memory_mode": {
-                "name": "लेन कीप असिस्ट लास्ट स्टेट मेमोरी लॉक",
-                "desc": "हर बार इग्निशन पुनः चालू होने पर एलकेए को स्वचालित रूप से वापस चालू होने से रोकता है।"
+                "name": "Lane Keep Assist Last State Memory Lock",
+                "desc": "Prevents LKA from automatically turning back ON every time ignition is restarted."
             },
             "adas_acc_default_follow_distance": {
-                "name": "अनुकूली क्रूज़ नियंत्रण डिफ़ॉल्ट दूरी प्रीसेट",
-                "desc": "जब भी एसीसी चालू होता है तो डिफ़ॉल्ट गैप सेटिंग सेट करता है।"
+                "name": "Adaptive Cruise Control Default Distance Preset",
+                "desc": "Sets default gap setting whenever ACC is powered on."
             },
             "adas_acc_speed_step_adjustment": {
-                "name": "एसीसी क्रूज गति वृद्धि चरण चयनकर्ता",
-                "desc": "शॉर्ट-प्रेस स्टीयरिंग व्हील स्पीड बटन स्टेप को 1 किमी/घंटा से 5 किमी/घंटा में बदलता है।"
+                "name": "ACC Cruise Speed Increment Step Selector",
+                "desc": "Changes short-press steering wheel speed button step from 1 km/h to 5 km/h."
             },
             "adas_matrix_led_glare_free_high_beam_unlock": {
-                "name": "मैट्रिक्स एलईडी चमक-मुक्त अनुकूली हाई-बीम चमक शील्ड",
-                "desc": "उत्तरी अमेरिकी कारों पर यूरोपीय-विशेष अनुकूली बीम-गठन उच्च बीम को अनलॉक करता है।"
+                "name": "Matrix LED Glare-Free Adaptive High-Beam Glare Shield",
+                "desc": "Unlocks European-spec adaptive beam-forming high beams on North American cars."
             },
             "adas_traffic_jam_assist_follow_fine_tune": {
-                "name": "ट्रैफ़िक जाम सहायता रोकने और जाने में देरी",
-                "desc": "स्वचालित स्टॉप-एंड-गो रीस्टार्ट विंडो को 3 सेकंड से 15 सेकंड तक बढ़ाता है।"
+                "name": "Traffic Jam Assist Stop-and-Go Resume Delay",
+                "desc": "Extends automatic stop-and-go restart window from 3 seconds to 15 seconds."
             },
             "adas_rear_radar_blind_spot_zero_point_reset": {
-                "name": "रियर ब्लाइंड स्पॉट रडार जीरो-प्वाइंट एंगल कैलिब्रेशन",
-                "desc": "बम्पर हटाने या मरम्मत के बाद रियर बम्पर रडार अज़ीमुथ कोण को पुन: कैलिब्रेट करता है।"
+                "name": "Rear Blind Spot Radar Zero-Point Angle Calibration",
+                "desc": "Recalibrates rear bumper radar azimuth angle after bumper removal or repair."
             },
             "adas_surround_camera_stitching_recalib": {
-                "name": "सराउंड व्यू कैमरा डायनामिक इमेज स्टिचिंग एलाइनमेंट",
-                "desc": "सड़क पर गाड़ी चलाते समय गतिशील कैमरा छवि सिलाई अंशांकन निष्पादित करता है।"
+                "name": "Surround View Camera Dynamic Image Stitching Alignment",
+                "desc": "Executes dynamic camera image stitching calibration while driving on road."
             },
             "adas_steering_angle_sensor_zero_point_reset": {
-                "name": "स्टीयरिंग एंगल सेंसर जीरो-प्वाइंट कैलिब्रेशन",
-                "desc": "व्हील संरेखण सेवा के बाद स्टीयरिंग सेंटर कोण को 0.0° पर रीसेट करता है।"
+                "name": "Steering Angle Sensor Zero-Point Calibration",
+                "desc": "Resets steering center angle to 0.0° following wheel alignment service."
             },
             "adas_cross_traffic_alert_sensitivity_adjust": {
-                "name": "रियर क्रॉस-ट्रैफ़िक अलर्ट डिटेक्शन रेंज",
-                "desc": "पीछे आते समय आने वाले वाहनों के लिए साइड रडार डिटेक्शन दूरी बढ़ जाती है।"
+                "name": "Rear Cross-Traffic Alert Detection Range",
+                "desc": "Increases side radar detection distance for vehicles approaching while backing out."
             },
             "adas_aeb_emergency_braking_threshold_preview": {
-                "name": "स्वचालित आपातकालीन ब्रेकिंग चेतावनी प्रभावकारिता",
-                "desc": "आगे की टक्कर की चेतावनियों के लिए प्रारंभिक बनाम देर की चेतावनी झंकार का समय समायोजित करता है।"
+                "name": "Automatic Emergency Braking Warning Efficacy",
+                "desc": "Adjusts early vs late warning chime timing for forward collision alerts."
             },
             "adas_night_vision_camera_alignment": {
-                "name": "इन्फ्रारेड नाइट विजन थर्मल कैमरा लक्ष्य संरेखण",
-                "desc": "इन्फ्रारेड कैमरा पेडस्टल संरेखण सत्यापन अनुक्रम आरंभ करता है।"
+                "name": "Infrared Night Vision Thermal Camera Target Alignment",
+                "desc": "Initiates infrared camera pedestal alignment verification sequence."
             },
             "adas_dms_driver_monitoring_ir_threshold": {
-                "name": "डीएमएस चालक ध्यान कैमरा इन्फ्रारेड संवेदनशीलता",
-                "desc": "गहरे ध्रुवीकृत धूप का चश्मा पहनने वाले ड्राइवरों के लिए आंखों की ट्रैकिंग सीमा को समायोजित करता है।"
+                "name": "DMS Driver Attention Camera Infrared Sensitivity",
+                "desc": "Adjusts eye tracking threshold for drivers wearing dark polarized sunglasses."
             },
             "toyota_soft_close_door_retrofit_coding": {
-                "name": "पावर सॉफ्ट-क्लोज़ डोर वैक्यूम एक्चुएटर कोडिंग",
-                "desc": "बॉडी कंट्रोल मॉड्यूल में पावर डोर लैच पुल-इन एक्चुएटर्स को सक्षम करता है।"
+                "name": "Power Soft-Close Door Vacuum Actuator Coding",
+                "desc": "Enables power door latch pull-in actuators in body control module."
             },
             "toyota_digital_speedometer_display_enable": {
-                "name": "डिजिटल स्पीडोमीटर सेंटर गेज डिस्प्ले",
-                "desc": "एनालॉग इंस्ट्रूमेंट क्लस्टर एलसीडी में बड़ी डिजिटल स्पीड रीडआउट जोड़ता है।"
+                "name": "Digital Speedometer Center Gauge Display",
+                "desc": "Adds large digital speed readout to analog instrument cluster LCD."
             },
             "toyota_walk_away_auto_lock_sensitivity": {
-                "name": "वॉक-अवे स्मार्ट कुंजी ऑटो डोर लॉकिंग संवेदनशीलता",
-                "desc": "दूर जाने पर दरवाजे स्वचालित रूप से लॉक होने से पहले दूरी सीमा को समायोजित करता है।"
+                "name": "Walk-Away Smart Key Auto Door Locking Sensitivity",
+                "desc": "Adjusts distance threshold before doors automatically lock when walking away."
             },
             "toyota_jbl_3d_eq_audio_profile_unlock": {
-                "name": "जेबीएल प्रीमियम सराउंड साउंड इक्वलाइज़र कर्व्स",
-                "desc": "जेबीएल ऑडियो हेड यूनिट में 3डी कॉन्सर्ट हॉल इक्वलाइज़र प्रोफाइल को अनलॉक करता है।"
+                "name": "JBL Premium Surround Sound Equalizer Curves",
+                "desc": "Unlocks 3D concert hall equalizer profiles in JBL audio head unit."
             },
             "toyota_ev_mode_throttle_override_suppression": {
-                "name": "ईवी मोड प्योर इलेक्ट्रिक थ्रॉटल लिमिट सप्रेशन",
-                "desc": "मध्यम ईवी त्वरण के दौरान गैसोलीन इंजन को चालू होने से रोकता है।"
+                "name": "EV Mode Pure Electric Throttle Limit Suppression",
+                "desc": "Prevents gasoline engine from kicking ON during moderate EV acceleration."
             },
             "ford_sync3_engineering_diagnostics_page": {
-                "name": "SYNC3 / SYNC4 टचस्क्रीन इंजीनियरिंग डायग्नोस्टिक स्क्रीन",
-                "desc": "SYNC पर रॉ जीपीएस, एपीआईएम परीक्षण और ऑडियो फ्रीक्वेंसी डायग्नोस्टिक स्क्रीन सक्षम करता है।"
+                "name": "SYNC3 / SYNC4 Touchscreen Engineering Diagnostic Screen",
+                "desc": "Enables raw GPS, APIM test, and audio frequency diagnostic screens on SYNC."
             },
             "ford_rear_seat_entertainment_unlock": {
-                "name": "रियर सीट एचडीएमआई / वीडियो मनोरंजन ऑडियो पास-थ्रू",
-                "desc": "पिछली सीट की मनोरंजन स्क्रीन के लिए केबिन हेडफ़ोन ऑडियो स्ट्रीमिंग सक्षम करता है।"
+                "name": "Rear Seat HDMI / Video Entertainment Audio Pass-Through",
+                "desc": "Enables cabin headphone audio streaming for rear seat entertainment screens."
             },
             "ford_bambi_mode_fog_light_expansion": {
-                "name": "बांबी मोड हाई बीम + फॉग लाइट एक साथ रोशनी",
-                "desc": "हाई बीम हेडलाइट सक्रिय होने पर भी सामने की फॉग लाइट को चालू रखता है।"
+                "name": "Bambi Mode High Beam + Fog Light Simultaneous Illumination",
+                "desc": "Keeps front fog lights powered ON even when high beam headlights are activated."
             },
             "ford_auto_engine_idle_shutdown_30min_override": {
-                "name": "30-मिनट निष्क्रिय ऑटो इंजन शटडाउन अक्षम",
-                "desc": "पार्क में 30 मिनट के बाद इंजन को स्वचालित रूप से बंद होने से रोकता है।"
+                "name": "30-Minute Idle Auto Engine Shutdown Disable",
+                "desc": "Prevents engine from shutting OFF automatically after 30 minutes in Park."
             },
             "hyundai_n_grin_shift_retrofit_enable": {
-                "name": "एन ग्रिन शिफ्ट 20-सेकंड ओवरबूस्ट रेट्रोफिट अनलॉक",
-                "desc": "ईसीयू में स्टीयरिंग व्हील एनजीएस बटन ओवरबूस्ट फ़ंक्शन सक्षम करता है।"
+                "name": "N Grin Shift 20-Second Overboost Retrofit Unlock",
+                "desc": "Enables steering wheel NGS button overboost function in ECU."
             },
             "hyundai_smart_tailgate_approach_distance": {
-                "name": "स्मार्ट हैंड्स-फ़्री टेलगेट अप्रोच प्रॉक्सिमिटी सेंसिंग",
-                "desc": "स्मार्ट टेलगेट स्वचालित रूप से खुलने से पहले खड़े होने में देरी का समय समायोजित करता है।"
+                "name": "Smart Hands-Free Tailgate Approach Proximity Sensing",
+                "desc": "Adjusts standing delay time before smart tailgate automatically opens."
             },
             "hyundai_digital_cluster_n_performance_theme": {
-                "name": "एन परफॉर्मेंस डिजिटल इंस्ट्रूमेंट क्लस्टर गेज लेआउट",
-                "desc": "मानक एलसीडी डैश पर एन-परफॉर्मेंस रेड शिफ्ट-इंडिकेटर क्लस्टर लेआउट लागू करता है।"
+                "name": "N Performance Digital Instrument Cluster Gauge Layout",
+                "desc": "Applies N-Performance red shift-indicator cluster layout to standard LCD dash."
             },
             "stellantis_scr_adblue_warning_threshold_adjust": {
-                "name": "एससीआर एडब्लू चेतावनी दूरी सीमा समायोजन",
-                "desc": "पहले AdBlue रीफिल रिमाइंडर चेतावनी दूरी को 2400 किमी से 1000 किमी तक समायोजित करता है।"
+                "name": "SCR AdBlue Warning Distance Threshold Adjustment",
+                "desc": "Adjusts first AdBlue refill reminder warning distance from 2400 km to 1000 km."
             },
             "stellantis_jeep_trail_rated_offroad_pages": {
-                "name": "जीप यूकनेक्ट ट्रेल-रेटेड ऑफ-रोड टेलीमेट्री पेज",
-                "desc": "यूकनेक्ट पर ड्राइवट्रेन पिच, रोल, व्हील आर्टिक्यूलेशन और कूलेंट टेम्प पेज को अनलॉक करता है।"
+                "name": "Jeep Uconnect Trail-Rated Off-Road Telemetry Pages",
+                "desc": "Unlocks drivetrain pitch, roll, wheel articulation, and coolant temp pages on Uconnect."
             },
             "stellantis_peugeot_icockpit_3d_color_schemes": {
-                "name": "प्यूज़ो 3डी आई-कॉकपिट कस्टम कलर स्कीम पैलेट",
-                "desc": "3डी होलोग्राफिक डिजिटल इंस्ट्रूमेंट क्लस्टर के लिए कॉपर और क्वार्ट्ज रंग थीम को अनलॉक करता है।"
+                "name": "Peugeot 3D i-Cockpit Custom Color Scheme Palette",
+                "desc": "Unlocks Copper and Quartz color themes for 3D holographic digital instrument cluster."
             },
             "gm_super_cruise_follow_distance_adjust": {
-                "name": "सुपर क्रूज़ हैंड्स-फ़्री फ़ॉलोइंग डिस्टेंस ऑफ़सेट",
-                "desc": "स्वायत्त सुपर क्रूज़ हाईवे ड्राइविंग के दौरान गैप स्पेसिंग को अनुकूलित करता है।"
+                "name": "Super Cruise Hands-Free Following Distance Offset",
+                "desc": "Customizes gap spacing during autonomous Super Cruise highway driving."
             },
             "gm_instrument_hud_calibration_reset": {
-                "name": "हेड-अप डिस्प्ले स्थिति और झुकाव शून्य-बिंदु अंशांकन",
-                "desc": "विंड-शील्ड HUD प्रोजेक्टर छवि कोण और शून्य-स्तरीय क्षितिज संरेखण को रीसेट करता है।"
+                "name": "Head-Up Display Position & Tilt Zero-Point Calibration",
+                "desc": "Resets wind-shield HUD projector image angle and zero-level horizon alignment."
             },
             "gm_afm_v8_cylinder_lock_no_v4_drop": {
-                "name": "एएफएम/डीएफएम सिलेंडर निष्क्रियकरण ओवरराइड",
-                "desc": "इंजन को 8-सिलेंडर मोड में चालू रखने के लिए सक्रिय ईंधन प्रबंधन सिलेंडर ड्रॉप को अक्षम करता है।"
+                "name": "AFM / DFM Cylinder Deactivation Override",
+                "desc": "Disables Active Fuel Management cylinder drop to keep engine operating in 8-cylinder mode."
             },
             "dodge_ram_truck_fog_lights_with_high_beam": {
-                "name": "हाई बीम के साथ रैम ट्रक फॉग लाइट्स",
-                "desc": "हाई बीम चालू होने पर फॉग लाइट को स्वचालित रूप से बंद होने से रोकता है।"
+                "name": "RAM Truck Fog Lights with High Beam",
+                "desc": "Prevents fog lights from turning OFF automatically when high beams are switched ON."
             },
             "toyota_keyless_window_down": {
-                "name": "टोयोटा कुंजी फ़ोब विंडो खुली",
-                "desc": "रिमोट फ़ॉब पर अनलॉक बटन दबाए रखने पर सभी पावर विंडो बंद हो जाती हैं।"
+                "name": "Toyota Key Fob Window Open",
+                "desc": "Rolls down all power windows when holding UNLOCK button on remote fob."
             },
             "toyota_seatbelt_chime_disable": {
-                "name": "टोयोटा पैसेंजर सीटबेल्ट अलार्म म्यूट",
-                "desc": "यात्री सीट में लगातार ध्वनिक सीटबेल्ट चेतावनी झंकार को अक्षम करता है।"
+                "name": "Toyota Passenger Seatbelt Alarm Mute",
+                "desc": "Disables persistent acoustic seatbelt warning chime in passenger seat."
             },
             "honda_walkaway_auto_lock": {
-                "name": "होंडा वॉक-अवे ऑटो डोर लॉक",
-                "desc": "जब स्मार्ट कुंजी 2.5 मीटर वाहन त्रिज्या छोड़ती है तो सभी दरवाजे स्वचालित रूप से लॉक हो जाते हैं।"
+                "name": "Honda Walk-Away Auto Door Lock",
+                "desc": "Automatically locks all doors when Smart Key leaves 2.5m vehicle radius."
             },
             "volvo_speed_limiter_unlock": {
-                "name": "वोल्वो 180 किमी/घंटा फ़ैक्टरी स्पीड लिमिटर बढ़ाया गया",
-                "desc": "ट्रैक/ऑटोबान प्रदर्शन उपयोग के लिए 180 किमी/घंटा फ़ैक्टरी स्पीड कैप को समायोजित करता है।"
+                "name": "Volvo 180 km/h Factory Speed Limiter Extended",
+                "desc": "Adjusts 180 km/h factory speed cap for Track / Autobahn performance use."
             },
             "byd_v2l_3kw_power_unlock": {
-                "name": "BYD वाहन-से-लोड 3.6kW AC आउटपुट मोड",
-                "desc": "कैम्पिंग उपकरणों के लिए बाहरी 220V/3.6kW V2L AC डिस्चार्ज पोर्ट सक्षम करता है।"
+                "name": "BYD Vehicle-to-Load 3.6kW AC Output Mode",
+                "desc": "Enables external 220V/3.6kW V2L AC discharge port for camping appliances."
             },
             "xiaomi_su7_drift_mode_unlock": {
-                "name": "Xiaomi SU7 ट्रैक ड्रिफ्ट मोड और रियर-टॉर्क बायस",
-                "desc": "100% रियर मोटर टॉर्क बायस और ईएससी ट्रैक ड्रिफ्ट मोड को सक्रिय करता है।"
+                "name": "Xiaomi SU7 Track Drift Mode & Rear-Torque Bias",
+                "desc": "Activates 100% rear motor torque bias and ESC Track Drift Mode."
             },
             "vag_oil_service_reset": {
-                "name": "Oil Change Service Reset",
-                "desc": "Resets instrument cluster oil change interval counter to factory 15,000 km / 365 days."
+                "name": "Oil Service Interval Reset",
+                "desc": "Resets oil change service counter and inspection interval for VAG vehicles."
             },
             "vag_epb_service_mode": {
-                "name": "इलेक्ट्रॉनिक पार्किंग ब्रेक ब्रेक पैड सर्विस मोड",
-                "desc": "रियर ब्रेक पैड और रोटर प्रतिस्थापन के लिए रियर ईपीबी कैलिपर पिस्टन को वापस लेता है।"
+                "name": "Electronic Parking Brake Brake Pad Service Mode",
+                "desc": "Retracts rear EPB caliper pistons for rear brake pad and rotor replacement."
             },
             "bmw_bms_battery_registration": {
-                "name": "इंटेलिजेंट बैटरी सेंसर बैटरी पंजीकरण",
-                "desc": "डीएमई/डीडीई इंजन प्रबंधन में नए 12वी एजीएम/लीड-एसिड बैटरी प्रतिस्थापन को पंजीकृत करता है।"
+                "name": "Intelligent Battery Sensor Battery Registration",
+                "desc": "Registers new 12V AGM/Lead-acid battery replacement in DME/DDE engine management."
             },
             "bmw_motorrad_service_indicator_reset": {
-                "name": "बीएमडब्ल्यू मोटरराड वार्षिक सेवा और तेल संकेतक रीसेट",
-                "desc": "टीएफटी इंस्ट्रूमेंट क्लस्टर पर वार्षिक सेवा तिथि और 10,000 किमी दूरी अनुस्मारक साफ़ करता है।"
+                "name": "BMW Motorrad Annual Service & Oil Indicator Reset",
+                "desc": "Clears annual service date and 10,000 km distance reminder on TFT instrument cluster."
             },
             "ducati_desmo_service_reset": {
-                "name": "डुकाटी डेस्मो वाल्व सेवा अनुस्मारक साफ़",
-                "desc": "15,000/30,000 किमी की सेवा के बाद डैशबोर्ड पर डेस्मोसर्विस रिंच आइकन साफ़ हो जाता है।"
+                "name": "Ducati Desmo Valve Service Reminder Clear",
+                "desc": "Clears Desmoservice wrench icon on dashboard after 15,000 / 30,000 km service."
             },
             "byd_bms_isolation_self_test": {
-                "name": "BYD ब्लेड बैटरी हाई-वोल्टेज आइसोलेशन सेल्फ-टेस्ट",
-                "desc": "बीएमएस में उच्च-वोल्टेज प्रणाली रिसाव और प्रतिरोध निदान निष्पादित करता है।"
+                "name": "BYD Blade Battery High-Voltage Isolation Self-Test",
+                "desc": "Executes high-voltage system leakage & resistance diagnostics in BMS."
             },
             "vag_drl_brightness_multi": {
-                "name": "दिन के समय चलने वाली रोशनी चमक समायोजन",
-                "desc": "लो-बीम/पार्किंग मोड के लिए एलईडी डीआरएल तीव्रता स्तर समायोजित करें।"
+                "name": "Daytime Running Lights Brightness Adjustment",
+                "desc": "Adjust LED DRL intensity level for low-beam / parking mode."
             },
             "bmw_comfort_turn_signal_cycles": {
-                "name": "वन-टच कम्फर्ट टर्न सिग्नल पल्स काउंट",
-                "desc": "चुनें कि टर्न इंडिकेटर लीवर के त्वरित टैप पर कितनी पलकें झपकती हैं।"
+                "name": "One-Touch Comfort Turn Signal Pulse Count",
+                "desc": "Select how many blinks occur on quick tap of turn indicator lever."
             },
             "bmw_oil_service_reset": {
-                "name": "सीबीएस इंजन ऑयल रीसेट",
-                "desc": "स्थिति आधारित सेवा तेल जीवन प्रतिशत को 100% पर वापस सेट करता है।"
+                "name": "CBS Engine Oil Reset",
+                "desc": "Resets Condition Based Service oil life percentage back to 100%."
             },
             "generic_oil_service_reset": {
-                "name": "यूनिवर्सल ऑयल मेंटेनेंस इंडिकेटर रीसेट",
-                "desc": "समर्थित OBD2/UDS ECUs में डैशबोर्ड ऑयल रखरखाव चेतावनी लाइट को साफ़ करता है।"
+                "name": "Universal Oil Maintenance Indicator Reset",
+                "desc": "Clears dashboard oil maintenance warning light across supported OBD2/UDS ECUs."
             },
             "vag_epb_pad_change": {
-                "name": "ईपीबी ब्रेक पैड रिप्लेसमेंट मोड",
-                "desc": "रियर ब्रेक पैड सर्विसिंग के लिए इलेक्ट्रॉनिक पार्किंग ब्रेक कैलीपर्स को वापस लेता है।"
+                "name": "EPB Brake Pad Replacement Mode",
+                "desc": "Retracts electronic parking brake calipers for rear brake pad servicing."
             },
             "bmw_epb_pad_change": {
-                "name": "ईपीबी ब्रेक सर्विस मोड",
-                "desc": "रियर पैड प्रतिस्थापन के लिए पार्किंग ब्रेक एक्चुएटर को सेवा स्थिति में खोलता है।"
+                "name": "EPB Brake Service Mode",
+                "desc": "Opens parking brake actuator to service position for rear pad replacement."
             },
             "mb_epb_pad_change": {
-                "name": "ईपीबी पैड फिटिंग मोड",
-                "desc": "ब्रेक सर्विस के लिए पार्किंग ब्रेक स्पिंडल को वर्कशॉप स्थिति में जारी करता है।"
+                "name": "EPB Pad Fitting Mode",
+                "desc": "Releases parking brake spindle to workshop position for brake service."
             },
             "vag_dpf_regen": {
-                "name": "डीपीएफ सेवा पुनर्जनन ट्रिगर",
-                "desc": "स्थिर डीज़ल पार्टिकुलेट फ़िल्टर कालिख जलाने का चक्र शुरू करता है।"
+                "name": "DPF Service Regeneration Trigger",
+                "desc": "Initiates stationary Diesel Particulate Filter soot burn-off cycle."
             },
             "bmw_dpf_regen": {
-                "name": "डीपीएफ फोर्स्ड रीजेनरेशन ट्रिगर",
-                "desc": "सक्रिय पार्टिकुलेट फ़िल्टर पुनर्जनन दिनचर्या शुरू करने के लिए DDE ECU से अनुरोध करता है।"
+                "name": "DPF Forced Regeneration Trigger",
+                "desc": "Requests DDE ECU to start active particulate filter regeneration routine."
             },
             "psa_dpf_regen": {
-                "name": "डीपीएफ पुनर्जनन अनुरोध",
-                "desc": "एचडीआई डीजल इंजन ईसीयू के लिए स्थिर डीपीएफ पुनर्जनन को ट्रिगर करता है।"
+                "name": "DPF Regeneration Request",
+                "desc": "Triggers stationary DPF regeneration for HDi diesel engine ECUs."
             },
             "bmw_bms_battery_register": {
-                "name": "बीएमएस बैटरी रिप्लेसमेंट पंजीकरण",
-                "desc": "डीएमई/डीडीई इंटेलिजेंट बैटरी सेंसर के साथ नई बैटरी प्रतिस्थापन पंजीकृत करता है।"
+                "name": "BMS Battery Replacement Registration",
+                "desc": "Registers new battery replacement with DME/DDE Intelligent Battery Sensor."
             },
             "mb_bms_battery_register": {
-                "name": "बैटरी पंजीकरण और रीसेट",
-                "desc": "नई बैटरी इंस्टालेशन के बाद एसएएम मॉड्यूल में बैटरी एजिंग काउंटर को रीसेट करता है।"
+                "name": "Battery Registration & Reset",
+                "desc": "Resets battery aging counter in SAM module after new battery installation."
             },
             "vag_sas_calibrate": {
-                "name": "स्टीयरिंग एंगल सेंसर कैलिब्रेशन",
-                "desc": "ABS/ESP ECU के लिए G85 स्टीयरिंग एंगल सेंसर शून्य-बिंदु स्थिति को कैलिब्रेट करता है।"
+                "name": "Steering Angle Sensor Calibration",
+                "desc": "Calibrates G85 steering angle sensor zero-point position for ABS/ESP ECU."
             },
             "toyota_sas_calibrate": {
-                "name": "स्टीयरिंग कोण शून्य बिंदु अंशांकन",
-                "desc": "स्किड कंट्रोल ईसीयू में स्टीयरिंग एंगल सेंसर का शून्य बिंदु अंशांकन करता है।"
+                "name": "Steering Angle Zero Point Calibration",
+                "desc": "Performs zero point calibration of steering angle sensor in Skid Control ECU."
             },
             "generic_tba_adapt": {
-                "name": "थ्रॉटल बॉडी संरेखण और अनुकूलन",
-                "desc": "इंजन ईसीयू में इलेक्ट्रॉनिक थ्रॉटल बॉडी स्टॉप लर्निंग रूटीन निष्पादित करता है।"
+                "name": "Throttle Body Alignment & Adaptation",
+                "desc": "Executes electronic throttle body stop learning routine in engine ECU."
             },
             "epb_service_reset": {
-                "name": "यूनिवर्सल ईपीबी रखरखाव रीसेट",
-                "desc": "इलेक्ट्रॉनिक पार्क ब्रेक कैलिपर वियर काउंटर को रीसेट करता है और एयर गैप को कैलिब्रेट करता है।"
+                "name": "Universal EPB Maintenance Reset",
+                "desc": "Resets electronic park brake caliper wear counter and calibrates air gap."
             },
             "vag_dsg_reset": {
-                "name": "डीएसजी ट्रांसमिशन बेसिक सेटिंग्स रीसेट",
-                "desc": "डीएसजी/एस-ट्रॉनिक के लिए क्लच एंगेजमेंट पॉइंट और शिफ्ट वाल्व अनुकूलन को रीसेट करता है।"
+                "name": "DSG Transmission Basic Settings Reset",
+                "desc": "Resets clutch engagement points and shift valve adaptations for DSG/S-Tronic."
             },
             "bmw_zf_reset": {
-                "name": "ZF 8HP ट्रांसमिशन अनुकूलन रीसेट",
-                "desc": "ईजीएस ट्रांसमिशन शिफ्ट समय और दबाव अनुकूलन मूल्यों को साफ़ करता है।"
+                "name": "ZF 8HP Transmission Adaptation Reset",
+                "desc": "Clears EGS transmission shift time and pressure adaptation values."
             },
             "bmw_brake_fluid_reset": {
-                "name": "ब्रेक द्रव सेवा अंतराल रीसेट",
-                "desc": "स्थिति आधारित सेवा 2-वर्षीय ब्रेक द्रव परिवर्तन टाइमर को रीसेट करता है।"
+                "name": "Brake Fluid Service Interval Reset",
+                "desc": "Resets Condition Based Service 2-year brake fluid change timer."
             },
             "ford_injector_code": {
-                "name": "इंजेक्टर सुधार कारक कोडिंग",
-                "desc": "पीसीएम में डीजल इंजेक्टरों के लिए 16-वर्ण वाले IQA कोड प्रोग्राम करता है।"
+                "name": "Injector Correction Factor Coding",
+                "desc": "Programs 16-character IQA codes for diesel injectors into PCM."
             },
             "bmw_injector_code": {
-                "name": "ईंधन इंजेक्टर प्रवाह दर कोडिंग",
-                "desc": "डीएमई में बदले गए ईंधन इंजेक्टरों के लिए ऊर्जा अंशांकन मान लिखता है।"
+                "name": "Fuel Injector Flow Rate Coding",
+                "desc": "Writes energy calibration values for replaced fuel injectors into DME."
             },
             "generic_headlight_aim": {
-                "name": "हेडलाइट ऑटो-लेवलिंग कैलिब्रेशन",
-                "desc": "अनुकूली ऑटो-लेवलिंग हेडलाइट मोटर्स के लिए संदर्भ शून्य स्थिति सेट करता है।"
+                "name": "Headlight Auto-Leveling Calibration",
+                "desc": "Sets reference zero position for adaptive auto-leveling headlight motors."
             },
             "bmw_12v_battery_reg": {
-                "name": "12V सहायक बैटरी पंजीकरण",
-                "desc": "पीसीयू में सहायक एजीएम स्टार्टर/सपोर्ट बैटरी प्रतिस्थापन को पंजीकृत करता है।"
+                "name": "12V Auxiliary Battery Registration",
+                "desc": "Registers auxiliary AGM starter/support battery replacement in PCU."
             },
             "vag_comfort_turn_signal": {
-                "name": "कम्फर्ट टर्न सिग्नल ब्लिंक काउंट",
-                "desc": "3, 4, और 5 फ्लैश के बीच लेन परिवर्तन ब्लिंकर चक्र गणना को समायोजित करता है।"
+                "name": "Comfort Turn Signal Blink Count",
+                "desc": "Adjusts lane change blinker cycle count between 3, 4, and 5 flashes."
             },
             "vag_coming_home_duration": {
-                "name": "घर आने/छोड़ने की प्रकाश अवधि",
-                "desc": "वाहन लॉकिंग के बाद हेडलाइट रोशनी टाइमर को कॉन्फ़िगर करता है।"
+                "name": "Coming/Leaving Home Light Duration",
+                "desc": "Configures headlight illumination timer after vehicle locking."
             },
             "vag_remote_windows": {
-                "name": "रिमोट सुविधा विंडो नियंत्रण",
-                "desc": "रिमोट की फ़ॉब लॉन्ग प्रेस के माध्यम से पावर विंडो खोलने और बंद करने में सक्षम बनाता है।"
+                "name": "Remote Convenience Window Control",
+                "desc": "Enables opening and closing power windows via remote key fob long press."
             },
             "vag_auto_lock_15kmh": {
-                "name": "15 किमी/घंटा पर ऑटो डोर लॉक",
-                "desc": "जब वाहन की गति 15 किमी/घंटा तक पहुंच जाती है तो सभी दरवाजे स्वचालित रूप से लॉक हो जाते हैं।"
+                "name": "Auto Door Lock at 15 km/h",
+                "desc": "Automatically locks all doors when vehicle speed reaches 15 km/h."
             },
             "vag_sfd_unlock_prep": {
-                "name": "एसएफडी गेटवे सुरक्षा स्थिति तैयारी",
-                "desc": "संरक्षित डीआईडी लिखने के लिए एमक्यूबी-ईवो एसएफडी गेटवे टोकन सत्र तैयार करता है।"
+                "name": "SFD Gateway Protection Status Prep",
+                "desc": "Prepares MQB-evo SFD gateway token session for writing protected DIDs."
             },
             "bmw_asd_deactivate": {
-                "name": "सक्रिय ध्वनि डिज़ाइन निष्क्रियकरण",
-                "desc": "केबिन स्पीकर के माध्यम से बजने वाली सिंथेटिक इंजन ध्वनि को म्यूट करता है।"
+                "name": "Active Sound Design Deactivation",
+                "desc": "Mutes synthetic engine sound played through cabin speakers."
             },
             "bmw_comfort_turn_signal": {
-                "name": "कम्फर्ट टर्न सिग्नल काउंट",
-                "desc": "वन-टच इंडिकेटर पल्स काउंट सेट करता है।"
+                "name": "Comfort Turn Signal Count",
+                "desc": "Sets one-touch indicator pulse count."
             },
             "bmw_mirror_fold_lock": {
-                "name": "कम्फर्ट एक्सेस मिरर फोल्ड ऑन लॉक",
-                "desc": "वाहन लॉक होने पर तुरंत साइड मिरर को स्वचालित रूप से मोड़ देता है।"
+                "name": "Comfort Access Mirror Fold on Lock",
+                "desc": "Automatically folds side mirrors immediately upon locking vehicle."
             },
             "toyota_coming_home_duration": {
-                "name": "हेडलाइट सौजन्य विलंब / कमिंग-होम",
-                "desc": "इग्निशन शटडाउन के बाद हेडलाइट बंद विलंब टाइमर को कॉन्फ़िगर करता है।"
+                "name": "Headlight Courtesy Delay / Coming-Home",
+                "desc": "Configures headlight off delay timer after ignition shutdown."
             },
             "toyota_lane_change_flash": {
-                "name": "लेन-चेंज टर्न सिग्नल फ्लैश काउंट",
-                "desc": "एक-स्पर्श लेन परिवर्तन ब्लिंकर चक्र गणना को समायोजित करता है।"
+                "name": "Lane-Change Turn Signal Flash Count",
+                "desc": "Adjusts one-touch lane change blinker cycle count."
             },
             "toyota_remote_window_close": {
-                "name": "रिमोट पावर विंडो क्लोजर",
-                "desc": "रिमोट लॉक बटन दबाकर सभी पावर विंडो बंद करने की अनुमति देता है।"
+                "name": "Remote Power Window Closure",
+                "desc": "Allows closing all power windows by holding remote lock button."
             },
             "toyota_autolock_behavior": {
-                "name": "ऑटो दरवाज़ा लॉक/अनलॉक अनुकूलन",
-                "desc": "दरवाज़ा लॉकिंग ट्रिगर सेट करता है।"
+                "name": "Auto Door Lock/Unlock Customization",
+                "desc": "Sets door locking trigger."
             },
             "toyota_approach_welcome_lights": {
-                "name": "स्मार्ट कुंजी दृष्टिकोण स्वागत रोशनी",
-                "desc": "जब स्मार्ट कुंजी वाहन के पास पहुंचती है तो आंतरिक पुडल/केबिन लाइट चालू हो जाती है।"
+                "name": "Smart Key Approach Welcome Lights",
+                "desc": "Turns on interior puddle/cabin lights when smart key approaches vehicle."
             },
             "hyundai_autolock_behavior": {
-                "name": "ऑटो दरवाज़ा लॉक/अनलॉक व्यवहार",
-                "desc": "शिफ्ट या गति पर दरवाजे स्वचालित रूप से लॉक हो जाते हैं और पी या इग्निशन ऑफ पर अनलॉक हो जाते हैं।"
+                "name": "Auto Door Lock/Unlock Behavior",
+                "desc": "Automatically locks doors on shift or speed and unlocks on P or Ignition Off."
             },
             "hyundai_window_remote": {
-                "name": "रिमोट विंडो खोलें/बंद करें",
-                "desc": "स्मार्ट कुंजी फ़ोब बटन का उपयोग करके विंडोज़ को ऊपर/नीचे रोल करने में सक्षम बनाता है।"
+                "name": "Remote Window Open/Close",
+                "desc": "Enables rolling windows up/down using smart key fob buttons."
             },
             "hyundai_sport_mode_memory": {
-                "name": "ड्राइव मोड चयन मेमोरी",
-                "desc": "इंजन पुनरारंभ होने के बाद अंतिम चयनित ड्राइव मोड याद रहता है।"
+                "name": "Drive Mode Select Memory",
+                "desc": "Remembers last selected Drive Mode after engine restart."
             },
             "tesla_charge_limit_custom": {
-                "name": "बैटरी चार्ज सीमा अनुकूलन",
-                "desc": "डिफ़ॉल्ट एचवी बैटरी चार्ज सीमा प्रतिशत सेट करता है।"
+                "name": "Battery Charge Limit Customization",
+                "desc": "Sets default HV battery charge limit percentage."
             },
             "tesla_mirror_fold_lock": {
-                "name": "वॉक-अवे लॉक पर मिरर ऑटो-फोल्ड",
-                "desc": "फ़ोन की वॉक-अवे लॉक ट्रिगर होने पर साइड मिरर स्वचालित रूप से मुड़ जाते हैं।"
+                "name": "Mirror Auto-Fold on Walk-Away Lock",
+                "desc": "Automatically folds side mirrors when phone key walk-away lock triggers."
             },
             "nissan_coming_home": {
-                "name": "सौजन्य हेडलाइट ऑफ डिले",
-                "desc": "निसान वाहन से बाहर निकलने के बाद 30 सेकंड तक हेडलाइट्स को रोशन रखता है।"
+                "name": "Courtesy Headlight Off Delay",
+                "desc": "Keeps headlights illuminated for 30 seconds after exiting Nissan vehicle."
             },
             "nissan_lane_change_flash": {
-                "name": "टैप-टू-पास लेन चेंज फ्लैश काउंट",
-                "desc": "लाइट डंठल टैप पर टर्न सिग्नल इंडिकेटर पल्स काउंट सेट करता है।"
+                "name": "Tap-to-Pass Lane Change Flash Count",
+                "desc": "Sets turn signal indicator pulse count on light stalk tap."
             },
             "nissan_autolock_behavior": {
-                "name": "गति-निर्भर स्वचालित दरवाज़ा लॉक",
-                "desc": "जब वाहन 24 किमी/घंटा तक पहुंचता है तो सभी दरवाजे स्वचालित रूप से लॉक हो जाते हैं।"
+                "name": "Speed-Dependent Automatic Door Lock",
+                "desc": "Locks all doors automatically when vehicle reaches 24 km/h."
             },
             "nissan_window_remote": {
-                "name": "रिमोट कुंजी फ़ॉब पावर विंडो नियंत्रण",
-                "desc": "कुंजी फ़ॉब अनलॉक बटन को लंबे समय तक दबाने से सामने की खिड़कियां खुलती/बंद होती हैं।"
+                "name": "Remote Key Fob Power Window Control",
+                "desc": "Opens/closes front windows via key fob unlock button long press."
             },
             "nissan_seatbelt_chime_mute": {
-                "name": "सीटबेल्ट चेतावनी ऑडियो चाइम सप्रेस",
-                "desc": "क्लस्टर आइकन रखते समय बार-बार आने वाली सीटबेल्ट चेतावनी घंटी को म्यूट कर देता है।"
+                "name": "Seatbelt Warning Audio Chime Suppress",
+                "desc": "Mutes repetitive seatbelt warning chime while keeping cluster icon."
             },
             "porsche_sport_chrono_launch": {
-                "name": "स्पोर्ट क्रोनो लॉन्च कंट्रोल रिस्पांस प्रोफाइल",
-                "desc": "पीडीके ट्रांसमिशन लॉन्च कंट्रोल आरपीएम थ्रेशोल्ड और क्लच बाइट को अनुकूलित करता है।"
+                "name": "Sport Chrono Launch Control Response Profile",
+                "desc": "Optimizes PDK transmission launch control RPM threshold & clutch bite."
             },
             "porsche_pasm_default": {
-                "name": "पीएएसएम सस्पेंशन मोड स्टार्टअप प्रीसेट",
-                "desc": "इग्निशन प्रारंभ पर PASM अनुकूली निलंबन डिफ़ॉल्ट कठोरता सेट करता है।"
+                "name": "PASM Suspension Mode Startup Preset",
+                "desc": "Sets PASM adaptive suspension default stiffness on ignition start."
             },
             "porsche_exhaust_flap": {
-                "name": "स्पोर्ट एग्जॉस्ट फ्लैप कॉन्स्टेंट ओपन ओवरराइड",
-                "desc": "सभी आरपीएम रेंजों में सक्रिय निकास वाल्वों को 100% खुला रहने के लिए बाध्य करता है।"
+                "name": "Sport Exhaust Flap Constant Open Override",
+                "desc": "Forces active exhaust valves to stay 100% open across all RPM ranges."
             },
             "audi_drive_select_memory": {
-                "name": "ऑडी ड्राइव चयन मोड मेमोरी रिटेंशन",
-                "desc": "पुनरारंभ करने पर अंतिम सक्रिय ड्राइव चयन प्रोफ़ाइल बरकरार रखता है।"
+                "name": "Audi Drive Select Mode Memory Retention",
+                "desc": "Retains last active Drive Select profile upon restart."
             },
             "audi_virtual_cockpit_themes": {
-                "name": "ऑडी वर्चुअल कॉकपिट एस/आरएस स्पोर्ट ग्राफिक लेआउट",
-                "desc": "वर्चुअल कॉकपिट पर एस/आरएस सेंट्रल टैकोमीटर लेआउट विकल्प अनलॉक करता है।"
+                "name": "Audi Virtual Cockpit S/RS Sport Graphic Layout",
+                "desc": "Unlocks S/RS central tachometer layout options on Virtual Cockpit."
             },
             "vag_scandinavian_drl": {
-                "name": "स्कैंडिनेवियाई डीआरएल मोड",
-                "desc": "फ्रंट डीआरएल के साथ पीछे की टेल लाइट्स को लगातार रोशन रखता है।"
+                "name": "Scandinavian DRL Mode",
+                "desc": "Keeps rear tail lights illuminated continuously alongside front DRLs."
             },
             "vag_mirror_dip_reverse": {
-                "name": "पैसेंजर मिरर डिप इन रिवर्स",
-                "desc": "रिवर्स गियर लगे होने पर यात्री साइड के शीशे को नीचे की ओर झुका देता है।"
+                "name": "Passenger Mirror Dip in Reverse",
+                "desc": "Tills passenger side mirror downward when reverse gear is engaged."
             },
             "vag_dynamic_turn_signal": {
-                "name": "गतिशील/अनुक्रमिक टर्न सिग्नल मोड",
-                "desc": "संगत रियर लाइट मॉड्यूल पर व्यापक गतिशील एलईडी ब्लिंकर पैटर्न को सक्षम करता है।"
+                "name": "Dynamic / Sequential Turn Signal Mode",
+                "desc": "Enables sweeping dynamic LED blinker pattern on compatible rear light modules."
             },
             "vag_seatbelt_warning_duration": {
-                "name": "सीटबेल्ट चेतावनी झंकार अवधि समायोजन",
-                "desc": "बार-बार आने वाले सीटबेल्ट चेतावनी झंकार टाइमर को छोटा या दबा देता है।"
+                "name": "Seatbelt Warning Chime Duration Adjustment",
+                "desc": "Shortens or suppresses repetitive seatbelt warning chime timer."
             },
             "vag_sunroof_remote": {
-                "name": "सनरूफ रिमोट कम्फर्ट कंट्रोल",
-                "desc": "रिमोट की फ़ॉब होल्ड के माध्यम से पैनोरमिक सनरूफ को खोलने और झुकाने की अनुमति देता है।"
+                "name": "Sunroof Remote Comfort Control",
+                "desc": "Allows opening and tilting panoramic sunroof via remote key fob hold."
             },
             "vag_acc_distance_preset": {
-                "name": "एसीसी अनुकूली क्रूज डिफ़ॉल्ट अनुवर्ती दूरी",
-                "desc": "इग्निशन प्रारंभ पर दूरी प्रोफ़ाइल के अनुसार डिफ़ॉल्ट रडार सेट करता है।"
+                "name": "ACC Adaptive Cruise Default Following Distance",
+                "desc": "Sets default radar following distance profile on ignition start."
             },
             "vag_infotainment_startup_logo": {
-                "name": "इन्फोटेनमेंट बूट ग्राफिक लोगो",
-                "desc": "इन्फोटेनमेंट स्टार्टअप स्प्लैश स्क्रीन लोगो को अनुकूलित करता है।"
+                "name": "Infotainment Boot Graphic Logo",
+                "desc": "Customizes infotainment startup splash screen logo."
             },
             "vag_ambient_color_cycle": {
-                "name": "इंटीरियर एम्बिएंट लाइट कलर स्पेक्ट्रम अनलॉक",
-                "desc": "वाहन सेटिंग मेनू में परिवेश प्रकाश पैलेट विकल्पों का विस्तार करता है।"
+                "name": "Interior Ambient Light Color Spectrum Unlock",
+                "desc": "Expands ambient lighting palette options in vehicle settings menu."
             },
             "vag_service_interval_custom": {
-                "name": "कस्टम निरीक्षण एवं सेवा दूरी सीमा",
-                "desc": "अगली सेवा चेतावनी के लिए कस्टम किमी और दिन के लक्ष्य कॉन्फ़िगर करता है।"
+                "name": "Custom Inspection & Service Distance Threshold",
+                "desc": "Configures custom km and day targets for next service warning."
             },
             "vag_door_handle_lights_reverse": {
-                "name": "बाहरी दरवाज़े के हैंडल की लाइटें रिवर्स में चालू होती हैं",
-                "desc": "जमीन पर दृश्यता के लिए पीछे मुड़ने पर दरवाज़े के हैंडल एलईडी पोखर रोशनी को रोशन करता है।"
+                "name": "Exterior Door Handle Lights ON in Reverse",
+                "desc": "Illuminates door handle LED puddle lights when reversing for ground visibility."
             },
             "bmw_msport_exhaust_burble": {
-                "name": "एम-स्पोर्ट एग्जॉस्ट बर्बल और पॉप इंटेंसिटी",
-                "desc": "स्पोर्ट मोड में ओवररन बर्बल ध्वनि की आक्रामकता को समायोजित करता है।"
+                "name": "M-Sport Exhaust Burble & Pop Intensity",
+                "desc": "Adjusts overrun burble sound aggressiveness in Sport mode."
             },
             "bmw_welcome_light_sequence": {
-                "name": "वेलकम लाइट सीक्वेंस एनिमेशन",
-                "desc": "एलईडी हेडलाइट और एंजेल आइज़ के स्वागत अभिवादन क्रम को अनुकूलित करता है।"
+                "name": "Welcome Light Sequence Animation",
+                "desc": "Customizes LED headlight and Angel Eyes welcome greeting sequence."
             },
             "bmw_service_history_menu": {
-                "name": "डिजिटल सेवा इतिहास मेनू सक्षम करें",
-                "desc": "सेंट्रल डिस्प्ले पर आईड्राइव डिजिटल सर्विस रिकॉर्ड बुक मेनू को अनलॉक करता है।"
+                "name": "Digital Service History Menu Enable",
+                "desc": "Unlocks iDrive digital service record book menu on central display."
             },
             "bmw_hud_speed_display": {
-                "name": "हेड-अप डिस्प्ले डिजिटल स्पीडोमीटर ओवरले",
-                "desc": "हेड-अप डिस्प्ले पर रीयल-टाइम डिजिटल स्पीड रीडआउट प्रोजेक्ट करता है।"
+                "name": "Head-Up Display Digital Speedometer Overlay",
+                "desc": "Projects real-time digital speed readout onto Head-Up Display."
             },
             "bmw_cornering_lights_fog": {
-                "name": "फॉग लैंप कॉर्नरिंग इल्यूमिनेशन",
-                "desc": "टर्न सिग्नल या लो-स्पीड स्टीयरिंग एंगल पर फ्रंट फॉग लाइट चालू करता है।"
+                "name": "Fog Lamp Cornering Illumination",
+                "desc": "Turns on front fog light on turn signal or low-speed steering angle."
             },
             "bmw_easy_entry_steering": {
-                "name": "आसान प्रवेश ऑटो-रिट्रैक्टिंग स्टीयरिंग कॉलम",
-                "desc": "आसान निकास के लिए इंजन बंद होने पर इलेक्ट्रिक स्टीयरिंग व्हील को ऊपर की ओर खींचता है।"
+                "name": "Easy Entry Auto-Retracting Steering Column",
+                "desc": "Retracts electric steering wheel upward upon engine shutdown for easy exit."
             },
             "bmw_bluetooth_audio_enable": {
-                "name": "उन्नत ब्लूटूथ ऑडियो स्ट्रीमिंग अनलॉक",
-                "desc": "iDrive HU_ENTRYNAV में A2DP ब्लूटूथ वायरलेस संगीत स्ट्रीमिंग सक्षम करता है।"
+                "name": "Enhanced Bluetooth Audio Streaming Unlock",
+                "desc": "Enables A2DP Bluetooth wireless music streaming in iDrive HU_ENTRYNAV."
             },
             "bmw_door_handle_lights_reverse": {
-                "name": "बाहरी दरवाज़े के हैंडल पुडल लाइट्स रिवर्स में",
-                "desc": "रिवर्स गियर लगे होने पर दरवाज़े के हैंडल एलईडी को रोशन करता है।"
+                "name": "Exterior Door Handle Puddle Lights in Reverse",
+                "desc": "Illuminates door handle LEDs when reverse gear is engaged."
             },
             "toyota_auto_headlight_threshold": {
-                "name": "ऑटो हेडलाइट एम्बिएंट लाइट सेंसर संवेदनशीलता",
-                "desc": "स्वचालित हेडलाइट सक्रियण के लिए गोधूलि संध्या सीमा को समायोजित करता है।"
+                "name": "Auto Headlight Ambient Light Sensor Sensitivity",
+                "desc": "Adjusts twilight dusk threshold for automatic headlight activation."
             },
             "toyota_turn_signal_click_volume": {
-                "name": "टर्न सिग्नल ऑडियो क्लिकर स्पीकर वॉल्यूम",
-                "desc": "टर्न सिग्नल रिले क्लिक चाइम वॉल्यूम कॉन्फ़िगर करता है।"
+                "name": "Turn Signal Audio Clicker Speaker Volume",
+                "desc": "Configures turn signal relay click chime volume."
             },
             "toyota_smart_key_approach_lights": {
-                "name": "स्मार्ट कुंजी प्रॉक्सिमिटी वेलकम पुडल लाइट्स",
-                "desc": "जब स्मार्ट कुंजी वाहन के पास आती है तो दर्पण पुडल लाइट चालू हो जाती है।"
+                "name": "Smart Key Proximity Welcome Puddle Lights",
+                "desc": "Turns on mirror puddle lights when smart key approaches vehicle."
             },
             "toyota_rear_hatch_behavior": {
-                "name": "पावर टेलगेट लिफ्टगेट ओपन/क्लोज़ ऑपरेशन लॉजिक",
-                "desc": "रिमोट और डैशबोर्ड पावर हैच बटन प्रेस अवधि को कॉन्फ़िगर करता है।"
+                "name": "Power Tailgate Liftgate Open/Close Operation Logic",
+                "desc": "Configures remote and dashboard power hatch button press duration."
             },
             "toyota_open_windows_smart_key": {
-                "name": "स्मार्ट कुंजी रिमोट विंडो रोल-डाउन लॉन्ग प्रेस",
-                "desc": "रिमोट अनलॉक बटन दबाकर सभी विंडो खोलने की अनुमति देता है।"
+                "name": "Smart Key Remote Window Roll-Down Long Press",
+                "desc": "Allows opening all windows by holding remote unlock button."
             },
             "toyota_interior_light_dim_timer": {
-                "name": "आंतरिक केबिन लाइट ऑटो-डिमिंग ऑफ डिले",
-                "desc": "दरवाजा बंद होने के बाद आंतरिक गुंबद लाइट शटडाउन टाइमर को समायोजित करता है।"
+                "name": "Interior Cabin Light Auto-Dimming Off Delay",
+                "desc": "Adjusts interior dome light shutdown timer after door closure."
             },
             "toyota_panic_alarm_remote": {
-                "name": "रिमोट कुंजी फ़ॉब पैनिक अलार्म सायरन फ़ंक्शन",
-                "desc": "रिमोट की होल्ड के माध्यम से वाहन हॉर्न पैनिक अलार्म को सक्षम या अक्षम करता है।"
+                "name": "Remote Key Fob Panic Alarm Siren Function",
+                "desc": "Enables or disables vehicle horn panic alarm via remote key hold."
             },
             "toyota_eco_drive_indicator": {
-                "name": "ईसीओ ड्राइव क्लस्टर जोन संकेतक लाइट",
-                "desc": "क्लस्टर पर पर्यावरण-अनुकूल एक्सेलेरेशन बार और संकेतक लाइट दिखाता है।"
+                "name": "ECO Drive Cluster Zone Indicator Light",
+                "desc": "Shows eco-friendly acceleration bar and indicator light on cluster."
             },
             "hyundai_coming_home_duration": {
-                "name": "एस्कॉर्ट हेडलाइट बंद विलंब टाइमर",
-                "desc": "वाहन के बाहर निकलने के बाद लो बीम हेडलाइट्स को रोशन रखता है।"
+                "name": "Escort Headlight Off Delay Timer",
+                "desc": "Keeps low beam headlights illuminated after vehicle exit."
             },
             "hyundai_drl_menu_toggle": {
-                "name": "दिन के समय चलने वाली लाइटें मेनू नियंत्रण",
-                "desc": "उपकरण क्लस्टर उपयोगकर्ता विकल्पों में डीआरएल चालू/बंद सेटिंग जोड़ता है।"
+                "name": "Daytime Running Lights Menu Control",
+                "desc": "Adds DRL ON/OFF setting to instrument cluster user options."
             },
             "hyundai_welcome_sequence": {
-                "name": "स्मार्ट कुंजी प्रॉक्सिमिटी वेलकम लाइट और मिरर अनफोल्ड",
-                "desc": "पास आने पर बिजली के दर्पण खोल देता है और दरवाज़े के हैंडल को रोशन कर देता है।"
+                "name": "Smart Key Proximity Welcome Light & Mirror Unfold",
+                "desc": "Unfolds power mirrors and lights up door handles upon approach."
             },
             "hyundai_interior_light_delay": {
-                "name": "केबिन इंटीरियर रूम लैंप ऑटो-कट डिले",
-                "desc": "बैटरी बचाने के लिए आंतरिक लाइटें स्वचालित रूप से बंद होने से पहले टाइमर सेट करता है।"
+                "name": "Cabin Interior Room Lamp Auto-Cut Delay",
+                "desc": "Sets timer before interior lights automatically turn off to save battery."
             },
             "hyundai_heat_pump_efficiency": {
-                "name": "ईवी क्लाइमेट हीट पंप थर्मल दक्षता मोड",
-                "desc": "ठंड के मौसम में ईवी हीट पंप ऊर्जा खपत को अनुकूलित करता है।"
+                "name": "EV Climate Heat Pump Thermal Efficiency Mode",
+                "desc": "Optimizes EV heat pump energy consumption in cold winter weather."
             },
             "tesla_track_mode_params": {
-                "name": "ट्रैक मोड स्थिरता और टॉर्क बायस प्रोफ़ाइल",
-                "desc": "फ्रंट/रियर मोटर ड्राइव पूर्वाग्रह और स्थिरता हस्तक्षेप को कॉन्फ़िगर करता है।"
+                "name": "Track Mode Stability & Torque Bias Profile",
+                "desc": "Configures front/rear motor drive bias and stability intervention."
             },
             "tesla_regen_brake_strength": {
-                "name": "पुनर्योजी ब्रेकिंग पावर प्रोफ़ाइल",
-                "desc": "त्वरक पेडल लिफ्ट-ऑफ ऊर्जा पुनर्प्राप्ति तीव्रता को समायोजित करता है।"
+                "name": "Regenerative Braking Power Profile",
+                "desc": "Adjusts accelerator pedal lift-off energy recovery intensity."
             },
             "tesla_walkaway_door_lock": {
-                "name": "वॉक-अवे फ़ोन कुंजी ऑटो दरवाज़ा लॉक",
-                "desc": "दरवाजे बंद कर देता है और फोन की चाबी दूर जाने पर हॉर्न बजाकर पुष्टि करता है।"
+                "name": "Walk-Away Phone Key Auto Door Lock",
+                "desc": "Locks doors and confirms with horn chirp when phone key moves away."
             },
             "tesla_acceleration_boost_unlock": {
-                "name": "पॉवरट्रेन एक्सेलेरेशन बूस्ट ड्राइव प्रोफ़ाइल",
-                "desc": "इलेक्ट्रिक मोटर इन्वर्टर प्रतिक्रिया को 0-100 किमी/घंटा की गति से तेज करता है।"
+                "name": "Powertrain Acceleration Boost Drive Profile",
+                "desc": "Sharpens electric motor inverter response for faster 0-100 km/h times."
             },
             "tesla_interior_ambient_color": {
-                "name": "केबिन फुटवेल एम्बिएंट लाइटिंग कलर प्रीसेट",
-                "desc": "एलईडी फुटवेल परिवेश प्रकाश आरजीबी रंग पैलेट को अनुकूलित करता है।"
+                "name": "Cabin Footwell Ambient Lighting Color Preset",
+                "desc": "Customizes LED footwell ambient light RGB color palette."
             },
             "audi_matrix_led_animation": {
-                "name": "मैट्रिक्स एलईडी हेडलाइट डायनामिक वेलकम लाइट डांस",
-                "desc": "वाहन अनलॉक होने पर गतिशील प्रकाश कोरियोग्राफी बजाता है।"
+                "name": "Matrix LED Headlight Dynamic Welcome Light Dance",
+                "desc": "Plays dynamic light choreography upon vehicle unlocking."
             },
             "audi_mmi_startup_screen": {
-                "name": "एमएमआई टच स्क्रीन बूट ग्राफ़िक थीम",
-                "desc": "एमएमआई सेंट्रल स्क्रीन बूट एनीमेशन को अनुकूलित करता है।"
+                "name": "MMI Touch Screen Boot Graphic Theme",
+                "desc": "Customizes MMI central screen boot animation."
             },
             "audi_drive_select_efficiency": {
-                "name": "ऑडी ड्राइव सेलेक्ट में दक्षता ड्राइविंग प्रोफ़ाइल",
-                "desc": "ड्राइव चयन विकल्पों में ईंधन-बचत दक्षता मोड सक्षम करता है।"
+                "name": "Efficiency Driving Profile in Audi Drive Select",
+                "desc": "Enables fuel-saving Efficiency mode in Drive Select options."
             },
             "audi_laptimer_boost_display": {
-                "name": "लैप टाइमर और टर्बो बार प्रेशर गेज ओवरले",
-                "desc": "वर्चुअल कॉकपिट पर ट्रैक लैप टाइमर और वास्तविक समय टर्बो बूस्ट गेज प्रदर्शित करता है।"
+                "name": "Lap Timer & Turbo Bar Pressure Gauge Overlay",
+                "desc": "Displays track lap timer and real-time turbo boost gauge on Virtual Cockpit."
             },
             "audi_needle_sweep_gauge": {
-                "name": "स्पोर्ट गेज सुई स्वीप सत्यापन",
-                "desc": "प्रारंभ में पूर्ण टैकोमीटर और स्पीडोमीटर सुई स्वीप परीक्षण करता है।"
+                "name": "Sport Gauge Needle Sweep Verification",
+                "desc": "Performs full tachometer and speedometer needle sweep test on start."
             },
             "skoda_coming_home_lights": {
-                "name": "घर छोड़ना/घर आना लाइटिंग टाइमर",
-                "desc": "वाहन के बाहर निकलने के बाद हेडलाइट रोशनी टाइमर को कॉन्फ़िगर करता है।"
+                "name": "Leaving Home / Coming Home Lighting Timer",
+                "desc": "Configures headlight illumination timer after vehicle exit."
             },
             "skoda_comfort_turn_signal": {
-                "name": "कम्फर्ट इंडिकेटर पल्स काउंट एडजस्टमेंट",
-                "desc": "3 और 5 फ्लैश के बीच वन-टच टर्न सिग्नल ब्लिंक काउंट सेट करता है।"
+                "name": "Comfort Indicator Pulse Count Adjustment",
+                "desc": "Sets one-touch turn signal blink count between 3 and 5 flashes."
             },
             "cupra_sport_display_menu": {
-                "name": "कपरा प्रदर्शन उपकरण और जी-मीटर मेनू",
-                "desc": "जी-फोर्स मीटर, किलोवाट पावर गेज और तेल तापमान डिस्प्ले को अनलॉक करता है।"
+                "name": "Cupra Performance Instrument & G-Meter Menu",
+                "desc": "Unlocks G-force meter, kW power gauge, and oil temp display."
             },
             "cupra_virtual_cockpit_copper": {
-                "name": "कॉपर थीम डैशबोर्ड एक्सेंट ग्राफ़िक्स",
-                "desc": "गेज क्लस्टर पर सिग्नेचर कपरा कॉपर मेटालिक एक्सेंट थीम लागू करता है।"
+                "name": "Copper Theme Dashboard Accent Graphics",
+                "desc": "Applies signature Cupra copper metallic accent theme to gauge cluster."
             },
             "vag_brake_disc_drying": {
-                "name": "बारिश में ब्रेक डिस्क को पोंछने/सुखाने का कार्य",
-                "desc": "सूखे रोटर्स पर गीले मौसम में समय-समय पर न्यूनतम पैड दबाव लागू करता है।"
+                "name": "Brake Disc Wiping / Drying Function in Rain",
+                "desc": "Periodically applies minimal pad pressure in wet weather to dry rotors."
             },
             "vag_tourist_mode_lights": {
-                "name": "पर्यटक मोड हेडलाइट बीम पैटर्न",
-                "desc": "विदेश में ड्राइविंग के लिए हेडलाइट बीम पैटर्न को एलएचडी और आरएचडी के बीच स्विच करता है।"
+                "name": "Tourist Mode Headlight Beam Pattern",
+                "desc": "Switches headlight beam pattern between LHD and RHD for driving abroad."
             },
             "vag_hood_warning_mute": {
-                "name": "बोनट ओपन इंस्ट्रूमेंट चाइम म्यूट",
-                "desc": "जब हुड खोला जाता है तो लगातार उपकरण की चेतावनी झंकार को दबा देता है।"
+                "name": "Bonnet Open Instrument Chime Mute",
+                "desc": "Suppresses persistent instrument warning chime when hood is unlatched."
             },
             "vag_emergency_brake_hazard": {
-                "name": "आपातकालीन ब्रेकिंग स्वचालित खतरा फ्लैशर",
-                "desc": "कठोर एबीएस आपातकालीन स्टॉप के दौरान खतरनाक लाइटें तेजी से चमकती हैं।"
+                "name": "Emergency Braking Automatic Hazard Flasher",
+                "desc": "Flashes hazard lights rapidly during hard ABS emergency stops."
             },
             "vag_sunroof_comfort_open": {
-                "name": "सनरूफ टिल्ट / ओपन रिमोट कम्फर्ट की फोब लॉजिक",
-                "desc": "सनरूफ को झुकाने या पूरी तरह से खोलने के लिए रिमोट की होल्ड क्रिया को कॉन्फ़िगर करता है।"
+                "name": "Sunroof Tilt / Open Remote Comfort Key Fob Logic",
+                "desc": "Configures remote key hold action to either tilt or fully open sunroof."
             },
             "bmw_ecopro_display_variant": {
-                "name": "ईसीओ प्रो इंस्ट्रूमेंट क्लस्टर गेज स्टाइलिंग",
-                "desc": "नीले ईसीओ प्रो दक्षता गेज ग्राफिक थीम को अनुकूलित करता है।"
+                "name": "ECO PRO Instrument Cluster Gauge Styling",
+                "desc": "Customizes blue ECO PRO efficiency gauge graphic theme."
             },
             "bmw_volume_bar_hud": {
-                "name": "हेड-अप डिस्प्ले ऑडियो वॉल्यूम लेवल बार ओवरले",
-                "desc": "सीधे HUD प्रक्षेपण पर वॉल्यूम परिवर्तन बार दिखाता है।"
+                "name": "Head-Up Display Audio Volume Level Bar Overlay",
+                "desc": "Shows volume change bar directly on HUD projection."
             },
             "bmw_anti_dazzle_mirror": {
-                "name": "इलेक्ट्रोक्रोमिक एंटी-डैज़ल मिरर डिमिंग सेंसिटिविटी",
-                "desc": "स्वचालित रियरव्यू मिरर डिमिंग फोटो-सेंसर थ्रेशोल्ड को समायोजित करता है।"
+                "name": "Electrochromic Anti-Dazzle Mirror Dimming Sensitivity",
+                "desc": "Adjusts automatic rearview mirror dimming photo-sensor threshold."
             },
             "bmw_camera_pdc_warning_mute": {
-                "name": "पीडीसी और सराउंड व्यू स्पीड कट-ऑफ स्पीड एडजस्टमेंट",
-                "desc": "वाहन की गति सीमा को समायोजित करता है जिस पर पार्किंग कैमरे बंद हो जाते हैं।"
+                "name": "PDC & Surround View Speed Cut-off Speed Adjustment",
+                "desc": "Adjusts vehicle speed threshold at which parking cameras turn off."
             },
             "toyota_pcs_distance_preset": {
-                "name": "पूर्व-टकराव प्रणाली डिफ़ॉल्ट चेतावनी दूरी",
-                "desc": "प्रारंभिक रडार आगे टकराव चेतावनी दूरी संवेदनशीलता सेट करता है।"
+                "name": "Pre-Collision System Default Alert Distance",
+                "desc": "Sets initial radar forward collision warning distance sensitivity."
             },
             "toyota_bsm_timing": {
-                "name": "ब्लाइंड स्पॉट मॉनिटर चेतावनी चेतावनी समय",
-                "desc": "ब्लाइंड स्पॉट साइड मिरर चेतावनी प्रकाश रोशनी समय को समायोजित करता है।"
+                "name": "Blind Spot Monitor Warning Warning Timing",
+                "desc": "Adjusts blind spot side mirror warning light illumination timing."
             },
             "toyota_ac_noise_reduction": {
-                "name": "ए/सी कंप्रेसर ब्लोअर शोर कटौती मोड",
-                "desc": "केबिन की शांति के लिए अधिकतम एयर कंडीशनिंग ब्लोअर पंखे की गति को सीमित करता है।"
+                "name": "A/C Compressor Blower Noise Reduction Mode",
+                "desc": "Limits maximum air conditioning blower fan speed for cabin quietness."
             },
             "toyota_sflow_control": {
-                "name": "एस-फ्लो स्मार्ट क्लाइमेट सिंगल-ऑक्यूपेंट मोड",
-                "desc": "वजन सेंसर के आधार पर विशेष रूप से भरी हुई सीटों पर ए/सी एयरफ्लो को निर्देशित करता है।"
+                "name": "S-Flow Smart Climate Single-Occupant Mode",
+                "desc": "Directs A/C airflow exclusively to occupied seats based on weight sensors."
             },
             "toyota_relock_timeout": {
-                "name": "रिमोट अनलॉक के बाद स्वचालित पुनः लॉक विलंब टाइमर",
-                "desc": "यदि कोई दरवाज़ा नहीं खुला है तो दरवाज़े के ऑटो-रीलॉक होने से कुछ सेकंड पहले समायोजित हो जाता है।"
+                "name": "Automatic Re-Lock Delay Timer after Remote Unlock",
+                "desc": "Adjusts seconds before doors auto-relock if no door is opened."
             },
             "lexus_mark_levinson_audio_profile": {
-                "name": "मार्क लेविंसन सराउंड साउंड डीएसपी ऑडियो प्रोफाइल",
-                "desc": "मार्क लेविंसन प्रीमियम स्पीकर के लिए 3डी स्थानिक ध्वनिक ट्यूनिंग को अनुकूलित करता है।"
+                "name": "Mark Levinson Surround Sound DSP Audio Profile",
+                "desc": "Optimizes 3D spatial acoustic tuning for Mark Levinson premium speakers."
             },
             "lexus_ev_mode_beeper_mute": {
-                "name": "कम गति वाले पैदल यात्री ईवी ध्वनिक अलर्ट बीपर म्यूट",
-                "desc": "कम गति वाले इलेक्ट्रिक मोड सिंथेटिक बाहरी झंकार को दबा देता है।"
+                "name": "Low-Speed Pedestrian EV Acoustic Alert Beeper Mute",
+                "desc": "Suppresses low speed electric mode synthetic exterior chime."
             },
             "lexus_easy_access_seat": {
-                "name": "आसान पहुंच वाला स्टीयरिंग व्हील और पावर सीट स्लाइड-बैक",
-                "desc": "आसान प्रवेश/निकास के लिए ड्राइवर की सीट को पीछे की ओर खिसकाता है और स्टीयरिंग व्हील को दूर झुकाता है।"
+                "name": "Easy Access Steering Wheel & Power Seat Slide-Back",
+                "desc": "Slides driver seat back and tilts steering wheel away for easy entry/exit."
             },
             "nissan_epower_regen_mode": {
-                "name": "ई-पावर वन-पेडल रीजेनरेटिव ब्रेकिंग मोड",
-                "desc": "डिफ़ॉल्ट ई-पेडल पुनर्योजी ब्रेकिंग मंदी स्तर सेट करता है।"
+                "name": "e-POWER One-Pedal Regenerative Braking Mode",
+                "desc": "Sets default e-Pedal regenerative braking deceleration level."
             },
             "nissan_propilot_assist_timing": {
-                "name": "प्रोपायलट लेन सेंटरिंग असिस्ट स्टीयरिंग सेंसिटिविटी",
-                "desc": "ProPILOT स्टीयरिंग हस्तक्षेप तीक्ष्णता को कॉन्फ़िगर करता है।"
+                "name": "ProPILOT Lane Centering Assist Steering Sensitivity",
+                "desc": "Configures ProPILOT steering intervention sharpness."
             },
             "nissan_intelligent_around_view": {
-                "name": "कम गति पर अराउंड व्यू मॉनिटर ऑटो-पॉप-अप",
-                "desc": "जब फ्रंट पार्किंग सेंसर बाधाओं का पता लगाता है तो 360-डिग्री कैमरा डिस्प्ले ट्रिगर हो जाता है।"
+                "name": "Around View Monitor Auto-Pop-Up at Low Speed",
+                "desc": "Triggers 360-degree camera display when front parking sensors detect obstacles."
             },
             "mazda_g_vectoring_display": {
-                "name": "जी-वेक्टरिंग कंट्रोल प्लस डायनेमिक विज़ुअलाइज़र",
-                "desc": "उपकरण पैनल पर वास्तविक समय जीवीसी+ कॉर्नरिंग टॉर्क वेक्टरिंग ग्राफ प्रदर्शित करता है।"
+                "name": "G-Vectoring Control Plus Dynamic Visualizer",
+                "desc": "Displays real-time GVC+ cornering torque vectoring graph on instrument panel."
             },
             "mazda_ieloop_capacitor_monitor": {
-                "name": "i-ELOOP ब्रेक एनर्जी रिकवरी कैपेसिटर मीटर",
-                "desc": "केंद्रीय स्क्रीन पर इलेक्ट्रिक कैपेसिटर चार्ज और डिस्चार्ज स्थिति दिखाता है।"
+                "name": "i-ELOOP Brake Energy Recovery Capacitor Meter",
+                "desc": "Shows electric capacitor charge & discharge status on central screen."
             },
             "mazda_smart_city_brake_sens": {
-                "name": "स्मार्ट सिटी ब्रेक सपोर्ट संवेदनशीलता",
-                "desc": "कम गति वाली स्वचालित आपातकालीन ब्रेकिंग सेंसर रेंज सेट करता है।"
+                "name": "Smart City Brake Support Sensitivity",
+                "desc": "Sets low-speed automatic emergency braking sensor range."
             },
             "subaru_eyesight_distance_preset": {
-                "name": "आईसाइट अनुकूली क्रूज़ नियंत्रण डिफ़ॉल्ट दूरी",
-                "desc": "स्टार्टअप पर स्टीरियो कैमरा डिफॉल्ट क्रूज़ गैप प्रोफाइल को कॉन्फ़िगर करता है।"
+                "name": "EyeSight Adaptive Cruise Control Default Distance",
+                "desc": "Configures stereo camera default cruise gap profile on startup."
             },
             "subaru_xmode_auto_engage": {
-                "name": "एक्स-मोड ऑफ-रोड ट्रैक्शन ऑटो-एंगेज थ्रेशोल्ड",
-                "desc": "स्वचालित दोहरे फ़ंक्शन एक्स-मोड सक्रियण के लिए व्हील स्लिप थ्रेशोल्ड सेट करता है।"
+                "name": "X-Mode Off-Road Traction Auto-Engage Threshold",
+                "desc": "Sets wheel slip threshold for automatic dual-function X-Mode activation."
             },
             "subaru_steering_responsive_headlights": {
-                "name": "स्टीयरिंग रिस्पॉन्सिव हेडलाइट्स टॉगल",
-                "desc": "दिशात्मक अनुकूली हेडलाइट कुंडा को सक्षम या अक्षम करता है।"
+                "name": "Steering Responsive Headlights Toggle",
+                "desc": "Enables or disables directional adaptive headlight swivel."
             },
             "genesis_sport_plus_mode": {
-                "name": "स्पोर्ट+ पावरट्रेन और इलेक्ट्रॉनिक सस्पेंशन मोड",
-                "desc": "ट्रैक-उन्मुख ईएससी ऑफ और कठोर डैम्पर मैपिंग को अनलॉक करता है।"
+                "name": "Sport+ Powertrain & Electronic Suspension Mode",
+                "desc": "Unlocks track-oriented ESC OFF and stiffened damper mapping."
             },
             "genesis_ambient_active_light": {
-                "name": "सक्रिय परिवेश प्रकाश ड्राइव मोड सिंक",
-                "desc": "ड्राइव मोड के आधार पर आंतरिक परिवेश प्रकाश का रंग गतिशील रूप से बदलता है।"
+                "name": "Active Ambient Lighting Drive Mode Sync",
+                "desc": "Changes interior ambient lighting color dynamically based on drive mode."
             },
             "volvo_city_safety_warning": {
-                "name": "शहर सुरक्षा स्वायत्त आपातकालीन चेतावनी संवेदनशीलता",
-                "desc": "रडार और लिडार टकराव चेतावनी चेतावनी समय कॉन्फ़िगर करता है।"
+                "name": "City Safety Autonomous Emergency Warning Sensitivity",
+                "desc": "Configures radar and lidar collision warning alert timing."
             },
             "chery_ar_navigation_hud": {
-                "name": "HUD पर AR नेविगेशन प्रोजेक्शन ओवरले",
-                "desc": "विंडशील्ड पर 3डी संवर्धित वास्तविकता नेविगेशन तीर प्रोजेक्ट करता है।"
+                "name": "AR Navigation Projection Overlay on HUD",
+                "desc": "Projects 3D augmented reality navigation arrows onto windshield."
             },
             "jlr_terrain_response_preset": {
-                "name": "टेरेन रिस्पांस ऑटो ऑफ-रोड मोड प्रीसेट",
-                "desc": "अंतिम भूभाग प्रतिक्रिया सतह प्रोफ़ाइल याद है।"
+                "name": "Terrain Response Auto Off-Road Mode Preset",
+                "desc": "Remembers last Terrain Response surface profile."
             },
             "jlr_adaptive_dynamics_firm": {
-                "name": "एडेप्टिव डायनेमिक्स डैम्पर फर्मनेस प्रोफाइल",
-                "desc": "डिफ़ॉल्ट इलेक्ट्रॉनिक शॉक अवशोषक भिगोना कठोरता सेट करता है।"
+                "name": "Adaptive Dynamics Damper Firmness Profile",
+                "desc": "Sets default electronic shock absorber damping stiffness."
             },
             "jlr_wading_sensor_alert": {
-                "name": "वेड सेंसिंग डेप्थ वार्निंग चाइम थ्रेशोल्ड",
-                "desc": "अल्ट्रासोनिक जल गहराई चेतावनी झंकार संवेदनशीलता को कॉन्फ़िगर करता है।"
+                "name": "Wade Sensing Depth Warning Chime Threshold",
+                "desc": "Configures ultrasonic water depth warning chime sensitivity."
             },
             "alfa_dna_dynamic_memory": {
-                "name": "अल्फ़ा डीएनए चयनकर्ता डायनामिक मोड स्टार्टअप मेमोरी",
-                "desc": "पुनरारंभ के बाद डायनामिक मोड थ्रॉटल प्रतिक्रिया बरकरार रखता है।"
+                "name": "Alfa DNA Selector Dynamic Mode Startup Memory",
+                "desc": "Retains Dynamic mode throttle response after restart."
             },
             "alfa_q4_torque_split": {
-                "name": "Q4 ऑल-व्हील ड्राइव रीयल-टाइम टॉर्क स्प्लिट ग्राफ़",
-                "desc": "उपकरण डिस्प्ले पर AWD फ्रंट/रियर पावर स्प्लिट प्रतिशत दिखाता है।"
+                "name": "Q4 All-Wheel Drive Real-Time Torque Split Graph",
+                "desc": "Shows AWD front/rear power split percentage on instrument display."
             },
             "li_auto_range_extender_mode": {
-                "name": "आरईवी जेनरेटर बैटरी चार्ज रिटेंशन लेवल",
-                "desc": "आंतरिक दहन इंजन जनरेटर प्रारंभ सीमा को समायोजित करता है।"
+                "name": "REV Generator Battery Charge Retention Level",
+                "desc": "Adjusts internal combustion engine generator start threshold."
             },
             "li_auto_cinema_seat_position": {
-                "name": "थिएटर/सिनेमा मोड एर्गोनोमिक सीट स्थिति",
-                "desc": "सिनेमा मोड सक्रिय होने पर पीछे की सीटों को झुका देता है और पैरों के आराम को खोल देता है।"
+                "name": "Theater / Cinema Mode Ergonomic Seat Position",
+                "desc": "Reclines rear seats and unfolds leg rests when cinema mode is active."
             },
             "zeekr_drift_mode_torque": {
-                "name": "डुअल मोटर परफॉर्मेंस ड्रिफ्ट मोड रियर बायस",
-                "desc": "नियंत्रित बहाव के लिए रियर इलेक्ट्रिक मोटर को 100% टॉर्क भेजता है।"
+                "name": "Dual Motor Performance Drift Mode Rear Bias",
+                "desc": "Sends 100% torque to rear electric motor for controlled drifting."
             },
             "zeekr_ambient_beat_sync": {
-                "name": "एम्बिएंट लाइटिंग म्यूजिक रिदम बीट सिंक",
-                "desc": "बजाए गए संगीत की धुनों के साथ आंतरिक केबिन की रोशनी को स्पंदित करता है।"
+                "name": "Ambient Lighting Music Rhythm Beat Sync",
+                "desc": "Pulsates interior cabin lighting in sync with played music beats."
             },
             "tata_drive_mode_voice": {
-                "name": "ड्राइव मोड स्विच वॉयस अनाउंसमेंट",
-                "desc": "ड्राइव मोड स्विच करते समय ऑडियो वॉयस पुष्टिकरण सक्षम करता है।"
+                "name": "Drive Mode Switch Voice Announcement",
+                "desc": "Enables audio voice confirmation when switching drive modes."
             },
             "mahindra_zip_zap_zoom_custom": {
-                "name": "ज़िप/ज़ैप/ज़ूम पावरट्रेन थ्रॉटल रिस्पांस प्रोफ़ाइल",
-                "desc": "ज़िप, जैप और ज़ूम ड्राइविंग मोड के लिए त्वरण वक्र को अनुकूलित करता है।"
+                "name": "Zip/Zap/Zoom Powertrain Throttle Response Profile",
+                "desc": "Customizes acceleration curve for Zip, Zap, and Zoom driving modes."
             },
             "fun_cyberpunk_cluster_theme": {
-                "name": "साइबरपंक 2077 नियॉन ग्राफिक कॉकपिट थीम",
-                "desc": "भविष्यवादी नियॉन सियान और एम्बर डिजिटल डैशबोर्ड गेज स्टाइल लागू करता है।"
+                "name": "Cyberpunk 2077 Neon Graphic Cockpit Theme",
+                "desc": "Applies futuristic neon cyan & amber digital dashboard gauge styling."
             },
             "fun_exhaust_flame_sound_effect": {
-                "name": "स्टीरियो सिस्टम पॉप और बैंग एग्जॉस्ट साउंड एफएक्स",
-                "desc": "केबिन स्पीकर के माध्यम से यथार्थवादी V8 एग्जॉस्ट पॉप और बैंग ऑडियो प्रभाव चलाता है।"
+                "name": "Stereo System Pop & Bang Exhaust Sound FX",
+                "desc": "Plays realistic V8 exhaust pop & bang audio effects through cabin speakers."
             },
             "fun_matrix_light_show_welcome": {
-                "name": "कस्टम हेडलाइट मैट्रिक्स एलईडी डांस का स्वागत है",
-                "desc": "हेडलाइट्स और संकेतकों का उपयोग करके लयबद्ध लाइट शो कोरियोग्राफी बजाता है।"
+                "name": "Custom Headlight Matrix LED Dance Welcome",
+                "desc": "Plays rhythmic Light Show choreography using headlights & indicators."
             },
             "fun_stealth_fighter_display": {
-                "name": "स्टील्थ फाइटर नाइट ड्राइविंग मिनिमलिस्ट क्लस्टर मोड",
-                "desc": "काली रात में ड्राइविंग के लिए स्पीडोमीटर को छोड़कर सभी क्लस्टर लाइटें बंद कर देता है।"
+                "name": "Stealth Fighter Night Driving Minimalist Cluster Mode",
+                "desc": "Turns off all cluster lights except speedometer for pitch-black night driving."
             },
             "vag_lap_timer_oil_temp": {
                 "name": "Lap Timer & Oil Temperature in Gauge Cluster",
@@ -2783,147 +2794,147 @@
                 "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
             }
         },
-        "codeBtn": "कोड करें",
-        "removeBtn": "हटाएं",
-        "unsupportedTitle": "वाहन समर्थित नहीं है",
-        "unsupportedMsg": "यह सुविधा आपके वाहन के ईसीयू द्वारा समर्थित नहीं है।",
-        "layoutChart": "ग्राफ़",
-        "selectBrand": "वाहन ब्रांड का चयन करें",
-        "selectCategory": "श्रेणी चुनें",
-        "selectMakeTitle": "वाहन ब्रांड चुनें",
-        "selectCategoryTitle": "फ़ीचर श्रेणी चुनें",
-        "brandAll": "सभी बनाते हैं",
-        "categoryAll": "सभी श्रेणियाँ",
-        "lighting": "प्रकाश",
-        "soundAlerts": "ध्वनि अलर्ट",
-        "displayInstrument": "प्रदर्शन/क्लस्टर",
-        "drivingComfort": "ड्राइविंग आराम",
-        "securitySafety": "सुरक्षा एवं संरक्षा",
-        "restoreBtn": "फ़ैक्टरी स्थिति पुनर्स्थापित करें",
-        "searchPlaceholder": "खोज सुविधा, DID, या लक्ष्य ECU...",
-        "restoreSuccessTitle": "फ़ैक्टरी स्थिति बहाल",
-        "restoreSuccessMsg": "चयनित सुविधा को मूल DID स्थिति में वापस लौटा दिया गया है।",
-        "cloneLockedBanner": "क्लोन एडाप्टर का पता चला - कोडिंग लॉक",
-        "cloneAlertTitle": "क्लोन OBD2 एडाप्टर का पता चला",
-        "cloneAlertMsg": "आपके कनेक्टेड OBD2 एडॉप्टर को नकली क्लोन एडॉप्टर के रूप में चिह्नित किया गया था जिसमें ECU लेखन के लिए आवश्यक सख्त समय सटीकता का अभाव था। आप सभी सुविधाओं को ब्राउज़ और खोज सकते हैं, लेकिन आपके वाहन की सुरक्षा के लिए कोडिंग लेखन कार्य बंद हैं। कृपया लिखने के लिए एक वास्तविक ELM327 v2.1+ या vLinker एडाप्टर कनेक्ट करें।",
-        "riskLow": "कम जोखिम",
-        "riskMedium": "मध्यम जोखिम",
-        "riskHigh": "उच्च जोखिम",
-        "sfdProtected": "एसएफडी संरक्षित ईसीयू",
-        "legalDisclaimerUsLights": "नोट: निरंतर अमेरिकी पार्किंग लाइटें कुछ यूरोपीय न्यायालयों में सड़क पर वैध नहीं हो सकती हैं।",
-        "legalDisclaimerVim": "नोट: गाड़ी चलाते समय वीडियो प्लेबैक केवल यात्री उपयोग के लिए है।",
-        "headerCategory": "छिपी हुई विशेषताएं और कोडिंग",
-        "vehicleMatched": "{{make}} — कनेक्टेड",
-        "demoModeVehicle": "डेमो मोड: {{make}}",
-        "waitingVehicle": "कनेक्टेड वाहन का इंतज़ार",
-        "activeFeaturesCount": "{{count}} वाहन-विशिष्ट OEM फ़ीचर्स सक्रिय",
-        "demoFeaturesCount": "{{count}} डेमो फ़ीचर्स सूचीबद्ध",
-        "connectForFeaturesNote": "फ़ायदेमंद फ़ीचर्स देखने के लिए OBD2 डिवाइस से कनेक्ट करें",
-        "codingFailed": "कोडिंग विफल.",
-        "engineRunningMsg": "अल्टरनेटर वोल्टेज स्पाइक्स को रोकने के लिए ईसीयू कोडिंग के लिए इंजन ऑफ के साथ इग्निशन ऑन की आवश्यकता होती है।",
-        "engineRunningTitle": "इंजन चल रहा है",
-        "lowVoltageMsg": "ईसीयू लिखने के संचालन के लिए बैटरी वोल्टेज सुरक्षित सीमा से नीचे है। आगे बढ़ने से पहले बैटरी चार्ज करें.",
-        "lowVoltageTitle": "कम बैटरी वोल्टेज चेतावनी",
-        "motionAlertMsg": "वाहन चलते समय ECU लिखने का कार्य अवरुद्ध हो जाता है। कृपया कोडिंग से पहले सुरक्षित रूप से पार्क करें।",
-        "motionAlertTitle": "गतिमान वाहन",
-        "noMatchingFeatures": "चयनित फ़िल्टर के लिए कोई मिलान सुविधाएँ नहीं मिलीं।",
-        "unsafeModuleMsg": "महत्वपूर्ण वाहन सुरक्षा प्रणालियों की सुरक्षा के लिए एबीएस/ईएसपी और एयरबैग/एसआरएस मॉड्यूल के लिए ईसीयू राइट ऑपरेशन 100% हार्ड-ब्लॉक हैं।",
-        "unsafeModuleTitle": "संरक्षित सुरक्षा मॉड्यूल",
-        "catMotorcycle": "मोटरसाइकिल ईसीयू",
-        "catRetrofit": "रेट्रोफिट और हार्डवेयर",
-        "catEv": "ईवी और बैटरी",
-        "catAdas": "ADAS अंशांकन",
-        "catEasterEgg": "ईस्टर अंडे",
-        "catService": "सेवा एवं रखरखाव",
-        "catPerformance": "प्रदर्शन",
-        "segmentAll": "सभी बनाते हैं",
-        "segmentEuroPremium": "यूरोपीय प्रीमियम",
-        "segmentEuroVolume": "यूरोपीय वॉल्यूम",
-        "segmentAsian": "एशियाई",
-        "segmentAmerican": "अमेरिकी",
-        "segmentChineseEv": "चीनी ईवी",
-        "segmentMotorcycle": "मोटरसाइकिल",
-        "detailTitle": "फ़ीचर विवरण और एक-क्लिक कोडिंग",
-        "prePostValues": "प्री/पोस्ट पेलोड पूर्वावलोकन",
-        "selectOption": "कोडिंग विकल्प चुनें:",
-        "oneClickActivate": "एक-क्लिक सक्रिय करें",
-        "expertModeTitle": "विशेषज्ञ मोड",
-        "allMakes": "सभी बनाते हैं",
-        "techEcuSpecs": "तकनीकी ईसीयू विनिर्देश और पेलोड पूर्वावलोकन",
-        "targetEcuHeaderLabel": "लक्ष्य ECU हेडर:",
-        "udsDidLabel": "यूडीएस डेटा पहचानकर्ता:",
-        "bitPositionLabel": "बिट स्थिति:",
-        "targetPayloadLabel": "लक्ष्य यूडीएस पेलोड:",
-        "byteBitValue": "बाइट {{byte}}, बिट {{bit}}",
-        "expertSafetyNote": "For advanced users only. In case of incorrect coding, you can use the 'Restore Factory Settings' button below to revert to the original state.",
-        "restoreFactoryBtn": "फ़ैक्टरी सेटिंग्स पुनर्स्थापित करें",
-        "restoreFactoryTitle": "फ़ैक्टरी सेटिंग्स पुनर्स्थापित करें",
-        "enterDidFirst": "कृपया पुनर्स्थापित करने के लिए DID हेक्स कोड दर्ज करें।",
-        "restoreConfirmMsg": "DID 0x{{didHex}} के लिए मूल फ़ैक्टरी स्थिति पर वापस लौटें?",
-        "restoreAction": "फ़ैक्टरी पुनर्स्थापित करें",
-        "expertDidPlaceholder": "डीआईडी हेक्स",
-        "expertValPlaceholder": "मान हेक्स",
-        "writeRawPayload": "रॉ यूडीएस पेलोड लिखें",
-        "enterValidHex": "कृपया वैध डीआईडी और वैल्यू हेक्स स्ट्रिंग दर्ज करें।",
+        "codeBtn": "CODE",
+        "removeBtn": "REMOVE",
+        "unsupportedTitle": "Vehicle Not Supported",
+        "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version.",
+        "layoutChart": "CHART",
+        "selectBrand": "Select Vehicle Brand",
+        "selectCategory": "Select Category",
+        "selectMakeTitle": "SELECT VEHICLE BRAND",
+        "selectCategoryTitle": "SELECT FEATURE CATEGORY",
+        "brandAll": "ALL MAKES",
+        "categoryAll": "ALL CATEGORIES",
+        "lighting": "LIGHTING",
+        "soundAlerts": "SOUND ALERTS",
+        "displayInstrument": "DISPLAY / CLUSTER",
+        "drivingComfort": "DRIVING COMFORT",
+        "securitySafety": "SECURITY & SAFETY",
+        "restoreBtn": "RESTORE FACTORY STATE",
+        "searchPlaceholder": "Search feature, DID, or target ECU...",
+        "restoreSuccessTitle": "Factory State Restored",
+        "restoreSuccessMsg": "Selected feature has been reverted back to original DID state.",
+        "cloneLockedBanner": "Clone Adapter Detected — Coding Locked",
+        "cloneAlertTitle": "Clone OBD2 Adapter Detected",
+        "cloneAlertMsg": "Your connected OBD2 adapter was flagged as a counterfeit clone adapter lacking strict timing accuracy required for ECU writing. You can browse and search all features, but coding write operations are locked to protect your vehicle. Please connect a genuine ELM327 v2.1+ or vLinker adapter for writing.",
+        "riskLow": "LOW RISK",
+        "riskMedium": "MEDIUM RISK",
+        "riskHigh": "HIGH RISK",
+        "sfdProtected": "SFD Protected ECU",
+        "legalDisclaimerUsLights": "Note: Continuous US parking lights may not be street legal in some European jurisdictions.",
+        "legalDisclaimerVim": "Note: Video playback while driving is intended for passenger use only.",
+        "headerCategory": "Hidden Features & Coding",
+        "vehicleMatched": "{{make}} — MATCHED",
+        "demoModeVehicle": "DEMO MODE: {{make}}",
+        "waitingVehicle": "WAITING FOR CONNECTED VEHICLE",
+        "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
+        "demoFeaturesCount": "{{count}} demo features listed",
+        "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
+        "codingFailed": "Coding failed.",
+        "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
+        "engineRunningTitle": "Engine Running",
+        "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
+        "lowVoltageTitle": "Low Battery Voltage Alert",
+        "motionAlertMsg": "ECU write operations are blocked while the vehicle is moving. Please park safely before coding.",
+        "motionAlertTitle": "Vehicle in Motion",
+        "noMatchingFeatures": "No matching features found for selected filters.",
+        "unsafeModuleMsg": "ECU write operations to ABS/ESP and Airbag/SRS modules are 100% hard-blocked to protect critical vehicle safety systems.",
+        "unsafeModuleTitle": "Protected Safety Module",
+        "catMotorcycle": "MOTORCYCLE ECU",
+        "catRetrofit": "RETROFIT & HARDWARE",
+        "catEv": "EV & BATTERY",
+        "catAdas": "ADAS CALIBRATION",
+        "catEasterEgg": "EASTER EGGS",
+        "catService": "SERVICE & MAINTENANCE",
+        "catPerformance": "PERFORMANCE",
+        "segmentAll": "ALL MAKES",
+        "segmentEuroPremium": "European Premium",
+        "segmentEuroVolume": "European Volume",
+        "segmentAsian": "Asian",
+        "segmentAmerican": "American",
+        "segmentChineseEv": "Chinese EV",
+        "segmentMotorcycle": "Motorcycle",
+        "detailTitle": "Feature Details & One-Click Coding",
+        "prePostValues": "Pre / Post Payload Preview",
+        "selectOption": "Select Coding Option:",
+        "oneClickActivate": "ONE-CLICK ACTIVATE",
+        "expertModeTitle": "Expert Mode",
+        "allMakes": "ALL MAKES",
+        "techEcuSpecs": "TECHNICAL ECU SPECIFICATIONS & PAYLOAD PREVIEW",
+        "targetEcuHeaderLabel": "Target ECU Header:",
+        "udsDidLabel": "UDS Data Identifier:",
+        "bitPositionLabel": "Bit Position:",
+        "targetPayloadLabel": "Target UDS Payload:",
+        "byteBitValue": "Byte {{byte}}, Bit {{bit}}",
+        "expertSafetyNote": "For advanced users only. In case of incorrect coding, use 'Restore Factory Settings' below to revert to original state.",
+        "restoreFactoryBtn": "RESTORE FACTORY SETTINGS",
+        "restoreFactoryTitle": "RESTORE FACTORY SETTINGS",
+        "enterDidFirst": "Please enter the DID Hex code to restore.",
+        "restoreConfirmMsg": "Revert to original factory state for DID 0x{{didHex}}?",
+        "restoreAction": "RESTORE FACTORY",
+        "expertDidPlaceholder": "DID Hex",
+        "expertValPlaceholder": "Value Hex",
+        "writeRawPayload": "WRITE RAW UDS PAYLOAD",
+        "enterValidHex": "Please enter valid DID and Value Hex strings.",
         "options": {
             "speed85": "85 km/h",
             "speed90": "90 km/h",
             "speed100": "100 km/h",
             "speed110": "110 km/h",
-            "idleOff": "Devre Dışı",
+            "idleOff": "Disabled",
             "idle3m": "3 Dakika Sonra Kapat",
             "idle5m": "5 Dakika Sonra Kapat",
             "idle10m": "10 Dakika Sonra Kapat",
             "pto900": "900 RPM",
             "pto1100": "1100 RPM",
             "pto1300": "1300 RPM",
-            "retarderLow": "Düşük",
+            "retarderLow": "Low",
             "retarderMed": "Orta",
-            "retarderHigh": "Yüksek",
-            "levelNormal": "Normal Sürüş Seviyesi",
-            "levelRamp1": "Yükleme Rampası Seviyesi 1",
-            "levelRamp2": "Yükleme Rampası Seviyesi 2",
-            "regenStart": "Sabit Rejenerasyonu Başlat",
+            "retarderHigh": "High",
+            "levelNormal": "Normal Driving Level",
+            "levelRamp1": "Loading Ramp Level 1",
+            "levelRamp2": "Loading Ramp Level 2",
+            "regenStart": "Start Static Regeneration",
             "regenStatus": "Kurum Durumunu Sorgula",
             "alarmFull": "Tam Ses",
-            "alarmNight": "Kısık Ses",
+            "alarmNight": "Low Volume",
             "hyst3": "+/- 3 km/h",
             "hyst5": "+/- 5 km/h",
             "hyst10": "+/- 10 km/h",
-            "drl25": "%25 Kısık",
+            "drl25": "25% Dimmed",
             "drl50": "%50 Orta",
             "drl75": "%75 Parlak",
-            "drl100": "%100 Tam Güç",
+            "drl100": "100% Full Power",
             "xdsStandard": "Standart",
-            "xdsStrong": "Güçlü",
-            "blink1": "1 Flaş",
-            "blink3": "3 Flaş",
-            "blink4": "4 Flaş",
-            "blink5": "5 Flaş",
+            "xdsStrong": "Strong",
+            "blink1": "1 Flash",
+            "blink3": "3 Flashes",
+            "blink4": "4 Flashes",
+            "blink5": "5 Flashes",
             "chimeBmw": "BMW Standart",
-            "chimeMini": "MINI Tarzı",
-            "chimeRolls": "Rolls-Royce Lüks",
+            "chimeMini": "MINI Style",
+            "chimeRolls": "Rolls-Royce Luxury",
             "chimeBmwi": "BMW i Elektrik",
             "logoStandard": "Standart",
             "logoMPerf": "M Performance",
             "logoAlpina": "Alpina Mavi"
         },
-        "catSoundAlerts": "Ses & Uyarılar",
-        "catDisplayInstrument": "Gösterge Paneli",
-        "catDrivingComfort": "Sürüş Konforu",
-        "catSecuritySafety": "Güvenlik & Emniyet",
+        "catSoundAlerts": "Sound & Alerts",
+        "catDisplayInstrument": "Instrument Cluster",
+        "catDrivingComfort": "Driving Comfort",
+        "catSecuritySafety": "Security & Safety",
         "catMotorcycleEcu": "Motosiklet ECU",
-        "freeTrialAvailableBadge": "1 मुफ़्त क्रेडिट",
-        "freeTrialUsedBadge": "अनलॉक",
-        "proRequiredBadge": "प्रो आवश्यक",
-        "freeTrialExhaustedTitle": "मुफ़्त परीक्षण क्रेडिट का उपयोग किया गया",
-        "freeTrialExhaustedMsg": "आपने अपना 1 मुफ़्त फ़ीचर एक्टिवेशन क्रेडिट उपयोग कर लिया है। असीमित फ़ीचर अनलॉकिंग, विशेषज्ञ कोडिंग और सर्विस रीसेट के लिए PRO में अपग्रेड करें!",
-        "freeTrialSuccessTitle": "बधाई हो! फ़ीचर सक्रिय हो गया",
-        "freeTrialSuccessMsg": "यह फ़ीचर आपके 1 मुफ़्त परीक्षण क्रेडिट का उपयोग करके आपके वाहन में सफलतापूर्वक कोड किया गया! सभी फ़ीचर्स को अनलॉक करने के लिए कभी भी PRO में अपग्रेड करें।",
-        "upgradeToPro": "PRO में अपग्रेड करें",
-        "toastActivated": "सक्रिय किया गया",
-        "toastDeactivated": "निष्क्रिय किया गया",
-        "optionsBadge": "{{count}} विकल्प"
+        "freeTrialAvailableBadge": "1 FREE CREDIT",
+        "freeTrialUsedBadge": "UNLOCKED",
+        "proRequiredBadge": "PRO REQUIRED",
+        "freeTrialExhaustedTitle": "Free Trial Credit Used",
+        "freeTrialExhaustedMsg": "You have used your 1 free feature activation credit. Upgrade to PRO for unlimited feature unlocking, expert coding, and full service resets!",
+        "freeTrialSuccessTitle": "Congratulations! Feature Activated",
+        "freeTrialSuccessMsg": "This feature was successfully coded to your vehicle using your 1 free trial credit! Upgrade to PRO anytime to unlock all other features with no limits.",
+        "upgradeToPro": "UPGRADE TO PRO",
+        "toastActivated": "Activated",
+        "toastDeactivated": "Deactivated",
+        "optionsBadge": "{{count}} OPTIONS"
     },
     "ignition": {
         "title": "इग्निशन स्थिति चेतावनी",
@@ -2937,27 +2948,27 @@
         "batteryVoltage": "बैटरी वोल्टेज:"
     },
     "hpGauge": {
-        "title": "लाइव पावर और टॉर्क गेज",
-        "subtitle": "वास्तविक समय अश्वशक्ति और टोक़",
-        "horsepower": "अश्वशक्ति",
-        "torque": "इंजन टॉर्क",
-        "peakHp": "पीक एचपी",
-        "peakTorque": "चरम टॉर्क",
-        "efficiency": "दक्षता",
-        "methodMaf": "Hava Akış Tabanlı",
-        "methodTorque": "Canlı Tork Tabanlı",
-        "methodLoad": "Motor Yükü Tabanlı",
-        "configWeight": "वाहन का वजन:",
-        "configDisplacement": "इंजन विस्थापन:",
-        "calcMethod": "गणना विधि",
-        "methodDiesel": "Dizel Tork & Yakıt Akışı"
+        "title": "LIVE POWER & TORQUE GAUGE",
+        "subtitle": "Real-Time Horsepower & Torque",
+        "horsepower": "HORSEPOWER",
+        "torque": "ENGINE TORQUE",
+        "peakHp": "PEAK HP",
+        "peakTorque": "PEAK TORQUE",
+        "efficiency": "EFFICIENCY",
+        "methodMaf": "Mass Airflow Based",
+        "methodTorque": "Live Torque Based",
+        "methodLoad": "Engine Load Based",
+        "configWeight": "Vehicle Weight:",
+        "configDisplacement": "Engine Displacement:",
+        "calcMethod": "CALCULATION METHOD",
+        "methodDiesel": "Diesel Torque & Fuel Flow"
     },
     "fuelTrim": {
-        "title": "ईंधन ट्रिम और वायु-ईंधन मिश्रण विश्लेषण",
+        "title": "FUEL TRIM & AIR-FUEL MIXTURE ANALYSIS",
         "subtitle": "STFT & LTFT Diagnostics",
         "stft": "STFT",
         "ltft": "LTFT",
-        "totalTrim": "कुल ईंधन ट्रिम",
+        "totalTrim": "TOTAL FUEL TRIM",
         "afrRatio": "AIR-FUEL RATIO",
         "lambda": "LAMBDA",
         "stateIdeal": "IDEAL STOICHIOMETRIC MIXTURE",
@@ -2965,38 +2976,38 @@
         "stateCriticalLean": "CRITICAL LEAN MIXTURE",
         "stateMildRich": "MILD RICH MIXTURE",
         "stateCriticalRich": "CRITICAL RICH MIXTURE",
-        "guideTitle": "लीन बनाम रिच मिश्रण गाइड",
-        "guideDesc": "समृद्ध मिश्रण दहन कक्ष में अतिरिक्त ईंधन को इंगित करता है, जबकि दुबला मिश्रण अतिरिक्त हवा को इंगित करता है।",
-        "causesTitle": "संभावित कारण:",
-        "actionTitle": "अनुशंसित कार्रवाई:",
+        "guideTitle": "LEAN vs RICH MIXTURE GUIDE",
+        "guideDesc": "Rich mixture indicates excess fuel in combustion chamber, while Lean mixture indicates excess air.",
+        "causesTitle": "Potential Causes:",
+        "actionTitle": "Recommended Action:",
         "causeNormal": "System operates within ideal range. No faults.",
-        "actionNormal": "नियमित रखरखाव जारी रखें.",
-        "causeVacuumLeak": "वैक्यूम लीक, फटी हुई नली, या इनटेक मैनिफोल्ड गैसकेट",
-        "causeDirtyMaf": "गंदा या दोषपूर्ण एमएएफ सेंसर",
-        "causeLowFuelPressure": "कम ईंधन पंप दबाव या भरा हुआ ईंधन फिल्टर",
-        "causeCloggedInjectors": "बंद या गंदे ईंधन इंजेक्टर",
-        "actionCriticalLean": "इनटेक लीक के लिए धुआं परीक्षण करें और एमएएफ सेंसर को साफ करें।",
-        "causeMinorVacuumLeak": "मामूली वायु रिसाव या पुराना O2 सेंसर",
-        "actionMildLean": "लाइव O2 सेंसर डेटा और इनटेक होसेस की जाँच करें।",
-        "causeLeakingInjector": "लीक/खुले ईंधन इंजेक्टर का अटक जाना",
-        "causeStuckEvapPurgeVal": "अटका हुआ खुला ईवीएपी कनस्तर पर्ज वाल्व",
-        "causeDirtyAirFilter": "अत्यधिक गंदा एयर फिल्टर",
-        "causeHighFuelPressure": "उच्च ईंधन रेल दबाव",
-        "actionCriticalRich": "ईवीएपी पर्ज वाल्व और इंजेक्टर रिटर्न लीक-ऑफ का निरीक्षण करें।",
-        "causeRestrictedAirIntake": "वायु सेवन नली में रुकावट",
-        "actionMildRich": "इंजन एयर फ़िल्टर की जाँच करें या बदलें।",
-        "dieselCombustionNormal": "Dizel Enjeksiyon & Yanma Sağlığı Normal",
-        "railPressure": "Rail Basıncı",
-        "fuelRate": "Yakıt Debisi",
-        "widebandSensor": "Geniş Bant Lambda Sensörü",
-        "commonRailStatus": "Common Rail Püskürtme",
-        "dieselGuideTitle": "Dizel Yanma & Karışım Rehberi",
-        "dieselGuideDesc": "Dizel motorlar aşırı hava ile fakir karışımda çalışır. Common Rail basıncı ve Lambda sensörü püskürtme dengesini anlık olarak kontrol eder.",
-        "dieselActionNormal": "Sistem ideal parametrelerde çalışıyor. Düzenli yakıt filtresi bakımına devam edebilirsiniz.",
-        "modeDiesel": "Dizel",
-        "modeGasoline": "Benzinli",
-        "leanNormal": "Fakir Karışım",
-        "railStable": "Basınç Kararlı"
+        "actionNormal": "Continue routine maintenance.",
+        "causeVacuumLeak": "Vacuum leaks, torn hoses, or intake manifold gasket",
+        "causeDirtyMaf": "Dirty or faulty MAF sensor",
+        "causeLowFuelPressure": "Low fuel pump pressure or clogged fuel filter",
+        "causeCloggedInjectors": "Clogged or dirty fuel injectors",
+        "actionCriticalLean": "Perform smoke test for intake leaks and clean MAF sensor.",
+        "causeMinorVacuumLeak": "Minor air leak or aging O2 sensor",
+        "actionMildLean": "Check live O2 sensor data and intake hoses.",
+        "causeLeakingInjector": "Leaking/stuck-open fuel injector",
+        "causeStuckEvapPurgeVal": "Stuck-open EVAP canister purge valve",
+        "causeDirtyAirFilter": "Severely dirty air filter",
+        "causeHighFuelPressure": "High fuel rail pressure",
+        "actionCriticalRich": "Inspect EVAP purge valve and injector return leak-off.",
+        "causeRestrictedAirIntake": "Air intake duct obstruction",
+        "actionMildRich": "Check or replace engine air filter.",
+        "dieselCombustionNormal": "Diesel Injection & Combustion Health Normal",
+        "railPressure": "Rail Pressure",
+        "fuelRate": "Fuel Flow Rate",
+        "widebandSensor": "Wideband Lambda Sensor",
+        "commonRailStatus": "Common Rail Injection",
+        "dieselGuideTitle": "Diesel Combustion & Mixture Guide",
+        "dieselGuideDesc": "Diesel engines operate lean with excess air. Common Rail pressure and Lambda sensor regulate injection balance in real time.",
+        "dieselActionNormal": "System operates within ideal parameters. Continue regular fuel filter maintenance.",
+        "modeDiesel": "Diesel",
+        "modeGasoline": "Gasoline",
+        "leanNormal": "Lean Mixture Normal",
+        "railStable": "Pressure Stable"
     },
     "dpf": {
         "title": "DIESEL PARTICULATE FILTER MONITOR",
@@ -3041,42 +3052,42 @@
         "readyTitle": "ईसीयू निदान तैयार"
     },
     "dct": {
-        "title": "DCT डुअल क्लच अनुकूलन",
-        "subtitle": "डीएसजी/पॉवरशिफ्ट/ईडीसी डुअल क्लच बेसिक सेटिंग्स",
-        "warningTitle": "DCT अनुकूलन सुरक्षा शर्तें",
-        "warningDesc": "कृपया सुनिश्चित करें कि अनुकूलन शुरू करने से पहले सभी भौतिक पूर्व शर्ते पूरी कर ली गई हैं:",
-        "checkGearPark": "P गियर में डालें और हैंडब्रेक लगाएं",
-        "checkFootBrake": "पैर का ब्रेक मजबूती से दब गया",
-        "checkHandBrake": "हैंडब्रेक लगा हुआ है",
-        "checkOilTemp": "गियरबॉक्स तेल का तापमान 30°C से 90°C के बीच होना चाहिए",
-        "startAdaptation": "अनुकूलन प्रारंभ करें",
-        "inProgress": "ट्रांसमिशन की बुनियादी सेटिंग्स निष्पादित की जा रही हैं... फ़ुट ब्रेक न छोड़ें!",
-        "success": "डीसीटी ट्रांसमिशन रीसेट और क्लच रीलर्न सफलतापूर्वक पूरा हुआ!",
-        "step1": "1/3: हाइड्रोलिक दबाव अंशांकन करना...",
-        "step2": "2/3: क्लच 1 बुनियादी सेटिंग्स निष्पादित करना...",
-        "step3": "3/3: क्लच 2 गियर फोर्क अनुकूलन का प्रदर्शन...",
-        "ensurePreconditions": "कृपया शुरू करने से पहले सभी सुरक्षा पूर्व शर्तों को पूरा करें।",
-        "manualTitle": "MANUEL ŞANZIMAN SENSÖR KONTROLÜ",
-        "manualDesc": "Bu araç manuel şanzımanlıdır. Otomatik TCU uyarlaması gerekmez. Aşağıdan debriyaj ve boş vites sensörlerinin canlı çalışma durumunu kontrol edebilirsiniz.",
-        "clutchSwitch": "Debriyaj Pedalı Müşürü",
-        "neutralSwitch": "Boş Vites Sensörü",
-        "reverseSwitch": "Geri Vites Müşürü",
-        "pressed": "BASILI",
-        "released": "SERBEST",
-        "neutral": "BOŞTA",
-        "inGear": "VİTESTE",
-        "active": "AKTİF",
-        "passive": "PASİF",
-        "startManualTest": "Sensör Testini Başlat",
-        "manualTestSuccess": "Manuel şanzıman debriyaj ve vites sensör kontrolleri başarıyla tamamlandı.",
-        "ensureManualPreconditions": "Lütfen debriyaj ve boş vites konumunu doğrulayın.",
-        "manualStep1": "Debriyaj Müşürü Sinyali Test Ediliyor...",
-        "manualStep2": "Boş Vites Sensör Doğrulaması...",
-        "manualStep3": "Sensör Kalibrasyonu Tamamlandı.",
-        "modeAuto": "Otomatik / DCT Uyarlama",
-        "modeManual": "Manuel Şanzıman Testi",
+        "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
+        "subtitle": "DSG / Powershift / EDC Dual Clutch Basic Settings",
+        "warningTitle": "SAFETY & PRECONDITION CHECK",
+        "warningDesc": "Please ensure all physical preconditions are met before initiating adaptation:",
+        "checkGearPark": "Gear selector in 'P'",
+        "checkFootBrake": "Foot brake depressed firmly",
+        "checkHandBrake": "Handbrake engaged",
+        "checkOilTemp": "Transmission Fluid Temp between 30°C - 90°C",
+        "startAdaptation": "START ADAPTATION",
+        "inProgress": "Performing Transmission Basic Settings... Do NOT release foot brake!",
+        "success": "DCT Transmission Reset and Clutch Relearn Completed Successfully!",
+        "step1": "1/3: Performing Hydraulic Pressure Calibration...",
+        "step2": "2/3: Performing Clutch 1 Basic Settings...",
+        "step3": "3/3: Performing Clutch 2 Gear Fork Adaptation...",
+        "ensurePreconditions": "Please satisfy all safety preconditions before starting.",
+        "manualTitle": "MANUAL TRANSMISSION SENSOR CHECK",
+        "manualDesc": "This vehicle has a manual transmission. Automatic TCU adaptation is not required. You can monitor the real-time status of clutch and neutral sensors below.",
+        "clutchSwitch": "Clutch Pedal Switch",
+        "neutralSwitch": "Neutral Gear Sensor",
+        "reverseSwitch": "Reverse Gear Switch",
+        "pressed": "DEPRESSED",
+        "released": "RELEASED",
+        "neutral": "NEUTRAL",
+        "inGear": "IN GEAR",
+        "active": "ACTIVE",
+        "passive": "INACTIVE",
+        "startManualTest": "Start Sensor Test",
+        "manualTestSuccess": "Manual transmission clutch and gear sensor checks completed successfully.",
+        "ensureManualPreconditions": "Please verify clutch and neutral gear positions.",
+        "manualStep1": "Testing Clutch Switch Signal...",
+        "manualStep2": "Verifying Neutral Sensor...",
+        "manualStep3": "Sensor Calibration Completed.",
+        "modeAuto": "Automatic / DCT Adaptation",
+        "modeManual": "Manual Transmission Test",
         "park": "P",
-        "engaged": "ÇEKİLİ"
+        "engaged": "ENGAGED"
     },
     "safeExit": {
         "btn": "सुरक्षित डिस्कनेक्ट और एडॉप्टर रीसेट",
@@ -3167,7 +3178,8 @@
             "manual": "मैनुअल"
         },
         "unknown": "अज्ञात",
-        "year": "वर्ष:"
+        "year": "वर्ष:",
+        "transmissionLabel": "Transmission:"
     },
     "sgw": {
         "title": "सिक्योरिटी गेटवे अनलॉकिंग",
@@ -3356,7 +3368,7 @@
         "downloadBtn": "मेरा डेटा डाउनलोड करें",
         "purgeBtn": "मेरा सभी डेटा मिटाएं",
         "exportSuccessTitle": "डेटा तैयार",
-        "exportSuccessMsg": "आपका डेटा पैकेज {{date}} को बनाया गया था। सामग्री: टेलीमेट्री कतार, ऐप सेटिंग्स।",
+        "exportSuccessMsg": "Your data package was created on {{date}}. Contents: Telemetry queue ({{count}} records), App settings.",
         "exportErrorTitle": "त्रुटि",
         "exportErrorMsg": "डेटा पैकेज बनाने में विफल.",
         "purgeAlertTitle": "सभी डेटा हटाएं",
@@ -3415,8 +3427,8 @@
         "enter_valid_hex": "कृपया एक मान्य DID और सम लंबाई का Hex डेटा दर्ज करें।"
     },
     "safety": {
-        "engineRunningTitle": "Motor Çalışıyor Güvenlik Kilidi",
-        "engineRunningDesc": "Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir."
+        "engineRunningTitle": "Engine Running Safety Lock",
+        "engineRunningDesc": "For safety reasons, trouble codes can only be cleared with ignition ON and engine OFF."
     },
     "deviceFound": "Device Found",
     "data": "Data",
@@ -3435,7 +3447,12 @@
     "AI_DOCTOR_LIMIT": "A I_ D O C T O R_ L I M I T",
     "grid": "Grid",
     "disclaimers": {
-        "safetyNotice": "Safety Notice"
+        "safetyNotice": "Safety Notice",
+        "subtitle": "Read carefully before writing configuration to vehicle ECU.",
+        "p1": "ECU coding and parameter writing directly modifies your vehicle's Electronic Control Unit configuration memory. MotoCortex executes multi-stage journal backups, but failure to comply with safety rules can risk module lockouts.",
+        "check1": "I confirm that the vehicle battery is stable (>= 12.4V) and ignition is ON.",
+        "check2": "I understand that incorrect coding may require a factory reset and accept all liability.",
+        "proceed": "WRITE PARAMETERS"
     },
     "Success": "Success",
     "marketplace": {
