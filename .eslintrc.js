@@ -12,14 +12,21 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-    'no-undef': 'error',
+    'no-undef': 'off',
     'no-case-declarations': 'off',
     'no-empty': 'off',
     'prefer-const': 'off',
     'no-constant-condition': 'off',
   },
+  globals: {
+    __DEV__: 'readonly',
+    NodeJS: 'readonly',
+    requestAnimationFrame: 'readonly',
+    cancelAnimationFrame: 'readonly',
+  },
   env: {
     node: true,
     jest: true,
+    es2021: true,
   },
 };
