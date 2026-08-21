@@ -287,7 +287,7 @@ const FeatureActivationModalComponent = ({
       return;
     }
 
-    const isConsumingNewCredit = !isUserPro && !isFeatureAlreadyUnlockedFree;
+    const isConsumingNewCredit = !isUserPro && !isFeatureAlreadyUnlockedFree && !inSim;
     try {
       if (isConsumingNewCredit || isFeatureAlreadyUnlockedFree) {
         useAppStore.getState().setActiveFreeTrialExecution(true);
@@ -676,7 +676,7 @@ const FeatureActivationModalComponent = ({
  </View>
 
  {/* Free Trial / PRO Status Pill */}
- {!isPro && (
+ {!isPro && !isSimulationMode && (
    usedFreeFeatureIds?.includes(item.id) ? (
      <View style={{ backgroundColor: `${colors.green}22`, paddingHorizontal: scaleWidth(6), paddingVertical: scaleHeight(2), borderRadius: scaleMod(4), borderWidth: 1, borderColor: `${colors.green}60` }}>
        <Text style={{ color: colors.green, fontSize: scaleFont(8), fontWeight: '900', fontFamily: MONO }}>

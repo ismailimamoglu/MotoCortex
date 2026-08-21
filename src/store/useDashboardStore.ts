@@ -60,7 +60,7 @@ export const useDashboardStore = create<DashboardState>()(
   persist(
     (set) => ({
       activeSensors: DEFAULT_SENSORS,
-      layoutType: 'grid',
+      layoutType: 'gauge',
       toggleSensor: (key) => set((state) => {
         const isExists = state.activeSensors.includes(key);
         if (isExists) {
@@ -72,7 +72,7 @@ export const useDashboardStore = create<DashboardState>()(
         }
       }),
       setLayoutType: (layoutType) => set({ layoutType }),
-      resetToDefault: () => set({ activeSensors: DEFAULT_SENSORS, layoutType: 'grid' }),
+      resetToDefault: () => set({ activeSensors: DEFAULT_SENSORS, layoutType: 'gauge' }),
     }),
     {
       name: 'motocortex-dashboard-storage',

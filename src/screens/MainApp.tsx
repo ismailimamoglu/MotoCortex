@@ -1604,14 +1604,14 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  isCompact ? (
  dtcs.map((dtc, i) => {
  const desc = lookupDTC(dtc);
- const isPro = useAppStore.getState().isPro;
- const displayDesc = isPro ? desc : getContextualDtcDesc(dtc);
+ const isProEffective = useAppStore.getState().isPro || isSimulationMode;
+ const displayDesc = isProEffective ? desc : getContextualDtcDesc(dtc);
  return (
  <TouchableOpacity
  key={i}
  style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
  onPress={() => {
- if (!isPro) {
+ if (!isProEffective) {
  setIsPaywallVisible(true);
  } else {
  handleOpenDtcDetail(dtc);
@@ -1621,7 +1621,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  <View style={s.dtcDot} />
  <View style={{ flex: 1 }}>
  <Text style={[s.dtcCode, { fontSize: scaleFont(11) }]}>{dtc}</Text>
- <Text style={{ color: isPro ? tc.red : tc.amber, opacity: isPro ? 0.85 : 0.95, fontSize: scaleFont(9), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(12), fontWeight: isPro ? '400' : '600' }}>
+ <Text style={{ color: isProEffective ? tc.red : tc.amber, opacity: isProEffective ? 0.85 : 0.95, fontSize: scaleFont(9), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(12), fontWeight: isProEffective ? '400' : '600' }}>
  {displayDesc}
  </Text>
  </View>
@@ -1632,14 +1632,14 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  <View style={{ gap: scaleHeight(4) }}>
  {dtcs.map((dtc, i) => {
  const desc = lookupDTC(dtc);
- const isPro = useAppStore.getState().isPro;
- const displayDesc = isPro ? desc : getContextualDtcDesc(dtc);
+ const isProEffective = useAppStore.getState().isPro || isSimulationMode;
+ const displayDesc = isProEffective ? desc : getContextualDtcDesc(dtc);
  return (
  <TouchableOpacity
  key={i}
  style={[s.dtcRow, { paddingVertical: scaleHeight(8), marginBottom: 0 }]}
  onPress={() => {
- if (!isPro) {
+ if (!isProEffective) {
  setIsPaywallVisible(true);
  } else {
  handleOpenDtcDetail(dtc);
@@ -1649,7 +1649,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  <View style={s.dtcDot} />
  <View style={{ flex: 1 }}>
  <Text style={[s.dtcCode, { fontSize: scaleFont(10) }]}>{dtc}</Text>
- <Text style={{ color: isPro ? tc.red : tc.amber, opacity: isPro ? 0.85 : 0.95, fontSize: scaleFont(8), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(11), fontWeight: isPro ? '400' : '600' }}>
+ <Text style={{ color: isProEffective ? tc.red : tc.amber, opacity: isProEffective ? 0.85 : 0.95, fontSize: scaleFont(8), fontFamily: MONO, marginTop: scaleHeight(1), paddingBottom: Platform.OS === 'ios' ? 2 : 0, lineHeight: scaleFont(11), fontWeight: isProEffective ? '400' : '600' }}>
  {displayDesc}
  </Text>
  </View>

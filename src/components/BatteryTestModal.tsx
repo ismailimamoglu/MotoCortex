@@ -117,7 +117,7 @@ export default function BatteryTestModal({ visible, onClose, sendCommand, voltag
  }, []);
 
  const getVerdict = () => {
- const isPro = useAppStore.getState().isPro;
+ const isPro = useAppStore.getState().isPro || useAppStore.getState().isSimulationMode;
  if (!isPro) {
  return [` PRO Required - ${t('battery.verdictLocked')}`];
  }

@@ -141,69 +141,6 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  return tc.textSec;
  };
 
- const renderConnectionCard = () => (
- <View
- style={{
- backgroundColor: ecuStatus === 'connected' ? `${tc.green}14` : tc.card,
- borderWidth: 1.5,
- borderColor: ecuStatus === 'connected' ? tc.green : tc.border,
- borderRadius: scaleMod(12),
- padding: scaleMod(12),
- marginBottom: isTablet ? 0 : scaleHeight(10),
- flexDirection: 'column',
- gap: scaleHeight(6),
- flexShrink: 0,
- }}
- >
- <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(10) }}>
- <View style={{ width: scaleMod(8), height: scaleMod(8), borderRadius: scaleMod(4), backgroundColor: statusColor(ecuStatus) }} />
- <View style={{ flex: 1 }}>
- <Text style={{ color: tc.textPri, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>
- {ecuStatus === 'connected' ? t('dashboard.connectedDevice') : t('bento.settings.noConnection')}
- </Text>
- <Text numberOfLines={1} style={{ color: tc.textSec, fontSize: scaleFont(9.5), fontFamily: MONO, marginTop: scaleHeight(2) }}>
- {ecuStatus === 'connected' && lastDeviceName ? lastDeviceName : t('bento.settings.deviceNotConnected')}
- </Text>
- </View>
- </View>
-
- {/* Auto Hardware Health Info details rendered inline when connected */}
- {ecuStatus === 'connected' && (
- <View style={{
- borderTopWidth: 1,
- borderTopColor: `${tc.textPri}10`,
- paddingTop: scaleHeight(6),
- marginTop: scaleHeight(2),
- flexDirection: 'row',
- flexWrap: 'wrap',
- gap: scaleMod(6),
- }}>
- <View style={{
- flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
- backgroundColor: isCloneDevice ? `${tc.red}12` : `${tc.green}12`,
- borderRadius: scaleMod(12), paddingHorizontal: scaleMod(8), paddingVertical: scaleHeight(3),
- }}>
- <Text style={{ color: isCloneDevice ? tc.red : tc.green, fontSize: scaleFont(8.2), fontFamily: MONO, fontWeight: '800' }}>
- {isCloneDevice ? t('dashboard.adapterClone') : t('dashboard.adapterOriginal')} ({adapterCapabilityScore}/100)
- </Text>
- </View>
-
- {protocol && (
- <View style={{
- flexDirection: 'row', alignItems: 'center', gap: scaleMod(4),
- backgroundColor: `${tc.purple}12`,
- borderRadius: scaleMod(12), paddingHorizontal: scaleMod(8), paddingVertical: scaleHeight(3),
- }}>
- <Text style={{ color: tc.purple, fontSize: scaleFont(8.2), fontFamily: MONO, fontWeight: '800' }}>
- {protocol === 'SIMULATED_OBD' ? 'CAN BUS (DEMO)' : protocol.replace(/_/g, ' ')}
- </Text>
- </View>
- )}
- </View>
- )}
- </View>
- );
-
  const renderBatteryWarning = () => {
  if (isBatteryLow) {
  return (
@@ -550,78 +487,82 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  };
 
  const renderSensorGauge = () => {
- const itemGap = isTablet ? scaleMod(12) : scaleMod(8);
- const size = isTablet ? scaleMod(130) : scaleMod(95);
+    const itemGap = isTablet ? scaleMod(12) : scaleMod(8);
+    const size = isTablet ? scaleMod(130) : scaleMod(105);
 
- if (!isPidDiscoveryComplete) {
- const shimmerCount = Math.max(activeSensors.length, 4);
- const gaugeCardSize = size + scaleHeight(36);
- return (
- <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: itemGap, marginBottom: isTablet ? 0 : scaleHeight(10) }}>
- {Array.from({ length: shimmerCount }, (_, idx) => (
- <ShimmerSensorCard key={`shimmer-gauge-${idx}`} width={isTablet ? '31.3%' : '47%'} height={gaugeCardSize} tc={tc} scaleMod={scaleMod} />
- ))}
- </View>
- );
- }
+    if (!isPidDiscoveryComplete) {
+      const shimmerCount = Math.max(activeSensors.length, 4);
+      const gaugeCardSize = size + scaleHeight(46);
+      return (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: itemGap, marginBottom: isTablet ? 0 : scaleHeight(10) }}>
+          {Array.from({ length: shimmerCount }, (_, idx) => (
+            <ShimmerSensorCard key={`shimmer-gauge-${idx}`} width={isTablet ? '31.3%' : '48.5%'} height={gaugeCardSize} tc={tc} scaleMod={scaleMod} />
+          ))}
+        </View>
+      );
+    }
 
- const CRITICAL_PIDS = ['0C', '0D', '05'];
- const activeConfigs = ALL_SENSORS.filter(s => {
- if (!activeSensors.includes(s.key)) return false;
- if (isSimulationMode || supportedPids.length === 0) return true;
- const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
- if (!pidHex) return true;
- if (CRITICAL_PIDS.includes(pidHex)) return true;
- return supportedPids.some(p => p === pidHex || p.startsWith(pidHex + '@'));
- });
+    const CRITICAL_PIDS = ['0C', '0D', '05'];
+    const activeConfigs = ALL_SENSORS.filter(s => {
+      if (!activeSensors.includes(s.key)) return false;
+      if (isSimulationMode || supportedPids.length === 0) return true;
+      const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
+      if (!pidHex) return true;
+      if (CRITICAL_PIDS.includes(pidHex)) return true;
+      return supportedPids.some(p => p === pidHex || p.startsWith(pidHex + '@'));
+    });
 
- return (
- <View style={{ 
- flexDirection: 'row', 
- flexWrap: 'wrap', 
- justifyContent: 'center',
- gap: itemGap,
- marginBottom: isTablet ? 0 : scaleHeight(10),
- }}>
- {activeConfigs.map((sensor) => {
- const rawVal = (sensorValues as any)[sensor.key];
- return (
- <View 
- key={sensor.key}
- style={{
- backgroundColor: tc.card,
- borderWidth: 1.2,
- borderColor: tc.border,
- borderRadius: scaleMod(12),
- padding: scaleMod(10),
- alignItems: 'center',
- justifyContent: 'center',
- width: isTablet ? '31.3%' : '47%',
- height: size + scaleHeight(36),
- }}
- >
- <Text 
- numberOfLines={1} 
- style={{ 
- fontSize: scaleFont(9.5), 
- fontWeight: '700', 
- color: tc.textSec, 
- fontFamily: MONO,
- letterSpacing: 0.5,
- textAlign: 'center',
- marginBottom: scaleHeight(4)
- }}
- >
- {t(sensor.nameKey, sensor.defaultName).toUpperCase()}
- </Text>
- 
- <CircularGauge sensor={sensor} value={rawVal} size={size} tc={tc} />
- </View>
- );
- })}
- </View>
- );
- };
+    return (
+      <View style={{ 
+        flexDirection: 'row', 
+        flexWrap: 'wrap', 
+        justifyContent: 'space-between',
+        rowGap: itemGap,
+        marginBottom: isTablet ? 0 : scaleHeight(10),
+      }}>
+        {activeConfigs.map((sensor) => {
+          const rawVal = (sensorValues as any)[sensor.key];
+          return (
+            <View 
+              key={sensor.key}
+              style={{
+                backgroundColor: tc.card,
+                borderWidth: 1.2,
+                borderColor: tc.border,
+                borderRadius: scaleMod(14),
+                paddingVertical: scaleHeight(10),
+                paddingHorizontal: scaleWidth(8),
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: isTablet ? '31.3%' : '48.5%',
+                height: size + scaleHeight(48),
+              }}
+            >
+              {/* Sensor Header Label & Accent Dot */}
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleMod(5), marginBottom: scaleHeight(4) }}>
+                <View style={{ width: scaleMod(5), height: scaleMod(5), borderRadius: scaleMod(2.5), backgroundColor: sensor.color }} />
+                <Text 
+                  numberOfLines={1} 
+                  style={{ 
+                    fontSize: scaleFont(9.5), 
+                    fontWeight: '800', 
+                    color: tc.textPri, 
+                    fontFamily: MONO,
+                    letterSpacing: 0.5,
+                    textAlign: 'center',
+                  }}
+                >
+                  {t(sensor.nameKey, sensor.defaultName).toUpperCase()}
+                </Text>
+              </View>
+              
+              <CircularGauge sensor={sensor} value={rawVal} size={size} tc={tc} />
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
 
  const renderSensorChart = () => {
  const cardPad = isTablet ? scaleHeight(12) : scaleHeight(10);
@@ -762,14 +703,11 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  contentContainerStyle={{ 
  flexGrow: 1, 
  justifyContent: 'flex-start',
- gap: scaleHeight(24),
+ gap: scaleHeight(16),
  paddingBottom: scaleHeight(40)
  }}
  >
- <View style={{ gap: scaleMod(10) }}>
- {renderConnectionCard()}
  {renderBatteryWarning()}
- </View>
 
  <View style={{ flex: 1 }}>
  {layoutType === 'grid' ? renderSensorGrid() : layoutType === 'gauge' ? renderSensorGauge() : layoutType === 'chart' ? renderSensorChart() : renderSensorList()}
@@ -796,7 +734,6 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  <View style={{ flexDirection: 'row', gap: scaleMod(12), flex: 1 }}>
  <View style={{ flex: 1, gap: scaleMod(10), justifyContent: 'space-between' }}>
  <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleMod(10) }} style={{ flex: 1 }} bounces={false}>
- {renderConnectionCard()}
  {renderBatteryWarning()}
  </ScrollView>
  <View style={{ gap: scaleHeight(6) }}>
@@ -812,24 +749,24 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  );
  }
 
- return (
- <View style={{ flex: 1, padding: scaleMod(12), backgroundColor: tc.bg }}>
- <ScrollView 
- showsVerticalScrollIndicator={false} 
- contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start', paddingBottom: scaleHeight(40) }}
- bounces={true}
- >
- <View style={{ gap: scaleHeight(10) }}>
- {renderConnectionCard()}
- {renderCustomizeButton()}
- {renderBatteryWarning()}
- <View style={{ marginTop: scaleHeight(4) }}>
- {layoutType === 'grid' ? renderSensorGrid() : layoutType === 'gauge' ? renderSensorGauge() : layoutType === 'chart' ? renderSensorChart() : renderSensorList()}
- </View>
- </View>
- </ScrollView>
- </View>
- );
-});
+    return (
+      <View style={{ flex: 1, padding: scaleMod(12), backgroundColor: tc.bg }}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false} 
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start', paddingBottom: scaleHeight(40) }}
+          bounces={true}
+        >
+          <View style={{ gap: scaleHeight(10) }}>
+            {renderCustomizeButton()}
+            {renderBatteryWarning()}
+            <View style={{ marginTop: scaleHeight(4) }}>
+              {layoutType === 'grid' ? renderSensorGrid() : layoutType === 'gauge' ? renderSensorGauge() : layoutType === 'chart' ? renderSensorChart() : renderSensorList()}
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
+);
 
 export default DashboardSpeedometer;

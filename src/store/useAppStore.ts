@@ -269,7 +269,7 @@ export const useAppStore = create<AppState>()(
       useFreeFeatureCredit: (featureId: string) => {
         let result = false;
         set((state) => {
-          if (state.isPro) {
+          if (state.isPro || state.isSimulationMode) {
             result = true;
             return state;
           }

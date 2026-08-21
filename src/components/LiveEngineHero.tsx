@@ -107,7 +107,7 @@ export default function LiveEngineHero({
  const suggestedBrandFromVin = useBluetoothStore((state) => state.suggestedBrandFromVin);
  const setSuggestedBrandFromVin = useBluetoothStore((state) => state.setSuggestedBrandFromVin);
  const isSimulationMode = useAppStore((state) => state.isSimulationMode);
- const isPro = useAppStore((state) => state.isPro);
+ const isPro = useAppStore((state) => state.isPro || state.isSimulationMode);
  const language = useAppStore((state) => state.language);
 
  useEffect(() => {

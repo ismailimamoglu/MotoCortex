@@ -4,7 +4,7 @@ import { useResponsive } from '../hooks/useResponsive';
 import { useThemeColors } from '../theme';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
-const TICK_ANGLES = [-135, -105, -75, -45, -15, 15, 45, 75, 105, 135];
+const TICK_ANGLES = [-135, -108, -81, -54, -27, 0, 27, 54, 81, 108, 135];
 
 export interface CircularGaugeProps {
   sensor?: any;
@@ -22,7 +22,7 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({
   maxValue,
   label,
   unit,
-  size = 100,
+  size = 110,
   tc: providedTc,
 }) => {
   const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont } = useResponsive();
@@ -33,7 +33,7 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({
     key: 'speed',
     name: label || 'SPEED',
     unit: unit || 'km/h',
-    color: tc.cyan || '#00F0FF',
+    color: tc.cyan || '#0284c7',
   };
 
   // Parse numeric value
@@ -63,12 +63,12 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({
     max = maxValue;
   } else if (sensor.key === 'rpm') { min = 0; max = 8000; }
   else if (sensor.key === 'speed') { min = 0; max = 220; }
-  else if (sensor.key === 'coolant') { min = -20; max = 120; }
+  else if (sensor.key === 'coolant') { min = 20; max = 120; }
   else if (sensor.key === 'voltage') { min = 9; max = 16; }
   else if (sensor.key === 'throttle') { min = 0; max = 100; }
   else if (sensor.key === 'engineLoad') { min = 0; max = 100; }
-  else if (sensor.key === 'oilTemp' || sensor.key === 'transTemp') { min = 0; max = 150; }
-  else if (sensor.key === 'catalystTemp' || sensor.key === 'egtTemp') { min = 0; max = 1000; }
+  else if (sensor.key === 'oilTemp' || sensor.key === 'transTemp') { min = 40; max = 150; }
+  else if (sensor.key === 'catalystTemp' || sensor.key === 'egtTemp') { min = 100; max = 1000; }
   else if (sensor.key === 'fuelLevel' || sensor.key === 'ethanolPercent' || sensor.key === 'adblueLevel') { min = 0; max = 100; }
   else if (sensor.key === 'manifoldPressure') { min = 0; max = 250; }
   else if (sensor.key === 'baroPressure') { min = 50; max = 120; }
@@ -80,107 +80,138 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({
   else if (sensor.key === 'intakeAirTemp' || sensor.key === 'ambientTemp') { min = -20; max = 80; }
   
   const pct = Math.max(0, Math.min(1, (displayNumVal - min) / (max - min)));
-  // Map 0-1 to angle: -135deg (min) to +135deg (max)
+  // Map 0-1 to angle: -135deg (min) to +135deg (max) (Total sweep: 270 deg)
   const angle = -135 + pct * 270;
   
   let displayVal = value !== null && value !== undefined ? String(value).replace(/[A-Za-z]/g, '') : '--';
   if (sensor.key === 'rpm' && value !== null && value !== undefined) {
     displayVal = String(Math.round(displayNumVal));
   }
-  
+
+  // Calculate needle length and pivot size
+  const needleLength = size * 0.38;
+  const hubSize = scaleMod(10);
+  const trackBorder = scaleMod(2.5);
+
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
-      {/* Subtle background color circle */}
-      <View style={{
-        position: 'absolute',
-        width: size - scaleMod(8),
-        height: size - scaleMod(8),
-        borderRadius: (size - scaleMod(8)) / 2,
-        backgroundColor: `${sensor.color}05`,
-      }} />
+      
+      {/* 1. Outer Circular Scale Track (Subtle matte arc) */}
+      <View 
+        style={{
+          position: 'absolute',
+          width: size - scaleMod(6),
+          height: size - scaleMod(6),
+          borderRadius: (size - scaleMod(6)) / 2,
+          borderWidth: trackBorder,
+          borderColor: `${tc.textPri}10`,
+          borderTopColor: `${tc.textPri}20`,
+          borderLeftColor: `${tc.textPri}20`,
+          borderRightColor: `${tc.textPri}20`,
+          transform: [{ rotate: '-45deg' }],
+        }} 
+      />
 
-      {/* Outer Ring */}
-      <View style={{
-        position: 'absolute',
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        borderWidth: scaleMod(3),
-        borderColor: `${sensor.color}15`,
-        borderTopColor: sensor.color,
-        borderLeftColor: sensor.color,
-        borderRightColor: sensor.color,
-        transform: [{ rotate: '-45deg' }],
-      }} />
+      {/* 2. Active Accent Arc Track (Fills up to current angle visually) */}
+      <View 
+        style={{
+          position: 'absolute',
+          width: size - scaleMod(6),
+          height: size - scaleMod(6),
+          borderRadius: (size - scaleMod(6)) / 2,
+          borderWidth: trackBorder,
+          borderColor: 'transparent',
+          borderTopColor: sensor.color,
+          borderLeftColor: pct > 0.3 ? sensor.color : 'transparent',
+          borderRightColor: pct > 0.7 ? sensor.color : 'transparent',
+          transform: [{ rotate: '-45deg' }],
+          opacity: 0.85,
+        }} 
+      />
 
-      {/* Tick Marks */}
+      {/* 3. Radial Precision Tick Marks */}
       {TICK_ANGLES.map((tickAngle, idx) => {
         const tickPct = (tickAngle + 135) / 270;
         const tickVal = min + tickPct * (max - min);
         const isLit = numVal >= tickVal;
-        const isMajor = idx === 0 || idx === 3 || idx === 6 || idx === 9;
+        const isMajor = idx === 0 || idx === 5 || idx === 10;
 
         return (
           <View
             key={idx}
             style={{
               position: 'absolute',
-              width: isMajor ? scaleMod(1.8) : scaleMod(1),
+              width: isMajor ? scaleMod(1.6) : scaleMod(1),
               height: isMajor ? scaleMod(6) : scaleMod(3.5),
-              backgroundColor: isLit ? sensor.color : `${sensor.color}35`,
+              backgroundColor: isLit ? sensor.color : `${tc.textPri}25`,
+              borderRadius: scaleMod(0.8),
               transform: [
                 { rotate: `${tickAngle}deg` },
-                { translateY: -(size / 2 - scaleMod(4.5)) }
+                { translateY: -(size / 2 - scaleMod(5)) }
               ]
             }}
           />
         );
       })}
 
-      {/* Rotating Needle Container */}
-      <View style={{
-        position: 'absolute',
-        width: size - scaleMod(20),
-        height: size - scaleMod(20),
-        alignItems: 'center',
-        justifyContent: 'center',
-        transform: [{ rotate: `${angle}deg` }]
-      }}>
-        {/* Sleek needle shape pointing up */}
-        <View style={{
+      {/* 4. Precision Tapered Needle */}
+      <View 
+        style={{
           position: 'absolute',
-          top: scaleMod(4),
-          width: scaleMod(2.2),
-          height: (size - scaleMod(20)) / 2 - scaleMod(4),
-          backgroundColor: sensor.color,
-          borderTopLeftRadius: scaleMod(1.5),
-          borderTopRightRadius: scaleMod(1.5),
-          borderBottomLeftRadius: scaleMod(2.5),
-          borderBottomRightRadius: scaleMod(2.5),
-        }} />
+          width: size,
+          height: size,
+          alignItems: 'center',
+          justifyContent: 'center',
+          transform: [{ rotate: `${angle}deg` }]
+        }}
+      >
+        <View 
+          style={{
+            position: 'absolute',
+            top: size * 0.12,
+            width: scaleMod(2),
+            height: needleLength,
+            backgroundColor: sensor.color,
+            borderRadius: scaleMod(1),
+            opacity: 0.95,
+          }} 
+        />
       </View>
 
-      {/* Center cap */}
-      <View style={{
-        position: 'absolute',
-        width: scaleMod(11),
-        height: scaleMod(11),
-        borderRadius: scaleMod(5.5),
-        backgroundColor: tc.textPri,
-        borderWidth: 1.5,
-        borderColor: tc.bg,
-      }} />
+      {/* 5. Minimalist Center Pivot Hub */}
+      <View 
+        style={{
+          position: 'absolute',
+          width: hubSize,
+          height: hubSize,
+          borderRadius: hubSize / 2,
+          backgroundColor: tc.card || tc.bg,
+          borderWidth: scaleMod(2),
+          borderColor: sensor.color,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }} 
+      >
+        <View 
+          style={{
+            width: scaleMod(3),
+            height: scaleMod(3),
+            borderRadius: scaleMod(1.5),
+            backgroundColor: tc.textPri,
+          }} 
+        />
+      </View>
 
-      {/* Scale Numbers (Min / Max) inside the circle */}
+      {/* 6. Scale Min and Max Labels */}
       <Text
         allowFontScaling={false}
         style={{
           position: 'absolute',
-          left: size * 0.14,
-          bottom: size * 0.12,
-          fontSize: scaleFont(7),
-          fontWeight: '800',
-          color: tc.textSec,
+          left: size * 0.12,
+          bottom: size * 0.08,
+          fontSize: scaleFont(7.5),
+          fontWeight: '700',
+          color: tc.textTertiary || `${tc.textPri}50`,
           fontFamily: MONO,
         }}
       >
@@ -190,23 +221,50 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({
         allowFontScaling={false}
         style={{
           position: 'absolute',
-          right: size * 0.14,
-          bottom: size * 0.12,
-          fontSize: scaleFont(7),
-          fontWeight: '800',
-          color: tc.textSec,
+          right: size * 0.12,
+          bottom: size * 0.08,
+          fontSize: scaleFont(7.5),
+          fontWeight: '700',
+          color: tc.textTertiary || `${tc.textPri}50`,
           fontFamily: MONO,
         }}
       >
         {max}
       </Text>
 
-      {/* Value Text Overlaid Centered Below Needle */}
-      <View style={{ position: 'absolute', bottom: size * 0.18, alignItems: 'center' }}>
-        <Text allowFontScaling={false} style={{ fontSize: scaleFont(11.5), fontWeight: '900', color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(13) }}>
+      {/* 7. High-Contrast Center Readout & Unit */}
+      <View 
+        style={{ 
+          position: 'absolute', 
+          bottom: size * 0.16, 
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text 
+          allowFontScaling={false} 
+          style={{ 
+            fontSize: scaleFont(15), 
+            fontWeight: '900', 
+            color: tc.textPri, 
+            fontFamily: MONO, 
+            letterSpacing: -0.5,
+            lineHeight: scaleFont(18),
+          }}
+        >
           {displayVal}
         </Text>
-        <Text allowFontScaling={false} style={{ fontSize: scaleFont(7.5), color: tc.textSec, fontFamily: MONO, fontWeight: '700', marginTop: 1 }}>
+        <Text 
+          allowFontScaling={false} 
+          style={{ 
+            fontSize: scaleFont(8), 
+            color: tc.textSec, 
+            fontFamily: MONO, 
+            fontWeight: '700', 
+            marginTop: scaleHeight(1),
+            letterSpacing: 0.5,
+          }}
+        >
           {sensor.unit}
         </Text>
       </View>

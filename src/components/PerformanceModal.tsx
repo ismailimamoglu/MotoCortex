@@ -66,7 +66,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
     }, [speed, state, visible]);
 
     const armTimer = async () => {
-        const isPro = useAppStore.getState().isPro;
+        const isPro = useAppStore.getState().isPro || useAppStore.getState().isSimulationMode;
         if (!isPro) {
             // Check daily limit for free teaser (3 runs per day)
             try {
@@ -111,7 +111,7 @@ export default function PerformanceModal({ visible, onClose, speed }: Props) {
         if (timerRef.current) clearInterval(timerRef.current);
         
         // If free user successfully finished 0-60, increment daily counter
-        const isPro = useAppStore.getState().isPro;
+        const isPro = useAppStore.getState().isPro || useAppStore.getState().isSimulationMode;
         if (!isPro) {
             (async () => {
                 try {

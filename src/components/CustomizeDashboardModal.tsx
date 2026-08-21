@@ -99,6 +99,8 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
  const { activeSensors, layoutType } = useDashboardStore();
  const connectedProtocol = useBluetoothStore(state => state.protocol);
  const isPro = useAppStore(state => state.isPro);
+ const isSimulationMode = useAppStore(state => state.isSimulationMode);
+ const isProEffective = isPro || isSimulationMode;
  
  const isKLineProtocol = useMemo(() => {
  if (!connectedProtocol) return false;
@@ -106,7 +108,7 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
  return p.includes('ISO 9141') || p.includes('ISO 14230') || p.includes('KWP') || p.includes('PROTOCOL 3') || p.includes('PROTOCOL 4') || p.includes('PROTOCOL 5');
  }, [connectedProtocol]);
 
- const maxLimit = isKLineProtocol ? 4 : (isPro ? 8 : 6);
+ const maxLimit = isKLineProtocol ? 4 : (isProEffective ? 8 : 6);
 
  const [draftSensors, setDraftSensors] = useState<string[]>(activeSensors);
  const [draftLayout, setDraftLayout] = useState<'grid' | 'list' | 'gauge' | 'chart'>(layoutType);
@@ -125,34 +127,34 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
  }
  }, [visible, activeSensors, layoutType, isKLineProtocol]);
 
-  const handleToggleSensor = useCallback((key: string) => {
-    setShowLimitWarning(false);
-    const sensorConfig = ALL_SENSORS.find(s => s.key === key);
+ const handleToggleSensor = useCallback((key: string) => {
+   setShowLimitWarning(false);
+   const sensorConfig = ALL_SENSORS.find(s => s.key === key);
 
-    // If sensor is PRO-only and user is not PRO, trigger Paywall!
-    if (!isPro && sensorConfig?.isProOnly) {
-      onOpenPaywall?.();
-      return;
-    }
+   // If sensor is PRO-only and user is not PRO, trigger Paywall!
+   if (!isProEffective && sensorConfig?.isProOnly) {
+     onOpenPaywall?.();
+     return;
+   }
 
-    setDraftSensors((prev) => {
-      const isExists = prev.includes(key);
-      if (isExists) {
-        if (prev.length <= 1) return prev;
-        return prev.filter((k) => k !== key);
-      } else {
-        if (prev.length >= maxLimit) {
-          if (!isPro && prev.length >= 6) {
-            onOpenPaywall?.();
-            return prev;
-          }
-          setShowLimitWarning(true);
-          return prev;
-        }
-        return [...prev, key];
-      }
-    });
-  }, [isPro, maxLimit, onOpenPaywall]);
+   setDraftSensors((prev) => {
+     const isExists = prev.includes(key);
+     if (isExists) {
+       if (prev.length <= 1) return prev;
+       return prev.filter((k) => k !== key);
+     } else {
+       if (prev.length >= maxLimit) {
+         if (!isProEffective && prev.length >= 6) {
+           onOpenPaywall?.();
+           return prev;
+         }
+         setShowLimitWarning(true);
+         return prev;
+       }
+       return [...prev, key];
+     }
+   });
+ }, [isProEffective, maxLimit, onOpenPaywall]);
 
  const handleReset = useCallback(() => {
  setShowLimitWarning(false);
@@ -432,7 +434,7 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
  onToggle={handleToggleSensor}
  colors={colors}
  sDyn={sDyn}
- isPro={isPro}
+ isPro={isProEffective}
  />
  );
  })}
