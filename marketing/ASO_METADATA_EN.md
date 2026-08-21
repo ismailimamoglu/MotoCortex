@@ -98,16 +98,31 @@ Download MotoCortex today and take complete control of your vehicle's performanc
 
 ---
 
-## 🖼️ Included 10 Store Showcase Screenshots
+## 🖼️ Included 10 Store Showcase Screenshots (Phone & Tablet)
+
+### 📱 Phone Showcase (6.7" / 6.5" - 1290x2796 px)
 Stored in `marketing/store_screenshots/`:
-1. `01_hero_bento_hub.jpg` — ALL-IN-ONE OBD2 CONTROL HUB
-2. `02_dtc_diagnostics.jpg` — READ & CLEAR FAULT CODES
-3. `03_live_sensor_gauges.jpg` — REAL-TIME LIVE GAUGES
-4. `04_one_click_ecu_coding.jpg` — UNLOCK HIDDEN CAR FEATURES
-5. `05_expert_long_coding.jpg` — EXPERT LONG CODING & BYTES
-6. `06_fuel_trim_gasoline.jpg` — ADVANCED FUEL TRIM & AFR
-7. `07_diesel_common_rail.jpg` — DIESEL COMMON RAIL INJECTION
-8. `08_dct_transmission_adapt.jpg` — DCT & DSG TRANSMISSION RESET
-9. `09_manual_gearbox_sensors.jpg` — MANUAL TRANSMISSION AUDIT
-10. `10_technical_support_feedback.jpg` — DIRECT DEVELOPER SUPPORT
+1. `01_hero_bento_hub.jpg` — ALL IN ONE / OBD2 CONTROL HUB
+2. `02_dtc_diagnostics.jpg` — READ AND CLEAR / FAULT CODES
+3. `03_live_sensor_gauges.jpg` — REAL TIME / LIVE GAUGES
+4. `04_one_click_ecu_coding.jpg` — UNLOCK HIDDEN / CAR FEATURES
+5. `05_expert_long_coding.jpg` — EXPERT LONG CODING / AND BYTES
+6. `06_fuel_trim_gasoline.jpg` — ADVANCED FUEL TRIM / AND AFR
+7. `07_diesel_common_rail.jpg` — DIESEL COMMON RAIL / INJECTION
+8. `08_dct_transmission_adapt.jpg` — DCT AND DSG / TRANSMISSION RESET
+9. `09_manual_gearbox_sensors.jpg` — MANUAL TRANSMISSION / AUDIT
+10. `10_technical_support_feedback.jpg` — DIRECT DEVELOPER / SUPPORT
+
+### 📟 Tablet Showcase (12.9" / 13" iPad Pro & 10" Tablets - 2048x2732 px)
+Stored in `marketing/tablet_screenshots/`:
+1. `01_hero_bento_hub.jpg` — ALL IN ONE / OBD2 CONTROL HUB
+2. `02_dtc_diagnostics.jpg` — READ AND CLEAR / FAULT CODES
+3. `03_live_sensor_gauges.jpg` — REAL TIME / LIVE GAUGES
+4. `04_one_click_ecu_coding.jpg` — UNLOCK HIDDEN / CAR FEATURES
+5. `05_expert_long_coding.jpg` — EXPERT LONG CODING / AND BYTES
+6. `06_fuel_trim_gasoline.jpg` — ADVANCED FUEL TRIM / AND AFR
+7. `07_diesel_common_rail.jpg` — DIESEL COMMON RAIL / INJECTION
+8. `08_dct_transmission_adapt.jpg` — DCT AND DSG / TRANSMISSION RESET
+9. `09_manual_gearbox_sensors.jpg` — MANUAL TRANSMISSION / AUDIT
+10. `10_technical_support_feedback.jpg` — DIRECT DEVELOPER / SUPPORT
 

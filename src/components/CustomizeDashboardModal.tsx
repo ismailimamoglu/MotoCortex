@@ -157,14 +157,14 @@ export default function CustomizeDashboardModal({ visible, onClose, onOpenPaywal
  }, [isProEffective, maxLimit, onOpenPaywall]);
 
  const handleReset = useCallback(() => {
- setShowLimitWarning(false);
- let initialSensors = [...DEFAULT_SENSORS];
- if (isKLineProtocol && initialSensors.length > 4) {
- initialSensors = initialSensors.slice(0, 4);
- }
- setDraftSensors(initialSensors);
- setDraftLayout('grid');
- }, [isKLineProtocol]);
+    setShowLimitWarning(false);
+    let initialSensors = [...DEFAULT_SENSORS];
+    if (isKLineProtocol && initialSensors.length > 4) {
+      initialSensors = initialSensors.slice(0, 4);
+    }
+    setDraftSensors(initialSensors);
+    setDraftLayout('gauge');
+  }, [isKLineProtocol]);
 
  const handleApply = useCallback(() => {
  useDashboardStore.setState({
