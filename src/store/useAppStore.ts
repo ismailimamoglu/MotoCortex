@@ -255,7 +255,7 @@ export const useAppStore = create<AppState>()(
       appUserId: null,
       deviceUuid: null,
       enabledFeatures: {},
-      isTelemetryOptedIn: false,
+      isTelemetryOptedIn: true,
 
       setTheme: (theme) => set({ theme }),
       setLanguage: async (language) => {

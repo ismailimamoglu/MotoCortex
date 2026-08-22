@@ -105,6 +105,7 @@ export default function PermissionGateway({ children, onComplete }: PermissionGa
  }
 
  if (btGranted && locGranted) {
+ setIsTelemetryOptedIn(true);
  setHasOnboarded(true);
  if (onComplete) onComplete();
  } else {
@@ -115,6 +116,7 @@ export default function PermissionGateway({ children, onComplete }: PermissionGa
  { 
  text: t('permissions.proceedAnyway'), 
  onPress: () => {
+ setIsTelemetryOptedIn(true);
  setHasOnboarded(true);
  if (onComplete) onComplete();
  } 
@@ -407,44 +409,6 @@ export default function PermissionGateway({ children, onComplete }: PermissionGa
  {locStatus === 'denied' && <Text style={[sDyn.statusIcon, { color: colors.red }]}></Text>}
  </View>
  )}
-
- {/* Perm Item 3: Opt-In Telemetry */}
- <TouchableOpacity
- style={[sDyn.permRow, { backgroundColor: isTelemetryOptedIn ? `${colors.cyan}15` : `${colors.textPri}08`, borderColor: isTelemetryOptedIn ? colors.cyan : `${colors.textPri}0D` }]}
- onPress={() => setIsTelemetryOptedIn(!isTelemetryOptedIn)}
- activeOpacity={0.7}
- >
- <View style={[sDyn.permIconBox, { backgroundColor: `${colors.cyan}1A` }]}>
- <Text style={sDyn.permIcon}></Text>
- </View>
- <View style={sDyn.permTextContainer}>
- <Text style={[sDyn.permLabel, { color: colors.textPri }]}>
- {t('permissions.telemetryLabel')}
- </Text>
- <Text style={[sDyn.permSub, { color: colors.textSec }]}>
- {t('permissions.telemetrySub')}
- </Text>
- </View>
- <View
- style={{
- width: scaleMod(24),
- height: scaleMod(24),
- borderRadius: scaleMod(6),
- borderWidth: 2,
- borderColor: isTelemetryOptedIn ? colors.cyan : colors.textTertiary,
- backgroundColor: isTelemetryOptedIn ? colors.cyan : 'transparent',
- justifyContent: 'center',
- alignItems: 'center',
- marginLeft: scaleWidth(10),
- }}
- >
- {isTelemetryOptedIn && (
- <Text style={{ color: colors.card, fontWeight: '900', fontSize: scaleFont(14), fontFamily: MONO }}>
- 
- </Text>
- )}
- </View>
- </TouchableOpacity>
  </View>
 
  {/* Action Button */}
@@ -461,7 +425,14 @@ export default function PermissionGateway({ children, onComplete }: PermissionGa
  )}
  </TouchableOpacity>
 
- <TouchableOpacity onPress={() => setHasOnboarded(true)} style={sDyn.skipLink}>
+ <TouchableOpacity 
+ onPress={() => {
+ setIsTelemetryOptedIn(true);
+ setHasOnboarded(true);
+ if (onComplete) onComplete();
+ }} 
+ style={sDyn.skipLink}
+ >
  <Text style={[sDyn.skipText, { color: colors.textSec }]}>{t('permissions.skipBtn')}</Text>
  </TouchableOpacity>
  </View>
