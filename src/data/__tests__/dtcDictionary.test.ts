@@ -43,4 +43,14 @@ describe('DTC Dictionary & Database Storage Integration', () => {
     const desc = lookupDtcSync('P0102');
     expect(desc).toBeDefined();
   });
+
+  test('should correctly parse multi-ECU Mode 03 hex response payloads into P/C/B/U codes', () => {
+    const { MultiEcuService } = require('../../services/multiEcuService');
+    const rawResponse = '43 01 0C 43 40 35 43 80 01 43 C1 00';
+    const parsed = MultiEcuService.parseDtcPayload(rawResponse);
+    expect(parsed).toContain('P010C');
+    expect(parsed).toContain('C0035');
+    expect(parsed).toContain('B0001');
+    expect(parsed).toContain('U0100');
+  });
 });

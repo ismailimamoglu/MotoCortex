@@ -20,14 +20,6 @@ export interface EcuModuleTarget {
 
 export const KNOWN_ECU_MODULES: EcuModuleTarget[] = [
   {
-    id: 'ecm',
-    nameKey: 'multiEcu.ecmName',
-    txHeader: '7E0',
-    rxHeader: '7E8',
-    category: 'powertrain',
-    icon: 'engine',
-  },
-  {
     id: 'tcm',
     nameKey: 'multiEcu.tcmName',
     txHeader: '7E1',
@@ -137,6 +129,116 @@ export class MultiEcuService {
       'AT SH 7E0',
       'AT CRA', // Clear filter
     ];
+  }
+
+  /**
+   * Parses raw Mode 03 / Mode 07 / UDS hex response into standard DTC codes (P, C, B, U)
+   */
+  public static parseDtcPayload(response: string): string[] {
+    if (!response) return [];
+    const lines = response.split(/[\r\n]+/);
+    const dtcs: string[] = [];
+
+    for (const line of lines) {
+      const clean = line
+        .replace(/SEARCHING\.*/gi, '')
+        .replace(/[0-9]+:/g, '')
+        .replace(/NO\s*DATA/gi, '')
+        .replace(/\s+/g, '')
+        .toUpperCase();
+
+      if (!clean || clean.includes('UNABLE') || clean.includes('ERROR') || clean.includes('?')) {
+        continue;
+      }
+
+      // Regex matches 43 or 47 response markers across single or concatenated multi-ECU frames
+      const frameRegex = /(?:43|47)([0-9A-F]+?)(?=(?:43|47)|$)/g;
+      let match: RegExpExecArray | null;
+
+      while ((match = frameRegex.exec(clean)) !== null) {
+        const payload = match[1];
+        for (let i = 0; i + 4 <= payload.length; i += 4) {
+          const codeHex = payload.substring(i, i + 4);
+          if (codeHex === '0000') continue;
+          const firstCharHex = parseInt(codeHex[0], 16);
+          let dtcType = 'P';
+          if (firstCharHex >= 4 && firstCharHex <= 7) dtcType = 'C';
+          else if (firstCharHex >= 8 && firstCharHex <= 11) dtcType = 'B';
+          else if (firstCharHex >= 12 && firstCharHex <= 15) dtcType = 'U';
+          dtcs.push(`${dtcType}${firstCharHex & 3}${codeHex.substring(1)}`);
+        }
+      }
+    }
+
+    return Array.from(new Set(dtcs));
+  }
+
+  /**
+   * Scans a specific hardware ECU module for active/stored DTCs via CAN header redirection
+   */
+  public static async scanHardwareModuleDtc(txHeader: string, timeoutMs: number = 2500): Promise<string[]> {
+    const OBDCommandQueue = require('../api/OBDCommandQueue').default;
+    const { preciseSleep } = require('../api/OBDCommandQueue');
+
+    try {
+      // 1. Switch to target ECU header
+      await OBDCommandQueue.add(`AT SH ${txHeader}`, 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      await preciseSleep(60);
+
+      // 2. Query Mode 03 (Stored DTCs)
+      const res03 = await OBDCommandQueue.add('03', timeoutMs, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      const dtcs = MultiEcuService.parseDtcPayload(res03);
+
+      // 3. Restore default ECM header (7E0)
+      await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      await preciseSleep(40);
+
+      return dtcs;
+    } catch {
+      // Safety guarantee: Always restore default ECM header
+      try {
+        await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      } catch {}
+      return [];
+    }
+  }
+
+  /**
+   * Clears DTC memory for a specific hardware ECU module via CAN header redirection
+   */
+  public static async clearHardwareModuleDtc(txHeader: string, timeoutMs: number = 3000): Promise<boolean> {
+    const OBDCommandQueue = require('../api/OBDCommandQueue').default;
+    const { preciseSleep } = require('../api/OBDCommandQueue');
+
+    try {
+      // 1. Switch to target ECU header
+      await OBDCommandQueue.add(`AT SH ${txHeader}`, 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      await preciseSleep(80);
+
+      // 2. Send Mode 04 (Clear DTCs)
+      const res04 = await OBDCommandQueue.add('04', timeoutMs, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      const clean04 = (res04 || '').replace(/\s+/g, '').toUpperCase();
+      let success = clean04.includes('44') || clean04.includes('OK');
+
+      // 3. UDS Fallback if Mode 04 was unacknowledged
+      if (!success) {
+        const resUds = await OBDCommandQueue.add('14FFFFFF', timeoutMs, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        const cleanUds = (resUds || '').replace(/\s+/g, '').toUpperCase();
+        success = cleanUds.includes('54') || cleanUds.includes('OK');
+      }
+
+      // 4. Restore default ECM header (7E0)
+      await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      await preciseSleep(50);
+
+      return success;
+    } catch {
+      // Safety guarantee: Always restore default ECM header
+      try {
+        await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      } catch {}
+      return false;
+    }
   }
 }
 

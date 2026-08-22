@@ -54,6 +54,7 @@ import HorsepowerModal from '../components/HorsepowerModal';
 import FuelTrimModal from '../components/FuelTrimModal';
 import DpfMonitorModal from '../components/DpfMonitorModal';
 import MultiEcuScanModal from '../components/MultiEcuScanModal';
+import MultiEcuService from '../services/multiEcuService';
 import DctResetModal from '../components/DctResetModal';
 import FeatureActivationModal from '../components/FeatureActivationModal';
 import ObdService from '../services/obdService';
@@ -2417,12 +2418,14 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  onClose={() => setActiveHubView('hub')}
  />
  )}
- {activeHubView === 'multi_ecu' && (
- <MultiEcuScanModal
- visible={true}
- onClose={() => setActiveHubView('hub')}
- />
- )}
+  {activeHubView === 'multi_ecu' && (
+    <MultiEcuScanModal
+      visible={true}
+      onClose={() => setActiveHubView('hub')}
+      onScanModule={(headerHex) => MultiEcuService.scanHardwareModuleDtc(headerHex)}
+      onClearModule={(headerHex) => MultiEcuService.clearHardwareModuleDtc(headerHex)}
+    />
+  )}
  {activeHubView === 'dct' && (
  <DctResetModal
  visible={true}

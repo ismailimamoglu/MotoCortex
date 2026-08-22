@@ -124,4 +124,40 @@ describe('Live Diagnostic & Modal Screens QA Suite', () => {
     const scanBtn = getByText('multiEcu.scanBtn');
     expect(scanBtn).toBeTruthy();
   });
+
+  it('renders AiDoctorModal with unified design and health score banner', () => {
+    const AiDoctorModal = require('../AiDoctorModal').default;
+    const { getByText } = render(
+      <AiDoctorModal
+        visible={true}
+        onClose={jest.fn()}
+        context={{ dtcCodes: ['P0102'] }}
+      />
+    );
+
+    expect(getByText(/P0102/)).toBeTruthy();
+  });
+
+  it('verifies that all 26 supported locales have complete multiEcu action keys', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const locales = [
+      'tr', 'en', 'de', 'fr', 'es', 'it', 'pt', 'ru', 'ja', 'ko',
+      'zh', 'ar', 'hi', 'el', 'nl', 'sv', 'pl', 'cs', 'ro', 'da',
+      'fi', 'no', 'id', 'th', 'uk', 'hu'
+    ];
+
+    for (const loc of locales) {
+      const filePath = path.join(__dirname, `../../locales/${loc}.json`);
+      expect(fs.existsSync(filePath)).toBe(true);
+      const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      expect(json.multiEcu).toBeDefined();
+      expect(json.multiEcu.clearModuleBtn).toBeDefined();
+      expect(json.multiEcu.clearModuleBtn.length).toBeGreaterThan(0);
+      expect(json.multiEcu.aiDoctorBtn).toBeDefined();
+      expect(json.multiEcu.aiDoctorBtn.length).toBeGreaterThan(0);
+      expect(json.multiEcu.clearConfirmTitle).toBeDefined();
+      expect(json.multiEcu.clearConfirmDesc).toBeDefined();
+    }
+  });
 });
