@@ -14,15 +14,16 @@ export interface AiDiagnosticContext {
 }
 
 export type RiskLevel = 'CRITICAL' | 'WARNING' | 'SAFE' | 'UNKNOWN';
+export type RepairDifficulty = 'DIY_EASY' | 'MODERATE' | 'PROFESSIONAL';
 
 export interface AiDiagnosticResult {
   riskLevel: RiskLevel;
   riskScore: number; // 0 to 100 (100 = perfectly safe, 0 = critical)
+  repairDifficulty?: RepairDifficulty;
   title: string;
   summary: string;
   causes: string[];
   recommendedSteps: string[];
-  estimatedCostRange: string;
   canDriveSafetyText: string;
 }
 
@@ -84,11 +85,11 @@ export class AiDoctorService {
             return {
               riskLevel,
               riskScore,
+              repairDifficulty: edgeData.repairDifficulty || (riskLevel === 'CRITICAL' ? 'PROFESSIONAL' : 'MODERATE'),
               title: edgeData.title || `DTC Analysis (${context.dtcCodes.join(', ')})`,
               summary: edgeData.summary || 'Diagnostic analysis completed.',
               causes: Array.isArray(edgeData.causes) ? edgeData.causes : [],
               recommendedSteps: Array.isArray(edgeData.recommendedSteps) ? edgeData.recommendedSteps : [],
-              estimatedCostRange: edgeData.estimatedCostRange || 'Variable',
               canDriveSafetyText: edgeData.canDriveSafetyText || 'Drive with caution to nearest service center.'
             };
           }
@@ -113,6 +114,7 @@ export class AiDoctorService {
       return {
         riskLevel: 'SAFE',
         riskScore: 100,
+        repairDifficulty: 'DIY_EASY',
         title: i18n.t('aiDoctor.noFaultsTitle', { defaultValue: 'System Optimal — No Fault Codes Detected' }),
         summary: i18n.t('aiDoctor.noFaultsSummary', { defaultValue: 'ECU telemetry shows no active diagnostic trouble codes. Engine parameters are within normal operating thresholds.' }),
         causes: [],
@@ -120,7 +122,6 @@ export class AiDoctorService {
           i18n.t('aiDoctor.stepMaintain', { defaultValue: 'Maintain regular oil and filter service intervals.' }),
           i18n.t('aiDoctor.stepCheckVoltage', { defaultValue: 'Periodically check battery resting voltage.' })
         ],
-        estimatedCostRange: '$0',
         canDriveSafetyText: i18n.t('aiDoctor.safeDrive', { defaultValue: 'Safe for regular operation.' })
       };
     }
@@ -132,6 +133,7 @@ export class AiDoctorService {
       return {
         riskLevel: 'CRITICAL',
         riskScore: 30,
+        repairDifficulty: 'PROFESSIONAL',
         title: i18n.t('aiDoctor.misfireTitle', { defaultValue: 'Engine Cylinder Misfire Detected' }),
         summary: i18n.t('aiDoctor.misfireSummary', { defaultValue: 'Active misfire detected in one or more cylinders. Unburnt fuel may enter catalytic converter causing permanent damage.' }),
         causes: [
@@ -144,7 +146,6 @@ export class AiDoctorService {
           i18n.t('aiDoctor.stepSwapCoils', { defaultValue: 'Swap ignition coils between cylinders to test for fault transfer.' }),
           i18n.t('aiDoctor.stepFuelPressure', { defaultValue: 'Measure fuel rail pressure.' })
         ],
-        estimatedCostRange: '$40 - $180',
         canDriveSafetyText: i18n.t('aiDoctor.criticalDrive', { defaultValue: 'Do not drive extended distances under heavy throttle. Drive immediately to service.' })
       };
     }
@@ -153,6 +154,7 @@ export class AiDoctorService {
       return {
         riskLevel: 'WARNING',
         riskScore: 65,
+        repairDifficulty: 'MODERATE',
         title: i18n.t('aiDoctor.o2Title', { defaultValue: 'Oxygen Sensor Circuit Malfunction' }),
         summary: i18n.t('aiDoctor.o2Summary', { defaultValue: 'Air-fuel mixture feedback is degraded. Engine may run rich or lean, reducing fuel efficiency.' }),
         causes: [
@@ -164,7 +166,6 @@ export class AiDoctorService {
           i18n.t('aiDoctor.stepCheckWiring', { defaultValue: 'Inspect O2 sensor wiring harness for melting or fraying.' }),
           i18n.t('aiDoctor.stepCleanSensor', { defaultValue: 'Clean O2 sensor tip or replace sensor if resistance out of spec.' })
         ],
-        estimatedCostRange: '$60 - $140',
         canDriveSafetyText: i18n.t('aiDoctor.warningDrive', { defaultValue: 'Safe to drive to repair shop at moderate speed.' })
       };
     }
@@ -172,6 +173,7 @@ export class AiDoctorService {
     return {
       riskLevel,
       riskScore,
+      repairDifficulty: 'MODERATE',
       title: i18n.t('aiDoctor.genericTitle', { defaultValue: `Diagnostic Code Analysis (${codes})` }),
       summary: i18n.t('aiDoctor.genericSummary', { defaultValue: `Active trouble code(s) detected: ${codes}. System monitoring recommended.` }),
       causes: [
@@ -182,7 +184,6 @@ export class AiDoctorService {
         i18n.t('aiDoctor.stepGeneric1', { defaultValue: 'Perform diagnostic scan and record freeze frame data.' }),
         i18n.t('aiDoctor.stepGeneric2', { defaultValue: 'Clear DTC codes after inspecting harness connectors.' })
       ],
-      estimatedCostRange: '$30 - $120',
       canDriveSafetyText: i18n.t('aiDoctor.warningDrive', { defaultValue: 'Safe to drive to repair shop at moderate speed.' })
     };
   }

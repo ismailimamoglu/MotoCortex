@@ -5,7 +5,6 @@ import * as Sharing from 'expo-sharing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
 import { useBluetooth } from '../hooks/useBluetooth';
-import ChronicFaultsWidget from '../components/ChronicFaultsWidget';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { ADAPTER_COMMANDS } from '../api/commands';
 import { lookupDTC, prefetchDtcChunksForCodes } from '../data/dtcDictionary';
@@ -1176,54 +1175,77 @@ export default function MainApp() {
  };
 
  const handleShareReport = async () => {
- // Dynamic i18n.t() — called at execution time to match current active language
- const { rpm, speed, coolant, throttle, engineLoad, intakeAirTemp, manifoldPressure, voltage } = useBluetoothStore.getState();
- const dtcLines = dtcs.length > 0
- ? dtcs.map(dtc => {
- const desc = lookupDTC(dtc);
- return desc ? ` • ${dtc} — ${desc}` : ` • ${dtc}`;
- }).join('\n')
- : ` ${i18n.t('report.noDtcs')}`;
+    const btState = useBluetoothStore.getState();
+    const activeLang = i18n.language || 'en';
+    const vehicleProfile = btState.suggestedVehicleProfile;
+    const vehicleName = vehicleProfile 
+      ? `${vehicleProfile.make || ''} ${vehicleProfile.model || ''} ${vehicleProfile.year ? `(${vehicleProfile.year})` : ''}`.trim()
+      : (activeSessionVehicle ? `${activeSessionVehicle.brand || ''} ${activeSessionVehicle.model || ''} ${activeSessionVehicle.year ? `(${activeSessionVehicle.year})` : ''}`.trim() : '');
 
- const sensorLines = [
- rpm !== null ? ` RPM: ${rpm}` : null,
- speed !== null ? ` ${i18n.t('report.speed')}: ${speed} km/h` : null,
- coolant !== null ? ` ${i18n.t('report.coolant')}: ${coolant}°C` : null,
- throttle !== null ? ` ${i18n.t('report.throttle')}: ${throttle}%` : null,
- engineLoad !== null ? ` ${i18n.t('report.engineLoad')}: ${engineLoad}%` : null,
- intakeAirTemp !== null ? ` ${i18n.t('report.intakeAir')}: ${intakeAirTemp}°C` : null,
- manifoldPressure !== null ? ` ${i18n.t('report.manifold')}: ${manifoldPressure} kPa` : null,
- voltage ? ` ${i18n.t('report.voltage')}: ${voltage}` : null,
- ].filter(Boolean).join('\n');
+    // 1. DTC List with localized lookup
+    const dtcLines = dtcs.length > 0
+      ? dtcs.map(dtc => {
+          const desc = lookupDTC(dtc);
+          return desc ? ` • ${dtc} - ${desc}` : ` • ${dtc}`;
+        }).join('\n')
+      : ` • ${i18n.t('report.noDtcs', { defaultValue: 'HATA KODU YOK - TEMİZ' })}`;
 
- const activeLang = i18n.language || 'en';
- const report = `${i18n.t('report.title')}
+    // 2. AI Doctor Summary
+    let aiSeverity = i18n.t('aiDoctor.severityClean', { defaultValue: 'TEMİZ' });
+    let aiSafetyImpact = i18n.t('aiDoctor.safetyOk', { defaultValue: 'Sürüşe uygun, kritik tehlike tespit edilmedi.' });
+    if (dtcs.length > 0) {
+      const hasCritical = dtcs.some(d => d.startsWith('P03') || d.startsWith('P02') || d.startsWith('P07'));
+      if (hasCritical) {
+        aiSeverity = i18n.t('aiDoctor.severityHigh', { defaultValue: 'YÜKSEK KRİTİK' });
+        aiSafetyImpact = i18n.t('aiDoctor.safetyHighWarning', { defaultValue: 'Sürüş güvenliği etkilenebilir. En yakın servise başvurunuz.' });
+      } else {
+        aiSeverity = i18n.t('aiDoctor.severityModerate', { defaultValue: 'ORTA DERECE' });
+        aiSafetyImpact = i18n.t('aiDoctor.safetyModerateWarning', { defaultValue: 'Kısa mesafe sürüşe uygun. Performans ve yakıt tüketimi kontrol edilmeli.' });
+      }
+    }
 
-${i18n.t('report.vehicleIdentity')}
---------------------━━
- ${i18n.t('report.vin')}: ${vin || i18n.t('report.vinNotFound')}
- ${i18n.t('report.odometer')}: ${odometer === 'UNSUPPORTED' ? i18n.t('common.unsupported') : odometer !== null ? `${odometer} km` : i18n.t('common.unknown')}
- ${i18n.t('report.milDist')}: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
- ${i18n.t('report.distSinceCleared')}: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : i18n.t('common.unknown')}
+    // 3. Multi-ECU Overview
+    const moduleStatusList = [
+      ` • [ECM] ${i18n.t('expertise.moduleEngine', { defaultValue: 'Motor Kontrol Ünitesi' })}: ${dtcs.length > 0 ? `${dtcs.length} ${i18n.t('report.faultCount', { defaultValue: 'Arıza Kodu' })}` : i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
+      ` • [TCM] ${i18n.t('expertise.moduleTcm', { defaultValue: 'Otomatik Şanzıman' })}: ${i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
+      ` • [ABS] ${i18n.t('expertise.moduleAbs', { defaultValue: 'Fren & Güvenlik Sistemi' })}: ${i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
+      ` • [BCM] ${i18n.t('expertise.moduleBcm', { defaultValue: 'Gövde Kontrol Modülü' })}: ${i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
+    ].join('\n');
 
-${i18n.t('report.dtcCount', { count: dtcs.length })}
---------------------━━
+    // 4. Formatted clean plain-text report
+    const lineSep = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+    const report = `[ ${i18n.t('report.title', { defaultValue: 'CORTEX OBD2 TEŞHİS & EKSPERTİZ RAPORU' })} ]
+
+${i18n.t('report.vehicleIdentity', { defaultValue: 'ARAÇ KİMLİĞİ & KİLOMETRE' })}
+${lineSep}
+ • ${i18n.t('report.vin', { defaultValue: 'Şasi No (VIN)' })}: ${vin || i18n.t('report.vinNotFound', { defaultValue: 'Tespit Edilemedi' })}
+${vehicleName ? ` • ${i18n.t('report.vehicle', { defaultValue: 'Araç' })}: ${vehicleName}\n` : ''} • ${i18n.t('report.odometer', { defaultValue: 'Orijinal KM' })}: ${odometer === 'UNSUPPORTED' ? i18n.t('common.unsupported', { defaultValue: 'Desteklenmiyor' }) : odometer !== null ? `${odometer} km` : i18n.t('common.unknown', { defaultValue: 'Bilinmiyor' })}
+ • ${i18n.t('report.milDist', { defaultValue: 'Motor Arıza Işığı (MIL)' })}: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
+ • ${i18n.t('report.distSinceCleared', { defaultValue: 'Arıza Kodları Silineli' })}: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : i18n.t('common.unknown', { defaultValue: 'Bilinmiyor' })}
+${btState.voltage ? ` • ${i18n.t('report.voltage', { defaultValue: 'Akü Voltajı' })}: ${btState.voltage}\n` : ''}
+${i18n.t('report.dtcCount', { count: dtcs.length, defaultValue: `ARIZA KODLARI (${dtcs.length} ADET)` })}
+${lineSep}
 ${dtcLines}
 
-${i18n.t('report.sensorData')}
---------------------━━
-${sensorLines || ` ${i18n.t('report.noData')}`}
+${i18n.t('report.aiSection', { defaultValue: 'AI DOKTOR ÖN DEĞERLENDİRMESİ' })}
+${lineSep}
+ • ${i18n.t('report.severity', { defaultValue: 'Kritiklik Seviyesi' })}: ${aiSeverity}
+ • ${i18n.t('report.safety', { defaultValue: 'Sürüş Güvenliği' })}: ${aiSafetyImpact}
 
---------------------━━
-*${i18n.t('report.proApp')}*
-*${i18n.t('report.date')}: ${new Date().toLocaleDateString(activeLang)} ${new Date().toLocaleTimeString(activeLang, { hour: '2-digit', minute: '2-digit' })}*`;
+${i18n.t('report.multiEcuStatus', { defaultValue: 'ELEKTRONİK MODÜL DURUMU (MULTI-ECU)' })}
+${lineSep}
+${moduleStatusList}
 
- try {
- await Share.share({ message: report, title: i18n.t('report.title') });
- } catch (e) {
- console.error('Report sharing failed:', e);
- }
- };
+${lineSep}
+${i18n.t('report.proApp', { defaultValue: 'MotoCortex Diagnostic Suite Pro' })}
+${i18n.t('report.date', { defaultValue: 'Tarih' })}: ${new Date().toLocaleDateString(activeLang)} ${new Date().toLocaleTimeString(activeLang, { hour: '2-digit', minute: '2-digit' })}`;
+
+    try {
+      await Share.share({ message: report, title: i18n.t('report.title', { defaultValue: 'MotoCortex Teşhis Raporu' }) });
+    } catch (e) {
+      console.error('Report sharing failed:', e);
+    }
+  };
 
  const statusColor = (s: string) => {
  if (s === 'connected') return colors.green;
@@ -1745,28 +1767,84 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  </View>
  </View>
 
-  {/* Separate Bottom Panel: OBD2 Capabilities & Compatibility Matrix */}
-  <View style={[s.panel, { padding: panelPad, marginBottom: 0 }]}>
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={[
-        s.actionBtn, 
-        { 
-          backgroundColor: tc.cyan, 
-          paddingVertical: isCompact ? scaleHeight(10) : scaleHeight(12), 
-          borderRadius: 8, 
-          marginVertical: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }
-      ]}
-      onPress={() => setActiveHubView('obd_health')}
-    >
-      <Text style={[s.actionBtnText, { color: '#ffffff', fontSize: isCompact ? scaleFont(9.5) : scaleFont(11), fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5 }]}>
-        {t('health.titleMenu', { defaultValue: 'OBD2 YETENEKLERİ & UYUMLULUK MATRİSİ' })}
-      </Text>
-    </TouchableOpacity>
-  </View>
+   {/* Separate Bottom Panel: OBD2 Capabilities & Share Report Buttons */}
+   <View style={[s.panel, { padding: panelPad, marginBottom: 0 }]}>
+     <View style={{ flexDirection: 'row', gap: scaleWidth(8) }}>
+       <TouchableOpacity
+         activeOpacity={0.8}
+         style={[
+           s.actionBtn, 
+           { 
+             flex: 1,
+             backgroundColor: tc.cyan, 
+             paddingVertical: scaleHeight(8), 
+             paddingHorizontal: scaleWidth(6),
+             minHeight: scaleHeight(42),
+             borderRadius: 8, 
+             marginVertical: 0,
+             alignItems: 'center',
+             justifyContent: 'center',
+           }
+         ]}
+         onPress={() => setActiveHubView('obd_health')}
+       >
+         <Text 
+           numberOfLines={2} 
+           style={[
+             s.actionBtnText, 
+             { 
+               color: '#ffffff', 
+               fontSize: isCompact ? scaleFont(8.5) : scaleFont(10), 
+               fontFamily: MONO, 
+               fontWeight: '900', 
+               letterSpacing: 0.2,
+               textAlign: 'center',
+               lineHeight: isCompact ? scaleFont(11) : scaleFont(13)
+             }
+           ]}
+         >
+           {t('health.titleMenu', { defaultValue: 'OBD2 YETENEKLERİ & UYUMLULUK' })}
+         </Text>
+       </TouchableOpacity>
+
+       <TouchableOpacity
+         activeOpacity={0.8}
+         style={[
+           s.actionBtn, 
+           { 
+             flex: 1,
+             backgroundColor: tc.green, 
+             paddingVertical: scaleHeight(8), 
+             paddingHorizontal: scaleWidth(6),
+             minHeight: scaleHeight(42),
+             borderRadius: 8, 
+             marginVertical: 0,
+             alignItems: 'center',
+             justifyContent: 'center',
+           }
+         ]}
+         onPress={handleShareReport}
+       >
+         <Text 
+           numberOfLines={2} 
+           style={[
+             s.actionBtnText, 
+             { 
+               color: '#ffffff', 
+               fontSize: isCompact ? scaleFont(8.5) : scaleFont(10), 
+               fontFamily: MONO, 
+               fontWeight: '900', 
+               letterSpacing: 0.2,
+               textAlign: 'center',
+               lineHeight: isCompact ? scaleFont(11) : scaleFont(13)
+             }
+           ]}
+         >
+           {t('report.shareBtn', { defaultValue: 'RAPORU PAYLAŞ' })}
+         </Text>
+       </TouchableOpacity>
+     </View>
+   </View>
 
 
  </View>
@@ -1781,7 +1859,6 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  {renderLeftColumn(false)}
  {renderRightColumn(false)}
  </View>
- <ChronicFaultsWidget />
  
  </View>
  </ScrollView>
@@ -1793,7 +1870,7 @@ ${sensorLines || ` ${i18n.t('report.noData')}`}
  <ScrollView style={s.tabContent} contentContainerStyle={{ paddingHorizontal: scaleWidth(16), paddingBottom: scaleHeight(100), gap: scaleHeight(12) }}>
  {renderLeftColumn(true)}
  {renderRightColumn(true)}
- <ChronicFaultsWidget />
+ 
  </ScrollView>
  );
  };
