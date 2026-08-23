@@ -574,7 +574,13 @@
         "noFaults": "В памяти ЭБУ не сохранены активные или исторические коды неисправностей.",
         "noMaintenance": "В Акыллы Гарадже нет зарегистрированных служебных записей.",
         "disclaimer": "Отказ от ответственности: этот отчет создается диагностическим программным обеспечением MotoCortex. Перед приобретением автомобиля рекомендуется провести физический осмотр сертифицированным техническим специалистом.",
-        "shareTitle": "Поделиться отчетом об оценке MotoCortex"
+        "shareTitle": "Поделиться отчетом об оценке MotoCortex",
+        "shareBtn": "ПОДЕЛИТЬСЯ ОТЧЕТОМ",
+        "vehicle": "Транспорт",
+        "faultCount": "Коды ошибок",
+        "severity": "Уровень критичности",
+        "safety": "Безопасность вождения",
+        "multiEcuStatus": "СОСТОЯНИЕ ЭЛЕКТРОННЫХ МОДУЛЕЙ (MULTI-ECU)"
     },
     "battery": {
         "title": "АККУМУЛЯТОРНАЯ БАТАРЕЯ И ПУСКОВОЙ ТЕСТ",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "СКАНИРОВАНИЕ ВСЕХ МОДУЛЕЙ",
+        "scanBtn": "СКАНИРОВАТЬ ВСЕ БЛОКИ",
         "scanning": "Сканирование: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} ОБНАРУЖЕНЫ НЕИСПРАВНОСТИ",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "НЕТ ОТВЕТА / ОТКЛЮЧЕН",
         "scanHintText": "Нажмите «СКАНИРОВАТЬ ВСЕ МОДУЛИ», чтобы запросить диагностические коды неисправностей во всех электронных блоках управления автомобиля.",
         "gatewayName": "Центральный сетевой шлюз",
         "ipcName": "Панель приборов",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "Анализ AI Doctor",
         "clearConfirmTitle": "Очистить память модуля",
         "clearConfirmDesc": "Очистить память кодов неисправностей для {{module}}? Продолжить?",
-        "clearingModule": "Очистка..."
+        "clearingModule": "Очистка...",
+        "simBanner": "Режим симуляции: Сканирование топологии Multi-ECU и CAN",
+        "hardwareBanner": "Аппаратный режим: Активное сканирование блоков управления",
+        "scanningModule": "Сканирование: {{module}}...",
+        "emptyTitle": "Сканирование топологии не запущено",
+        "emptyDesc": "Нажмите кнопку для сканирования всех электронных блоков (Двигатель, АКПП, ABS, Airbag, BCM).",
+        "statusNotSupported": "ТРЕБУЕТСЯ CAN",
+        "klineHeaderNotice": "Адресация CAN-заголовков не поддерживается на K-Line."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

@@ -574,7 +574,13 @@
         "noFaults": "У пам'яті ECU не зберігаються активні або історичні коди несправностей.",
         "noMaintenance": "Немає зареєстрованих службових записів у Akıllı Garaj.",
         "disclaimer": "Відмова від відповідальності: цей звіт створено діагностичним програмним забезпеченням MotoCortex. Перед придбанням автомобіля рекомендується фізичний огляд у сертифікованого фахівця.",
-        "shareTitle": "Поділіться звітом про оцінку MotoCortex"
+        "shareTitle": "Поділіться звітом про оцінку MotoCortex",
+        "shareBtn": "ПОДІЛИТИСЯ ЗВІТОМ",
+        "vehicle": "Автомобіль",
+        "faultCount": "Коди помилок",
+        "severity": "Рівень критичності",
+        "safety": "Безпека водіння",
+        "multiEcuStatus": "СТАН ЕЛЕКТРОННИХ МОДУЛІВ (MULTI-ECU)"
     },
     "battery": {
         "title": "ТЕСТ БАТАРЕЇ ТА ЗАПУСК",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "СКАНУВАТИ ВСІ МОДУЛІ",
+        "scanBtn": "SCAN ALL MODULES",
         "scanning": "Сканування: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} ВИЯВЛЕНО ПОМИЛОК",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "NO RESPONSE / UNPLUGGED",
         "scanHintText": "Торкніться «СКАНУВАТИ ВСІ МОДУЛІ», щоб отримати діагностичні коди несправностей для всіх електронних блоків керування автомобіля.",
         "gatewayName": "Центральний мережевий шлюз",
         "ipcName": "Панель приладів",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "Аналіз AI Doctor",
         "clearConfirmTitle": "Очистити пам'ять модуля",
         "clearConfirmDesc": "Очистити пам'ять кодів несправностей для {{module}}? Продовжити?",
-        "clearingModule": "Очищення..."
+        "clearingModule": "Очищення...",
+        "simBanner": "Simulation Mode: Multi-ECU & CAN Topology Scan",
+        "hardwareBanner": "Hardware Mode: Active Vehicle Electronic Network Scan",
+        "scanningModule": "Scanning: {{module}}...",
+        "emptyTitle": "Topology Scan Not Started",
+        "emptyDesc": "Tap the button to scan all vehicle electronic control modules (Engine, TCM, ABS, SRS, BCM).",
+        "statusNotSupported": "CAN REQUIRED",
+        "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

@@ -574,7 +574,13 @@
         "noFaults": "Nenhum código de falha ativo ou histórico armazenado na memória da ECU.",
         "noMaintenance": "Nenhuma entrada de serviço registrada em Akıllı Garaj.",
         "disclaimer": "Isenção de responsabilidade: este relatório é gerado pelo software de diagnóstico MotoCortex. Recomenda-se a inspeção física por um técnico certificado antes da aquisição do veículo.",
-        "shareTitle": "Compartilhe o relatório de avaliação do MotoCortex"
+        "shareTitle": "Compartilhe o relatório de avaliação do MotoCortex",
+        "shareBtn": "COMPARTILHAR RELATÓRIO",
+        "vehicle": "Veículo",
+        "faultCount": "Códigos de falha",
+        "severity": "Nível de gravidade",
+        "safety": "Segurança de condução",
+        "multiEcuStatus": "STATUS DOS MÓDULOS ELETRÔNICOS (MULTI-ECU)"
     },
     "battery": {
         "title": "BATERIA E TESTE DE PARTIDA",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "VERIFIQUE TODOS OS MÓDULOS",
+        "scanBtn": "VERIFICAR TODOS OS MÓDULOS",
         "scanning": "Varredura: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} FALHAS DETECTADAS",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "SEM RESPOSTA / DESCONECTADO",
         "scanHintText": "Toque em 'VERIFICAR TODOS OS MÓDULOS' para consultar códigos de problemas de diagnóstico em todas as unidades de controle eletrônico do veículo.",
         "gatewayName": "Gateway da Rede Central",
         "ipcName": "Painel de Instrumentos",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "Análise AI Doctor",
         "clearConfirmTitle": "Limpar memória do módulo",
         "clearConfirmDesc": "Limpar memória de falhas para {{module}}? Continuar?",
-        "clearingModule": "Limpando..."
+        "clearingModule": "Limpando...",
+        "simBanner": "Modo Simulação: Verificação de Topologia Multi-ECU e CAN",
+        "hardwareBanner": "Modo Hardware: Verificação Ativa da Rede Eletrônica",
+        "scanningModule": "Verificando: {{module}}...",
+        "emptyTitle": "Verificação de Topologia não Iniciada",
+        "emptyDesc": "Toque no botão para verificar todas as centrais (Motor, Câmbio, ABS, Airbag, BCM).",
+        "statusNotSupported": "CAN NECESSÁRIO",
+        "klineHeaderNotice": "Endereçamento CAN não suportado no protocolo K-Line."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

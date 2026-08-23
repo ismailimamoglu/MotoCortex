@@ -121,7 +121,7 @@ describe('Live Diagnostic & Modal Screens QA Suite', () => {
       />
     );
 
-    const scanBtn = getByText('multiEcu.scanBtn');
+    const scanBtn = getByText(/TÜM BEYİNLERİ TARA|multiEcu\.scanBtn/i);
     expect(scanBtn).toBeTruthy();
   });
 

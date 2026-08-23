@@ -574,7 +574,13 @@
         "noFaults": "لا توجد رموز خطأ نشطة أو تاريخية مخزنة في ذاكرة وحدة التحكم الإلكترونية.",
         "noMaintenance": "لا توجد إدخالات خدمة مسجلة في Akıllı Garaj.",
         "disclaimer": "إخلاء المسؤولية: تم إنشاء هذا التقرير بواسطة برنامج التشخيص MotoCortex. يوصى بإجراء فحص مادي بواسطة فني معتمد قبل شراء السيارة.",
-        "shareTitle": "مشاركة تقرير تقييم MotoCortex"
+        "shareTitle": "مشاركة تقرير تقييم MotoCortex",
+        "shareBtn": "مشاركة التقرير",
+        "vehicle": "المركبة",
+        "faultCount": "أكواد الأعطال",
+        "severity": "مستوى الخطورة",
+        "safety": "سلامة القيادة",
+        "multiEcuStatus": "حالة الوحدات الإلكترونية (MULTI-ECU)"
     },
     "battery": {
         "title": "اختبار البطارية والبدء",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "مسح كافة الوحدات",
+        "scanBtn": "فحص جميع الوحدات",
         "scanning": "المسح: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} تم اكتشاف الأخطاء",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "لا توجد استجابة / مفصول",
         "scanHintText": "اضغط على \"SCAN ALL MODULES\" للاستعلام عن رموز المشاكل التشخيصية عبر جميع وحدات التحكم الإلكترونية في السيارة.",
         "gatewayName": "بوابة الشبكة المركزية",
         "ipcName": "لوحة العدادات",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "تحليل طبيب الذكاء الاصطناعي",
         "clearConfirmTitle": "مسح ذاكرة الوحدة",
         "clearConfirmDesc": "هل تريد مسح ذاكرة رموز الأعطال لـ {{module}}؟ متابعة؟",
-        "clearingModule": "جارٍ المسح..."
+        "clearingModule": "جارٍ المسح...",
+        "simBanner": "وضع المحاكاة: فحص طوبولوجيا شبكة CAN والوحدات المتعددة",
+        "hardwareBanner": "وضع العتاد: فحص نشط لشبكة الوحدات الإلكترونية للسيارة",
+        "scanningModule": "جاري الفحص: {{module}}...",
+        "emptyTitle": "لم يتم بدء فحص الشبكة",
+        "emptyDesc": "اضغط على الزر لفحص جميع وحدات التحكم الإلكترونية (المحرك، القير، الفرامل، الوسائد، الهيكل).",
+        "statusNotSupported": "يتطلب شبكة CAN",
+        "klineHeaderNotice": "عنونة رؤوس CAN غير مدعومة في بروتوكولات K-Line القديمة."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

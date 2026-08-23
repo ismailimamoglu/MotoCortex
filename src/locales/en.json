@@ -3054,13 +3054,20 @@
         "bmsName": "Battery Management System",
         "statusClean": "0 FAULTS HEALTHY",
         "statusFault": "{{count}} FAULTS DETECTED",
-        "statusNoResponse": "NO RESPONSE NO HARDWARE",
+        "statusNoResponse": "NO RESPONSE / UNPLUGGED",
         "readyTitle": "ECU Diagnostics Ready",
         "clearModuleBtn": "Clear",
         "aiDoctorBtn": "AI Doctor Analysis",
         "clearConfirmTitle": "Clear Module DTCs",
         "clearConfirmDesc": "Clear trouble code memory for {{module}}? Continue?",
-        "clearingModule": "Clearing..."
+        "clearingModule": "Clearing...",
+        "simBanner": "Simulation Mode: Multi-ECU & CAN Topology Scan",
+        "hardwareBanner": "Hardware Mode: Active Vehicle Electronic Network Scan",
+        "scanningModule": "Scanning: {{module}}...",
+        "emptyTitle": "Topology Scan Not Started",
+        "emptyDesc": "Tap the button to scan all vehicle electronic control modules (Engine, TCM, ABS, SRS, BCM).",
+        "statusNotSupported": "CAN REQUIRED",
+        "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dtcRisk": {
         "safeTitle": "SAFE FOR DRIVING",

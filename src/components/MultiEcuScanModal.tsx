@@ -142,20 +142,22 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
   return (
     <View style={{ flex: 1, backgroundColor: tc.bg, padding: 16 }}>
       {(!onScanModule || isSimulationMode) && (
-        <View style={[styles.simBadge, { backgroundColor: `${tc.cyan}12`, borderColor: `${tc.cyan}40` }]}>
+        <View style={[styles.simBadge, { backgroundColor: `${tc.cyan}15`, borderColor: `${tc.cyan}40` }]}>
           <Text style={[styles.simBadgeText, { color: tc.cyan }]}>
-            {isSimulationMode ? t('multiEcu.simBanner') : t('multiEcu.hardwareBanner')}
+            {isSimulationMode 
+              ? t('multiEcu.simBanner', { defaultValue: 'Simülasyon Modu: Çoklu ECU ve CAN Topoloji Taraması' }) 
+              : t('multiEcu.hardwareBanner', { defaultValue: 'Donanım Modu: Aktif Araç Elektronik Ağ Taraması' })}
           </Text>
         </View>
       )}
 
       {/* Start Scan Button */}
       <TouchableOpacity
-        activeOpacity={0.8}
+        activeOpacity={0.85}
         style={[
           styles.scanBtn,
           { backgroundColor: isScanning ? tc.card : tc.cyan },
-          isScanning && { borderWidth: 1, borderColor: `${tc.cyan}60` },
+          isScanning ? { borderWidth: 1.5, borderColor: tc.cyan } : { elevation: 3, shadowColor: tc.cyan, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4 },
         ]}
         onPress={handleStartScan}
         disabled={isScanning}
@@ -163,13 +165,13 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
         {isScanning ? (
           <View style={styles.scanBtnRow}>
             <ActivityIndicator size="small" color={tc.cyan} />
-            <Text style={[styles.scanBtnText, { color: tc.cyan }]}>
-              {t('multiEcu.scanningModule', { module: activeModule })}
+            <Text style={[styles.scanBtnText, { color: tc.cyan, fontWeight: '700' }]}>
+              {t('multiEcu.scanningModule', { module: activeModule, defaultValue: `Taranıyor: ${activeModule}...` })}
             </Text>
           </View>
         ) : (
-          <Text style={[styles.scanBtnText, { color: tc.textPri, fontWeight: '800' }]}>
-            {t('multiEcu.scanBtn')}
+          <Text style={[styles.scanBtnText, { color: '#FFFFFF', fontWeight: '800', letterSpacing: 0.5 }]}>
+            {t('multiEcu.scanBtn', { defaultValue: 'TÜM BEYİNLERİ TARA' })}
           </Text>
         )}
       </TouchableOpacity>
@@ -181,12 +183,13 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
         showsVerticalScrollIndicator={false}
       >
         {results.length === 0 && !isScanning && (
-          <View style={[styles.emptyContainer, { borderColor: `${tc.textSec}25` }]}>
+          <View style={[styles.emptyContainer, { backgroundColor: tc.card, borderColor: `${tc.cyan}30` }]}>
+            <Text style={{ fontSize: 28, marginBottom: 8 }}>🔍</Text>
             <Text style={[styles.emptyTitle, { color: tc.textPri }]}>
-              {t('multiEcu.emptyTitle')}
+              {t('multiEcu.emptyTitle', { defaultValue: 'Topoloji Taraması Başlatılmadı' })}
             </Text>
             <Text style={[styles.emptySubtitle, { color: tc.textSec }]}>
-              {t('multiEcu.emptyDesc')}
+              {t('multiEcu.emptyDesc', { defaultValue: 'Araçtaki tüm beyinleri (Motor, Şanzıman, ABS, Airbag, Gövde) taramak için butona dokunun.' })}
             </Text>
           </View>
         )}

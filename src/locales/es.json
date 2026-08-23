@@ -574,7 +574,13 @@
         "noFaults": "No hay códigos de falla activos o históricos almacenados en la memoria de la ECU.",
         "noMaintenance": "No hay entradas de servicio registradas en Akıllı Garaj.",
         "disclaimer": "Descargo de responsabilidad: este informe es generado por el software de diagnóstico MotoCortex. Se recomienda la inspección física por parte de un técnico certificado antes de la adquisición del vehículo.",
-        "shareTitle": "Comparta el informe de evaluación de MotoCortex"
+        "shareTitle": "Comparta el informe de evaluación de MotoCortex",
+        "shareBtn": "COMPARTIR INFORME",
+        "vehicle": "Vehículo",
+        "faultCount": "Códigos de falla",
+        "severity": "Nivel de gravedad",
+        "safety": "Seguridad de conducción",
+        "multiEcuStatus": "ESTADO DE MÓDULOS ELECTRÓNICOS (MULTI-ECU)"
     },
     "battery": {
         "title": "TEST DE BATERÍA",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} FALLOS DETECTADOS",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "SIN RESPUESTA / DESCONECTADO",
         "scanHintText": "Toque 'ESCANEAR TODOS LOS MÓDULOS' para consultar códigos de diagnóstico de problemas en todas las unidades de control electrónico del vehículo.",
         "gatewayName": "Pasarela de Red Central",
         "ipcName": "Cuadro de Instrumentos",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "Análisis AI Doctor",
         "clearConfirmTitle": "Borrar memoria del módulo",
         "clearConfirmDesc": "¿Borrar la memoria de fallas para {{module}}? ¿Continuar?",
-        "clearingModule": "Borrando..."
+        "clearingModule": "Borrando...",
+        "simBanner": "Modo Simulación: Escaneo de Topología Multi-ECU y CAN",
+        "hardwareBanner": "Modo Hardware: Escaneo Activo de Red Electrónica",
+        "scanningModule": "Escaneando: {{module}}...",
+        "emptyTitle": "Escaneo de Topología no Iniciado",
+        "emptyDesc": "Toque el botón para escanear todas las centralitas (Motor, Transmisión, ABS, Airbag, BCM).",
+        "statusNotSupported": "REQUIERE CAN",
+        "klineHeaderNotice": "El direccionamiento CAN no es compatible con el protocolo K-Line."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

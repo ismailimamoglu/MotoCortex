@@ -574,7 +574,13 @@
         "noFaults": "Inga aktiva eller historiska felkoder lagrade i ECU-minnet.",
         "noMaintenance": "Inga registrerade serviceinlägg i Akıllı Garaj.",
         "disclaimer": "Ansvarsfriskrivning: Den här rapporten är genererad av MotoCortex diagnostikprogram. Fysisk inspektion av en certifierad tekniker rekommenderas före fordonsinköp.",
-        "shareTitle": "Dela MotoCortex utvärderingsrapport"
+        "shareTitle": "Dela MotoCortex utvärderingsrapport",
+        "shareBtn": "DELA RAPPORT",
+        "vehicle": "Fordon",
+        "faultCount": "Felkoder",
+        "severity": "Allvarlighetsgrad",
+        "safety": "Körsäkerhet",
+        "multiEcuStatus": "ELEKTRONISK MODULSTATUS (MULTI-ECU)"
     },
     "battery": {
         "title": "BATTERI OCH STARTTEST",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "SKANNA ALLA MODULER",
+        "scanBtn": "SCAN ALL MODULES",
         "scanning": "Skannar: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} FEL UPPTÄCKT",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "NO RESPONSE / UNPLUGGED",
         "scanHintText": "Tryck på \"SCANNA ALLA MODULER\" för att fråga diagnostiska felkoder över alla fordons elektroniska styrenheter.",
         "gatewayName": "Central Nätverksgateway",
         "ipcName": "Instrumentpanel",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "AI Doctor Analys",
         "clearConfirmTitle": "Rensa modulminne",
         "clearConfirmDesc": "Rensa felkodsminne för {{module}}? Fortsätta?",
-        "clearingModule": "Rensar..."
+        "clearingModule": "Rensar...",
+        "simBanner": "Simulation Mode: Multi-ECU & CAN Topology Scan",
+        "hardwareBanner": "Hardware Mode: Active Vehicle Electronic Network Scan",
+        "scanningModule": "Scanning: {{module}}...",
+        "emptyTitle": "Topology Scan Not Started",
+        "emptyDesc": "Tap the button to scan all vehicle electronic control modules (Engine, TCM, ABS, SRS, BCM).",
+        "statusNotSupported": "CAN REQUIRED",
+        "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

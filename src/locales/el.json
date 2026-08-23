@@ -574,7 +574,13 @@
         "noFaults": "Δεν έχουν αποθηκευτεί ενεργοί ή ιστορικοί κωδικοί σφάλματος στη μνήμη ECU.",
         "noMaintenance": "Δεν υπάρχουν καταγεγραμμένες καταχωρήσεις υπηρεσίας στο Akıllı Garaj.",
         "disclaimer": "Αποποίηση ευθύνης: Αυτή η αναφορά δημιουργείται από το διαγνωστικό λογισμικό MotoCortex. Συνιστάται φυσική επιθεώρηση από πιστοποιημένο τεχνικό πριν από την αγορά του οχήματος.",
-        "shareTitle": "Μοιραστείτε την έκθεση αξιολόγησης MotoCortex"
+        "shareTitle": "Μοιραστείτε την έκθεση αξιολόγησης MotoCortex",
+        "shareBtn": "ΚΟΙΝΟΠΟΙΗΣΗ ΑΝΑΦΟΡΑΣ",
+        "vehicle": "Όχημα",
+        "faultCount": "Κωδικοί σφάλματος",
+        "severity": "Επίπεδο σοβαρότητας",
+        "safety": "Ασφάλεια οδήγησης",
+        "multiEcuStatus": "ΚΑΤΑΣΤΑΣΗ ΗΛΕΚΤΡΟΝΙΚΩΝ ΜΟΝΑΔΩΝ (MULTI-ECU)"
     },
     "battery": {
         "title": "ΔΟΚΙΜΗ ΜΠΑΤΑΡΙΑΣ & ΕΚΚΙΝΗΣΗΣ",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "ΣΑΡΩΣΗ ΟΛΩΝ ΤΩΝ ΜΟΝΑΔΩΝ",
+        "scanBtn": "SCAN ALL MODULES",
         "scanning": "Σάρωση: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} ΕΝΤΟΠΙΣΘΗΚΑΝ ΣΦΑΛΜΑΤΑ",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "NO RESPONSE / UNPLUGGED",
         "scanHintText": "Πατήστε «ΣΑΡΩΣΗ ΟΛΩΝ ΤΩΝ ΜΟΝΑΔΩΝ» για να αναζητήσετε διαγνωστικούς κωδικούς βλάβης σε όλες τις ηλεκτρονικές μονάδες ελέγχου του οχήματος.",
         "gatewayName": "Κεντρική Πύλη Δικτύου",
         "ipcName": "Πίνακας Оργάνων",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "Ανάλυση AI Doctor",
         "clearConfirmTitle": "Εκκαθάριση μνήμης μονάδας",
         "clearConfirmDesc": "Εκκαθάριση μνήμης βλαβών για {{module}}; Συνέχεια;",
-        "clearingModule": "Εκκαθάριση..."
+        "clearingModule": "Εκκαθάριση...",
+        "simBanner": "Simulation Mode: Multi-ECU & CAN Topology Scan",
+        "hardwareBanner": "Hardware Mode: Active Vehicle Electronic Network Scan",
+        "scanningModule": "Scanning: {{module}}...",
+        "emptyTitle": "Topology Scan Not Started",
+        "emptyDesc": "Tap the button to scan all vehicle electronic control modules (Engine, TCM, ABS, SRS, BCM).",
+        "statusNotSupported": "CAN REQUIRED",
+        "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

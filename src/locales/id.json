@@ -574,7 +574,13 @@
         "noFaults": "Tidak ada kode kesalahan aktif atau historis yang disimpan dalam memori ECU.",
         "noMaintenance": "Tidak ada entri layanan yang tercatat di Akıllı Garaj.",
         "disclaimer": "Penafian: Laporan ini dihasilkan oleh perangkat lunak diagnostik MotoCortex. Inspeksi fisik oleh teknisi bersertifikat dianjurkan sebelum pembelian kendaraan.",
-        "shareTitle": "Bagikan Laporan Penilaian MotoCortex"
+        "shareTitle": "Bagikan Laporan Penilaian MotoCortex",
+        "shareBtn": "BAGIKAN LAPORAN",
+        "vehicle": "Kendaraan",
+        "faultCount": "Kode Kerusakan",
+        "severity": "Tingkat Keparahan",
+        "safety": "Keamanan Berkendara",
+        "multiEcuStatus": "STATUS MODUL ELEKTRONIK (MULTI-ECU)"
     },
     "battery": {
         "title": "UJI AKI & STARTER",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "PINDAI SEMUA MODUL",
+        "scanBtn": "SCAN ALL MODULES",
         "scanning": "Pemindaian: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} KESALAHAN TERDETEKSI",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "NO RESPONSE / UNPLUGGED",
         "scanHintText": "Ketuk 'PINDAI SEMUA MODUL' untuk menanyakan kode masalah diagnostik di semua unit kontrol elektronik kendaraan.",
         "gatewayName": "Gateway Jaringan Pusat",
         "ipcName": "Panel Instrumen",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "Analisis AI Doctor",
         "clearConfirmTitle": "Hapus Memori Modul",
         "clearConfirmDesc": "Hapus memori kode kesalahan untuk {{module}}? Lanjutkan?",
-        "clearingModule": "Menghapus..."
+        "clearingModule": "Menghapus...",
+        "simBanner": "Simulation Mode: Multi-ECU & CAN Topology Scan",
+        "hardwareBanner": "Hardware Mode: Active Vehicle Electronic Network Scan",
+        "scanningModule": "Scanning: {{module}}...",
+        "emptyTitle": "Topology Scan Not Started",
+        "emptyDesc": "Tap the button to scan all vehicle electronic control modules (Engine, TCM, ABS, SRS, BCM).",
+        "statusNotSupported": "CAN REQUIRED",
+        "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

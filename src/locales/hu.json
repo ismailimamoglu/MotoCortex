@@ -574,7 +574,13 @@
         "noFaults": "Nincsenek aktív vagy történelmi hibakódok az ECU memóriájában.",
         "noMaintenance": "Nincsenek rögzített szolgáltatásbejegyzések Akıllı Garajban.",
         "disclaimer": "Jogi nyilatkozat: Ezt a jelentést a MotoCortex diagnosztikai szoftver készítette. A jármű beszerzése előtt ajánlott egy képesített technikus által végzett fizikai ellenőrzés.",
-        "shareTitle": "Ossza meg a MotoCortex értékelő jelentését"
+        "shareTitle": "Ossza meg a MotoCortex értékelő jelentését",
+        "shareBtn": "JELENTÉS MEGOSZTÁSA",
+        "vehicle": "Jármű",
+        "faultCount": "Hibakódok",
+        "severity": "Súlyossági szint",
+        "safety": "Vezetési biztonság",
+        "multiEcuStatus": "ELEKTRONIKUS MODUL ÁLLAPOTA (MULTI-ECU)"
     },
     "battery": {
         "title": "AKKUMULÁTOR ÉS INDÍTÁSI TESZT",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "AZ ÖSSZES MODUL SZKENNELÉSE",
+        "scanBtn": "SCAN ALL MODULES",
         "scanning": "Szkennelés: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} HIBÁK ÉSZLELVE",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "NO RESPONSE / UNPLUGGED",
         "scanHintText": "Érintse meg az 'ÖSSZES MODUL VIZSGÁLÁSA' elemet a diagnosztikai hibakódok lekérdezéséhez a jármű összes elektronikus vezérlőegységében.",
         "gatewayName": "Központi Hálózati Átjáró",
         "ipcName": "Műszeregység",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "AI Doctor Elemzés",
         "clearConfirmTitle": "Modul memória törlése",
         "clearConfirmDesc": "Törli a hibakód memóriát ehhez: {{module}}? Folytatja?",
-        "clearingModule": "Törlés..."
+        "clearingModule": "Törlés...",
+        "simBanner": "Simulation Mode: Multi-ECU & CAN Topology Scan",
+        "hardwareBanner": "Hardware Mode: Active Vehicle Electronic Network Scan",
+        "scanningModule": "Scanning: {{module}}...",
+        "emptyTitle": "Topology Scan Not Started",
+        "emptyDesc": "Tap the button to scan all vehicle electronic control modules (Engine, TCM, ABS, SRS, BCM).",
+        "statusNotSupported": "CAN REQUIRED",
+        "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

@@ -574,7 +574,13 @@
         "noFaults": "ECU 메모리에 저장된 활성 또는 과거 오류 코드가 없습니다.",
         "noMaintenance": "Akıllı Garaj에 기록된 서비스 항목이 없습니다.",
         "disclaimer": "고지 사항: 이 보고서는 MotoCortex 진단 소프트웨어에 의해 생성되었습니다. 차량을 구입하기 전에 인증받은 기술자의 물리적 검사를 받는 것이 좋습니다.",
-        "shareTitle": "MotoCortex 평가 보고서 공유"
+        "shareTitle": "MotoCortex 평가 보고서 공유",
+        "shareBtn": "진단 보고서 공유",
+        "vehicle": "차량",
+        "faultCount": "고장 코드",
+        "severity": "심각도",
+        "safety": "주행 안전성",
+        "multiEcuStatus": "전자 모듈 상태 (MULTI-ECU)"
     },
     "battery": {
         "title": "배터리 및 시동 테스트",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "모든 모듈 스캔",
+        "scanBtn": "전체 모듈 스캔",
         "scanning": "스캔 중: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} 오류가 감지되었습니다.",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "응답 없음 / 분리됨",
         "scanHintText": "모든 차량 전자 제어 장치에 걸쳐 진단 문제 코드를 쿼리하려면 '모든 모듈 스캔'을 탭하세요.",
         "gatewayName": "중앙 네트워크 게이트웨이",
         "ipcName": "계기판 클러스터",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "AI 닥터 분석",
         "clearConfirmTitle": "모듈 메모리 삭제",
         "clearConfirmDesc": "{{module}}의 고장 코드 메모리를 삭제하시겠습니까? 계속하시겠습니까?",
-        "clearingModule": "삭제 중..."
+        "clearingModule": "삭제 중...",
+        "simBanner": "시뮬레이션 모드: 멀티 ECU 및 CAN 토폴로지 스캔",
+        "hardwareBanner": "하드웨어 모드: 차량 전자 제어 네트워크 활성 스캔",
+        "scanningModule": "스캔 중: {{module}}...",
+        "emptyTitle": "토폴로지 스캔 미시작",
+        "emptyDesc": "버튼을 눌러 모든 전자 제어 장치(엔진, 변속기, ABS, 에어백, BCM)를 스캔하세요.",
+        "statusNotSupported": "CAN 프로토콜 필요",
+        "klineHeaderNotice": "K-Line 레거시 프로토콜에서는 CAN 헤더 타겟팅이 지원되지 않습니다."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

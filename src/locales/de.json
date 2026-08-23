@@ -574,7 +574,13 @@
         "noFaults": "Im Steuergerätespeicher sind keine aktiven oder historischen Fehlercodes gespeichert.",
         "noMaintenance": "Keine erfassten Serviceeinträge in Akıllı Garaj.",
         "disclaimer": "Haftungsausschluss: Dieser Bericht wird von der MotoCortex-Diagnosesoftware erstellt. Vor dem Fahrzeugkauf wird eine physische Inspektion durch einen zertifizierten Techniker empfohlen.",
-        "shareTitle": "Teilen Sie den MotoCortex-Bewertungsbericht"
+        "shareTitle": "Teilen Sie den MotoCortex-Bewertungsbericht",
+        "shareBtn": "BERICHT TEILEN",
+        "vehicle": "Fahrzeug",
+        "faultCount": "Fehlercode",
+        "severity": "Schweregrad",
+        "safety": "Fahrsicherheit",
+        "multiEcuStatus": "ELEKTRONISCHER MODULSTATUS (MULTI-ECU)"
     },
     "battery": {
         "title": "BATTERIETEST",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "ALLE MODULE SCANNEN",
+        "scanBtn": "ALLE STEUERGERÄTE SCANNEN",
         "scanning": "Scannen: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} FEHLER ERKANNT",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "KEINE ANTWORT / GETRENNT",
         "scanHintText": "Tippen Sie auf „ALLE MODULE SCANNEN“, um Diagnosefehlercodes für alle elektronischen Steuergeräte des Fahrzeugs abzufragen.",
         "gatewayName": "Zentrales Netzwerk-Gateway",
         "ipcName": "Kombiinstrument",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "AI Doctor Analyse",
         "clearConfirmTitle": "Modulspeicher löschen",
         "clearConfirmDesc": "Fehlerspeicher für {{module}} löschen? Fortfahren?",
-        "clearingModule": "Löschen..."
+        "clearingModule": "Löschen...",
+        "simBanner": "Simulationsmodus: Multi-ECU & CAN-Topologie-Scan",
+        "hardwareBanner": "Hardware-Modus: Aktiver Fahrzeug-Netzwerk-Scan",
+        "scanningModule": "Scannen: {{module}}...",
+        "emptyTitle": "Topologie-Scan nicht gestartet",
+        "emptyDesc": "Tippen Sie auf die Schaltfläche, um alle Steuergeräte (Motor, Getriebe, ABS, Airbag, BCM) zu scannen.",
+        "statusNotSupported": "CAN ERFORDERLICH",
+        "klineHeaderNotice": "CAN-Header-Adressierung wird bei K-Line nicht unterstützt."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

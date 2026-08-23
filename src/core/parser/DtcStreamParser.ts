@@ -268,31 +268,141 @@ function reassembleByteStream(
  * Handles both headered (7E8 XX XX...) and headerless responses
  */
 export function parseAndReassembleServices(
-  raw: string,
-  timestamp: number = Date.now()
+  rawResponse: string,
+  timestamp = Date.now()
 ): ReassembledServicePayload[] {
+  if (!rawResponse || typeof rawResponse !== 'string') return [];
+
+  const raw = sanitizeObdStream(rawResponse);
   if (!raw) return [];
-  const rawLines = raw.split(/[\r\n]+/);
+
+  const rawLines = rawResponse.split(/[\r\n]+/);
   const services: ReassembledServicePayload[] = [];
+  const localContexts = new Map<SourceId, IsoTpReassemblyContext>();
 
   for (const rawLine of rawLines) {
     const line = cleanLineNoise(rawLine);
     if (!line) continue;
 
-    // Check if line has a 3-character hex CAN header followed by whitespace
+    let source = 'LOCAL';
+    let lineData = line;
+
+    // Check if line has a 3-character hex CAN header
     const headerMatch = line.match(/^([0-9A-F]{3})[:\-]?\s+((?:[0-9A-F]{2}\s*)+)$/i);
     if (headerMatch) {
-      const source = headerMatch[1].toUpperCase();
-      const hexPairs = headerMatch[2].match(HEX_PAIR_RE);
-      const bytes = hexPairsToBytes(hexPairs);
-      services.push(...reassembleByteStream(bytes, source, timestamp));
-    } else {
-      // Headerless line
-      const hexPairs = line.match(HEX_PAIR_RE);
-      const bytes = hexPairsToBytes(hexPairs);
-      if (bytes.length > 0) {
-        services.push(...reassembleByteStream(bytes, 'LOCAL', timestamp));
+      source = headerMatch[1].toUpperCase();
+      lineData = headerMatch[2];
+    }
+
+    const hexPairs = lineData.match(HEX_PAIR_RE);
+    if (!hexPairs || hexPairs.length === 0) continue;
+    const bytes = hexPairsToBytes(hexPairs);
+    if (bytes.length === 0) continue;
+
+    let i = 0;
+    const n = bytes.length;
+
+    while (i < n) {
+      const b = bytes[i];
+
+      // ISO-TP Single Frame (0x01..0x07)
+      if ((b & 0xF0) === 0x00 && (b & 0x0F) > 0 && (b & 0x0F) <= 7 && i + 1 < n) {
+        const sfLen = b & 0x0F;
+        const service = bytes[i + 1];
+        if (DTC_SERVICES.has(service)) {
+          const framePayload = bytes.slice(i + 2, i + 1 + sfLen);
+          services.push({
+            source,
+            service,
+            payload: framePayload,
+            rawHex: bytesToHex([service, ...framePayload]),
+            timestamp,
+          });
+          i += 1 + sfLen;
+          continue;
+        }
       }
+
+      // ISO-TP First Frame (0x10..0x1F)
+      if ((b & 0xF0) === 0x10 && i + 2 < n) {
+        const totalLen = ((b & 0x0F) << 8) + bytes[i + 1];
+        const service = bytes[i + 2];
+        if (DTC_SERVICES.has(service)) {
+          const ffPayload = bytes.slice(i + 3, n);
+          localContexts.set(source, {
+            source,
+            totalPayloadBytes: totalLen - 1,
+            collectedBytes: [service, ...ffPayload],
+            expectedSequence: 1,
+            service,
+            timestamp,
+          });
+          i = n;
+          continue;
+        }
+      }
+
+      // ISO-TP Consecutive Frame (0x20..0x2F)
+      if ((b & 0xF0) === 0x20 && i + 1 < n) {
+        const ctx = localContexts.get(source);
+        if (ctx && DTC_SERVICES.has(ctx.service)) {
+          const cfPayload = bytes.slice(i + 1, Math.min(i + 8, n));
+          ctx.collectedBytes.push(...cfPayload);
+          ctx.expectedSequence = (ctx.expectedSequence % 16) + 1;
+
+          if (ctx.collectedBytes.length - 1 >= ctx.totalPayloadBytes) {
+            services.push({
+              source,
+              service: ctx.service,
+              payload: ctx.collectedBytes.slice(1, 1 + ctx.totalPayloadBytes),
+              rawHex: bytesToHex(ctx.collectedBytes),
+              timestamp,
+            });
+            localContexts.delete(source);
+          }
+          i += 1 + cfPayload.length;
+          continue;
+        }
+      }
+
+      // Direct DTC Service (0x43, 0x47, 0x4A, 0x59)
+      if (DTC_SERVICES.has(b)) {
+        const service = b;
+        let j = i + 1;
+        while (j < n) {
+          const candidate = bytes[j];
+          if (DTC_SERVICES.has(candidate) && j + 1 < n) {
+            // Only split if next byte looks like another service boundary
+            break;
+          }
+          j++;
+        }
+        const directPayload = bytes.slice(i + 1, j);
+        services.push({
+          source,
+          service,
+          payload: directPayload,
+          rawHex: bytesToHex([service, ...directPayload]),
+          timestamp,
+        });
+        i = j;
+        continue;
+      }
+
+      i++;
+    }
+  }
+
+  // Flush any remaining partial First Frame contexts
+  for (const [_, ctx] of localContexts.entries()) {
+    if (ctx.collectedBytes.length > 1) {
+      services.push({
+        source: ctx.source,
+        service: ctx.service,
+        payload: ctx.collectedBytes.slice(1),
+        rawHex: bytesToHex(ctx.collectedBytes),
+        timestamp: ctx.timestamp,
+      });
     }
   }
 
@@ -319,7 +429,6 @@ export function decodeDtcPair(a: number, b: number): string | null {
 
 /**
  * Extracts clean, deterministic DTC codes from reassembled OBD-II services
- * Now handles complete multi-frame payloads
  */
 export function decodeDtcCodesFromResponse(rawResponse: string): string[] {
   if (!rawResponse) return [];
@@ -327,16 +436,14 @@ export function decodeDtcCodesFromResponse(rawResponse: string): string[] {
   const dtcList: string[] = [];
 
   for (const svc of services) {
-    // Mode 03 (0x43), Mode 07 (0x47), Mode 0A (0x4A), UDS Service 0x19 (0x59)
     if (!DTC_SERVICES.has(svc.service)) continue;
 
     let payload = svc.payload;
     if (payload.length === 0) continue;
 
-    // In UDS Service 0x59 (e.g. 59 02 FF ...), the first 2 bytes are subfunction & status mask
+    // UDS Service 0x59
     if (svc.service === 0x59 && payload.length >= 2) {
       payload = payload.slice(2);
-      // UDS DTCs are 3 bytes (DTC High, DTC Middle, DTC Low/Status)
       for (let i = 0; i + 2 < payload.length; i += 3) {
         const dtc = decodeDtcPair(payload[i], payload[i + 1]);
         if (dtc) dtcList.push(dtc);
@@ -344,13 +451,12 @@ export function decodeDtcCodesFromResponse(rawResponse: string): string[] {
       continue;
     }
 
-    // In standard OBD-II Mode 03 / 07 / 0A:
-    // If payload length is odd, the first byte is the DTC count (e.g. 43 [01] 03 01 ...)
+    // OBD-II Mode 03 / 07 / 0A:
+    // If first byte is DTC count (e.g. 0x01..0x08) and payload length is odd, skip count
     if (payload.length % 2 !== 0) {
       payload = payload.slice(1);
     }
 
-    // Standard OBD-II 2-byte pairs
     for (let i = 0; i + 1 < payload.length; i += 2) {
       const dtc = decodeDtcPair(payload[i], payload[i + 1]);
       if (dtc) dtcList.push(dtc);

@@ -3054,13 +3054,20 @@
         "bmsName": "Batarya Yönetim Sistemi",
         "statusClean": "SİSTEM NORMAL",
         "statusFault": "{{count}} ARIZA TESPİT EDİLDİ",
-        "statusNoResponse": "YANIT YOK DONANIM YOK",
+        "statusNoResponse": "YANIT YOK / SÖKÜK",
         "readyTitle": "ECU Teşhisi Hazır",
         "clearModuleBtn": "Temizle",
         "aiDoctorBtn": "AI Doktor Analizi",
         "clearConfirmTitle": "Modül Hafızasını Sil",
         "clearConfirmDesc": "{{module}} arıza hafızası temizlenecek. Devam edilsin mi?",
-        "clearingModule": "Temizleniyor..."
+        "clearingModule": "Temizleniyor...",
+        "simBanner": "Simülasyon Modu: Çoklu ECU ve CAN Topoloji Taraması",
+        "hardwareBanner": "Donanım Modu: Aktif Araç Elektronik Ağ Taraması",
+        "scanningModule": "Taranıyor: {{module}}...",
+        "emptyTitle": "Topoloji Taraması Başlatılmadı",
+        "emptyDesc": "Araçtaki tüm beyinleri (Motor, Şanzıman, ABS, Airbag, Gövde) taramak için butona dokunun.",
+        "statusNotSupported": "CAN GEREKLİ",
+        "klineHeaderNotice": "K-Line protokolünde CAN header taraması desteklenmez."
     },
     "dtcRisk": {
         "safeTitle": "SÜRÜŞ İÇİN GÜVENLİ",

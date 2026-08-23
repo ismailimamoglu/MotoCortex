@@ -574,7 +574,13 @@
         "noFaults": "ECU 内存中没有存储当前或历史故障代码。",
         "noMaintenance": "Akıllı Garaj 中没有记录的服务条目。",
         "disclaimer": "免责声明：此报告由 MotoCortex 诊断软件生成。建议在购买车辆之前由经过认证的技术人员进行物理检查。",
-        "shareTitle": "分享MotoCortex评估报告"
+        "shareTitle": "分享MotoCortex评估报告",
+        "shareBtn": "分享报告",
+        "vehicle": "车辆",
+        "faultCount": "故障码",
+        "severity": "严重程度",
+        "safety": "驾驶安全",
+        "multiEcuStatus": "电子控制单元状态 (MULTI-ECU)"
     },
     "battery": {
         "title": "电池及启动测试",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "扫描所有模块",
+        "scanBtn": "扫描全部控制单元",
         "scanning": "扫描：{{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} 检测到故障",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "无响应 / 未连接",
         "scanHintText": "点击“扫描所有模块”可查询所有车辆电子控制单元的诊断故障代码。",
         "gatewayName": "中央网络网关",
         "ipcName": "仪表盘组合",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "AI 医生分析",
         "clearConfirmTitle": "清除模块故障码",
         "clearConfirmDesc": "是否清除 {{module}} 的故障代码记忆？继续？",
-        "clearingModule": "正在清除..."
+        "clearingModule": "正在清除...",
+        "simBanner": "模拟模式：多ECU与CAN总线拓扑扫描",
+        "hardwareBanner": "硬件模式：正在扫描车辆电子控制网络",
+        "scanningModule": "正在扫描：{{module}}...",
+        "emptyTitle": "拓扑扫描未开始",
+        "emptyDesc": "点击按钮扫描全车所有控制单元（发动机、变速箱、ABS、安全气囊、车身控制）。",
+        "statusNotSupported": "需要 CAN 总线",
+        "klineHeaderNotice": "K-Line 协议不支持 CAN 报头寻址。"
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",

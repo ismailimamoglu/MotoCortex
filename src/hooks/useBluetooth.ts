@@ -206,15 +206,23 @@ export const useBluetooth = () => {
             // Over 85% of vehicles (2008+) respond immediately within 300ms
             try {
                 useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: Fast-Path attempting Modern CAN (ATSP6 11b/500k)...');
-                await OBDCommandQueue.add("ATSP6", 1500).catch(() => {});
-                await preciseSleep(100);
-                const fastCanRes = await OBDCommandQueue.add("01 00", 2500);
-                ecuConnected = verifyHandshakeResponse(fastCanRes, "01 00");
-                if (ecuConnected) {
-                    const dpnRes = await OBDCommandQueue.add("ATDPN", 1500).catch(() => '');
-                    const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
-                    useBluetoothStore.getState().setProtocol(`ISO 15765-4 (CAN 11b/500k) [DPN ${cleanDpn || '6'}]`);
-                    useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: Fast-Path CAN (ATSP6) confirmed successfully!');
+                const sp6Ack = await OBDCommandQueue.add("ATSP6", 1500).catch(() => '');
+                const cleanSp6Ack = (sp6Ack || '').toUpperCase().replace(/\s+/g, '');
+                
+                // Guard: Only proceed if adapter acknowledged or didn't explicitly reject
+                if (!cleanSp6Ack.includes('?') && !cleanSp6Ack.includes('ERROR')) {
+                    await preciseSleep(80);
+                    OBDCommandQueue.clear(new Error('FAST_PATH_PRE_TEST_FLUSH'));
+                    const fastCanRes = await OBDCommandQueue.add("01 00", 2500);
+                    ecuConnected = verifyHandshakeResponse(fastCanRes, "01 00");
+                    if (ecuConnected) {
+                        const dpnRes = await OBDCommandQueue.add("ATDPN", 1500).catch(() => '');
+                        const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
+                        useBluetoothStore.getState().setProtocol(`ISO 15765-4 (CAN 11b/500k) [DPN ${cleanDpn || '6'}]`);
+                        useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: Fast-Path CAN (ATSP6) confirmed successfully!');
+                    }
+                } else {
+                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: ATSP6 rejected by adapter (${cleanSp6Ack}), skipping fast-path.`);
                 }
             } catch {
                 ecuConnected = false;
@@ -274,6 +282,7 @@ export const useBluetooth = () => {
                                 await OBDCommandQueue.add("ATIB10400", 1000).catch(() => {});
                             }
 
+                            OBDCommandQueue.clear(new Error('PRE_PROTOCOL_TEST_FLUSH'));
                             let initRes = await OBDCommandQueue.add("01 00", item.timeout);
                             ecuConnected = verifyHandshakeResponse(initRes, "01 00");
 
@@ -283,6 +292,7 @@ export const useBluetooth = () => {
                                 await OBDCommandQueue.add("ATIIA11", 1000).catch(() => {});
                                 await OBDCommandQueue.add("ATBI", 1000).catch(() => {});
                                 await preciseSleep(500);
+                                OBDCommandQueue.clear(new Error('KLINE_BUS_INIT_FLUSH'));
                                 initRes = await OBDCommandQueue.add("01 00", item.timeout);
                                 ecuConnected = verifyHandshakeResponse(initRes, "01 00");
                             }

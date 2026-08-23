@@ -574,7 +574,13 @@
         "noFaults": "ईसीयू मेमोरी में कोई सक्रिय या ऐतिहासिक दोष कोड संग्रहीत नहीं है।",
         "noMaintenance": "Akıllı Garaj में कोई रिकॉर्ड की गई सेवा प्रविष्टियाँ नहीं।",
         "disclaimer": "अस्वीकरण: यह रिपोर्ट मोटोकॉर्टेक्स डायग्नोस्टिक सॉफ्टवेयर द्वारा तैयार की गई है। वाहन अधिग्रहण से पहले एक प्रमाणित तकनीशियन द्वारा भौतिक निरीक्षण की सिफारिश की जाती है।",
-        "shareTitle": "मोटोकॉर्टेक्स मूल्यांकन रिपोर्ट साझा करें"
+        "shareTitle": "मोटोकॉर्टेक्स मूल्यांकन रिपोर्ट साझा करें",
+        "shareBtn": "रिपोर्ट साझा करें",
+        "vehicle": "वाहन",
+        "faultCount": "दोष कोड",
+        "severity": "गंभीरता स्तर",
+        "safety": "ड्राइविंग सुरक्षा",
+        "multiEcuStatus": "इलेक्ट्रॉनिक मॉड्यूल स्थिति (MULTI-ECU)"
     },
     "battery": {
         "title": "बैटरी एवं स्टार्टिंग परीक्षण",
@@ -3032,7 +3038,7 @@
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
         "subtitle": "Engine, Transmission, ABS, Airbag & Body",
-        "scanBtn": "सभी मॉड्यूल स्कैन करें",
+        "scanBtn": "SCAN ALL MODULES",
         "scanning": "स्कैनिंग: {{module}}...",
         "ecmName": "Engine Control Module",
         "tcmName": "Transmission Control Module",
@@ -3041,7 +3047,7 @@
         "bcmName": "Body Control Module",
         "statusClean": "0 FAULTS",
         "statusFault": "{{count}} दोषों का पता लगाया गया",
-        "statusNoResponse": "NO RESPONSE / NO HARDWARE",
+        "statusNoResponse": "NO RESPONSE / UNPLUGGED",
         "scanHintText": "सभी वाहन इलेक्ट्रॉनिक नियंत्रण इकाइयों में डायग्नोस्टिक समस्या कोड पूछने के लिए 'सभी मॉड्यूल स्कैन करें' पर टैप करें।",
         "gatewayName": "सेंट्रल नेटवर्क गेटवे",
         "ipcName": "इंस्ट्रूमेंट क्लस्टर",
@@ -3054,7 +3060,14 @@
         "aiDoctorBtn": "AI डॉक्टर विश्लेषण",
         "clearConfirmTitle": "मॉड्यूल मेमोरी साफ़ करें",
         "clearConfirmDesc": "क्या आप {{module}} के लिए फ़ॉल्ट कोड साफ़ करना चाहते हैं? जारी रखें?",
-        "clearingModule": "साफ़ किया जा रहा है..."
+        "clearingModule": "साफ़ किया जा रहा है...",
+        "simBanner": "Simulation Mode: Multi-ECU & CAN Topology Scan",
+        "hardwareBanner": "Hardware Mode: Active Vehicle Electronic Network Scan",
+        "scanningModule": "Scanning: {{module}}...",
+        "emptyTitle": "Topology Scan Not Started",
+        "emptyDesc": "Tap the button to scan all vehicle electronic control modules (Engine, TCM, ABS, SRS, BCM).",
+        "statusNotSupported": "CAN REQUIRED",
+        "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dct": {
         "title": "DCT TRANSMISSION RESET & ADAPTATION WIZARD",
