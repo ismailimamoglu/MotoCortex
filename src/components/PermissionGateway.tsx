@@ -380,33 +380,27 @@ export default function PermissionGateway({ children, onComplete }: PermissionGa
 
  {/* Perm Item 1: Bluetooth */}
  <View style={[sDyn.permRow, { backgroundColor: `${colors.textPri}08`, borderColor: `${colors.textPri}0D` }]}>
- <View style={[sDyn.permIconBox, { backgroundColor: `${colors.cyan}1A` }]}>
- <Text style={sDyn.permIcon}></Text>
- </View>
  <View style={sDyn.permTextContainer}>
  <Text style={[sDyn.permLabel, { color: colors.textPri }]}>{t('permissions.btLabel')}</Text>
  <Text style={[sDyn.permSub, { color: colors.textSec }]}>
  {t('permissions.btSub')}
  </Text>
  </View>
- {btStatus === 'granted' && <Text style={[sDyn.statusIcon, { color: colors.green }]}></Text>}
- {btStatus === 'denied' && <Text style={[sDyn.statusIcon, { color: colors.red }]}></Text>}
+ {btStatus === 'granted' && <Text style={[sDyn.statusIcon, { color: colors.green }]}>✓</Text>}
+ {btStatus === 'denied' && <Text style={[sDyn.statusIcon, { color: colors.red }]}>✕</Text>}
  </View>
 
  {/* Perm Item 2: Location */}
  {Platform.OS === 'android' && (
  <View style={[sDyn.permRow, { backgroundColor: `${colors.textPri}08`, borderColor: `${colors.textPri}0D` }]}>
- <View style={[sDyn.permIconBox, { backgroundColor: `${colors.cyan}1A` }]}>
- <Text style={sDyn.permIcon}></Text>
- </View>
  <View style={sDyn.permTextContainer}>
  <Text style={[sDyn.permLabel, { color: colors.textPri }]}>{t('permissions.locLabel')}</Text>
  <Text style={[sDyn.permSub, { color: colors.textSec }]}>
  {t('permissions.locSub')}
  </Text>
  </View>
- {locStatus === 'granted' && <Text style={[sDyn.statusIcon, { color: colors.green }]}></Text>}
- {locStatus === 'denied' && <Text style={[sDyn.statusIcon, { color: colors.red }]}></Text>}
+ {locStatus === 'granted' && <Text style={[sDyn.statusIcon, { color: colors.green }]}>✓</Text>}
+ {locStatus === 'denied' && <Text style={[sDyn.statusIcon, { color: colors.red }]}>✕</Text>}
  </View>
  )}
  </View>

@@ -30,6 +30,7 @@ import { PollingOrchestrator } from '../core/connection/PollingOrchestrator';
 import { ProtocolEngine } from '../core/connection/ProtocolEngine';
 import { EcuIdentificationManager } from '../core/connection/EcuIdentificationManager';
 import CommandScheduler from '../core/queue/CommandScheduler';
+import { klineKeepAlive } from '../core/protocol/KlineKeepAliveManager';
 
 export const useBluetooth = () => {  
    const { i18n: reactI18n } = useTranslation();  
@@ -547,38 +548,50 @@ export const useBluetooth = () => {
     }, [t]);
 
    const clearDiagnostics = useCallback(async () => {  
-       const isSim = useAppStore.getState().isSimulationMode;
-       if (status !== 'connected' && !isSim) return;  
+        const isSim = useAppStore.getState().isSimulationMode;
+        if (status !== 'connected' && !isSim) return;  
 
-       const btState = useBluetoothStore.getState();
-       const currentRpm = btState.rpm ?? 0;
-       const currentSpeed = btState.speed ?? 0;
+        const btState = useBluetoothStore.getState();
+        const currentRpm = btState.rpm ?? 0;
+        const currentSpeed = btState.speed ?? 0;
 
-       if (currentRpm > 0 || currentSpeed > 0) {
-           Alert.alert(
-               t('safety.engineRunningTitle', { defaultValue: 'Motor Çalışıyor Güvenlik Kilidi' }),
-               t('safety.engineRunningDesc', { defaultValue: 'Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir.' })
-           );
-           return;
-       }
+        if (currentRpm > 0 || currentSpeed > 0) {
+            Alert.alert(
+                t('safety.engineRunningTitle', { defaultValue: 'Motor Çalışıyor Güvenlik Kilidi' }),
+                t('safety.engineRunningDesc', { defaultValue: 'Güvenlik nedeniyle arıza kodları yalnızca kontak açık ancak motor çalışmıyorken silinebilir.' })
+            );
+            return;
+        }
 
-       try { proGuardAction(() => { }); } catch { return; }  
-       useBluetoothStore.getState().setDiagnosticMode(true);  
-       if (!isSim) stopPolling();  
-       try {  
-           if (!isSim) {
-               await sendCommand(ADAPTER_COMMANDS.CLEAR_DTC);  
-               await preciseSleep(500);  
-           } else {
-               await preciseSleep(300);
-               clearDemoDtcs();
-           }
-           useBluetoothStore.getState().setSensorData({ dtcs: [] });  
-       } catch { } finally {  
-           useBluetoothStore.getState().setDiagnosticMode(false);  
-           if (!isSim) startPolling();  
-       }  
-   }, [status, sendCommand, startPolling, stopPolling, proGuardAction, t]);
+        try { proGuardAction(() => { }); } catch { return; }  
+        useBluetoothStore.getState().setDiagnosticMode(true);  
+        if (!isSim) stopPolling();  
+        try {  
+            if (!isSim) {
+                // 1. Wake up bus / prevent K-Line idle timeout before clearing
+                await klineKeepAlive.wakeupBusBeforeClear();
+                await preciseSleep(100);
+
+                // 2. Send Mode 04 (Clear DTCs)
+                const res04 = await sendCommand(ADAPTER_COMMANDS.CLEAR_DTC);  
+                await preciseSleep(300);
+
+                // 3. Fallback to UDS Service 0x14 if 04 was not positively acknowledged
+                const clean04 = (res04 || '').replace(/\s+/g, '').toUpperCase();
+                if (!clean04.includes('44') && !clean04.includes('OK')) {
+                    await sendCommand('14FFFFFF').catch(() => '');
+                    await preciseSleep(200);
+                }
+            } else {
+                await preciseSleep(300);
+                clearDemoDtcs();
+            }
+            useBluetoothStore.getState().setSensorData({ dtcs: [] });  
+        } catch { } finally {  
+            useBluetoothStore.getState().setDiagnosticMode(false);  
+            if (!isSim) startPolling();  
+        }  
+    }, [status, sendCommand, startPolling, stopPolling, proGuardAction, t]);
 
    const runAdaptationRoutine = useCallback(async (type: 'fuel' | 'ecu') => {  
        if (status !== 'connected') return;  

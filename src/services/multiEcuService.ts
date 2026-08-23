@@ -9,6 +9,8 @@
  * - Body Control Module (BCM) - Header 0x720 / Response 0x728
  */
 
+import { decodeDtcCodesFromResponse, sanitizeObdStream } from '../core/parser/DtcStreamParser';
+
 export interface EcuModuleTarget {
   id: string;
   nameKey: string;
@@ -101,13 +103,16 @@ export const KNOWN_ECU_MODULES: EcuModuleTarget[] = [
   },
 ];
 
+export type EcuModuleStatus = 'CLEAN' | 'FAULT_DETECTED' | 'NO_RESPONSE' | 'NOT_SUPPORTED';
+
 export interface ModuleDiagnosticResult {
   module: EcuModuleTarget;
   isResponding: boolean;
   dtcCount: number;
   dtcCodes: string[];
-  status: 'CLEAN' | 'FAULT_DETECTED' | 'NO_RESPONSE';
+  status: EcuModuleStatus;
   latencyMs: number;
+  rawResponse?: string;
 }
 
 export class MultiEcuService {
@@ -132,75 +137,129 @@ export class MultiEcuService {
   }
 
   /**
-   * Parses raw Mode 03 / Mode 07 / UDS hex response into standard DTC codes (P, C, B, U)
+   * Parses raw Mode 03 / Mode 07 / UDS hex response into standard DTC codes
    */
   public static parseDtcPayload(response: string): string[] {
-    if (!response) return [];
-    const lines = response.split(/[\r\n]+/);
-    const dtcs: string[] = [];
+    return decodeDtcCodesFromResponse(response);
+  }
 
-    for (const line of lines) {
-      const clean = line
-        .replace(/SEARCHING\.*/gi, '')
-        .replace(/[0-9]+:/g, '')
-        .replace(/NO\s*DATA/gi, '')
-        .replace(/\s+/g, '')
-        .toUpperCase();
-
-      if (!clean || clean.includes('UNABLE') || clean.includes('ERROR') || clean.includes('?')) {
-        continue;
-      }
-
-      // Regex matches 43 or 47 response markers across single or concatenated multi-ECU frames
-      const frameRegex = /(?:43|47)([0-9A-F]+?)(?=(?:43|47)|$)/g;
-      let match: RegExpExecArray | null;
-
-      while ((match = frameRegex.exec(clean)) !== null) {
-        const payload = match[1];
-        for (let i = 0; i + 4 <= payload.length; i += 4) {
-          const codeHex = payload.substring(i, i + 4);
-          if (codeHex === '0000') continue;
-          const firstCharHex = parseInt(codeHex[0], 16);
-          let dtcType = 'P';
-          if (firstCharHex >= 4 && firstCharHex <= 7) dtcType = 'C';
-          else if (firstCharHex >= 8 && firstCharHex <= 11) dtcType = 'B';
-          else if (firstCharHex >= 12 && firstCharHex <= 15) dtcType = 'U';
-          dtcs.push(`${dtcType}${firstCharHex & 3}${codeHex.substring(1)}`);
-        }
-      }
+  /**
+   * Checks if the active protocol supports multi-ECU CAN header addressing
+   */
+  public static isMultiEcuSupportedForProtocol(protocol: string | null | undefined): boolean {
+    if (!protocol) return true;
+    const p = protocol.toUpperCase();
+    // K-Line / Legacy protocols do not support AT SH CAN broadcast targeting
+    if (
+      p.includes('ISO 9141') ||
+      p.includes('ISO 14230') ||
+      p.includes('KWP') ||
+      p.includes('J1850') ||
+      p === '3' ||
+      p === '4' ||
+      p === '5' ||
+      p === '1' ||
+      p === '2'
+    ) {
+      return false;
     }
-
-    return Array.from(new Set(dtcs));
+    return true;
   }
 
   /**
    * Scans a specific hardware ECU module for active/stored DTCs via CAN header redirection
    */
-  public static async scanHardwareModuleDtc(txHeader: string, timeoutMs: number = 2500): Promise<string[]> {
+  public static async scanHardwareModule(
+    module: EcuModuleTarget,
+    currentProtocol?: string | null,
+    timeoutMs: number = 2500
+  ): Promise<ModuleDiagnosticResult> {
     const OBDCommandQueue = require('../api/OBDCommandQueue').default;
     const { preciseSleep } = require('../api/OBDCommandQueue');
+    const startTime = Date.now();
+
+    // 1. Protocol Compatibility Check
+    if (!MultiEcuService.isMultiEcuSupportedForProtocol(currentProtocol)) {
+      return {
+        module,
+        isResponding: false,
+        dtcCount: 0,
+        dtcCodes: [],
+        status: 'NOT_SUPPORTED',
+        latencyMs: 0,
+        rawResponse: 'K-Line / Legacy Protocol (CAN Header unsupported)',
+      };
+    }
 
     try {
-      // 1. Switch to target ECU header
-      await OBDCommandQueue.add(`AT SH ${txHeader}`, 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      // 2. Switch to target ECU header
+      await OBDCommandQueue.add(`AT SH ${module.txHeader}`, 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
       await preciseSleep(60);
 
-      // 2. Query Mode 03 (Stored DTCs)
+      // 3. Query Mode 03 (Stored DTCs)
       const res03 = await OBDCommandQueue.add('03', timeoutMs, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
-      const dtcs = MultiEcuService.parseDtcPayload(res03);
+      const latencyMs = Date.now() - startTime;
+      const clean = sanitizeObdStream(res03 || '');
 
-      // 3. Restore default ECM header (7E0)
+      // 4. Restore default ECM header (7E0)
       await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
       await preciseSleep(40);
 
-      return dtcs;
-    } catch {
-      // Safety guarantee: Always restore default ECM header
+      // Check if response is empty, NO DATA, or error
+      if (!clean || res03?.toUpperCase().includes('NO DATA') || res03?.includes('?') || res03?.toUpperCase().includes('UNABLE')) {
+        return {
+          module,
+          isResponding: false,
+          dtcCount: 0,
+          dtcCodes: [],
+          status: 'NO_RESPONSE',
+          latencyMs,
+          rawResponse: res03 || '',
+        };
+      }
+
+      const dtcs = MultiEcuService.parseDtcPayload(res03);
+
+      return {
+        module,
+        isResponding: true,
+        dtcCount: dtcs.length,
+        dtcCodes: dtcs,
+        status: dtcs.length > 0 ? 'FAULT_DETECTED' : 'CLEAN',
+        latencyMs,
+        rawResponse: res03,
+      };
+    } catch (e: any) {
       try {
         await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
       } catch {}
-      return [];
+      return {
+        module,
+        isResponding: false,
+        dtcCount: 0,
+        dtcCodes: [],
+        status: 'NO_RESPONSE',
+        latencyMs: Date.now() - startTime,
+        rawResponse: e?.message || 'TIMEOUT',
+      };
     }
+  }
+
+  /**
+   * Scans a specific hardware ECU module for active/stored DTCs via CAN header redirection
+   * (Legacy wrapper)
+   */
+  public static async scanHardwareModuleDtc(txHeader: string, timeoutMs: number = 2500): Promise<string[]> {
+    const targetModule = KNOWN_ECU_MODULES.find((m) => m.txHeader === txHeader) || {
+      id: 'custom',
+      nameKey: 'multiEcu.custom',
+      txHeader,
+      rxHeader: txHeader.replace(/^7/, '78'),
+      category: 'powertrain' as const,
+      icon: 'cog',
+    };
+    const res = await MultiEcuService.scanHardwareModule(targetModule, undefined, timeoutMs);
+    return res.dtcCodes;
   }
 
   /**
@@ -233,7 +292,6 @@ export class MultiEcuService {
 
       return success;
     } catch {
-      // Safety guarantee: Always restore default ECM header
       try {
         await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
       } catch {}

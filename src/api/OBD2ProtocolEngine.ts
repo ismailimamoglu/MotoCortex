@@ -19,6 +19,7 @@ import { PidRegistry } from '../core/pids/PidRegistry';
 import { assertHardwareGate, CommandClass, classifyCommand } from '../core/security/CommandClassificationRegistry';
 import { telemetryBuffer } from '../services/TelemetryBuffer';
 import { vehicleIdentityEngine } from '../core/identity/VehicleIdentityEngine';
+import { decodeDtcCodesFromResponse } from '../core/parser/DtcStreamParser';
 
 export enum ErrorLayer {
  BLE_TRANSPORT = 'BLE transport',
@@ -707,31 +708,20 @@ export class OBD2ProtocolEngine {
  } 
  }
 
- private parseMode03Response(command: string, response: string) { 
- if (command === '03') { 
- const lines = response.split(/[\r\n]+/); 
- const dtcs: string[] = []; 
- for (const line of lines) { 
- let clean = line.replace(/SEARCHING\.*/gi, '').replace(/[0-9]+:/g, '').replace(/\s+/g, '').toUpperCase(); 
- if (clean.startsWith('7E8')) clean = clean.substring(3); 
- const startIndex = clean.indexOf('43'); 
- if (startIndex !== -1) { 
- let payload = clean.substring(startIndex + 2); 
- for (let i = 0; i < payload.length; i += 4) { 
- const codeHex = payload.substring(i, i + 4); 
- if (codeHex === '0000' || codeHex.length < 4) continue; 
- const firstCharHex = parseInt(codeHex[0], 16); 
- let dtcType = 'P'; 
- if (firstCharHex >= 4 && firstCharHex <= 7) dtcType = 'C'; 
- else if (firstCharHex >= 8 && firstCharHex <= 11) dtcType = 'B'; 
- else if (firstCharHex >= 12 && firstCharHex <= 15) dtcType = 'U'; 
- dtcs.push(`${dtcType}${firstCharHex & 3}${codeHex.substring(1)}`); 
- } 
- } 
- } 
- useBluetoothStore.getState().setSensorData({ dtcs: Array.from(new Set(dtcs)) }); 
- } 
- }
+  private parseMode03Response(command: string, response: string) { 
+    const cleanCmd = command.replace(/\s+/g, '').toUpperCase();
+    if (cleanCmd.startsWith('03') || cleanCmd.startsWith('07') || cleanCmd.startsWith('0A') || cleanCmd.startsWith('19')) { 
+      const dtcs = decodeDtcCodesFromResponse(response);
+      if (dtcs.length > 0) {
+        const existingDtcs = useBluetoothStore.getState().dtcs || [];
+        const merged = Array.from(new Set([...existingDtcs, ...dtcs]));
+        useBluetoothStore.getState().setSensorData({ dtcs: merged }); 
+      } else if (cleanCmd.startsWith('03')) {
+        // If explicit Mode 03 returned 0 DTCs, set empty array
+        useBluetoothStore.getState().setSensorData({ dtcs: [] });
+      }
+    } 
+  }
 
  private parseMode09Response(command: string, response: string) { 
  const cleanCmd = command.replace(/\s+/g, '').toUpperCase();
