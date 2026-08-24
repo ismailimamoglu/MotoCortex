@@ -102,7 +102,12 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+            if (file('release.keystore').exists()) {
+                storeFile file('release.keystore')
+                storePassword 'motocortex2026'
+                keyAlias 'motocortex-key'
+                keyPassword 'motocortex2026'
+            } else if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
                 storeFile file(MYAPP_RELEASE_STORE_FILE)
                 storePassword MYAPP_RELEASE_STORE_PASSWORD
                 keyAlias MYAPP_RELEASE_KEY_ALIAS
