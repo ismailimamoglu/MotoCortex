@@ -75,10 +75,11 @@ items = [
 ]
 
 def generate_phone_showcases():
-    print('Generating Phone Showcase (1290x2796)...')
-    W, H = 1290, 2796
+    print('Generating Phone Showcase (1284x2778 - Exact Apple 6.5" / 6.7" Proportions)...')
+    W, H = 1284, 2778
     os.makedirs('marketing/store_screenshots', exist_ok=True)
-    font_title = ImageFont.truetype('/System/Library/Fonts/HelveticaNeue.ttc', 88, index=1)
+    os.makedirs('marketing/store_screenshots_6_5', exist_ok=True)
+    font_title = ImageFont.truetype('/System/Library/Fonts/HelveticaNeue.ttc', 86, index=1)
     font_sub = ImageFont.truetype('/System/Library/Fonts/HelveticaNeue.ttc', 38, index=10)
 
     for idx, item in enumerate(items, 1):
@@ -114,8 +115,10 @@ def generate_phone_showcases():
         sb = draw.textbbox((0, 0), item['subtitle'], font=font_sub)
         draw.text(((W - (sb[2] - sb[0])) / 2, 350), item['subtitle'], font=font_sub, fill=(186, 230, 253))
         
-        phone_w, phone_h = 780, 1940
-        phone_x, phone_y = (W - phone_w) // 2, 540
+        # Exact iPhone Pro Max 19.5:9 proportions (880 x 1908)
+        phone_w = 880
+        phone_h = 1908
+        phone_x, phone_y = (W - phone_w) // 2, 530
         
         shadow = Image.new('RGBA', (W, H), (0, 0, 0, 0))
         s_draw = ImageDraw.Draw(shadow)
@@ -142,7 +145,7 @@ def generate_phone_showcases():
         bezel_pad = 10
         c_draw.rounded_rectangle([bezel_pad, bezel_pad, phone_w - bezel_pad, phone_h - bezel_pad], radius=105, fill=(15, 23, 42, 255))
         
-        screen_pad = 18
+        screen_pad = 16
         screen_w, screen_h = phone_w - screen_pad * 2, phone_h - screen_pad * 2
         
         raw_img = Image.open(item['src'])
@@ -157,7 +160,11 @@ def generate_phone_showcases():
         canvas.paste(chassis, (phone_x, phone_y), chassis)
         
         out_path = os.path.join('marketing/store_screenshots', target_filename)
-        canvas.save(out_path, 'JPEG', quality=95)
+        canvas.save(out_path, 'JPEG', quality=98)
+        
+        # Also save to 6_5 folder for convenience
+        out_path_65 = os.path.join('marketing/store_screenshots_6_5', target_filename)
+        canvas.save(out_path_65, 'JPEG', quality=98)
         print(f'  Phone {idx}/10: {target_filename} -> OK')
 
 def generate_tablet_showcases():
