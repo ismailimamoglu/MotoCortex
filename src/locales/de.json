@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "KOSTENLOS"
+        "free": "KOSTENLOS",
+        "legalDisclaimer": "Rechtlicher Hinweis: MotoCortex ist eine professionelle Fahrzeugdiagnose-Software. Fahren Sie stets vorsichtig; wenden Sie sich für Reparaturen an zertifizierte Fachkräfte."
     },
     "paywall": {
         "subtitle": "Schalten Sie höchste Diagnosetiefe und unendliche Parameter frei.",
@@ -363,7 +364,8 @@
         "openBtSettings": "BLUETOOTH-EINSTELLUNGEN",
         "firstTimeGuideTitle": "ERSTEINRICHTUNG & KOPPLUNGSANLEITUNG",
         "firstTimeGuideDescAndroid": "Koppeln Sie Bluetooth Classic-Adapter vor der ersten Verwendung in den Bluetooth-Einstellungen Ihres Telefons. BLE- und Wi-Fi-Geräte verbinden sich direkt.",
-        "firstTimeGuideDescIos": "BLE- und Wi-Fi-Adapter erfordern keine Kopplung in den Systemeinstellungen; sie werden direkt in der App verbunden."
+        "firstTimeGuideDescIos": "BLE- und Wi-Fi-Adapter erfordern keine Kopplung in den Systemeinstellungen; sie werden direkt in der App verbunden.",
+        "pinCopied": "PIN {{pin}} kopiert."
     },
     "dashboard": {
         "selectDevice": "ZUM AUSWÄHLEN TIPPEN",
@@ -552,10 +554,10 @@
         "dtcCount": "FEHLERCODES ({{count}})",
         "sensorData": "LIVE-SENSORDATEN",
         "noData": "Keine Daten verfügbar",
-        "proApp": "Gescanned mit Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
         "date": "Datum",
         "vinNotFound": "Nicht erkannt",
-        "noDtcs": "KEINE FEHLERCODES — SAUBER",
+        "noDtcs": "KEINE FEHLERCODES - EINWANDFREI",
         "speed": "Geschwindigkeit",
         "coolant": "Motortemperatur",
         "throttle": "Drosselklappe",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "AUSWIRKUNGEN AUF DEN GESUNDHEITSBEREICH DES MOTORS",
         "freeTrialBadge": "SIE NUTZEN IHREN 1 KOSTENLOSEN KI-DIAGNOSE-TEST",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "EINWANDFREI / OPTIMAL",
+        "severityHigh": "HOCH KRITISCH",
+        "severityModerate": "MÄSSIGES RISIKO",
+        "safetyOk": "Fahrbereit. Keine kritischen Gefahren erkannt.",
+        "safetyHighWarning": "Fahrsicherheit beeinträchtigt. Sofort nächste Werkstatt aufsuchen.",
+        "safetyModerateWarning": "Für Kurzstrecken geeignet. Kraftstoffverbrauch und Motorlast überwachen."
     },
     "dtcRisk": {
         "safeTitle": "SICHER ZUM FAHREN",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Mechatronisches Druckgehäuse oder verstärkte Speicherplatte ersetzen.",
         "default_cause1": "Komponentenstromkreis-/Verdrahtungswiderstandsfehler",
         "default_cause2": "Mechanischer Verschleiß oder Sensorverschlechterung",
-        "default_action": "Führen Sie eine Spannungsabfall- und Durchgangsprüfung mit einem Multimeter durch."
+        "default_action": "Führen Sie eine Spannungsabfall- und Durchgangsprüfung mit einem Multimeter durch.",
+        "p0113_cause1": "Ansauglufttemperatursensor (IAT) defekt",
+        "p0113_cause2": "Kabelbaum / Stecker Unterbrechung oder Kurzschluss",
+        "p0113_cause3": "Motorsteuergerät (ECU) Eingangswiderstand fehlerhaft",
+        "p0113_action": "Messen Sie den IAT-Sensorwiderstand (kΩ) mit einem Multimeter und prüfen Sie die Steckerpins.",
+        "p0113_tsb": "TSB-2023-04: IAT-Kabelbaum auf Scheuerstellen und 5V-Referenzspannung prüfen.",
+        "cat_p_cause1": "Antriebsstrang Sensor- oder Aktorstromkreisfehler",
+        "cat_p_cause2": "Mechanischer Verschleiß oder Gemischabweichung",
+        "cat_p_action": "OBD-II Live-Telemetriescan durchführen und Sensorsignalspannungen prüfen.",
+        "cat_c_cause1": "Raddrehzahl- / ABS- / ESP-Sensorfehler",
+        "cat_c_cause2": "Hydraulischer oder elektrischer Bremsanschlussfehler",
+        "cat_c_action": "ABS-Radsensoren, Geberringe und Bremsverkabelung überprüfen.",
+        "cat_b_cause1": "Karosseriesteuergerät (BCM) / Beleuchtungs- / Verriegelungsfehler",
+        "cat_b_cause2": "Innenraumsensor, Airbag oder Komfortmodul getrennt",
+        "cat_b_action": "Karosseriemodulsicherungen, Massepunkte und Stecker prüfen.",
+        "cat_u_cause1": "CAN-Bus-Kommunikationsunterbrechung oder Rauschen",
+        "cat_u_cause2": "Modul-Spannungsverlust oder Gateway-Desynchronisation",
+        "cat_u_action": "CAN-High- und CAN-Low-Abschlusswiderstand (~60Ω) und 12V-Batterie prüfen."
     },
     "ev": {
         "loading": "EV-Diagnosedaten werden geladen...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Feedback erhalten",
         "successDesc": "Vielen Dank für Ihre Rückmeldung! Unser Team prüft Ihre Nachricht.",
         "reportIssueBtn": "Technisches Problem melden"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBALER DIAGNOSE- & GESUNDHEITSBERICHT",
+        "dateTime": "Datum/Uhrzeit",
+        "vin": "Fahrzeug-FIN",
+        "makeBrand": "Marke/Modell",
+        "scannedModules": "Gescannte Steuergeräte: {{count}} Module (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALLE SYSTEME EINWANDFREI (0 Fehlercodes)",
+        "statusHealthyDesc": "Keine aktiven oder ausstehenden Fehlercodes in den Steuergeräten gefunden.",
+        "statusFaults": "Status: FEHLER ERKANNT ({{count}} Aktive Fehlercodes)",
+        "dtcCode": "FEHLERCODE",
+        "guidedAction": "Geführte Maßnahme",
+        "technicalTsb": "Technisches TSB-Bulletin",
+        "footer": "Bericht automatisch generiert von der MotoCortex Diagnoseplattform."
     }
 }

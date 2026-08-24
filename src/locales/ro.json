@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "GRATUIT"
+        "free": "GRATUIT",
+        "legalDisclaimer": "Notă legală: MotoCortex este un software profesional de diagnosticare auto. Conduceți cu prudență; consultați tehnicieni certificați pentru reparații."
     },
     "paywall": {
         "subtitle": "Deblocați cele mai profunde caracteristici de diagnosticare și toți parametrii.",
@@ -363,7 +364,8 @@
         "openBtSettings": "SETĂRI BLUETOOTH",
         "firstTimeGuideTitle": "GHID PENTRU PRIMA ASOCIERE ȘI CONFIGURARE",
         "firstTimeGuideDescAndroid": "Asociați adaptoarele Bluetooth Classic în setările Bluetooth ale telefonului înainte de prima utilizare. Dispozitivele BLE și Wi-Fi se conectează direct.",
-        "firstTimeGuideDescIos": "Adaptoarele BLE și Wi-Fi nu necesită asociere în setările telefonului; sunt detectate și conectate direct în aplicație."
+        "firstTimeGuideDescIos": "Adaptoarele BLE și Wi-Fi nu necesită asociere în setările telefonului; sunt detectate și conectate direct în aplicație.",
+        "pinCopied": "PIN {{pin}} copied."
     },
     "dashboard": {
         "selectDevice": "Atingeți pentru a SELECTA DISPOZITIVUL",
@@ -552,8 +554,8 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "DATE LIVE DE LA SENZOR",
         "noData": "Nu s-au putut citi datele",
-        "proApp": "Scanat cu Cortex OBD2 Diagnostic Scanner v7 PRO.",
-        "date": "data",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Data",
         "vinNotFound": "Nedetectat",
         "noDtcs": "FĂRĂ CODURI DE EROARE - CURAT",
         "speed": "viteza",
@@ -561,7 +563,7 @@
         "throttle": "gaz",
         "engineLoad": "Sarcina motorului",
         "intakeAir": "Aer de admisie",
-        "voltage": "Tensiunea bateriei",
+        "voltage": "Tensiune baterie",
         "shareMessage": "Urmărește starea motocicletei tale din buzunar cu aplicația de diagnosticare Motocortex OBD2! Descărcați: https://cortexobd2.app",
         "manifold": "Manifold",
         "subtitle": "Diagnosticare cuprinzătoare la mâna a doua și inspecție de telemetrie",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "IMPACTUL SCORULUI DE SĂNĂTATE A MOTORULUI",
         "freeTrialBadge": "FOLOSIȚI TESTUL GRATUIT DE DIAGNOSTICARE AI",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "OPTIM / CURAT",
+        "severityHigh": "CRITIC / RISC RIDICAT",
+        "severityModerate": "RISC MODERAT",
+        "safetyOk": "Sigur pentru condus. Nu s-au detectat pericole critice.",
+        "safetyHighWarning": "Siguranța la volan poate fi compromisă. Mergeți imediat la cel mai apropiat service.",
+        "safetyModerateWarning": "Adecvat pentru distanțe scurte. Monitorizați consumul și sarcina motorului."
     },
     "dtcRisk": {
         "safeTitle": "SIGUR PENTRU CONDUCERE",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Înlocuiți carcasa de presiune mecatronică sau placa acumulatorului întărită.",
         "default_cause1": "Circuitul componentelor / Defecțiunea rezistenței cablajului",
         "default_cause2": "Uzura mecanică sau degradarea senzorului",
-        "default_action": "Efectuați verificarea căderii de tensiune și a continuității folosind multimetrul."
+        "default_action": "Efectuați verificarea căderii de tensiune și a continuității folosind multimetrul.",
+        "p0113_cause1": "Intake Air Temperature (IAT) Sensor Failure",
+        "p0113_cause2": "Wiring Harness / Connector Open or Short Circuit",
+        "p0113_cause3": "Engine Control Module (ECU) Input Resistance Deviation",
+        "p0113_action": "Measure IAT sensor resistance (kΩ) with a multimeter and check connector pins for corrosion.",
+        "p0113_tsb": "TSB-2023-04: Inspect IAT sensor wiring harness for friction wear and 5V reference voltage.",
+        "cat_p_cause1": "Powertrain Sensor or Actuator Circuit Fault",
+        "cat_p_cause2": "Mechanical Wear or Air/Fuel Imbalance",
+        "cat_p_action": "Perform OBD-II live telemetry scan and verify sensor signal voltages.",
+        "cat_c_cause1": "Wheel Speed / ABS / ESP Sensor Fault",
+        "cat_c_cause2": "Brake System Hydraulic or Electrical Connection Fault",
+        "cat_c_action": "Inspect ABS wheel speed sensors, tone rings, and brake harness wiring.",
+        "cat_b_cause1": "Body Control Module (BCM) / Lighting / Access Circuit Fault",
+        "cat_b_cause2": "Interior Sensor, SRS Airbag or Comfort Module Disconnect",
+        "cat_b_action": "Check body module fuses, chassis ground connections, and harness plugs.",
+        "cat_u_cause1": "CAN Bus Communication Line Interruption or Bus Noise",
+        "cat_u_cause2": "Module Power Loss or Network Gateway Desynchronization",
+        "cat_u_action": "Check CAN-High and CAN-Low termination resistance (approx. 60Ω) and 12V battery stability."
     },
     "ev": {
         "loading": "Se încarcă datele de diagnosticare EV...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Feedback Primit",
         "successDesc": "Vă mulțumim pentru mesaj! Echipa noastră îl va analiza.",
         "reportIssueBtn": "Raportează Problemă Tehnică"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT",
+        "dateTime": "Date/Time",
+        "vin": "Vehicle VIN",
+        "makeBrand": "Make/Brand",
+        "scannedModules": "Scanned ECUs: {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)",
+        "statusHealthyDesc": "No active or pending fault codes found across scanned electronic control units.",
+        "statusFaults": "Status: FAULTS DETECTED ({{count}} Active DTCs)",
+        "dtcCode": "DTC CODE",
+        "guidedAction": "Guided Action",
+        "technicalTsb": "Technical TSB",
+        "footer": "Report generated automatically by MotoCortex Intelligent Diagnostics Platform."
     }
 }

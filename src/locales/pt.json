@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "GRÁTIS"
+        "free": "GRÁTIS",
+        "legalDisclaimer": "Aviso legal: MotoCortex é um software profissional de diagnóstico de veículos. Dirija com cuidado; consulte técnicos certificados para reparos mecânicos."
     },
     "paywall": {
         "crownBadge": "MOTO CÓRTEX PRO",
@@ -363,7 +364,8 @@
         "openBtSettings": "CONFIGURAÇÕES DE BLUETOOTH",
         "firstTimeGuideTitle": "GUIA DE PRIMEIRA CONFIGURAÇÃO E EMPARELHAMENTO",
         "firstTimeGuideDescAndroid": "Emparelhe adaptadores Bluetooth Classic nas configurações de Bluetooth do seu telefone antes do primeiro uso. Dispositivos BLE e Wi-Fi conectam-se diretamente.",
-        "firstTimeGuideDescIos": "Adaptadores BLE e Wi-Fi não requerem emparelhamento nas configurações; são detectados e conectados diretamente no aplicativo."
+        "firstTimeGuideDescIos": "Adaptadores BLE e Wi-Fi não requerem emparelhamento nas configurações; são detectados e conectados diretamente no aplicativo.",
+        "pinCopied": "PIN {{pin}} copiado."
     },
     "dashboard": {
         "selectDevice": "TOQUE PARA SELECIONAR O DISPOSITIVO",
@@ -552,10 +554,10 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "DADOS DO SENSOR AO VIVO",
         "noData": "Falha ao ler os dados",
-        "proApp": "Digitalizado com Cortex OBD2 Diagnostic Scanner v7 PRO.",
-        "date": "data",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Data",
         "vinNotFound": "Não detectado",
-        "noDtcs": "SEM CÓDIGOS DE ERRO - LIMPAR",
+        "noDtcs": "SEM CÓDIGOS DE FALHA - LIMPO",
         "speed": "velocidade",
         "coolant": "Temperatura do motor",
         "throttle": "gás",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "IMPACTO DA PONTUAÇÃO DE SAÚDE DO MOTOR",
         "freeTrialBadge": "VOCÊ ESTÁ USANDO SEU TESTE GRATUITO DE DIAGNÓSTICO IA",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "ÓTIMO / LIMPO",
+        "severityHigh": "ALTO RISCO CRÍTICO",
+        "severityModerate": "RISCO MODERADO",
+        "safetyOk": "Seguro para condução. Nenhum perigo crítico detectado.",
+        "safetyHighWarning": "Segurança de condução afetada. Dirija-se à oficina mais próxima.",
+        "safetyModerateWarning": "Apropriado para curtas distâncias. Monitore consumo e carga do motor."
     },
     "dtcRisk": {
         "safeTitle": "SEGURO PARA DIRIGIR",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Substitua a caixa de pressão mecatrônica ou a placa acumuladora reforçada.",
         "default_cause1": "Falha no circuito do componente/resistência da fiação",
         "default_cause2": "Desgaste mecânico ou degradação do sensor",
-        "default_action": "Execute queda de tensão e verificação de continuidade usando multímetro."
+        "default_action": "Execute queda de tensão e verificação de continuidade usando multímetro.",
+        "p0113_cause1": "Falha no sensor de temperatura do ar de admissão (IAT)",
+        "p0113_cause2": "Chicote elétrico / Conector aberto ou em curto-circuito",
+        "p0113_cause3": "Desvio de resistência de entrada da ECU",
+        "p0113_action": "Meça a resistência do sensor IAT (kΩ) com um multímetro e inspecione os pinos do conector.",
+        "p0113_tsb": "TSB-2023-04: Inspecione o chicote do sensor IAT contra atrito e verifique a tensão de 5V.",
+        "cat_p_cause1": "Falha no circuito do sensor ou atuador do trem de força",
+        "cat_p_cause2": "Desgaste mecânico ou desequilíbrio ar/combustível",
+        "cat_p_action": "Execute a leitura de telemetria OBD-II em tempo real e verifique as tensões.",
+        "cat_c_cause1": "Falha no sensor de velocidade da roda / ABS / ESP",
+        "cat_c_cause2": "Falha hidráulica ou elétrica no sistema de freios",
+        "cat_c_action": "Inspecione os sensores de roda ABS, anéis fônicos e a fiação dos freios.",
+        "cat_b_cause1": "Falha no circuito do módulo de carroceria (BCM) / iluminação / travas",
+        "cat_b_cause2": "Sensor interno, airbag SRS ou módulo de conforto desconectado",
+        "cat_b_action": "Verifique os fusíveis do módulo de carroceria, aterramentos e conectores.",
+        "cat_u_cause1": "Interrupção na linha de comunicação ou ruído CAN Bus",
+        "cat_u_cause2": "Perda de alimentação do módulo ou dessincronização do Gateway",
+        "cat_u_action": "Verifique a resistência de terminação CAN-High e CAN-Low (~60Ω) e a bateria de 12V."
     },
     "ev": {
         "loading": "Carregando dados de diagnóstico de EV...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Feedback Recebido",
         "successDesc": "Obrigado pelo contato! Nossa equipe analisará em breve.",
         "reportIssueBtn": "Relatar Problema Técnico"
+    },
+    "reportExport": {
+        "headerTitle": "RELATÓRIO GLOBAL DE SAÚDE E DIAGNÓSTICO MOTOCORTEX",
+        "dateTime": "Data/Hora",
+        "vin": "VIN do Veículo",
+        "makeBrand": "Marca/Modelo",
+        "scannedModules": "ECUs Verificadas: {{count}} Módulos (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: TODOS OS SISTEMAS SAUDÁVEIS (0 Códigos de Falha)",
+        "statusHealthyDesc": "Nenhum código de falha ativo ou pendente encontrado nas centrais eletrônicas.",
+        "statusFaults": "Status: FALHAS DETECTADAS ({{count}} Códigos DTC Ativos)",
+        "dtcCode": "CÓDIGO DTC",
+        "guidedAction": "Ação Guiada",
+        "technicalTsb": "Boletim Técnico TSB",
+        "footer": "Relatório gerado automaticamente pela plataforma de diagnóstico MotoCortex."
     }
 }

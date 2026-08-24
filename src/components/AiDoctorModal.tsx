@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useTranslation } from 'react-i18next';
+import appI18n from '../i18n';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { AiDiagnosticContext } from '../services/aiDoctorService';
@@ -28,17 +29,22 @@ interface AiDoctorModalProps {
 }
 
 export default function AiDoctorModal({ visible, onClose, context, onClearDtc }: AiDoctorModalProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const activeI18n = i18n || appI18n;
   const tc = useThemeColors();
   const { s: scaleWidth, vs: scaleHeight, fs: scaleFont, ms: scaleMod } = useResponsive();
 
   const [loading, setLoading] = useState(false);
   const [isFreeTrial, setIsFreeTrial] = useState(false);
+  const [selectedDtcIndex, setSelectedDtcIndex] = useState(0);
 
-  const code = (context?.dtcCodes && context.dtcCodes.length > 0 ? context.dtcCodes[0] : 'OBD-II').toUpperCase().trim();
-  const guided = getGuidedDiagnostics(code);
+  const rawDtcs = context?.dtcCodes || [];
+  const dtcList = rawDtcs.length > 0 ? rawDtcs : ['OBD-II'];
+  const safeIndex = selectedDtcIndex < dtcList.length ? selectedDtcIndex : 0;
+  const activeCode = (dtcList[safeIndex] || 'OBD-II').toUpperCase().trim();
+  const guided = getGuidedDiagnostics(activeCode);
 
-  const dtcKey = (context?.dtcCodes || []).join(',');
+  const dtcKey = dtcList.join(',');
   const contextKey = visible ? `${dtcKey}_${context?.vin || ''}` : '';
 
   useEffect(() => {
@@ -79,10 +85,31 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
     };
   }, [visible, contextKey]);
 
-  const isMisfire = code.startsWith('P030') || code.startsWith('P02');
-  const isCritical = isMisfire || code.startsWith('P07') || code.startsWith('C0035');
-  const healthScore = isCritical ? 25 : 75;
+  // Overall multi-DTC health calculation
+  const hasCritical = dtcList.some(c => {
+    const uc = c.toUpperCase();
+    return uc.startsWith('P030') || uc.startsWith('P02') || uc.startsWith('P07') || uc.startsWith('C0035');
+  });
+  const hasWarning = dtcList.some(c => {
+    const uc = c.toUpperCase();
+    return uc.startsWith('P01') || uc.startsWith('P04') || uc.startsWith('C') || uc.startsWith('B') || uc.startsWith('U');
+  });
+
+  let healthScore = 95;
+  if (hasCritical) {
+    healthScore = 25;
+  } else if (hasWarning || (dtcList.length > 0 && dtcList[0] !== 'OBD-II')) {
+    healthScore = 65;
+  }
   const isOptimal = healthScore >= 50;
+
+  // Active code severity for drive guidance
+  const isCurrentCritical = activeCode.startsWith('P030') || activeCode.startsWith('P02') || activeCode.startsWith('P07') || activeCode.startsWith('C0035');
+
+  const formatPercentage = (prob: number) => {
+    const lang = (activeI18n?.language || 'en').toLowerCase();
+    return lang.startsWith('tr') ? `%${prob}` : `${prob}%`;
+  };
 
   return (
     <Modal visible={visible} animationType="fade" transparent={true} onRequestClose={onClose}>
@@ -97,7 +124,7 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
             },
           ]}
         >
-          <View style={[styles.headerRow, { marginBottom: scaleHeight(16) }]}>
+          <View style={[styles.headerRow, { marginBottom: scaleHeight(12) }]}>
             <View style={styles.headerLeft}>
               <View
                 style={[
@@ -116,7 +143,7 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
               </View>
 
               <Text style={[styles.headerTitleText, { color: tc.textPri, fontSize: scaleFont(12) }]}>
-                {code} {t('aiDoctor.reportTitle', { defaultValue: 'Arıza Kodu Analizi' })}
+                {activeCode} {t('aiDoctor.reportTitle', { defaultValue: 'Arıza Kodu Analizi' })}
               </Text>
             </View>
 
@@ -124,6 +151,40 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
               <Text style={[styles.closeIcon, { color: tc.textPri, fontSize: scaleFont(16) }]}>✕</Text>
             </TouchableOpacity>
           </View>
+
+          {/* Multi-DTC Selector Tabs when more than 1 code exists */}
+          {dtcList.length > 1 && (
+            <View style={{ flexDirection: 'row', gap: scaleWidth(8), marginBottom: scaleHeight(12), flexWrap: 'wrap' }}>
+              {dtcList.map((dtcItem, idx) => {
+                const isSelected = idx === safeIndex;
+                return (
+                  <TouchableOpacity
+                    key={idx}
+                    onPress={() => setSelectedDtcIndex(idx)}
+                    style={{
+                      backgroundColor: isSelected ? tc.cyan : `${tc.cyan}18`,
+                      borderColor: tc.cyan,
+                      borderWidth: 1,
+                      borderRadius: 8,
+                      paddingHorizontal: scaleWidth(10),
+                      paddingVertical: scaleHeight(4),
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: isSelected ? '#000' : tc.cyan,
+                        fontFamily: MONO,
+                        fontSize: scaleFont(11),
+                        fontWeight: '900',
+                      }}
+                    >
+                      {dtcItem}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
 
           {loading ? (
             <View style={styles.loadingBox}>
@@ -188,7 +249,7 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                   {t('aiDoctor.drivingSafety', { defaultValue: 'SÜRÜŞ EMNİYETİ REHBERİ' }).toUpperCase()}
                 </Text>
                 <Text style={[styles.sectionBodyText, { color: tc.textPri, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
-                  {isCritical
+                  {isCurrentCritical
                     ? t('aiDoctor.criticalDrive', { defaultValue: 'Kritik arıza! Motor ve güvenlik sistemlerini korumak için en yakın servise sürün.' })
                     : t('aiDoctor.warningDrive', { defaultValue: 'Düşük hızda servise kadar sürülmesi emniyetlidir.' })}
                 </Text>
@@ -224,7 +285,7 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                         { color: tc.cyan, fontSize: scaleFont(10), marginLeft: scaleWidth(8) },
                       ]}
                     >
-                      %{pc.probability}
+                      {formatPercentage(pc.probability)}
                     </Text>
                   </View>
                 ))}
@@ -256,6 +317,32 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                   2. {t('aiDoctor.stepGeneric2', { defaultValue: 'Tesisat konnektörlerini inceledikten sonra DTC kodlarını silin.' })}
                 </Text>
               </View>
+
+              {guided.tsbSummary && (
+                <View
+                  style={[
+                    styles.sectionCard,
+                    {
+                      backgroundColor: `${tc.cyan}0A`,
+                      borderColor: tc.cyan,
+                      padding: scaleMod(14),
+                      gap: scaleHeight(6),
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.sectionHeader,
+                      { color: tc.cyan, fontSize: scaleFont(10) },
+                    ]}
+                  >
+                    {t('reportExport.technicalTsb', { defaultValue: 'TEKNİK TSB BÜLTENİ' }).toUpperCase()}
+                  </Text>
+                  <Text style={[styles.sectionBodyText, { color: tc.textPri, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
+                    {guided.tsbSummary}
+                  </Text>
+                </View>
+              )}
 
               <View style={{ gap: scaleHeight(10), marginTop: scaleHeight(4) }}>
                 <TouchableOpacity

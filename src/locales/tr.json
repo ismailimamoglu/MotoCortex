@@ -177,7 +177,8 @@
         "gotIt": "Got It",
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
-        "simMode": "Sim Mode"
+        "simMode": "Sim Mode",
+        "legalDisclaimer": "Yasal Uyarı: MotoCortex profesyonel bir araç teşhis ve telemetri yazılımıdır. Sürüş sırasında dikkatli olunuz; mekanik müdahaleleri yetkili uzmanlara yaptırınız."
     },
     "paywall": {
         "crownBadge": "MOTO CORTEX PRO",
@@ -370,7 +371,8 @@
         "openBtSettings": "BLUETOOTH AYARLARI",
         "firstTimeGuideTitle": "İLK KURULUM & EŞLEŞTİRME REHBERİ",
         "firstTimeGuideDescAndroid": "Bluetooth Classic adaptörleri ilk kez kullanmadan önce telefonunuzun Bluetooth ayarlarından eşleştirin. BLE ve Wi-Fi cihazlar doğrudan bağlanır.",
-        "firstTimeGuideDescIos": "BLE ve Wi-Fi adaptörleri telefon ayarlarından eşleştirme gerektirmez, doğrudan uygulama içinden taranarak bağlanır."
+        "firstTimeGuideDescIos": "BLE ve Wi-Fi adaptörleri telefon ayarlarından eşleştirme gerektirmez, doğrudan uygulama içinden taranarak bağlanır.",
+        "pinCopied": "PIN {{pin}} kopyalandı."
     },
     "health": {
         "titleMenu": "OBD2 YETENEKLERİ & UYUMLULUK MATRİSİ",
@@ -648,10 +650,10 @@
         "safety": "Sürüş Güvenliği",
         "multiEcuStatus": "ELEKTRONİK MODÜL DURUMU (MULTI-ECU)",
         "noData": "Veri okunamadı",
-        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO ile taranmıştır.",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
         "date": "Tarih",
         "vinNotFound": "Tespit Edilemedi",
-        "noDtcs": "HATA KODU YOK — TEMİZ",
+        "noDtcs": "HATA KODU YOK - TEMİZ",
         "speed": "Hız",
         "coolant": "Motor Sıcaklığı",
         "throttle": "Gaz",
@@ -3321,7 +3323,13 @@
         "stepGeneric1": "Teşhis taraması yapın ve dondurulmuş çerçeve verilerini kaydedin.",
         "stepGeneric2": "Tesisat konnektörlerini inceledikten sonra DTC kodlarını silin.",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "TEMİZ",
+        "severityHigh": "YÜKSEK KRİTİK",
+        "severityModerate": "ORTA DERECE",
+        "safetyOk": "Sürüşe uygun, kritik tehlike tespit edilmedi.",
+        "safetyHighWarning": "Sürüş güvenliği etkilenebilir. En yakın servise başvurunuz.",
+        "safetyModerateWarning": "Kısa mesafe sürüşe uygun. Performans ve yakıt tüketimi kontrol edilmeli."
     },
     "guidedDiag": {
         "p0102_cause1": "Kirlenmiş veya Arızalı MAF Sensörü",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Mechatronic basınç gövdesini veya güçlendirilmiş akümülatör plakasını değiştirin.",
         "default_cause1": "Bileşen Devresi / Tesisat Direnç Arızası",
         "default_cause2": "Mekanik Aşınma veya Sensör Bozulması",
-        "default_action": "Multimetre kullanarak voltaj düşüşü ve tesisat süreklilik kontrolü yapın."
+        "default_action": "Multimetre kullanarak voltaj düşüşü ve tesisat süreklilik kontrolü yapın.",
+        "p0113_cause1": "Emme Havası Sıcaklık Sensörü (IAT) Arızası",
+        "p0113_cause2": "Kablo Demeti / Soket Temassızlık veya Açık Devre",
+        "p0113_cause3": "Motor Beyni (ECU) Giriş Direnç Sapması",
+        "p0113_action": "Multimetre ile IAT sensör direnç değerlerini (kΩ) ölçün ve soket pinlerindeki korozyonu kontrol edin.",
+        "p0113_tsb": "TSB-2023-04: IAT sensör kablo demetini sürtünme aşınması ve referans voltajına karşı inceleyin.",
+        "cat_p_cause1": "Güç Aktarım Sensör veya Aktüatör Devre Hatası",
+        "cat_p_cause2": "Mekanik Aşınma veya Yakıt/Hava Dengesizliği",
+        "cat_p_action": "OBD-II canlı telemetri taraması yapın ve sensör sinyal voltajlarını kontrol edin.",
+        "cat_c_cause1": "Tekerlek Hız / ABS / ESP Sensör Arızası",
+        "cat_c_cause2": "Fren Sistemi Hidrolik veya Elektrik Bağlantı Hatası",
+        "cat_c_action": "ABS tekerlek hız sensörlerini, manyetik halkaları ve fren tesisatını kontrol edin.",
+        "cat_b_cause1": "Gövde Kontrol Modülü (BCM) / Aydınlatma / Kilit Devre Hatası",
+        "cat_b_cause2": "İç Mekan Sensörü, SRS Hava Yastığı veya Konfor Modülü Temassızlığı",
+        "cat_b_action": "Gövde modülü sigortalarını, şasi bağlantılarını ve tesisat soketlerini kontrol edin.",
+        "cat_u_cause1": "CAN Bus İletişim Hattı Kesintisi veya Parazit",
+        "cat_u_cause2": "Modül Güç Kaybı veya Ağ-Geçidi (Gateway) Senkronizasyon Hatası",
+        "cat_u_action": "CAN-High ve CAN-Low sonlandırma direncini (~60Ω) ve 12V akü kararlılığını test edin."
     },
     "ev": {
         "loading": "EV Teşhis Verileri Yükleniyor...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Mesajınız Alındı",
         "successDesc": "Geri bildiriminiz için teşekkür ederiz. Destek ekibimiz en kısa sürede inceleyecektir.",
         "reportIssueBtn": "Teknik Destek Bildirimi"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAL ARIZA TEŞHİS VE SAĞLIK RAPORU",
+        "dateTime": "Tarih/Saat",
+        "vin": "Araç Şasi No (VIN)",
+        "makeBrand": "Marka/Model",
+        "scannedModules": "Taranan Modüller: {{count}} Modül (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Durum: TÜM SİSTEMLER SAĞLIKLI (0 Arıza Kodu)",
+        "statusHealthyDesc": "Taranan elektronik kontrol ünitelerinde aktif veya bekleyen arıza kodu bulunamadı.",
+        "statusFaults": "Durum: ARIZALAR TESPİT EDİLDİ ({{count}} Aktif Arıza Kodu)",
+        "dtcCode": "ARIZA KODU",
+        "guidedAction": "Yönlendirilmiş Aksiyon",
+        "technicalTsb": "Teknik TSB Bülteni",
+        "footer": "Rapor, MotoCortex Akıllı Teşhis Platformu tarafından otomatik olarak oluşturulmuştur."
     }
 }

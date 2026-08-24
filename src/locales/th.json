@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "ฟรี"
+        "free": "ฟรี",
+        "legalDisclaimer": "ข้อกำหนดทางกฎหมาย: MotoCortex เป็นซอฟต์แวร์วิเคราะห์ยานพาหนะระดับมืออาชีพ โปรดขับขี่ด้วยความระมัดระวังและปรึกษาช่างผู้ชำนาญการ"
     },
     "paywall": {
         "crownBadge": "โมโต คอร์เท็กซ์ โปร",
@@ -363,7 +364,8 @@
         "openBtSettings": "การตั้งค่าบลูทูธ",
         "firstTimeGuideTitle": "คู่มือการจับคู่และตั้งค่าครั้งแรก",
         "firstTimeGuideDescAndroid": "จับคู่อะแดปเตอร์ Bluetooth Classic ในการตั้งค่าบลูทูธของโทรศัพท์ก่อนใช้งานครั้งแรก อุปกรณ์ BLE และ Wi-Fi เชื่อมต่อได้โดยตรง",
-        "firstTimeGuideDescIos": "อะแดปเตอร์ BLE และ Wi-Fi ไม่จำเป็นต้องจับคู่ในการตั้งค่าโทรศัพท์ โดยจะค้นหาและเชื่อมต่อได้โดยตรงในแอป"
+        "firstTimeGuideDescIos": "อะแดปเตอร์ BLE และ Wi-Fi ไม่จำเป็นต้องจับคู่ในการตั้งค่าโทรศัพท์ โดยจะค้นหาและเชื่อมต่อได้โดยตรงในแอป",
+        "pinCopied": "PIN {{pin}} copied."
     },
     "dashboard": {
         "selectDevice": "แตะเพื่อเลือกอุปกรณ์",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "ข้อมูลเซ็นเซอร์สด",
         "noData": "ไม่สามารถอ่านข้อมูลได้",
-        "proApp": "สแกนด้วย Cortex OBD2 Diagnostic Scanner v7 PRO",
-        "date": "วันที่",
-        "vinNotFound": "ตรวจไม่พบ",
-        "noDtcs": "ไม่มีรหัสข้อผิดพลาด - สะอาด",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO TROUBLE CODES - CLEAN",
         "speed": "ความเร็ว",
         "coolant": "อุณหภูมิเครื่องยนต์",
         "throttle": "แก๊ส",
         "engineLoad": "โหลดเครื่องยนต์",
         "intakeAir": "อากาศเข้า",
         "manifold": "นานา",
-        "voltage": "แรงดันแบตเตอรี่",
+        "voltage": "Battery Voltage",
         "shareMessage": "ติดตามสถานะของรถจักรยานยนต์ของคุณจากกระเป๋าของคุณด้วยแอปพลิเคชั่นวินิจฉัย Motocortex OBD2! ดาวน์โหลด: https://cortexobd2.app",
         "subtitle": "การตรวจสอบการวินิจฉัยและการตรวจวัดทางไกลมือสองที่ครอบคลุม",
         "vehicleInfo": "การระบุยานพาหนะและข้อมูลเมตาของ ECU",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "ผลกระทบต่อคะแนนสุขภาพเครื่องยนต์",
         "freeTrialBadge": "คุณกำลังใช้สิทธิ์ทดลองวินิจฉัยด้วย AI ฟรี 1 ครั้ง",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "CLEAN / OPTIMAL",
+        "severityHigh": "CRITICAL RISK",
+        "severityModerate": "MODERATE RISK",
+        "safetyOk": "Safe for driving. No critical hazards detected.",
+        "safetyHighWarning": "Driving safety may be compromised. Proceed to nearest service immediately.",
+        "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
         "safeTitle": "ปลอดภัยสำหรับการขับขี่",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: เปลี่ยนตัวเรือนแรงดันเมคคาทรอนิกส์หรือแผ่นสะสมเสริมแรง",
         "default_cause1": "วงจรส่วนประกอบ / ความต้านทานสายไฟผิดพลาด",
         "default_cause2": "การสึกหรอทางกลหรือการเสื่อมสภาพของเซ็นเซอร์",
-        "default_action": "ทำการตรวจสอบแรงดันไฟฟ้าตกและความต่อเนื่องโดยใช้มัลติมิเตอร์"
+        "default_action": "ทำการตรวจสอบแรงดันไฟฟ้าตกและความต่อเนื่องโดยใช้มัลติมิเตอร์",
+        "p0113_cause1": "Intake Air Temperature (IAT) Sensor Failure",
+        "p0113_cause2": "Wiring Harness / Connector Open or Short Circuit",
+        "p0113_cause3": "Engine Control Module (ECU) Input Resistance Deviation",
+        "p0113_action": "Measure IAT sensor resistance (kΩ) with a multimeter and check connector pins for corrosion.",
+        "p0113_tsb": "TSB-2023-04: Inspect IAT sensor wiring harness for friction wear and 5V reference voltage.",
+        "cat_p_cause1": "Powertrain Sensor or Actuator Circuit Fault",
+        "cat_p_cause2": "Mechanical Wear or Air/Fuel Imbalance",
+        "cat_p_action": "Perform OBD-II live telemetry scan and verify sensor signal voltages.",
+        "cat_c_cause1": "Wheel Speed / ABS / ESP Sensor Fault",
+        "cat_c_cause2": "Brake System Hydraulic or Electrical Connection Fault",
+        "cat_c_action": "Inspect ABS wheel speed sensors, tone rings, and brake harness wiring.",
+        "cat_b_cause1": "Body Control Module (BCM) / Lighting / Access Circuit Fault",
+        "cat_b_cause2": "Interior Sensor, SRS Airbag or Comfort Module Disconnect",
+        "cat_b_action": "Check body module fuses, chassis ground connections, and harness plugs.",
+        "cat_u_cause1": "CAN Bus Communication Line Interruption or Bus Noise",
+        "cat_u_cause2": "Module Power Loss or Network Gateway Desynchronization",
+        "cat_u_action": "Check CAN-High and CAN-Low termination resistance (approx. 60Ω) and 12V battery stability."
     },
     "ev": {
         "loading": "กำลังโหลดข้อมูลการวินิจฉัย EV...",
@@ -3559,5 +3584,19 @@
         "successTitle": "ได้รับข้อเสนอแนะแล้ว",
         "successDesc": "ขอบคุณสำหรับข้อความของคุณ! ทีมงานจะตรวจสอบโดยเร็วที่สุด",
         "reportIssueBtn": "รายงานปัญหาทางเทคนิค"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT",
+        "dateTime": "Date/Time",
+        "vin": "Vehicle VIN",
+        "makeBrand": "Make/Brand",
+        "scannedModules": "Scanned ECUs: {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)",
+        "statusHealthyDesc": "No active or pending fault codes found across scanned electronic control units.",
+        "statusFaults": "Status: FAULTS DETECTED ({{count}} Active DTCs)",
+        "dtcCode": "DTC CODE",
+        "guidedAction": "Guided Action",
+        "technicalTsb": "Technical TSB",
+        "footer": "Report generated automatically by MotoCortex Intelligent Diagnostics Platform."
     }
 }

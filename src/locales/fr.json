@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "GRATUIT"
+        "free": "GRATUIT",
+        "legalDisclaimer": "Avis juridique : MotoCortex est un logiciel professionnel de diagnostic automobile. Soyez prudent au volant ; consultez un technicien certifié pour les réparations mécaniques."
     },
     "paywall": {
         "subtitle": "Débloquez les fonctionnalités de diagnostic les plus approfondies et tous les paramètres.",
@@ -363,7 +364,8 @@
         "openBtSettings": "PARAMÈTRES BLUETOOTH",
         "firstTimeGuideTitle": "GUIDE DE PREMIÈRE CONNEXION ET APPAIRAGE",
         "firstTimeGuideDescAndroid": "Appairez les adaptateurs Bluetooth Classic dans les paramètres Bluetooth de votre téléphone avant la première utilisation. Les appareils BLE et Wi-Fi se connectent directement.",
-        "firstTimeGuideDescIos": "Les adaptateurs BLE et Wi-Fi ne nécessitent pas d'appairage dans les paramètres ; ils sont détectés et connectés directement dans l'application."
+        "firstTimeGuideDescIos": "Les adaptateurs BLE et Wi-Fi ne nécessitent pas d'appairage dans les paramètres ; ils sont détectés et connectés directement dans l'application.",
+        "pinCopied": "PIN {{pin}} copié."
     },
     "dashboard": {
         "selectDevice": "TOUCHER POUR SÉLECTIONNER L'APPAREIL",
@@ -551,17 +553,17 @@
         "dtcCount": "CODES DÉFAUT ({{count}})",
         "sensorData": "DONNÉES DU CAPTEUR EN DIRECT",
         "noData": "Échec de la lecture des données",
-        "proApp": "Scanné avec Cortex OBD2 Diagnostic Scanner v7 PRO.",
-        "date": "rendez-vous",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
         "vinNotFound": "Non détecté",
-        "noDtcs": "AUCUN CODES D'ERREUR - NETTOYER",
+        "noDtcs": "AUCUN CODE DÉFAUT - SAIN",
         "speed": "vitesse",
         "coolant": "Température du moteur",
         "throttle": "gaz",
         "engineLoad": "Charge du moteur",
         "intakeAir": "Air d'admission",
         "manifold": "Collecteur",
-        "voltage": "Tension de la batterie",
+        "voltage": "Tension de batterie",
         "shareMessage": "Suivez l'état de votre moto depuis votre poche avec l'application de diagnostic Motocortex OBD2 ! Télécharger : https://cortexobd2.app",
         "odometer": "Distance",
         "subtitle": "Inspection complète de diagnostic et de télémétrie d'occasion",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "IMPACT DU SCORE DE SANTÉ DU MOTEUR",
         "freeTrialBadge": "VOUS UTILISEZ VOTRE ESSAI GRATUIT DE DIAGNOSTIC IA",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "OPTIMAL / SAIN",
+        "severityHigh": "HAUTEMENT CRITIQUE",
+        "severityModerate": "RISQUE MODÉRÉ",
+        "safetyOk": "Sûr pour la conduite. Aucun danger critique détecté.",
+        "safetyHighWarning": "Sécurité de conduite compromise. Rendez-vous au garage le plus proche.",
+        "safetyModerateWarning": "Adapté aux trajets courts. Surveiller la charge et la consommation."
     },
     "dtcRisk": {
         "safeTitle": "SANS DANGER POUR LA CONDUITE",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG : Remplacer le boîtier de pression mécatronique ou la plaque d'accumulateur renforcée.",
         "default_cause1": "Défaut de résistance du circuit de composant/câblage",
         "default_cause2": "Usure mécanique ou dégradation du capteur",
-        "default_action": "Effectuez un contrôle de chute de tension et de continuité à l'aide d'un multimètre."
+        "default_action": "Effectuez un contrôle de chute de tension et de continuité à l'aide d'un multimètre.",
+        "p0113_cause1": "Défaillance du capteur de température d'air d'admission (IAT)",
+        "p0113_cause2": "Faisceau de câblage / Connecteur ouvert ou en court-circuit",
+        "p0113_cause3": "Dérive de résistance d'entrée du calculateur moteur (ECU)",
+        "p0113_action": "Mesurez la résistance du capteur IAT (kΩ) au multimètre et vérifiez les broches du connecteur.",
+        "p0113_tsb": "TSB-2023-04: Vérifier le faisceau IAT contre l'usure par frottement et la tension de référence 5V.",
+        "cat_p_cause1": "Défaut de circuit de capteur ou actionneur groupe motopropulseur",
+        "cat_p_cause2": "Usure mécanique ou déséquilibre air/carburant",
+        "cat_p_action": "Effectuer un scan de télémétrie OBD-II et vérifier les tensions des signaux.",
+        "cat_c_cause1": "Défaut de capteur de vitesse de roue / ABS / ESP",
+        "cat_c_cause2": "Problème hydraulique ou électrique du système de freinage",
+        "cat_c_action": "Inspecter les capteurs de roue ABS, les cibles magnétiques et le câblage.",
+        "cat_b_cause1": "Défaut de circuit BCM / Éclairage / Verrouillage",
+        "cat_b_cause2": "Capteur intérieur, airbag SRS ou module confort déconnecté",
+        "cat_b_action": "Vérifier les fusibles du module carrosserie, les masses et les prises.",
+        "cat_u_cause1": "Interruption ou parasite sur la ligne de communication CAN Bus",
+        "cat_u_cause2": "Perte d'alimentation d'un module ou désynchronisation passerelle",
+        "cat_u_action": "Vérifier la résistance de terminaison CAN-High/CAN-Low (~60Ω) et la batterie 12V."
     },
     "ev": {
         "loading": "Chargement des données de diagnostic EV...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Retour Reçu",
         "successDesc": "Merci pour votre message ! Notre équipe va l'examiner.",
         "reportIssueBtn": "Signaler un Problème Technique"
+    },
+    "reportExport": {
+        "headerTitle": "RAPPORT DE SANTÉ ET DIAGNOSTIC GLOBAL MOTOCORTEX",
+        "dateTime": "Date/Heure",
+        "vin": "VIN du Véhicule",
+        "makeBrand": "Marque/Modèle",
+        "scannedModules": "Calculateurs scannés : {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Statut : TOUS LES SYSTÈMES SONT SAINS (0 Code Défaut)",
+        "statusHealthyDesc": "Aucun code défaut actif ou en attente trouvé dans les calculateurs.",
+        "statusFaults": "Statut : DÉFAUTS DÉTECTÉS ({{count}} Codes Défauts Actifs)",
+        "dtcCode": "CODE DTC",
+        "guidedAction": "Action Guidée",
+        "technicalTsb": "Bulletin Technique TSB",
+        "footer": "Rapport généré automatiquement par la plateforme de diagnostic MotoCortex."
     }
 }

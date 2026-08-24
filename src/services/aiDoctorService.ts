@@ -170,6 +170,27 @@ export class AiDoctorService {
       };
     }
 
+    const isAirIntakeOrMaf = context.dtcCodes.some(c => c.startsWith('P010') || c.startsWith('P011'));
+    if (isAirIntakeOrMaf) {
+      return {
+        riskLevel: 'WARNING',
+        riskScore: 70,
+        repairDifficulty: 'DIY_EASY',
+        title: i18n.t('aiDoctor.intakeTitle', { defaultValue: 'Air Intake / Metering Circuit Deviation' }),
+        summary: i18n.t('aiDoctor.intakeSummary', { defaultValue: 'Intake air temperature or air mass flow signals are outside normal operational tolerances.' }),
+        causes: [
+          i18n.t('guidedDiag.p0102_cause1', { defaultValue: 'Dirty or Faulty MAF Sensor' }),
+          i18n.t('guidedDiag.p0113_cause1', { defaultValue: 'Intake Air Temperature (IAT) Sensor Failure' }),
+          i18n.t('guidedDiag.p0102_cause2', { defaultValue: 'Intake Leak / Vacuum Leak' })
+        ],
+        recommendedSteps: [
+          i18n.t('guidedDiag.p0102_action', { defaultValue: 'Clean MAF/IAT sensors with contact cleaner and inspect intake hose.' }),
+          i18n.t('guidedDiag.p0113_action', { defaultValue: 'Measure sensor resistance (kΩ) and check connector pins.' })
+        ],
+        canDriveSafetyText: i18n.t('aiDoctor.warningDrive', { defaultValue: 'Safe to drive to repair shop at moderate speed.' })
+      };
+    }
+
     return {
       riskLevel,
       riskScore,

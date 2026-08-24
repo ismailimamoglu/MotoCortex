@@ -1188,57 +1188,57 @@ export default function MainApp() {
           const desc = lookupDTC(dtc);
           return desc ? ` • ${dtc} - ${desc}` : ` • ${dtc}`;
         }).join('\n')
-      : ` • ${i18n.t('report.noDtcs', { defaultValue: 'HATA KODU YOK - TEMİZ' })}`;
+      : ` • ${i18n.t('report.noDtcs', { defaultValue: 'NO TROUBLE CODES - CLEAN' })}`;
 
     // 2. AI Doctor Summary
-    let aiSeverity = i18n.t('aiDoctor.severityClean', { defaultValue: 'TEMİZ' });
-    let aiSafetyImpact = i18n.t('aiDoctor.safetyOk', { defaultValue: 'Sürüşe uygun, kritik tehlike tespit edilmedi.' });
+    let aiSeverity = i18n.t('aiDoctor.severityClean', { defaultValue: 'CLEAN / OPTIMAL' });
+    let aiSafetyImpact = i18n.t('aiDoctor.safetyOk', { defaultValue: 'Safe for driving. No critical hazards detected.' });
     if (dtcs.length > 0) {
       const hasCritical = dtcs.some(d => d.startsWith('P03') || d.startsWith('P02') || d.startsWith('P07'));
       if (hasCritical) {
-        aiSeverity = i18n.t('aiDoctor.severityHigh', { defaultValue: 'YÜKSEK KRİTİK' });
-        aiSafetyImpact = i18n.t('aiDoctor.safetyHighWarning', { defaultValue: 'Sürüş güvenliği etkilenebilir. En yakın servise başvurunuz.' });
+        aiSeverity = i18n.t('aiDoctor.severityHigh', { defaultValue: 'CRITICAL RISK' });
+        aiSafetyImpact = i18n.t('aiDoctor.safetyHighWarning', { defaultValue: 'Driving safety may be compromised. Proceed to nearest service immediately.' });
       } else {
-        aiSeverity = i18n.t('aiDoctor.severityModerate', { defaultValue: 'ORTA DERECE' });
-        aiSafetyImpact = i18n.t('aiDoctor.safetyModerateWarning', { defaultValue: 'Kısa mesafe sürüşe uygun. Performans ve yakıt tüketimi kontrol edilmeli.' });
+        aiSeverity = i18n.t('aiDoctor.severityModerate', { defaultValue: 'MODERATE RISK' });
+        aiSafetyImpact = i18n.t('aiDoctor.safetyModerateWarning', { defaultValue: 'Suitable for short distance driving. Monitor engine load and fuel consumption.' });
       }
     }
 
     // 3. Multi-ECU Overview
     const moduleStatusList = [
-      ` • [ECM] ${i18n.t('expertise.moduleEngine', { defaultValue: 'Motor Kontrol Ünitesi' })}: ${dtcs.length > 0 ? `${dtcs.length} ${i18n.t('report.faultCount', { defaultValue: 'Arıza Kodu' })}` : i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
-      ` • [TCM] ${i18n.t('expertise.moduleTcm', { defaultValue: 'Otomatik Şanzıman' })}: ${i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
-      ` • [ABS] ${i18n.t('expertise.moduleAbs', { defaultValue: 'Fren & Güvenlik Sistemi' })}: ${i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
-      ` • [BCM] ${i18n.t('expertise.moduleBcm', { defaultValue: 'Gövde Kontrol Modülü' })}: ${i18n.t('common.normal', { defaultValue: 'NORMAL' })}`,
+      ` • [ECM] ${i18n.t('expertise.moduleEngine', { defaultValue: 'Engine Control Module' })}: ${dtcs.length > 0 ? `${dtcs.length} ${i18n.t('report.faultCount', { defaultValue: 'Fault Codes' })}` : i18n.t('common.normal', { defaultValue: 'Normal' })}`,
+      ` • [TCM] ${i18n.t('expertise.moduleTcm', { defaultValue: 'Transmission Control Module' })}: ${i18n.t('common.normal', { defaultValue: 'Normal' })}`,
+      ` • [ABS] ${i18n.t('expertise.moduleAbs', { defaultValue: 'Anti-lock Braking System' })}: ${i18n.t('common.normal', { defaultValue: 'Normal' })}`,
+      ` • [BCM] ${i18n.t('expertise.moduleBcm', { defaultValue: 'Body Control Module' })}: ${i18n.t('common.normal', { defaultValue: 'Normal' })}`,
     ].join('\n');
 
     // 4. Formatted clean plain-text report
     const lineSep = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
-    const report = `[ ${i18n.t('report.title', { defaultValue: 'CORTEX OBD2 TEŞHİS & EKSPERTİZ RAPORU' })} ]
+    const report = `[ ${i18n.t('report.title', { defaultValue: 'CORTEX OBD2 DIAGNOSTIC & APPRAISAL REPORT' })} ]
 
-${i18n.t('report.vehicleIdentity', { defaultValue: 'ARAÇ KİMLİĞİ & KİLOMETRE' })}
+${i18n.t('report.vehicleIdentity', { defaultValue: 'VEHICLE IDENTITY & MILEAGE' })}
 ${lineSep}
- • ${i18n.t('report.vin', { defaultValue: 'Şasi No (VIN)' })}: ${vin || i18n.t('report.vinNotFound', { defaultValue: 'Tespit Edilemedi' })}
-${vehicleName ? ` • ${i18n.t('report.vehicle', { defaultValue: 'Araç' })}: ${vehicleName}\n` : ''} • ${i18n.t('report.odometer', { defaultValue: 'Orijinal KM' })}: ${odometer === 'UNSUPPORTED' ? i18n.t('common.unsupported', { defaultValue: 'Desteklenmiyor' }) : odometer !== null ? `${odometer} km` : i18n.t('common.unknown', { defaultValue: 'Bilinmiyor' })}
- • ${i18n.t('report.milDist', { defaultValue: 'Motor Arıza Işığı (MIL)' })}: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
- • ${i18n.t('report.distSinceCleared', { defaultValue: 'Arıza Kodları Silineli' })}: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : i18n.t('common.unknown', { defaultValue: 'Bilinmiyor' })}
-${btState.voltage ? ` • ${i18n.t('report.voltage', { defaultValue: 'Akü Voltajı' })}: ${btState.voltage}\n` : ''}
-${i18n.t('report.dtcCount', { count: dtcs.length, defaultValue: `ARIZA KODLARI (${dtcs.length} ADET)` })}
+ • ${i18n.t('report.vin', { defaultValue: 'VIN' })}: ${vin || i18n.t('report.vinNotFound', { defaultValue: 'Not Detected' })}
+${vehicleName ? ` • ${i18n.t('report.vehicle', { defaultValue: 'Vehicle' })}: ${vehicleName}\n` : ''} • ${i18n.t('report.odometer', { defaultValue: 'Odometer' })}: ${odometer === 'UNSUPPORTED' ? i18n.t('common.unsupported', { defaultValue: 'Unsupported' }) : odometer !== null ? `${odometer} km` : i18n.t('common.unknown', { defaultValue: 'Unknown' })}
+ • ${i18n.t('report.milDist', { defaultValue: 'Distance Traveled with MIL ON' })}: ${distanceMilOn !== null ? `${distanceMilOn} km` : '0 km'}
+ • ${i18n.t('report.distSinceCleared', { defaultValue: 'Distance Since Codes Cleared' })}: ${distanceSinceCleared !== null ? `${distanceSinceCleared} km` : i18n.t('common.unknown', { defaultValue: 'Unknown' })}
+${btState.voltage ? ` • ${i18n.t('report.voltage', { defaultValue: 'Battery Voltage' })}: ${btState.voltage}\n` : ''}
+${i18n.t('report.dtcCount', { count: dtcs.length, defaultValue: `FAULT CODES (${dtcs.length})` })}
 ${lineSep}
 ${dtcLines}
 
-${i18n.t('report.aiSection', { defaultValue: 'AI DOKTOR ÖN DEĞERLENDİRMESİ' })}
+${i18n.t('report.aiSection', { defaultValue: 'AI DOCTOR OVERALL CONDITION ANALYSIS' })}
 ${lineSep}
- • ${i18n.t('report.severity', { defaultValue: 'Kritiklik Seviyesi' })}: ${aiSeverity}
- • ${i18n.t('report.safety', { defaultValue: 'Sürüş Güvenliği' })}: ${aiSafetyImpact}
+ • ${i18n.t('report.severity', { defaultValue: 'Severity Level' })}: ${aiSeverity}
+ • ${i18n.t('report.safety', { defaultValue: 'Driving Safety' })}: ${aiSafetyImpact}
 
-${i18n.t('report.multiEcuStatus', { defaultValue: 'ELEKTRONİK MODÜL DURUMU (MULTI-ECU)' })}
+${i18n.t('report.multiEcuStatus', { defaultValue: 'ELECTRONIC MODULE STATUS (MULTI-ECU)' })}
 ${lineSep}
 ${moduleStatusList}
 
 ${lineSep}
-${i18n.t('report.proApp', { defaultValue: 'MotoCortex Diagnostic Suite Pro' })}
-${i18n.t('report.date', { defaultValue: 'Tarih' })}: ${new Date().toLocaleDateString(activeLang)} ${new Date().toLocaleTimeString(activeLang, { hour: '2-digit', minute: '2-digit' })}`;
+${i18n.t('report.proApp', { defaultValue: 'Cortex OBD2 Diagnostic Scanner v7 PRO.' })}
+${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateString(activeLang)} ${new Date().toLocaleTimeString(activeLang, { hour: '2-digit', minute: '2-digit' })}`;
 
     try {
       await Share.share({ message: report, title: i18n.t('report.title', { defaultValue: 'MotoCortex Teşhis Raporu' }) });
@@ -2339,7 +2339,7 @@ ${i18n.t('report.date', { defaultValue: 'Tarih' })}: ${new Date().toLocaleDateSt
  lineHeight: scaleFont(11),
  paddingHorizontal: scaleWidth(20),
  }}>
- {t('disclaimer')}
+ {t('common.legalDisclaimer', { defaultValue: 'Yasal Uyarı: MotoCortex profesyonel bir araç teşhis yazılımıdır. Sürüş sırasında dikkatli olunuz.' })}
  </Text>
  </View>
  </ScrollView>
@@ -2394,7 +2394,7 @@ ${i18n.t('report.date', { defaultValue: 'Tarih' })}: ${new Date().toLocaleDateSt
  lineHeight: scaleFont(10),
  paddingHorizontal: scaleWidth(10),
  }}>
- {t('disclaimer')}
+ {t('common.legalDisclaimer', { defaultValue: 'Yasal Uyarı: MotoCortex profesyonel bir araç teşhis yazılımıdır. Sürüş sırasında dikkatli olunuz.' })}
  </Text>
  </View>
  </ScrollView>

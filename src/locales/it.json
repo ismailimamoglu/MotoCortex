@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "GRATUITO"
+        "free": "GRATUITO",
+        "legalDisclaimer": "Avviso legale: MotoCortex è un software professionale di diagnosi dei veicoli. Guidare con cautela; consultare tecnici certificati per le riparazioni meccaniche."
     },
     "paywall": {
         "subtitle": "Sblocca la massima profondità diagnostica e parametri infiniti.",
@@ -363,7 +364,8 @@
         "openBtSettings": "IMPOSTAZIONI BLUETOOTH",
         "firstTimeGuideTitle": "GUIDA ALLA PRIMA CONFIGURAZIONE E ACCOPPIAMENTO",
         "firstTimeGuideDescAndroid": "Accoppia gli adattatori Bluetooth Classic nelle impostazioni Bluetooth del telefono prima del primo utilizzo. I dispositivi BLE e Wi-Fi si collegano direttamente.",
-        "firstTimeGuideDescIos": "Gli adattatori BLE e Wi-Fi non richiedono l'accoppiamento nelle impostazioni; vengono rilevati e collegati direttamente nell'app."
+        "firstTimeGuideDescIos": "Gli adattatori BLE e Wi-Fi non richiedono l'accoppiamento nelle impostazioni; vengono rilevati e collegati direttamente nell'app.",
+        "pinCopied": "PIN {{pin}} copiato."
     },
     "dashboard": {
         "selectDevice": "TOCCA PER SELEZIONARE IL DISPOSITIVO",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "DATI SENSORI IN TEMPO REALE",
         "noData": "Nessun dato disponibile",
-        "proApp": "Scansionato con Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
         "date": "Data",
         "vinNotFound": "Non rilevato",
-        "noDtcs": "NESSUN CODICE DI ERRORE — PULITO",
+        "noDtcs": "NESSUN CODICE GUASTO - PULITO",
         "speed": "Velocità",
         "coolant": "Temp. Motore",
         "throttle": "Acceleratore",
         "engineLoad": "Carico Motore",
         "intakeAir": "Aria Aspirata",
         "manifold": "Collettore",
-        "voltage": "Tensione Batteria",
+        "voltage": "Tensione batteria",
         "shareMessage": "Monitora lo stato di salute della tua moto dal telefono con l'app di diagnostica OBD2 Cortex OBD2 Diagnostic Scanner! Scarica: https://cortexobd2.app",
         "subtitle": "Ispezione diagnostica e telemetrica completa dell'usato",
         "vehicleInfo": "Identificazione del veicolo e metadati della ECU",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "IMPATTO SUL PUNTEGGIO SULLA SALUTE DEL MOTORE",
         "freeTrialBadge": "STAI USANDO LA TUA PROVA GRATUITA DI DIAGNOSI IA",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "OTTIMALE / PULITO",
+        "severityHigh": "ALTO RISCHIO CRITICO",
+        "severityModerate": "RISCHIO MODERATO",
+        "safetyOk": "Sicuro per la guida. Nessun pericolo critico rilevato.",
+        "safetyHighWarning": "Sicurezza di guida compromessa. Recarsi subito all'officina più vicina.",
+        "safetyModerateWarning": "Adatto a brevi tragitti. Monitorare carico motore e consumi."
     },
     "dtcRisk": {
         "safeTitle": "SICURO PER LA GUIDA",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: sostituire l'alloggiamento della pressione meccatronica o la piastra dell'accumulatore rinforzata.",
         "default_cause1": "Guasto al circuito del componente/resistenza del cablaggio",
         "default_cause2": "Usura meccanica o degrado del sensore",
-        "default_action": "Eseguire il controllo della caduta di tensione e della continuità utilizzando il multimetro."
+        "default_action": "Eseguire il controllo della caduta di tensione e della continuità utilizzando il multimetro.",
+        "p0113_cause1": "Guasto al sensore temperatura aria aspirata (IAT)",
+        "p0113_cause2": "Cablaggio / Connettore aperto o in cortocircuito",
+        "p0113_cause3": "Deviazione resistenza di ingresso centralina motore (ECU)",
+        "p0113_action": "Misurare la resistenza del sensore IAT (kΩ) con un multimetro e controllare i pin del connettore.",
+        "p0113_tsb": "TSB-2023-04: Ispezionare il cablaggio del sensore IAT per usura da sfregamento e tensione a 5V.",
+        "cat_p_cause1": "Guasto circuito sensore o attuatore motopropulsore",
+        "cat_p_cause2": "Usura meccanica o squilibrio aria/carburante",
+        "cat_p_action": "Eseguire la scansione telemetrica live OBD-II e verificare le tensioni di segnale.",
+        "cat_c_cause1": "Guasto sensore velocità ruota / ABS / ESP",
+        "cat_c_cause2": "Problema idraulico o elettrico al sistema frenante",
+        "cat_c_action": "Ispezionare i sensori ruota ABS, gli anelli magnetici e il cablaggio dei freni.",
+        "cat_b_cause1": "Guasto circuito centralina carrozzeria (BCM) / illuminazione / chiusura",
+        "cat_b_cause2": "Sensore abitacolo, airbag SRS o modulo comfort disconnesso",
+        "cat_b_action": "Controllare fusibili del modulo carrozzeria, punti di massa e connettori.",
+        "cat_u_cause1": "Interruzione linea di comunicazione o rumore CAN Bus",
+        "cat_u_cause2": "Perdita alimentazione modulo o desincronizzazione Gateway",
+        "cat_u_action": "Controllare resistenza di terminazione CAN-High e CAN-Low (~60Ω) e batteria 12V."
     },
     "ev": {
         "loading": "Caricamento dei dati diagnostici del veicolo elettrico...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Feedback Ricevuto",
         "successDesc": "Grazie per la segnalazione! Il nostro team la esaminerà presto.",
         "reportIssueBtn": "Segnala Problema Tecnico"
+    },
+    "reportExport": {
+        "headerTitle": "RAPPORTO GLOBALE DI SALUTE E DIAGNOSI MOTOCORTEX",
+        "dateTime": "Data/Ora",
+        "vin": "VIN Veicolo",
+        "makeBrand": "Marca/Modello",
+        "scannedModules": "Centraline Scansionate: {{count}} Moduli (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Stato: TUTTI I SISTEMI IN SALUTE (0 Codici Guasto)",
+        "statusHealthyDesc": "Nessun codice guasto attivo o in sospeso trovato nelle centraline elettroniche.",
+        "statusFaults": "Stato: GUASTI RILEVATI ({{count}} Codici DTC Attivi)",
+        "dtcCode": "CODICE DTC",
+        "guidedAction": "Azione Guidata",
+        "technicalTsb": "Bollettino Tecnico TSB",
+        "footer": "Rapporto generato automaticamente dalla piattaforma di diagnosi MotoCortex."
     }
 }

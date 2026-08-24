@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "DARMOWE"
+        "free": "DARMOWE",
+        "legalDisclaimer": "Nota prawna: MotoCortex to profesjonalne oprogramowanie do diagnostyki pojazdów. Zachowaj ostrożność podczas jazdy; naprawy zlecaj certyfikowanym specjalistom."
     },
     "paywall": {
         "subtitle": "Odblokuj najgłębsze funkcje diagnostyczne i wszystkie parametry.",
@@ -363,7 +364,8 @@
         "openBtSettings": "USTAWIENIA BLUETOOTH",
         "firstTimeGuideTitle": "PRZEWODNIK PIERWSZEGO PAROWANIA I KONFIGURACJI",
         "firstTimeGuideDescAndroid": "Przed pierwszym użyciem sparuj adaptery Bluetooth Classic w ustawieniach Bluetooth telefonu. Urządzenia BLE i Wi-Fi łączą się bezpośrednio.",
-        "firstTimeGuideDescIos": "Adaptery BLE i Wi-Fi nie wymagają parowania w ustawieniach telefonu; są wykrywane i łączone bezpośrednio w aplikacji."
+        "firstTimeGuideDescIos": "Adaptery BLE i Wi-Fi nie wymagają parowania w ustawieniach telefonu; są wykrywane i łączone bezpośrednio w aplikacji.",
+        "pinCopied": "PIN {{pin}} skopiowany."
     },
     "dashboard": {
         "selectDevice": "DOTKNIJ, ABY WYBRAĆ URZĄDZENIE",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "DANE Z CZUJNIKA NA ŻYWO",
         "noData": "Nie udało się odczytać danych",
-        "proApp": "Skanowane za pomocą Cortex OBD2 Diagnostic Scanner v7 PRO.",
-        "date": "data",
-        "vinNotFound": "Nie wykryto",
-        "noDtcs": "BRAK KODU BŁĘDU - CZYSTY",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO TROUBLE CODES - CLEAN",
         "speed": "prędkość",
         "coolant": "Temperatura silnika",
         "throttle": "gaz",
         "engineLoad": "Obciążenie silnika",
         "intakeAir": "Powietrze wlotowe",
         "manifold": "Kolektor",
-        "voltage": "Napięcie akumulatora",
+        "voltage": "Battery Voltage",
         "shareMessage": "Śledź stan swojego motocykla z kieszeni dzięki aplikacji diagnostycznej Motocortex OBD2! Pobierz: https://cortexobd2.app",
         "subtitle": "Kompleksowa diagnostyka używana i kontrola telemetryczna",
         "vehicleInfo": "Identyfikacja pojazdu i metadane ECU",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "WPŁYW NA OCEnę STANU SILNIKA",
         "freeTrialBadge": "UŻYWASZ 1 DARMOWEJ DIAGNOSTYKI AI",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "CLEAN / OPTIMAL",
+        "severityHigh": "CRITICAL RISK",
+        "severityModerate": "MODERATE RISK",
+        "safetyOk": "Safe for driving. No critical hazards detected.",
+        "safetyHighWarning": "Driving safety may be compromised. Proceed to nearest service immediately.",
+        "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
         "safeTitle": "BEZPIECZNE DO JAZDY",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Wymienić mechatroniczną obudowę ciśnieniową lub wzmocnioną płytę akumulatora.",
         "default_cause1": "Usterka obwodu komponentu/oporności przewodów",
         "default_cause2": "Zużycie mechaniczne lub degradacja czujnika",
-        "default_action": "Wykonaj kontrolę spadku napięcia i ciągłości za pomocą multimetru."
+        "default_action": "Wykonaj kontrolę spadku napięcia i ciągłości za pomocą multimetru.",
+        "p0113_cause1": "Uszkodzenie czujnika temperatury powietrza dolotowego (IAT)",
+        "p0113_cause2": "Przerwa lub zwarcie w wiązce przewodów / złączu",
+        "p0113_cause3": "Odchylenie rezystancji wejściowej sterownika silnika (ECU)",
+        "p0113_action": "Zmierz rezystancję czujnika IAT (kΩ) multimetrem i sprawdź piny złącza.",
+        "p0113_tsb": "TSB-2023-04: Sprawdź wiązkę czujnika IAT pod kątem przetarć i napięcia odniesienia 5V.",
+        "cat_p_cause1": "Usterka obwodu czujnika lub siłownika układu napędowego",
+        "cat_p_cause2": "Zużycie mechaniczne lub zaburzenie mieszanki paliwowo-powietrznej",
+        "cat_p_action": "Wykonaj skanowanie telemetrii OBD-II na żywo i sprawdź napięcia sygnałowe.",
+        "cat_c_cause1": "Usterka czujnika prędkości koła / ABS / ESP",
+        "cat_c_cause2": "Usterka hydrauliczna lub elektryczna układu hamulcowego",
+        "cat_c_action": "Sprawdź czujniki kół ABS, pierścienie impulsowe i okablowanie hamulców.",
+        "cat_b_cause1": "Usterka obwodu modułu nadwozia (BCM) / oświetlenia / zamków",
+        "cat_b_cause2": "Odłączony czujnik wnętrza, poduszka powietrzna SRS lub moduł komfortu",
+        "cat_b_action": "Sprawdź bezpieczniki modułu nadwozia, połączenia masowe i wtyczki.",
+        "cat_u_cause1": "Przerwa w linii komunikacyjnej lub zakłócenia magistrali CAN",
+        "cat_u_cause2": "Utrata zasilania modułu lub desynchronizacja bramki (Gateway)",
+        "cat_u_action": "Sprawdź rezystancję terminującą CAN-High/CAN-Low (~60Ω) i napięcie akumulatora 12V."
     },
     "ev": {
         "loading": "Ładowanie danych diagnostycznych pojazdu elektrycznego...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Opinia Otrzymana",
         "successDesc": "Dziękujemy za kontakt! Nasz zespół wkrótce się tym zajmie.",
         "reportIssueBtn": "Zgłoś Problem Techniczny"
+    },
+    "reportExport": {
+        "headerTitle": "GLOBALNY RAPORT DIAGNOSTYCZNY I STANU MOTOCORTEX",
+        "dateTime": "Data/Czas",
+        "vin": "VIN Pojazdu",
+        "makeBrand": "Marka/Model",
+        "scannedModules": "Przeskanowane Sterowniki: {{count}} Modułów (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: WSZYSTKIE SYSTEMY SPRAWNE (0 Kodów Błędów)",
+        "statusHealthyDesc": "Brak aktywnych lub oczekujących kodów błędów w sterownikach.",
+        "statusFaults": "Status: WYKRYTO USTERKI ({{count}} Aktywne Kody DTC)",
+        "dtcCode": "KOD DTC",
+        "guidedAction": "Zalecane Działanie",
+        "technicalTsb": "Biuletyn Techniczny TSB",
+        "footer": "Raport wygenerowany automatycznie przez platformę diagnostyczną MotoCortex."
     }
 }

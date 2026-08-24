@@ -869,7 +869,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  onPress={() => {
  Clipboard.setString('1234');
  triggerHaptic();
- Alert.alert(t('common.copied'), 'PIN 1234 copied.');
+ Alert.alert(t('common.copied'), t('connection.pinCopied', { pin: '1234', defaultValue: 'PIN 1234 copied.' }));
  }}
  >
  <Text style={[styles.pinBtnText, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
@@ -882,7 +882,7 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  onPress={() => {
  Clipboard.setString('0000');
  triggerHaptic();
- Alert.alert(t('common.copied'), 'PIN 0000 copied.');
+ Alert.alert(t('common.copied'), t('connection.pinCopied', { pin: '0000', defaultValue: 'PIN 0000 copied.' }));
  }}
  >
  <Text style={[styles.pinBtnText, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>

@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "免费"
+        "free": "免费",
+        "legalDisclaimer": "法律声明：MotoCortex 是一款专业的车辆诊断与遥测软件。请安全驾驶；机械维修请咨询专业技术人员。"
     },
     "paywall": {
         "crownBadge": "摩托皮质专业版",
@@ -363,7 +364,8 @@
         "openBtSettings": "蓝牙设置",
         "firstTimeGuideTitle": "首次配对与设置指南",
         "firstTimeGuideDescAndroid": "首次使用前请在手机蓝牙设置中配对经典蓝牙 适配器（PIN 码：1234 或 0000）。BLE 和 Wi-Fi 设备可直接连接。",
-        "firstTimeGuideDescIos": "BLE（蓝牙 4.0+）和 Wi-Fi 适配器无需在手机设置中配对，可直接在应用内扫描并连接。"
+        "firstTimeGuideDescIos": "BLE（蓝牙 4.0+）和 Wi-Fi 适配器无需在手机设置中配对，可直接在应用内扫描并连接。",
+        "pinCopied": "PIN {{pin}} copied."
     },
     "dashboard": {
         "selectDevice": "触摸选择设备",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "实时传感器数据",
         "noData": "读取数据失败",
-        "proApp": "使用 Cortex OBD2 Diagnostic Scanner v7 PRO 扫描。",
-        "date": "日期",
-        "vinNotFound": "未检测到",
-        "noDtcs": "无错误代码 - 干净",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO TROUBLE CODES - CLEAN",
         "speed": "速度",
         "coolant": "发动机温度",
         "throttle": "气体",
         "engineLoad": "发动机负载",
         "intakeAir": "进气",
         "manifold": "歧管",
-        "voltage": "电池电压",
+        "voltage": "Battery Voltage",
         "shareMessage": "使用 Motocortex OBD2 诊断应用程序从口袋里跟踪摩托车的状态！ 下载：https://cortexobd2.app",
         "subtitle": "全面的二手诊断和遥测检查",
         "vehicleInfo": "车辆识别和 ECU 元数据",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "发动机健康评分影响",
         "freeTrialBadge": "您正在使用 1 次免费 AI 诊断测试",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "CLEAN / OPTIMAL",
+        "severityHigh": "CRITICAL RISK",
+        "severityModerate": "MODERATE RISK",
+        "safetyOk": "Safe for driving. No critical hazards detected.",
+        "safetyHighWarning": "Driving safety may be compromised. Proceed to nearest service immediately.",
+        "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
         "safeTitle": "允许继续行驶",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG：更换机电压力外壳或加固蓄能器板。",
         "default_cause1": "元件电路/接线电阻故障",
         "default_cause2": "机械磨损或传感器退化",
-        "default_action": "使用万用表执行电压降和连续性检查。"
+        "default_action": "使用万用表执行电压降和连续性检查。",
+        "p0113_cause1": "Intake Air Temperature (IAT) Sensor Failure",
+        "p0113_cause2": "Wiring Harness / Connector Open or Short Circuit",
+        "p0113_cause3": "Engine Control Module (ECU) Input Resistance Deviation",
+        "p0113_action": "Measure IAT sensor resistance (kΩ) with a multimeter and check connector pins for corrosion.",
+        "p0113_tsb": "TSB-2023-04: Inspect IAT sensor wiring harness for friction wear and 5V reference voltage.",
+        "cat_p_cause1": "Powertrain Sensor or Actuator Circuit Fault",
+        "cat_p_cause2": "Mechanical Wear or Air/Fuel Imbalance",
+        "cat_p_action": "Perform OBD-II live telemetry scan and verify sensor signal voltages.",
+        "cat_c_cause1": "Wheel Speed / ABS / ESP Sensor Fault",
+        "cat_c_cause2": "Brake System Hydraulic or Electrical Connection Fault",
+        "cat_c_action": "Inspect ABS wheel speed sensors, tone rings, and brake harness wiring.",
+        "cat_b_cause1": "Body Control Module (BCM) / Lighting / Access Circuit Fault",
+        "cat_b_cause2": "Interior Sensor, SRS Airbag or Comfort Module Disconnect",
+        "cat_b_action": "Check body module fuses, chassis ground connections, and harness plugs.",
+        "cat_u_cause1": "CAN Bus Communication Line Interruption or Bus Noise",
+        "cat_u_cause2": "Module Power Loss or Network Gateway Desynchronization",
+        "cat_u_action": "Check CAN-High and CAN-Low termination resistance (approx. 60Ω) and 12V battery stability."
     },
     "ev": {
         "loading": "正在加载电动汽车诊断数据...",
@@ -3559,5 +3584,19 @@
         "successTitle": "已收到反馈",
         "successDesc": "感谢您的反馈！工程团队将尽快处理。",
         "reportIssueBtn": "报告技术问题"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT",
+        "dateTime": "Date/Time",
+        "vin": "Vehicle VIN",
+        "makeBrand": "Make/Brand",
+        "scannedModules": "Scanned ECUs: {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)",
+        "statusHealthyDesc": "No active or pending fault codes found across scanned electronic control units.",
+        "statusFaults": "Status: FAULTS DETECTED ({{count}} Active DTCs)",
+        "dtcCode": "DTC CODE",
+        "guidedAction": "Guided Action",
+        "technicalTsb": "Technical TSB",
+        "footer": "Report generated automatically by MotoCortex Intelligent Diagnostics Platform."
     }
 }

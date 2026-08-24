@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "ΔΩΡΕΑΝ"
+        "free": "ΔΩΡΕΑΝ",
+        "legalDisclaimer": "Νομική ειδοποίηση: Το MotoCortex είναι επαγγελματικό λογισμικό διάγνωσης οχημάτων. Οδηγείτε με προσοχή και απευθυνθείτε σε εξουσιοδοτημένους τεχνικούς."
     },
     "paywall": {
         "subtitle": "Ξεκλειδώστε τα πιο βαθιά διαγνωστικά χαρακτηριστικά και όλες τις παραμέτρους.",
@@ -363,7 +364,8 @@
         "openBtSettings": "ΡΥΘΜΙΣΕΙΣ BLUETOOTH",
         "firstTimeGuideTitle": "ΟΔΗΓΟΣ ΠΡΩΤΗΣ ΣΥΝΔΕΣΗΣ & ΡΥΘΜΙΣΗΣ",
         "firstTimeGuideDescAndroid": "Κάντε σύζευξη των προσαρμογέων Bluetooth Classic στις ρυθμίσεις Bluetooth του τηλεφώνου σας πριν από την πρώτη χρήση. Οι συσκευές BLE και Wi-Fi συνδέονται απευθείας.",
-        "firstTimeGuideDescIos": "Οι προσαρμογείς BLE και Wi-Fi δεν απαιτούν σύζευξη στις ρυθμίσεις του τηλεφώνου, εντοπίζονται και συνδέονται απευθείας μέσα από την εφαρμογή."
+        "firstTimeGuideDescIos": "Οι προσαρμογείς BLE και Wi-Fi δεν απαιτούν σύζευξη στις ρυθμίσεις του τηλεφώνου, εντοπίζονται και συνδέονται απευθείας μέσα από την εφαρμογή.",
+        "pinCopied": "PIN {{pin}} copied."
     },
     "dashboard": {
         "selectDevice": "ΑΓΓΙΞΤΕ ΓΙΑ ΕΠΙΛΟΓΗ ΣΥΣΚΕΥΗΣ",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "ΖΩΝΤΑΝΑ ΔΕΔΟΜΕΝΑ ΑΙΣΘΗΤΗΡΑ",
         "noData": "Αποτυχία ανάγνωσης δεδομένων",
-        "proApp": "Σάρωση με Cortex OBD2 Diagnostic Scanner v7 PRO.",
-        "date": "ημερομηνία",
-        "vinNotFound": "Δεν εντοπίστηκε",
-        "noDtcs": "ΟΧΙ ΚΩΔΙΚΟΙ ΣΦΑΛΜΑΤΩΝ - ΚΑΘΑΡΙΣΜΟΣ",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO TROUBLE CODES - CLEAN",
         "speed": "ταχύτητα",
         "coolant": "Θερμοκρασία κινητήρα",
         "throttle": "αέριο",
         "engineLoad": "Φορτίο κινητήρα",
         "intakeAir": "Εισαγωγή αέρα",
         "manifold": "Πολλαπλή",
-        "voltage": "Τάση μπαταρίας",
+        "voltage": "Battery Voltage",
         "shareMessage": "Ακολουθήστε την κατάσταση της μοτοσυκλέτας σας από την τσέπη σας με την Διαγνωστική Εφαρμογή Motocortex OBD2! Λήψη: https://cortexobd2.app",
         "subtitle": "Πλήρης Μεταχειρισμένος Διαγνωστικός & Τηλεμετρικός Έλεγχος",
         "vehicleInfo": "Αναγνώριση οχήματος & Μεταδεδομένα ECU",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "ΕΠΙΠΤΩΣΗ ΒΑΘΜΟΛΟΓΙΑΣ ΥΓΕΙΑΣ ΚΙΝΗΤΗΡΑ",
         "freeTrialBadge": "ΧΡΗΣΙΜΟΠΟΙΕΙΤΕ ΤΗ 1 ΔΩΡΕΑΝ ΔΟΚΙΜΗ ΔΙΑΓΝΩΣΗΣ AI",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "CLEAN / OPTIMAL",
+        "severityHigh": "CRITICAL RISK",
+        "severityModerate": "MODERATE RISK",
+        "safetyOk": "Safe for driving. No critical hazards detected.",
+        "safetyHighWarning": "Driving safety may be compromised. Proceed to nearest service immediately.",
+        "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
         "safeTitle": "ΑΣΦΑΛΕΣ ΓΙΑ ΟΔΗΓΗΣΗ",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Αντικαταστήστε το περίβλημα μηχατρονικής πίεσης ή την ενισχυμένη πλάκα συσσωρευτή.",
         "default_cause1": "Σφάλμα κυκλώματος εξαρτήματος / αντίστασης καλωδίωσης",
         "default_cause2": "Μηχανική φθορά ή υποβάθμιση αισθητήρα",
-        "default_action": "Πραγματοποιήστε έλεγχο πτώσης τάσης και συνέχειας χρησιμοποιώντας πολύμετρο."
+        "default_action": "Πραγματοποιήστε έλεγχο πτώσης τάσης και συνέχειας χρησιμοποιώντας πολύμετρο.",
+        "p0113_cause1": "Intake Air Temperature (IAT) Sensor Failure",
+        "p0113_cause2": "Wiring Harness / Connector Open or Short Circuit",
+        "p0113_cause3": "Engine Control Module (ECU) Input Resistance Deviation",
+        "p0113_action": "Measure IAT sensor resistance (kΩ) with a multimeter and check connector pins for corrosion.",
+        "p0113_tsb": "TSB-2023-04: Inspect IAT sensor wiring harness for friction wear and 5V reference voltage.",
+        "cat_p_cause1": "Powertrain Sensor or Actuator Circuit Fault",
+        "cat_p_cause2": "Mechanical Wear or Air/Fuel Imbalance",
+        "cat_p_action": "Perform OBD-II live telemetry scan and verify sensor signal voltages.",
+        "cat_c_cause1": "Wheel Speed / ABS / ESP Sensor Fault",
+        "cat_c_cause2": "Brake System Hydraulic or Electrical Connection Fault",
+        "cat_c_action": "Inspect ABS wheel speed sensors, tone rings, and brake harness wiring.",
+        "cat_b_cause1": "Body Control Module (BCM) / Lighting / Access Circuit Fault",
+        "cat_b_cause2": "Interior Sensor, SRS Airbag or Comfort Module Disconnect",
+        "cat_b_action": "Check body module fuses, chassis ground connections, and harness plugs.",
+        "cat_u_cause1": "CAN Bus Communication Line Interruption or Bus Noise",
+        "cat_u_cause2": "Module Power Loss or Network Gateway Desynchronization",
+        "cat_u_action": "Check CAN-High and CAN-Low termination resistance (approx. 60Ω) and 12V battery stability."
     },
     "ev": {
         "loading": "Φόρτωση δεδομένων διάγνωσης EV...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Ελήφθησαν τα Σχόλια",
         "successDesc": "Ευχαριστούμε για το μήνυμά σας! Η ομάδα μας θα το εξετάσει σύντομα.",
         "reportIssueBtn": "Αναφορά Τεχνικού Προβλήματος"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT",
+        "dateTime": "Date/Time",
+        "vin": "Vehicle VIN",
+        "makeBrand": "Make/Brand",
+        "scannedModules": "Scanned ECUs: {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)",
+        "statusHealthyDesc": "No active or pending fault codes found across scanned electronic control units.",
+        "statusFaults": "Status: FAULTS DETECTED ({{count}} Active DTCs)",
+        "dtcCode": "DTC CODE",
+        "guidedAction": "Guided Action",
+        "technicalTsb": "Technical TSB",
+        "footer": "Report generated automatically by MotoCortex Intelligent Diagnostics Platform."
     }
 }

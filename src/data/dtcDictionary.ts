@@ -814,31 +814,35 @@ export function lookupDTC(code: string, brand?: string): string | null {
         return cleanDtcDescription(localizeDtcText(oemDesc, currentLang));
     }
 
-    // 2. Check i18n translation key first (26 Locales)
-    const i18nKey = `dtc.${normalized}`;
-    if (i18n.isInitialized && i18n.exists(i18nKey)) {
-        return cleanDtcDescription(i18n.t(i18nKey));
-    }
-
-    // 3. Turkish Semantic & Local Dictionary (Only when active language is Turkish)
+    // 2. Turkish Semantic Dictionary (Rich actionable advice for Turkish users)
     if (langCode === 'tr') {
         const semanticDesc = SemanticDtcDictionary[normalized];
         if (semanticDesc) {
             return cleanDtcDescription(semanticDesc);
         }
+    }
+
+    // 3. Check i18n translation key (26 Locales)
+    const i18nKey = `dtc.${normalized}`;
+    if (i18n.isInitialized && i18n.exists(i18nKey)) {
+        return cleanDtcDescription(i18n.t(i18nKey));
+    }
+
+    // 4. Turkish Local Dictionary fallback
+    if (langCode === 'tr') {
         const localDesc = DTC_DICTIONARY[normalized];
         if (localDesc) {
             return cleanDtcDescription(localDesc);
         }
     }
     
-    // 4. Synchronous chunk lookup (26 Locales)
+    // 5. Synchronous chunk lookup (26 Locales)
     const chunkDesc = lookupDtcSync(normalized);
     if (chunkDesc) {
         return cleanDtcDescription(localizeDtcText(chunkDesc, currentLang));
     }
 
-    // 5. General fallback: if not Turkish, do NOT return Turkish hardcoded text
+    // 6. General fallback: if Turkish, return standard dictionary if available
     if (langCode === 'tr') {
         const fallbackDesc = SemanticDtcDictionary[normalized] || DTC_DICTIONARY[normalized] || null;
         return cleanDtcDescription(fallbackDesc);

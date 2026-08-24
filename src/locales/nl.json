@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "GRATIS"
+        "free": "GRATIS",
+        "legalDisclaimer": "Juridische mededeling: MotoCortex is professionele voertuigdiagnosesoftware. Wees voorzichtig tijdens het rijden; raadpleeg gecertificeerde technici voor reparaties."
     },
     "paywall": {
         "subtitle": "Ontgrendel de diepste diagnostische functies en alle parameters.",
@@ -363,7 +364,8 @@
         "openBtSettings": "BLUETOOTH-INSTELLINGEN",
         "firstTimeGuideTitle": "EERSTE KOPPELING & INSTELLINGENGIDS",
         "firstTimeGuideDescAndroid": "Koppel Bluetooth Classic-adapters vóór het eerste gebruik in de Bluetooth-instellingen van uw telefoon. BLE- en Wi-Fi-apparaten maken rechtstreeks verbinding.",
-        "firstTimeGuideDescIos": "BLE en Wi-Fi-adapters vereisen geen koppeling in de telefooninstellingen; ze worden rechtstreeks in de app ontdekt en verbonden."
+        "firstTimeGuideDescIos": "BLE en Wi-Fi-adapters vereisen geen koppeling in de telefooninstellingen; ze worden rechtstreeks in de app ontdekt en verbonden.",
+        "pinCopied": "PIN {{pin}} gekopieerd."
     },
     "dashboard": {
         "selectDevice": "RAAK AAN OM APPARAAT TE SELECTEREN",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "LIVE SENSORGEGEVENS",
         "noData": "Kan gegevens niet lezen",
-        "proApp": "Gescand met Cortex OBD2 Diagnostic Scanner v7 PRO.",
-        "date": "datum",
-        "vinNotFound": "Niet gedetecteerd",
-        "noDtcs": "GEEN FOUTCODES - SCHOON",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO TROUBLE CODES - CLEAN",
         "speed": "snelheid",
         "coolant": "Motortemperatuur",
         "throttle": "gas",
         "engineLoad": "Motorbelasting",
         "intakeAir": "Inlaatlucht",
         "manifold": "Verdeelstuk",
-        "voltage": "Batterijspanning",
+        "voltage": "Battery Voltage",
         "shareMessage": "Volg de status van uw motorfiets vanuit uw zak met Motocortex OBD2 diagnostische applicatie! Downloaden: https://cortexobd2.app",
         "subtitle": "Uitgebreide tweedehands diagnose- en telemetrie-inspectie",
         "vehicleInfo": "Voertuigidentificatie en ECU-metagegevens",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "IMPACT VAN DE MOTORGEZONDHEIDSCORE",
         "freeTrialBadge": "JE GEBRUIKT JE 1 GRATIS KI-DIAGNOSTISCHE PROEF",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "CLEAN / OPTIMAL",
+        "severityHigh": "CRITICAL RISK",
+        "severityModerate": "MODERATE RISK",
+        "safetyOk": "Safe for driving. No critical hazards detected.",
+        "safetyHighWarning": "Driving safety may be compromised. Proceed to nearest service immediately.",
+        "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
         "safeTitle": "VEILIG OM TE RIJDEN",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Mechatronische drukbehuizing of versterkte accumulatorplaat vervangen.",
         "default_cause1": "Component Circuit/bedradingsweerstandsfout",
         "default_cause2": "Mechanische slijtage of sensordegradatie",
-        "default_action": "Voer een spanningsval- en continuïteitscontrole uit met behulp van een multimeter."
+        "default_action": "Voer een spanningsval- en continuïteitscontrole uit met behulp van een multimeter.",
+        "p0113_cause1": "Inlaatluchttemperatuursensor (IAT) defect",
+        "p0113_cause2": "Kabelboom / Connector open of kortsluiting",
+        "p0113_cause3": "Ingangsweerstand ECU afwijkend",
+        "p0113_action": "Meet de IAT-sensorweerstand (kΩ) met een multimeter en controleer connectorcontacten.",
+        "p0113_tsb": "TSB-2023-04: Inspecteer IAT-kabelboom op schuurschade en 5V-referentiespanning.",
+        "cat_p_cause1": "Aandrijflijn sensor- of actuatorcircuitfout",
+        "cat_p_cause2": "Mechanische slijtage of lucht/brandstof-onbalans",
+        "cat_p_action": "Voer OBD-II live telemetriescan uit en controleer signaalspanningen.",
+        "cat_c_cause1": "Wielsnelheids- / ABS- / ESP-sensorfout",
+        "cat_c_cause2": "Hydraulische of elektrische storing remsysteem",
+        "cat_c_action": "Inspecteer ABS-wielsensoren, magneetringen en rembedrading.",
+        "cat_b_cause1": "Carrosseriemodule (BCM) / verlichting / vergrendelingsfout",
+        "cat_b_cause2": "Interieursensor, SRS airbag of comfortmodule losgekoppeld",
+        "cat_b_action": "Controleer zekeringen carrosseriemodule, massapunten en stekkers.",
+        "cat_u_cause1": "CAN-bus communicatie-onderbreking of ruis",
+        "cat_u_cause2": "Voedingsverlies module of Gateway-desynchronisatie",
+        "cat_u_action": "Controleer CAN-High en CAN-Low afsluitweerstand (~60Ω) en 12V-accu."
     },
     "ev": {
         "loading": "EV-diagnostische gegevens laden...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Feedback Ontvangen",
         "successDesc": "Bedankt voor uw bericht! Ons team zal dit spoedig beoordelen.",
         "reportIssueBtn": "Technisch Probleem Melden"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAAL DIAGNOSE- EN GEZONDHEIDSRAPPORT",
+        "dateTime": "Datum/Tijd",
+        "vin": "Voertuig-VIN",
+        "makeBrand": "Merk/Model",
+        "scannedModules": "Gescande ECU's: {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALLE SYSTEMEN GEZOND (0 Foutcodes)",
+        "statusHealthyDesc": "Geen actieve of openstaande foutcodes gevonden in elektronische regelmodules.",
+        "statusFaults": "Status: FOUTEN GEDETECTEERD ({{count}} Actieve Foutcodes)",
+        "dtcCode": "DTC-CODE",
+        "guidedAction": "Begeleide Actie",
+        "technicalTsb": "Technisch TSB-bulletin",
+        "footer": "Rapport automatisch gegenereerd door MotoCortex Diagnosesoftware."
     }
 }

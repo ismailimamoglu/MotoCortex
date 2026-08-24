@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "ILMAINEN"
+        "free": "ILMAINEN",
+        "legalDisclaimer": "Oikeudellinen ilmoitus: MotoCortex on ammattimainen ajoneuvodiagnostiikkaohjelmisto. Aja varovasti; käänny aina valtuutetun mekaanikon puoleen."
     },
     "paywall": {
         "subtitle": "Avaa syvimmät diagnostiikkaominaisuudet ja kaikki parametrit.",
@@ -363,7 +364,8 @@
         "openBtSettings": "BLUETOOTH-ASETUKSET",
         "firstTimeGuideTitle": "ENSIMMÄISEN PARILIITOKSEN JA ASENNUKSEN OPAS",
         "firstTimeGuideDescAndroid": "Muodosta laitepari Bluetooth Classic -sovittimille puhelimen Bluetooth-asetuksissa ennen ensimmäistä käyttöä. BLE- ja Wi-Fi-laitteet yhdistyvät suoraan.",
-        "firstTimeGuideDescIos": "BLE ja Wi-Fi -sovittimet eivät vaadi pariliitosta puhelimen asetuksissa; ne löydetään ja yhdistetään suoraan sovelluksessa."
+        "firstTimeGuideDescIos": "BLE ja Wi-Fi -sovittimet eivät vaadi pariliitosta puhelimen asetuksissa; ne löydetään ja yhdistetään suoraan sovelluksessa.",
+        "pinCopied": "PIN {{pin}} copied."
     },
     "dashboard": {
         "selectDevice": "VALITSE LAITE KOSKETAAN",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "SUORAT ANTURIT",
         "noData": "Tietojen lukeminen epäonnistui",
-        "proApp": "Skannattu Cortex OBD2 Diagnostic Scanner v7 PRO:lla.",
-        "date": "päivämäärä",
-        "vinNotFound": "Ei havaittu",
-        "noDtcs": "EI VIRHEKODEJA - PUHDISTA",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO TROUBLE CODES - CLEAN",
         "speed": "nopeus",
         "coolant": "Moottorin lämpötila",
         "throttle": "kaasua",
         "engineLoad": "Moottorin kuormitus",
         "intakeAir": "Imuilma",
         "manifold": "Jakotukki",
-        "voltage": "Akun jännite",
+        "voltage": "Battery Voltage",
         "shareMessage": "Seuraa moottoripyöräsi tilaa taskustasi Motocortex OBD2 -diagnostiikkasovelluksella! Lataa: https://cortexobd2.app",
         "subtitle": "Kattava käytetty diagnostiikka ja telemetriatarkastus",
         "vehicleInfo": "Ajoneuvon tunnistus ja ECU:n metatiedot",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "MOOTTORIN TERVEYSPISTEIDEN VAIKUTUS",
         "freeTrialBadge": "KÄYTÄT 1 ILMAISTA TEKOÄLYDIAGNOOSIKOKEILUA",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "CLEAN / OPTIMAL",
+        "severityHigh": "CRITICAL RISK",
+        "severityModerate": "MODERATE RISK",
+        "safetyOk": "Safe for driving. No critical hazards detected.",
+        "safetyHighWarning": "Driving safety may be compromised. Proceed to nearest service immediately.",
+        "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
         "safeTitle": "TURVALLISTA AJAA",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Vaihda mekatroninen painekotelo tai vahvistettu akkulevy.",
         "default_cause1": "Vika komponenttipiirissä/johdotusvastuksessa",
         "default_cause2": "Mekaaninen kuluminen tai anturin heikkeneminen",
-        "default_action": "Suorita jännitehäviön ja jatkuvuuden tarkistus yleismittarilla."
+        "default_action": "Suorita jännitehäviön ja jatkuvuuden tarkistus yleismittarilla.",
+        "p0113_cause1": "Intake Air Temperature (IAT) Sensor Failure",
+        "p0113_cause2": "Wiring Harness / Connector Open or Short Circuit",
+        "p0113_cause3": "Engine Control Module (ECU) Input Resistance Deviation",
+        "p0113_action": "Measure IAT sensor resistance (kΩ) with a multimeter and check connector pins for corrosion.",
+        "p0113_tsb": "TSB-2023-04: Inspect IAT sensor wiring harness for friction wear and 5V reference voltage.",
+        "cat_p_cause1": "Powertrain Sensor or Actuator Circuit Fault",
+        "cat_p_cause2": "Mechanical Wear or Air/Fuel Imbalance",
+        "cat_p_action": "Perform OBD-II live telemetry scan and verify sensor signal voltages.",
+        "cat_c_cause1": "Wheel Speed / ABS / ESP Sensor Fault",
+        "cat_c_cause2": "Brake System Hydraulic or Electrical Connection Fault",
+        "cat_c_action": "Inspect ABS wheel speed sensors, tone rings, and brake harness wiring.",
+        "cat_b_cause1": "Body Control Module (BCM) / Lighting / Access Circuit Fault",
+        "cat_b_cause2": "Interior Sensor, SRS Airbag or Comfort Module Disconnect",
+        "cat_b_action": "Check body module fuses, chassis ground connections, and harness plugs.",
+        "cat_u_cause1": "CAN Bus Communication Line Interruption or Bus Noise",
+        "cat_u_cause2": "Module Power Loss or Network Gateway Desynchronization",
+        "cat_u_action": "Check CAN-High and CAN-Low termination resistance (approx. 60Ω) and 12V battery stability."
     },
     "ev": {
         "loading": "Ladataan sähköauton diagnostiikkatietoja...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Palaute Vastaanotettu",
         "successDesc": "Kiitos yhteydenotostasi! Tiimimme käsittelee asiasi pian.",
         "reportIssueBtn": "Ilmoita Teknisestä Ongelmasta"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT",
+        "dateTime": "Date/Time",
+        "vin": "Vehicle VIN",
+        "makeBrand": "Make/Brand",
+        "scannedModules": "Scanned ECUs: {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)",
+        "statusHealthyDesc": "No active or pending fault codes found across scanned electronic control units.",
+        "statusFaults": "Status: FAULTS DETECTED ({{count}} Active DTCs)",
+        "dtcCode": "DTC CODE",
+        "guidedAction": "Guided Action",
+        "technicalTsb": "Technical TSB",
+        "footer": "Report generated automatically by MotoCortex Intelligent Diagnostics Platform."
     }
 }

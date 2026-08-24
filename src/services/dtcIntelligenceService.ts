@@ -110,118 +110,193 @@ import i18n from '../i18n';
  * Provides guided diagnostic mappings for live data PID charts & probabilities
  */
 export function getGuidedDiagnostics(code: string): GuidedDiagnostic {
- const cleanCode = code.toUpperCase().trim();
+  const cleanCode = code.toUpperCase().trim();
+  const prefix = cleanCode.charAt(0);
 
- switch (cleanCode) {
- case 'P0102':
- case 'P0101':
- return {
- relatedPids: ['MAF', 'RPM', 'ENGINE_LOAD'],
- probableCauses: [
- { cause: i18n.t('guidedDiag.p0102_cause1', { defaultValue: 'Dirty or Faulty MAF Sensor' }), probability: 65 },
- { cause: i18n.t('guidedDiag.p0102_cause2', { defaultValue: 'Intake Leak / Vacuum Leak' }), probability: 25 },
- { cause: i18n.t('guidedDiag.p0102_cause3', { defaultValue: 'Wiring Harness Damage' }), probability: 10 },
- ],
- recommendedAction: i18n.t('guidedDiag.p0102_action', { defaultValue: 'Clean MAF sensor with contact cleaner or inspect air filter housing for leaks.' }),
- tsbSummary: i18n.t('guidedDiag.p0102_tsb', { defaultValue: 'TSB-2023-09: Inspect air intake hose clamp torque before replacing MAF.' }),
- };
+  switch (cleanCode) {
+    case 'P0113':
+    case 'P0112':
+    case 'P0110':
+    case 'P0111':
+      return {
+        relatedPids: ['INTAKE_AIR_TEMP', 'COOLANT_TEMP', 'MAF', 'VOLTAGE'],
+        probableCauses: [
+          { cause: i18n.t('guidedDiag.p0113_cause1', { defaultValue: 'Intake Air Temperature (IAT) Sensor Failure' }), probability: 60 },
+          { cause: i18n.t('guidedDiag.p0113_cause2', { defaultValue: 'Wiring Harness / Connector Open or Short Circuit' }), probability: 30 },
+          { cause: i18n.t('guidedDiag.p0113_cause3', { defaultValue: 'Engine Control Module (ECU) Input Resistance Deviation' }), probability: 10 },
+        ],
+        recommendedAction: i18n.t('guidedDiag.p0113_action', { defaultValue: 'Measure IAT sensor resistance (kΩ) with a multimeter and check connector pins for corrosion.' }),
+        tsbSummary: i18n.t('guidedDiag.p0113_tsb', { defaultValue: 'TSB-2023-04: Inspect IAT sensor wiring harness for friction wear and 5V reference voltage.' }),
+      };
 
- case 'P0171':
- return {
- relatedPids: ['STFT1', 'LTFT1', 'MAF', 'O2_VOLTAGE'],
- probableCauses: [
- { cause: i18n.t('guidedDiag.p0171_cause1', { defaultValue: 'Vacuum Hose Leak / Intake Leak' }), probability: 50 },
- { cause: i18n.t('guidedDiag.p0171_cause2', { defaultValue: 'Weak Fuel Pump / Low Pressure' }), probability: 30 },
- { cause: i18n.t('guidedDiag.p0171_cause3', { defaultValue: 'Fouled O2 Sensor 1' }), probability: 20 },
- ],
- recommendedAction: i18n.t('guidedDiag.p0171_action', { defaultValue: 'Perform smoke test on intake manifold and check long-term fuel trim.' }),
- tsbSummary: i18n.t('guidedDiag.p0171_tsb', { defaultValue: 'TSB-2022-14: Check PCV valve diaphragm for tears.' }),
- };
+    case 'P0102':
+    case 'P0101':
+    case 'P0100':
+    case 'P0103':
+      return {
+        relatedPids: ['MAF', 'RPM', 'ENGINE_LOAD'],
+        probableCauses: [
+          { cause: i18n.t('guidedDiag.p0102_cause1', { defaultValue: 'Dirty or Faulty MAF Sensor' }), probability: 65 },
+          { cause: i18n.t('guidedDiag.p0102_cause2', { defaultValue: 'Intake Leak / Vacuum Leak' }), probability: 25 },
+          { cause: i18n.t('guidedDiag.p0102_cause3', { defaultValue: 'Wiring Harness Damage' }), probability: 10 },
+        ],
+        recommendedAction: i18n.t('guidedDiag.p0102_action', { defaultValue: 'Clean MAF sensor with contact cleaner or inspect air filter housing for leaks.' }),
+        tsbSummary: i18n.t('guidedDiag.p0102_tsb', { defaultValue: 'TSB-2023-09: Inspect air intake hose clamp torque before replacing MAF.' }),
+      };
 
- case 'P0420':
- return {
- relatedPids: ['O2_B1S1', 'O2_B1S2', 'CAT_TEMP'],
- probableCauses: [
- { cause: i18n.t('guidedDiag.p0420_cause1', { defaultValue: 'Catalytic Converter Efficiency Degradation' }), probability: 70 },
- { cause: i18n.t('guidedDiag.p0420_cause2', { defaultValue: 'Rear Downstream O2 Sensor Fault' }), probability: 20 },
- { cause: i18n.t('guidedDiag.p0420_cause3', { defaultValue: 'Exhaust Leak Before Converter' }), probability: 10 },
- ],
- recommendedAction: i18n.t('guidedDiag.p0420_action', { defaultValue: 'Compare upstream vs downstream O2 sensor waveforms or check catalytic converter temperature.' }),
- };
+    case 'P0171':
+    case 'P0170':
+    case 'P0174':
+      return {
+        relatedPids: ['STFT1', 'LTFT1', 'MAF', 'O2_VOLTAGE'],
+        probableCauses: [
+          { cause: i18n.t('guidedDiag.p0171_cause1', { defaultValue: 'Vacuum Hose Leak / Intake Leak' }), probability: 50 },
+          { cause: i18n.t('guidedDiag.p0171_cause2', { defaultValue: 'Weak Fuel Pump / Low Pressure' }), probability: 30 },
+          { cause: i18n.t('guidedDiag.p0171_cause3', { defaultValue: 'Fouled O2 Sensor 1' }), probability: 20 },
+        ],
+        recommendedAction: i18n.t('guidedDiag.p0171_action', { defaultValue: 'Perform smoke test on intake manifold and check long-term fuel trim.' }),
+        tsbSummary: i18n.t('guidedDiag.p0171_tsb', { defaultValue: 'TSB-2022-14: Check PCV valve diaphragm for tears.' }),
+      };
 
- case 'P0300':
- case 'P0301':
- case 'P0302':
- return {
- relatedPids: ['RPM', 'MISFIRE_COUNT', 'COOLANT_TEMP'],
- probableCauses: [
- { cause: i18n.t('guidedDiag.p0300_cause1', { defaultValue: 'Worn Spark Plug / Ignition Coil' }), probability: 60 },
- { cause: i18n.t('guidedDiag.p0300_cause2', { defaultValue: 'Clogged Fuel Injector' }), probability: 30 },
- { cause: i18n.t('guidedDiag.p0300_cause3', { defaultValue: 'Low Engine Cylinder Compression' }), probability: 10 },
- ],
- recommendedAction: i18n.t('guidedDiag.p0300_action', { defaultValue: 'Swap ignition coil to adjacent cylinder and monitor if misfire follows.' }),
- };
+    case 'P0420':
+    case 'P0430':
+      return {
+        relatedPids: ['O2_B1S1', 'O2_B1S2', 'CAT_TEMP'],
+        probableCauses: [
+          { cause: i18n.t('guidedDiag.p0420_cause1', { defaultValue: 'Catalytic Converter Efficiency Degradation' }), probability: 70 },
+          { cause: i18n.t('guidedDiag.p0420_cause2', { defaultValue: 'Rear Downstream O2 Sensor Fault' }), probability: 20 },
+          { cause: i18n.t('guidedDiag.p0420_cause3', { defaultValue: 'Exhaust Leak Before Converter' }), probability: 10 },
+        ],
+        recommendedAction: i18n.t('guidedDiag.p0420_action', { defaultValue: 'Compare upstream vs downstream O2 sensor waveforms or check catalytic converter temperature.' }),
+      };
 
- case 'P17BF':
- case 'P0700':
- return {
- relatedPids: ['TRANSMISSION_SPEED', 'HYDRAULIC_PRESSURE', 'GEAR_RATIO'],
- probableCauses: [
- { cause: i18n.t('guidedDiag.p17bf_cause1', { defaultValue: 'Mechatronic Hydraulic Pressure Accumulator Leak' }), probability: 75 },
- { cause: i18n.t('guidedDiag.p17bf_cause2', { defaultValue: 'Solenoid Valve Circuit Fault' }), probability: 15 },
- { cause: i18n.t('guidedDiag.p17bf_cause3', { defaultValue: 'Low Fluid Level / Fluid Degradation' }), probability: 10 },
- ],
- recommendedAction: i18n.t('guidedDiag.p17bf_action', { defaultValue: 'Perform DCT Mechatronic pressure test and inspect accumulator housing.' }),
- tsbSummary: i18n.t('guidedDiag.p17bf_tsb', { defaultValue: 'TSB-VAG-DSG: Replace mechatronic pressure housing or reinforced accumulator plate.' }),
- };
+    case 'P0300':
+    case 'P0301':
+    case 'P0302':
+    case 'P0303':
+    case 'P0304':
+      return {
+        relatedPids: ['RPM', 'MISFIRE_COUNT', 'COOLANT_TEMP'],
+        probableCauses: [
+          { cause: i18n.t('guidedDiag.p0300_cause1', { defaultValue: 'Worn Spark Plug / Ignition Coil' }), probability: 60 },
+          { cause: i18n.t('guidedDiag.p0300_cause2', { defaultValue: 'Clogged Fuel Injector' }), probability: 30 },
+          { cause: i18n.t('guidedDiag.p0300_cause3', { defaultValue: 'Low Engine Cylinder Compression' }), probability: 10 },
+        ],
+        recommendedAction: i18n.t('guidedDiag.p0300_action', { defaultValue: 'Swap ignition coil to adjacent cylinder and monitor if misfire follows.' }),
+      };
 
- default:
- return {
- relatedPids: ['RPM', 'SPEED', 'COOLANT_TEMP', 'VOLTAGE'],
- probableCauses: [
- { cause: i18n.t('guidedDiag.default_cause1', { defaultValue: 'Component Circuit / Wiring Resistance Fault' }), probability: 50 },
- { cause: i18n.t('guidedDiag.default_cause2', { defaultValue: 'Mechanical Wear or Sensor Degradation' }), probability: 50 },
- ],
- recommendedAction: i18n.t('guidedDiag.default_action', { defaultValue: 'Perform voltage drop & continuity check using multimeter.' }),
- };
- }
+    case 'P17BF':
+    case 'P0700':
+    case 'P0750':
+      return {
+        relatedPids: ['TRANSMISSION_SPEED', 'HYDRAULIC_PRESSURE', 'GEAR_RATIO'],
+        probableCauses: [
+          { cause: i18n.t('guidedDiag.p17bf_cause1', { defaultValue: 'Mechatronic Hydraulic Pressure Accumulator Leak' }), probability: 75 },
+          { cause: i18n.t('guidedDiag.p17bf_cause2', { defaultValue: 'Solenoid Valve Circuit Fault' }), probability: 15 },
+          { cause: i18n.t('guidedDiag.p17bf_cause3', { defaultValue: 'Low Fluid Level / Fluid Degradation' }), probability: 10 },
+        ],
+        recommendedAction: i18n.t('guidedDiag.p17bf_action', { defaultValue: 'Perform DCT Mechatronic pressure test and inspect accumulator housing.' }),
+        tsbSummary: i18n.t('guidedDiag.p17bf_tsb', { defaultValue: 'TSB-VAG-DSG: Replace mechatronic pressure housing or reinforced accumulator plate.' }),
+      };
+
+    default: {
+      if (prefix === 'P') {
+        return {
+          relatedPids: ['RPM', 'SPEED', 'ENGINE_LOAD', 'COOLANT_TEMP'],
+          probableCauses: [
+            { cause: i18n.t('guidedDiag.cat_p_cause1', { defaultValue: 'Powertrain Sensor or Actuator Circuit Fault' }), probability: 60 },
+            { cause: i18n.t('guidedDiag.cat_p_cause2', { defaultValue: 'Mechanical Wear or Air/Fuel Imbalance' }), probability: 40 },
+          ],
+          recommendedAction: i18n.t('guidedDiag.cat_p_action', { defaultValue: 'Perform OBD-II live telemetry scan and verify sensor signal voltages.' }),
+        };
+      }
+      if (prefix === 'C') {
+        return {
+          relatedPids: ['WHEEL_SPEED', 'BRAKE_PRESSURE', 'LATERAL_ACCEL'],
+          probableCauses: [
+            { cause: i18n.t('guidedDiag.cat_c_cause1', { defaultValue: 'Wheel Speed / ABS / ESP Sensor Fault' }), probability: 65 },
+            { cause: i18n.t('guidedDiag.cat_c_cause2', { defaultValue: 'Brake System Hydraulic or Electrical Connection Fault' }), probability: 35 },
+          ],
+          recommendedAction: i18n.t('guidedDiag.cat_c_action', { defaultValue: 'Inspect ABS wheel speed sensors, tone rings, and brake harness wiring.' }),
+        };
+      }
+      if (prefix === 'B') {
+        return {
+          relatedPids: ['BATTERY_VOLTAGE', 'DOOR_STATUS', 'AIRBAG_RESISTANCE'],
+          probableCauses: [
+            { cause: i18n.t('guidedDiag.cat_b_cause1', { defaultValue: 'Body Control Module (BCM) / Lighting / Access Circuit Fault' }), probability: 60 },
+            { cause: i18n.t('guidedDiag.cat_b_cause2', { defaultValue: 'Interior Sensor, SRS Airbag or Comfort Module Disconnect' }), probability: 40 },
+          ],
+          recommendedAction: i18n.t('guidedDiag.cat_b_action', { defaultValue: 'Check body module fuses, chassis ground connections, and harness plugs.' }),
+        };
+      }
+      if (prefix === 'U') {
+        return {
+          relatedPids: ['CAN_ERROR_COUNT', 'BUS_VOLTAGE', 'NODE_STATUS'],
+          probableCauses: [
+            { cause: i18n.t('guidedDiag.cat_u_cause1', { defaultValue: 'CAN Bus Communication Line Interruption or Bus Noise' }), probability: 70 },
+            { cause: i18n.t('guidedDiag.cat_u_cause2', { defaultValue: 'Module Power Loss or Network Gateway Desynchronization' }), probability: 30 },
+          ],
+          recommendedAction: i18n.t('guidedDiag.cat_u_action', { defaultValue: 'Check CAN-High and CAN-Low termination resistance (approx. 60Ω) and 12V battery stability.' }),
+        };
+      }
+      return {
+        relatedPids: ['RPM', 'SPEED', 'COOLANT_TEMP', 'VOLTAGE'],
+        probableCauses: [
+          { cause: i18n.t('guidedDiag.default_cause1', { defaultValue: 'Component Circuit / Wiring Resistance Fault' }), probability: 50 },
+          { cause: i18n.t('guidedDiag.default_cause2', { defaultValue: 'Mechanical Wear or Sensor Degradation' }), probability: 50 },
+        ],
+        recommendedAction: i18n.t('guidedDiag.default_action', { defaultValue: 'Perform voltage drop & continuity check using multimeter.' }),
+      };
+    }
+  }
 }
 
 /**
- * Generates a full multi-ECU diagnostic report text for PDF / Share export
+ * Generates a full multi-ECU diagnostic report text for PDF / Share export (Fully 26-language localized)
  */
 export function generateDiagnosticReportText(
- vehicleVin: string,
- brand: string,
- dtcs: string[],
- scannedModuleCount: number = 11
+  vehicleVin: string,
+  brand: string,
+  dtcs: string[],
+  scannedModuleCount: number = 11
 ): string {
- const dateStr = new Date().toLocaleString();
- let report = `===============================================\n`;
- report += ` MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT \n`;
- report += `===============================================\n`;
- report += `Date/Time : ${dateStr}\n`;
- report += `Vehicle VIN: ${vehicleVin || 'N/A'}\n`;
- report += `Make/Brand : ${brand || 'Generic OBD2'}\n`;
- report += `Scanned ECUs: ${scannedModuleCount} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)\n`;
- report += `-----------------------------------------------\n\n`;
+  const dateStr = new Date().toLocaleString();
+  const title = i18n.t('reportExport.headerTitle', { defaultValue: 'MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT' });
+  const dateLabel = i18n.t('reportExport.dateTime', { defaultValue: 'Date/Time' });
+  const vinLabel = i18n.t('reportExport.vin', { defaultValue: 'Vehicle VIN' });
+  const makeLabel = i18n.t('reportExport.makeBrand', { defaultValue: 'Make/Brand' });
+  const scannedLabel = i18n.t('reportExport.scannedModules', { count: scannedModuleCount, defaultValue: `Scanned ECUs: ${scannedModuleCount} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)` });
+  const dtcCodeLabel = i18n.t('reportExport.dtcCode', { defaultValue: 'DTC CODE' });
+  const guidedActionLabel = i18n.t('reportExport.guidedAction', { defaultValue: 'Guided Action' });
+  const technicalTsbLabel = i18n.t('reportExport.technicalTsb', { defaultValue: 'Technical TSB' });
+  const footerLabel = i18n.t('reportExport.footer', { defaultValue: 'Report generated automatically by MotoCortex Intelligent Diagnostics Platform.' });
 
- if (!dtcs || dtcs.length === 0) {
- report += `Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)\n`;
- report += `No active or pending fault codes found across scanned electronic control units.\n`;
- } else {
- report += `Status: FAULTS DETECTED (${dtcs.length} Active DTCs)\n\n`;
- dtcs.forEach((code, index) => {
- const guided = getGuidedDiagnostics(code);
- report += `[${index + 1}] DTC CODE: ${code}\n`;
- report += ` Guided Action : ${guided.recommendedAction}\n`;
- if (guided.tsbSummary) {
- report += ` Technical TSB : ${guided.tsbSummary}\n`;
- }
- report += `-----------------------------------------------\n`;
- });
- }
+  let report = `===============================================\n`;
+  report += ` ${title} \n`;
+  report += `===============================================\n`;
+  report += `${dateLabel} : ${dateStr}\n`;
+  report += `${vinLabel}: ${vehicleVin || 'N/A'}\n`;
+  report += `${makeLabel} : ${brand || 'Generic OBD2'}\n`;
+  report += `${scannedLabel}\n`;
+  report += `-----------------------------------------------\n\n`;
 
- report += `\nReport generated automatically by MotoCortex Intelligent Diagnostics Platform.\n`;
- return report;
+  if (!dtcs || dtcs.length === 0) {
+    report += `${i18n.t('reportExport.statusHealthy', { defaultValue: 'Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)' })}\n`;
+    report += `${i18n.t('reportExport.statusHealthyDesc', { defaultValue: 'No active or pending fault codes found across scanned electronic control units.' })}\n`;
+  } else {
+    report += `${i18n.t('reportExport.statusFaults', { count: dtcs.length, defaultValue: `Status: FAULTS DETECTED (${dtcs.length} Active DTCs)` })}\n\n`;
+    dtcs.forEach((code, index) => {
+      const guided = getGuidedDiagnostics(code);
+      report += `[${index + 1}] ${dtcCodeLabel}: ${code}\n`;
+      report += ` ${guidedActionLabel} : ${guided.recommendedAction}\n`;
+      if (guided.tsbSummary) {
+        report += ` ${technicalTsbLabel} : ${guided.tsbSummary}\n`;
+      }
+      report += `-----------------------------------------------\n`;
+    });
+  }
+
+  report += `\n${footerLabel}\n`;
+  return report;
 }

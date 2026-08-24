@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "GRATIS"
+        "free": "GRATIS",
+        "legalDisclaimer": "Aviso legal: MotoCortex es un software profesional de diagnóstico de vehículos. Conduzca con precaución; consulte a técnicos certificados para reparaciones mecánicas."
     },
     "paywall": {
         "subtitle": "Desbloquee una profundidad diagnóstica suprema y parámetros infinitos.",
@@ -363,7 +364,8 @@
         "openBtSettings": "AJUSTES DE BLUETOOTH",
         "firstTimeGuideTitle": "GUÍA DE PRIMERA CONFIGURACIÓN Y EMPAREJAMIENTO",
         "firstTimeGuideDescAndroid": "Empareje adaptadores Bluetooth Classic en los ajustes de Bluetooth de su teléfono antes del primer uso. Los dispositivos BLE y Wi-Fi se conectan directamente.",
-        "firstTimeGuideDescIos": "Los adaptadores BLE y Wi-Fi no requieren emparejamiento en ajustes; se detectan y conectan directamente desde la aplicación."
+        "firstTimeGuideDescIos": "Los adaptadores BLE y Wi-Fi no requieren emparejamiento en ajustes; se detectan y conectan directamente desde la aplicación.",
+        "pinCopied": "PIN {{pin}} copiado."
     },
     "dashboard": {
         "selectDevice": "TOCAR PARA SELECCIONAR",
@@ -552,17 +554,17 @@
         "dtcCount": "CÓDIGOS DE FALLA ({{count}})",
         "sensorData": "DATOS EN VIVO",
         "noData": "Sin datos disponibles",
-        "proApp": "Escaneado con Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
         "date": "Fecha",
-        "vinNotFound": "No Detectado",
-        "noDtcs": "SIN CÓDIGOS DE ERROR — LIMPIO",
+        "vinNotFound": "No detectado",
+        "noDtcs": "SIN CÓDIGOS DE FALLA - LIMPIO",
         "speed": "Velocidad",
         "coolant": "Temp. Motor",
         "throttle": "Acelerador",
         "engineLoad": "Carga Motor",
         "intakeAir": "Admisión Aire",
         "manifold": "Colector",
-        "voltage": "Voltaje Batería",
+        "voltage": "Voltaje de batería",
         "shareMessage": "¡Monitorea la salud de tu moto desde tu bolsillo con Cortex OBD2 Diagnostic Scanner! Descargar: https://cortexobd2.app",
         "subtitle": "Inspección integral de diagnóstico y telemetría de segunda mano",
         "vehicleInfo": "Identificación del vehículo y metadatos de la ECU",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "IMPACTO EN LA PUNTUACIÓN DE SALUD DEL MOTOR",
         "freeTrialBadge": "ESTÁS USANDO TU PRUEBA GRATUITA DE DIAGNÓSTICO IA",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "ÓPTIMO / LIMPIO",
+        "severityHigh": "ALTO RIESGO CRÍTICO",
+        "severityModerate": "RIESGO MODERADO",
+        "safetyOk": "Seguro para conducir. No se detectaron peligros críticos.",
+        "safetyHighWarning": "Seguridad comprometida. Diríjase inmediatamente al taller.",
+        "safetyModerateWarning": "Apto para distancias cortas. Monitoree consumo de combustible y carga."
     },
     "dtcRisk": {
         "safeTitle": "SEGURO PARA CONDUCIR",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "TSB-VAG-DSG: Sustituir carcasa de presión mecatrónica o placa acumuladora reforzada.",
         "default_cause1": "Fallo de resistencia del circuito/cableado de componentes",
         "default_cause2": "Desgaste mecánico o degradación del sensor",
-        "default_action": "Realice una verificación de continuidad y caída de voltaje con un multímetro."
+        "default_action": "Realice una verificación de continuidad y caída de voltaje con un multímetro.",
+        "p0113_cause1": "Fallo del sensor de temperatura del aire de admisión (IAT)",
+        "p0113_cause2": "Arnés de cableado / Conector abierto o en cortocircuito",
+        "p0113_cause3": "Desviación de resistencia de entrada de la ECU",
+        "p0113_action": "Mida la resistencia del sensor IAT (kΩ) con un multímetro y revise los pines del conector.",
+        "p0113_tsb": "TSB-2023-04: Inspeccione el arnés del sensor IAT por fricción y voltaje de referencia de 5V.",
+        "cat_p_cause1": "Fallo de circuito de sensor o actuador del tren motriz",
+        "cat_p_cause2": "Desgaste mecánico o desequilibrio aire/combustible",
+        "cat_p_action": "Realice un escaneo de telemetría OBD-II en vivo y verifique los voltajes.",
+        "cat_c_cause1": "Fallo del sensor de velocidad de rueda / ABS / ESP",
+        "cat_c_cause2": "Fallo hidráulico o de conexión eléctrica del sistema de frenos",
+        "cat_c_action": "Inspeccione los sensores de rueda ABS, los anillos dentados y el cableado.",
+        "cat_b_cause1": "Fallo de circuito del módulo de carrocería (BCM) / luces / acceso",
+        "cat_b_cause2": "Sensor interior, airbag SRS o módulo de confort desconectado",
+        "cat_b_action": "Revise los fusibles del módulo de carrocería, tierras y conectores.",
+        "cat_u_cause1": "Interrupción o ruido en la línea de comunicación CAN Bus",
+        "cat_u_cause2": "Pérdida de alimentación del módulo o desincronización de pasarela (Gateway)",
+        "cat_u_action": "Compruebe la resistencia de terminación CAN-High y CAN-Low (~60Ω) y la batería de 12V."
     },
     "ev": {
         "loading": "Cargando datos de diagnóstico del vehículo eléctrico...",
@@ -3559,5 +3584,19 @@
         "successTitle": "Comentarios Recibidos",
         "successDesc": "¡Gracias por tu mensaje! Nuestro equipo lo revisará pronto.",
         "reportIssueBtn": "Reportar Problema Técnico"
+    },
+    "reportExport": {
+        "headerTitle": "INFORME DE SALUD Y DIAGNÓSTICO GLOBAL MOTOCORTEX",
+        "dateTime": "Fecha/Hora",
+        "vin": "VIN del Vehículo",
+        "makeBrand": "Marca/Modelo",
+        "scannedModules": "ECUs escaneadas: {{count}} Módulos (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Estado: TODOS LOS SISTEMAS ÓPTIMOS (0 Códigos de Falla)",
+        "statusHealthyDesc": "No se encontraron códigos de falla activos o pendientes en las unidades de control.",
+        "statusFaults": "Estado: FALLAS DETECTADAS ({{count}} Códigos DTC Activos)",
+        "dtcCode": "CÓDIGO DTC",
+        "guidedAction": "Acción Guiada",
+        "technicalTsb": "Boletín Técnico TSB",
+        "footer": "Informe generado automáticamente por la plataforma de diagnóstico MotoCortex."
     }
 }

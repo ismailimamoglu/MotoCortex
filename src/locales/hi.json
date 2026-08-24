@@ -170,7 +170,8 @@
         "securityAlert": "Security Alert",
         "cloneSafetyRedirect": "Clone Safety Redirect",
         "simMode": "Sim Mode",
-        "free": "मुफ़्त"
+        "free": "मुफ़्त",
+        "legalDisclaimer": "कानूनी सूचना: MotoCortex पेशेवर वाहन निदान सॉफ्टवेयर है। वाहन चलाते समय सावधानी बरतें; मरम्मत के लिए प्रमाणित तकनीशियनों से परामर्श लें।"
     },
     "paywall": {
         "crownBadge": "मोटो कॉर्टेक्स प्रो",
@@ -363,7 +364,8 @@
         "openBtSettings": "ब्लूटूथ सेटिंग्स",
         "firstTimeGuideTitle": "पहली बार युग्मन और सेटअप गाइड",
         "firstTimeGuideDescAndroid": "पहले उपयोग से पहले अपने फोन की ब्लूटूथ सेटिंग्स में ब्लूटूथ क्लासिक एडेप्टर को युग्मित करें। BLE और Wi-Fi डिवाइस सीधे कनेक्ट होते हैं।",
-        "firstTimeGuideDescIos": "BLE और Wi-Fi एडेप्टर को फ़ोन सेटिंग्स में युग्मित करने की आवश्यकता नहीं है; वे सीधे ऐप के भीतर खोजे और कनेक्ट किए जाते हैं।"
+        "firstTimeGuideDescIos": "BLE और Wi-Fi एडेप्टर को फ़ोन सेटिंग्स में युग्मित करने की आवश्यकता नहीं है; वे सीधे ऐप के भीतर खोजे और कनेक्ट किए जाते हैं।",
+        "pinCopied": "PIN {{pin}} copied."
     },
     "dashboard": {
         "selectDevice": "डिवाइस का चयन करने के लिए स्पर्श करें",
@@ -552,17 +554,17 @@
         "dtcCount": "FAULT CODES ({{count}})",
         "sensorData": "लाइव सेंसर डेटा",
         "noData": "डेटा पढ़ने में विफल",
-        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO के साथ स्कैन किया गया।",
-        "date": "दिनांक",
-        "vinNotFound": "पता नहीं चला",
-        "noDtcs": "कोई त्रुटि कोड नहीं - साफ़",
+        "proApp": "Cortex OBD2 Diagnostic Scanner v7 PRO.",
+        "date": "Date",
+        "vinNotFound": "Not Detected",
+        "noDtcs": "NO TROUBLE CODES - CLEAN",
         "speed": "गति",
         "coolant": "इंजन का तापमान",
         "throttle": "गैस",
         "engineLoad": "इंजन लोड",
         "intakeAir": "हवा का सेवन",
         "manifold": "अनेक गुना",
-        "voltage": "बैटरी वोल्टेज",
+        "voltage": "Battery Voltage",
         "shareMessage": "मोटोकॉर्टेक्स OBD2 डायग्नोस्टिक एप्लिकेशन के साथ अपनी जेब से अपनी मोटरसाइकिल की स्थिति का पता लगाएं! डाउनलोड करें: https://cortexobd2.app",
         "subtitle": "व्यापक सेकेंड-हैंड डायग्नोस्टिक एवं टेलीमेट्री निरीक्षण",
         "vehicleInfo": "वाहन की पहचान और ईसीयू मेटाडेटा",
@@ -3296,7 +3298,13 @@
         "healthImpactTitle": "इंजन स्वास्थ्य स्कोर प्रभाव",
         "freeTrialBadge": "आप अपने 1 मुफ़्त एआई निदान परीक्षण का उपयोग कर रहे हैं",
         "modalTitle": "Modal Title",
-        "modalSubtitle": "Modal Subtitle"
+        "modalSubtitle": "Modal Subtitle",
+        "severityClean": "CLEAN / OPTIMAL",
+        "severityHigh": "CRITICAL RISK",
+        "severityModerate": "MODERATE RISK",
+        "safetyOk": "Safe for driving. No critical hazards detected.",
+        "safetyHighWarning": "Driving safety may be compromised. Proceed to nearest service immediately.",
+        "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
         "safeTitle": "ड्राइव के लिए सुरक्षित",
@@ -3349,7 +3357,24 @@
         "p17bf_tsb": "टीएसबी-वीएजी-डीएसजी: मेक्ट्रोनिक प्रेशर हाउसिंग या प्रबलित संचायक प्लेट को बदलें।",
         "default_cause1": "घटक सर्किट / वायरिंग प्रतिरोध दोष",
         "default_cause2": "यांत्रिक घिसाव या सेंसर का ख़राब होना",
-        "default_action": "मल्टीमीटर का उपयोग करके वोल्टेज ड्रॉप और निरंतरता की जांच करें।"
+        "default_action": "मल्टीमीटर का उपयोग करके वोल्टेज ड्रॉप और निरंतरता की जांच करें।",
+        "p0113_cause1": "Intake Air Temperature (IAT) Sensor Failure",
+        "p0113_cause2": "Wiring Harness / Connector Open or Short Circuit",
+        "p0113_cause3": "Engine Control Module (ECU) Input Resistance Deviation",
+        "p0113_action": "Measure IAT sensor resistance (kΩ) with a multimeter and check connector pins for corrosion.",
+        "p0113_tsb": "TSB-2023-04: Inspect IAT sensor wiring harness for friction wear and 5V reference voltage.",
+        "cat_p_cause1": "Powertrain Sensor or Actuator Circuit Fault",
+        "cat_p_cause2": "Mechanical Wear or Air/Fuel Imbalance",
+        "cat_p_action": "Perform OBD-II live telemetry scan and verify sensor signal voltages.",
+        "cat_c_cause1": "Wheel Speed / ABS / ESP Sensor Fault",
+        "cat_c_cause2": "Brake System Hydraulic or Electrical Connection Fault",
+        "cat_c_action": "Inspect ABS wheel speed sensors, tone rings, and brake harness wiring.",
+        "cat_b_cause1": "Body Control Module (BCM) / Lighting / Access Circuit Fault",
+        "cat_b_cause2": "Interior Sensor, SRS Airbag or Comfort Module Disconnect",
+        "cat_b_action": "Check body module fuses, chassis ground connections, and harness plugs.",
+        "cat_u_cause1": "CAN Bus Communication Line Interruption or Bus Noise",
+        "cat_u_cause2": "Module Power Loss or Network Gateway Desynchronization",
+        "cat_u_action": "Check CAN-High and CAN-Low termination resistance (approx. 60Ω) and 12V battery stability."
     },
     "ev": {
         "loading": "ईवी डायग्नोस्टिक डेटा लोड हो रहा है...",
@@ -3559,5 +3584,19 @@
         "successTitle": "प्रतिक्रिया प्राप्त हुई",
         "successDesc": "संदेश प्राप्त हो गया है। हमारी टीम जल्द समीक्षा करेगी।",
         "reportIssueBtn": "तकनीकी समस्या की रिपोर्ट करें"
+    },
+    "reportExport": {
+        "headerTitle": "MOTOCORTEX GLOBAL DIAGNOSTIC HEALTH REPORT",
+        "dateTime": "Date/Time",
+        "vin": "Vehicle VIN",
+        "makeBrand": "Make/Brand",
+        "scannedModules": "Scanned ECUs: {{count}} Modules (ECM, TCM, ABS, SRS, BCM, Gateway, IPC, EPS, HVAC, TPMS, BMS)",
+        "statusHealthy": "Status: ALL SYSTEMS HEALTHY (0 DTCs Detected)",
+        "statusHealthyDesc": "No active or pending fault codes found across scanned electronic control units.",
+        "statusFaults": "Status: FAULTS DETECTED ({{count}} Active DTCs)",
+        "dtcCode": "DTC CODE",
+        "guidedAction": "Guided Action",
+        "technicalTsb": "Technical TSB",
+        "footer": "Report generated automatically by MotoCortex Intelligent Diagnostics Platform."
     }
 }
