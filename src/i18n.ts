@@ -1,60 +1,61 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import tr from './locales/tr.json';
 import en from './locales/en.json';
-import id from './locales/id.json';
-import de from './locales/de.json';
-import es from './locales/es.json';
-import it from './locales/it.json';
-import ar from './locales/ar.json';
-import zh from './locales/zh.json';
-import da from './locales/da.json';
-import fi from './locales/fi.json';
-import fr from './locales/fr.json';
-import hi from './locales/hi.json';
-import nl from './locales/nl.json';
-import ja from './locales/ja.json';
-import ko from './locales/ko.json';
-import pl from './locales/pl.json';
-import hu from './locales/hu.json';
-import no from './locales/no.json';
-import pt from './locales/pt.json';
-import ro from './locales/ro.json';
-import ru from './locales/ru.json';
-import th from './locales/th.json';
-import uk from './locales/uk.json';
-import el from './locales/el.json';
-import cs from './locales/cs.json';
-import sv from './locales/sv.json';
+
+export const localeLoaders: Record<string, () => any> = {
+    en: () => en,
+    tr: () => require('./locales/tr.json'),
+    id: () => require('./locales/id.json'),
+    de: () => require('./locales/de.json'),
+    es: () => require('./locales/es.json'),
+    it: () => require('./locales/it.json'),
+    ar: () => require('./locales/ar.json'),
+    zh: () => require('./locales/zh.json'),
+    da: () => require('./locales/da.json'),
+    fi: () => require('./locales/fi.json'),
+    fr: () => require('./locales/fr.json'),
+    hi: () => require('./locales/hi.json'),
+    nl: () => require('./locales/nl.json'),
+    ja: () => require('./locales/ja.json'),
+    ko: () => require('./locales/ko.json'),
+    pl: () => require('./locales/pl.json'),
+    hu: () => require('./locales/hu.json'),
+    no: () => require('./locales/no.json'),
+    pt: () => require('./locales/pt.json'),
+    ro: () => require('./locales/ro.json'),
+    ru: () => require('./locales/ru.json'),
+    th: () => require('./locales/th.json'),
+    uk: () => require('./locales/uk.json'),
+    el: () => require('./locales/el.json'),
+    cs: () => require('./locales/cs.json'),
+    sv: () => require('./locales/sv.json'),
+};
+
+/**
+ * Dynamically loads and injects a locale bundle into i18n runtime on-demand.
+ * Keeps cold-start memory footprint minimal to prevent Hermes OOM heap crashes.
+ */
+export const ensureLocaleLoaded = (lng: string): boolean => {
+    if (!lng) return false;
+    if (i18n.hasResourceBundle(lng, 'translation')) {
+        return true;
+    }
+    const loader = localeLoaders[lng];
+    if (loader) {
+        try {
+            const data = loader();
+            i18n.addResourceBundle(lng, 'translation', data, true, true);
+            return true;
+        } catch (err) {
+            console.warn(`[i18n] Failed to load locale bundle for [${lng}]:`, err);
+        }
+    }
+    return false;
+};
 
 const resources = {
-    tr: { translation: tr },
     en: { translation: en },
-    id: { translation: id },
-    de: { translation: de },
-    es: { translation: es },
-    it: { translation: it },
-    ar: { translation: ar },
-    zh: { translation: zh },
-    da: { translation: da },
-    fi: { translation: fi },
-    fr: { translation: fr },
-    hi: { translation: hi },
-    nl: { translation: nl },
-    ja: { translation: ja },
-    ko: { translation: ko },
-    pl: { translation: pl },
-    hu: { translation: hu },
-    no: { translation: no },
-    pt: { translation: pt },
-    ro: { translation: ro },
-    ru: { translation: ru },
-    th: { translation: th },
-    uk: { translation: uk },
-    el: { translation: el },
-    cs: { translation: cs },
-    sv: { translation: sv },
 };
 
 // Rate limiting tracker to prevent Bridge Flooding on high-frequency UI updates
@@ -116,5 +117,13 @@ i18n
             }
         },
     });
+
+// Hook into changeLanguage to guarantee on-demand loading
+const originalChangeLanguage = i18n.changeLanguage.bind(i18n);
+i18n.changeLanguage = async (lng?: string, ...args: any[]) => {
+    const targetLng = (lng || 'en').toLowerCase().split('-')[0];
+    ensureLocaleLoaded(targetLng);
+    return (originalChangeLanguage as any)(targetLng, ...args);
+};
 
 export default i18n;

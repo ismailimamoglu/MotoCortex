@@ -517,4 +517,20 @@ describe('useTelemetryStore Tests', () => {
         useBluetoothStore.getState().reset();
         expect(useBluetoothStore.getState().connectingDeviceId).toBeNull();
     });
+
+    test('16. setActiveSessionVehicle persists fuelType (diesel, gasoline, etc.) properly', () => {
+        useTelemetryStore.getState().setActiveSessionVehicle({
+            brand: 'peugeot_car',
+            model: 'rifter',
+            year: 2025,
+            fuelType: 'diesel'
+        });
+
+        const active = useTelemetryStore.getState().activeSessionVehicle;
+        expect(active).not.toBeNull();
+        expect(active?.brand).toBe('peugeot_car');
+        expect(active?.model).toBe('rifter');
+        expect(active?.year).toBe(2025);
+        expect(active?.fuelType).toBe('diesel');
+    });
 });

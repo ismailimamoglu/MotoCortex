@@ -1,5 +1,9 @@
+-- =================================================================
+-- MOTOCORTEX SUPABASE FULL PRODUCTION SCHEMA & SECURITY FIXES
+-- =================================================================
+
 -- 1. Create Telemetry Table
-CREATE TABLE IF NOT EXISTS anonymous_diagnostic_telemetry (
+CREATE TABLE IF NOT EXISTS public.anonymous_diagnostic_telemetry (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     brand TEXT,
@@ -16,26 +20,33 @@ CREATE TABLE IF NOT EXISTS anonymous_diagnostic_telemetry (
 );
 
 -- 2. Create Unique Index on session_hash
-CREATE UNIQUE INDEX IF NOT EXISTS idx_telemetry_session_hash ON anonymous_diagnostic_telemetry(session_hash);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_telemetry_session_hash ON public.anonymous_diagnostic_telemetry(session_hash);
 
 -- Enable RLS and insert-only policy for telemetry table
-ALTER TABLE anonymous_diagnostic_telemetry ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.anonymous_diagnostic_telemetry ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Anon telemetry insert only" ON anonymous_diagnostic_telemetry;
+DROP POLICY IF EXISTS "Anon telemetry insert only" ON public.anonymous_diagnostic_telemetry;
 CREATE POLICY "Anon telemetry insert only"
-    ON anonymous_diagnostic_telemetry
+    ON public.anonymous_diagnostic_telemetry
     FOR INSERT
     TO anon, authenticated
     WITH CHECK (true);
 
--- 3. Create RPC function to handle upsert with hit_count incrementation
-CREATE OR REPLACE FUNCTION upsert_telemetry(payload JSONB)
+DROP POLICY IF EXISTS "Anon telemetry select all" ON public.anonymous_diagnostic_telemetry;
+CREATE POLICY "Anon telemetry select all"
+    ON public.anonymous_diagnostic_telemetry
+    FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
+-- 3. Create RPC function to handle upsert with hit_count incrementation (SECURITY DEFINER)
+CREATE OR REPLACE FUNCTION public.upsert_telemetry(payload JSONB)
 RETURNS VOID 
 SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO anonymous_diagnostic_telemetry (
+  INSERT INTO public.anonymous_diagnostic_telemetry (
     created_at,
     brand, 
     model, 
@@ -72,7 +83,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_chronic_faults(target_brand TEXT, limit_count INTEGER DEFAULT 3)
+-- Chronic Faults Analytics Function
+CREATE OR REPLACE FUNCTION public.get_chronic_faults(target_brand TEXT, limit_count INTEGER DEFAULT 3)
 RETURNS TABLE (
     fault_code TEXT,
     unique_days_count BIGINT,
@@ -88,7 +100,7 @@ BEGIN
             unnested_dtc AS fault_code,
             hit_count,
             created_at::DATE AS record_date
-        FROM anonymous_diagnostic_telemetry
+        FROM public.anonymous_diagnostic_telemetry
         LEFT JOIN LATERAL unnest(dtc_codes) AS unnested_dtc ON TRUE
         WHERE brand = target_brand
     )
@@ -105,7 +117,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =================================================================
--- 4. FIELD TELEMETRY & COMPATIBILITY ENGINE TABLES (FAZ 1-8)
+-- 4. FIELD TELEMETRY & CONNECTION DIAGNOSTICS
 -- =================================================================
 
 -- 4.1 Primary Structured Connection Telemetry Table
@@ -116,31 +128,36 @@ CREATE TABLE IF NOT EXISTS public.connection_telemetry (
     app_version TEXT NOT NULL,
     platform TEXT NOT NULL,
     consent_version TEXT DEFAULT 'v1.0',
-    vehicle JSONB NOT NULL,
-    ecu_fingerprint JSONB NOT NULL,
-    adapter JSONB NOT NULL,
-    metrics JSONB NOT NULL,
+    vehicle JSONB NOT NULL DEFAULT '{}'::jsonb,
+    ecu_fingerprint JSONB NOT NULL DEFAULT '{}'::jsonb,
+    adapter JSONB NOT NULL DEFAULT '{}'::jsonb,
+    metrics JSONB NOT NULL DEFAULT '{}'::jsonb,
     redacted_trace_log JSONB DEFAULT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Index for session deduplication and analytical queries
 CREATE INDEX IF NOT EXISTS idx_conn_telemetry_session_id ON public.connection_telemetry(session_id);
-CREATE INDEX IF NOT EXISTS idx_conn_telemetry_wmi ON public.connection_telemetry(((vehicle->>'wmi')));
-CREATE INDEX IF NOT EXISTS idx_conn_telemetry_status ON public.connection_telemetry(((metrics->>'status')));
+CREATE INDEX IF NOT EXISTS idx_conn_telemetry_created_at ON public.connection_telemetry(created_at DESC);
 
--- RLS: Allow anonymous telemetry insertion, block public read/update/delete
+-- RLS: Allow anonymous telemetry insertion
 ALTER TABLE public.connection_telemetry ENABLE ROW LEVEL SECURITY;
 
-DO $$ BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_policies WHERE tablename = 'connection_telemetry' AND policyname = 'Allow anonymous telemetry insert'
-    ) THEN
-        CREATE POLICY "Allow anonymous telemetry insert" ON public.connection_telemetry FOR INSERT WITH CHECK (true);
-    END IF;
-END $$;
+DROP POLICY IF EXISTS "Allow anonymous telemetry insert" ON public.connection_telemetry;
+CREATE POLICY "Allow anonymous telemetry insert" 
+    ON public.connection_telemetry 
+    FOR INSERT 
+    TO anon, authenticated 
+    WITH CHECK (true);
 
--- 4.2 Unverified Device Telemetry Table (Dynamic Degradation Pool for Rooted Devices)
+DROP POLICY IF EXISTS "Allow anonymous telemetry select" ON public.connection_telemetry;
+CREATE POLICY "Allow anonymous telemetry select" 
+    ON public.connection_telemetry 
+    FOR SELECT 
+    TO anon, authenticated 
+    USING (true);
+
+-- 4.2 Unverified Device Telemetry Table
 CREATE TABLE IF NOT EXISTS public.unverified_device_telemetry (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     session_id TEXT NOT NULL,
@@ -150,17 +167,19 @@ CREATE TABLE IF NOT EXISTS public.unverified_device_telemetry (
 
 ALTER TABLE public.unverified_device_telemetry ENABLE ROW LEVEL SECURITY;
 
-DO $$ BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_policies WHERE tablename = 'unverified_device_telemetry' AND policyname = 'Allow unverified telemetry insert'
-    ) THEN
-        CREATE POLICY "Allow unverified telemetry insert" ON public.unverified_device_telemetry FOR INSERT WITH CHECK (true);
-    END IF;
-END $$;
+DROP POLICY IF EXISTS "Allow unverified telemetry insert" ON public.unverified_device_telemetry;
+CREATE POLICY "Allow unverified telemetry insert" 
+    ON public.unverified_device_telemetry 
+    FOR INSERT 
+    TO anon, authenticated 
+    WITH CHECK (true);
 
--- 4.3 RPC: Structurally insert connection telemetry payloads
-CREATE OR REPLACE FUNCTION upsert_connection_telemetry(payload JSONB)
-RETURNS VOID AS $$
+-- 4.3 RPC: Structurally insert connection telemetry payloads (SECURITY DEFINER)
+CREATE OR REPLACE FUNCTION public.upsert_connection_telemetry(payload JSONB)
+RETURNS VOID 
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
     INSERT INTO public.connection_telemetry (
         session_id,
@@ -189,37 +208,115 @@ BEGIN
         NOW()
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql;
 
 -- 4.4 Compatibility Analytical Views for Admin Dashboard
-CREATE OR REPLACE VIEW vw_adapter_compatibility_summary AS
+CREATE OR REPLACE VIEW public.vw_adapter_compatibility_summary AS
 SELECT 
     (adapter->>'claimed_name') AS adapter_model,
     (adapter->>'real_chip_type') AS chip_type,
     COUNT(*)::BIGINT AS total_sessions,
     COUNT(CASE WHEN (metrics->>'status') = 'SUCCESS' THEN 1 END)::BIGINT AS successful_sessions,
-    ROUND((COUNT(CASE WHEN (metrics->>'status') = 'SUCCESS' THEN 1 END)::NUMERIC / COUNT(*)::NUMERIC) * 100, 2) AS success_rate_pct
+    ROUND((COUNT(CASE WHEN (metrics->>'status') = 'SUCCESS' THEN 1 END)::NUMERIC / NULLIF(COUNT(*)::NUMERIC, 0)) * 100, 2) AS success_rate_pct
 FROM public.connection_telemetry
 GROUP BY (adapter->>'claimed_name'), (adapter->>'real_chip_type');
 
--- 4.5 GDPR Data Retention (18 Months Automatic Eviction via pg_cron if enabled)
-DO $$ BEGIN
-    IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_cron') THEN
-        PERFORM cron.schedule(
-            'delete_old_telemetry_job',
-            '0 3 * * *',
-            $cron$ DELETE FROM public.connection_telemetry WHERE created_at < NOW() - INTERVAL '18 months'; $cron$
-        );
-    END IF;
-END $$;
+-- =================================================================
+-- 5. CLOUD FEATURE CODING BACKUPS TABLE & RLS
+-- =================================================================
+CREATE TABLE IF NOT EXISTS public.coding_backups (
+    id TEXT PRIMARY KEY,
+    vin TEXT,
+    feature_id TEXT,
+    feature_name TEXT,
+    ecu_header TEXT,
+    did_hex TEXT,
+    original_payload TEXT,
+    modified_payload TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- 5. Explicit RPC Permission Hardening for SECURITY DEFINER Functions
-REVOKE EXECUTE ON FUNCTION upsert_telemetry(JSONB) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION upsert_telemetry(JSONB) TO anon, authenticated, service_role;
+ALTER TABLE public.coding_backups ENABLE ROW LEVEL SECURITY;
 
-REVOKE EXECUTE ON FUNCTION get_chronic_faults(TEXT, INTEGER) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION get_chronic_faults(TEXT, INTEGER) TO anon, authenticated, service_role;
+DROP POLICY IF EXISTS "Anon coding backups insert" ON public.coding_backups;
+CREATE POLICY "Anon coding backups insert" 
+    ON public.coding_backups 
+    FOR INSERT 
+    TO anon, authenticated 
+    WITH CHECK (true);
 
-REVOKE EXECUTE ON FUNCTION upsert_connection_telemetry(JSONB) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION upsert_connection_telemetry(JSONB) TO anon, authenticated, service_role;
+DROP POLICY IF EXISTS "Anon coding backups select" ON public.coding_backups;
+CREATE POLICY "Anon coding backups select" 
+    ON public.coding_backups 
+    FOR SELECT 
+    TO anon, authenticated 
+    USING (true);
+
+-- =================================================================
+-- 6. APP LAUNCH & ORGANIC INSTALLATION HEARTBEAT
+-- =================================================================
+CREATE TABLE IF NOT EXISTS public.app_launches (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    anon_user_id TEXT NOT NULL,
+    app_version TEXT,
+    platform TEXT,
+    device_model TEXT,
+    os_version TEXT,
+    locale TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_app_launches_created_at ON public.app_launches(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_app_launches_anon_user ON public.app_launches(anon_user_id);
+
+ALTER TABLE public.app_launches ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anon app launches insert" ON public.app_launches;
+CREATE POLICY "Anon app launches insert" 
+    ON public.app_launches 
+    FOR INSERT 
+    TO anon, authenticated 
+    WITH CHECK (true);
+
+CREATE OR REPLACE FUNCTION public.log_app_launch(payload JSONB)
+RETURNS VOID 
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+    INSERT INTO public.app_launches (
+        anon_user_id,
+        app_version,
+        platform,
+        device_model,
+        os_version,
+        locale,
+        created_at
+    ) VALUES (
+        COALESCE(payload->>'anon_user_id', gen_random_uuid()::text),
+        payload->>'app_version',
+        payload->>'platform',
+        payload->>'device_model',
+        payload->>'os_version',
+        payload->>'locale',
+        NOW()
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+-- =================================================================
+-- 7. EXPLICIT PERMISSION GRANTS (NO PERMISSION DROPS)
+-- =================================================================
+REVOKE EXECUTE ON FUNCTION public.upsert_telemetry(JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.upsert_telemetry(JSONB) TO anon, authenticated, service_role;
+
+REVOKE EXECUTE ON FUNCTION public.get_chronic_faults(TEXT, INTEGER) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_chronic_faults(TEXT, INTEGER) TO anon, authenticated, service_role;
+
+REVOKE EXECUTE ON FUNCTION public.upsert_connection_telemetry(JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.upsert_connection_telemetry(JSONB) TO anon, authenticated, service_role;
+
+REVOKE EXECUTE ON FUNCTION public.log_app_launch(JSONB) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.log_app_launch(JSONB) TO anon, authenticated, service_role;
+
 

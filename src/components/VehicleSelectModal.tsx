@@ -24,11 +24,12 @@ export default function VehicleSelectModal({ visible, onDisconnect }: VehicleSel
     return null;
   }
 
-  const handleConfirm = (brand: string, model: string, year: number) => {
+  const handleConfirm = (brand: string, model: string, year: number, fuelType?: string) => {
     setActiveSessionVehicle({
       brand,
       model,
       year,
+      fuelType: fuelType || 'diesel'
     });
   };
 
@@ -62,6 +63,7 @@ export default function VehicleSelectModal({ visible, onDisconnect }: VehicleSel
             initialBrandId={activeSessionVehicle?.brand}
             initialModelId={activeSessionVehicle?.model}
             initialYear={activeSessionVehicle?.year}
+            initialFuelType={activeSessionVehicle?.fuelType}
           />
         </View>
       </KeyboardAvoidingView>

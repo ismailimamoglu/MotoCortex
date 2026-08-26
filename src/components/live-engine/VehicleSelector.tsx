@@ -42,26 +42,48 @@ export default function VehicleSelector({
  {getLocalizedVehicleBrand(activeSessionVehicle.brand, t)} {getLocalizedVehicleModel(activeSessionVehicle.model)}
  </Text>
  <Text style={sDyn.vehicleYear}>{activeSessionVehicle.year}</Text>
- <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleMod(8), marginTop: scaleHeight(8) }}>
- <TouchableOpacity 
- style={{
- flex: 1,
- backgroundColor: `${colors.purple}14`,
- borderColor: colors.purple,
- borderWidth: 1.5,
- borderRadius: scaleMod(8),
- paddingHorizontal: scaleWidth(10),
- paddingVertical: scaleHeight(8),
- alignItems: 'center',
- justifyContent: 'center',
- }}
- onPress={onOpenRegisteredVehicles || onChangeVehicle}
- activeOpacity={0.7}
- >
- <Text style={{ color: colors.purple, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5 }}>
- {t('vehicleSelect.registeredVehiclesButton').toUpperCase()}
- </Text>
- </TouchableOpacity>
+  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: scaleMod(8), marginTop: scaleHeight(8) }}>
+  <TouchableOpacity 
+  style={{
+  flex: 1,
+  backgroundColor: `${colors.cyan}14`,
+  borderColor: colors.cyan,
+  borderWidth: 1.5,
+  borderRadius: scaleMod(8),
+  paddingHorizontal: scaleWidth(10),
+  paddingVertical: scaleHeight(8),
+  alignItems: 'center',
+  justifyContent: 'center',
+  }}
+  onPress={onChangeVehicle}
+  activeOpacity={0.7}
+  >
+  <Text style={{ color: colors.cyan, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5 }}>
+  {t('connection.changeVehicle', { defaultValue: 'Değiştir' }).toUpperCase()}
+  </Text>
+  </TouchableOpacity>
+
+  {onOpenRegisteredVehicles && (
+  <TouchableOpacity 
+  style={{
+  flex: 1,
+  backgroundColor: `${colors.purple}14`,
+  borderColor: colors.purple,
+  borderWidth: 1.5,
+  borderRadius: scaleMod(8),
+  paddingHorizontal: scaleWidth(10),
+  paddingVertical: scaleHeight(8),
+  alignItems: 'center',
+  justifyContent: 'center',
+  }}
+  onPress={onOpenRegisteredVehicles}
+  activeOpacity={0.7}
+  >
+  <Text style={{ color: colors.purple, fontSize: scaleFont(9.5), fontWeight: '900', fontFamily: MONO, letterSpacing: 0.5 }}>
+  {t('vehicleSelect.registeredVehiclesButton').toUpperCase()}
+  </Text>
+  </TouchableOpacity>
+  )}
 
  {isConnected && (
  <TouchableOpacity 

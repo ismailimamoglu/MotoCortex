@@ -38,6 +38,7 @@ import { useTelemetrySync } from '../services/TelemetrySyncManager';
 import SearchableVehicleSelect from '../components/SearchableVehicleSelect';
 import { toSnakeCase, getLocalizedVehicleBrand, getLocalizedVehicleModel } from '../utils/vehicleStandardizer';
 import * as Location from 'expo-location';
+import { AppLaunchTracker } from '../services/AppLaunchTracker';
 import BLEBridge from '../api/BLEBridge';
 import { State } from 'react-native-ble-plx';
 import CustomizeDashboardModal from '../components/CustomizeDashboardModal';
@@ -1017,6 +1018,9 @@ export default function MainApp() {
  } catch (e) {
  console.warn('Analytics init warning (handled):', e);
  }
+
+ // Record Supabase anonymous launch heartbeat
+ AppLaunchTracker.trackAppLaunch().catch(() => {});
  };
  initFirebase();
  }, []);
@@ -2578,12 +2582,13 @@ ${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateStr
  confirmText={t('common.save')}
  cancelText={t('common.cancel')}
  onCancel={() => setIsSaveModalVisible(false)}
- onConfirm={(brandId, modelId, year) => {
+ onConfirm={(brandId, modelId, year, fuelType) => {
  handleSaveToGarage(brandId, modelId, year);
  }}
  initialBrandId={activeSessionVehicle?.brand}
  initialModelId={activeSessionVehicle?.model}
  initialYear={activeSessionVehicle?.year}
+ initialFuelType={activeSessionVehicle?.fuelType}
  />
  </View>
  </KeyboardAvoidingView>

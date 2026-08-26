@@ -26,6 +26,9 @@ import { triggerHaptic } from '../utils/haptics';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { RadarScannerView } from '../components/RadarScannerView';
 import SupportModal from '../components/SupportModal';
+import SearchableVehicleSelect from '../components/SearchableVehicleSelect';
+import { useTelemetryStore, SelectedVehicle } from '../store/useTelemetryStore';
+import { getRegisteredVehicles, saveRegisteredVehicle } from '../store/garageStore';
 
 interface ConnectionFlowScreenProps {
  onBack: () => void;
@@ -40,6 +43,12 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  const [isSupportModalVisible, setIsSupportModalVisible] = useState(false);
  const [selectedType, setSelectedType] = useState<'BLUETOOTH' | 'WIFI' | null>(null);
  const [selectedCategory, setSelectedCategory] = useState<'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK' | null>(null);
+ const [showVehiclePicker, setShowVehiclePicker] = useState(false);
+ const [garageVehicles, setGarageVehicles] = useState<SelectedVehicle[]>([]);
+
+ const activeSessionVehicle = useTelemetryStore(s => s.activeSessionVehicle);
+ const setActiveSessionVehicle = useTelemetryStore(s => s.setActiveSessionVehicle);
+
  const [wifiIp, setWifiIp] = useState('192.168.0.10');
  const [wifiPort, setWifiPort] = useState('35000');
  const [scannedDevices, setScannedDevices] = useState<any[]>([]);
@@ -47,29 +56,72 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  const [showPairingOverlay, setShowPairingOverlay] = useState(false);
  const [pairingDeviceId, setPairingDeviceId] = useState<string | null>(null);
 
- // Read state from Bluetooth hook & store
- const {
- status,
- connectionState,
- ecuStatus,
- adapterStatus,
- enableBluetooth,
- scanDevices,
- connect,
- disconnect,
- lastDeviceId,
- lastDeviceName,
- vin
- } = useBluetooth();
+  const {
+    status,
+    connectionState,
+    ecuStatus,
+    adapterStatus,
+    enableBluetooth,
+    scanDevices,
+    connect,
+    disconnect,
+    lastDeviceId,
+    lastDeviceName,
+    vin
+  } = useBluetooth();
 
- const connectionSteps = useBluetoothStore(s => s.connectionSteps);
- const connectionProgress = useBluetoothStore(s => s.connectionProgress);
- const connectionStatusTextKey = useBluetoothStore(s => s.connectionStatusTextKey);
- const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
- const connectingDeviceId = useBluetoothStore(s => s.connectingDeviceId);
- const errorMsg = useBluetoothStore(s => s.error);
+  const connectionSteps = useBluetoothStore(s => s.connectionSteps);
+  const connectionProgress = useBluetoothStore(s => s.connectionProgress);
+  const connectionStatusTextKey = useBluetoothStore(s => s.connectionStatusTextKey);
+  const isCloneDevice = useBluetoothStore(s => s.isCloneDevice);
+  const connectingDeviceId = useBluetoothStore(s => s.connectingDeviceId);
+  const errorMsg = useBluetoothStore(s => s.error);
 
- const radarScale = useRef(new Animated.Value(1)).current;
+  const radarScale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    getRegisteredVehicles().then(list => {
+      if (list && list.length > 0) {
+        setGarageVehicles(list);
+        if (!useTelemetryStore.getState().activeSessionVehicle) {
+          setActiveSessionVehicle(list[0]);
+        }
+      } else {
+        setGarageVehicles([]);
+        if (status === 'disconnected') {
+          const current = useTelemetryStore.getState().activeSessionVehicle;
+          if (current && !current.vin) {
+            setActiveSessionVehicle(null);
+          }
+        }
+      }
+    }).catch(() => {});
+  }, [status]);
+
+ const handleVehicleConfirm = (brand: string, model: string, year: number, fuelType: string) => {
+   triggerHaptic();
+   const newVehicle: SelectedVehicle = { brand, model, year, fuelType };
+   setActiveSessionVehicle(newVehicle);
+   setShowVehiclePicker(false);
+ };
+
+ const getLocalizedFuelType = useCallback((fuel?: string) => {
+   if (!fuel) return t('vehicleSelect.fuelGasoline', { defaultValue: 'Benzin' });
+   switch (fuel) {
+     case 'gasoline':
+       return t('vehicleSelect.fuelGasoline', { defaultValue: 'Benzin' });
+     case 'diesel':
+       return t('vehicleSelect.fuelDiesel', { defaultValue: 'Dizel' });
+     case 'gasoline_lpg':
+       return t('vehicleSelect.fuelGasolineLpg', { defaultValue: 'Benzin + LPG' });
+     case 'hybrid':
+       return t('vehicleSelect.fuelHybrid', { defaultValue: 'Hibrit' });
+     case 'electric':
+       return t('vehicleSelect.fuelElectric', { defaultValue: 'Elektrik' });
+     default:
+       return t('vehicleSelect.fuelOther', { defaultValue: 'Diğer' });
+   }
+ }, [t]);
 
  // Reset stale error/scan status on screen mount so connection screen always opens cleanly at Step 1
  useEffect(() => {
@@ -275,75 +327,75 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         </Text>
       </View>
 
- {/* Main Connection Status Card */}
- <View style={[styles.statusCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
- <View style={styles.statusHeader}>
- <View style={[
- styles.statusDot, 
- { backgroundColor: ecuStatus === 'connected' ? colors.green : status === 'connecting' ? colors.amber : colors.red }
- ]} />
- <Text style={[styles.statusTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
- {ecuStatus === 'connected' 
- ? t('common.connected').toUpperCase() 
- : status === 'connecting' 
- ? t('connection.connecting').toUpperCase()
- : t('common.disconnected').toUpperCase()
- }
- </Text>
- </View>
- 
- {ecuStatus === 'connected' ? (
- <View style={styles.successBlock}>
- <Text style={[styles.successText, { color: colors.textSec, fontSize: fs(12.5) }]}>
- {t('connection.successVin')}
- </Text>
- {vin && (
- <Text style={[styles.vinText, { color: colors.green, fontSize: fs(13), fontFamily: colors.mono }]}>
- VIN: {vin.replace(/_SIMULATED/gi, ' (DEMO)').replace(/_/g, ' ')}
- </Text>
- )}
- 
- {isCloneDevice && (
- <View style={[styles.warningBanner, { backgroundColor: `${colors.amber}15`, borderColor: colors.amber, paddingVertical: vs(8), paddingHorizontal: ms(12), borderRadius: 10, borderWidth: 1, marginVertical: vs(10) }]}>
- <Text style={[styles.warningText, { color: colors.amber, fontSize: fs(11.5), lineHeight: fs(16), fontWeight: '600' }]}>
- {t('connection.cloneWarning')}
- </Text>
- </View>
- )}
- </View>
- ) : (
- <Text style={[styles.statusDesc, { color: colors.textSec, fontSize: fs(12) }]}>
- {t('connection.statusPrompt')}
- </Text>
- )}
- </View>
+  {/* Main Connection Status Card - Only shown when not in vehicle selection form */}
+  {(!selectedType || (!showVehiclePicker && activeSessionVehicle) || status !== 'disconnected') && (
+    <View style={[styles.statusCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <View style={styles.statusHeader}>
+        <View style={[
+          styles.statusDot, 
+          { backgroundColor: ecuStatus === 'connected' ? colors.green : status === 'connecting' ? colors.amber : colors.red }
+        ]} />
+        <Text style={[styles.statusTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+          {ecuStatus === 'connected' 
+            ? t('common.connected').toUpperCase() 
+            : status === 'connecting' 
+            ? t('connection.connecting').toUpperCase()
+            : t('common.disconnected').toUpperCase()
+          }
+        </Text>
+      </View>
+      
+      {ecuStatus === 'connected' ? (
+        <View style={styles.successBlock}>
+          <Text style={[styles.successText, { color: colors.textSec, fontSize: fs(12.5) }]}>
+            {t('connection.successVin')}
+          </Text>
+          {vin && (
+            <Text style={[styles.vinText, { color: colors.green, fontSize: fs(13), fontFamily: colors.mono }]}>
+              VIN: {vin.replace(/_SIMULATED/gi, ' (DEMO)').replace(/_/g, ' ')}
+            </Text>
+          )}
+          
+          {isCloneDevice && (
+            <View style={[styles.warningBanner, { backgroundColor: `${colors.amber}15`, borderColor: colors.amber, paddingVertical: vs(8), paddingHorizontal: ms(12), borderRadius: 10, borderWidth: 1, marginVertical: vs(10) }]}>
+              <Text style={[styles.warningText, { color: colors.amber, fontSize: fs(11.5), lineHeight: fs(16), fontWeight: '600' }]}>
+                {t('connection.cloneWarning')}
+              </Text>
+            </View>
+          )}
+        </View>
+      ) : (
+        <Text style={[styles.statusDesc, { color: colors.textSec, fontSize: fs(12) }]}>
+          {t('connection.statusPrompt')}
+        </Text>
+      )}
+    </View>
+  )}
 
-
-
- {/* Auto-Connect Quick Action Banner for Last Connected Device */}
- {status === 'disconnected' && Boolean(lastDeviceId) && (
- <View style={[styles.quickConnectCard, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan }]}>
- <View style={{ flex: 1, marginRight: ms(10) }}>
- <Text style={[styles.quickConnectTitle, { color: colors.cyan, fontSize: fs(12), fontFamily: colors.mono, fontWeight: '800' }]}>
- {t('connection.quickConnectTitle')}
- </Text>
- <Text style={[styles.quickConnectDesc, { color: colors.textPri, fontSize: fs(11.5), marginTop: vs(2) }]}>
- {t('connection.quickConnectDesc', { name: lastDeviceName || 'OBDII', defaultValue: `Quick connect to your last used adapter '${lastDeviceName || 'OBDII'}'?` })}
- </Text>
- </View>
- <TouchableOpacity
- style={[styles.quickConnectBtn, { backgroundColor: colors.cyan }]}
- onPress={() => {
- triggerHaptic();
- proceedWithConnection(lastDeviceId!, lastDeviceName || 'OBD2 Adapter');
- }}
- >
- <Text style={[styles.quickConnectBtnText, { fontSize: fs(11), fontFamily: colors.mono, color: '#ffffff', fontWeight: '900' }]}>
- {t('connection.quickConnectBtn')}
- </Text>
- </TouchableOpacity>
- </View>
- )}
+  {/* Auto-Connect Quick Action Banner for Last Connected Device */}
+  {status === 'disconnected' && Boolean(lastDeviceId) && !selectedType && (
+    <View style={[styles.quickConnectCard, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan }]}>
+      <View style={{ flex: 1, marginRight: ms(10) }}>
+        <Text style={[styles.quickConnectTitle, { color: colors.cyan, fontSize: fs(12), fontFamily: colors.mono, fontWeight: '800' }]}>
+          {t('connection.quickConnectTitle')}
+        </Text>
+        <Text style={[styles.quickConnectDesc, { color: colors.textPri, fontSize: fs(11.5), marginTop: vs(2) }]}>
+          {t('connection.quickConnectDesc', { name: lastDeviceName || 'OBDII', defaultValue: `Quick connect to your last used adapter '${lastDeviceName || 'OBDII'}'?` })}
+        </Text>
+      </View>
+      <TouchableOpacity
+        style={[styles.quickConnectBtn, { backgroundColor: colors.cyan }]}
+        onPress={() => {
+          triggerHaptic();
+          proceedWithConnection(lastDeviceId!, lastDeviceName || 'OBD2 Adapter');
+        }}
+      >
+        <Text style={[styles.quickConnectBtnText, { fontSize: fs(11), fontFamily: colors.mono, color: '#ffffff', fontWeight: '900' }]}>
+          {t('connection.quickConnectBtn')}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )}
 
  {/* Connection Mode Selection (Bluetooth / Wi-Fi) */}
  {status === 'disconnected' && !selectedType && (
@@ -418,91 +470,193 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  </>
  )}
 
- {/* Step 2: Vehicle Category Selection (Passenger Car / Motorcycle / Heavy Duty Truck) */}
-  {status === 'disconnected' && selectedType && !selectedCategory && (
+   {/* Step 2: Vehicle Category Selection (Passenger Car / Motorcycle / Heavy Duty Truck) */}
+   {status === 'disconnected' && selectedType && !selectedCategory && (
+     <View style={{ width: '100%', marginVertical: vs(8) }}>
+       <TouchableOpacity onPress={() => setSelectedType(null)} style={{ marginBottom: vs(12) }}>
+         <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
+           ← {t('connection.changeType', { defaultValue: 'Bağlantı Türünü Değiştir' })}
+         </Text>
+       </TouchableOpacity>
+
+       <Text style={{ color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '800', marginBottom: vs(12), letterSpacing: 0.5 }}>
+         {t('connection.selectCategory', { defaultValue: 'ARAÇ KATEGORİSİ SEÇİN' })}
+       </Text>
+
+       <TouchableOpacity
+         activeOpacity={0.75}
+         style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+         onPress={() => {
+           triggerHaptic();
+           useBluetoothStore.getState().setSelectedCategoryByUser('PASSENGER_CAR');
+           setSelectedCategory('PASSENGER_CAR');
+           setShowVehiclePicker(true);
+         }}
+       >
+         <View style={styles.categoryContent}>
+           <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+             {t('connection.passengerCar', { defaultValue: 'Otomobil' }).toUpperCase()}
+           </Text>
+           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
+             {t('connection.passengerCarDesc', { defaultValue: '12V Binek & Hafif Ticari Araçlar' })}
+           </Text>
+         </View>
+         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
+       </TouchableOpacity>
+
+       <TouchableOpacity
+         activeOpacity={0.75}
+         style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+         onPress={() => {
+           triggerHaptic();
+           useBluetoothStore.getState().setSelectedCategoryByUser('MOTORCYCLE');
+           setSelectedCategory('MOTORCYCLE');
+           setShowVehiclePicker(true);
+         }}
+       >
+         <View style={styles.categoryContent}>
+           <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+             {t('connection.motorcycle', { defaultValue: 'Motosiklet' }).toUpperCase()}
+           </Text>
+           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
+             {t('connection.motorcycleDesc', { defaultValue: 'Euro 5 & Yüksek Devirli Motosiklet Telemetrisi' })}
+           </Text>
+         </View>
+         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
+       </TouchableOpacity>
+
+       <TouchableOpacity
+         activeOpacity={0.75}
+         style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+         onPress={() => {
+           triggerHaptic();
+           useBluetoothStore.getState().setSelectedCategoryByUser('HEAVY_DUTY_TRUCK');
+           setSelectedCategory('HEAVY_DUTY_TRUCK');
+           setShowVehiclePicker(true);
+         }}
+       >
+         <View style={styles.categoryContent}>
+           <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+             {t('connection.heavyDutyTruck', { defaultValue: 'Ağır Vasıta & Kamyon' }).toUpperCase()}
+           </Text>
+           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
+             {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs' })}
+           </Text>
+         </View>
+         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
+       </TouchableOpacity>
+     </View>
+   )}
+
+  {/* Step 2.5: Vehicle Model / Year / Fuel Selection (Brand, Model, Year, Fuel Type) */}
+  {status === 'disconnected' && selectedType && selectedCategory && (showVehiclePicker || !activeSessionVehicle) && (
     <View style={{ width: '100%', marginVertical: vs(8) }}>
-      <TouchableOpacity onPress={() => setSelectedType(null)} style={{ marginBottom: vs(12) }}>
+      <TouchableOpacity onPress={() => setSelectedCategory(null)} style={{ marginBottom: vs(12) }}>
         <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-          ← {t('connection.changeType', { defaultValue: 'Bağlantı Türünü Değiştir' })}
+          ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
         </Text>
       </TouchableOpacity>
 
-      <Text style={{ color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '800', marginBottom: vs(12), letterSpacing: 0.5 }}>
-        {t('connection.selectCategory', { defaultValue: 'ARAÇ KATEGORİSİ SEÇİN' })}
+      <Text style={{ color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '800', marginBottom: vs(4), letterSpacing: 0.5 }}>
+        {t('connection.selectVehicleDetails', { defaultValue: 'ARAÇ DETAYLARINI BELİRLEYİN' })}
+      </Text>
+      <Text style={{ color: colors.textSec, fontSize: fs(11), marginBottom: vs(12) }}>
+        {t('connection.selectVehicleHint', { defaultValue: 'Hızlı ve kararlı bağlantı için aracınızın marka, model, yıl ve yakıt tipini seçin.' })}
       </Text>
 
-      <TouchableOpacity
-        activeOpacity={0.75}
-        style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-        onPress={() => {
-          triggerHaptic();
-          useBluetoothStore.getState().setSelectedCategoryByUser('PASSENGER_CAR');
-          setSelectedCategory('PASSENGER_CAR');
-        }}
-      >
-        <View style={styles.categoryContent}>
-          <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-            {t('connection.passengerCar', { defaultValue: 'Otomobil' }).toUpperCase()}
+      {garageVehicles.length > 0 && (
+        <View style={{ marginBottom: vs(12) }}>
+          <Text style={{ color: colors.textSec, fontSize: fs(10), fontFamily: colors.mono, fontWeight: '700', marginBottom: vs(6) }}>
+            {t('connection.savedGarageVehicles', { defaultValue: 'KAYITLI GARAJ ARAÇLARI' })}
           </Text>
-          <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-            {t('connection.passengerCarDesc', { defaultValue: '12V Binek & Hafif Ticari Araçlar' })}
-          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+            {garageVehicles.map((v, idx) => (
+              <TouchableOpacity
+                key={idx}
+                onPress={() => {
+                  triggerHaptic();
+                  setActiveSessionVehicle(v);
+                  setShowVehiclePicker(false);
+                }}
+                style={{
+                  backgroundColor: colors.card,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  paddingHorizontal: 12,
+                  paddingVertical: 8,
+                }}
+              >
+                <Text style={{ color: colors.cyan, fontSize: fs(11.5), fontFamily: colors.mono, fontWeight: '700' }}>
+                  {t(`brands.${v.brand}`, v.brand)} {v.model}
+                </Text>
+                <Text style={{ color: colors.textSec, fontSize: fs(10) }}>
+                  {v.year} • {getLocalizedFuelType(v.fuelType)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
-        <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
-      </TouchableOpacity>
+      )}
 
-      <TouchableOpacity
-        activeOpacity={0.75}
-        style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-        onPress={() => {
-          triggerHaptic();
-          useBluetoothStore.getState().setSelectedCategoryByUser('MOTORCYCLE');
-          setSelectedCategory('MOTORCYCLE');
-        }}
-      >
-        <View style={styles.categoryContent}>
-          <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-            {t('connection.motorcycle', { defaultValue: 'Motosiklet' }).toUpperCase()}
-          </Text>
-          <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-            {t('connection.motorcycleDesc', { defaultValue: 'Euro 5 & Yüksek Devirli Motosiklet Telemetrisi' })}
-          </Text>
-        </View>
-        <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        activeOpacity={0.75}
-        style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-        onPress={() => {
-          triggerHaptic();
-          useBluetoothStore.getState().setSelectedCategoryByUser('HEAVY_DUTY_TRUCK');
-          setSelectedCategory('HEAVY_DUTY_TRUCK');
-        }}
-      >
-        <View style={styles.categoryContent}>
-          <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-            {t('connection.heavyDutyTruck', { defaultValue: 'Ağır Vasıta & Kamyon' }).toUpperCase()}
-          </Text>
-          <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-            {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs' })}
-          </Text>
-        </View>
-        <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
-      </TouchableOpacity>
+      <View style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1, borderRadius: 14, padding: 14 }}>
+        <SearchableVehicleSelect
+          category={selectedCategory}
+          initialBrandId={activeSessionVehicle?.brand}
+          initialModelId={activeSessionVehicle?.model}
+          initialYear={activeSessionVehicle?.year}
+          initialFuelType={activeSessionVehicle?.fuelType}
+          confirmText={t('vehicleSelect.confirm', { defaultValue: 'ARACI ONAYLA VE DEVAM ET' })}
+          cancelText={t('common.cancel', { defaultValue: 'İPTAL' })}
+          onCancel={() => {
+            if (activeSessionVehicle) {
+              setShowVehiclePicker(false);
+            } else {
+              setSelectedCategory(null);
+            }
+          }}
+          onConfirm={handleVehicleConfirm}
+        />
+      </View>
     </View>
   )}
 
- {/* Step 3A: Bluetooth Device Scan & Radar View */}
- {selectedType === 'BLUETOOTH' && selectedCategory && (status === 'disconnected' || status === 'scanning') && (
- <View style={styles.btBlock}>
- <View style={styles.sectionHeader}>
- <TouchableOpacity onPress={() => setSelectedCategory(null)}>
- <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
- ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
- </Text>
- </TouchableOpacity>
- </View>
+  {/* Step 3A: Bluetooth Device Scan & Radar View */}
+  {selectedType === 'BLUETOOTH' && selectedCategory && activeSessionVehicle && !showVehiclePicker && (status === 'disconnected' || status === 'scanning') && (
+  <View style={styles.btBlock}>
+  <View style={styles.sectionHeader}>
+  <TouchableOpacity onPress={() => setSelectedCategory(null)}>
+  <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
+  ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
+  </Text>
+  </TouchableOpacity>
+  </View>
+
+  {/* Target Vehicle Summary Card */}
+  <View style={{ backgroundColor: colors.card, borderColor: colors.cyan, borderWidth: 1, borderRadius: 12, padding: 12, marginBottom: vs(12), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+    <View style={{ flex: 1, paddingRight: 8 }}>
+      <Text style={{ color: colors.cyan, fontSize: fs(10), fontFamily: colors.mono, fontWeight: '700', letterSpacing: 0.5 }}>
+        {t('connection.targetVehicle', { defaultValue: 'HEDEF ARAÇ PROFİLİ' })}
+      </Text>
+      <Text style={{ color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '800', marginTop: 2 }}>
+        {t(`brands.${activeSessionVehicle.brand}`, activeSessionVehicle.brand)} {activeSessionVehicle.model} ({activeSessionVehicle.year})
+      </Text>
+      <Text style={{ color: colors.textSec, fontSize: fs(11), marginTop: 2 }}>
+        {t('vehicleSelect.fuelType', { defaultValue: 'Yakıt' })}: {getLocalizedFuelType(activeSessionVehicle.fuelType)}
+      </Text>
+    </View>
+    <TouchableOpacity
+      style={{ borderColor: colors.cyan, borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 }}
+      onPress={() => {
+        triggerHaptic();
+        setShowVehiclePicker(true);
+      }}
+    >
+      <Text style={{ color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono, fontWeight: '700' }}>
+        {t('connection.changeVehicle', { defaultValue: 'Değiştir' })}
+      </Text>
+    </TouchableOpacity>
+  </View>
 
  {Platform.OS === 'ios' && (
  <View style={[styles.warningBanner, { backgroundColor: `${colors.cyan}12`, borderColor: colors.cyan, marginVertical: vs(8) }]}>
@@ -630,13 +784,39 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  )}
 
  {/* Step 3B: Wi-Fi Selection view */}
- {selectedType === 'WIFI' && selectedCategory && (status === 'disconnected' || status === 'scanning') && (
- <View style={styles.wifiBlock}>
- <TouchableOpacity onPress={() => setSelectedCategory(null)} style={{ marginBottom: vs(12) }}>
- <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
- ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
- </Text>
- </TouchableOpacity>
+ {selectedType === 'WIFI' && selectedCategory && activeSessionVehicle && !showVehiclePicker && (status === 'disconnected' || status === 'scanning') && (
+  <View style={styles.wifiBlock}>
+  <TouchableOpacity onPress={() => setSelectedCategory(null)} style={{ marginBottom: vs(12) }}>
+  <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
+  ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
+  </Text>
+  </TouchableOpacity>
+
+  {/* Target Vehicle Summary Card */}
+  <View style={{ backgroundColor: colors.card, borderColor: colors.cyan, borderWidth: 1, borderRadius: 12, padding: 12, marginBottom: vs(12), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+    <View style={{ flex: 1, paddingRight: 8 }}>
+      <Text style={{ color: colors.cyan, fontSize: fs(10), fontFamily: colors.mono, fontWeight: '700', letterSpacing: 0.5 }}>
+        {t('connection.targetVehicle', { defaultValue: 'HEDEF ARAÇ PROFİLİ' })}
+      </Text>
+      <Text style={{ color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '800', marginTop: 2 }}>
+        {t(`brands.${activeSessionVehicle.brand}`, activeSessionVehicle.brand)} {activeSessionVehicle.model} ({activeSessionVehicle.year})
+      </Text>
+      <Text style={{ color: colors.textSec, fontSize: fs(11), marginTop: 2 }}>
+        {t('vehicleSelect.fuelType', { defaultValue: 'Yakıt' })}: {getLocalizedFuelType(activeSessionVehicle.fuelType)}
+      </Text>
+    </View>
+    <TouchableOpacity
+      style={{ borderColor: colors.cyan, borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 }}
+      onPress={() => {
+        triggerHaptic();
+        setShowVehiclePicker(true);
+      }}
+    >
+      <Text style={{ color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono, fontWeight: '700' }}>
+        {t('connection.changeVehicle', { defaultValue: 'Değiştir' })}
+      </Text>
+    </TouchableOpacity>
+  </View>
 
  <View style={[styles.infoBanner, { backgroundColor: `${colors.border}30`, borderColor: colors.border }]}>
  <Text style={[styles.infoBannerText, { color: colors.textSec, fontSize: fs(11.5) }]}>

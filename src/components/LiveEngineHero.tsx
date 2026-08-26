@@ -92,9 +92,18 @@ export default function LiveEngineHero({
  const [brandSearchQuery, setBrandSearchQuery] = useState<string>('');
  const [modelSearchQuery, setModelSearchQuery] = useState<string>('');
 
+ const isConnected = ecuStatus === 'connected';
+ const isScanning = status === 'scanning';
+ const isPressable = true;
+
  useEffect(() => {
- getRegisteredVehicles().then(setRegisteredVehicles);
- }, [activeSessionVehicle]);
+   getRegisteredVehicles().then((list) => {
+     setRegisteredVehicles(list || []);
+     if ((!list || list.length === 0) && !isConnected && activeSessionVehicle && !activeSessionVehicle.vin) {
+       setActiveSessionVehicle(null);
+     }
+   }).catch(() => {});
+ }, [activeSessionVehicle, isConnected]);
 
  useEffect(() => {
  if (activeSessionVehicle) {
@@ -118,10 +127,6 @@ export default function LiveEngineHero({
  setShowModelDropdown(true);
  }
  }, [suggestedBrandFromVin, activeSessionVehicle]);
-
- const isConnected = ecuStatus === 'connected';
- const isScanning = status === 'scanning';
- const isPressable = true;
 
  const [wasConnected, setWasConnected] = useState(isConnected);
 

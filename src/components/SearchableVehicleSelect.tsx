@@ -1,19 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Platform, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
-import { BRANDS, MODELS_BY_BRAND, YEARS } from '../data/vehicleData';
+import { 
+  BRANDS, 
+  MODELS_BY_BRAND, 
+  YEARS, 
+  FUEL_TYPES,
+  PASSENGER_CAR_FUEL_TYPES,
+  MOTORCYCLE_FUEL_TYPES,
+  HEAVY_DUTY_FUEL_TYPES,
+  MOTORCYCLE_BRANDS, 
+  HEAVY_DUTY_BRANDS, 
+  PASSENGER_CAR_BRANDS 
+} from '../data/vehicleData';
 import { toSnakeCase, formatVehicleIdToLabel } from '../utils/vehicleStandardizer';
 
 interface SearchableVehicleSelectProps {
   confirmText: string;
   cancelText: string;
   onCancel: () => void;
-  onConfirm: (brandId: string, modelId: string, year: number) => void;
+  onConfirm: (brandId: string, modelId: string, year: number, fuelType: string) => void;
+  category?: 'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK' | null;
   initialBrandId?: string | null;
   initialModelId?: string | null;
   initialYear?: number | null;
+  initialFuelType?: string | null;
 }
 
 export default function SearchableVehicleSelect({
@@ -21,13 +34,15 @@ export default function SearchableVehicleSelect({
   cancelText,
   onCancel,
   onConfirm,
+  category,
   initialBrandId,
   initialModelId,
-  initialYear
+  initialYear,
+  initialFuelType
 }: SearchableVehicleSelectProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
-  const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet } = useResponsive();
+  const { vs: scaleHeight, fs: scaleFont } = useResponsive();
 
   const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -35,6 +50,24 @@ export default function SearchableVehicleSelect({
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
+
+  // Filter fuel types based on category
+  const availableFuelTypes = React.useMemo(() => {
+    if (category === 'MOTORCYCLE') {
+      return MOTORCYCLE_FUEL_TYPES;
+    }
+    if (category === 'HEAVY_DUTY_TRUCK') {
+      return HEAVY_DUTY_FUEL_TYPES;
+    }
+    return PASSENGER_CAR_FUEL_TYPES;
+  }, [category]);
+
+  const [selectedFuelType, setSelectedFuelType] = useState<string>(() => {
+    if (initialFuelType && availableFuelTypes.includes(initialFuelType as any)) {
+      return initialFuelType;
+    }
+    return '';
+  });
 
   // Custom text input states
   const [customBrand, setCustomBrand] = useState<string>('');
@@ -49,6 +82,7 @@ export default function SearchableVehicleSelect({
   const [showBrandDropdown, setShowBrandDropdown] = useState(false);
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [showYearDropdown, setShowYearDropdown] = useState(false);
+  const [showFuelDropdown, setShowFuelDropdown] = useState(false);
 
   // Initialize from props
   useEffect(() => {
@@ -69,7 +103,6 @@ export default function SearchableVehicleSelect({
   useEffect(() => {
     if (initialBrandId && initialModelId) {
       const brandModels = MODELS_BY_BRAND[initialBrandId] || [];
-      // Clean target model from any trailing '(year)' formatting if present in legacy items
       const cleanModelId = initialModelId.replace(/\s*\(\d{4}\)$/, '');
       const matched = brandModels.find(m => toSnakeCase(m) === cleanModelId);
       if (matched && matched !== 'other') {
@@ -101,13 +134,43 @@ export default function SearchableVehicleSelect({
     }
   }, [initialYear]);
 
+  // Sync with initialFuelType when passed or changed externally
+  useEffect(() => {
+    if (initialFuelType && availableFuelTypes.includes(initialFuelType as any)) {
+      setSelectedFuelType(initialFuelType);
+    } else if (!initialFuelType) {
+      setSelectedFuelType('');
+    }
+  }, [initialFuelType, availableFuelTypes]);
+
+  // Reset selectedFuelType if incompatible with newly selected category
+  useEffect(() => {
+    if (selectedFuelType && !availableFuelTypes.includes(selectedFuelType as any)) {
+      setSelectedFuelType('');
+    }
+  }, [category, availableFuelTypes]);
+
+  // Filter raw brands by category
+  const baseBrands = React.useMemo(() => {
+    if (category === 'MOTORCYCLE') {
+      return MOTORCYCLE_BRANDS;
+    }
+    if (category === 'HEAVY_DUTY_TRUCK') {
+      return HEAVY_DUTY_BRANDS;
+    }
+    if (category === 'PASSENGER_CAR') {
+      return PASSENGER_CAR_BRANDS;
+    }
+    return BRANDS;
+  }, [category]);
+
   // Sort brands alphabetically based on localized string in current language
   const sortedBrands = React.useMemo(() => {
-    return [...BRANDS]
+    return [...baseBrands]
       .filter((b) => b !== 'other')
       .sort((a, b) => t(`brands.${a}`, a).localeCompare(t(`brands.${b}`, b)))
       .concat(['other']);
-  }, [t]);
+  }, [baseBrands, t]);
 
   // Filter brands based on search query
   const filteredBrands = React.useMemo(() => {
@@ -172,8 +235,29 @@ export default function SearchableVehicleSelect({
       Alert.alert(t('common.error'), t('vehicleSelect.errorYear'));
       return;
     }
+    if (!selectedFuelType) {
+      Alert.alert(t('common.error'), t('vehicleSelect.errorFuelType'));
+      return;
+    }
 
-    onConfirm(finalBrand, finalModel, finalYear);
+    onConfirm(finalBrand, finalModel, finalYear, selectedFuelType);
+  };
+
+  const getFuelTypeLabel = (fuel: string) => {
+    switch (fuel) {
+      case 'gasoline':
+        return t('vehicleSelect.fuelGasoline', { defaultValue: 'Benzin' });
+      case 'diesel':
+        return t('vehicleSelect.fuelDiesel', { defaultValue: 'Dizel' });
+      case 'gasoline_lpg':
+        return t('vehicleSelect.fuelGasolineLpg', { defaultValue: 'Benzin + LPG' });
+      case 'hybrid':
+        return t('vehicleSelect.fuelHybrid', { defaultValue: 'Hibrit' });
+      case 'electric':
+        return t('vehicleSelect.fuelElectric', { defaultValue: 'Elektrik' });
+      default:
+        return t('vehicleSelect.fuelOther', { defaultValue: 'Diğer' });
+    }
   };
 
   return (
@@ -193,6 +277,7 @@ export default function SearchableVehicleSelect({
             setShowBrandDropdown(!showBrandDropdown);
             setShowModelDropdown(false);
             setShowYearDropdown(false);
+            setShowFuelDropdown(false);
           }}
         >
           <Text style={[styles.dropdownText, { color: selectedBrand ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
@@ -256,20 +341,21 @@ export default function SearchableVehicleSelect({
           {t('vehicleSelect.model')}
         </Text>
         <TouchableOpacity 
-          style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border, opacity: selectedBrand ? 1 : 0.6 }]}
+          style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
           disabled={!selectedBrand}
           onPress={() => {
             setShowModelDropdown(!showModelDropdown);
             setShowBrandDropdown(false);
             setShowYearDropdown(false);
+            setShowFuelDropdown(false);
           }}
         >
           <Text style={[styles.dropdownText, { color: selectedModel ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {selectedModel ? selectedModelLabel : t('vehicleSelect.selectModel')}
+            {!selectedBrand ? t('vehicleSelect.selectBrandFirst', { defaultValue: 'Önce Marka Seçin...' }) : (selectedModel ? selectedModelLabel : t('vehicleSelect.selectModel'))}
           </Text>
           <Text style={{ color: colors.textSec }}>{showModelDropdown ? '▲' : '▼'}</Text>
         </TouchableOpacity>
-        
+
         {showModelDropdown && (
           <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
             <TextInput
@@ -288,18 +374,18 @@ export default function SearchableVehicleSelect({
                   </Text>
                 </View>
               ) : (
-                filteredModels.map((opt) => (
+                filteredModels.map((item) => (
                   <TouchableOpacity 
-                    key={opt.value}
+                    key={item.value}
                     style={[styles.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
                     onPress={() => {
-                      setSelectedModel(opt.value);
+                      setSelectedModel(item.value);
                       setShowModelDropdown(false);
                       setModelSearchQuery('');
                     }}
                   >
                     <Text style={[styles.itemText, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11.5) }]}>
-                      {opt.label}
+                      {item.label}
                     </Text>
                   </TouchableOpacity>
                 ))
@@ -319,7 +405,7 @@ export default function SearchableVehicleSelect({
         )}
       </View>
 
-      {/* YEAR SELECTOR */}
+      {/* MODEL YEAR SELECTOR */}
       <View style={styles.formGroup}>
         <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
           {t('vehicleSelect.year')}
@@ -330,6 +416,7 @@ export default function SearchableVehicleSelect({
             setShowYearDropdown(!showYearDropdown);
             setShowBrandDropdown(false);
             setShowModelDropdown(false);
+            setShowFuelDropdown(false);
           }}
         >
           <Text style={[styles.dropdownText, { color: selectedYear ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
@@ -337,10 +424,10 @@ export default function SearchableVehicleSelect({
           </Text>
           <Text style={{ color: colors.textSec }}>{showYearDropdown ? '▲' : '▼'}</Text>
         </TouchableOpacity>
-        
+
         {showYearDropdown && (
           <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-            <ScrollView style={{ maxHeight: scaleHeight(160) }} nestedScrollEnabled={true}>
+            <ScrollView style={{ maxHeight: scaleHeight(160) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
               {YEARS.map((year) => (
                 <TouchableOpacity 
                   key={year}
@@ -369,6 +456,48 @@ export default function SearchableVehicleSelect({
             maxLength={4}
             onChangeText={setCustomYear}
           />
+        )}
+      </View>
+
+      {/* FUEL TYPE SELECTOR */}
+      <View style={styles.formGroup}>
+        <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
+          {t('vehicleSelect.fuelType', { defaultValue: 'YAKIT TİPİ' })}
+        </Text>
+        <TouchableOpacity 
+          style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
+          onPress={() => {
+            setShowFuelDropdown(!showFuelDropdown);
+            setShowBrandDropdown(false);
+            setShowModelDropdown(false);
+            setShowYearDropdown(false);
+          }}
+        >
+          <Text style={[styles.dropdownText, { color: selectedFuelType ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
+            {selectedFuelType ? getFuelTypeLabel(selectedFuelType) : t('vehicleSelect.selectFuelType', { defaultValue: 'Yakıt Tipi Seçin...' })}
+          </Text>
+          <Text style={{ color: colors.textSec }}>{showFuelDropdown ? '▲' : '▼'}</Text>
+        </TouchableOpacity>
+
+        {showFuelDropdown && (
+          <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
+            <ScrollView style={{ maxHeight: scaleHeight(160) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+              {availableFuelTypes.map((fuel) => (
+                <TouchableOpacity 
+                  key={fuel}
+                  style={[styles.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
+                  onPress={() => {
+                    setSelectedFuelType(fuel);
+                    setShowFuelDropdown(false);
+                  }}
+                >
+                  <Text style={[styles.itemText, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11.5) }]}>
+                    {getFuelTypeLabel(fuel)}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
         )}
       </View>
 

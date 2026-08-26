@@ -78,6 +78,7 @@ export interface SelectedVehicle {
     brand: string;
     model: string;
     year: number;
+    fuelType?: string;
     vin?: string;
 }
 
@@ -125,15 +126,17 @@ export async function getRegisteredVehicles(): Promise<SelectedVehicle[]> {
 export async function saveRegisteredVehicle(vehicle: SelectedVehicle): Promise<void> {
     try {
         const list = await getRegisteredVehicles();
-        const exists = list.some(v => 
+        const index = list.findIndex(v => 
             v.brand.toLowerCase() === vehicle.brand.toLowerCase() &&
             v.model.toLowerCase() === vehicle.model.toLowerCase() &&
             v.year === vehicle.year
         );
-        if (!exists) {
+        if (index >= 0) {
+            list[index] = { ...list[index], ...vehicle };
+        } else {
             list.unshift(vehicle);
-            await AsyncStorage.setItem(REGISTERED_VEHICLES_KEY, JSON.stringify(list));
         }
+        await AsyncStorage.setItem(REGISTERED_VEHICLES_KEY, JSON.stringify(list));
     } catch (e) {
         console.error('Failed to save registered vehicle:', e);
     }

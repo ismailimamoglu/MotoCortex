@@ -32,6 +32,7 @@ export interface SelectedVehicle {
   brand: string;
   model: string;
   year: number;
+  fuelType?: string;
   vin?: string;
 }
 
@@ -285,6 +286,7 @@ export const useTelemetryStore = create<TelemetryState>()(
           brand: toSnakeCase(activeSessionVehicle.brand),
           model: toSnakeCase(activeSessionVehicle.model),
           year: activeSessionVehicle.year,
+          fuelType: activeSessionVehicle.fuelType,
           vin: activeSessionVehicle.vin
         } : null 
       }),
