@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Platform, Alert } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  ScrollView, 
+  TextInput, 
+  Platform, 
+  Alert,
+  Modal,
+  FlatList,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
@@ -7,7 +20,6 @@ import {
   BRANDS, 
   MODELS_BY_BRAND, 
   YEARS, 
-  FUEL_TYPES,
   PASSENGER_CAR_FUEL_TYPES,
   MOTORCYCLE_FUEL_TYPES,
   HEAVY_DUTY_FUEL_TYPES,
@@ -29,6 +41,8 @@ interface SearchableVehicleSelectProps {
   initialFuelType?: string | null;
 }
 
+type ActivePicker = 'brand' | 'model' | 'year' | 'fuel' | null;
+
 export default function SearchableVehicleSelect({
   confirmText,
   cancelText,
@@ -42,7 +56,7 @@ export default function SearchableVehicleSelect({
 }: SearchableVehicleSelectProps) {
   const { t } = useTranslation();
   const colors = useThemeColors();
-  const { vs: scaleHeight, fs: scaleFont } = useResponsive();
+  const { vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet } = useResponsive();
 
   const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
@@ -50,6 +64,9 @@ export default function SearchableVehicleSelect({
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
+
+  // Active Bottom Sheet Modal Picker State
+  const [activePicker, setActivePicker] = useState<ActivePicker>(null);
 
   // Filter fuel types based on category
   const availableFuelTypes = React.useMemo(() => {
@@ -69,20 +86,13 @@ export default function SearchableVehicleSelect({
     return '';
   });
 
-  // Custom text input states
+  // Custom text input states (for 'other' option)
   const [customBrand, setCustomBrand] = useState<string>('');
   const [customModel, setCustomModel] = useState<string>('');
   const [customYear, setCustomYear] = useState<string>('');
 
   // Search query states
-  const [brandSearchQuery, setBrandSearchQuery] = useState<string>('');
-  const [modelSearchQuery, setModelSearchQuery] = useState<string>('');
-
-  // Dropdown expansion states
-  const [showBrandDropdown, setShowBrandDropdown] = useState(false);
-  const [showModelDropdown, setShowModelDropdown] = useState(false);
-  const [showYearDropdown, setShowYearDropdown] = useState(false);
-  const [showFuelDropdown, setShowFuelDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Initialize from props
   useEffect(() => {
@@ -143,7 +153,7 @@ export default function SearchableVehicleSelect({
     }
   }, [initialFuelType, availableFuelTypes]);
 
-  // Reset all internal selections when category switches (e.g. from Passenger Car to Motorcycle)
+  // Reset all internal selections when category switches
   const prevCategoryRef = React.useRef(category);
   useEffect(() => {
     if (prevCategoryRef.current !== category) {
@@ -155,12 +165,8 @@ export default function SearchableVehicleSelect({
       setCustomBrand('');
       setCustomModel('');
       setCustomYear('');
-      setBrandSearchQuery('');
-      setModelSearchQuery('');
-      setShowBrandDropdown(false);
-      setShowModelDropdown(false);
-      setShowYearDropdown(false);
-      setShowFuelDropdown(false);
+      setSearchQuery('');
+      setActivePicker(null);
     }
   }, [category]);
 
@@ -186,15 +192,6 @@ export default function SearchableVehicleSelect({
       .concat(['other']);
   }, [baseBrands, t]);
 
-  // Filter brands based on search query
-  const filteredBrands = React.useMemo(() => {
-    if (!brandSearchQuery) return sortedBrands;
-    const query = brandSearchQuery.toLowerCase();
-    return sortedBrands.filter((brandKey) =>
-      brandKey === 'other' || t(`brands.${brandKey}`, brandKey).toLowerCase().includes(query)
-    );
-  }, [brandSearchQuery, sortedBrands, t]);
-
   // Pre-calculate model options
   const modelOptions = React.useMemo(() => {
     if (!selectedBrand) return [];
@@ -206,15 +203,6 @@ export default function SearchableVehicleSelect({
       return { label: m, value: toSnakeCase(m) };
     });
   }, [selectedBrand, t]);
-
-  // Filter models based on search query
-  const filteredModels = React.useMemo(() => {
-    if (!modelSearchQuery) return modelOptions;
-    const query = modelSearchQuery.toLowerCase();
-    return modelOptions.filter((opt) =>
-      opt.value === 'other' || opt.label.toLowerCase().includes(query)
-    );
-  }, [modelSearchQuery, modelOptions]);
 
   const selectedModelLabel = React.useMemo(() => {
     if (!selectedModel) return '';
@@ -228,8 +216,24 @@ export default function SearchableVehicleSelect({
     if (initialBrandId && selectedBrand === initialBrandId) return;
     setSelectedModel('');
     setCustomModel('');
-    setModelSearchQuery('');
   }, [selectedBrand]);
+
+  const getFuelTypeLabel = (fuel: string) => {
+    switch (fuel) {
+      case 'gasoline':
+        return t('vehicleSelect.fuelGasoline', { defaultValue: 'Benzin' });
+      case 'diesel':
+        return t('vehicleSelect.fuelDiesel', { defaultValue: 'Dizel' });
+      case 'gasoline_lpg':
+        return t('vehicleSelect.fuelGasolineLpg', { defaultValue: 'Benzin + LPG' });
+      case 'hybrid':
+        return t('vehicleSelect.fuelHybrid', { defaultValue: 'Hibrit' });
+      case 'electric':
+        return t('vehicleSelect.fuelElectric', { defaultValue: 'Elektrik' });
+      default:
+        return t('vehicleSelect.fuelOther', { defaultValue: 'Diğer' });
+    }
+  };
 
   const handleSave = () => {
     const finalBrand = selectedBrand === 'other' ? toSnakeCase(customBrand) : selectedBrand;
@@ -257,289 +261,383 @@ export default function SearchableVehicleSelect({
     onConfirm(finalBrand, finalModel, finalYear, selectedFuelType);
   };
 
-  const getFuelTypeLabel = (fuel: string) => {
-    switch (fuel) {
-      case 'gasoline':
-        return t('vehicleSelect.fuelGasoline', { defaultValue: 'Benzin' });
-      case 'diesel':
-        return t('vehicleSelect.fuelDiesel', { defaultValue: 'Dizel' });
-      case 'gasoline_lpg':
-        return t('vehicleSelect.fuelGasolineLpg', { defaultValue: 'Benzin + LPG' });
-      case 'hybrid':
-        return t('vehicleSelect.fuelHybrid', { defaultValue: 'Hibrit' });
-      case 'electric':
-        return t('vehicleSelect.fuelElectric', { defaultValue: 'Elektrik' });
+  // Open a specific picker modal
+  const openPicker = (type: ActivePicker) => {
+    setSearchQuery('');
+    setActivePicker(type);
+  };
+
+  // Get active picker data and title
+  const getPickerData = () => {
+    const query = searchQuery.trim().toLowerCase();
+
+    if (activePicker === 'brand') {
+      const items = sortedBrands.map((key) => ({
+        key,
+        label: key === 'other' ? t('brands.other') : t(`brands.${key}`, key),
+        value: key,
+        isSelected: selectedBrand === key,
+      }));
+      if (!query) return items;
+      return items.filter((item) => item.value === 'other' || item.label.toLowerCase().includes(query));
+    }
+
+    if (activePicker === 'model') {
+      const items = modelOptions.map((opt) => ({
+        key: opt.value,
+        label: opt.label,
+        value: opt.value,
+        isSelected: selectedModel === opt.value,
+      }));
+      if (!query) return items;
+      return items.filter((item) => item.value === 'other' || item.label.toLowerCase().includes(query));
+    }
+
+    if (activePicker === 'year') {
+      const items = YEARS.map((year) => ({
+        key: year,
+        label: year === 'other' ? t('brands.other') : year,
+        value: year,
+        isSelected: selectedYear === year,
+      }));
+      if (!query) return items;
+      return items.filter((item) => item.value === 'other' || item.label.toLowerCase().includes(query));
+    }
+
+    if (activePicker === 'fuel') {
+      const items = availableFuelTypes.map((fuel) => ({
+        key: fuel,
+        label: getFuelTypeLabel(fuel),
+        value: fuel,
+        isSelected: selectedFuelType === fuel,
+      }));
+      if (!query) return items;
+      return items.filter((item) => item.label.toLowerCase().includes(query));
+    }
+
+    return [];
+  };
+
+  const getPickerTitle = () => {
+    switch (activePicker) {
+      case 'brand':
+        return t('vehicleSelect.selectBrand', { defaultValue: 'Marka Seçin' });
+      case 'model':
+        return t('vehicleSelect.selectModel', { defaultValue: 'Model Seçin' });
+      case 'year':
+        return t('vehicleSelect.selectYear', { defaultValue: 'Model Yılı Seçin' });
+      case 'fuel':
+        return t('vehicleSelect.selectFuelType', { defaultValue: 'Yakıt Tipi Seçin' });
       default:
-        return t('vehicleSelect.fuelOther', { defaultValue: 'Diğer' });
+        return '';
     }
   };
 
+  const handleSelectItem = (value: string) => {
+    if (activePicker === 'brand') {
+      setSelectedBrand(value);
+      if (value !== 'other') setCustomBrand('');
+    } else if (activePicker === 'model') {
+      setSelectedModel(value);
+      if (value !== 'other') setCustomModel('');
+    } else if (activePicker === 'year') {
+      setSelectedYear(value);
+      if (value !== 'other') setCustomYear('');
+    } else if (activePicker === 'fuel') {
+      setSelectedFuelType(value);
+    }
+    setActivePicker(null);
+    setSearchQuery('');
+  };
+
+  const pickerData = getPickerData();
+  const showSearchBar = activePicker === 'brand' || activePicker === 'model';
+
   return (
-    <ScrollView 
-      style={styles.scrollForm} 
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled"
-    >
-      {/* BRAND SELECTOR */}
-      <View style={styles.formGroup}>
-        <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
-          {t('vehicleSelect.brand')}
-        </Text>
-        <TouchableOpacity 
-          style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
-          onPress={() => {
-            setShowBrandDropdown(!showBrandDropdown);
-            setShowModelDropdown(false);
-            setShowYearDropdown(false);
-            setShowFuelDropdown(false);
-          }}
-        >
-          <Text style={[styles.dropdownText, { color: selectedBrand ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {selectedBrand ? t(`brands.${selectedBrand}`, selectedBrand) : t('vehicleSelect.selectBrand')}
+    <View style={styles.container}>
+      <ScrollView 
+        style={styles.scrollForm} 
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* 1. BRAND TRIGGER */}
+        <View style={styles.formGroup}>
+          <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
+            {t('vehicleSelect.brand')}
           </Text>
-          <Text style={{ color: colors.textSec }}>{showBrandDropdown ? '▲' : '▼'}</Text>
-        </TouchableOpacity>
-        
-        {showBrandDropdown && (
-          <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
+          <TouchableOpacity 
+            style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: selectedBrand ? colors.cyan : colors.border }]}
+            onPress={() => openPicker('brand')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.dropdownText, { color: selectedBrand ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
+              {selectedBrand ? t(`brands.${selectedBrand}`, selectedBrand) : t('vehicleSelect.selectBrand')}
+            </Text>
+            <Text style={{ color: selectedBrand ? colors.cyan : colors.textSec, fontSize: scaleFont(14), fontWeight: '700' }}>›</Text>
+          </TouchableOpacity>
+
+          {selectedBrand === 'other' && (
             <TextInput
-              style={[styles.searchInput, { backgroundColor: colors.bg, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11) }]}
-              placeholder={t('vehicleSelect.searchBrand')}
+              style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
+              placeholder={t('vehicleSelect.customBrandPlaceholder')}
               placeholderTextColor={colors.textSec}
-              value={brandSearchQuery}
-              onChangeText={setBrandSearchQuery}
+              value={customBrand}
+              onChangeText={setCustomBrand}
             />
-            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
-              {filteredBrands.length === 0 ? (
-                <View style={{ padding: 14, alignItems: 'center' }}>
-                  <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11) }}>
-                    {t('vehicleSelect.noResults')}
+          )}
+        </View>
+
+        {/* 2. MODEL TRIGGER */}
+        <View style={styles.formGroup}>
+          <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
+            {t('vehicleSelect.model')}
+          </Text>
+          <TouchableOpacity 
+            style={[
+              styles.dropdownTrigger, 
+              { 
+                backgroundColor: colors.elevated, 
+                borderColor: selectedModel ? colors.cyan : colors.border,
+                opacity: !selectedBrand ? 0.6 : 1
+              }
+            ]}
+            disabled={!selectedBrand}
+            onPress={() => openPicker('model')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.dropdownText, { color: selectedModel ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
+              {!selectedBrand 
+                ? t('vehicleSelect.selectBrandFirst', { defaultValue: 'Önce Marka Seçin...' }) 
+                : (selectedModel ? selectedModelLabel : t('vehicleSelect.selectModel'))}
+            </Text>
+            <Text style={{ color: selectedModel ? colors.cyan : colors.textSec, fontSize: scaleFont(14), fontWeight: '700' }}>›</Text>
+          </TouchableOpacity>
+
+          {selectedModel === 'other' && (
+            <TextInput
+              style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
+              placeholder={t('vehicleSelect.customModelPlaceholder')}
+              placeholderTextColor={colors.textSec}
+              value={customModel}
+              onChangeText={setCustomModel}
+            />
+          )}
+        </View>
+
+        {/* 3. MODEL YEAR TRIGGER */}
+        <View style={styles.formGroup}>
+          <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
+            {t('vehicleSelect.year')}
+          </Text>
+          <TouchableOpacity 
+            style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: selectedYear ? colors.cyan : colors.border }]}
+            onPress={() => openPicker('year')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.dropdownText, { color: selectedYear ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
+              {selectedYear ? (selectedYear === 'other' ? t('brands.other') : selectedYear) : t('vehicleSelect.selectYear')}
+            </Text>
+            <Text style={{ color: selectedYear ? colors.cyan : colors.textSec, fontSize: scaleFont(14), fontWeight: '700' }}>›</Text>
+          </TouchableOpacity>
+
+          {selectedYear === 'other' && (
+            <TextInput
+              style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
+              placeholder={t('vehicleSelect.customYearPlaceholder')}
+              placeholderTextColor={colors.textSec}
+              value={customYear}
+              keyboardType="numeric"
+              maxLength={4}
+              onChangeText={setCustomYear}
+            />
+          )}
+        </View>
+
+        {/* 4. FUEL TYPE TRIGGER */}
+        <View style={styles.formGroup}>
+          <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
+            {t('vehicleSelect.fuelType', { defaultValue: 'YAKIT TİPİ' })}
+          </Text>
+          <TouchableOpacity 
+            style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: selectedFuelType ? colors.cyan : colors.border }]}
+            onPress={() => openPicker('fuel')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.dropdownText, { color: selectedFuelType ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
+              {selectedFuelType ? getFuelTypeLabel(selectedFuelType) : t('vehicleSelect.selectFuelType', { defaultValue: 'Yakıt Tipi Seçin...' })}
+            </Text>
+            <Text style={{ color: selectedFuelType ? colors.cyan : colors.textSec, fontSize: scaleFont(14), fontWeight: '700' }}>›</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Action Buttons */}
+        <View style={styles.actionRow}>
+          <TouchableOpacity 
+            style={[styles.button, { backgroundColor: colors.elevated, borderColor: colors.border, borderWidth: 1, marginEnd: 8 }]}
+            onPress={onCancel}
+            activeOpacity={0.4}
+          >
+            <Text style={[styles.buttonText, { color: colors.red, fontFamily: MONO, fontSize: scaleFont(11) }]}>
+              {cancelText.toUpperCase()}
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.button, { backgroundColor: colors.cyan }]}
+            onPress={handleSave}
+            activeOpacity={0.4}
+          >
+            <Text style={[styles.buttonText, { color: colors.statusBarStyle === 'light-content' ? '#000000' : '#ffffff', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(11) }]}>
+              {confirmText.toUpperCase()}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      {/* ─────────────────────────────────────────────────────────────
+          UNIFIED FULL-HEIGHT BOTTOM SHEET SELECTION MODAL
+      ───────────────────────────────────────────────────────────── */}
+      <Modal
+        visible={activePicker !== null}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setActivePicker(null)}
+      >
+        <TouchableWithoutFeedback onPress={() => {
+          Keyboard.dismiss();
+          setActivePicker(null);
+        }}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+              <View style={[
+                styles.sheetContainer, 
+                { 
+                  backgroundColor: colors.card, 
+                  borderColor: colors.border,
+                  width: isTablet ? 540 : '100%',
+                  alignSelf: 'center',
+                }
+              ]}>
+                {/* Sheet Drag Handle */}
+                <View style={[styles.sheetHandle, { backgroundColor: `${colors.textSec}40` }]} />
+
+                {/* Sheet Header */}
+                <View style={[styles.sheetHeader, { borderBottomColor: `${colors.border}40` }]}>
+                  <Text style={[styles.sheetTitle, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(14) }]}>
+                    {getPickerTitle()}
                   </Text>
-                </View>
-              ) : (
-                filteredBrands.map((brandKey) => (
                   <TouchableOpacity 
-                    key={brandKey}
-                    style={[styles.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
                     onPress={() => {
-                      setSelectedBrand(brandKey);
-                      setShowBrandDropdown(false);
-                      setBrandSearchQuery('');
+                      Keyboard.dismiss();
+                      setActivePicker(null);
                     }}
+                    style={styles.sheetCloseBtn}
+                    hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                   >
-                    <Text style={[styles.itemText, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11.5) }]}>
-                      {t(`brands.${brandKey}`, brandKey)}
+                    <Text style={{ color: colors.cyan, fontWeight: '800', fontFamily: MONO, fontSize: scaleFont(12) }}>
+                      {t('common.close', { defaultValue: 'KAPAT' })}
                     </Text>
                   </TouchableOpacity>
-                ))
-              )}
-            </ScrollView>
-          </View>
-        )}
-
-        {selectedBrand === 'other' && (
-          <TextInput
-            style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
-            placeholder={t('vehicleSelect.customBrandPlaceholder')}
-            placeholderTextColor={colors.textSec}
-            value={customBrand}
-            onChangeText={setCustomBrand}
-          />
-        )}
-      </View>
-
-      {/* MODEL SELECTOR */}
-      <View style={styles.formGroup}>
-        <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
-          {t('vehicleSelect.model')}
-        </Text>
-        <TouchableOpacity 
-          style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
-          disabled={!selectedBrand}
-          onPress={() => {
-            setShowModelDropdown(!showModelDropdown);
-            setShowBrandDropdown(false);
-            setShowYearDropdown(false);
-            setShowFuelDropdown(false);
-          }}
-        >
-          <Text style={[styles.dropdownText, { color: selectedModel ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {!selectedBrand ? t('vehicleSelect.selectBrandFirst', { defaultValue: 'Önce Marka Seçin...' }) : (selectedModel ? selectedModelLabel : t('vehicleSelect.selectModel'))}
-          </Text>
-          <Text style={{ color: colors.textSec }}>{showModelDropdown ? '▲' : '▼'}</Text>
-        </TouchableOpacity>
-
-        {showModelDropdown && (
-          <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-            <TextInput
-              style={[styles.searchInput, { backgroundColor: colors.bg, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11) }]}
-              placeholder={t('vehicleSelect.searchModel')}
-              placeholderTextColor={colors.textSec}
-              value={modelSearchQuery}
-              onChangeText={setModelSearchQuery}
-            />
-            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
-              {filteredModels.length === 0 ? (
-                <View style={{ padding: 14, alignItems: 'center' }}>
-                  <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11) }}>
-                    {t('vehicleSelect.noResults')}
-                  </Text>
                 </View>
-              ) : (
-                filteredModels.map((item) => (
-                  <TouchableOpacity 
-                    key={item.value}
-                    style={[styles.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
-                    onPress={() => {
-                      setSelectedModel(item.value);
-                      setShowModelDropdown(false);
-                      setModelSearchQuery('');
-                    }}
-                  >
-                    <Text style={[styles.itemText, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11.5) }]}>
-                      {item.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))
-              )}
-            </ScrollView>
-          </View>
-        )}
 
-        {selectedModel === 'other' && (
-          <TextInput
-            style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
-            placeholder={t('vehicleSelect.customModelPlaceholder')}
-            placeholderTextColor={colors.textSec}
-            value={customModel}
-            onChangeText={setCustomModel}
-          />
-        )}
-      </View>
+                {/* Optional Search Bar */}
+                {showSearchBar && (
+                  <View style={styles.searchBarWrapper}>
+                    <TextInput
+                      style={[
+                        styles.searchInput, 
+                        { 
+                          backgroundColor: colors.bg, 
+                          borderColor: colors.border, 
+                          color: colors.textPri, 
+                          fontFamily: MONO, 
+                          fontSize: scaleFont(12) 
+                        }
+                      ]}
+                      placeholder={
+                        activePicker === 'brand' 
+                          ? t('vehicleSelect.searchBrand', { defaultValue: 'Marka Ara...' })
+                          : t('vehicleSelect.searchModel', { defaultValue: 'Model Ara...' })
+                      }
+                      placeholderTextColor={colors.textSec}
+                      value={searchQuery}
+                      onChangeText={setSearchQuery}
+                      autoFocus={false}
+                      autoCorrect={false}
+                    />
+                    {searchQuery.length > 0 && (
+                      <TouchableOpacity 
+                        onPress={() => setSearchQuery('')}
+                        style={styles.clearSearchBtn}
+                      >
+                        <Text style={{ color: colors.textSec, fontSize: scaleFont(12), fontWeight: '700' }}>✕</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                )}
 
-      {/* MODEL YEAR SELECTOR */}
-      <View style={styles.formGroup}>
-        <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
-          {t('vehicleSelect.year')}
-        </Text>
-        <TouchableOpacity 
-          style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
-          onPress={() => {
-            setShowYearDropdown(!showYearDropdown);
-            setShowBrandDropdown(false);
-            setShowModelDropdown(false);
-            setShowFuelDropdown(false);
-          }}
-        >
-          <Text style={[styles.dropdownText, { color: selectedYear ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {selectedYear ? (selectedYear === 'other' ? t('brands.other') : selectedYear) : t('vehicleSelect.selectYear')}
-          </Text>
-          <Text style={{ color: colors.textSec }}>{showYearDropdown ? '▲' : '▼'}</Text>
-        </TouchableOpacity>
-
-        {showYearDropdown && (
-          <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
-              {YEARS.map((year) => (
-                <TouchableOpacity 
-                  key={year}
-                  style={[styles.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
-                  onPress={() => {
-                    setSelectedYear(year);
-                    setShowYearDropdown(false);
+                {/* Full-Height Scrollable List */}
+                <FlatList
+                  data={pickerData}
+                  keyExtractor={(item) => item.key}
+                  showsVerticalScrollIndicator={true}
+                  keyboardShouldPersistTaps="handled"
+                  contentContainerStyle={{ paddingBottom: scaleHeight(24) }}
+                  renderItem={({ item }) => {
+                    return (
+                      <TouchableOpacity
+                        style={[
+                          styles.sheetRow,
+                          {
+                            backgroundColor: item.isSelected ? `${colors.cyan}14` : 'transparent',
+                            borderBottomColor: `${colors.border}30`,
+                          }
+                        ]}
+                        onPress={() => handleSelectItem(item.value)}
+                        activeOpacity={0.7}
+                      >
+                        <Text 
+                          style={[
+                            styles.sheetRowText, 
+                            { 
+                              color: item.isSelected ? colors.cyan : colors.textPri,
+                              fontWeight: item.isSelected ? '800' : '600',
+                              fontFamily: MONO,
+                              fontSize: scaleFont(13)
+                            }
+                          ]}
+                        >
+                          {item.label}
+                        </Text>
+                        {item.isSelected && (
+                          <Text style={{ color: colors.cyan, fontWeight: '900', fontSize: scaleFont(14) }}>
+                            ✓
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    );
                   }}
-                >
-                  <Text style={[styles.itemText, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11.5) }]}>
-                    {year === 'other' ? t('brands.other') : year}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+                  ListEmptyComponent={
+                    <View style={{ padding: scaleMod(24), alignItems: 'center' }}>
+                      <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }}>
+                        {t('vehicleSelect.noResults', { defaultValue: 'Sonuç bulunamadı.' })}
+                      </Text>
+                    </View>
+                  }
+                />
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        )}
-
-        {selectedYear === 'other' && (
-          <TextInput
-            style={[styles.textInput, { backgroundColor: colors.elevated, borderColor: colors.border, color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(12), marginTop: 8 }]}
-            placeholder={t('vehicleSelect.customYearPlaceholder')}
-            placeholderTextColor={colors.textSec}
-            value={customYear}
-            keyboardType="numeric"
-            maxLength={4}
-            onChangeText={setCustomYear}
-          />
-        )}
-      </View>
-
-      {/* FUEL TYPE SELECTOR */}
-      <View style={styles.formGroup}>
-        <Text style={[styles.label, { color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(10) }]}>
-          {t('vehicleSelect.fuelType', { defaultValue: 'YAKIT TİPİ' })}
-        </Text>
-        <TouchableOpacity 
-          style={[styles.dropdownTrigger, { backgroundColor: colors.elevated, borderColor: colors.border }]}
-          onPress={() => {
-            setShowFuelDropdown(!showFuelDropdown);
-            setShowBrandDropdown(false);
-            setShowModelDropdown(false);
-            setShowYearDropdown(false);
-          }}
-        >
-          <Text style={[styles.dropdownText, { color: selectedFuelType ? colors.textPri : colors.textSec, fontFamily: MONO, fontSize: scaleFont(12) }]}>
-            {selectedFuelType ? getFuelTypeLabel(selectedFuelType) : t('vehicleSelect.selectFuelType', { defaultValue: 'Yakıt Tipi Seçin...' })}
-          </Text>
-          <Text style={{ color: colors.textSec }}>{showFuelDropdown ? '▲' : '▼'}</Text>
-        </TouchableOpacity>
-
-        {showFuelDropdown && (
-          <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
-              {availableFuelTypes.map((fuel) => (
-                <TouchableOpacity 
-                  key={fuel}
-                  style={[styles.dropdownItem, { borderBottomColor: `${colors.border}33` }]}
-                  onPress={() => {
-                    setSelectedFuelType(fuel);
-                    setShowFuelDropdown(false);
-                  }}
-                >
-                  <Text style={[styles.itemText, { color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(11.5) }]}>
-                    {getFuelTypeLabel(fuel)}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
-      </View>
-
-      {/* Action Buttons */}
-      <View style={styles.actionRow}>
-        <TouchableOpacity 
-          style={[styles.button, { backgroundColor: colors.elevated, borderColor: colors.border, borderWidth: 1, marginEnd: 8 }]}
-          onPress={onCancel}
-          activeOpacity={0.4}
-        >
-          <Text style={[styles.buttonText, { color: colors.red, fontFamily: MONO, fontSize: scaleFont(11) }]}>
-            {cancelText.toUpperCase()}
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.button, { backgroundColor: colors.cyan }]}
-          onPress={handleSave}
-          activeOpacity={0.4}
-        >
-          <Text style={[styles.buttonText, { color: colors.statusBarStyle === 'light-content' ? '#000000' : '#ffffff', fontWeight: '900', fontFamily: MONO, fontSize: scaleFont(11) }]}>
-            {confirmText.toUpperCase()}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
   scrollForm: {
     marginBottom: 16,
   },
@@ -556,35 +654,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
   dropdownText: {
     fontWeight: '600',
   },
-  dropdownList: {
-    borderWidth: 1,
-    borderTopWidth: 0,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    marginTop: -2,
-    zIndex: 1000,
-    elevation: 5,
-  },
-  dropdownItem: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderBottomWidth: 0.5,
-  },
-  itemText: {
-    fontWeight: '500',
-  },
   textInput: {
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 10,
     paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
   actionRow: {
     flexDirection: 'row',
@@ -593,8 +674,8 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    borderRadius: 8,
-    paddingVertical: 12,
+    borderRadius: 10,
+    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -602,11 +683,75 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1,
   },
+  // Modal Bottom Sheet Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'flex-end',
+  },
+  sheetContainer: {
+    height: '75%',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    paddingTop: 10,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 20,
+  },
+  sheetHandle: {
+    width: 44,
+    height: 5,
+    borderRadius: 3,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    marginBottom: 10,
+  },
+  sheetTitle: {
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  sheetCloseBtn: {
+    padding: 6,
+  },
+  searchBarWrapper: {
+    position: 'relative',
+    marginBottom: 10,
+  },
   searchInput: {
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    paddingRight: 36,
+  },
+  clearSearchBtn: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    padding: 4,
+  },
+  sheetRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    margin: 8,
-  }
+    borderBottomWidth: 0.5,
+    borderRadius: 8,
+  },
+  sheetRowText: {
+    letterSpacing: 0.3,
+  },
 });
