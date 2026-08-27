@@ -288,7 +288,7 @@ export function parseAndReassembleServices(
     let lineData = line;
 
     // Check if line has a 3-character hex CAN header
-    const headerMatch = line.match(/^([0-9A-F]{3})[:\-]?\s+((?:[0-9A-F]{2}\s*)+)$/i);
+    const headerMatch = line.match(/^([0-9A-F]{3})[:-]?\s+((?:[0-9A-F]{2}\s*)+)$/i);
     if (headerMatch) {
       source = headerMatch[1].toUpperCase();
       lineData = headerMatch[2];
