@@ -104,20 +104,25 @@ export const useBluetooth = () => {
         useBluetoothStore.getState().setSensorData({ isPollingActive: false });  
     }, []);
 
-   const verifyHandshakeResponse = (rawResponse: string, sentCommand: string): boolean => {  
-       if (!rawResponse) return false;  
-       const clean = rawResponse.toUpperCase().replace(/\s+/g, '');  
-       const isHardNegative = clean.includes('CANERROR') || clean.includes('NODATA') || clean.includes('BUSBUSY') || clean.includes('BUSERROR');  
-       if (isHardNegative) return false;
+    const verifyHandshakeResponse = (rawResponse: string, sentCommand: string): boolean => {  
+        if (!rawResponse) return false;  
+        const clean = rawResponse.toUpperCase().replace(/\s+/g, '');  
+        const isHardNegative = clean.includes('CANERROR') || clean.includes('NODATA') || clean.includes('BUSBUSY') || clean.includes('BUSERROR') || clean.includes('UNABLETOCONNECT') || clean.includes('ERROR');  
+        if (isHardNegative) return false;
 
-       const expectedModeEcho = sentCommand.startsWith('01') ? '41' : '49';  
-       const pidHex = sentCommand.replace(/\s+/g, '').slice(-2).toUpperCase();  
-       const targetPattern = expectedModeEcho + pidHex;
+        const expectedModeEcho = sentCommand.startsWith('01') ? '41' : (sentCommand.startsWith('09') ? '49' : '');  
+        const pidHex = sentCommand.replace(/\s+/g, '').slice(-2).toUpperCase();  
+        const targetPattern = expectedModeEcho ? (expectedModeEcho + pidHex) : '';
 
-       return clean.includes(targetPattern) || rawResponse.toUpperCase().includes('BUS INIT');  
-   };
+        return (targetPattern ? clean.includes(targetPattern) : false) || 
+               rawResponse.toUpperCase().includes('BUS INIT') ||
+               clean.includes('5001') ||
+               clean.includes('5003') ||
+               clean.includes('62F190') ||
+               clean.includes('7E00');  
+    };
 
-   const triggerTelemetryEnqueue = useCallback(async () => {  
+    const triggerTelemetryEnqueue = useCallback(async () => {  
        const btState = useBluetoothStore.getState();  
        const telemetryState = useTelemetryStore.getState();  
        if (btState.status !== 'connected' || !telemetryState.activeSessionVehicle) return;
@@ -138,45 +143,43 @@ export const useBluetooth = () => {
    }, []);
 
     const handleVinReceived = useCallback(async (vin: string) => {  
-        if (!vin) return;  
-        const { VehicleIdentityService } = require('../services/VehicleIdentityService');
-        const profile = await VehicleIdentityService.decodeVehicleFromVin(vin);
-        
-        const btStore = useBluetoothStore.getState();
-        btStore.setSuggestedVehicleProfile(profile);
-        btStore.setSensorData({ vehicleMake: profile.make });  
-
-        // [Gap-fix] Probe manufacturer-specific (Mode 22) PIDs now that the make is known.
-        // Fire-and-forget: never allowed to block or fail the main connection flow.
-        if (profile.make) {
-            CapabilityDiscoveryManager.discoverOemPids(profile.make).catch(() => {});
-        }
-
-        const telemetryState = useTelemetryStore.getState();  
-        if (telemetryState.activeSessionVehicle) {  
-            const verifiedVehicle = { ...telemetryState.activeSessionVehicle, vin };
-            telemetryState.setActiveSessionVehicle(verifiedVehicle);  
-            const { saveRegisteredVehicle } = require('../store/garageStore');
-            await saveRegisteredVehicle(verifiedVehicle);
-            await bindVinToRegisteredVehicle(telemetryState.activeSessionVehicle.brand, telemetryState.activeSessionVehicle.model, telemetryState.activeSessionVehicle.year, vin);  
+        if (!vin || vin.length < 11) return;  
+        useBluetoothStore.getState().setSensorData({ vin });  
+        try {  
+            const { decodeVin } = require('../utils/vinDecoder');
+            const { GarageVehicleRegistry } = require('../store/garageStore');
+            const info = decodeVin(vin);  
+            if (info && info.make) {  
+                useBluetoothStore.getState().setSensorData({ ecuId: `${info.make}_${info.year || ''}` });  
+            }  
+            await GarageVehicleRegistry.saveRegisteredVehicle({
+                brand: info.make || 'Unknown',
+                model: info.model || 'Unknown',
+                year: info.year || 2024,
+                vin,
+                wmi: info.wmi || vin.substring(0, 3),
+                fuelType: info.fuelType || 'gasoline',
+                batteryHealthPct: null,
+                dpfSootLevelPct: null,
+                savedAt: new Date().toISOString(),
+                colorIndex: Math.floor(Math.random() * 5),
+            });
+        } catch {  
+            // Ignore decode failures  
         }  
-        await preloadDynamicDtc(profile.make);  
     }, []);
 
-   const initializeAndCheckEcu = async () => {  
+    const initializeAndCheckEcu = useCallback(async () => {  
        if (isInitializationMutexLocked.current) return;  
        isInitializationMutexLocked.current = true;
+       let initSuccess = false;
 
-       let initSuccess = false;  
        if (useAppStore.getState().isSimulationMode) {  
            useBluetoothStore.getState().addLog('DIAG: Simulation mode bypass in initializeAndCheckEcu');  
            ConnectionStateMachine.transitionTo(ConnectionState.TELEMETRY_ACTIVE);  
            setEcuStatus('connected'); isInitializationMutexLocked.current = false; return;  
        }
 
-       clearLogs();
-       ProtocolEngine.resetSession();  
-       useBluetoothStore.getState().addLog(`HANDSHAKE_START: timestamp=${Date.now()}`);  
        setEcuStatus('connecting'); setError(null);  
        ConnectionStateMachine.transitionTo(ConnectionState.INITIALIZING);
 
@@ -216,12 +219,17 @@ export const useBluetooth = () => {
             );
             const targetHeader = profile?.targetHeader || '7E0';
             const isModernVehicle = !activeVehicle || activeVehicle.year >= 2008 || profile.protocol === '6' || profile.protocol === '7';
+            const isStellantis = profile.make.toLowerCase().includes('stellantis') || 
+                                activeVehicle?.brand.toLowerCase().includes('peugeot') || 
+                                activeVehicle?.brand.toLowerCase().includes('citroen') ||
+                                activeVehicle?.brand.toLowerCase().includes('opel') ||
+                                activeVehicle?.brand.toLowerCase().includes('fiat');
 
             useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Targeted OEM Handshake -> Make: ${profile.make}, Model: ${profile.model}, Header: ${targetHeader}`);
 
             let canErrorCount = 0;
 
-            // Step 1: Targeted 11-bit CAN (ATSP6) + ATCAF1 + ATAT1 + ATH1 + ATSH <targetHeader> + 150ms + 3E 00 + 150ms + 01 00
+            // Step 1: Targeted 11-bit CAN (ATSP6) with SGW & Diagnostic Session Awakening
             try {
                 useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Attempting 11-bit CAN (ATSP6) with header ATSH ${targetHeader}...`);
                 await OBDCommandQueue.add("ATSP6", 1500).catch(() => '');
@@ -230,12 +238,42 @@ export const useBluetooth = () => {
                 await OBDCommandQueue.add("ATH1", 1000).catch(() => '');
                 await OBDCommandQueue.add(`ATSH ${targetHeader}`, 1000).catch(() => '');
                 await preciseSleep(150); // Gateway settling delay
-                await OBDCommandQueue.add("3E 00", 1000).catch(() => ''); // Tester Present to open gateway
-                await preciseSleep(150);
+
+                // Security Gateway (SGW) & BSI Awakening sequence: Tester Present (3E 00) + Default Session (10 01)
+                await OBDCommandQueue.add("3E 00", 1000).catch(() => '');
+                await preciseSleep(100);
+                if (isStellantis) {
+                    await OBDCommandQueue.add("10 01", 1000).catch(() => '');
+                    await preciseSleep(100);
+                }
 
                 OBDCommandQueue.clear(new Error('FAST_CAN_PRE_TEST_FLUSH'));
-                const fastCanRes = await OBDCommandQueue.add("01 00", 2500);
+                let fastCanRes = await OBDCommandQueue.add("01 00", 2500);
                 ecuConnected = verifyHandshakeResponse(fastCanRes, "01 00");
+
+                // Secondary verification with RPM (01 0C) if 01 00 returned NO DATA on 7E0
+                if (!ecuConnected && (fastCanRes || '').toUpperCase().includes('NO DATA')) {
+                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: 7E0 returned NO DATA, probing 01 0C (RPM)...`);
+                    const probeRpmRes = await OBDCommandQueue.add("01 0C", 2000).catch(() => '');
+                    ecuConnected = verifyHandshakeResponse(probeRpmRes, "01 0C");
+                }
+
+                // Stellantis BSI Gateway Fallback: if 7E0 unconfirmed, try BSI header 752
+                if (!ecuConnected && isStellantis) {
+                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: 7E0 unconfirmed, attempting Stellantis BSI Gateway (ATSH 752)...`);
+                    await OBDCommandQueue.add("ATSH 752", 1000).catch(() => '');
+                    await preciseSleep(150);
+                    await OBDCommandQueue.add("3E 00", 1000).catch(() => '');
+                    await preciseSleep(100);
+                    const bsiRes = await OBDCommandQueue.add("01 00", 2500).catch(() => '');
+                    ecuConnected = verifyHandshakeResponse(bsiRes, "01 00");
+                    if (ecuConnected) {
+                        useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Stellantis BSI Gateway (752) confirmed successfully!`);
+                    } else {
+                        // Restore primary targetHeader
+                        await OBDCommandQueue.add(`ATSH ${targetHeader}`, 1000).catch(() => '');
+                    }
+                }
 
                 if (ecuConnected) {
                     const dpnRes = await OBDCommandQueue.add("ATDPN", 1500).catch(() => '');
@@ -518,7 +556,7 @@ export const useBluetooth = () => {
            useBluetoothStore.getState().setConnectionStatusText(null);
            isInitializationMutexLocked.current = false;  
        }  
-   };
+    }, []);
 
    const connect = useCallback(async (selectedId: string, selectedName: string = 'Device') => {  
         const currentStatus = useBluetoothStore.getState().status;  

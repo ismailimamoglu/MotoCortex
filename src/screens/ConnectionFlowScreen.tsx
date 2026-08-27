@@ -29,6 +29,7 @@ import SupportModal from '../components/SupportModal';
 import SearchableVehicleSelect from '../components/SearchableVehicleSelect';
 import { useTelemetryStore, SelectedVehicle } from '../store/useTelemetryStore';
 import { getRegisteredVehicles, saveRegisteredVehicle } from '../store/garageStore';
+import { PASSENGER_CAR_BRANDS, MOTORCYCLE_BRANDS, HEAVY_DUTY_BRANDS } from '../data/vehicleData';
 
 interface ConnectionFlowScreenProps {
  onBack: () => void;
@@ -88,12 +89,6 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         }
       } else {
         setGarageVehicles([]);
-        if (status === 'disconnected') {
-          const current = useTelemetryStore.getState().activeSessionVehicle;
-          if (current && !current.vin) {
-            setActiveSessionVehicle(null);
-          }
-        }
       }
     }).catch(() => {});
   }, [status]);
@@ -327,50 +322,36 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
         </Text>
       </View>
 
-  {/* Main Connection Status Card - Only shown when not in vehicle selection form */}
-  {(!selectedType || (!showVehiclePicker && activeSessionVehicle) || status !== 'disconnected') && (
-    <View style={[styles.statusCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-      <View style={styles.statusHeader}>
-        <View style={[
-          styles.statusDot, 
-          { backgroundColor: ecuStatus === 'connected' ? colors.green : status === 'connecting' ? colors.amber : colors.red }
-        ]} />
-        <Text style={[styles.statusTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-          {ecuStatus === 'connected' 
-            ? t('common.connected').toUpperCase() 
-            : status === 'connecting' 
-            ? t('connection.connecting').toUpperCase()
-            : t('common.disconnected').toUpperCase()
-          }
-        </Text>
-      </View>
-      
-      {ecuStatus === 'connected' ? (
-        <View style={styles.successBlock}>
-          <Text style={[styles.successText, { color: colors.textSec, fontSize: fs(12.5) }]}>
-            {t('connection.successVin')}
-          </Text>
-          {vin && (
-            <Text style={[styles.vinText, { color: colors.green, fontSize: fs(13), fontFamily: colors.mono }]}>
-              VIN: {vin.replace(/_SIMULATED/gi, ' (DEMO)').replace(/_/g, ' ')}
+      {/* Connected Success Card - Only shown when ECU connection is active and verified */}
+      {ecuStatus === 'connected' && (
+        <View style={[styles.statusCard, { backgroundColor: colors.card, borderColor: colors.green, marginBottom: vs(12) }]}>
+          <View style={styles.statusHeader}>
+            <View style={[styles.statusDot, { backgroundColor: colors.green }]} />
+            <Text style={[styles.statusTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+              {t('common.connected').toUpperCase()}
             </Text>
-          )}
+          </View>
           
-          {isCloneDevice && (
-            <View style={[styles.warningBanner, { backgroundColor: `${colors.amber}15`, borderColor: colors.amber, paddingVertical: vs(8), paddingHorizontal: ms(12), borderRadius: 10, borderWidth: 1, marginVertical: vs(10) }]}>
-              <Text style={[styles.warningText, { color: colors.amber, fontSize: fs(11.5), lineHeight: fs(16), fontWeight: '600' }]}>
-                {t('connection.cloneWarning')}
+          <View style={styles.successBlock}>
+            <Text style={[styles.successText, { color: colors.textSec, fontSize: fs(12.5) }]}>
+              {t('connection.successVin')}
+            </Text>
+            {vin && (
+              <Text style={[styles.vinText, { color: colors.green, fontSize: fs(13), fontFamily: colors.mono }]}>
+                VIN: {vin.replace(/_SIMULATED/gi, ' (DEMO)').replace(/_/g, ' ')}
               </Text>
-            </View>
-          )}
+            )}
+            
+            {isCloneDevice && (
+              <View style={[styles.warningBanner, { backgroundColor: `${colors.amber}15`, borderColor: colors.amber, paddingVertical: vs(8), paddingHorizontal: ms(12), borderRadius: 10, borderWidth: 1, marginVertical: vs(10) }]}>
+                <Text style={[styles.warningText, { color: colors.amber, fontSize: fs(11.5), lineHeight: fs(16), fontWeight: '600' }]}>
+                  {t('connection.cloneWarning')}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
-      ) : (
-        <Text style={[styles.statusDesc, { color: colors.textSec, fontSize: fs(12) }]}>
-          {t('connection.statusPrompt')}
-        </Text>
       )}
-    </View>
-  )}
 
   {/* Auto-Connect Quick Action Banner for Last Connected Device */}
   {status === 'disconnected' && Boolean(lastDeviceId) && !selectedType && (
@@ -473,87 +454,104 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
    {/* Step 2: Vehicle Category Selection (Passenger Car / Motorcycle / Heavy Duty Truck) */}
    {status === 'disconnected' && selectedType && !selectedCategory && (
      <View style={{ width: '100%', marginVertical: vs(8) }}>
-       <TouchableOpacity onPress={() => setSelectedType(null)} style={{ marginBottom: vs(12) }}>
-         <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-           ← {t('connection.changeType', { defaultValue: 'Bağlantı Türünü Değiştir' })}
-         </Text>
-       </TouchableOpacity>
+       <TouchableOpacity 
+          style={[styles.backPillButton, { backgroundColor: `${colors.cyan}12`, borderColor: `${colors.cyan}35` }]}
+          onPress={() => setSelectedType(null)} 
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.backPillText, { color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono }]}>
+            {t('connection.changeType', { defaultValue: 'Bağlantı Türünü Değiştir' }).toUpperCase()}
+          </Text>
+        </TouchableOpacity>
 
        <Text style={{ color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono, fontWeight: '800', marginBottom: vs(12), letterSpacing: 0.5 }}>
          {t('connection.selectCategory', { defaultValue: 'ARAÇ KATEGORİSİ SEÇİN' })}
        </Text>
 
-       <TouchableOpacity
-         activeOpacity={0.75}
-         style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-         onPress={() => {
-           triggerHaptic();
-           useBluetoothStore.getState().setSelectedCategoryByUser('PASSENGER_CAR');
-           setSelectedCategory('PASSENGER_CAR');
-           setShowVehiclePicker(true);
-         }}
-       >
-         <View style={styles.categoryContent}>
-           <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-             {t('connection.passengerCar', { defaultValue: 'Otomobil' }).toUpperCase()}
-           </Text>
-           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-             {t('connection.passengerCarDesc', { defaultValue: '12V Binek & Hafif Ticari Araçlar' })}
-           </Text>
-         </View>
-         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
-       </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.75}
+          style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            triggerHaptic();
+            useBluetoothStore.getState().setSelectedCategoryByUser('PASSENGER_CAR');
+            setSelectedCategory('PASSENGER_CAR');
+            if (activeSessionVehicle && !PASSENGER_CAR_BRANDS.includes(activeSessionVehicle.brand)) {
+              setActiveSessionVehicle(null);
+            }
+            setShowVehiclePicker(true);
+          }}
+        >
+          <View style={styles.categoryContent}>
+            <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+              {t('connection.passengerCar', { defaultValue: 'Otomobil' }).toUpperCase()}
+            </Text>
+            <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
+              {t('connection.passengerCarDesc', { defaultValue: '12V Binek & Hafif Ticari Araçlar' })}
+            </Text>
+          </View>
+          <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
+        </TouchableOpacity>
 
-       <TouchableOpacity
-         activeOpacity={0.75}
-         style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-         onPress={() => {
-           triggerHaptic();
-           useBluetoothStore.getState().setSelectedCategoryByUser('MOTORCYCLE');
-           setSelectedCategory('MOTORCYCLE');
-           setShowVehiclePicker(true);
-         }}
-       >
-         <View style={styles.categoryContent}>
-           <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-             {t('connection.motorcycle', { defaultValue: 'Motosiklet' }).toUpperCase()}
-           </Text>
-           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-             {t('connection.motorcycleDesc', { defaultValue: 'Euro 5 & Yüksek Devirli Motosiklet Telemetrisi' })}
-           </Text>
-         </View>
-         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
-       </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.75}
+          style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            triggerHaptic();
+            useBluetoothStore.getState().setSelectedCategoryByUser('MOTORCYCLE');
+            setSelectedCategory('MOTORCYCLE');
+            if (activeSessionVehicle && !MOTORCYCLE_BRANDS.includes(activeSessionVehicle.brand)) {
+              setActiveSessionVehicle(null);
+            }
+            setShowVehiclePicker(true);
+          }}
+        >
+          <View style={styles.categoryContent}>
+            <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+              {t('connection.motorcycle', { defaultValue: 'Motosiklet' }).toUpperCase()}
+            </Text>
+            <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
+              {t('connection.motorcycleDesc', { defaultValue: 'Euro 5 & Yüksek Devirli Motosiklet Telemetrisi' })}
+            </Text>
+          </View>
+          <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
+        </TouchableOpacity>
 
-       <TouchableOpacity
-         activeOpacity={0.75}
-         style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-         onPress={() => {
-           triggerHaptic();
-           useBluetoothStore.getState().setSelectedCategoryByUser('HEAVY_DUTY_TRUCK');
-           setSelectedCategory('HEAVY_DUTY_TRUCK');
-           setShowVehiclePicker(true);
-         }}
-       >
-         <View style={styles.categoryContent}>
-           <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
-             {t('connection.heavyDutyTruck', { defaultValue: 'Ağır Vasıta & Kamyon' }).toUpperCase()}
-           </Text>
-           <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
-             {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs' })}
-           </Text>
-         </View>
-         <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
-       </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.75}
+          style={[styles.categoryCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            triggerHaptic();
+            useBluetoothStore.getState().setSelectedCategoryByUser('HEAVY_DUTY_TRUCK');
+            setSelectedCategory('HEAVY_DUTY_TRUCK');
+            if (activeSessionVehicle && !HEAVY_DUTY_BRANDS.includes(activeSessionVehicle.brand)) {
+              setActiveSessionVehicle(null);
+            }
+            setShowVehiclePicker(true);
+          }}
+        >
+          <View style={styles.categoryContent}>
+            <Text style={[styles.categoryTitle, { color: colors.textPri, fontSize: fs(14), fontFamily: colors.mono }]}>
+              {t('connection.heavyDutyTruck', { defaultValue: 'Ağır Vasıta & Kamyon' }).toUpperCase()}
+            </Text>
+            <Text style={[styles.categoryDesc, { color: colors.textSec, fontSize: fs(11.5) }]}>
+              {t('connection.heavyDutyTruckDesc', { defaultValue: '24V Ağır Ticari Araçlar & Otobüs' })}
+            </Text>
+          </View>
+          <Text style={[styles.categoryArrow, { color: colors.cyan }]}>›</Text>
+        </TouchableOpacity>
      </View>
    )}
 
   {/* Step 2.5: Vehicle Model / Year / Fuel Selection (Brand, Model, Year, Fuel Type) */}
   {status === 'disconnected' && selectedType && selectedCategory && (showVehiclePicker || !activeSessionVehicle) && (
     <View style={{ width: '100%', marginVertical: vs(8) }}>
-      <TouchableOpacity onPress={() => setSelectedCategory(null)} style={{ marginBottom: vs(12) }}>
-        <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-          ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
+      <TouchableOpacity 
+        style={[styles.backPillButton, { backgroundColor: `${colors.cyan}12`, borderColor: `${colors.cyan}35` }]}
+        onPress={() => setSelectedCategory(null)} 
+        activeOpacity={0.7}
+      >
+        <Text style={[styles.backPillText, { color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono }]}>
+          {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' }).toUpperCase()}
         </Text>
       </TouchableOpacity>
 
@@ -625,10 +623,14 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
   {selectedType === 'BLUETOOTH' && selectedCategory && activeSessionVehicle && !showVehiclePicker && (status === 'disconnected' || status === 'scanning') && (
   <View style={styles.btBlock}>
   <View style={styles.sectionHeader}>
-  <TouchableOpacity onPress={() => setSelectedCategory(null)}>
-  <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-  ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
-  </Text>
+  <TouchableOpacity 
+    style={[styles.backPillButton, { backgroundColor: `${colors.cyan}12`, borderColor: `${colors.cyan}35` }]}
+    onPress={() => setSelectedCategory(null)}
+    activeOpacity={0.7}
+  >
+    <Text style={[styles.backPillText, { color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono }]}>
+      {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' }).toUpperCase()}
+    </Text>
   </TouchableOpacity>
   </View>
 
@@ -786,11 +788,15 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  {/* Step 3B: Wi-Fi Selection view */}
  {selectedType === 'WIFI' && selectedCategory && activeSessionVehicle && !showVehiclePicker && (status === 'disconnected' || status === 'scanning') && (
   <View style={styles.wifiBlock}>
-  <TouchableOpacity onPress={() => setSelectedCategory(null)} style={{ marginBottom: vs(12) }}>
-  <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
-  ← {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' })}
-  </Text>
-  </TouchableOpacity>
+   <TouchableOpacity 
+     style={[styles.backPillButton, { backgroundColor: `${colors.cyan}12`, borderColor: `${colors.cyan}35` }]}
+     onPress={() => setSelectedCategory(null)} 
+     activeOpacity={0.7}
+   >
+     <Text style={[styles.backPillText, { color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono }]}>
+       {t('connection.changeCategory', { defaultValue: 'Kategoriyi Değiştir' }).toUpperCase()}
+     </Text>
+   </TouchableOpacity>
 
   {/* Target Vehicle Summary Card */}
   <View style={{ backgroundColor: colors.card, borderColor: colors.cyan, borderWidth: 1, borderRadius: 12, padding: 12, marginBottom: vs(12), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -880,19 +886,20 @@ export default function ConnectionFlowScreen({ onBack, onNavigateToHealth }: Con
  {/* Connecting Steps Visual Progress */}
  {(status === 'connecting' || (status === 'connected' && ecuStatus === 'connecting')) && (
  <View style={{ width: '100%' }}>
- <TouchableOpacity 
- onPress={() => {
- triggerHaptic();
- disconnect();
- useBluetoothStore.getState().setSensorData({ status: 'disconnected', adapterStatus: 'disconnected' });
- setSelectedType(null);
- }} 
- style={{ marginBottom: vs(12) }}
- >
- <Text style={[styles.backArrow, { color: colors.cyan, fontSize: fs(13) }]}>
- ← {t('common.changeType')}
- </Text>
- </TouchableOpacity>
+  <TouchableOpacity 
+    style={[styles.backPillButton, { backgroundColor: `${colors.cyan}12`, borderColor: `${colors.cyan}35`, marginBottom: vs(12) }]}
+    onPress={() => {
+      triggerHaptic();
+      disconnect();
+      useBluetoothStore.getState().setSensorData({ status: 'disconnected', adapterStatus: 'disconnected' });
+      setSelectedType(null);
+    }} 
+    activeOpacity={0.7}
+  >
+    <Text style={[styles.backPillText, { color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono }]}>
+      {t('common.changeType', { defaultValue: 'Bağlantı Türünü Değiştir' }).toUpperCase()}
+    </Text>
+  </TouchableOpacity>
 
  <View style={[styles.progressBlock, { backgroundColor: colors.card, borderColor: colors.border }]}>
  <Text style={[styles.progressHeader, { color: colors.textPri, fontSize: fs(13), fontFamily: colors.mono }]}>
@@ -1297,9 +1304,22 @@ const styles = StyleSheet.create({
  sectionHeader: {
  marginBottom: 12,
  },
- backArrow: {
- fontWeight: '800',
- },
+ backPillButton: {
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingVertical: 7,
+    paddingHorizontal: 16,
+    marginBottom: 14,
+  },
+  backPillText: {
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    textAlign: 'center',
+  },
+  backArrow: {
+    fontWeight: '800',
+  },
  scanActionRow: {
  marginBottom: 16,
  },

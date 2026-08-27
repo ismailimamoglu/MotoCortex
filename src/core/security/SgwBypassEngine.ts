@@ -46,8 +46,8 @@ export class SgwBypassEngine {
         const cleanVin = vin.toUpperCase().trim();
         const wmi = cleanVin.substring(0, 3);
 
-        // FCA Group (Fiat, Chrysler, Jeep, Dodge, Alfa Romeo 2018+)
-        if (['1J4', '1J8', 'C4R', 'ZFA', 'FA1', '3FE', '9BD', 'ZAR'].includes(wmi)) {
+        // FCA / Stellantis Group (Peugeot, Citroen, Fiat, Chrysler, Jeep, Dodge, Alfa Romeo, Opel 2018+)
+        if (['1J4', '1J8', 'C4R', 'ZFA', 'FA1', '3FE', '9BD', 'ZAR', 'VF3', 'VF7', 'VR3', 'VX1', '1C4', '1C6', '1C3', 'W0L', 'W0V'].includes(wmi)) {
             this.activeStatus = {
                 isLocked: true,
                 vendor: 'FCA',

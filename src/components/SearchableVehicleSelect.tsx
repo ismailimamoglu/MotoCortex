@@ -143,12 +143,26 @@ export default function SearchableVehicleSelect({
     }
   }, [initialFuelType, availableFuelTypes]);
 
-  // Reset selectedFuelType if incompatible with newly selected category
+  // Reset all internal selections when category switches (e.g. from Passenger Car to Motorcycle)
+  const prevCategoryRef = React.useRef(category);
   useEffect(() => {
-    if (selectedFuelType && !availableFuelTypes.includes(selectedFuelType as any)) {
+    if (prevCategoryRef.current !== category) {
+      prevCategoryRef.current = category;
+      setSelectedBrand('');
+      setSelectedModel('');
+      setSelectedYear('');
       setSelectedFuelType('');
+      setCustomBrand('');
+      setCustomModel('');
+      setCustomYear('');
+      setBrandSearchQuery('');
+      setModelSearchQuery('');
+      setShowBrandDropdown(false);
+      setShowModelDropdown(false);
+      setShowYearDropdown(false);
+      setShowFuelDropdown(false);
     }
-  }, [category, availableFuelTypes]);
+  }, [category]);
 
   // Filter raw brands by category
   const baseBrands = React.useMemo(() => {
@@ -294,9 +308,8 @@ export default function SearchableVehicleSelect({
               placeholderTextColor={colors.textSec}
               value={brandSearchQuery}
               onChangeText={setBrandSearchQuery}
-              autoFocus={true}
             />
-            <ScrollView style={{ maxHeight: scaleHeight(160) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
               {filteredBrands.length === 0 ? (
                 <View style={{ padding: 14, alignItems: 'center' }}>
                   <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11) }}>
@@ -364,9 +377,8 @@ export default function SearchableVehicleSelect({
               placeholderTextColor={colors.textSec}
               value={modelSearchQuery}
               onChangeText={setModelSearchQuery}
-              autoFocus={true}
             />
-            <ScrollView style={{ maxHeight: scaleHeight(160) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
               {filteredModels.length === 0 ? (
                 <View style={{ padding: 14, alignItems: 'center' }}>
                   <Text style={{ color: colors.textSec, fontFamily: MONO, fontSize: scaleFont(11) }}>
@@ -427,7 +439,7 @@ export default function SearchableVehicleSelect({
 
         {showYearDropdown && (
           <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-            <ScrollView style={{ maxHeight: scaleHeight(160) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
               {YEARS.map((year) => (
                 <TouchableOpacity 
                   key={year}
@@ -481,7 +493,7 @@ export default function SearchableVehicleSelect({
 
         {showFuelDropdown && (
           <View style={[styles.dropdownList, { backgroundColor: colors.elevated, borderColor: colors.border }]}>
-            <ScrollView style={{ maxHeight: scaleHeight(160) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
+            <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">
               {availableFuelTypes.map((fuel) => (
                 <TouchableOpacity 
                   key={fuel}

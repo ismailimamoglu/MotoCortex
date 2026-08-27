@@ -2408,29 +2408,39 @@ ${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateStr
  {/* Prominent Hub Navigation Header */}
  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 8, zIndex: 100, elevation: 100, position: 'relative' }}>
  <TouchableOpacity
- style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 4, paddingEnd: 12, zIndex: 110, elevation: 110 }}
- onPress={() => {
- console.log('[App] Back to Hub pressed!');
- setIsCustomizeModalVisible(false);
- setIsPaywallVisible(false);
- setIsAdminModalVisible(false);
- setIsDiagVisible(false);
- setIsBatteryTestVisible(false);
- setIsFreezeFrameVisible(false);
- setIsPerformanceVisible(false);
- setIsSaveModalVisible(false);
- setIsIgnitionModalVisible(false);
- useBluetoothStore.getState().clearPaywallContext();
- setActiveHubView('hub');
- }}
- activeOpacity={0.6}
- delayPressIn={0}
- hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+   style={{
+     flexDirection: 'row',
+     alignItems: 'center',
+     backgroundColor: `${colors.cyan}14`,
+     borderColor: `${colors.cyan}40`,
+     borderWidth: 1,
+     borderRadius: 20,
+     paddingVertical: scaleHeight(6),
+     paddingHorizontal: scaleWidth(14),
+     zIndex: 110,
+     elevation: 110
+   }}
+   onPress={() => {
+     console.log('[App] Back to Hub pressed!');
+     setIsCustomizeModalVisible(false);
+     setIsPaywallVisible(false);
+     setIsAdminModalVisible(false);
+     setIsDiagVisible(false);
+     setIsBatteryTestVisible(false);
+     setIsFreezeFrameVisible(false);
+     setIsPerformanceVisible(false);
+     setIsSaveModalVisible(false);
+     setIsIgnitionModalVisible(false);
+     useBluetoothStore.getState().clearPaywallContext();
+     setActiveHubView('hub');
+   }}
+   activeOpacity={0.6}
+   delayPressIn={0}
+   hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
  >
- <Text style={{ color: colors.cyan, fontSize: 18, fontWeight: '900' }}>←</Text>
- <Text numberOfLines={1} style={{ color: colors.textPri, fontSize: 13, fontWeight: '800', fontFamily: MONO }}>
- {t('hub.backToHub')}
- </Text>
+   <Text numberOfLines={1} style={{ color: colors.cyan, fontSize: scaleFont(11), fontWeight: '800', fontFamily: MONO, letterSpacing: 0.5 }}>
+     {t('hub.backToHub')}
+   </Text>
  </TouchableOpacity>
  {activeHubView !== 'connection_flow' && activeHubView !== 'obd_health' && (
  <TouchableOpacity

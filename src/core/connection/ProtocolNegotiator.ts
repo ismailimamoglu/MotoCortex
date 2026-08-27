@@ -79,18 +79,13 @@ export class ProtocolNegotiator {
             await OBDCommandQueue.add('ATSP0', 3500).catch(() => {}); // Auto protocol search
             await preciseSleep(100);
 
-            // ── Step 4: Info Queries & Protocol Resolution ───────────────
+            // ── Step 4: Info Queries & Hardware Classification ──────────
             const t0 = Date.now();
             let unresponsiveCount = 0;
             const atiRes = await OBDCommandQueue.add('ATI', 3000).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
             const rvRes = await OBDCommandQueue.add('ATRV', 3000).catch(() => { unresponsiveCount++; return '12.0V'; });
-            const dpRes = await OBDCommandQueue.add('ATDP', 3000).catch(() => { unresponsiveCount++; return 'AUTO'; });
-            const rtt = Math.max(10, Math.round((Date.now() - t0) / 3));
-
-            // ── Step 5: Smoke Test (01 00) ───────────────────────────────
+            const rtt = Math.max(10, Math.round((Date.now() - t0) / 2));
             OBDCommandQueue.flushRxBuffer();
-            const smokeRes = await OBDCommandQueue.add('01 00', 1500).catch(() => '');
-            store.addLog(`CLEAN_INIT: Smoke test (01 00) response: ${smokeRes}`);
 
             const cleanFirmware = (atiRes || 'ELM327 v1.5').replace(/[\r\n>]/g, '').trim();
             const supportsLongFrames = (atalRes || '').toUpperCase().includes('OK');

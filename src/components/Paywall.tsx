@@ -54,8 +54,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  identifier: 'weekly_single',
  packageType: 'WEEKLY',
  product: {
- price: 9.99,
- priceString: '$9.99',
+ price: 5.99,
+ priceString: '$5.99',
  title: t('paywall.weekly'),
  description: t('paywall.weeklyDesc'),
  },
@@ -64,8 +64,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  identifier: '$rc_monthly',
  packageType: 'MONTHLY',
  product: {
- price: 29.99,
- priceString: '$29.99',
+ price: 19.99,
+ priceString: '$19.99',
  title: t('paywall.monthly'),
  description: t('paywall.monthlyDesc'),
  },
@@ -74,8 +74,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  identifier: '$rc_yearly',
  packageType: 'ANNUAL',
  product: {
- price: 199.99,
- priceString: '$199.99',
+ price: 129.99,
+ priceString: '$129.99',
  title: t('paywall.yearly'),
  description: t('paywall.yearlyDesc'),
  },
@@ -89,8 +89,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  packageType: 'WEEKLY',
  product: {
  identifier: 'motocortex_pro_weekly_nonrenew',
- price: 9.99,
- priceString: '$9.99',
+ price: 5.99,
+ priceString: '$5.99',
  title: t('paywall.weekly'),
  description: t('paywall.weeklyDesc'),
  }
@@ -100,8 +100,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  packageType: 'MONTHLY',
  product: {
  identifier: 'motocortex_pro_monthly',
- price: 29.99,
- priceString: '$29.99',
+ price: 19.99,
+ priceString: '$19.99',
  title: t('paywall.monthly'),
  description: t('paywall.monthlyDesc'),
  }
@@ -111,8 +111,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  packageType: 'ANNUAL',
  product: {
  identifier: 'motocortex_pro_yearly',
- price: 199.99,
- priceString: '$199.99',
+ price: 129.99,
+ priceString: '$129.99',
  title: t('paywall.yearly'),
  description: t('paywall.yearlyDesc'),
  }
@@ -682,7 +682,10 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       const currencySymbol = pkg.product.priceString ? pkg.product.priceString.replace(/[0-9.,\s]/g, '') : '$';
       const monthlyPrice = (pkg.product.price / 12).toFixed(2);
       const perMonthText = t('paywall.perMonth');
-      const saveText = t('paywall.save44');
+      const monthlyBase = monthlyPkg?.product?.price || 19.99;
+      const yearlyBase = pkg.product.price || 129.99;
+      const calculatedPct = Math.max(1, Math.round(((monthlyBase * 12 - yearlyBase) / (monthlyBase * 12)) * 100));
+      const saveText = t('paywall.saveDiscount', { pct: calculatedPct, defaultValue: `%${calculatedPct} Tasarruf` });
       savingsText = `~${currencySymbol}${monthlyPrice}${perMonthText} • ${saveText}`;
       planDescText = t('paywall.yearlyDesc');
     } else if (type === 'monthly') {
