@@ -22,8 +22,8 @@ import { triggerHaptic } from '../utils/haptics';
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
 const SUPPORT_EMAIL = 'ismailimamoglu610@gmail.com';
-const APP_STORE_URL = 'https://apps.apple.com/app/id6742882583';
-const APP_STORE_NATIVE = 'itms-apps://apps.apple.com/app/id6742882583';
+const APP_STORE_URL = 'https://apps.apple.com/app/id6764052240';
+const APP_STORE_NATIVE = 'itms-apps://apps.apple.com/app/id6764052240';
 const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.ismail.motocortexv2';
 const PLAY_STORE_NATIVE = 'market://details?id=com.ismail.motocortexv2';
 
