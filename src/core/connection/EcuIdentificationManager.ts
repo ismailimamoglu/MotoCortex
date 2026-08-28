@@ -1,7 +1,7 @@
 // src/core/connection/EcuIdentificationManager.ts
 // MotoCortex v8.0.0 - ECU Identification & VIN Discovery Engine
 
-import OBDCommandQueue from '../../api/OBDCommandQueue';
+import OBDCommandQueue, { preciseSleep } from '../../api/OBDCommandQueue';
 import { useBluetoothStore } from '../../store/useBluetoothStore';
 import { CategoryAutoCorrectionEngine } from './CategoryAutoCorrectionEngine';
 import { vehicleIdentityEngine } from '../identity/VehicleIdentityEngine';
@@ -30,7 +30,15 @@ export class EcuIdentificationManager {
         OBDCommandQueue.flushRxBuffer();
 
         try {
-            const raw = await OBDCommandQueue.add('09 02', 3000);
+            let raw = await OBDCommandQueue.add('09 02', 3000);
+            // K-Line Buffer Collision Guard: If previous response (e.g. 43/47 DTC) leaked into buffer, flush and retry once
+            const cleanRaw = raw.toUpperCase().replace(/\s+/g, '');
+            if (cleanRaw.startsWith('47') || cleanRaw.startsWith('43') || (!cleanRaw.includes('4902') && !cleanRaw.includes('49 02'))) {
+                store.addLog('ECU_ID: Stale K-Line buffer detected in Mode 09. Retrying 09 02...');
+                OBDCommandQueue.flushRxBuffer();
+                await preciseSleep(120);
+                raw = await OBDCommandQueue.add('09 02', 3000);
+            }
             const vin = vehicleIdentityEngine.parseVinResponse(raw);
             if (vin && vin.length === 17) {
                 store.addLog(`ECU_ID: Discovered VIN = ${vin}`);

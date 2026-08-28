@@ -1,4 +1,4 @@
-onoFe Ultra v1.5 OBD 2 Akıllı Araç Tanı Cihazı
+monoFe Ultra v1.5 OBD 2 Akıllı Araç Tanı Cihazı
 
 Uygulama Desteği: 30+ Uygulama Destekler
 Çip Seti: Geliştirilmiş 25K80  Çift Çip

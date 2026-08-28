@@ -537,9 +537,9 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
         )?.[0] || '';
         
         expect(lowScoreLog).toContain('Score=45');
-        expect(lowScoreLog).toContain('interLoopDelay=50ms');
-        expect(lowScoreLog).toContain('cmdTimeoutBase=500ms');
-        expect(lowScoreLog).toContain('cmdPacingDelay=15ms');
+        expect(lowScoreLog).toContain('interLoopDelay=20ms');
+        expect(lowScoreLog).toContain('cmdTimeoutBase=250ms');
+        expect(lowScoreLog).toContain('cmdPacingDelay=5ms');
 
         logSpy.mockClear();
 

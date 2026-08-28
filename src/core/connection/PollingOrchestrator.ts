@@ -79,10 +79,10 @@ export class PollingOrchestrator {
             cmdTimeoutBase = 150;
             cmdPacingDelay = 2;
         } else if (score < 60) {
-            // Düşük kaliteli / klon adaptörler: Güvenli yavaş akış, tampon taşmasını engeller
-            interLoopDelay = 50;
-            cmdTimeoutBase = 500;
-            cmdPacingDelay = 15;
+            // PIC18F25K80 ve muadil adaptörler: 20ms akıcı ara, duyarlı gaz/RPM tepkisi
+            interLoopDelay = 20;
+            cmdTimeoutBase = 250;
+            cmdPacingDelay = 5;
         }
 
         store.addLog(`POLLING_ORCHESTRATOR: Target pacing parameters computed. Score=${score}, isCAN=${isCanProtocol}, interLoopDelay=${interLoopDelay}ms, cmdTimeoutBase=${cmdTimeoutBase}ms, cmdPacingDelay=${cmdPacingDelay}ms`);

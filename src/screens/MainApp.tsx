@@ -913,6 +913,17 @@ export default function MainApp() {
  }
  }, [isAtomicOperationRunning, activeHubView, pendingProRevocation]);
 
+ // Lifecycle Isolation: Halt background polling when navigating away from live sensors to prevent K-Line buffer collisions
+ useEffect(() => {
+ if (status !== 'connected') return;
+ if (activeHubView !== 'sensors') {
+ stopPolling();
+ OBDCommandQueue.clear(new Error('NAVIGATED_AWAY_FROM_SENSORS'));
+ } else {
+ startPolling();
+ }
+ }, [activeHubView, status, stopPolling, startPolling]);
+
  // Garage states
  const [garageRecords, setGarageRecords] = useState<GarageRecord[]>([]);
  const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
@@ -2263,7 +2274,7 @@ ${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateStr
  </View>
  </View>
 
- {isCloneDevice && ecuStatus === 'connected' && (
+ {isCloneDevice && (adapterCapabilityScore ?? 100) < 50 && ecuStatus === 'connected' && (
  <View style={{
  backgroundColor: `${colors.amber}1A`,
  borderBottomWidth: 1,

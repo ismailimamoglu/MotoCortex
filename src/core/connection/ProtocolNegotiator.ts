@@ -83,7 +83,7 @@ export class ProtocolNegotiator {
             const t0 = Date.now();
             let unresponsiveCount = 0;
             const atiRes = await OBDCommandQueue.add('ATI', 3000).catch(() => { unresponsiveCount++; return 'ELM327 v1.5'; });
-            const rvRes = await OBDCommandQueue.add('ATRV', 3000).catch(() => { unresponsiveCount++; return '12.0V'; });
+            const rvRes = await OBDCommandQueue.add('ATRV', 3000).catch(() => { unresponsiveCount++; return ''; });
             const rtt = Math.max(10, Math.round((Date.now() - t0) / 2));
             OBDCommandQueue.flushRxBuffer();
 
@@ -96,15 +96,15 @@ export class ProtocolNegotiator {
             const isHighGradeHardware = supportsLongFrames && supportsCanAutoFormat;
             const isCheapFakeClone = !supportsLongFrames && !supportsCanAutoFormat && unresponsiveCount > 0;
 
-            let score = 95;
+            let score = 75;
             if (cleanFirmware.includes('STN') || cleanFirmware.includes('OBDLink') || cleanFirmware.includes('vLinker') || cleanFirmware.includes('vGate') || cleanFirmware.includes('2.2')) {
-                score = 100;
-            } else if (isHighGradeHardware) {
-                // PIC18F25K80 Dual-Chip (e.g. MonoFe Ultra v1.5)
                 score = 95;
+            } else if (isHighGradeHardware) {
+                score = 85; // High-grade Dual-Chip (e.g. PIC18F25K80 / v1.5 Full Microchip)
+            } else if (supportsCanAutoFormat || supportsLongFrames) {
+                score = 70; // Standard 25K80
             } else if (isCheapFakeClone) {
-                // Low-grade single-chip clone failing basic ELM commands
-                score = 45;
+                score = 45; // Broken single-chip fake
             } else {
                 score = 80;
             }

@@ -131,8 +131,9 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
 
  const voltage = sensorValues.voltage;
  const voltNum = voltage ? parseFloat(voltage.replace('V', '')) : null;
- const isBatteryLow = voltNum !== null && voltNum < 11.8;
- const isBatteryWarn = voltNum !== null && voltNum < 12.2 && voltNum >= 11.8;
+ const isEngineRunning = (sensorValues.rpm !== null && sensorValues.rpm > 400);
+ const isBatteryLow = voltNum !== null && voltNum < (isEngineRunning ? 11.2 : 11.8);
+ const isBatteryWarn = voltNum !== null && !isEngineRunning && voltNum < 12.2 && voltNum >= 11.8;
 
  const statusColor = (s: string) => {
  if (s === 'connected') return tc.green;
