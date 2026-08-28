@@ -5,6 +5,7 @@ import * as Sharing from 'expo-sharing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
 import { useBluetooth } from '../hooks/useBluetooth';
+import OBDCommandQueue from '../api/OBDCommandQueue';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { ADAPTER_COMMANDS } from '../api/commands';
 import { lookupDTC, prefetchDtcChunksForCodes } from '../data/dtcDictionary';
