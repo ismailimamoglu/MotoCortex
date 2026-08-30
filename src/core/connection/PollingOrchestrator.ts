@@ -66,20 +66,26 @@ export class PollingOrchestrator {
 
         // 2. ADIM: Donanım Kalitesine Göre Adaptif Limitlerin Hesaplanması
         const score = store.adapterCapabilityScore || 100;
-        const protocol = store.protocol || '';
-        const isCanProtocol = protocol.toUpperCase().includes('CAN') || protocol.includes('6') || protocol.includes('7');
+        const rawProtocol = (store.protocol || '').toUpperCase();
+        const isExplicitlySlow = rawProtocol.includes('KWP') || rawProtocol.includes('ISO 14230') || rawProtocol.includes('ISO 9141') || rawProtocol.includes('J1850') || rawProtocol.includes('9141') || rawProtocol === '3' || rawProtocol === '4' || rawProtocol === '5' || rawProtocol === '1' || rawProtocol === '2';
+        const isCanProtocol = !isExplicitlySlow;
         
         let interLoopDelay = 15;
         let cmdTimeoutBase = 400;
         let cmdPacingDelay = 5;
 
-        if (score >= 75) {
-            // Yüksek kaliteli / orijinal adaptörler: Yüksek hız, JS Event Loop ve Hermes HadesGC için 16ms güvenli ara
+        if (isExplicitlySlow) {
+            // K-Line / J1850 (10.4 kbps): Minimum UART yükü, buffer taşmasını önleyen güvenli aralıklar
+            interLoopDelay = 40;
+            cmdTimeoutBase = 500;
+            cmdPacingDelay = 15;
+        } else if (score >= 75) {
+            // Yüksek kaliteli CAN adaptörler: Yüksek hız, JS Event Loop ve Hermes HadesGC için 16ms güvenli ara
             interLoopDelay = 16; 
             cmdTimeoutBase = 150;
             cmdPacingDelay = 2;
         } else if (score < 60) {
-            // PIC18F25K80 ve muadil adaptörler: 20ms akıcı ara, duyarlı gaz/RPM tepkisi
+            // PIC18F25K80 ve muadil klon adaptörler: 20ms akıcı ara
             interLoopDelay = 20;
             cmdTimeoutBase = 250;
             cmdPacingDelay = 5;
@@ -108,15 +114,15 @@ export class PollingOrchestrator {
 
                 const now = Date.now();
 
-                // Periodically query battery voltage via ATRV (every 5 seconds)
-                if (now - lastVoltageReadTime > 5000) {
+                // Periodically query battery voltage via ATRV (every 3.5 seconds)
+                if (now - lastVoltageReadTime > 3500) {
                     try {
-                        await OBDCommandQueue.add('ATRV', cmdTimeoutBase);
+                        await OBDCommandQueue.add('ATRV', isCanProtocol ? cmdTimeoutBase : 600);
                         lastVoltageReadTime = now;
                     } catch (e) {}
                 }
 
-                const shouldRunSlowCadence = (now - lastSlowCadenceTime > 5000);
+                const shouldRunSlowCadence = (now - lastSlowCadenceTime > 4000);
                 if (shouldRunSlowCadence) {
                     lastSlowCadenceTime = now;
                 }
@@ -141,7 +147,7 @@ export class PollingOrchestrator {
                         }
                     }
 
-                    // Dinamik Priority Interleaving: Yüksek devir tepkisi için her ikincil sensörde bir RPM (010C) sıkıştır
+                    // Dinamik Priority Interleaving: Yüksek devir tepkisi için CAN hatlarında her ikincil sensörde bir RPM (010C) sıkıştır
                     const highPriorityPids = pids.filter(p => p === '0C' || p === '0D' || p === '11');
                     const secondaryPids = pids.filter(p => p !== '0C' && p !== '0D' && p !== '11');
 
@@ -152,35 +158,35 @@ export class PollingOrchestrator {
 
                         try {
                             const raw = await OBDCommandQueue.add(`01 ${hpPid}`, cmdTimeoutBase);
-                            const clean = raw.toUpperCase().replace(/\s+/g, '');
-                            if (clean.includes("NODATA") || clean.includes("CANERROR") || clean.includes("7F01")) {
+                            const clean = (raw || '').toUpperCase().replace(/\s+/g, '');
+                            if (clean.includes("NODATA") || clean.includes("CANERROR") || clean.includes("7F") || clean.includes("STOPPED")) {
                                 this.blacklistedPids.add(hpPid);
                             }
                         } catch (e) {}
                         if (cmdPacingDelay > 0) await preciseSleep(cmdPacingDelay);
                     }
 
-                    // 2. İkincil sensörleri sırayla oku, her birinden sonra tekrar RPM (010C) araya sıkıştır
+                    // 2. İkincil sensörleri sırayla oku
                     for (const secPid of secondaryPids) {
                         if (!this.isPollingActive) break;
                         if (this.blacklistedPids.has(secPid)) continue;
 
-                        // Yavaş değişen PID'leri sadece 5 saniyede bir çalıştır
+                        // Yavaş değişen PID'leri sadece periyodik aralıkta çalıştır
                         if (SLOW_CADENCE_PIDS.has(secPid) && !shouldRunSlowCadence) {
                             continue;
                         }
 
                         try {
                             const raw = await OBDCommandQueue.add(`01 ${secPid}`, cmdTimeoutBase);
-                            const clean = raw.toUpperCase().replace(/\s+/g, '');
-                            if (clean.includes("NODATA") || clean.includes("CANERROR") || clean.includes("7F01")) {
+                            const clean = (raw || '').toUpperCase().replace(/\s+/g, '');
+                            if (clean.includes("NODATA") || clean.includes("CANERROR") || clean.includes("7F") || clean.includes("STOPPED")) {
                                 this.blacklistedPids.add(secPid);
                             }
                         } catch (e) {}
                         if (cmdPacingDelay > 0) await preciseSleep(cmdPacingDelay);
 
-                        // PRIORITY INTERLEAVE: Anlık aragazı ve devir değişimini kaçırmamak için anında RPM oku
-                        if (highPriorityPids.includes('0C') && !this.blacklistedPids.has('0C')) {
+                        // PRIORITY INTERLEAVE: Yalnızca CAN-Bus hatlarında anlık devir için araya RPM oku (K-Line'da lag yapmaması için atlanır)
+                        if (isCanProtocol && highPriorityPids.includes('0C') && !this.blacklistedPids.has('0C')) {
                             try {
                                 await OBDCommandQueue.add('01 0C', cmdTimeoutBase);
                             } catch (e) {}

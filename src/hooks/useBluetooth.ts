@@ -251,27 +251,18 @@ export const useBluetooth = () => {
                 let fastCanRes = await OBDCommandQueue.add("01 00", 2500);
                 ecuConnected = verifyHandshakeResponse(fastCanRes, "01 00");
 
-                // Secondary verification with RPM (01 0C) if 01 00 returned NO DATA on 7E0
+                // Secondary verification with RPM (01 0C) or 11-bit Broadcast 7DF if 01 00 returned NO DATA on targetHeader
                 if (!ecuConnected && (fastCanRes || '').toUpperCase().includes('NO DATA')) {
-                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: 7E0 returned NO DATA, probing 01 0C (RPM)...`);
+                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: ${targetHeader} returned NO DATA, probing 01 0C (RPM)...`);
                     const probeRpmRes = await OBDCommandQueue.add("01 0C", 2000).catch(() => '');
                     ecuConnected = verifyHandshakeResponse(probeRpmRes, "01 0C");
-                }
 
-                // Stellantis BSI Gateway Fallback: if 7E0 unconfirmed, try BSI header 752
-                if (!ecuConnected && isStellantis) {
-                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: 7E0 unconfirmed, attempting Stellantis BSI Gateway (ATSH 752)...`);
-                    await OBDCommandQueue.add("ATSH 752", 1000).catch(() => '');
-                    await preciseSleep(150);
-                    await OBDCommandQueue.add("3E 00", 1000).catch(() => '');
-                    await preciseSleep(100);
-                    const bsiRes = await OBDCommandQueue.add("01 00", 2500).catch(() => '');
-                    ecuConnected = verifyHandshakeResponse(bsiRes, "01 00");
-                    if (ecuConnected) {
-                        useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Stellantis BSI Gateway (752) confirmed successfully!`);
-                    } else {
-                        // Restore primary targetHeader
-                        await OBDCommandQueue.add(`ATSH ${targetHeader}`, 1000).catch(() => '');
+                    if (!ecuConnected) {
+                        useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Probing 11-bit Standard Broadcast ATSH 7DF...`);
+                        await OBDCommandQueue.add("ATSH 7DF", 1000).catch(() => '');
+                        await preciseSleep(100);
+                        const broadcastRes = await OBDCommandQueue.add("01 00", 2500).catch(() => '');
+                        ecuConnected = verifyHandshakeResponse(broadcastRes, "01 00");
                     }
                 }
 
@@ -288,15 +279,21 @@ export const useBluetooth = () => {
                 ecuConnected = false;
             }
 
-            // Step 2: 29-bit CAN Fallback (ATSP7 + ATSH 18DA10F1) if 11-bit was unconfirmed
-            if (!ecuConnected) {
+            // Step 2: 29-bit CAN Fallback (ATSP7) if 11-bit was unconfirmed (STRICTLY BYPASSED FOR STELLANTIS / 11-bit OEMS)
+            if (!ecuConnected && !isStellantis && (profile.protocol === '7' || !isModernVehicle || activeVehicle?.year === undefined || activeVehicle.year >= 2008)) {
                 try {
-                    useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: 11-bit unconfirmed, attempting 29-bit CAN (ATSP7 / ATSH 18DA10F1)...');
+                    useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: 11-bit unconfirmed, attempting 29-bit CAN (ATSP7)...');
                     await OBDCommandQueue.add("ATSP7", 1500).catch(() => '');
                     await OBDCommandQueue.add("ATCAF1", 1000).catch(() => '');
                     await OBDCommandQueue.add("ATAT1", 1000).catch(() => '');
                     await OBDCommandQueue.add("ATH1", 1000).catch(() => '');
-                    await OBDCommandQueue.add("ATSH 18DA10F1", 1000).catch(() => '');
+
+                    // Safe 29-bit header configuration with clone tolerance
+                    const headerRes = await OBDCommandQueue.add("ATSH 18DA10F1", 1000).catch(() => '');
+                    if ((headerRes || '').includes('?')) {
+                        useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: ATSH 18DA10F1 unaccepted by clone, trying 29-bit Broadcast 18DB33F1...');
+                        await OBDCommandQueue.add("ATSH 18DB33F1", 1000).catch(() => '');
+                    }
                     await preciseSleep(150);
                     await OBDCommandQueue.add("3E 00", 1000).catch(() => '');
                     await preciseSleep(150);
@@ -348,17 +345,17 @@ export const useBluetooth = () => {
                     useBluetoothStore.getState().setProtocol(selectedProtocol ? selectedProtocol.trim() : `AUTO (SP 0 / DPN ${cleanDpn})`);  
                 } catch (e) {  
                     // Only try legacy K-Line & J1850 fallback if vehicle is not explicitly a modern 2016+ model
-                    if (!activeVehicle || activeVehicle.year < 2016) {
+                    if (!activeVehicle || activeVehicle.year < 2016 || profile.protocol === '3' || profile.protocol === '4' || profile.protocol === '5') {
                         useBluetoothStore.getState().addLog('GLOBAL_PROTOCOL_ENGINE: Auto protocol unconfirmed. Executing fallback matrix (CAN -> K-Line -> Legacy)...');
                         const fallbackProtocols = [
-                             { sp: 'ATSP8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 5000 },
-                             { sp: 'ATSP9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 5000 },
-                             { sp: 'ATSP5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, timeout: 8000, isKLine: true },
-                             { sp: 'ATSP4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 8000, isKLine: true },
-                             { sp: 'ATSP3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, timeout: 8000, isKLine: true },
-                             { sp: 'ATSPA', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 8000 },
-                             { sp: 'ATSP1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 6000 },
-                             { sp: 'ATSP2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 6000 },
+                             { sp: 'ATSP3', name: 'ISO 9141-2 (5-Baud Init - Asian/Euro)', isCan: false, timeout: 7000, isKLine: true },
+                             { sp: 'ATSP5', name: 'ISO 14230-4 (KWP Fast Init - Renault/Dacia/Asian)', isCan: false, timeout: 7000, isKLine: true },
+                             { sp: 'ATSP4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, timeout: 7000, isKLine: true },
+                             { sp: 'ATSP8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, timeout: 4000 },
+                             { sp: 'ATSP9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, timeout: 4000 },
+                             { sp: 'ATSPA', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 6000 },
+                             { sp: 'ATSP1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 5000 },
+                             { sp: 'ATSP2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 5000 },
                         ];
 
                         for (let i = 0; i < fallbackProtocols.length; i++) {
@@ -368,14 +365,12 @@ export const useBluetooth = () => {
                                  useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningProtocol', { current: i + 1, total: fallbackProtocols.length, name: item.name });
                                  useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Trying ${item.sp} [${item.name}] (${i + 1}/${fallbackProtocols.length})...`);
                                 OBDCommandQueue.resetStallCounter();
-                                await OBDCommandQueue.add("ATPC", 800).catch(() => {});
-                                await preciseSleep(80);
                                 await OBDCommandQueue.add(item.sp, 2000).catch(() => {});
-                                await preciseSleep(100);
+                                await preciseSleep(120);
 
                                 if (item.isKLine) {
-                                    await preciseSleep(300);
-                                    await OBDCommandQueue.add("ATIB10400", 1000).catch(() => {});
+                                    await OBDCommandQueue.add("ATST FF", 800).catch(() => {});
+                                    await preciseSleep(200);
                                 }
 
                                 OBDCommandQueue.clear(new Error('PRE_PROTOCOL_TEST_FLUSH'));

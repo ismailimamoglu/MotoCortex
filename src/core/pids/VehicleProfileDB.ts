@@ -238,6 +238,44 @@ export class VehicleProfileDB {
             description: "24V Commercial Heavy Duty Truck SAE J1939 CAN profile"
         },
         {
+            id: "honda_accord_kline",
+            make: "Honda",
+            model: "Accord / Civic (Pre-2008 K-Line)",
+            year: 2005,
+            protocol: "3", // ISO 9141-2 (5-Baud Init) / ISO 14230-4 KWP
+            initCommands: [
+                "AT Z",
+                "AT E0",
+                "AT ST FF",
+                "AT SP 3"
+            ],
+            settleDelayMs: 350,
+            initAddresses: [0x33, 0x10, 0x81],
+            supportsManualFlowControl: false,
+            description: "Honda Accord/Civic/CR-V (2000-2007) K-Line ISO 9141-2 5-Baud Engine ECU profile"
+        },
+        {
+            id: "honda_modern_can",
+            make: "Honda",
+            model: "Accord / Civic / CR-V (2008+ CAN)",
+            year: 2020,
+            protocol: "6", // ISO 15765-4 CAN (11 bit ID, 500 kbaud)
+            targetHeader: "7E0",
+            initCommands: [
+                "AT Z",
+                "AT E0",
+                "AT SP 6",
+                "AT CAF 1",
+                "AT AT 1",
+                "AT H1",
+                "AT SH 7E0",
+                "3E 00"
+            ],
+            settleDelayMs: 100,
+            supportsManualFlowControl: true,
+            description: "Modern Honda CAN 11-bit 500k profile with standard powertrain diagnostics"
+        },
+        {
             id: "generic_obd2_auto",
             make: "Generic",
             model: "Auto Protocol",
@@ -362,7 +400,15 @@ export class VehicleProfileDB {
             return this.getProfileById("stellantis_can") || this.getProfileById("generic_obd2_auto") || this.getActiveProfiles()[0];
         }
 
-        // 9. Motorcycles
+        // 9. Honda (Legacy K-Line <= 2007 vs Modern CAN 2008+)
+        if (cleanBrand.includes('honda') && !cleanBrand.includes('moto')) {
+            if (year > 0 && year <= 2007) {
+                return this.getProfileById("honda_accord_kline") || this.getActiveProfiles()[0];
+            }
+            return this.getProfileById("honda_modern_can") || this.getProfileById("generic_obd2_auto") || this.getActiveProfiles()[0];
+        }
+
+        // 10. Motorcycles
         if (
             cleanBrand.includes('moto') ||
             cleanBrand.includes('honda_moto') ||
@@ -388,7 +434,7 @@ export class VehicleProfileDB {
     public static getKLineAddressUnion(): number[] {
         const baseline = [0x10, 0x33, 0x81];
         const profileAddresses = this.getActiveProfiles()
-            .filter(p => p.protocol === '4' || p.protocol === '5')
+            .filter(p => p.protocol === '3' || p.protocol === '4' || p.protocol === '5')
             .flatMap(p => p.initAddresses ?? []);
         const union = [...new Set([...baseline, ...profileAddresses])];
         return union.sort((a, b) => a - b);
@@ -401,6 +447,9 @@ export class VehicleProfileDB {
         const cleanVin = vin.toUpperCase().trim();
         if (cleanVin.startsWith("UU1") || cleanVin.startsWith("VF1")) {
             return this.getProfileById("dacia_logan_2011_kline");
+        }
+        if (cleanVin.startsWith("JHM") || cleanVin.startsWith("1HG") || cleanVin.startsWith("2HG") || cleanVin.startsWith("3HG") || cleanVin.startsWith("SHH") || cleanVin.startsWith("MRH")) {
+            return this.getProfileById("honda_modern_can");
         }
         if (cleanVin.startsWith("KMH") || cleanVin.startsWith("KMX")) {
             return this.getProfileById("hyundai_h100_2024_can");
