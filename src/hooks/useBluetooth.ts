@@ -217,27 +217,47 @@ export const useBluetooth = () => {
             OBDCommandQueue.clear(new Error('INIT_FLUSH'));
             OBDCommandQueue.resetStallCounter();
 
-            // 1. Temel Yapılandırma (Echo Off, Linefeed Off, Space Off, Headers Off)
+            // 1. Temel Yapılandırma (Echo Off, Linefeed Off, Space Off, Headers Off, Safe Timeout)
             await OBDCommandQueue.add("ATE0", 800).catch(() => '');
             await OBDCommandQueue.add("ATL0", 800).catch(() => '');
             await OBDCommandQueue.add("ATS0", 800).catch(() => '');
             await OBDCommandQueue.add("ATH0", 800).catch(() => ''); // Headers OFF: Evrensel Başlık Filtresi
+            await OBDCommandQueue.add("ATAT1", 800).catch(() => ''); // Adaptive timing
+            await OBDCommandQueue.add("ATST FF", 1000).catch(() => ''); // Tam Güvenli Yanıt Süresi (1024ms)
 
-            // 2. Dinamik Hedef Protokol Belirleme
-            const activeVehicle = useTelemetryStore.getState().activeSessionVehicle;
+            // 2. Dinamik Hedef Protokol Belirleme (TelemetryStore & GarageStore Çift Doğrulama)
+            const telemetryVehicle = useTelemetryStore.getState().activeSessionVehicle;
+            let activeBrand = telemetryVehicle?.brand || '';
+            let activeModel = telemetryVehicle?.model || '';
+            let activeYear = telemetryVehicle?.year || 2024;
+            let activeFuel = telemetryVehicle?.fuelType;
+
+            if (!activeBrand) {
+                try {
+                    const { useGarageStore } = require('../store/garageStore');
+                    const selectedGarageCar = useGarageStore.getState().selectedVehicle;
+                    if (selectedGarageCar) {
+                        activeBrand = selectedGarageCar.brand || '';
+                        activeModel = selectedGarageCar.model || '';
+                        activeYear = selectedGarageCar.year || 2024;
+                        activeFuel = selectedGarageCar.fuelType;
+                    }
+                } catch {}
+            }
+
             const profile = VehicleProfileDB.matchProfileByMakeModelYear(
-                activeVehicle?.brand || '',
-                activeVehicle?.model || '',
-                activeVehicle?.year || 2024,
-                activeVehicle?.fuelType
+                activeBrand,
+                activeModel,
+                activeYear,
+                activeFuel
             );
             const targetProtocol = profile?.protocol || '6';
             const isKLine = targetProtocol === '3' || targetProtocol === '4' || targetProtocol === '5' ||
-                            (activeVehicle?.brand || '').toLowerCase().includes('dacia') ||
-                            ((activeVehicle?.brand || '').toLowerCase().includes('renault') && (activeVehicle?.year || 2024) <= 2014);
+                            activeBrand.toLowerCase().includes('dacia') ||
+                            (activeBrand.toLowerCase().includes('renault') && activeYear <= 2014);
             const targetSp = isKLine ? 'ATSP5' : (targetProtocol === '6' ? 'ATSP6' : `ATSP${targetProtocol}`);
 
-            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Probing target SP [${targetSp}] for ${profile.make} ${profile.model}...`);
+            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Probing target SP [${targetSp}] for ${profile.make} ${profile.model} (Brand: ${activeBrand || 'Default'})...`);
 
             // ADIM 1: HEDEFLENEN PROTOKOL İLE HIZLI SORGULAMA (1-2 Saniye)
             await OBDCommandQueue.add(targetSp, 1500).catch(() => '');

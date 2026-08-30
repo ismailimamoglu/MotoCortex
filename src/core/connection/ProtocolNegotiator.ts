@@ -72,12 +72,10 @@ export class ProtocolNegotiator {
             await preciseSleep(50);
             const atcafRes = await OBDCommandQueue.add('ATCAF1', 1000).catch(() => '?'); // CAN Auto Formatting on
             await preciseSleep(50);
-            await OBDCommandQueue.add('ATAT2', 1000).catch(() => {}); // Adaptive timing
+            await OBDCommandQueue.add('ATAT1', 1000).catch(() => {}); // Adaptive timing standard
             await preciseSleep(50);
-            await OBDCommandQueue.add('ATST64', 1000).catch(() => {}); // 400ms timeout
-            await preciseSleep(50);
-            await OBDCommandQueue.add('ATSP0', 3500).catch(() => {}); // Auto protocol search
-            await preciseSleep(100);
+            await OBDCommandQueue.add('ATSTFF', 1000).catch(() => {}); // Safe universal timeout
+            await preciseSleep(60);
 
             // ── Step 4: Info Queries & Hardware Classification ──────────
             const t0 = Date.now();
