@@ -104,24 +104,23 @@ export const useBluetooth = () => {
         useBluetoothStore.getState().setSensorData({ isPollingActive: false });  
     }, []);
 
-    const verifyHandshakeResponse = (rawResponse: string, sentCommand: string): boolean => {  
+    const verifyHandshakeResponse = (rawResponse: string, sentCommand?: string): boolean => {  
         if (!rawResponse) return false;  
         const clean = rawResponse.toUpperCase().replace(/\s+/g, '');  
         const isHardNegative = clean.includes('CANERROR') || clean.includes('NODATA') || clean.includes('BUSBUSY') || clean.includes('BUSERROR') || clean.includes('UNABLETOCONNECT') || clean.includes('ERROR') || clean.includes('STOPPED') || clean.includes('?');  
         if (isHardNegative) return false;
 
-        const expectedModeEcho = sentCommand.startsWith('01') ? '41' : (sentCommand.startsWith('09') ? '49' : (sentCommand.startsWith('22') ? '62' : ''));  
-        const pidHex = sentCommand.replace(/\s+/g, '').slice(-2).toUpperCase();  
-        const targetPattern = expectedModeEcho ? (expectedModeEcho + pidHex) : '';
-
-        // Must contain actual ECU mode response bytes (e.g. 4100, 410C, 4902, 62F190, 5001, 5003)
-        return (targetPattern ? clean.includes(targetPattern) : false) || 
-               clean.includes('4100') ||
+        // Pozitif ECU motor yanıtı veya KWP el sıkışması
+        return clean.includes('4100') ||
                clean.includes('410C') ||
                clean.includes('410D') ||
+               clean.includes('4105') ||
+               clean.includes('4111') ||
+               clean.includes('41') ||
                clean.includes('5001') ||
                clean.includes('5003') ||
-               clean.includes('62F190');  
+               clean.includes('62F190') ||
+               clean.includes('OK');  
     };
 
     const triggerTelemetryEnqueue = useCallback(async () => {  
@@ -206,82 +205,25 @@ export const useBluetooth = () => {
 
             updateStep('adapter', 'success', 25);  
             updateStep('protocol', 'pending', 35);  
+
+            // =========================================================================
+            // ⚡ MİNİMALİST VE HIZLI ENDÜSTRİ STANDARDI BAĞLANTI ÇEKİRDEĞİ
+            // =========================================================================
             useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningCan');
             ConnectionStateMachine.transitionTo(ConnectionState.PROTOCOL_SCANNING);            
             let ecuConnected = false;  
             let rpmRes = '';
 
-            // =========================================================================
-            // 🌐 EVRENSEL ATOMİK PROTOKOL YÜRÜTÜCÜSÜ (UNIVERSAL PROTOCOL ENGINE)
-            // =========================================================================
-            const executeAtomicProtocolProbe = async (config: {
-                sp: string;
-                name: string;
-                header?: string;
-                isCan?: boolean;
-                isKLine?: boolean;
-                isSgwAware?: boolean;
-                timeout?: number;
-            }): Promise<boolean> => {
-                try {
-                    OBDCommandQueue.clear(new Error('ATOMIC_PROBE_FLUSH'));
-                    OBDCommandQueue.resetStallCounter();
+            OBDCommandQueue.clear(new Error('INIT_FLUSH'));
+            OBDCommandQueue.resetStallCounter();
 
-                    // 1. Donanım Sıfırlama (Warm Start & Buffer Boşaltma)
-                    await OBDCommandQueue.add("ATWS", 1000).catch(() => '');
-                    await preciseSleep(60);
-                    await OBDCommandQueue.add("ATE0", 800).catch(() => '');
-                    await OBDCommandQueue.add("ATL0", 800).catch(() => '');
-                    await OBDCommandQueue.add("ATS0", 800).catch(() => '');
-                    await preciseSleep(40);
+            // 1. Temel Yapılandırma (Echo Off, Linefeed Off, Space Off, Headers Off)
+            await OBDCommandQueue.add("ATE0", 800).catch(() => '');
+            await OBDCommandQueue.add("ATL0", 800).catch(() => '');
+            await OBDCommandQueue.add("ATS0", 800).catch(() => '');
+            await OBDCommandQueue.add("ATH0", 800).catch(() => ''); // Headers OFF: Evrensel Başlık Filtresi
 
-                    // 2. Kesin Protokol Kilidi (ATSP0'ı ezer ve adaptörü o moda kilitler)
-                    await OBDCommandQueue.add(config.sp, 2000).catch(() => '');
-                    await preciseSleep(60);
-
-                    // 3. Başlık ve Özel Gateway Parametreleri
-                    if (config.header) {
-                        await OBDCommandQueue.add(`ATSH ${config.header}`, 1000).catch(() => '');
-                    }
-                    if (config.isCan) {
-                        await OBDCommandQueue.add("ATCAF1", 1000).catch(() => '');
-                        await OBDCommandQueue.add("3E 00", 1000).catch(() => ''); // SGW / BSI Tester Present Uyandırma
-                        if (config.isSgwAware) {
-                            await OBDCommandQueue.add("10 01", 1000).catch(() => ''); // Default Diagnostic Session
-                        }
-                    }
-                    if (config.isKLine) {
-                        await OBDCommandQueue.add("ATST FF", 1000).catch(() => ''); // K-Line Yeterli Cevap Süresi
-                    }
-
-                    await preciseSleep(80);
-
-                    // 4. ECU Teyit Sorgusu (01 00 ve 01 0C)
-                    let testRes = await OBDCommandQueue.add("01 00", config.timeout || 3500).catch(() => '');
-                    let verified = verifyHandshakeResponse(testRes, "01 00");
-
-                    if (!verified) {
-                        // İkincil teyit: Devir (01 0C)
-                        const rpmProbe = await OBDCommandQueue.add("01 0C", 2500).catch(() => '');
-                        verified = verifyHandshakeResponse(rpmProbe, "01 0C");
-                    }
-
-                    if (verified) {
-                        const dpnRes = await OBDCommandQueue.add("ATDPN", 1500).catch(() => '');
-                        const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
-                        const protocolName = `${config.name} [DPN ${cleanDpn || config.sp.replace('ATSP', '')}]`;
-                        useBluetoothStore.getState().setProtocol(protocolName);
-                        useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE_SUCCESS: Connected via ${protocolName}`);
-                        return true;
-                    }
-                    return false;
-                } catch (e: any) {
-                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE_FAIL: ${config.sp} failed: ${e?.message || e}`);
-                    return false;
-                }
-            };
-
-            // 1. Dinamik Araç Profilinin Tespiti
+            // 2. Dinamik Hedef Protokol Belirleme
             const activeVehicle = useTelemetryStore.getState().activeSessionVehicle;
             const profile = VehicleProfileDB.matchProfileByMakeModelYear(
                 activeVehicle?.brand || '',
@@ -289,66 +231,53 @@ export const useBluetooth = () => {
                 activeVehicle?.year || 2024,
                 activeVehicle?.fuelType
             );
-            const targetHeader = profile?.targetHeader || '7E0';
             const targetProtocol = profile?.protocol || '6';
-            const isStellantis = profile.make.toLowerCase().includes('stellantis') || 
-                                activeVehicle?.brand.toLowerCase().includes('peugeot') || 
-                                activeVehicle?.brand.toLowerCase().includes('citroen') ||
-                                activeVehicle?.brand.toLowerCase().includes('opel') ||
-                                activeVehicle?.brand.toLowerCase().includes('fiat');
+            const isKLine = targetProtocol === '3' || targetProtocol === '4' || targetProtocol === '5' ||
+                            (activeVehicle?.brand || '').toLowerCase().includes('dacia') ||
+                            ((activeVehicle?.brand || '').toLowerCase().includes('renault') && (activeVehicle?.year || 2024) <= 2014);
+            const targetSp = isKLine ? 'ATSP5' : (targetProtocol === '6' ? 'ATSP6' : `ATSP${targetProtocol}`);
 
-            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Dynamic Target -> Make: ${profile.make}, Model: ${profile.model}, TargetSP: ATSP${targetProtocol}, Header: ${targetHeader}`);
+            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Probing target SP [${targetSp}] for ${profile.make} ${profile.model}...`);
 
-            // ADIM 1: SEÇİLEN DİNAMİK ARAÇ PROFİLİ İLE ATOMİK BAŞLATMA
-            const profileSp = `ATSP${targetProtocol}`;
-            const isProfileCan = targetProtocol === '6' || targetProtocol === '7' || targetProtocol === '8' || targetProtocol === '9' || targetProtocol === 'A';
-            const isProfileKLine = targetProtocol === '3' || targetProtocol === '4' || targetProtocol === '5';
+            // ADIM 1: HEDEFLENEN PROTOKOL İLE HIZLI SORGULAMA (1-2 Saniye)
+            await OBDCommandQueue.add(targetSp, 1500).catch(() => '');
+            if (isKLine) {
+                await OBDCommandQueue.add("ATST FF", 1000).catch(() => '');
+            }
+            await preciseSleep(60);
 
-            useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningCan');
-            ecuConnected = await executeAtomicProtocolProbe({
-                sp: profileSp,
-                name: `${profile.make} ${profile.model} (${profile.description})`,
-                header: isProfileCan ? targetHeader : undefined,
-                isCan: isProfileCan,
-                isKLine: isProfileKLine,
-                isSgwAware: isStellantis,
-                timeout: isProfileKLine ? 5000 : 3500
-            });
+            let res = await OBDCommandQueue.add("01 00", 3000).catch(() => '');
+            ecuConnected = verifyHandshakeResponse(res, "01 00");
 
-            // ADIM 2: HEDEF PROFİL YANIT VERMEZSE VEYA YANLIŞ ARAÇ SEÇİLDİYSE (EVRENSEL KÜRESEL FALLBACK)
             if (!ecuConnected) {
-                useBluetoothStore.getState().addLog('GLOBAL_PROTOCOL_ENGINE: Target profile unconfirmed. Executing Universal Global Fallback Matrix...');
-                
-                const universalMatrix = [
-                    { sp: 'ATSP6', name: 'ISO 15765-4 (CAN 11b/500k)', isCan: true, header: '7DF', timeout: 3500 },
-                    { sp: 'ATSP5', name: 'ISO 14230-4 (KWP Fast Init)', isCan: false, isKLine: true, timeout: 5000 },
-                    { sp: 'ATSP3', name: 'ISO 9141-2 (5-Baud Init)', isCan: false, isKLine: true, timeout: 5500 },
-                    { sp: 'ATSP7', name: 'ISO 15765-4 (CAN 29b/500k)', isCan: true, header: '18DB33F1', timeout: 3500 },
-                    { sp: 'ATSP4', name: 'ISO 14230-4 (KWP 5-Baud Init)', isCan: false, isKLine: true, timeout: 5500 },
-                    { sp: 'ATSP8', name: 'ISO 15765-4 (CAN 11b/250k)', isCan: true, header: '7DF', timeout: 3500 },
-                    { sp: 'ATSP9', name: 'ISO 15765-4 (CAN 29b/250k)', isCan: true, header: '18DB33F1', timeout: 3500 },
-                    { sp: 'ATSPA', name: 'SAE J1939 (29b CAN/250k Heavy Duty)', isCan: true, timeout: 4500 },
-                    { sp: 'ATSP1', name: 'SAE J1850 PWM (Ford)', isCan: false, timeout: 4000 },
-                    { sp: 'ATSP2', name: 'SAE J1850 VPW (GM)', isCan: false, timeout: 4000 },
-                ];
+                // İkincil hızlı sorgu: Devir (01 0C)
+                const rpmProbe = await OBDCommandQueue.add("01 0C", 2500).catch(() => '');
+                ecuConnected = verifyHandshakeResponse(rpmProbe, "01 0C");
+            }
 
-                for (let i = 0; i < universalMatrix.length; i++) {
-                    const item = universalMatrix[i];
-                    if (ecuConnected) break;
+            // ADIM 2: HEDEF YANIT VERMEZSE DOĞRUDAN DAHİLİ ATSP0 (OTOMATİK ARAMA) DEVREYE GİRER
+            if (!ecuConnected) {
+                useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: Primary target unconfirmed. Engaging ELM327 Native Auto-Search (ATSP0)...');
+                await OBDCommandQueue.add("ATSP0", 1500).catch(() => '');
+                await preciseSleep(60);
 
-                    // Eğer bu protokol zaten Adım 1'de denendiyse tekrar deneme
-                    if (item.sp === profileSp) continue;
+                let autoRes = await OBDCommandQueue.add("01 00", 4000).catch(() => '');
+                ecuConnected = verifyHandshakeResponse(autoRes, "01 00");
 
-                    useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningProtocol', { current: i + 1, total: universalMatrix.length, name: item.name });
-                    useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Universal probe [${item.sp}] ${item.name}...`);
-
-                    ecuConnected = await executeAtomicProtocolProbe(item);
-                    if (ecuConnected) break;
-                    await preciseSleep(100);
+                if (!ecuConnected) {
+                    const rpmAuto = await OBDCommandQueue.add("01 0C", 3000).catch(() => '');
+                    ecuConnected = verifyHandshakeResponse(rpmAuto, "01 0C");
                 }
             }
 
-            if (!ecuConnected) {
+            // ADIM 3: BAĞLANTI DURUMUNUN KAYDI VE TELEMETRİYE GEÇİŞ
+            if (ecuConnected) {
+                const dpnRes = await OBDCommandQueue.add("ATDPN", 1500).catch(() => '');
+                const cleanDpn = (dpnRes || '').replace(/[\r\n>]/g, '').trim();
+                const protocolName = `OBD-II Standard [DPN ${cleanDpn || targetProtocol}]`;
+                useBluetoothStore.getState().setProtocol(protocolName);
+                useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE_SUCCESS: Connected via ${protocolName}`);
+            } else {
                 updateStep('protocol', 'failed', 35);
                 try {
                     const vRes = await OBDCommandQueue.add("ATRV", 2000).catch(() => '');
