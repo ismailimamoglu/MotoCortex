@@ -197,33 +197,31 @@ export const useBluetooth = () => {
         try {  
             useBluetoothStore.getState().setConnectionStatusText('connection.statusProfiling');
             OBDCommandQueue.clear(new Error('RETRY_INIT_FLUSH'));  
+            OBDCommandQueue.resetStallCounter();
             await preciseSleep(150); 
 
-            await ProtocolNegotiator.runBenchmark();  
-            await ProtocolNegotiator.applyPostResetConfig();  
             TransportRateLimiter.initialize();
 
             updateStep('adapter', 'success', 25);  
             updateStep('protocol', 'pending', 35);  
 
             // =========================================================================
-            // ⚡ MİNİMALİST VE HIZLI ENDÜSTRİ STANDARDI BAĞLANTI ÇEKİRDEĞİ
+            // 🏆 GOLD-STANDARD ELM327 INITIALIZATION (Copilot / Claude / Lovable Standard)
             // =========================================================================
             useBluetoothStore.getState().setConnectionStatusText('connection.statusScanningCan');
             ConnectionStateMachine.transitionTo(ConnectionState.PROTOCOL_SCANNING);            
             let ecuConnected = false;  
             let rpmRes = '';
 
-            OBDCommandQueue.clear(new Error('INIT_FLUSH'));
-            OBDCommandQueue.resetStallCounter();
-
-            // 1. Temel Yapılandırma (Echo Off, Linefeed Off, Space Off, Headers Off, Safe Timeout)
+            // 1. Temel Reset ve Gürültü Kapatma (Prompt Tabanlı + 250ms Settle)
+            await OBDCommandQueue.add("ATZ", 1500).catch(() => '');
+            await preciseSleep(250); // Mikrodenetleyici dinlenme (drain) süresi
             await OBDCommandQueue.add("ATE0", 800).catch(() => '');
             await OBDCommandQueue.add("ATL0", 800).catch(() => '');
             await OBDCommandQueue.add("ATS0", 800).catch(() => '');
             await OBDCommandQueue.add("ATH0", 800).catch(() => ''); // Headers OFF: Evrensel Başlık Filtresi
-            await OBDCommandQueue.add("ATAT1", 800).catch(() => ''); // Adaptive timing
-            await OBDCommandQueue.add("ATST FF", 1000).catch(() => ''); // Tam Güvenli Yanıt Süresi (1024ms)
+            await OBDCommandQueue.add("ATAT1", 800).catch(() => ''); // Adaptive timing mode 1
+            await OBDCommandQueue.add("ATST FF", 1000).catch(() => ''); // Güvenli Yanıt Süresi (1024ms)
 
             // 2. Dinamik Hedef Protokol Belirleme (TelemetryStore & GarageStore Çift Doğrulama)
             const telemetryVehicle = useTelemetryStore.getState().activeSessionVehicle;
