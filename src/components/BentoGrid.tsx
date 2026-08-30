@@ -81,7 +81,7 @@ export default function BentoGrid({
   const status = useBluetoothStore((state) => state.status);
   const adapterStatus = useBluetoothStore((state) => state.adapterStatus);
   const activeSessionVehicle = useTelemetryStore((state) => state.activeSessionVehicle);
-  const isConnected = ecuStatus === 'connected' || status === 'connected' || adapterStatus === 'connected';
+  const isConnected = ecuStatus === 'connected' || adapterStatus === 'connected';
 
   const dtcCount = dtcs.length;
   const isClean = dtcCount === 0;
@@ -316,7 +316,7 @@ export default function BentoGrid({
             isSimulationMode && { borderColor: colors.green, backgroundColor: `${colors.green}1F` }
           ]}
           onPress={() => {
-            if (!isSimulationMode && (isConnected || ecuStatus === 'connected' || ecuStatus === 'connecting' || status === 'connected' || adapterStatus === 'connected')) {
+            if (!isSimulationMode && (isConnected || ecuStatus === 'connecting' || adapterStatus === 'connecting')) {
               Alert.alert(
                 t('common.warning', { defaultValue: 'Uyarı' }),
                 t('bento.demoDisabledWhileConnected', { defaultValue: 'Cihaza bağlıyken Demo Moduna geçilemez. Lütfen önce bağlantıyı kesin.' })
