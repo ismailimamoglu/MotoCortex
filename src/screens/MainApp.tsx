@@ -2489,7 +2489,7 @@ ${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateStr
  onClose={() => setActiveHubView('hub')}
  rpm={storeRpm || 0}
  mafGps={mafFlow || 0}
- engineTorqueNm={0}
+ engineTorqueNm={useBluetoothStore.getState().actualTorque || useBluetoothStore.getState().driverTorque || 0}
  calculatedLoadPct={engineLoad || 0}
  />
  )}
