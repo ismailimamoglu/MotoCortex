@@ -7,7 +7,7 @@ import { useThemeColors } from '../theme';
 import { useAppStore } from '../store/useAppStore';
 import { useResponsive } from '../hooks/useResponsive';
 import { useTelemetryStore } from '../store/useTelemetryStore';
-import { getRegisteredVehicles, deleteRegisteredVehicle, SelectedVehicle } from '../store/garageStore';
+import { getRegisteredVehicles, deleteRegisteredVehicle, saveRegisteredVehicle, SelectedVehicle } from '../store/garageStore';
 import { getLocalizedVehicleBrand, getLocalizedVehicleModel } from '../utils/vehicleStandardizer';
 import { BRANDS, MODELS_BY_BRAND, YEARS } from '../data/vehicleData';
 import SelectionModal from './SelectionModal';
@@ -615,6 +615,7 @@ export default function LiveEngineHero({
  onSelect={(val) => {
  setSelectedBrand(val);
  setShowBrandDropdown(false);
+ setTimeout(() => setShowModelDropdown(true), 200);
  }}
  showSearch={true}
  searchPlaceholder={t('vehicleSelect.searchBrand')}
@@ -629,6 +630,7 @@ export default function LiveEngineHero({
  onSelect={(val) => {
  setSelectedModel(val);
  setShowModelDropdown(false);
+ setTimeout(() => setShowYearDropdown(true), 200);
  }}
  showSearch={true}
  searchPlaceholder={t('vehicleSelect.searchModel')}
@@ -640,9 +642,22 @@ export default function LiveEngineHero({
  title={t('vehicleSelect.selectYear')}
  options={yearOptions}
  selectedValue={selectedYear}
- onSelect={(val) => {
+ onSelect={async (val) => {
  setSelectedYear(val);
  setShowYearDropdown(false);
+ 
+ const newVehicle: SelectedVehicle = {
+ brand: selectedBrand,
+ model: selectedModel || 'other',
+ year: parseInt(val, 10) || new Date().getFullYear(),
+ fuelType: 'gasoline',
+ };
+ 
+ await saveRegisteredVehicle(newVehicle);
+ const list = await getRegisteredVehicles();
+ setRegisteredVehicles(list);
+ setActiveSessionVehicle(newVehicle);
+ setShowRegisteredListScreen(false);
  }}
  showSearch={false}
  />
