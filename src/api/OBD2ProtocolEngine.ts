@@ -457,18 +457,19 @@ export class OBD2ProtocolEngine {
  const cleanUpper = trimmedRaw.toUpperCase().replace(/\s+/g, ''); 
  const isHardwareError = cleanUpper.includes('BUFFERFULL') || cleanUpper.includes('FBERROR') || cleanUpper.includes('RXERROR');
 
- if (trimmedRaw === ".") { 
- const sleepTime = (this.currentProtocol === '' || this.currentProtocol.includes('4') || this.currentProtocol.includes('5') || this.currentProtocol.toUpperCase().includes('KWP')) ? 1800 : 800; 
- await preciseSleep(sleepTime); 
- } else if (trimmedRaw.includes("STOPPED") || isHardwareError) { 
- useBluetoothStore.getState().addLog(` SILENT_MICRO_FLUSH: Bypassing hardware buffer saturation. Executing 60ms hard clear.`); 
- BluetoothService.clearBuffer(); 
- await preciseSleep(60); 
- this.finishCommand(new Error('LINE_SATURATED_FLUSHED')); 
- return; 
- }
+  if (trimmedRaw === ".") { 
+    const sleepTime = (this.currentProtocol === '' || this.currentProtocol.includes('4') || this.currentProtocol.includes('5') || this.currentProtocol.toUpperCase().includes('KWP')) ? 1800 : 800; 
+    await preciseSleep(sleepTime); 
+  } else if (isHardwareError) { 
+    useBluetoothStore.getState().addLog(` SILENT_MICRO_FLUSH: Bypassing hardware buffer saturation. Executing 60ms hard clear.`); 
+    BluetoothService.clearBuffer(); 
+    await preciseSleep(60); 
+    this.finishCommand(new Error('LINE_SATURATED_FLUSHED')); 
+    return; 
+  }
 
- const sanitized = this.elmParser.sanitize(rawResponse, this.activeCommand); 
+  const cleanRawResponse = rawResponse.replace(/STOPPED/gi, ' ');
+  const sanitized = this.elmParser.sanitize(cleanRawResponse, this.activeCommand); 
  const uniqueTokens = this.structuralDeduplicate(sanitized);
 
  let decoded = ''; 
@@ -612,32 +613,23 @@ export class OBD2ProtocolEngine {
  if (!isNaN(a) && !isNaN(b)) { 
  const rpm = Math.round(((a * 256) + b) / 4); 
  this.currentRpm = rpm;
- const prevRpm = store.rpm; 
- const pidDef = PidRegistry.getPid('01', '0C'); 
- if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, rpm, prevRpm, elapsed)) { 
  telemetryBuffer.pushTelemetry({ rpm }, '010C'); 
- } 
+ useBluetoothStore.getState().setSensorData({ rpm, lastSuccessfulResponseAt: nowWall });
  } 
  break; 
  case '0D': 
  if (!isNaN(a)) { 
  const speed = a; 
  this.currentSpeed = speed;
- const prevSpeed = store.speed; 
- const pidDef = PidRegistry.getPid('01', '0D'); 
- if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, speed, prevSpeed, elapsed)) { 
  telemetryBuffer.pushTelemetry({ speed }, '010D'); 
- } 
+ useBluetoothStore.getState().setSensorData({ speed, lastSuccessfulResponseAt: nowWall });
  } 
  break; 
  case '05': 
  if (!isNaN(a)) { 
  const coolant = a - 40; 
- const prevCoolant = store.coolant; 
- const pidDef = PidRegistry.getPid('01', '05'); 
- if (!pidDef || PidRegistry.validateTemporalSanity(pidDef, coolant, prevCoolant, elapsed)) { 
  telemetryBuffer.pushTelemetry({ coolant }, '0105'); 
- } 
+ useBluetoothStore.getState().setSensorData({ coolant, lastSuccessfulResponseAt: nowWall });
  } 
  break; 
  case '11': 
