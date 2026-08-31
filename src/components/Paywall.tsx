@@ -83,94 +83,97 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  ];
 
  const fetchOfferings = async () => {
- const useLocalFallbacks = () => {
- const fallbackWeekly: any = {
- identifier: 'weekly_single',
- packageType: 'WEEKLY',
- product: {
- identifier: 'motocortex_pro_weekly_nonrenew',
- price: 5.99,
- priceString: '$5.99',
- title: t('paywall.weekly'),
- description: t('paywall.weeklyDesc'),
- }
- };
- const fallbackMonthly: any = {
- identifier: '$rc_monthly',
- packageType: 'MONTHLY',
- product: {
- identifier: 'motocortex_pro_monthly',
- price: 19.99,
- priceString: '$19.99',
- title: t('paywall.monthly'),
- description: t('paywall.monthlyDesc'),
- }
- };
- const fallbackYearly: any = {
- identifier: '$rc_yearly',
- packageType: 'ANNUAL',
- product: {
- identifier: 'motocortex_pro_yearly',
- price: 129.99,
- priceString: '$129.99',
- title: t('paywall.yearly'),
- description: t('paywall.yearlyDesc'),
- }
- };
- setWeeklyPkg(fallbackWeekly);
- setMonthlyPkg(fallbackMonthly);
- setYearlyPkg(fallbackYearly);
- setSelectedPkgId('$rc_yearly');
- };
+    const useLocalFallbacks = () => {
+      const fallbackWeekly: any = {
+        identifier: 'weekly_single',
+        packageType: 'WEEKLY',
+        isFallback: true,
+        product: {
+          identifier: 'motocortex_pro_weekly_nonrenew',
+          price: 5.99,
+          priceString: '$5.99',
+          title: t('paywall.weekly'),
+          description: t('paywall.weeklyDesc'),
+        }
+      };
+      const fallbackMonthly: any = {
+        identifier: '$rc_monthly',
+        packageType: 'MONTHLY',
+        isFallback: true,
+        product: {
+          identifier: 'motocortex_pro_monthly',
+          price: 19.99,
+          priceString: '$19.99',
+          title: t('paywall.monthly'),
+          description: t('paywall.monthlyDesc'),
+        }
+      };
+      const fallbackYearly: any = {
+        identifier: '$rc_yearly',
+        packageType: 'ANNUAL',
+        isFallback: true,
+        product: {
+          identifier: 'motocortex_pro_yearly',
+          price: 129.99,
+          priceString: '$129.99',
+          title: t('paywall.yearly'),
+          description: t('paywall.yearlyDesc'),
+        }
+      };
+      setWeeklyPkg(fallbackWeekly);
+      setMonthlyPkg(fallbackMonthly);
+      setYearlyPkg(fallbackYearly);
+      setSelectedPkgId('$rc_yearly');
+    };
 
- if (USE_MOCK_DATA) {
- setIsLoadingOfferings(false);
- const w = mockPackages.find(p => p.identifier === 'weekly_single');
- const m = mockPackages.find(p => p.identifier === '$rc_monthly');
- const y = mockPackages.find(p => p.identifier === '$rc_yearly');
- setWeeklyPkg(w || null);
- setMonthlyPkg(m || null);
- setYearlyPkg(y || null);
- setSelectedPkgId('$rc_yearly');
- return;
- }
+    if (USE_MOCK_DATA) {
+      setIsLoadingOfferings(false);
+      const w = mockPackages.find(p => p.identifier === 'weekly_single');
+      const m = mockPackages.find(p => p.identifier === '$rc_monthly');
+      const y = mockPackages.find(p => p.identifier === '$rc_yearly');
+      setWeeklyPkg(w || null);
+      setMonthlyPkg(m || null);
+      setYearlyPkg(y || null);
+      setSelectedPkgId('$rc_yearly');
+      return;
+    }
 
- setIsLoadingOfferings(true);
- try {
- const offerings = await Purchases.getOfferings();
- if (offerings.current !== null && offerings.current.availablePackages.length > 0) {
- const currentOffering = offerings.current;
- const customWeekly = currentOffering.availablePackages.find(
- (pkg) => pkg.identifier === 'weekly_single'
- ) || null;
- const customMonthly = currentOffering.availablePackages.find(
- (pkg) => pkg.identifier === 'src_monthly' || pkg.identifier === '$rc_monthly' || pkg.identifier === 'monthly'
- ) || null;
- const customYearly = currentOffering.availablePackages.find(
- (pkg) => pkg.identifier === 'src_annual' || pkg.identifier === '$rc_annual' || pkg.identifier === '$rc_yearly' || pkg.identifier === 'yearly'
- ) || null;
+    setIsLoadingOfferings(true);
+    try {
+      const offerings = await Purchases.getOfferings();
+      if (offerings.current !== null && offerings.current.availablePackages.length > 0) {
+        const currentOffering = offerings.current;
+        const customWeekly = currentOffering.availablePackages.find(
+          (pkg) => pkg.identifier === 'weekly_single'
+        ) || null;
+        const customMonthly = currentOffering.availablePackages.find(
+          (pkg) => pkg.identifier === 'src_monthly' || pkg.identifier === '$rc_monthly' || pkg.identifier === 'monthly'
+        ) || null;
+        const customYearly = currentOffering.availablePackages.find(
+          (pkg) => pkg.identifier === 'src_annual' || pkg.identifier === '$rc_annual' || pkg.identifier === '$rc_yearly' || pkg.identifier === 'yearly'
+        ) || null;
 
- setMonthlyPkg(customMonthly);
- setYearlyPkg(customYearly);
- setWeeklyPkg(customWeekly);
+        setMonthlyPkg(customMonthly);
+        setYearlyPkg(customYearly);
+        setWeeklyPkg(customWeekly);
 
- if (customYearly) {
- setSelectedPkgId(customYearly.identifier);
- } else if (customMonthly) {
- setSelectedPkgId(customMonthly.identifier);
- } else if (customWeekly) {
- setSelectedPkgId(customWeekly.identifier);
- }
- } else {
- useLocalFallbacks();
- }
- } catch (error) {
- console.warn('Failed to load offerings in Paywall, using local fallbacks:', error);
- useLocalFallbacks();
- } finally {
- setIsLoadingOfferings(false);
- }
- };
+        if (customYearly) {
+          setSelectedPkgId(customYearly.identifier);
+        } else if (customMonthly) {
+          setSelectedPkgId(customMonthly.identifier);
+        } else if (customWeekly) {
+          setSelectedPkgId(customWeekly.identifier);
+        }
+      } else {
+        useLocalFallbacks();
+      }
+    } catch (error) {
+      console.warn('Failed to load offerings in Paywall, using local fallbacks:', error);
+      useLocalFallbacks();
+    } finally {
+      setIsLoadingOfferings(false);
+    }
+  };
 
  useEffect(() => {
  if (visible) {
@@ -188,50 +191,50 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  }, [isPro, visible]);
 
  const handlePurchase = async (pkg: PurchasesPackage) => {
- setIsPurchasing(true);
- analytics().logEvent('purchase_initiated', {
- package_id: pkg.identifier,
- package_type: pkg.packageType,
- price: pkg.product.price,
- price_string: pkg.product.priceString
- }).catch(e => console.warn('[Analytics] Failed purchase_initiated event:', e));
+    setIsPurchasing(true);
+    analytics().logEvent('purchase_initiated', {
+      package_id: pkg.identifier,
+      package_type: pkg.packageType,
+      price: pkg.product.price,
+      price_string: pkg.product.priceString
+    }).catch(e => console.warn('[Analytics] Failed purchase_initiated event:', e));
 
- if (USE_MOCK_DATA) {
- setTimeout(() => {
- setIsPurchasing(false);
- useAppStore.getState().setIsPro(true);
- analytics().logEvent('purchase_success', {
- package_id: pkg.identifier,
- is_mock: true
- }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
- const congratsTitle = t('paywall.congratsTitle');
- const congratsMsg = t('paywall.congratsMsg');
- Alert.alert(congratsTitle, congratsMsg);
- onClose();
- }, 1200);
- return;
- }
+    if (USE_MOCK_DATA) {
+      setTimeout(() => {
+        setIsPurchasing(false);
+        useAppStore.getState().setIsPro(true);
+        analytics().logEvent('purchase_success', {
+          package_id: pkg.identifier,
+          is_mock: true
+        }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
+        const congratsTitle = t('paywall.congratsTitle');
+        const congratsMsg = t('paywall.congratsMsg');
+        Alert.alert(congratsTitle, congratsMsg);
+        onClose();
+      }, 1200);
+      return;
+    }
 
- try {
- let purchaseResult;
- const isFallbackPkg = !pkg.product.subscriptionPeriod && !pkg.product.introPrice;
- 
- if (isFallbackPkg) {
- console.log('[Paywall] Fallback package purchase, querying store product for ID:', pkg.product.identifier);
- try {
- const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
- if (storeProducts && storeProducts.length > 0) {
- purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
- } else {
- purchaseResult = await Purchases.purchasePackage(pkg);
- }
- } catch (prodErr) {
- console.warn('[Paywall] Failed store product query, trying package directly:', prodErr);
- purchaseResult = await Purchases.purchasePackage(pkg);
- }
- } else {
- purchaseResult = await Purchases.purchasePackage(pkg);
- }
+    try {
+      let purchaseResult;
+      const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product.subscriptionPeriod && !pkg.product.introPrice);
+      
+      if (isFallbackPkg) {
+        console.log('[Paywall] Fallback package purchase, querying store product for ID:', pkg.product.identifier);
+        try {
+          const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
+          if (storeProducts && storeProducts.length > 0) {
+            purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
+          } else {
+            throw new Error(t('paywall.productUnavailable', { defaultValue: 'Store product could not be loaded. Please check your connection and try again.' }));
+          }
+        } catch (prodErr: any) {
+          console.warn('[Paywall] Failed store product purchase:', prodErr);
+          throw prodErr;
+        }
+      } else {
+        purchaseResult = await Purchases.purchasePackage(pkg);
+      }
 
  const { customerInfo } = purchaseResult;
  setIsPurchasing(false);

@@ -256,9 +256,18 @@ export class OBD2ProtocolEngine {
  return Promise.reject(wrapError(new Error('PID_BLACKLISTED_BY_UDS_GATE'), command)); 
  }
 
- const isTelemetry = cleanCmd.startsWith('010C') || cleanCmd.startsWith('010D') || cleanCmd.startsWith('0105') || cleanCmd.startsWith('0111') || cleanCmd.startsWith('0104') || cleanCmd.startsWith('012F') || cleanCmd.startsWith('0100'); 
- const priority = customPriority || (isTelemetry ? 'HIGH' : 'LOW'); 
- const estimatedCost = priority === 'HIGH_PRIORITY_AD_HOC' ? 10 : (isTelemetry ? 30 : 150);
+    const isTelemetry = this.isPollingActive && (
+        cleanCmd.startsWith('010C') ||
+        cleanCmd.startsWith('010D') ||
+        cleanCmd.startsWith('0105') ||
+        cleanCmd.startsWith('0111') ||
+        cleanCmd.startsWith('0104') ||
+        cleanCmd.startsWith('012F')
+    );
+    // During initial handshake (polling inactive), all AT and probe commands share identical FIFO priority
+    const isHandshakePhase = !this.isPollingActive || cleanCmd.startsWith('AT') || cleanCmd === '0100';
+    const priority = customPriority || (isHandshakePhase ? 'HIGH_PRIORITY_AD_HOC' : (isTelemetry ? 'HIGH' : 'LOW')); 
+    const estimatedCost = priority === 'HIGH_PRIORITY_AD_HOC' ? 10 : (isTelemetry ? 30 : 150);
 
  const commandSessionId = this.currentSessionId; 
  return new Promise<string>((resolve, reject) => { 

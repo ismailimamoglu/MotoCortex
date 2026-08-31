@@ -18,6 +18,28 @@ export class VehicleProfileDB {
     private static loadedProfiles: VehicleProfile[] = [];
     private static profiles: VehicleProfile[] = [
         {
+            id: "generic_obd2_auto",
+            make: "Universal",
+            model: "Auto Protocol Engine",
+            year: 2024,
+            protocol: "0", // ISO Auto Search
+            initCommands: ["AT Z", "AT E0", "AT SP 0"],
+            settleDelayMs: 200,
+            supportsManualFlowControl: false,
+            description: "Universal Standard OBD-II Auto Protocol Search Profile"
+        },
+        {
+            id: "stellantis_can",
+            make: "Stellantis",
+            model: "Modern CAN (Peugeot/Citroen/Opel/Fiat)",
+            year: 2024,
+            protocol: "6", // ISO 15765-4 CAN 11bit 500k
+            initCommands: ["AT Z", "AT E0", "AT SP 6", "AT CAF 1", "AT AT 1", "AT H0"],
+            settleDelayMs: 100,
+            supportsManualFlowControl: true,
+            description: "Stellantis High-Speed CAN 11bit 500k profile (Peugeot Rifter / 208 / 3008 etc.)"
+        },
+        {
             id: "dacia_logan_2011_kline",
             make: "Dacia",
             model: "Logan",
