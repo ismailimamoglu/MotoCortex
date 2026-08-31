@@ -269,7 +269,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
               <ActivityIndicator size="small" color={colors.cyan} />
             ) : (
               <Text style={[styles.benchmarkBtnText, { color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono }]}>
-                ⚡ {t('health.runBenchmarkBtn', { defaultValue: 'Donanım Sağlık & Hız Testini Başlat (15 Komut)' })}
+                {t('health.runBenchmarkBtn', { defaultValue: 'Donanım Sağlık & Hız Testini Başlat (15 Komut)' })}
               </Text>
             )}
           </TouchableOpacity>
