@@ -510,31 +510,9 @@ export class PidRegistry {
         previousValue: number | null,
         elapsedMs: number
     ): boolean {
+        if (isNaN(value)) return false;
         if (pidDef.name === 'ENGINE_RPM') {
-            const activeVeh = useTelemetryStore.getState().activeSessionVehicle;
-            const dynamicLimit = (activeVeh as any)?.maxRpmLimit ?? 16000;
-            if (value > dynamicLimit) {
-                return false;
-            }
-        }
-
-        if (previousValue === null) {
-            return true;
-        }
-
-        if (pidDef.maxJumpPer100ms !== undefined) {
-            const delta = Math.abs(value - previousValue);
-            const calcElapsed = Math.max(10, Math.min(60, elapsedMs));
-            let allowedJump = (pidDef.maxJumpPer100ms / 100) * calcElapsed;
-            
-            // Jitter Lag Compensation: Inject 1.50 tolerance multiplier for lag > 60ms
-            if (elapsedMs > 60) {
-                allowedJump = allowedJump * 1.50;
-            }
-
-            if (delta > allowedJump) {
-                return false;
-            }
+            return value >= 0 && value <= 18000;
         }
         return true;
     }

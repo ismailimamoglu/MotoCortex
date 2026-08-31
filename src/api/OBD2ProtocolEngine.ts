@@ -566,21 +566,22 @@ export class OBD2ProtocolEngine {
  return processedLines.join(' '); 
  }
 
- private parseMode01Response(response: string) { 
- const store = useBluetoothStore.getState(); 
- const isKLineProtocol = this.currentProtocol.includes('4') || this.currentProtocol.includes('5'); 
- let sanitized = response.replace(/SEARCHING\.*/gi, '').replace(/\s+/g, '').toUpperCase();
+  private parseMode01Response(response: string) { 
+    if (!response) return; 
+    const store = useBluetoothStore.getState(); 
+    const isKLineProtocol = this.currentProtocol.includes('4') || this.currentProtocol.includes('5'); 
+    let sanitized = response.replace(/STOPPED|SEARCHING|NO DATA|OK|>|\r|\n/gi, ' ').replace(/\s+/g, '').toUpperCase(); 
 
- const canResidueMatch = sanitized.match(/^\s*(7E[89A-F][0-9A-F]{2}|18DAF1[0-9A-F]{2})(41[0-9A-F]+)/); 
- if (canResidueMatch) { 
- sanitized = canResidueMatch[2]; 
- } else if (isKLineProtocol) { 
- const klineResidueMatch = sanitized.match(/^\s*([0-9A-F]{2}F1[0-9A-F]{2})(41[0-9A-F]+)/); 
- if (klineResidueMatch) sanitized = klineResidueMatch[2]; 
- }
+    const canResidueMatch = sanitized.match(/^\s*(7E[89A-F][0-9A-F]{2}|18DAF1[0-9A-F]{2})(41[0-9A-F]+)/); 
+    if (canResidueMatch) { 
+      sanitized = canResidueMatch[2]; 
+    } else if (isKLineProtocol) { 
+      const klineResidueMatch = sanitized.match(/^\s*([0-9A-F]{2}F1[0-9A-F]{2})(41[0-9A-F]+)/); 
+      if (klineResidueMatch) sanitized = klineResidueMatch[2]; 
+    }
 
- const mode01Match = sanitized.match(/^\s*41([0-9A-F]+)/i); 
- if (!mode01Match) return;
+    const mode01Match = sanitized.match(/^\s*41([0-9A-F]+)/i); 
+    if (!mode01Match) return;
 
  const payload = mode01Match[1].toUpperCase(); 
  let currentPos = 0;

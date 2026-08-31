@@ -328,23 +328,11 @@ export const useBluetooth = () => {
            const connectedProtocol = useBluetoothStore.getState().protocol || '';  
            const pUpper = connectedProtocol.toUpperCase();
            const isCan = pUpper.includes('CAN') || connectedProtocol.includes('6') || connectedProtocol.includes('7');  
-           useBluetoothStore.getState().setSensorData({ guardTime: isCan ? 100 : 200 });            
+           useBluetoothStore.getState().setSensorData({ guardTime: isCan ? 80 : 150 });            
            
-           // Dynamically inject ATAT0 and ATST96 for legacy ISO/KWP (3, 4, 5) protocols (Ensure CAN protocols are excluded)
-           const isLegacyIsoKwp = !isCan && (pUpper.includes('KWP') || pUpper.includes('ISO 14230') || pUpper.includes('ISO 9141') || pUpper.includes('3') || pUpper.includes('4') || pUpper.includes('5'));
-           if (isLegacyIsoKwp) {
-               useBluetoothStore.getState().addLog('LEGACY_PROFILE_INJECTION: Injecting ATAT0 and ATST96 for slow protocols.');
-               try {
-                   await OBDCommandQueue.add('ATAT0', 1500);
-                   await OBDCommandQueue.add('ATST96', 1500);
-               } catch (injErr) {
-                   useBluetoothStore.getState().addLog(`LEGACY_PROFILE_INJECTION_WARN: Injection failed: ${injErr}`);
-               }
-           } else {
-               try {
-                   await OBDCommandQueue.add('ATAT2', 1500);
-               } catch {}
-           }
+           try {
+               await OBDCommandQueue.add('ATAT1', 1500).catch(() => {});
+           } catch {}
 
            ConnectionStateMachine.transitionTo(ConnectionState.TELEMETRY_ACTIVE);  
            useTelemetryStore.getState().setSessionDynamicKey(ProtocolEngine.getRelativeLogicalTimestamp().toString());  

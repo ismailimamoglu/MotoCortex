@@ -55,12 +55,12 @@ class TelemetryBuffer {
       this.pendingPidUpdateTimes = {};
       this.hasPendingData = false;
 
-      // Single throttled batch update to Zustand
+      // Single throttled batch update to Zustand (80ms - 12.5 Hz smooth telemetry)
       useBluetoothStore.getState().setSensorData({
         ...updatesToFlush,
         pidLastUpdateTimes: Object.keys(pidTimesToFlush).length > 0 ? pidTimesToFlush : undefined,
       });
-    }, 500);
+    }, 80);
   }
 
   public clear() {
