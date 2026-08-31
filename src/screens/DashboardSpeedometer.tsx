@@ -100,15 +100,16 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  }, [ecuStatus, telemetryRef]);
 
  // Read all sensor values from useBluetoothStore with fallback to JSI Direct Pipeline for high freq sensors
+ const isOnline = ecuStatus === 'connected' || isSimulationMode;
  const sensorValues = {
- rpm: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.rpm || storeRpm || (isSimulationMode ? 1724 : null)) : null,
- speed: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.speed || storeSpeed || (isSimulationMode ? 50 : null)) : null,
- coolant: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.coolant || storeCoolant || (isSimulationMode ? 87 : null)) : null,
- throttle: (ecuStatus === 'connected' || isSimulationMode) ? (localSensors.throttle || storeThrottle || (isSimulationMode ? 25 : null)) : null,
- voltage: (ecuStatus === 'connected' || isSimulationMode) ? (storeVoltage || (localSensors.voltage !== '0.0V' ? localSensors.voltage : null) || (isSimulationMode ? '14.2V' : null)) : null,
- engineLoad: (ecuStatus === 'connected' || isSimulationMode) ? (engineLoad !== null ? engineLoad : (isSimulationMode ? 35 : null)) : null,
- intakeAirTemp: (ecuStatus === 'connected' || isSimulationMode) ? (intakeAirTemp !== null ? intakeAirTemp : (isSimulationMode ? 28 : null)) : null,
- manifoldPressure: (ecuStatus === 'connected' || isSimulationMode) ? (manifoldPressure !== null ? manifoldPressure : (isSimulationMode ? 100 : null)) : null,
+ rpm: isOnline ? (storeRpm ?? (localSensors.rpm || (isSimulationMode ? 1724 : null))) : null,
+ speed: isOnline ? (storeSpeed ?? (localSensors.speed || (isSimulationMode ? 50 : null))) : null,
+ coolant: isOnline ? (storeCoolant ?? (localSensors.coolant || (isSimulationMode ? 87 : null))) : null,
+ throttle: isOnline ? (storeThrottle ?? (localSensors.throttle || (isSimulationMode ? 25 : null))) : null,
+ voltage: isOnline ? (storeVoltage || (localSensors.voltage !== '0.0V' ? localSensors.voltage : null) || (isSimulationMode ? '14.2V' : null)) : null,
+ engineLoad: isOnline ? (engineLoad !== null ? engineLoad : (isSimulationMode ? 35 : null)) : null,
+ intakeAirTemp: isOnline ? (intakeAirTemp !== null ? intakeAirTemp : (isSimulationMode ? 28 : null)) : null,
+ manifoldPressure: isOnline ? (manifoldPressure !== null ? manifoldPressure : (isSimulationMode ? 100 : null)) : null,
  ambientTemp: (ecuStatus === 'connected' || isSimulationMode) ? (ambientTemp !== null ? ambientTemp : (isSimulationMode ? 22 : null)) : null,
  oilTemp: (ecuStatus === 'connected' || isSimulationMode) ? (oilTemp !== null ? oilTemp : (isSimulationMode ? 92 : null)) : null,
  mafFlow: (ecuStatus === 'connected' || isSimulationMode) ? (mafFlow !== null ? mafFlow : (isSimulationMode ? 12.5 : null)) : null,

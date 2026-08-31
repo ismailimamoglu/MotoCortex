@@ -339,61 +339,13 @@ export const useBluetooth = () => {
            setLastResponse(rpmRes);  
            setError(null);
 
-           if (isCan) {  
-               try { await OBDCommandQueue.add('ATST32', 1000); } catch (e) { }  
-           }
-
-           await Promise.race([
-               CapabilityDiscoveryManager.discoverSupportedPids(),
-               new Promise((_, reject) => setTimeout(() => reject(new Error('CAPABILITY_DISCOVERY_TIMEOUT')), 15000))
-           ]).catch(err => {
-               useBluetoothStore.getState().addLog(`DIAG_WARN: PID Discovery stalled or timed out: ${err.message}`);
-           });
-
-           if (isCan) {
-               await ModuleDiscoveryManager.discoverModules().catch(err => {
-                   useBluetoothStore.getState().addLog(`DIAG_WARN: Module discovery skipped or timed out: ${err?.message || err}`);
-               });
-               await CapabilityDiscoveryManager.probeUdsServices().catch(err => {
-                   useBluetoothStore.getState().addLog(`DIAG_WARN: UDS probing skipped: ${err?.message || err}`);
-               });
-           }
-
-             setEcuStatus('connected');
-             updateStep('stabilization', 'success', 100);  
-             useBluetoothStore.getState().setConnectionStatusText(null);
-             
-             // Autonomous Zero-Friction Vehicle Profiling:
-             // Ensure active session vehicle is registered even if VIN cannot be read from hardware
-             const currentTelemetryState = useTelemetryStore.getState();
-             if (!currentTelemetryState.activeSessionVehicle) {
-                 const category = useBluetoothStore.getState().selectedCategoryByUser || 'PASSENGER_CAR';
-                 const defaultBrand = category === 'MOTORCYCLE' ? 'Motosiklet' : (category === 'HEAVY_DUTY_TRUCK' ? 'Ağır Ticari' : 'OBD-II Standart');
-                 const defaultModel = category === 'MOTORCYCLE' ? 'Euro 5 (OBD2)' : (category === 'HEAVY_DUTY_TRUCK' ? 'J1939 (24V)' : 'Binek Araç (CAN)');
-                 const fallbackVehicle = {
-                     brand: defaultBrand,
-                     model: defaultModel,
-                     year: new Date().getFullYear(),
-                     vin: 'OBD2_GENERIC'
-                 };
-                 currentTelemetryState.setActiveSessionVehicle(fallbackVehicle);
-                 const { saveRegisteredVehicle } = require('../store/garageStore');
-                 saveRegisteredVehicle(fallbackVehicle).catch(() => {});
-             } else {
-                 const { saveRegisteredVehicle } = require('../store/garageStore');
-                 saveRegisteredVehicle(currentTelemetryState.activeSessionVehicle).catch(() => {});
-             }
-
-             startPolling();  
-             initSuccess = true;  
-
              // Record Connection Success Diagnostic
              ConnectionDiagnosticsManager.recordDiagnostic({
                  adapterName: useBluetoothStore.getState().deviceName || 'OBD2 Adapter',
                  status: 'SUCCESS',
                  protocol: useBluetoothStore.getState().protocol || 'AUTOMATIC',
                  chipType: useBluetoothStore.getState().isCloneDevice ? 'CLONE_ELM327' : 'STANDARD_ELM327',
-                 vehicleInfo: currentTelemetryState.activeSessionVehicle || undefined,
+                 vehicleInfo: useTelemetryStore.getState().activeSessionVehicle || undefined,
                  recentLogs: useBluetoothStore.getState().logs,
              }).catch(() => {});
 
