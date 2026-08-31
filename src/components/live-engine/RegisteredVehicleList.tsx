@@ -9,7 +9,6 @@ interface RegisteredVehicleListProps {
  registeredVehicles: SelectedVehicle[];
  onSelect: (v: SelectedVehicle) => void;
  onDelete: (v: SelectedVehicle) => void;
- onAddNew?: () => void;
  onBack: () => void;
  colors: any;
  sDyn: any;
@@ -25,7 +24,6 @@ export default function RegisteredVehicleList({
  registeredVehicles,
  onSelect,
  onDelete,
- onAddNew,
  onBack,
  colors,
  sDyn,
@@ -42,28 +40,15 @@ export default function RegisteredVehicleList({
  <View style={{ gap: scaleHeight(12) }}>
  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: scaleHeight(4) }}>
  <Text style={sDyn.vehicleLabel}>{t('vehicleSelect.registeredVehicles').toUpperCase()}</Text>
- <View style={{ flexDirection: 'row', gap: 8 }}>
-   {onAddNew && (
-     <TouchableOpacity 
-       onPress={onAddNew}
-       style={{ paddingHorizontal: 10, paddingVertical: 6, backgroundColor: `${colors.cyan}20`, borderColor: colors.cyan, borderWidth: 1, borderRadius: 6 }}
-       activeOpacity={0.4}
-     >
-       <Text style={{ color: colors.cyan, fontFamily: MONO, fontSize: scaleFont(9.5), fontWeight: 'bold' }}>
-         + {t('vehicleSelect.addNew', { defaultValue: 'YENİ EKLE' })}
-       </Text>
-     </TouchableOpacity>
-   )}
-   <TouchableOpacity 
-     onPress={onBack}
-     style={{ paddingHorizontal: 10, paddingVertical: 6, backgroundColor: `${colors.textPri}14`, borderRadius: 6 }}
-     activeOpacity={0.4}
-   >
-     <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(9.5), fontWeight: 'bold' }}>
-       {t('common.back').toUpperCase()}
-     </Text>
-   </TouchableOpacity>
- </View>
+ <TouchableOpacity 
+   onPress={onBack}
+   style={{ paddingHorizontal: 12, paddingVertical: 6, backgroundColor: `${colors.textPri}14`, borderRadius: 6 }}
+   activeOpacity={0.4}
+ >
+   <Text style={{ color: colors.textPri, fontFamily: MONO, fontSize: scaleFont(10), fontWeight: 'bold' }}>
+     {t('common.back').toUpperCase()}
+   </Text>
+ </TouchableOpacity>
  </View>
  
  <ScrollView style={{ maxHeight: scaleHeight(260) }} nestedScrollEnabled={true} keyboardShouldPersistTaps="handled">

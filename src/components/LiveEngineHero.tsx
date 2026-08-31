@@ -415,10 +415,6 @@ export default function LiveEngineHero({
  setShowRegisteredListScreen(false);
  }}
  onDelete={handleDeleteRegistered}
- onAddNew={() => {
- setShowRegisteredListScreen(false);
- setShowBrandDropdown(true);
- }}
  onBack={() => setShowRegisteredListScreen(false)}
  colors={colors}
  sDyn={sDyn}
@@ -534,29 +530,6 @@ export default function LiveEngineHero({
  scaleHeight={scaleHeight}
  MONO={MONO}
  />
-
- {/* 🚗 Manuel Araç Seçimi Butonu */}
- <TouchableOpacity 
- style={[
- sDyn.dropdownTrigger, 
- { 
- backgroundColor: `${colors.cyan}12`, 
- borderColor: colors.cyan,
- borderWidth: 1.5,
- paddingVertical: scaleHeight(12),
- borderRadius: 12,
- marginTop: scaleHeight(4),
- alignItems: 'center',
- justifyContent: 'center',
- }
- ]}
- onPress={() => setShowBrandDropdown(true)}
- activeOpacity={0.7}
- >
- <Text style={[sDyn.dropdownTriggerText, { color: colors.cyan, fontSize: scaleFont(11.5), fontWeight: '800' }]}>
- + {t('vehicleSelect.manualSelectBrand', { defaultValue: 'Manuel Araç Seç (Marka / Model / Yıl)' })}
- </Text>
- </TouchableOpacity>
  </View>
  )}
  </View>
