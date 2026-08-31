@@ -198,7 +198,7 @@ export const useBluetooth = () => {
             useBluetoothStore.getState().setConnectionStatusText('connection.statusProfiling');
             OBDCommandQueue.clear(new Error('RETRY_INIT_FLUSH'));  
             OBDCommandQueue.resetStallCounter();
-            await preciseSleep(150); 
+            await preciseSleep(250); // Clone ELM327 PIC18F25K80 için güvenli drain süresi
 
             TransportRateLimiter.initialize();
 
@@ -315,7 +315,11 @@ export const useBluetooth = () => {
             updateStep('handshake', 'pending', 60);  
             useBluetoothStore.getState().setConnectionStatusText('connection.statusHandshake');
             ConnectionStateMachine.transitionTo(ConnectionState.ECU_HANDSHAKE);  
-            await preciseSleep(250);
+            
+            const currentProto = (useBluetoothStore.getState().protocol || '').toUpperCase();
+            const isKLineProtocol = currentProto.includes('4') || currentProto.includes('5') || currentProto.includes('KWP');
+            const stabilizeDelay = isKLineProtocol ? 400 : 250;
+            await preciseSleep(stabilizeDelay);
 
            try {  
                rpmRes = await OBDCommandQueue.add(ADAPTER_COMMANDS.RPM, 5000);  
