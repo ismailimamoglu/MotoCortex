@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useBluetoothStore } from '../store/useBluetoothStore';
@@ -30,6 +31,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
 
   const [activeTab, setActiveTab] = useState<MatrixTab>('HARDWARE');
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [isBenchmarking, setIsBenchmarking] = useState(false);
 
   // Load metrics from Bluetooth Store
   const adapterCapabilityScore = useBluetoothStore(s => s.adapterCapabilityScore) || 100;
@@ -43,6 +45,24 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
   const vin = useBluetoothStore(s => s.vin);
 
   const isConnected = ecuStatus === 'connected';
+
+  const handleRunBenchmark = async () => {
+    if (!isConnected || isBenchmarking) return;
+    setIsBenchmarking(true);
+    triggerHaptic();
+    try {
+      const { ProtocolNegotiator } = require('../core/connection/ProtocolNegotiator');
+      const score = await ProtocolNegotiator.runBenchmark();
+      useBluetoothStore.getState().setSensorData({
+        adapterCapabilityScore: score,
+        isCloneDevice: score < 70,
+      });
+    } catch (e) {
+      console.warn('[ObdHealthScreen] Benchmark error:', e);
+    } finally {
+      setIsBenchmarking(false);
+    }
+  };
 
   // Quality rating & Tier calculation
   const rating = useMemo(() => {
@@ -234,6 +254,26 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
             </Text>
           </View>
         </View>
+
+        {/* 🚀 On-Demand Benchmark Trigger */}
+        {isConnected && (
+          <TouchableOpacity
+            style={[
+              styles.benchmarkBtn,
+              { backgroundColor: `${colors.cyan}18`, borderColor: colors.cyan }
+            ]}
+            onPress={handleRunBenchmark}
+            disabled={isBenchmarking}
+          >
+            {isBenchmarking ? (
+              <ActivityIndicator size="small" color={colors.cyan} />
+            ) : (
+              <Text style={[styles.benchmarkBtnText, { color: colors.cyan, fontSize: fs(11), fontFamily: colors.mono }]}>
+                ⚡ {t('health.runBenchmarkBtn', { defaultValue: 'Donanım Sağlık & Hız Testini Başlat (15 Komut)' })}
+              </Text>
+            )}
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* 3. Segmented Tab Switcher */}
@@ -757,5 +797,18 @@ const styles = StyleSheet.create({
   },
   catProtocols: {
     lineHeight: 15,
+  },
+  benchmarkBtn: {
+    marginTop: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  benchmarkBtnText: {
+    fontWeight: '700',
+    textAlign: 'center',
   },
 });

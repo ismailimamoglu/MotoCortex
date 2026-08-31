@@ -214,14 +214,25 @@ export const useBluetooth = () => {
             let rpmRes = '';
 
             // 1. Temel Reset ve Gürültü Kapatma (Prompt Tabanlı + 250ms Settle)
-            await OBDCommandQueue.add("ATZ", 1500).catch(() => '');
+            const atzRes = await OBDCommandQueue.add("ATZ", 1500).catch(() => '');
             await preciseSleep(250); // Mikrodenetleyici dinlenme (drain) süresi
+            const atiRes = await OBDCommandQueue.add("ATI", 800).catch(() => '');
             await OBDCommandQueue.add("ATE0", 800).catch(() => '');
             await OBDCommandQueue.add("ATL0", 800).catch(() => '');
             await OBDCommandQueue.add("ATS0", 800).catch(() => '');
             await OBDCommandQueue.add("ATH0", 800).catch(() => ''); // Headers OFF: Evrensel Başlık Filtresi
             await OBDCommandQueue.add("ATAT1", 800).catch(() => ''); // Adaptive timing mode 1
             await OBDCommandQueue.add("ATST FF", 1000).catch(() => ''); // Güvenli Yanıt Süresi (1024ms)
+
+            // 0-Gecikmeli Pasif Klon Tespiti (ATI yanıtı analizi)
+            const cleanAti = (atiRes || atzRes || '').toUpperCase();
+            const isClone = cleanAti.includes('V1.5') || cleanAti.includes('1.5') || (!cleanAti.includes('STN') && !cleanAti.includes('OBDLINK') && !cleanAti.includes('V2.'));
+            const initialScore = isClone ? 45 : 95;
+            useBluetoothStore.getState().setSensorData({ 
+                isCloneDevice: isClone, 
+                adapterCapabilityScore: initialScore,
+                adapterFirmware: cleanAti.trim() || 'ELM327 v1.5'
+            });
 
             // 2. Dinamik Hedef Protokol Belirleme (TelemetryStore & GarageStore Çift Doğrulama)
             const telemetryVehicle = useTelemetryStore.getState().activeSessionVehicle;

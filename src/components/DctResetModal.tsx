@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../theme';
 import { DctAdaptationService, DctSafetyChecklist } from '../services/dctAdaptationService';
+import { useBluetoothStore } from '../store/useBluetoothStore';
 
 interface DctResetModalProps {
   visible: boolean;
@@ -54,7 +55,28 @@ export const DctResetModal: React.FC<DctResetModalProps> = ({
     ? { allPassed: clutchPedalPressed && neutralGearEngaged }
     : DctAdaptationService.verifyPreconditions(checklist);
 
+  const isCloneDevice = useBluetoothStore((s) => s.isCloneDevice);
+
   const handleStartReset = async () => {
+    if (isCloneDevice) {
+      Alert.alert(
+        t('features.cloneAlertTitle', { defaultValue: 'Klon Adaptör Uyarısı' }),
+        t('features.cloneAlertMsg', { defaultValue: 'Şanzıman adaptasyonu ve kalibrasyonu gibi hassas işlemler için OBDLink / vLinker gibi orijinal adaptörler önerilmektedir. Klon ELM327 adaptörlerde zaman aşımı riski bulunmaktadır.' }),
+        [
+          { text: t('common.cancel', { defaultValue: 'İptal' }), style: 'cancel' },
+          { 
+            text: t('common.proceedAnyway', { defaultValue: 'Yine de Devam Et' }), 
+            onPress: () => executeResetFlow() 
+          }
+        ]
+      );
+      return;
+    }
+
+    executeResetFlow();
+  };
+
+  const executeResetFlow = async () => {
     if (!preconditionResult.allPassed) {
       Alert.alert(
         t('common.warning', { defaultValue: 'Uyarı' }), 

@@ -6,11 +6,12 @@ jest.mock('../../store/useAppStore', () => ({
   useAppStore: (selector: any) => selector({ isSimulationMode: true }),
 }));
 
-jest.mock('../../store/useBluetoothStore', () => ({
-  useBluetoothStore: {
-    getState: () => ({ dtcs: [] }),
-  },
-}));
+jest.mock('../../store/useBluetoothStore', () => {
+  const state = { dtcs: [], isCloneDevice: false, adapterCapabilityScore: 100 };
+  const mockHook: any = (selector: any) => (selector ? selector(state) : state);
+  mockHook.getState = () => state;
+  return { useBluetoothStore: mockHook };
+});
 
 // Mock i18next properly preserving initReactI18next
 jest.mock('react-i18next', () => ({
