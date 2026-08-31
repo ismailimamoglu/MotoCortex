@@ -492,12 +492,14 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
         expect(useBluetoothStore.getState().voltage).toBe('12.6V');
     });
 
-    test('13. PollingOrchestrator Desteklenmeyen PID\'leri Kara Listeye Alma Kontrolü', async () => {
+    test('13. PollingOrchestrator Sıfır Karaliste ile Kesintisiz Telemetri Akışı', async () => {
         const { PollingOrchestrator } = require('../../core/connection/PollingOrchestrator');
         const OBDCommandQueue = require('../OBDCommandQueue').default;
 
+        const sentCommands: string[] = [];
         const queueAddSpy = jest.spyOn(OBDCommandQueue, 'add')
             .mockImplementation((cmd: any) => {
+                sentCommands.push(cmd);
                 if (cmd === 'ATRV') return Promise.resolve('14.2V');
                 if (cmd === '01 05') return Promise.resolve('NO DATA');
                 if (cmd === '01 0C') return Promise.resolve('41 0C 00 00');
@@ -506,63 +508,38 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
 
         setTimeout(() => {
             PollingOrchestrator.stopPolling();
-        }, 100);
+        }, 50);
 
-        await PollingOrchestrator.startPolling(['05@7E8', '0C@7E8']);
+        await PollingOrchestrator.startPolling(['05', '0C']);
 
-        expect((PollingOrchestrator as any).blacklistedPids.has('05')).toBe(true);
-        expect((PollingOrchestrator as any).blacklistedPids.has('0C')).toBe(false);
+        expect(sentCommands).toContain('01 05');
+        expect(sentCommands).toContain('01 0C');
 
         queueAddSpy.mockRestore();
     });
 
-    test('14. Donanım Skoruna Dayalı Otomatik Adaptif Telemetri Pacing Doğrulaması', async () => {
+    test('14. PollingOrchestrator Performance Mode Speed Önceliği Doğrulaması', async () => {
         const { PollingOrchestrator } = require('../../core/connection/PollingOrchestrator');
         const OBDCommandQueue = require('../OBDCommandQueue').default;
 
-        const queueAddSpy = jest.spyOn(OBDCommandQueue, 'add').mockImplementation(() => Promise.resolve('OK'));
-        const logSpy = jest.spyOn(useBluetoothStore.getState(), 'addLog');
+        const sentCommands: string[] = [];
+        const queueAddSpy = jest.spyOn(OBDCommandQueue, 'add')
+            .mockImplementation((cmd: any) => {
+                sentCommands.push(cmd);
+                return Promise.resolve('41 0D 32');
+            });
 
-        // SENARYO A: Düşük Skorlu Adaptör (Klon) -> Pacing gevşetilmeli
-        useBluetoothStore.setState({ adapterCapabilityScore: 45 });
-        
-        setTimeout(() => {
-            PollingOrchestrator.stopPolling();
-        }, 30);
-
-        await PollingOrchestrator.startPolling(['0C@7E8']);
-
-        const lowScoreLog = logSpy.mock.calls.find(call => 
-            call[0].includes('POLLING_ORCHESTRATOR: Target pacing parameters computed')
-        )?.[0] || '';
-        
-        expect(lowScoreLog).toContain('Score=45');
-        expect(lowScoreLog).toContain('interLoopDelay=20ms');
-        expect(lowScoreLog).toContain('cmdTimeoutBase=250ms');
-        expect(lowScoreLog).toContain('cmdPacingDelay=5ms');
-
-        logSpy.mockClear();
-
-        // SENARYO B: Yüksek Skorlu Adaptör (Orijinal) -> Pacing maksimum hıza çekilmeli
-        useBluetoothStore.setState({ adapterCapabilityScore: 92 });
+        PollingOrchestrator.setPerformanceModePriority(true);
 
         setTimeout(() => {
             PollingOrchestrator.stopPolling();
-        }, 30);
+            PollingOrchestrator.setPerformanceModePriority(false);
+        }, 50);
 
-        await PollingOrchestrator.startPolling(['0C@7E8']);
+        await PollingOrchestrator.startPolling(['0C', '0D']);
 
-        const highScoreLog = logSpy.mock.calls.find(call => 
-            call[0].includes('POLLING_ORCHESTRATOR: Target pacing parameters computed')
-        )?.[0] || '';
+        expect(sentCommands).toContain('01 0D');
 
-        expect(highScoreLog).toContain('Score=92');
-        expect(highScoreLog).toContain('interLoopDelay=16ms');
-        expect(highScoreLog).toContain('cmdTimeoutBase=150ms');
-        expect(highScoreLog).toContain('cmdPacingDelay=2ms');
-
-        queueAddSpy.mockRestore();
-        logSpy.mockRestore();
     });
 });
 

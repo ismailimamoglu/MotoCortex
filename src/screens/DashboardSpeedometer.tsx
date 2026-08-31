@@ -278,33 +278,18 @@ export const DashboardSpeedometer = React.memo(({ ecuStatus, lastDeviceName, onG
  };
 
  const renderSensorGrid = () => {
- const itemGap = isTablet ? scaleMod(10) : scaleMod(6);
+    const itemGap = isTablet ? scaleMod(10) : scaleMod(6);
 
- // SHIMMER LOADING STATE during PID capability discovery
- if (!isPidDiscoveryComplete) {
- const shimmerCount = Math.max(activeSensors.length, 4);
- const shimmerStyles = Array.from({ length: shimmerCount }, (_, idx) =>
- getCardStyle(idx, shimmerCount)
- );
- return (
- <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: itemGap, marginBottom: isTablet ? 0 : scaleHeight(10) }}>
- {shimmerStyles.map((cfg, idx) => (
- <ShimmerSensorCard key={`shimmer-grid-${idx}`} width={cfg.width} height={cfg.height} tc={tc} scaleMod={scaleMod} />
- ))}
- </View>
- );
- }
-
- const CRITICAL_PIDS = ['0C', '0D', '05', '42'];
- const activeConfigs = ALL_SENSORS.filter(s => {
- if (!activeSensors.includes(s.key)) return false;
- if (s.key === 'voltage') return true; // Hardware ATRV is always supported by adapter
- if (isSimulationMode || supportedPids.length === 0) return true;
- const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
- if (!pidHex) return true;
- if (CRITICAL_PIDS.includes(pidHex)) return true;
- return supportedPids.some(p => p === pidHex || p.startsWith(pidHex + '@'));
- });
+    const CRITICAL_PIDS = ['0C', '0D', '05', '42'];
+    const activeConfigs = ALL_SENSORS.filter(s => {
+      if (!activeSensors.includes(s.key)) return false;
+      if (s.key === 'voltage') return true; 
+      if (isSimulationMode || supportedPids.length === 0) return true;
+      const pidHex = s.pid?.replace(/\s+/g, '').toUpperCase().slice(-2);
+      if (!pidHex) return true;
+      if (CRITICAL_PIDS.includes(pidHex)) return true;
+      return supportedPids.some(p => p === pidHex || p.startsWith(pidHex + '@'));
+    });
 
  return (
  <View style={{ 
