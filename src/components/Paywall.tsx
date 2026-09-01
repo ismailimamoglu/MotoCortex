@@ -82,7 +82,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  },
  ];
 
- const fetchOfferings = async () => {
+  const fetchOfferings = async () => {
     const useLocalFallbacks = () => {
       const fallbackWeekly: any = {
         identifier: 'weekly_single',
@@ -126,6 +126,9 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       setSelectedPkgId('$rc_yearly');
     };
 
+    // Pre-populate with immediate localized fallbacks so user never sees an infinite loading spinner
+    useLocalFallbacks();
+
     if (USE_MOCK_DATA) {
       setIsLoadingOfferings(false);
       const w = mockPackages.find(p => p.identifier === 'weekly_single');
@@ -138,38 +141,40 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       return;
     }
 
-    setIsLoadingOfferings(true);
     try {
-      const offerings = await Purchases.getOfferings();
-      if (offerings.current !== null && offerings.current.availablePackages.length > 0) {
+      // 2.5s Timeout guard to prevent hanging promise in case of slow or unconfigured network
+      const offeringsPromise = Purchases.getOfferings();
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFERINGS_TIMEOUT')), 2500));
+      
+      const offerings: any = await Promise.race([offeringsPromise, timeoutPromise]);
+      if (offerings && offerings.current !== null && offerings.current.availablePackages.length > 0) {
         const currentOffering = offerings.current;
         const customWeekly = currentOffering.availablePackages.find(
-          (pkg) => pkg.identifier === 'weekly_single'
+          (pkg: any) => pkg.identifier === 'weekly_single'
         ) || null;
         const customMonthly = currentOffering.availablePackages.find(
-          (pkg) => pkg.identifier === 'src_monthly' || pkg.identifier === '$rc_monthly' || pkg.identifier === 'monthly'
+          (pkg: any) => pkg.identifier === 'src_monthly' || pkg.identifier === '$rc_monthly' || pkg.identifier === 'monthly'
         ) || null;
         const customYearly = currentOffering.availablePackages.find(
-          (pkg) => pkg.identifier === 'src_annual' || pkg.identifier === '$rc_annual' || pkg.identifier === '$rc_yearly' || pkg.identifier === 'yearly'
+          (pkg: any) => pkg.identifier === 'src_annual' || pkg.identifier === '$rc_annual' || pkg.identifier === '$rc_yearly' || pkg.identifier === 'yearly'
         ) || null;
 
-        setMonthlyPkg(customMonthly);
-        setYearlyPkg(customYearly);
-        setWeeklyPkg(customWeekly);
+        if (customMonthly || customYearly || customWeekly) {
+          setMonthlyPkg(customMonthly);
+          setYearlyPkg(customYearly);
+          setWeeklyPkg(customWeekly);
 
-        if (customYearly) {
-          setSelectedPkgId(customYearly.identifier);
-        } else if (customMonthly) {
-          setSelectedPkgId(customMonthly.identifier);
-        } else if (customWeekly) {
-          setSelectedPkgId(customWeekly.identifier);
+          if (customYearly) {
+            setSelectedPkgId(customYearly.identifier);
+          } else if (customMonthly) {
+            setSelectedPkgId(customMonthly.identifier);
+          } else if (customWeekly) {
+            setSelectedPkgId(customWeekly.identifier);
+          }
         }
-      } else {
-        useLocalFallbacks();
       }
     } catch (error) {
-      console.warn('Failed to load offerings in Paywall, using local fallbacks:', error);
-      useLocalFallbacks();
+      console.warn('Failed to load offerings in Paywall, keeping instant fallbacks:', error);
     } finally {
       setIsLoadingOfferings(false);
     }
