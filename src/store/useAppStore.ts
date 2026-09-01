@@ -465,8 +465,19 @@ export const useAppStore = create<AppState>()(
 
       purchasePackage: async (pkg) => {
         try {
-          const { customerInfo } = await Purchases.purchasePackage(pkg);
-          const isPro = checkIsProStatus(customerInfo);
+          let purchaseResult;
+          const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product?.subscriptionPeriod && !pkg.product?.introPrice);
+          if (isFallbackPkg && pkg.product?.identifier) {
+            const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
+            if (storeProducts && storeProducts.length > 0) {
+              purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
+            } else {
+              return false;
+            }
+          } else {
+            purchaseResult = await Purchases.purchasePackage(pkg);
+          }
+          const isPro = checkIsProStatus(purchaseResult?.customerInfo);
           set({ isPro });
           return isPro;
         } catch (error: any) {

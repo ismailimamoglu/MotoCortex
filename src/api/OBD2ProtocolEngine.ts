@@ -888,9 +888,8 @@ export class OBD2ProtocolEngine {
  rejecter(wrappedErr); 
  } catch {} 
  }
-
  this.flushRxBuffer(); 
- BluetoothService.write('\r').catch(() => {}); 
+ try { Promise.resolve(BluetoothService.write('\r')).catch(() => {}); } catch {}
  this.clearListeners.forEach(cb => { try { cb(); } catch {} }); 
  }
 

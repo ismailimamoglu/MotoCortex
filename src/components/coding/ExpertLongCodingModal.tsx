@@ -18,9 +18,11 @@ import {
  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { useThemeColors } from '../../theme';
 import { useResponsive } from '../../hooks/useResponsive';
+import { useBluetoothStore } from '../../store/useBluetoothStore';
 import PreconditionWizardModal from './PreconditionWizardModal';
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
@@ -99,13 +101,24 @@ export const ExpertLongCodingModal: React.FC<ExpertLongCodingModalProps> = ({
  };
 
  const handleConfirmedExecution = async () => {
- setIsWizardOpen(false);
- try {
- await onExecuteWrite(targetDid, cleanHex);
- onClose();
- } catch (err: any) {
- Alert.alert(t('common.error', 'Error'), err?.message || 'Write failed');
- }
+   setIsWizardOpen(false);
+   try {
+     // 🛡️ Otomatik Güvenlik Yedeği (Safety Rollback Backup)
+     const backupKey = `@motocortex_coding_backup_${targetDid}_${Date.now()}`;
+     const backupPayload = {
+       did: targetDid,
+       payload: cleanHex,
+       timestamp: Date.now(),
+       vin: useBluetoothStore.getState().vin || 'UNKNOWN',
+     };
+     await AsyncStorage.setItem(backupKey, JSON.stringify(backupPayload)).catch(() => {});
+     useBluetoothStore.getState().addLog(`EXPERT_CODING: Created Safety Backup -> ${backupKey}`);
+
+     await onExecuteWrite(targetDid, cleanHex);
+     onClose();
+   } catch (err: any) {
+     Alert.alert(t('common.error', 'Error'), err?.message || 'Write failed');
+   }
  };
 
  return (

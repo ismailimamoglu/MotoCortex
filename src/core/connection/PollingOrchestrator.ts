@@ -51,10 +51,11 @@ export class PollingOrchestrator {
         const isExplicitlySlow = rawProtocol.includes('KWP') || rawProtocol.includes('ISO 14230') || rawProtocol.includes('ISO 9141') || rawProtocol.includes('J1850') || rawProtocol.includes('9141') || rawProtocol === '3' || rawProtocol === '4' || rawProtocol === '5';
         
         const cmdTimeout = isExplicitlySlow ? 600 : 350;
-        const pacingDelay = isExplicitlySlow ? 15 : 2;
-        const interLoopDelay = isExplicitlySlow ? 40 : 16;
+        const pacingDelay = isExplicitlySlow ? 25 : 8; // Klon UART tamponunun rahatlaması için 8ms
+        const interLoopDelay = isExplicitlySlow ? 50 : 20;
 
         let lastVoltageReadTime = 0;
+        let consecutiveFailures = 0;
 
         while (this.isPollingActive) {
             try {
@@ -62,8 +63,11 @@ export class PollingOrchestrator {
                 if (this.isPerformanceMode) {
                     try {
                         await OBDCommandQueue.add('01 0D', cmdTimeout);
-                    } catch {}
-                    await preciseSleep(2);
+                        consecutiveFailures = 0;
+                    } catch {
+                        consecutiveFailures++;
+                    }
+                    await preciseSleep(pacingDelay);
                     continue;
                 }
 
@@ -83,11 +87,21 @@ export class PollingOrchestrator {
 
                     try {
                         await OBDCommandQueue.add(`01 ${pid}`, cmdTimeout);
-                    } catch {}
+                        consecutiveFailures = 0; // Başarılı komutta sıfırla
+                    } catch {
+                        consecutiveFailures++;
+                    }
 
                     if (pacingDelay > 0) {
                         await preciseSleep(pacingDelay);
                     }
+                }
+
+                // Devre Kesici (Circuit Breaker): 5 ardışık döngü boyunca bağlantı yoksa döngüyü durdur
+                if (consecutiveFailures >= 10 && store.connectionState === 'DISCONNECTED') {
+                    store.addLog('POLLING_ORCHESTRATOR: Connection lost - stopping polling loop cleanly.');
+                    this.isPollingActive = false;
+                    break;
                 }
 
                 await preciseSleep(interLoopDelay);
@@ -104,6 +118,7 @@ export class PollingOrchestrator {
     public static stopPolling(): void {
         this.isPollingActive = false;
         OBDCommandQueue.setPollingActive(false);
+        OBDCommandQueue.clear(new Error('POLLING_STOPPED'));
     }
 }
 export default PollingOrchestrator;

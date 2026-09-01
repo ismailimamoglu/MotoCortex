@@ -661,7 +661,10 @@ export default function MainApp() {
  | 'feature_coding'
  >('hub');
 
- const handleCloseSubView = React.useCallback(() => setActiveHubView('hub'), []);
+  const handleCloseSubView = React.useCallback(() => {
+    OBDCommandQueue.clear(new Error('SUBVIEW_CLOSED'));
+    setActiveHubView('hub');
+  }, []);
  const [isPaywallVisible, setIsPaywallVisible] = useState(false);
  const [activeTab, setActiveTab] = useState<'dashboard' | 'expertise' | 'info'>('dashboard'); // Kept for legacy fallback views compatibility
  const [isCustomizeModalVisible, setIsCustomizeModalVisible] = useState(false);

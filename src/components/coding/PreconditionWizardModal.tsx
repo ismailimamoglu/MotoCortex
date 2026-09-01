@@ -48,9 +48,9 @@ export const PreconditionWizardModal: React.FC<PreconditionWizardModalProps> = (
  const [isHandbrakeChecked, setIsHandbrakeChecked] = useState(false);
  const [isLoadsChecked, setIsLoadsChecked] = useState(false);
 
- const effectiveVoltage = isSimulationMode ? 12.8 : currentVoltage;
- const isVoltageSafe = effectiveVoltage >= 12.4;
- const isVoltageCritical = effectiveVoltage < 12.0;
+ const effectiveVoltage = isSimulationMode ? 13.5 : currentVoltage;
+ const isVoltageSafe = effectiveVoltage >= 12.8;
+ const isVoltageCritical = effectiveVoltage < 12.4;
 
  const allConditionsMet = isIgnitionChecked && isHandbrakeChecked && isLoadsChecked && isVoltageSafe;
 

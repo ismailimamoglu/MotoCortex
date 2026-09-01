@@ -213,10 +213,20 @@ export const useBluetooth = () => {
             let ecuConnected = false;  
             let rpmRes = '';
 
-            // 1. Temel Reset ve Gürültü Kapatma (Prompt Tabanlı + 250ms Settle)
-            const atzRes = await OBDCommandQueue.add("ATZ", 1500).catch(() => '');
-            await preciseSleep(250); // Mikrodenetleyici dinlenme (drain) süresi
-            const atiRes = await OBDCommandQueue.add("ATI", 800).catch(() => '');
+            // 1. Temel Reset ve Gürültü Kapatma (Prompt Tabanlı + Adaptif Drain)
+            const atzRes = await OBDCommandQueue.add("ATZ", 2000).catch(() => '');
+            
+            // Klon adaptör kontrolü ve adaptif drain süresi
+            const cleanAtz = (atzRes || '').toUpperCase();
+            const isEarlyClone = cleanAtz.includes('V1.5') || cleanAtz.includes('1.5') || cleanAtz.length < 5;
+            const drainTime = isEarlyClone ? 400 : 250;
+            await preciseSleep(drainTime);
+
+            // Buffer temizleme garantisi
+            OBDCommandQueue.flushRxBuffer();
+            await preciseSleep(30);
+
+            const atiRes = await OBDCommandQueue.add("ATI", 1000).catch(() => '');
             await OBDCommandQueue.add("ATE0", 800).catch(() => '');
             await OBDCommandQueue.add("ATL0", 800).catch(() => '');
             await OBDCommandQueue.add("ATS0", 800).catch(() => '');
@@ -224,9 +234,9 @@ export const useBluetooth = () => {
             await OBDCommandQueue.add("ATAT1", 800).catch(() => ''); // Adaptive timing mode 1
             await OBDCommandQueue.add("ATST FF", 1000).catch(() => ''); // Güvenli Yanıt Süresi (1024ms)
 
-            // 0-Gecikmeli Pasif Klon Tespiti (ATI yanıtı analizi)
+            // 0-Gecikmeli Pasif Klon Tespiti (ATI ve ATZ yanıtı analizi)
             const cleanAti = (atiRes || atzRes || '').toUpperCase();
-            const isClone = cleanAti.includes('V1.5') || cleanAti.includes('1.5') || (!cleanAti.includes('STN') && !cleanAti.includes('OBDLINK') && !cleanAti.includes('V2.'));
+            const isClone = isEarlyClone || cleanAti.includes('V1.5') || cleanAti.includes('1.5') || (!cleanAti.includes('STN') && !cleanAti.includes('OBDLINK') && !cleanAti.includes('V2.'));
             const initialScore = isClone ? 45 : 95;
             useBluetoothStore.getState().setSensorData({ 
                 isCloneDevice: isClone, 
