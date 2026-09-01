@@ -107,20 +107,20 @@ export const useBluetooth = () => {
     const verifyHandshakeResponse = (rawResponse: string, sentCommand?: string): boolean => {  
         if (!rawResponse) return false;  
         const clean = rawResponse.toUpperCase().replace(/\s+/g, '');  
-        const isHardNegative = clean.includes('CANERROR') || clean.includes('NODATA') || clean.includes('BUSBUSY') || clean.includes('BUSERROR') || clean.includes('UNABLETOCONNECT') || clean.includes('ERROR') || clean.includes('STOPPED') || clean.includes('?');  
+        const isHardNegative = clean.includes('CANERROR') || clean.includes('NODATA') || clean.includes('BUSBUSY') || clean.includes('BUSERROR') || clean.includes('UNABLETOCONNECT') || clean.includes('ERROR') || clean.includes('STOPPED') || clean.includes('?') || clean === 'OK' || clean === '>';  
         if (isHardNegative) return false;
 
-        // Pozitif ECU motor yanıtı veya KWP el sıkışması
+        // Pozitif ECU motor yanıtı (Mode 01 PID yanıtları 41xx ile başlar) veya UDS/KWP yanıtı
         return clean.includes('4100') ||
                clean.includes('410C') ||
                clean.includes('410D') ||
                clean.includes('4105') ||
                clean.includes('4111') ||
-               clean.includes('41') ||
+               /^41[0-9A-F]{2}/i.test(clean) ||
                clean.includes('5001') ||
                clean.includes('5003') ||
                clean.includes('62F190') ||
-               clean.includes('OK');  
+               clean.includes('86F1');  
     };
 
     const triggerTelemetryEnqueue = useCallback(async () => {  
@@ -283,13 +283,15 @@ export const useBluetooth = () => {
             if (isKLine) {
                 await OBDCommandQueue.add("ATST FF", 1000).catch(() => '');
             }
-            await preciseSleep(60);
+            await preciseSleep(isClone ? 150 : 80);
+            OBDCommandQueue.flushRxBuffer(); // Önceki AT komutundan kalan OK yanıtını süpür
 
             let res = await OBDCommandQueue.add("01 00", 3000).catch(() => '');
             ecuConnected = verifyHandshakeResponse(res, "01 00");
 
             if (!ecuConnected) {
                 // İkincil hızlı sorgu: Devir (01 0C)
+                OBDCommandQueue.flushRxBuffer();
                 const rpmProbe = await OBDCommandQueue.add("01 0C", 2500).catch(() => '');
                 ecuConnected = verifyHandshakeResponse(rpmProbe, "01 0C");
             }
@@ -298,12 +300,14 @@ export const useBluetooth = () => {
             if (!ecuConnected) {
                 useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: Primary target unconfirmed. Engaging ELM327 Native Auto-Search (ATSP0)...');
                 await OBDCommandQueue.add("ATSP0", 1500).catch(() => '');
-                await preciseSleep(60);
+                await preciseSleep(isClone ? 150 : 80);
+                OBDCommandQueue.flushRxBuffer();
 
                 let autoRes = await OBDCommandQueue.add("01 00", 4000).catch(() => '');
                 ecuConnected = verifyHandshakeResponse(autoRes, "01 00");
 
                 if (!ecuConnected) {
+                    OBDCommandQueue.flushRxBuffer();
                     const rpmAuto = await OBDCommandQueue.add("01 0C", 3000).catch(() => '');
                     ecuConnected = verifyHandshakeResponse(rpmAuto, "01 0C");
                 }

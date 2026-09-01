@@ -110,20 +110,24 @@ const FeatureActivationModalComponent = ({
  const rpm = useBluetoothStore((s) => s.rpm);
  const speed = useBluetoothStore((s) => s.speed);
 
+ const connectionState = useBluetoothStore((s) => s.connectionState);
+ const status = useBluetoothStore((s) => s.status);
+ const isEcuLive = status === 'connected' && connectionState === 'TELEMETRY_ACTIVE';
+
  const storeVoltage = useBluetoothStore((s) => s.voltage);
  const parsedVoltage = parseFloat(storeVoltage || '');
  const liveVoltage = !isNaN(parsedVoltage) ? parsedVoltage : currentVoltage;
 
  const [selectedBrand, setSelectedBrand] = useState<string>(() => {
- if (connectedVehicleMake) return connectedVehicleMake;
- return 'ALL';
+  if (isEcuLive && connectedVehicleMake) return connectedVehicleMake;
+  return 'ALL';
  });
 
  React.useEffect(() => {
- if (connectedVehicleMake && selectedBrand === 'ALL') {
- setSelectedBrand(connectedVehicleMake);
- }
- }, [connectedVehicleMake]);
+  if (isEcuLive && connectedVehicleMake && selectedBrand === 'ALL') {
+    setSelectedBrand(connectedVehicleMake);
+  }
+ }, [connectedVehicleMake, isEcuLive]);
 
  const [selectedCategory, setSelectedCategory] = useState<FeatureCategory | 'ALL'>('ALL');
  const [selectedSegment, setSelectedSegment] = useState<string>('ALL');
@@ -476,7 +480,7 @@ const FeatureActivationModalComponent = ({
  {/* Dynamic Vehicle Identification & Voltage Status Bar */}
  <View style={{
  backgroundColor: colors.card,
- borderColor: isVoltageLow ? colors.red : colors.border,
+ borderColor: !isEcuLive && !isSimulationMode ? colors.border : isVoltageLow ? colors.red : colors.border,
  borderWidth: 1,
  borderRadius: scaleMod(10),
  padding: scaleMod(10),
@@ -487,30 +491,30 @@ const FeatureActivationModalComponent = ({
  }}>
  <View style={{ flex: 1, paddingRight: scaleWidth(8) }}>
  <Text numberOfLines={1} style={{ color: colors.textPri, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
- {connectedVehicleMake 
+ {isEcuLive && connectedVehicleMake 
  ? String(t('features.vehicleMatched', { make: connectedVehicleMake.toUpperCase(), defaultValue: `${connectedVehicleMake.toUpperCase()} — MATCHED` }))
  : isSimulationMode 
  ? String(t('features.demoModeVehicle', { make: selectedBrand === 'ALL' ? t('features.allMakes') : selectedBrand.toUpperCase(), defaultValue: `DEMO MODE: ${selectedBrand === 'ALL' ? 'ALL MAKES & ECUs' : selectedBrand.toUpperCase()}` })) 
- : String(t('features.waitingVehicle'))}
+ : String(t('features.waitingVehicle', 'ECU BAĞLANTISI BEKLENİYOR'))}
  </Text>
  <Text numberOfLines={1} style={{ color: colors.textSec, fontSize: scaleFont(9), fontFamily: MONO, marginTop: 2 }}>
- {connectedVehicleMake 
+ {isEcuLive && connectedVehicleMake 
  ? String(t('features.activeFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} vehicle OEM hidden features active` }))
  : isSimulationMode 
  ? String(t('features.demoFeaturesCount', { count: filteredFeatures.length, defaultValue: `${filteredFeatures.length} demo features listed` }))
- : String(t('features.connectForFeaturesNote'))}
+ : String(t('features.connectForFeaturesNote', 'Kontağı açın ve araç motor beynine bağlanın'))}
  </Text>
  </View>
  <View style={{
  paddingHorizontal: scaleWidth(8),
  paddingVertical: scaleHeight(4),
  borderRadius: scaleMod(6),
- backgroundColor: isVoltageLow ? `${colors.red}20` : `${colors.green}20`,
+ backgroundColor: !isEcuLive && !isSimulationMode ? `${colors.textSec}18` : isVoltageLow ? `${colors.red}20` : `${colors.green}20`,
  borderWidth: 1,
- borderColor: isVoltageLow ? colors.red : colors.green,
+ borderColor: !isEcuLive && !isSimulationMode ? colors.border : isVoltageLow ? colors.red : colors.green,
  }}>
- <Text style={{ color: isVoltageLow ? colors.red : colors.green, fontWeight: '900', fontSize: scaleFont(9.5), fontFamily: MONO }}>
- {effectiveVoltage.toFixed(1)}V
+ <Text style={{ color: !isEcuLive && !isSimulationMode ? colors.textSec : isVoltageLow ? colors.red : colors.green, fontWeight: '900', fontSize: scaleFont(9.5), fontFamily: MONO }}>
+ {isEcuLive || isSimulationMode ? `${effectiveVoltage.toFixed(1)}V` : `${effectiveVoltage.toFixed(1)}V (PORT)`}
  </Text>
  </View>
  </View>
