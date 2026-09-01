@@ -134,11 +134,11 @@ export const CustomGaugePickerModal: React.FC<CustomGaugePickerModalProps> = ({
         <View style={[styles.modalCard, { backgroundColor: colors.bg, borderColor: colors.border }]}>
           {/* Header */}
           <View style={styles.header}>
-            <View>
-              <Text style={[styles.title, { color: colors.textPri }]}>
+            <View style={{ flex: 1, marginRight: 10 }}>
+              <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.title, { color: colors.textPri }]}>
                 {String(t('sensors.customGaugesTitle', 'GÖSTERGELERİ DÜZENLE'))}
               </Text>
-              <Text style={[styles.subtitle, { color: colors.textSec }]}>
+              <Text numberOfLines={2} style={[styles.subtitle, { color: colors.textSec }]}>
                 {String(t('sensors.customGaugesSubtitle', 'Kadranda görünmesini istediğiniz 6 sensörü seçin (Seçili: {{count}}/6)', { count: selectedPids.length }))}
               </Text>
             </View>
@@ -203,9 +203,9 @@ export const CustomGaugePickerModal: React.FC<CustomGaugePickerModalProps> = ({
                       </Text>
                     </View>
                     <View style={{ flex: 1, marginLeft: 10 }}>
-                      <Text style={[styles.sensorName, { color: colors.textPri }]}>{name}</Text>
-                      <Text style={[styles.sensorMeta, { color: colors.textSec }]}>
-                        Birim: {item.unit} | Aralık: {item.min} - {item.max}
+                      <Text numberOfLines={2} ellipsizeMode="tail" style={[styles.sensorName, { color: colors.textPri }]}>{name}</Text>
+                      <Text numberOfLines={1} style={[styles.sensorMeta, { color: colors.textSec }]}>
+                        {item.unit} | {item.min} .. {item.max}
                       </Text>
                     </View>
                   </View>
@@ -229,7 +229,12 @@ export const CustomGaugePickerModal: React.FC<CustomGaugePickerModalProps> = ({
           {/* Footer Actions */}
           <View style={[styles.footer, { borderTopColor: colors.border }]}>
             <TouchableOpacity onPress={handleSaveAndApply} style={[styles.applyBtn, { backgroundColor: colors.cyan }]}>
-              <Text style={styles.applyBtnText}>
+              <Text 
+                numberOfLines={1} 
+                adjustsFontSizeToFit 
+                minimumFontScale={0.75} 
+                style={styles.applyBtnText}
+              >
                 {String(t('sensors.saveGaugesBtn', 'KAYDET VE UYGULA ({{count}} SENSÖR)', { count: selectedPids.length }))}
               </Text>
             </TouchableOpacity>
