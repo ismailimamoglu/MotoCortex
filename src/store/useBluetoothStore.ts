@@ -95,6 +95,8 @@ interface BluetoothState {
     odometer: number | 'UNSUPPORTED' | null;
     distanceSinceCleared: number | null;
     distanceMilOn: number | null;
+    isMilOn?: boolean;
+    dtcCount?: number;
     isDiagnosticMode: boolean;
     isAdaptationRunning: boolean;
     isPollingActive: boolean;
@@ -248,6 +250,8 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     odometer: null,
     distanceSinceCleared: null,
     distanceMilOn: null,
+    isMilOn: false,
+    dtcCount: 0,
     isDiagnosticMode: false,
     isAdaptationRunning: false,
     isPollingActive: false,
