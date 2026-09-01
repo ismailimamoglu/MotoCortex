@@ -1221,6 +1221,74 @@
         "name": "12V Yedek Akü Kaydı",
         "desc": "PCU ünitesine yedek AGM marş/destek aküsü değişimini tanımlar."
       },
+      "vag_tpms_reset": {
+        "name": "TPMS Lastik Basınç Öğrenme ve Sıfırlama",
+        "desc": "Lastik basınç referans değerlerini sıfırlar ve kadrandaki TPMS lastik ikaz lambasını söndürür."
+      },
+      "bmw_tpms_reset": {
+        "name": "RDC / TPMS Lastik Basınç Sıfırlama",
+        "desc": "DSC modülünde RDC lastik basınç sensörü kalibrasyon rutinini başlatır."
+      },
+      "generic_tpms_reset": {
+        "name": "Evrensel TPMS Sensör Tanıtma ve Sıfırlama",
+        "desc": "Tekerlek basınç eşiklerini yeniden öğrenir ve göstergedeki lastik basınç uyarısını sıfırlar."
+      },
+      "vag_injector_code": {
+        "name": "Common Rail Enjektör IMA Kodlama",
+        "desc": "Enjektör kalibrasyon ve debi kodlarını (IMA) EDC16/EDC17/MD1 motor beynine yazar."
+      },
+      "psa_injector_code": {
+        "name": "HDi Enjektör Sınıflandırma Kodlaması",
+        "desc": "Yeni takılan dizel enjektör kalibrasyon matrisini Delphi/Bosch motor beynine kaydeder."
+      },
+      "renault_injector_code": {
+        "name": "dCi Enjektör Kalibrasyonu (IMA)",
+        "desc": "1.5 dCi ve 1.6 dCi Renault / Dacia motorlarında yeni enjektör düzeltme kodlarını kaydeder."
+      },
+      "vag_abs_bleed": {
+        "name": "ABS Hidrolik Pompa Otomatik Hava Alma",
+        "desc": "Fren hidroliği hava tahliyesi için ABS pompasını ve selenoid valflerini otomatik çalıştırır."
+      },
+      "generic_abs_bleed": {
+        "name": "Evrensel ABS Hidrolik Fren Havası Alma",
+        "desc": "Fren hidrolik devresindeki sıkışmış havayı tahliye etmek için ABS pompası ve valflerini döngüye sokar."
+      },
+      "vag_sunroof_calibrate": {
+        "name": "Sunroof ve Perde Uç Nokta Kalibrasyonu",
+        "desc": "Panoramik sunroof ve tavan perdesi motorlarının açılma, eğim ve kapanma sınırlarını yeniden öğretir."
+      },
+      "bmw_sunroof_calibrate": {
+        "name": "Panoramik Sunroof Başlatma ve Tanıtma",
+        "desc": "Elektrikli sunroof için sıkışma koruma limitlerini ve mekanik hareket duraklarını kalibre eder."
+      },
+      "generic_sunroof_calibrate": {
+        "name": "Evrensel Sunroof Hareket Sınırı Kalibrasyonu",
+        "desc": "Sunroof motoru hareket limitlerini ve sıkışma önleme hassasiyetini kalibre eder."
+      },
+      "bmw_seat_calibrate": {
+        "name": "Elektrikli Hafızalı Koltuk Kalibrasyonu",
+        "desc": "Sürücü ve yolcu elektrikli koltuk potansiyometrelerini ve hareket limitlerini sıfırlar."
+      },
+      "mb_seat_calibrate": {
+        "name": "Elektrikli Koltuk Modülü (ESA) Normalizasyonu",
+        "desc": "ESA beyninde koltuk yükseklik, sırtlık ve kızak motorlarının durma noktalarını öğretir."
+      },
+      "generic_seat_calibrate": {
+        "name": "Evrensel Elektrikli Koltuk Limit Sıfırlama",
+        "desc": "Elektrikli hafızalı koltuk hareket sınırlarını ve Hall sensörü referans duraklarını yeniden öğretir."
+      },
+      "vag_window_calibrate": {
+        "name": "Otomatik Cam Tek Dokunuş ve Sıkışma Kalibrasyonu",
+        "desc": "Elektrikli camların tek dokunuşla açma/kapama ve sıkışma önleme güvenlik eşiklerini öğretir."
+      },
+      "renault_window_calibrate": {
+        "name": "Darbe Korumalı Cam Motoru Normalizasyonu",
+        "desc": "Otomatik tek dokunuş yukarı/aşağı cam motoru hareket limitlerini sıfırlar ve öğretir."
+      },
+      "generic_window_calibrate": {
+        "name": "Evrensel Elektrikli Cam Kriko Kalibrasyonu",
+        "desc": "Otomatik tek dokunuşla cam kaldırma limitlerini ve sıkışma önleme güvenlik eşiğini kalibre eder."
+      },
       "vag_comfort_turn_signal": {
         "name": "Konfor Sinyal Flaş Sayısı",
         "desc": "Şerit değiştirme sinyali vuruş sayısını 3, 4 veya 5 olarak ayarlar."
