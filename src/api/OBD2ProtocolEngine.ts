@@ -633,7 +633,6 @@ export class OBD2ProtocolEngine {
  } 
  break; 
  case '11': 
- case '49': 
  if (!isNaN(a)) telemetryBuffer.pushTelemetry({ throttle: Math.round((a * 100) / 255) }, '0111'); 
  break; 
  case '04': 
