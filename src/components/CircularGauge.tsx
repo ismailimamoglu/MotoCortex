@@ -83,8 +83,8 @@ export const CircularGauge: React.FC<CircularGaugeProps> = ({
   // Map 0-1 to angle: -135deg (min) to +135deg (max) (Total sweep: 270 deg)
   const angle = -135 + pct * 270;
   
-  let displayVal = value !== null && value !== undefined ? String(value).replace(/[A-Za-z]/g, '') : '--';
-  if (sensor.key === 'rpm' && value !== null && value !== undefined) {
+  let displayVal = (value !== null && value !== undefined && value !== '' && value !== 'UNSUPPORTED' && value !== '-') ? String(value).replace(/[A-Za-z]/g, '') : '--';
+  if (sensor.key === 'rpm' && value !== null && value !== undefined && value !== '' && value !== 'UNSUPPORTED' && value !== '-') {
     displayVal = String(Math.round(displayNumVal));
   }
 

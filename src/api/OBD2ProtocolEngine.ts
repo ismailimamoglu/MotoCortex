@@ -591,24 +591,46 @@ export class OBD2ProtocolEngine {
  const pidInResponse = payload.substring(currentPos, currentPos + 2); 
  let bytes = 1; 
  
- if (['0C', '10', '3C', '42'].includes(pidInResponse)) bytes = 2; 
- else if (pidInResponse === 'A6') bytes = 4;
+  if (['0C', '10', '3C', '42', '21', '31', '22', '23', '78', '7A', '83', '63'].includes(pidInResponse)) bytes = 2; 
+  else if (['A6', 'A0', '01'].includes(pidInResponse)) bytes = 4;
 
- const dataStart = currentPos + 2; 
- const dataEnd = dataStart + (bytes * 2);
+  const dataStart = currentPos + 2; 
+  const dataEnd = dataStart + (bytes * 2);
 
- if (dataEnd <= payload.length) { 
- const hexVal = payload.substring(dataStart, dataEnd); 
- const a = parseInt(hexVal.substring(0, 2), 16); 
- let b = parseInt(hexVal.substring(2, 4) || '0', 16); 
- let c = parseInt(hexVal.substring(4, 6) || '0', 16); 
- let d = parseInt(hexVal.substring(6, 8) || '0', 16);
+  if (dataEnd <= payload.length) { 
+  const hexVal = payload.substring(dataStart, dataEnd); 
+  const a = parseInt(hexVal.substring(0, 2), 16); 
+  let b = parseInt(hexVal.substring(2, 4) || '0', 16); 
+  let c = parseInt(hexVal.substring(4, 6) || '0', 16); 
+  let d = parseInt(hexVal.substring(6, 8) || '0', 16);
 
- const nowWall = Date.now(); 
- const lastSuccess = store.lastSuccessfulResponseAt || 0; 
- const elapsed = lastSuccess === 0 ? 9999 : nowWall - lastSuccess;
+  const nowWall = Date.now(); 
+  const lastSuccess = store.lastSuccessfulResponseAt || 0; 
+  const elapsed = lastSuccess === 0 ? 9999 : nowWall - lastSuccess;
 
- switch (pidInResponse) { 
+  switch (pidInResponse) { 
+  case '01':
+  if (!isNaN(a)) {
+    const isMilOn = (a & 0x80) !== 0;
+    const dtcCount = a & 0x7F;
+    telemetryBuffer.pushTelemetry({ isMilOn, dtcCount }, '0101');
+    useBluetoothStore.getState().setSensorData({ isMilOn, dtcCount, lastSuccessfulResponseAt: nowWall });
+  }
+  break;
+  case '21':
+  if (!isNaN(a) && !isNaN(b)) {
+    const distanceMilOn = (a * 256) + b;
+    telemetryBuffer.pushTelemetry({ distanceMilOn }, '0121');
+    useBluetoothStore.getState().setSensorData({ distanceMilOn, lastSuccessfulResponseAt: nowWall });
+  }
+  break;
+  case '31':
+  if (!isNaN(a) && !isNaN(b)) {
+    const distanceSinceCleared = (a * 256) + b;
+    telemetryBuffer.pushTelemetry({ distanceSinceCleared }, '0131');
+    useBluetoothStore.getState().setSensorData({ distanceSinceCleared, lastSuccessfulResponseAt: nowWall });
+  }
+  break;
  case '0C': 
  if (!isNaN(a) && !isNaN(b)) { 
  const rpm = Math.round(((a * 256) + b) / 4); 

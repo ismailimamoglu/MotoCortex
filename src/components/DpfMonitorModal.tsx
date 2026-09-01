@@ -18,25 +18,35 @@ interface DpfMonitorModalProps {
 export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
   visible,
   onClose,
-  sootMassGrams = 22,
-  ashMassGrams = 14,
-  egtTempC = 340,
-  differentialPressureHpa = 24,
+  sootMassGrams,
+  ashMassGrams,
+  egtTempC,
+  differentialPressureHpa,
   isRegenActive = false,
 }) => {
   const { t } = useTranslation();
   const tc = useThemeColors();
   const isSimulationMode = useAppStore((state) => state.isSimulationMode);
 
-  const analysis: DpfAnalysisResult = DpfService.analyze({
-    sootMassGrams,
-    ashMassGrams,
-    egtTempC,
-    differentialPressureHpa,
+  const hasRealData = sootMassGrams !== undefined || egtTempC !== undefined || differentialPressureHpa !== undefined;
+
+  const analysis: DpfAnalysisResult | null = hasRealData ? DpfService.analyze({
+    sootMassGrams: sootMassGrams ?? 0,
+    ashMassGrams: ashMassGrams ?? 0,
+    egtTempC: egtTempC ?? 0,
+    differentialPressureHpa: differentialPressureHpa ?? 0,
     isRegenActive,
-  });
+  }) : null;
 
   if (!visible) return null;
+
+  const sootDisplay = sootMassGrams !== undefined && analysis ? `%${analysis.sootPercentage}` : '--';
+  const ashDisplay = ashMassGrams !== undefined && analysis ? `%${analysis.ashPercentage}` : '--';
+  const egtDisplay = egtTempC !== undefined ? `${egtTempC}°C` : '--';
+  const diffDisplay = differentialPressureHpa !== undefined ? `${differentialPressureHpa} hPa` : '--';
+  const statusTitle = analysis ? t(analysis.stateTitleKey) : t('common.noData', { defaultValue: '--' });
+  const statusColor = analysis ? analysis.statusColor : tc.textSec;
+  const sootWidth = analysis && sootMassGrams !== undefined ? `${analysis.sootPercentage}%` : '0%';
 
   return (
     <View style={{ flex: 1, backgroundColor: tc.bg, padding: 16 }}>
@@ -51,17 +61,17 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
             )}
 
             {/* Status Card */}
-            <View style={[styles.statusCard, { backgroundColor: tc.elevated, borderColor: analysis.statusColor }]}>
-              <Text style={[styles.statusTitle, { color: analysis.statusColor }]}>
-                {t(analysis.stateTitleKey)}
+            <View style={[styles.statusCard, { backgroundColor: tc.elevated, borderColor: statusColor }]}>
+              <Text style={[styles.statusTitle, { color: statusColor }]}>
+                {statusTitle}
               </Text>
 
               {/* Progress Gauge */}
               <View style={styles.gaugeContainer}>
                 <View style={styles.gaugeHeader}>
                   <Text style={[styles.gaugeText, { color: tc.textPri }]}>{t('dpf.sootLoad')}</Text>
-                  <Text style={[styles.gaugePct, { color: analysis.statusColor }]}>
-                    %{analysis.sootPercentage}
+                  <Text style={[styles.gaugePct, { color: statusColor }]}>
+                    {sootDisplay}
                   </Text>
                 </View>
                 <View style={[styles.progressTrack, { backgroundColor: tc.border }]}>
@@ -69,8 +79,8 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
                     style={[
                       styles.progressBar,
                       {
-                        width: `${analysis.sootPercentage}%`,
-                        backgroundColor: analysis.statusColor,
+                        width: sootWidth as any,
+                        backgroundColor: statusColor,
                       },
                     ]}
                   />
@@ -82,7 +92,7 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
             <View style={styles.gridRow}>
               <View style={[styles.gridBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
                 <Text style={[styles.boxLabel, { color: tc.textSec }]}>{t('dpf.ashLoad')}</Text>
-                <Text style={[styles.boxVal, { color: tc.textPri }]}>%{analysis.ashPercentage}</Text>
+                <Text style={[styles.boxVal, { color: tc.textPri }]}>{ashDisplay}</Text>
               </View>
 
               <View style={[styles.gridBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
@@ -90,16 +100,16 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
                 <Text
                   style={[
                     styles.boxVal,
-                    { color: egtTempC >= 550 ? tc.red : egtTempC >= 300 ? tc.amber : tc.green },
+                    { color: egtTempC !== undefined ? (egtTempC >= 550 ? tc.red : egtTempC >= 300 ? tc.amber : tc.green) : tc.textPri },
                   ]}
                 >
-                  {egtTempC}°C
+                  {egtDisplay}
                 </Text>
               </View>
 
               <View style={[styles.gridBox, { backgroundColor: tc.elevated, borderColor: tc.border }]}>
                 <Text style={[styles.boxLabel, { color: tc.textSec }]}>{t('dpf.diffPressure')}</Text>
-                <Text style={[styles.boxVal, { color: tc.textPri }]}>{differentialPressureHpa} hPa</Text>
+                <Text style={[styles.boxVal, { color: tc.textPri }]}>{diffDisplay}</Text>
               </View>
             </View>
 
@@ -109,7 +119,7 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
                 {t('dpf.regenRecommendation')}
               </Text>
               <Text style={[styles.recDesc, { color: tc.textPri }]}>
-                {t(analysis.regenRecommendationKey)}
+                {analysis ? t(analysis.regenRecommendationKey) : '--'}
               </Text>
             </View>
           </ScrollView>

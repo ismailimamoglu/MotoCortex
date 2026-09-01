@@ -230,10 +230,11 @@ const FeatureActivationModalComponent = ({
     }
 
     // 0. Clone Adapter Safety Gate Check (Bypassed in Demo Mode)
-    if (isCloneDevice && !inSim) {
+    // Only HIGH risk coding (engine/airbag/flash) is blocked on clone devices; LOW risk comfort coding is allowed.
+    if (isCloneDevice && !inSim && feature.riskLevel === 'HIGH') {
       Alert.alert(
-        t('features.cloneAlertTitle'),
-        t('features.cloneAlertMsg'),
+        t('features.cloneAlertTitle', { defaultValue: 'Klon Adaptör Uyarısı' }),
+        t('features.cloneAlertMsg', { defaultValue: 'Bu özellik yüksek riskli bir ECU kodlama işlemidir ve stabil olmayan klon adaptörlerle yapılamaz. Lütfen Orijinal (Tier A/B) adaptör kullanın.' }),
         [{ text: t('common.ok'), style: 'cancel' }]
       );
       return;
@@ -746,24 +747,24 @@ const FeatureActivationModalComponent = ({
  setSelectedOptionHex(item.options[0].valueHex);
  }
  }}
- disabled={isCodingThis}
+ disabled={isCodingThis || (isCloneDevice && !isSimulationMode && item.riskLevel === 'HIGH')}
  activeOpacity={0.75}
  style={{
- backgroundColor: (isCloneDevice && !isSimulationMode) ? colors.textSec : (isEnabled ? colors.red : colors.cyan),
+ backgroundColor: (isCloneDevice && !isSimulationMode && item.riskLevel === 'HIGH') ? colors.textSec : (isEnabled ? colors.red : colors.cyan),
  paddingHorizontal: scaleWidth(14),
  paddingVertical: scaleHeight(8),
  borderRadius: scaleMod(8),
  minWidth: scaleWidth(84),
  alignItems: 'center',
  justifyContent: 'center',
- opacity: (isCloneDevice && !isSimulationMode) ? 0.65 : 1
+ opacity: (isCloneDevice && !isSimulationMode && item.riskLevel === 'HIGH') ? 0.5 : 1
  }}
  >
  {isCodingThis ? (
  <ActivityIndicator size="small" color="#ffffff" />
  ) : (
  <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(10.5), fontFamily: MONO, letterSpacing: 0.5 }}>
- {(isCloneDevice && !isSimulationMode) ? t('features.codeBtn') : (isEnabled ? t('features.removeBtn') : t('features.codeBtn'))}
+ {(isCloneDevice && !isSimulationMode && item.riskLevel === 'HIGH') ? t('features.lockedTier', { defaultValue: 'KİLİTLİ' }) : (isEnabled ? t('features.removeBtn') : t('features.codeBtn'))}
  </Text>
  )}
  </TouchableOpacity>

@@ -1578,19 +1578,19 @@ ${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateStr
  <Text style={[s.panelTitle, { marginBottom: isCompact ? scaleHeight(4) : scaleHeight(8), fontSize: titleSz }]}>{t('expertise.vehicleIdentity')}</Text>
  <View style={[s.tableRow, { paddingVertical: isCompact ? scaleHeight(4) : scaleHeight(6) }]}>
  <Text style={[s.tableLabel, { fontSize: labelSz }]}>{t('expertise.vin')}</Text>
- <Text numberOfLines={1} style={[s.tableValue, { fontSize: valSz }]}>{vin || '—'}</Text>
+ <Text numberOfLines={1} style={[s.tableValue, { fontSize: valSz }]}>{vin || '--'}</Text>
  </View>
  <View style={[s.tableRow, { paddingVertical: isCompact ? scaleHeight(4) : scaleHeight(6) }]}>
  <Text style={[s.tableLabel, { fontSize: labelSz }]}>{t('expertise.odometer')}</Text>
- <Text style={[s.tableValue, { fontSize: valSz }]}>{odometer === 'UNSUPPORTED' ? t('common.unsupported') : odometer !== null ? `${odometer} km` : '—'}</Text>
+ <Text style={[s.tableValue, { fontSize: valSz }]}>{odometer && odometer !== 'UNSUPPORTED' ? `${odometer} km` : '--'}</Text>
  </View>
  <View style={[s.tableRow, { paddingVertical: isCompact ? scaleHeight(4) : scaleHeight(6) }]}>
  <Text style={[s.tableLabel, { fontSize: labelSz }]}>{t('expertise.distSinceCleared')}</Text>
- <Text style={[s.tableValue, { fontSize: valSz }]}>{distanceSinceCleared !== null ? `${distanceSinceCleared} km` : '—'}</Text>
+ <Text style={[s.tableValue, { fontSize: valSz }]}>{distanceSinceCleared !== null && distanceSinceCleared !== undefined ? `${distanceSinceCleared} km` : '--'}</Text>
  </View>
  <View style={[s.tableRow, { paddingVertical: isCompact ? scaleHeight(4) : scaleHeight(6), borderBottomWidth: 0 }]}>
  <Text style={[s.tableLabel, { fontSize: labelSz }]}>{t('expertise.milDist')}</Text>
- <Text style={[s.tableValue, { fontSize: valSz }]}>{distanceMilOn !== null ? `${distanceMilOn} km` : '—'}</Text>
+ <Text style={[s.tableValue, { fontSize: valSz }]}>{distanceMilOn !== null && distanceMilOn !== undefined ? `${distanceMilOn} km` : '--'}</Text>
  </View>
  </View>
 

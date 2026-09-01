@@ -361,6 +361,7 @@ export const useBluetooth = () => {
 
             // Start live telemetry polling loop
             startPolling();
+            initSuccess = true;
 
         } catch (e) {  
            updateStep('stabilization', 'failed', useBluetoothStore.getState().connectionProgress);  
@@ -511,11 +512,30 @@ export const useBluetooth = () => {
                 await handleVinReceived(vin);  
             }  
 
-            // Sequentially query Mode 03 (Confirmed DTCs) and Mode 07 (Pending DTCs)
+            // 1. Mode 01 PID 01 (MIL Status & DTC count)
+            OBDCommandQueue.flushRxBuffer();
+            await sendCommand('01 01').catch(() => '');
+            await preciseSleep(60);
+
+            // 2. Mode 01 PID 21 (Distance Traveled with MIL ON)
+            await sendCommand('01 21').catch(() => '');
+            await preciseSleep(60);
+
+            // 3. Mode 01 PID 31 (Distance Traveled Since Codes Cleared)
+            await sendCommand('01 31').catch(() => '');
+            await preciseSleep(60);
+
+            // 4. Mode 01 PID A6 (Odometer readout if supported)
+            await sendCommand('01 A6').catch(() => '');
+            await preciseSleep(60);
+
+            // 5. Mode 03 (Confirmed DTCs), Mode 07 (Pending DTCs), Mode 0A (Permanent DTCs)
             OBDCommandQueue.flushRxBuffer();
             await sendCommand(ADAPTER_COMMANDS.READ_DTC).catch(() => '');  
             await preciseSleep(100);
             await sendCommand('07').catch(() => '');  
+            await preciseSleep(100);
+            await sendCommand('0A').catch(() => '');  
        } catch (e) {  
            setError("Diagnostics Failed");  
        } finally {  
