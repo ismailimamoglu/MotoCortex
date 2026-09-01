@@ -1049,7 +1049,16 @@
     "maf": "Витрата повітря MAF",
     "iat": "Температура повітря на впуску",
     "load": "Розрахункове навантаження двигуна",
-    "fuel": "Рівень палива"
+    "fuel": "Рівень палива",
+    "fuelRail": "Fuel Rail Pressure",
+    "stft1": "Short Term Fuel Trim 1",
+    "ltft1": "Long Term Fuel Trim 1",
+    "dpfPressure": "DPF Differential Pressure",
+    "pedalD": "Accelerator Pedal Position D",
+    "hybridSoc": "Hybrid Battery (SOC)",
+    "adblue": "adblue",
+    "egt": "egt",
+    "nox": "nox"
   },
   "secretDebug": {
     "title": "MOTO CORTEX DEV ПАНЕЛЬ",
@@ -2833,6 +2842,74 @@
       "cummins_ecm_fleet_speed_limiter": {
         "name": "Cummins Engine Road Speed Limiter",
         "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
+      },
+      "vag_tpms_reset": {
+        "name": "TPMS Tire Pressure Learning & Reset",
+        "desc": "Resets tire pressure monitoring reference values and clears TPMS warning light in ABS/ESP ECU."
+      },
+      "bmw_tpms_reset": {
+        "name": "RDC / TPMS Tire Pressure Reset",
+        "desc": "Initializes RDC tire pressure sensor calibration routine in DSC module."
+      },
+      "generic_tpms_reset": {
+        "name": "Universal TPMS Sensor Relearn & Reset",
+        "desc": "Relearns wheel pressure thresholds and extinguishes dashboard tire pressure warning indicator."
+      },
+      "vag_injector_code": {
+        "name": "Common Rail Injector IMA Coding",
+        "desc": "Programs injector calibration values (IMA codes) into EDC16/EDC17/MD1 engine control unit."
+      },
+      "psa_injector_code": {
+        "name": "HDi Injector Classification Coding",
+        "desc": "Writes replacement diesel injector calibration matrices into Delphi/Bosch engine ECU."
+      },
+      "renault_injector_code": {
+        "name": "dCi Injector Calibration (IMA)",
+        "desc": "Registers replaced injector correction codes for 1.5 dCi / 1.6 dCi Renault and Dacia engines."
+      },
+      "vag_abs_bleed": {
+        "name": "ABS Hydraulic Pump Automated Bleed",
+        "desc": "Activates ABS hydraulic pump and solenoid valves for complete brake fluid air purge."
+      },
+      "generic_abs_bleed": {
+        "name": "Universal ABS Hydraulic Brake Bleeding",
+        "desc": "Cycles ABS pump and pressure valves to release trapped air from the brake hydraulic circuit."
+      },
+      "vag_sunroof_calibrate": {
+        "name": "Sunroof & Blind End-Position Calibration",
+        "desc": "Re-learns open, tilt, and closed limit stop positions for panoramic sunroof and sunblind motors."
+      },
+      "bmw_sunroof_calibrate": {
+        "name": "Panoramic Sunroof Initialization",
+        "desc": "Initializes anti-pinch limits and mechanical travel stops for electric sunroof."
+      },
+      "generic_sunroof_calibrate": {
+        "name": "Universal Sunroof Travel Stop Calibration",
+        "desc": "Calibrates sunroof drive motor travel limits and anti-pinch obstruction threshold."
+      },
+      "bmw_seat_calibrate": {
+        "name": "Electric Memory Seat Calibration",
+        "desc": "Standardizes driver and passenger memory seat position potentiometers and travel limits."
+      },
+      "mb_seat_calibrate": {
+        "name": "Power Seat Module (ESA) Normalization",
+        "desc": "Calibrates seat height, backrest, and forward/backward slide motor stops in ESA module."
+      },
+      "generic_seat_calibrate": {
+        "name": "Universal Electric Seat Limit Reset",
+        "desc": "Re-teaches electric memory seat movement boundaries and Hall sensor reference stops."
+      },
+      "vag_window_calibrate": {
+        "name": "Power Window One-Touch & Pinch Normalization",
+        "desc": "Teaches upper and lower end stops and pinch protection sensitivity for electric power windows."
+      },
+      "renault_window_calibrate": {
+        "name": "Impulse Window Motor Normalization",
+        "desc": "Resets and learns automatic one-touch up/down window motor travel limits."
+      },
+      "generic_window_calibrate": {
+        "name": "Universal Power Window Regulator Calibration",
+        "desc": "Calibrates automatic one-touch open/close travel limits and anti-pinch safety threshold."
       }
     },
     "codeBtn": "CODE",
@@ -3631,5 +3708,16 @@
     "guidedAction": "Guided Action",
     "technicalTsb": "Technical TSB",
     "footer": "Report generated automatically by MotoCortex Intelligent Diagnostics Platform."
+  },
+  "sensors": {
+    "customGaugesTitle": "CUSTOMIZE GAUGES",
+    "customGaugesSubtitle": "Select 6 sensors to display on dashboard (Selected: {{count}}/6)",
+    "saveGaugesBtn": "SAVE & APPLY ({{count}} SENSORS)",
+    "allSensors": "All (32)",
+    "catEngine": "Engine",
+    "catAirTurbo": "Turbo & Air",
+    "catFuel": "Fuel",
+    "catEmission": "Emission & Heat",
+    "catPerf": "Performance"
   }
 }

@@ -1049,7 +1049,16 @@
     "maf": "Flujo de aire MAF",
     "iat": "Temp. de admisión de aire",
     "load": "Carga del motor calculada",
-    "fuel": "Nivel de combustible"
+    "fuel": "Nivel de combustible",
+    "fuelRail": "Fuel Rail Pressure",
+    "stft1": "Short Term Fuel Trim 1",
+    "ltft1": "Long Term Fuel Trim 1",
+    "dpfPressure": "DPF Differential Pressure",
+    "pedalD": "Accelerator Pedal Position D",
+    "hybridSoc": "Hybrid Battery (SOC)",
+    "adblue": "adblue",
+    "egt": "egt",
+    "nox": "nox"
   },
   "secretDebug": {
     "title": "DESBLOQUEAR FUNCIONES OCULTAS & UDS",
@@ -2833,6 +2842,74 @@
       "cummins_ecm_fleet_speed_limiter": {
         "name": "Cummins Engine Road Speed Limiter",
         "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
+      },
+      "vag_tpms_reset": {
+        "name": "Reinicio y Aprendizaje TPMS",
+        "desc": "Restablece los valores de referencia de presión y apaga el testigo de TPMS."
+      },
+      "bmw_tpms_reset": {
+        "name": "Reinicio de Presión de Neumáticos RDC",
+        "desc": "Inicia la rutina de calibración del sensor RDC en el módulo DSC."
+      },
+      "generic_tpms_reset": {
+        "name": "Reaprendizaje Universal Sensor TPMS",
+        "desc": "Reaprende los umbrales de presión y apaga el testigo en el cuadro."
+      },
+      "vag_injector_code": {
+        "name": "Codificación Inyectores Common Rail IMA",
+        "desc": "Programa los códigos de calibración (IMA) en la unidad de control motor."
+      },
+      "psa_injector_code": {
+        "name": "Codificación Clasificación Inyectores HDi",
+        "desc": "Escribe las matrices de calibración de inyectores en la ECU Delphi/Bosch."
+      },
+      "renault_injector_code": {
+        "name": "Calibración Inyectores dCi (IMA)",
+        "desc": "Registra los códigos de corrección de inyectores para motores 1.5/1.6 dCi."
+      },
+      "vag_abs_bleed": {
+        "name": "Purga Automatizada Bomba Hidráulica ABS",
+        "desc": "Activa la bomba y válvulas del ABS para purgar completamente el aire del líquido de frenos."
+      },
+      "generic_abs_bleed": {
+        "name": "Purga Hidráulica de Frenos ABS Universal",
+        "desc": "Cicla la bomba y válvulas del ABS para liberar aire atrapado en el circuito."
+      },
+      "vag_sunroof_calibrate": {
+        "name": "Calibración Fin de Carrera Techo Solar",
+        "desc": "Reaprende los topes de apertura, inclinación y cierre del techo panorámico."
+      },
+      "bmw_sunroof_calibrate": {
+        "name": "Inicialización Techo Solar Panorámico",
+        "desc": "Inicializa topes mecánicos y protección antipinzamiento del techo solar."
+      },
+      "generic_sunroof_calibrate": {
+        "name": "Calibración Universal Techo Solar",
+        "desc": "Calibra los límites de recorrido y umbral antipinzamiento del techo solar."
+      },
+      "bmw_seat_calibrate": {
+        "name": "Calibración Asiento Eléctrico con Memoria",
+        "desc": "Calibra potenciómetros y límites de recorrido de asientos eléctricos."
+      },
+      "mb_seat_calibrate": {
+        "name": "Normalización Módulo Asiento Eléctrico (ESA)",
+        "desc": "Calibra topes de altura, respaldo y deslizamiento en el módulo ESA."
+      },
+      "generic_seat_calibrate": {
+        "name": "Reinicio Límites Asiento Eléctrico Universal",
+        "desc": "Reaprende límites de movimiento y topes Hall del asiento con memoria."
+      },
+      "vag_window_calibrate": {
+        "name": "Normalización Elevalunas Un Toque y Antipinzamiento",
+        "desc": "Aprende topes superior e inferior y sensibilidad antipinzamiento de elevalunas."
+      },
+      "renault_window_calibrate": {
+        "name": "Normalización Motor Elevalunas Impulsional",
+        "desc": "Restablece y aprende los límites de subida/bajada automática de elevalunas."
+      },
+      "generic_window_calibrate": {
+        "name": "Calibración Universal Elevalunas Eléctrico",
+        "desc": "Calibra límites de carrera de un solo toque y seguridad antipinzamiento."
       }
     },
     "codeBtn": "CODE",
@@ -3631,5 +3708,16 @@
     "guidedAction": "Acción Guiada",
     "technicalTsb": "Boletín Técnico TSB",
     "footer": "Informe generado automáticamente por la plataforma de diagnóstico MotoCortex."
+  },
+  "sensors": {
+    "customGaugesTitle": "PERSONALIZAR INDICADORES",
+    "customGaugesSubtitle": "Seleccione 6 sensores para el panel (Seleccionados: {{count}}/6)",
+    "saveGaugesBtn": "GUARDAR Y APLICAR ({{count}} SENSORES)",
+    "allSensors": "Todos (32)",
+    "catEngine": "Motor",
+    "catAirTurbo": "Turbo y Aire",
+    "catFuel": "Combustible",
+    "catEmission": "Emisión y Calor",
+    "catPerf": "Rendimiento"
   }
 }

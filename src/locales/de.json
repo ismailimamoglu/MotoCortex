@@ -1049,7 +1049,16 @@
     "maf": "Luftmassenmesser",
     "iat": "Ansauglufttemperatur",
     "load": "Berechnete Motorlast",
-    "fuel": "Kraftstofffüllstand"
+    "fuel": "Kraftstofffüllstand",
+    "fuelRail": "Fuel Rail Pressure",
+    "stft1": "Short Term Fuel Trim 1",
+    "ltft1": "Long Term Fuel Trim 1",
+    "dpfPressure": "DPF Differential Pressure",
+    "pedalD": "Accelerator Pedal Position D",
+    "hybridSoc": "Hybrid Battery (SOC)",
+    "adblue": "adblue",
+    "egt": "egt",
+    "nox": "nox"
   },
   "secretDebug": {
     "title": "VERSTECKTE FUNKTIONEN & UDS-CODIERUNG",
@@ -2833,6 +2842,74 @@
       "cummins_ecm_fleet_speed_limiter": {
         "name": "Cummins Engine Road Speed Limiter",
         "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
+      },
+      "vag_tpms_reset": {
+        "name": "RDKS Reifendruck Lernen & Reset",
+        "desc": "Setzt RDKS Reifendruck-Referenzwerte zurück und löscht Reifendruckwarnung."
+      },
+      "bmw_tpms_reset": {
+        "name": "RDC Reifendruck-Initialisierung",
+        "desc": "Startet RDC Reifendruck-Kalibrierungsroutine im DSC Steuergerät."
+      },
+      "generic_tpms_reset": {
+        "name": "Universeller RDKS Sensor Reset",
+        "desc": "Lernt Raddruckschwellen neu an und löscht Reifendruckkontrollleuchte."
+      },
+      "vag_injector_code": {
+        "name": "Common-Rail Injektor IMA Codierung",
+        "desc": "Schreibt Injektor-Kalibrierungscodes (IMA) in das EDC16/EDC17/MD1 Steuergerät."
+      },
+      "psa_injector_code": {
+        "name": "HDi Injektor Klassifizierungscodierung",
+        "desc": "Schreibt Diesel-Injektormatrizen in das Delphi/Bosch Motorsteuergerät."
+      },
+      "renault_injector_code": {
+        "name": "dCi Injektor Kalibrierung (IMA)",
+        "desc": "Registriert Injektor-Korrekturcodes für 1.5/1.6 dCi Renault/Dacia Motoren."
+      },
+      "vag_abs_bleed": {
+        "name": "Automatisierte ABS-Hydraulik Entlüftung",
+        "desc": "Aktiviert ABS-Pumpe und Ventile für vollständige Bremsflüssigkeitsentlüftung."
+      },
+      "generic_abs_bleed": {
+        "name": "Universelle ABS Bremsenentlüftung",
+        "desc": "Steuert ABS-Pumpe und Ventile an, um Lufteinschlüsse im Bremskreis zu spülen."
+      },
+      "vag_sunroof_calibrate": {
+        "name": "Schiebedach & Rollo Endlagenkalibrierung",
+        "desc": "Lernt Öffnungs-, Neige- und Schließendlagen für Panoramadach und Rollo neu an."
+      },
+      "bmw_sunroof_calibrate": {
+        "name": "Panorama-Schiebedach Initialisierung",
+        "desc": "Initialisiert Einklemmschutz und Endanschläge für das elektrische Schiebedach."
+      },
+      "generic_sunroof_calibrate": {
+        "name": "Universelle Schiebedach Kalibrierung",
+        "desc": "Kalibriert Schiebedach-Verfahrgrenzen und Einklemmschutzschwelle."
+      },
+      "bmw_seat_calibrate": {
+        "name": "Elektrische Memory-Sitz Kalibrierung",
+        "desc": "Kalibriert Sitzpotentiometer und Verfahrgrenzen für Fahrer-/Beifahrersitz."
+      },
+      "mb_seat_calibrate": {
+        "name": "Elektrisches Sitzmodul (ESA) Normalisierung",
+        "desc": "Lernt Sitzhöhen-, Lehnen- und Längsverstellungsmotoren im ESA an."
+      },
+      "generic_seat_calibrate": {
+        "name": "Universeller elektrischer Sitz Reset",
+        "desc": "Lernt Bewegungsgrenzen und Hall-Sensor-Anschläge für Memory-Sitze an."
+      },
+      "vag_window_calibrate": {
+        "name": "Fensterheber One-Touch & Einklemmschutz Normalisierung",
+        "desc": "Lernt obere und untere Endlagen sowie Einklemmschutz für Fensterheber an."
+      },
+      "renault_window_calibrate": {
+        "name": "Impuls-Fensterhebermotor Normalisierung",
+        "desc": "Setzt One-Touch Fensterheber-Verfahrgrenzen zurück und lernt sie neu an."
+      },
+      "generic_window_calibrate": {
+        "name": "Universelle Fensterheber Kalibrierung",
+        "desc": "Kalibriert automatische One-Touch Verfahrgrenzen und Einklemmschutz."
       }
     },
     "codeBtn": "CODE",
@@ -3631,5 +3708,16 @@
     "guidedAction": "Geführte Maßnahme",
     "technicalTsb": "Technisches TSB-Bulletin",
     "footer": "Bericht automatisch generiert von der MotoCortex Diagnoseplattform."
+  },
+  "sensors": {
+    "customGaugesTitle": "ANZEIGEN ANPASSEN",
+    "customGaugesSubtitle": "Wählen Sie 6 Sensoren für das Dashboard (Ausgewählt: {{count}}/6)",
+    "saveGaugesBtn": "SPEICHERN & ANWENDEN ({{count}} SENSOREN)",
+    "allSensors": "Alle (32)",
+    "catEngine": "Motor",
+    "catAirTurbo": "Turbo & Luft",
+    "catFuel": "Kraftstoff",
+    "catEmission": "Emission & Hitze",
+    "catPerf": "Leistung"
   }
 }

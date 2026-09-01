@@ -1049,7 +1049,16 @@
     "maf": "Débit d'air MAF",
     "iat": "Temp. de l'air d'admission",
     "load": "Charge calculée du moteur",
-    "fuel": "Niveau de carburant"
+    "fuel": "Niveau de carburant",
+    "fuelRail": "Fuel Rail Pressure",
+    "stft1": "Short Term Fuel Trim 1",
+    "ltft1": "Long Term Fuel Trim 1",
+    "dpfPressure": "DPF Differential Pressure",
+    "pedalD": "Accelerator Pedal Position D",
+    "hybridSoc": "Hybrid Battery (SOC)",
+    "adblue": "adblue",
+    "egt": "egt",
+    "nox": "nox"
   },
   "secretDebug": {
     "title": "DÉVERROUILLER FONCTIONS CACHÉES & UDS",
@@ -2833,6 +2842,74 @@
       "cummins_ecm_fleet_speed_limiter": {
         "name": "Cummins Engine Road Speed Limiter",
         "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
+      },
+      "vag_tpms_reset": {
+        "name": "Réinitialisation & Apprentissage TPMS",
+        "desc": "Réinitialise les valeurs de référence TPMS et éteint le voyant de pression des pneus."
+      },
+      "bmw_tpms_reset": {
+        "name": "Réinitialisation Pression des Pneus RDC",
+        "desc": "Initialise la routine de calibration des capteurs de pression RDC dans le DSC."
+      },
+      "generic_tpms_reset": {
+        "name": "Réapprentissage Universel TPMS",
+        "desc": "Réapprend les seuils de pression et éteint le voyant de pression au tableau de bord."
+      },
+      "vag_injector_code": {
+        "name": "Codage Injecteur Common Rail IMA",
+        "desc": "Enregistre les codes de calibration injecteur (IMA) dans le calculateur moteur."
+      },
+      "psa_injector_code": {
+        "name": "Codage de Classification Injecteur HDi",
+        "desc": "Écrit les matrices de calibration des injecteurs dans le calculateur Delphi/Bosch."
+      },
+      "renault_injector_code": {
+        "name": "Calibration Injecteur dCi (IMA)",
+        "desc": "Enregistre les codes de correction injecteur pour moteurs 1.5/1.6 dCi Renault et Dacia."
+      },
+      "vag_abs_bleed": {
+        "name": "Purge Automatisée du Bloc Hydraulique ABS",
+        "desc": "Active la pompe ABS et les électrovannes pour purger complètement le liquide de frein."
+      },
+      "generic_abs_bleed": {
+        "name": "Purge Hydraulique ABS Universelle",
+        "desc": "Fait cycler la pompe et les vannes ABS pour chasser l'air du circuit de freinage."
+      },
+      "vag_sunroof_calibrate": {
+        "name": "Calibration Fin de Course Toit Ouvrant & Store",
+        "desc": "Réapprend les positions d'arrêt pour le toit panoramique et le store électrique."
+      },
+      "bmw_sunroof_calibrate": {
+        "name": "Initialisation Toit Ouvrant Panoramique",
+        "desc": "Initialise l'anti-pincement et les butées mécaniques du toit ouvrant électrique."
+      },
+      "generic_sunroof_calibrate": {
+        "name": "Calibration Universelle Toit Ouvrant",
+        "desc": "Calibre les limites de course du moteur de toit ouvrant et l'anti-pincement."
+      },
+      "bmw_seat_calibrate": {
+        "name": "Calibration Siège Électrique à Mémoire",
+        "desc": "Standardise les potentiomètres de position et butées de course du siège conducteur/passager."
+      },
+      "mb_seat_calibrate": {
+        "name": "Normalisation Module Siège Électrique (ESA)",
+        "desc": "Calibre les butées de hauteur, dossier et glissière dans le module ESA."
+      },
+      "generic_seat_calibrate": {
+        "name": "Réinitialisation Limite Siège Électrique",
+        "desc": "Réapprend les limites de mouvement et butées de référence Hall du siège."
+      },
+      "vag_window_calibrate": {
+        "name": "Normalisation Lève-Vitre One-Touch & Anti-Pincement",
+        "desc": "Apprend les butées haute/basse et la sensibilité anti-pincement des vitres électriques."
+      },
+      "renault_window_calibrate": {
+        "name": "Normalisation Moteur Lève-Vitre Impulsionnel",
+        "desc": "Réinitialise et apprend les limites de course de montée/descente automatique."
+      },
+      "generic_window_calibrate": {
+        "name": "Calibration Universelle Lève-Vitre Électrique",
+        "desc": "Calibre les limites de course automatique et le seuil de sécurité anti-pincement."
       }
     },
     "codeBtn": "CODE",
@@ -3631,5 +3708,16 @@
     "guidedAction": "Action Guidée",
     "technicalTsb": "Bulletin Technique TSB",
     "footer": "Rapport généré automatiquement par la plateforme de diagnostic MotoCortex."
+  },
+  "sensors": {
+    "customGaugesTitle": "PERSONNALISER LES JAUGES",
+    "customGaugesSubtitle": "Sélectionnez 6 capteurs pour le tableau de bord (Sélectionnés: {{count}}/6)",
+    "saveGaugesBtn": "ENREGISTRER & APPLIQUER ({{count}} CAPTEURS)",
+    "allSensors": "Tous (32)",
+    "catEngine": "Moteur",
+    "catAirTurbo": "Turbo & Air",
+    "catFuel": "Carburant",
+    "catEmission": "Émission & Chaleur",
+    "catPerf": "Performance"
   }
 }

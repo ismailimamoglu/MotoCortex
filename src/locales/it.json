@@ -1049,7 +1049,16 @@
     "maf": "Portata d'aria MAF",
     "iat": "Temp. aria di aspirazione",
     "load": "Carico motore calcolato",
-    "fuel": "Livello carburante"
+    "fuel": "Livello carburante",
+    "fuelRail": "Fuel Rail Pressure",
+    "stft1": "Short Term Fuel Trim 1",
+    "ltft1": "Long Term Fuel Trim 1",
+    "dpfPressure": "DPF Differential Pressure",
+    "pedalD": "Accelerator Pedal Position D",
+    "hybridSoc": "Hybrid Battery (SOC)",
+    "adblue": "adblue",
+    "egt": "egt",
+    "nox": "nox"
   },
   "secretDebug": {
     "title": "SBLOCCA FUNZIONI NASCOSTE & UDS",
@@ -2833,6 +2842,74 @@
       "cummins_ecm_fleet_speed_limiter": {
         "name": "Cummins Engine Road Speed Limiter",
         "desc": "Programs maximum allowable road vehicle speed in Cummins ECM parameter tables."
+      },
+      "vag_tpms_reset": {
+        "name": "Apprendimento e Reset Pressione TPMS",
+        "desc": "Ripristina i valori di riferimento TPMS e spegne la spia pressione pneumatici."
+      },
+      "bmw_tpms_reset": {
+        "name": "Inizializzazione Pressione Pneumatici RDC",
+        "desc": "Avvia la routine di calibrazione sensori RDC nella centralina DSC."
+      },
+      "generic_tpms_reset": {
+        "name": "Reset Universale Sensori TPMS",
+        "desc": "Riapprende le soglie di pressione ed estingue la spia sul quadro strumenti."
+      },
+      "vag_injector_code": {
+        "name": "Codifica Iniettori Common Rail IMA",
+        "desc": "Programma i codici di taratura iniettori (IMA) nella centralina motore."
+      },
+      "psa_injector_code": {
+        "name": "Codifica Classificazione Iniettori HDi",
+        "desc": "Scrive le matrici di taratura iniettori nella centralina motore Delphi/Bosch."
+      },
+      "renault_injector_code": {
+        "name": "Taratura Iniettori dCi (IMA)",
+        "desc": "Registra i codici di correzione per motori 1.5/1.6 dCi Renault e Dacia."
+      },
+      "vag_abs_bleed": {
+        "name": "Spurgo Idraulico Automatizzato Pompa ABS",
+        "desc": "Attiva la pompa e le valvole ABS per lo spurgo completo dell'aria dai freni."
+      },
+      "generic_abs_bleed": {
+        "name": "Spurgo Idraulico Freni ABS Universale",
+        "desc": "Cicla la pompa e le valvole ABS per eliminare l'aria dal circuito frenante."
+      },
+      "vag_sunroof_calibrate": {
+        "name": "Calibrazione Finecorsa Tettuccio e Tendina",
+        "desc": "Riapprende le posizioni di finecorsa per tettuccio panoramico e tendina."
+      },
+      "bmw_sunroof_calibrate": {
+        "name": "Inizializzazione Tettuccio Panoramico",
+        "desc": "Inizializza finecorsa meccanici e antipizzicamento del tettuccio elettrico."
+      },
+      "generic_sunroof_calibrate": {
+        "name": "Calibrazione Universale Tettuccio Apribile",
+        "desc": "Calibra i limiti di corsa e la soglia antipizzicamento del tettuccio."
+      },
+      "bmw_seat_calibrate": {
+        "name": "Calibrazione Sedile Elettrico con Memoria",
+        "desc": "Standardizza potenziometri e limiti di corsa del sedile conducente/passeggero."
+      },
+      "mb_seat_calibrate": {
+        "name": "Normalizzazione Modulo Sedile Elettrico (ESA)",
+        "desc": "Calibra i finecorsa di altezza, schienale e scorrimento nel modulo ESA."
+      },
+      "generic_seat_calibrate": {
+        "name": "Reset Universale Limiti Sedile Elettrico",
+        "desc": "Riapprende limiti di movimento e battute sensore Hall del sedile con memoria."
+      },
+      "vag_window_calibrate": {
+        "name": "Normalizzazione Alzacristalli One-Touch & Antipizzicamento",
+        "desc": "Apprende battute superiori/inferiori e sensibilità antipizzicamento cristalli."
+      },
+      "renault_window_calibrate": {
+        "name": "Normalizzazione Alzacristalli a Impulsi",
+        "desc": "Ripristina e apprende i limiti di salita/discesa automatica dei finestrini."
+      },
+      "generic_window_calibrate": {
+        "name": "Calibrazione Universale Alzacristalli Elettrici",
+        "desc": "Calibra i limiti di corsa automatica e la soglia di sicurezza antipizzicamento."
       }
     },
     "codeBtn": "CODE",
@@ -3631,5 +3708,16 @@
     "guidedAction": "Azione Guidata",
     "technicalTsb": "Bollettino Tecnico TSB",
     "footer": "Rapporto generato automaticamente dalla piattaforma di diagnosi MotoCortex."
+  },
+  "sensors": {
+    "customGaugesTitle": "PERSONALIZZA STRUMENTI",
+    "customGaugesSubtitle": "Seleziona 6 sensori per il cruscotto (Selezionati: {{count}}/6)",
+    "saveGaugesBtn": "SALVA E APPLICA ({{count}} SENSORI)",
+    "allSensors": "Tutti (32)",
+    "catEngine": "Motore",
+    "catAirTurbo": "Turbo & Aria",
+    "catFuel": "Carburante",
+    "catEmission": "Emissioni & Calore",
+    "catPerf": "Prestazioni"
   }
 }
