@@ -66,6 +66,18 @@ interface BluetoothState {
     adblueLevel: number | null;
     egtTemp: number | null;
     noxSensor: number | null;
+    shortFuelTrim1: number | null;
+    longFuelTrim1: number | null;
+    shortFuelTrim2: number | null;
+    longFuelTrim2: number | null;
+    fuelRailPressure: number | null;
+    dpfPressure: number | null;
+    pedalPosD: number | null;
+    pedalPosE: number | null;
+    throttlePosB: number | null;
+    hybridBatterySoc: number | null;
+    activeGaugePids: string[];
+    setActiveGaugePids: (pids: string[]) => void;
     
     // Category-Specific Sensors (Truck / Motorcycle / Passenger)
     vehicleCategory: 'PASSENGER_CAR' | 'MOTORCYCLE' | 'HEAVY_DUTY_TRUCK';
@@ -208,6 +220,18 @@ export const useBluetoothStore = create<BluetoothState>((set) => ({
     adblueLevel: null,
     egtTemp: null,
     noxSensor: null,
+    shortFuelTrim1: null,
+    longFuelTrim1: null,
+    shortFuelTrim2: null,
+    longFuelTrim2: null,
+    fuelRailPressure: null,
+    dpfPressure: null,
+    pedalPosD: null,
+    pedalPosE: null,
+    throttlePosB: null,
+    hybridBatterySoc: null,
+    activeGaugePids: ['0C', '0D', '05', 'ATRV', '11', '04'],
+    setActiveGaugePids: (pids) => set({ activeGaugePids: pids }),
 
     vehicleCategory: 'PASSENGER_CAR',
     selectedCategoryByUser: null,

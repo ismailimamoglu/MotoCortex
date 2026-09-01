@@ -30,9 +30,9 @@ export class PollingOrchestrator {
         OBDCommandQueue.setPollingActive(true);
         store.addLog('POLLING_ORCHESTRATOR: Commencing Direct & Robust Telemetry Stream.');
 
-        // Varsayılan standart OBD2 canlı sensörler
-        const DEFAULT_PIDS = ['0C', '0D', '04', '05', '11'];
-        const STATIC_PIDS_TO_EXCLUDE = new Set(['00', '20', '40', '60', '80', 'A0', 'C0', '1C', '0100', '0120', '0140', '0160', '011C']);
+        // Varsayılan veya kullanıcının seçtiği aktif gösterge PID'leri
+        const activeUserPids = store.activeGaugePids || ['0C', '0D', '05', '11', '04'];
+        const STATIC_PIDS_TO_EXCLUDE = new Set(['00', '20', '40', '60', '80', 'A0', 'C0', '1C', '0100', '0120', '0140', '0160', '011C', 'ATRV', 'VOLTAGE']);
 
         let targetPids: string[] = [];
 
@@ -40,10 +40,14 @@ export class PollingOrchestrator {
             targetPids = requestedKeys
                 .map(k => k.split('@')[0].trim().replace(/^01\s*/i, '').toUpperCase())
                 .filter(p => !STATIC_PIDS_TO_EXCLUDE.has(p) && p.length > 0);
+        } else {
+            targetPids = activeUserPids
+                .map(k => k.trim().replace(/^01\s*/i, '').toUpperCase())
+                .filter(p => !STATIC_PIDS_TO_EXCLUDE.has(p) && p.length > 0);
         }
 
         if (targetPids.length === 0) {
-            targetPids = [...DEFAULT_PIDS];
+            targetPids = ['0C', '0D', '05', '11', '04'];
         }
 
         // Protokol hızına göre güvenli pacing (gecikme) hesaplama

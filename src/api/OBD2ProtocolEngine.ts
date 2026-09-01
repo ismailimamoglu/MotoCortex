@@ -691,6 +691,42 @@ export class OBD2ProtocolEngine {
  case '9B':
  if (!isNaN(a)) telemetryBuffer.pushTelemetry({ adblueLevel: Math.round((a * 100) / 255) }, '019B');
  break;
+ case '06':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ shortFuelTrim1: Number((((a - 128) * 100) / 128).toFixed(1)) }, '0106');
+ break;
+ case '07':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ longFuelTrim1: Number((((a - 128) * 100) / 128).toFixed(1)) }, '0107');
+ break;
+ case '08':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ shortFuelTrim2: Number((((a - 128) * 100) / 128).toFixed(1)) }, '0108');
+ break;
+ case '09':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ longFuelTrim2: Number((((a - 128) * 100) / 128).toFixed(1)) }, '0109');
+ break;
+ case '22':
+ if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ fuelRailPressure: Number((((a * 256 + b) * 0.079) / 100).toFixed(1)) }, '0122');
+ break;
+ case '23':
+ if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ fuelRailPressure: Number((((a * 256 + b) * 10) / 100).toFixed(1)) }, '0123');
+ break;
+ case '7A':
+ if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ dpfPressure: Number(((a * 256 + b) / 100).toFixed(2)) }, '017A');
+ break;
+ case '46':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ ambientTemp: a - 40 }, '0146');
+ break;
+ case '49':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ pedalPosD: Math.round((a * 100) / 255) }, '0149');
+ break;
+ case '4A':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ pedalPosE: Math.round((a * 100) / 255) }, '014A');
+ break;
+ case '47':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ throttlePosB: Math.round((a * 100) / 255) }, '0147');
+ break;
+ case '5B':
+ if (!isNaN(a)) telemetryBuffer.pushTelemetry({ hybridBatterySoc: Math.round((a * 100) / 255) }, '015B');
+ break;
  case '78':
  if (!isNaN(a) && !isNaN(b)) telemetryBuffer.pushTelemetry({ egtTemp: Number((((a * 256) + b) / 10 - 40).toFixed(1)) }, '0178');
  break;

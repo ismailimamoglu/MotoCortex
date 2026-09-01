@@ -44,6 +44,12 @@ export const ALL_SENSORS: SensorConfig[] = [
   { key: 'adblueLevel', nameKey: 'dashboard.adblue', defaultName: 'AdBlue Seviyesi', unit: '%', pid: '01 9B', icon: '', color: '#0284c7', isHighPriority: false, isProOnly: true },
   { key: 'egtTemp', nameKey: 'dashboard.egt', defaultName: 'Egzoz Gazı Sıcaklığı', unit: '°C', pid: '01 78', icon: '', color: '#e11d48', isHighPriority: false, isProOnly: true },
   { key: 'noxSensor', nameKey: 'dashboard.nox', defaultName: 'NOx Sensörü', unit: 'ppm', pid: '01 83', icon: '', color: '#0f766e', isHighPriority: false, isProOnly: true },
+  { key: 'fuelRailPressure', nameKey: 'sensor.fuelRail', defaultName: 'Yakıt Ray Basıncı', unit: 'Bar', pid: '01 23', icon: '', color: '#f59e0b', isHighPriority: false, isProOnly: true },
+  { key: 'shortFuelTrim1', nameKey: 'sensor.stft1', defaultName: 'Kısa Yakıt Trimi 1', unit: '%', pid: '01 06', icon: '', color: '#ea580c', isHighPriority: false, isProOnly: true },
+  { key: 'longFuelTrim1', nameKey: 'sensor.ltft1', defaultName: 'Uzun Yakıt Trimi 1', unit: '%', pid: '01 07', icon: '', color: '#ea580c', isHighPriority: false, isProOnly: true },
+  { key: 'dpfPressure', nameKey: 'sensor.dpfPressure', defaultName: 'DPF Fark Basıncı', unit: 'kPa', pid: '01 7A', icon: '', color: '#d97706', isHighPriority: false, isProOnly: true },
+  { key: 'pedalPosD', nameKey: 'sensor.pedalD', defaultName: 'Gaz Pedalı D', unit: '%', pid: '01 49', icon: '', color: '#f59e0b', isHighPriority: false, isProOnly: true },
+  { key: 'hybridBatterySoc', nameKey: 'sensor.hybridSoc', defaultName: 'Hibrit Batarya (SOC)', unit: '%', pid: '01 5B', icon: '', color: '#10b981', isHighPriority: false, isProOnly: true },
 ];
 
 interface DashboardState {
