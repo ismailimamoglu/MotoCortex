@@ -346,29 +346,27 @@ export const useBluetooth = () => {
            useBluetoothStore.getState().setSensorData({ guardTime: isCan ? 80 : 150 });            
            
            try {
-               await OBDCommandQueue.add('ATAT1', 1500).catch(() => {});
-           } catch {}
+                await OBDCommandQueue.add('ATAT1', 1500).catch(() => {});
+            } catch {}
 
-           ConnectionStateMachine.transitionTo(ConnectionState.TELEMETRY_ACTIVE);  
-           useTelemetryStore.getState().setSessionDynamicKey(ProtocolEngine.getRelativeLogicalTimestamp().toString());  
-           setLastResponse(rpmRes);  
-           setError(null);
+            ConnectionStateMachine.transitionTo(ConnectionState.TELEMETRY_ACTIVE);  
+            useTelemetryStore.getState().setSessionDynamicKey(ProtocolEngine.getRelativeLogicalTimestamp().toString());  
+            setLastResponse(rpmRes);  
+            setError(null);
 
-             // Record Connection Success Diagnostic
-             ConnectionDiagnosticsManager.recordDiagnostic({
-                 adapterName: useBluetoothStore.getState().deviceName || 'OBD2 Adapter',
-                 status: 'SUCCESS',
-                 protocol: useBluetoothStore.getState().protocol || 'AUTOMATIC',
-                 chipType: useBluetoothStore.getState().isCloneDevice ? 'CLONE_ELM327' : 'STANDARD_ELM327',
-                 vehicleInfo: useTelemetryStore.getState().activeSessionVehicle || undefined,
-                 recentLogs: useBluetoothStore.getState().logs,
-             }).catch(() => {});
+            // Record Connection Success Diagnostic
+            ConnectionDiagnosticsManager.recordDiagnostic({
+                adapterName: useBluetoothStore.getState().deviceName || 'OBD2 Adapter',
+                status: 'SUCCESS',
+                protocol: useBluetoothStore.getState().protocol || 'AUTOMATIC',
+                chipType: useBluetoothStore.getState().isCloneDevice ? 'CLONE_ELM327' : 'STANDARD_ELM327',
+                vehicleInfo: useTelemetryStore.getState().activeSessionVehicle || undefined,
+                recentLogs: useBluetoothStore.getState().logs,
+            }).catch(() => {});
 
-             setTimeout(() => {
-                 runDiagnostics().catch(err => {
-                     useBluetoothStore.getState().addLog(`DIAG_WARN: Auto diagnostics failed: ${err?.message || err}`);
-                 });
-             }, 1000);
+            // Start live telemetry polling loop
+            startPolling();
+
         } catch (e) {  
            updateStep('stabilization', 'failed', useBluetoothStore.getState().connectionProgress);  
            const errorReasonStr = e instanceof Error ? e.message : String(e);
