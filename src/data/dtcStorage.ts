@@ -26,6 +26,8 @@ const CHUNK_MAP: Record<string, () => any> = {
     'P19': () => require('./chunks/P19.json'),
     'P20': () => require('./chunks/P20.json'),
     'P21': () => require('./chunks/P21.json'),
+    'P22': () => require('./chunks/P22.json'),
+    'P24': () => require('./chunks/P24.json'),
     'P0A': () => require('./chunks/P0A.json'),
 };
 

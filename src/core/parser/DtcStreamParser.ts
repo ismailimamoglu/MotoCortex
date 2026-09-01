@@ -441,10 +441,10 @@ export function decodeDtcCodesFromResponse(rawResponse: string): string[] {
     let payload = svc.payload;
     if (payload.length === 0) continue;
 
-    // UDS Service 0x59
+    // UDS Service 0x59 (ReadDTCInformation - 3 bytes per DTC: High, Low, Status)
     if (svc.service === 0x59 && payload.length >= 2) {
-      payload = payload.slice(2);
-      for (let i = 0; i + 2 < payload.length; i += 3) {
+      payload = payload.slice(2); // Skip Subfunction & DTCStatusAvailabilityMask
+      for (let i = 0; i + 1 < payload.length; i += 3) {
         const dtc = decodeDtcPair(payload[i], payload[i + 1]);
         if (dtc) dtcList.push(dtc);
       }
@@ -467,6 +467,18 @@ export function decodeDtcCodesFromResponse(rawResponse: string): string[] {
 }
 
 /**
+ * Cleans stale reassembly contexts to prevent memory leaks (5 second TTL)
+ */
+export function cleanStaleReassemblyContexts(ttlMs = 5000): void {
+  const now = Date.now();
+  for (const [source, ctx] of globalReassemblyContexts) {
+    if (now - ctx.timestamp > ttlMs) {
+      globalReassemblyContexts.delete(source);
+    }
+  }
+}
+
+/**
  * Resets reassembly contexts (call on new diagnostic session)
  */
 export function resetReassemblyContexts(): void {
@@ -477,5 +489,6 @@ export default {
   parseAndReassembleServices,
   decodeDtcPair,
   decodeDtcCodesFromResponse,
+  cleanStaleReassemblyContexts,
   resetReassemblyContexts,
 };

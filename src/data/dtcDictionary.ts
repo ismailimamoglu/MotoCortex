@@ -110,9 +110,32 @@ const DTC_DICTIONARY: Record<string, string> = {
     P0675: '5. Silindir Kızdırma Bujisi Devre Arızası',
     P0676: '6. Silindir Kızdırma Bujisi Devre Arızası',
     P0683: 'Kızdırma Bujisi Kontrol Modülü - ECM İletişim Hatası',
+    P2000: 'NOx Tutucu Verimliliği Eşiğin Altında (Banka 1)',
     P2002: 'Dizel Partikül Filtresi (DPF) - Verimlilik Eşik Altında',
-    P2463: 'Dizel Partikül Filtresi (DPF) - Kurum Birikimi',
+    P2003: 'Dizel Partikül Filtresi (DPF) Verimliliği Eşiğin Altında (Banka 2)',
+    P2004: 'Emme Manifoldu Klape Kontrolü Açık Takılı Kaldı (Banka 1)',
+    P2008: 'Emme Manifoldu Klape Kontrol Devresi Açık (Banka 1)',
+    P2015: 'Emme Manifoldu Klape Konum Sensörü Aralık/Performans (Banka 1)',
+    P2047: 'Redüktör Enjektör Valfi Devresi Açık (AdBlue Banka 1)',
+    P2048: 'Redüktör Enjektör Valfi Devresi Düşük (AdBlue Banka 1)',
+    P2049: 'Redüktör Enjektör Valfi Devresi Yüksek (AdBlue Banka 1)',
+    P20EE: 'SCR NOx Katalizör Verimliliği Eşiğin Altında (Banka 1)',
+    P2187: 'Rölantide Sistem Çok Fakir (Banka 1)',
+    P2188: 'Rölantide Sistem Çok Zengin (Banka 1)',
+    P2195: 'O2 Sensörü Sinyali Fakirde Takılı Kaldı (B1S1)',
+    P2196: 'O2 Sensörü Sinyali Zenginde Takılı Kaldı (B1S1)',
+    P2263: 'Turboşarj / Süperşarj Takviye Sistemi Performansı',
+    P2279: 'Emme Hava Sisteminde Kaçak Tespit Edildi',
+    P242F: 'Dizel Partikül Filtresi (DPF) Kül Birikimi Tıkanıklığı',
+    P244A: 'DPF Diferansiyel Basıncı Çok Düşük',
+    P244B: 'DPF Diferansiyel Basıncı Çok Yüksek (Aşırı Kurum)',
     P2452: 'DPF Basınç Sensörü A - Devre Arızası',
+    P2453: 'DPF Basınç Sensörü A Devresi Aralık/Performans',
+    P2454: 'DPF Basınç Sensörü A Devresi Düşük Voltaj',
+    P2455: 'DPF Basınç Sensörü A Devresi Yüksek Voltaj',
+    P2463: 'Dizel Partikül Filtresi (DPF) - Kurum Birikimi',
+    P2563: 'Turboşarj Kanat Konum Sensörü Devresi Aralık/Performans',
+    P2714: 'Basınç Kontrol Solenoidi D Performansı veya Takılı Kalma',
 
     // Turbo / Supercharger
     P0299: 'Turboşarj / Süperşarj Düşük Basınç (Underboost)',
@@ -845,10 +868,34 @@ export function lookupDTC(code: string, brand?: string): string | null {
     // 6. General fallback: if Turkish, return standard dictionary if available
     if (langCode === 'tr') {
         const fallbackDesc = SemanticDtcDictionary[normalized] || DTC_DICTIONARY[normalized] || null;
-        return cleanDtcDescription(fallbackDesc);
+        if (fallbackDesc) return cleanDtcDescription(fallbackDesc);
     }
 
-    return null;
+    // 7. Akıllı SAE J2012 Kategori Fallback'i (Sıfır Boş Ekran Garantisi)
+    const firstChar = normalized.charAt(0);
+    const secondChar = normalized.charAt(1);
+
+    if (langCode === 'tr') {
+        if (firstChar === 'P') {
+            if (secondChar === '0') return cleanDtcDescription(`${normalized}: Standart Motor / Güç Aktarım Arızası`);
+            if (secondChar === '2') return cleanDtcDescription(`${normalized}: Emisyon / DPF / Şanzıman Arızası`);
+            return cleanDtcDescription(`${normalized}: Üreticiye Özel Motor / Güç Aktarım Arızası`);
+        }
+        if (firstChar === 'C') return cleanDtcDescription(`${normalized}: Şasi / ABS / ESP Fren Sistemi Arızası`);
+        if (firstChar === 'B') return cleanDtcDescription(`${normalized}: Gövde / Hava Yastığı / Konfor Modülü Arızası`);
+        if (firstChar === 'U') return cleanDtcDescription(`${normalized}: CAN / Ağ İletişim Hattı Arızası`);
+        return cleanDtcDescription(`${normalized}: Araç Arıza Kodu (Yetkili Servise Danışın)`);
+    } else {
+        if (firstChar === 'P') {
+            if (secondChar === '0') return cleanDtcDescription(`${normalized}: Standard Powertrain Malfunction`);
+            if (secondChar === '2') return cleanDtcDescription(`${normalized}: Emission / DPF / Transmission Fault`);
+            return cleanDtcDescription(`${normalized}: Manufacturer Specific Powertrain Fault`);
+        }
+        if (firstChar === 'C') return cleanDtcDescription(`${normalized}: Chassis / ABS / ESP Brake System Fault`);
+        if (firstChar === 'B') return cleanDtcDescription(`${normalized}: Body / Airbag / Comfort Module Fault`);
+        if (firstChar === 'U') return cleanDtcDescription(`${normalized}: Network / CAN Bus Communication Fault`);
+        return cleanDtcDescription(`${normalized}: Diagnostic Trouble Code (Consult Service Manual)`);
+    }
 }
 
 export { prefetchDtcChunks, prefetchDtcChunksForCodes };
