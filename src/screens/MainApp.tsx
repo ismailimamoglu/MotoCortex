@@ -922,7 +922,6 @@ export default function MainApp() {
  if (status !== 'connected') return;
  if (activeHubView !== 'sensors') {
  stopPolling();
- OBDCommandQueue.clear(new Error('NAVIGATED_AWAY_FROM_SENSORS'));
  } else {
  startPolling();
  }

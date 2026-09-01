@@ -182,35 +182,18 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
         // Run the command
         const res = await (engine as any).executeCommand('ATCFC0');
         expect(res.trim()).toBe('?');
-
-        // Check if capability score is downgraded to 30 and clone flag is set
-        const store = useBluetoothStore.getState();
-        expect(store.isCloneDevice).toBe(true);
-        expect(store.adapterCapabilityScore).toBe(30);
-
         writeSpy.mockRestore();
     });
 
-    test('6. ADAPTER_STALL Kurtarma Mekanizması (Arka arkaya 3 kez ? veya timeout alınırsa kuyruk temizlenmeli ve ATWS basılmalı)', async () => {
-        const writeSpy = jest.spyOn(require('../BluetoothService').default, 'write').mockImplementation(() => Promise.resolve(true));
-        
-        // Trigger 2 failures first
-        (engine as any).finishCommand(null, '?');
-        (engine as any).finishCommand(new Error('Timeout'));
-        expect((engine as any).stallCounter).toBe(2);
-
-        // Third failure triggers recovery
+    test('6. Sıfır Kilitlenme Toleransı (? veya bilinmeyen komut yanıtında kuyruk kilitlenmemeli)', async () => {
         const clearSpy = jest.spyOn(engine, 'clear');
+        
+        // Komut '?' gelse dahi clear() çağrılmamalı, döngü devam etmeli
+        (engine as any).finishCommand(null, '?');
+        (engine as any).finishCommand(null, '?');
         (engine as any).finishCommand(null, '?');
 
-        expect(clearSpy).toHaveBeenCalled();
-        expect((engine as any).stallCounter).toBe(0); // Reset after recovery
-        
-        // Wait briefly for recovery command write to happen
-        await new Promise(resolve => setTimeout(resolve, 150));
-        expect(writeSpy).toHaveBeenCalledWith('ATWS\r');
-
-        writeSpy.mockRestore();
+        expect(clearSpy).not.toHaveBeenCalled();
         clearSpy.mockRestore();
     });
 
@@ -320,7 +303,6 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
             await flushMicrotasks();
             const res1 = await p1;
             expect(res1).toBe('?');
-            expect((engine as any).stallCounter).toBe(1);
 
             const p2 = (engine as any).executeCommand('01 0C');
             await flushMicrotasks();
@@ -328,22 +310,9 @@ describe('OBD2ProtocolEngine Sandbox Security Gate Tests', () => {
             await flushMicrotasks();
             const res2 = await p2;
             expect(res2).toBe('?');
-            expect((engine as any).stallCounter).toBe(2);
 
-            // 3rd failure triggers ADAPTER_STALL and rejects
-            const p3 = (engine as any).executeCommand('01 0C');
-            await flushMicrotasks();
-            jest.advanceTimersByTime(0);
-            await flushMicrotasks();
-            await expect(p3).rejects.toThrow('ADAPTER_STALL');
-
-            expect(clearSpy).toHaveBeenCalled();
-            expect((engine as any).stallCounter).toBe(0);
-
-            // The recovery command ATWS is sent after 100ms cooldown:
-            jest.advanceTimersByTime(100);
-            await flushMicrotasks();
-            expect(writeSpy).toHaveBeenCalledWith('ATWS\r');
+            // Sıfır kilitlenme garantisi: clear çağrılmamalı
+            expect(clearSpy).not.toHaveBeenCalled();
         } finally {
             rateLimitSpy.mockRestore();
             writeSpy.mockRestore();

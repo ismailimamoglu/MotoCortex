@@ -765,84 +765,12 @@ export class OBD2ProtocolEngine {
  if (this.commandTimeoutTimer) clearTimeout(this.commandTimeoutTimer); 
  if (this.silenceTimeout) clearTimeout(this.silenceTimeout);
 
- // ResponseInterceptor katmanı
- const cleanCmd = (this.activeCommand || '').replace(/\s+/g, '').toUpperCase();
- const trimmedResult = (result || '').trim();
-
- if (error) {
- this.stallCounter++;
- } else if (trimmedResult === '?') {
- this.stallCounter++;
-
- // ── ATSP6 / ATSP7 CAN clone block → trigger K-Line fallback ───────
- if (cleanCmd === 'ATSP6' || cleanCmd === 'ATSP7') {
- useBluetoothStore.getState().addLog(
- `[ResponseInterceptor] CLONE_BLOCK: Protocol ${cleanCmd} returned '?'. Non-CAN clone detected. Dispatching K-Line fallback.`
- );
- if (this.kLineFallbackCallback) {
- // Dispatch on next macro-task to avoid re-entrancy inside finishCommand
- setTimeout(() => this.kLineFallbackCallback!(), 0);
- }
- }
-
- // ── Advanced command clone detection (ATCFC0 / CFC0 / CFC1) ──────
- if (cleanCmd.includes('CFC0') || cleanCmd.includes('CFC1') || cleanCmd.includes('FC')) {
- useBluetoothStore.getState().addLog(
- `[ResponseInterceptor] Advanced command ${cleanCmd} failed with '?'. Lowering capability score and flagging clone device.`
- );
- useBluetoothStore.getState().setSensorData({
- adapterCapabilityScore: 30,
- isCloneDevice: true
- });
- }
- } else {
- // ── Garbage / anlamsız hex tespiti ───────────────────────────────
- const isTest = process.env.NODE_ENV === 'test';
- const isAtCmd = cleanCmd.startsWith('AT');
- const SAFE_RESPONSE_RE = /^[0-9A-Fa-f\s>?:.]+$|^(?:OK|SEARCHING|UNABLE TO CONNECT|ERROR|STOPPED|BUS INIT|BUS BUSY|NO DATA|BUFFER FULL|FB ERROR|RX ERROR|ELM327.*|OBDII.*|Interpreter.*|ISO.*|SAE.*|CAN.*|KWP.*|AUTO.*|\d+\.\d+V.*)$/i;
- const isStartupBanner = /ELM327|OBDII|RS232|Interpreter|^\s*[\uFFFD\s]*\s*$/i.test(trimmedResult);
- const isGarbage = !isTest && !isAtCmd && trimmedResult.length > 0 && !isStartupBanner && !SAFE_RESPONSE_RE.test(trimmedResult);
- if (isGarbage) {
- this.stallCounter++;
- useBluetoothStore.getState().addLog(`[ResponseInterceptor] Garbage response detected: "${trimmedResult}"`);
- } else {
- // Geçerli yanıt → stallCounter & stallSkipCount sıfırla
- this.stallCounter = 0;
- this.stallSkipCount = 0;
- }
- }
-
- // ── ADAPTER_STALL tespiti & warm-start kurtarma ───────────────────
- // Only trigger ATWS recovery during active telemetry polling (or in test environment).
- // During initial handshake and protocol negotiation, stall recovery is suppressed to avoid interrupting slow ECU responses.
- if (this.stallCounter >= 3 && (this.isPollingActive || process.env.NODE_ENV === 'test')) {
- useBluetoothStore.getState().addLog(`[ResponseInterceptor] ADAPTER_STALL detected after 3 consecutive failures. Reinitiating recovery.`);
- this.stallCounter = 0; // Reset counter to prevent recovery loop
-
- // Clear execution queue
- this.clear(new Error('ADAPTER_STALL'));
-
- // Send recovery reset command after 100ms delay, enforcing force-clear if skipped multiple times (livelock breaker)
- preciseSleep(100).then(() => {
- if (this.isQueueBusy() && this.stallSkipCount < 2) {
- this.stallSkipCount++;
- return;
- }
- this.stallSkipCount = 0;
- if (this.isQueueBusy()) {
- useBluetoothStore.getState().addLog(`[ResponseInterceptor] LIVELOCK_DETECTED: Force clearing busy queue for ATWS recovery.`);
- this.clear(new Error('LIVELOCK_RECOVERY_FORCE_CLEAR'));
- }
- BluetoothService.write('ATWS\r').catch(() => {}).finally(() => { this.stallSkipCount = 0; });
- });
- }
-
  const resolver = this.activeResolver; 
  const rejecter = this.activeRejecter; 
  this.activeResolver = null; this.activeRejecter = null; 
  this.isProcessingFlow = false;
 
- // Replace micro-task scheduling with macro-task boundaries (setImmediate or setTimeout polyfill)
+ // Macro-task boundaries
  const macroYield = (cb: () => void) => {
  if (process.env.NODE_ENV === 'test') {
  cb();

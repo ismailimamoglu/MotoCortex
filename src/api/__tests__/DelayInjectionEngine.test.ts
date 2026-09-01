@@ -56,23 +56,18 @@ describe('DelayInjectionEngine & Livelock Recovery Tests', () => {
         useBluetoothStore.setState({ protocolCacheByDevice: {} });
     });
 
-    it('should break livelocks via stallSkipCount force-clear when queue remains busy during recovery', async () => {
-        const writeSpy = jest.spyOn(BluetoothService, 'write').mockImplementation(() => Promise.resolve());
+    it('should maintain queue integrity without forcing destructive clears on individual command errors', async () => {
         const clearSpy = jest.spyOn(engine, 'clear');
 
-        // Simulate 3 consecutive command timeouts/errors to trigger ADAPTER_STALL
+        // Simulate 3 consecutive command timeouts/errors
         (engine as any).finishCommand(new Error('TIMEOUT_1'));
         (engine as any).finishCommand(new Error('TIMEOUT_2'));
         (engine as any).finishCommand(new Error('TIMEOUT_3'));
 
-        // Wait for 150ms macro-task boundary for preciseSleep(100) recovery execution
-        await new Promise((r) => setTimeout(r, 150));
+        await new Promise((r) => setTimeout(r, 50));
 
-        // Verify clear was triggered and ATWS recovery attempted
-        expect(clearSpy).toHaveBeenCalledWith(expect.any(Error));
-        expect(writeSpy).toHaveBeenCalledWith('ATWS\r');
-
-        writeSpy.mockRestore();
+        // Destructive clear must NOT be called
+        expect(clearSpy).not.toHaveBeenCalled();
         clearSpy.mockRestore();
     });
 
