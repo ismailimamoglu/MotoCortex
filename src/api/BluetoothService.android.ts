@@ -714,7 +714,7 @@ class BluetoothServiceAndroid implements IBluetoothService {
         if (this.drainTimeout) clearTimeout(this.drainTimeout);
         this.drainTimeout = setTimeout(() => {
             this.isDraining = false;
-        }, 100);
+        }, 20); // 20ms micro-drain ensures valid incoming sensor frames are never dropped
     }
 
     private startListening() {

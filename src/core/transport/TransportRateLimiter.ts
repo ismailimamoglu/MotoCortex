@@ -40,7 +40,7 @@ export class TransportRateLimiter {
         this.timer = setInterval(() => {
             this.refill();
             this.processQueue();
-        }, 50); // Refill every 50ms for high precision
+        }, 50); // Refill every 50ms for precise timing
     }
 
     private static refill(): void {
@@ -76,7 +76,7 @@ export class TransportRateLimiter {
     }
 
     /**
-     * Cleans up timer and queues.
+     * Cleans up timer and empties queues.
      */
     public static cleanup(): void {
         if (this.timer) {

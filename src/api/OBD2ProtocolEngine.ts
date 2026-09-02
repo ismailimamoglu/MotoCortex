@@ -356,8 +356,8 @@ export class OBD2ProtocolEngine {
  cleanCmd === 'ATSI' ||
  cleanCmd === '0100';
 
- if (isHandshakeInitCmd && actualTimeoutMs < 3500) {
- actualTimeoutMs = 3500;
+ if (isHandshakeInitCmd && actualTimeoutMs < 4500) {
+ actualTimeoutMs = 4500;
  }
 
  this.commandTimeoutTimer = setTimeout(async () => { 
