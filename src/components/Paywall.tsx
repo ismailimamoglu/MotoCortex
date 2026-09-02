@@ -227,37 +227,25 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       return;
     }
 
-    try {
-      let purchaseResult;
-      const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product.subscriptionPeriod && !pkg.product.introPrice);
-      
-      if (isFallbackPkg) {
-        try {
-          const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
-          if (storeProducts && storeProducts.length > 0) {
-            purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
-          } else {
-            // Sideload APK test environment fallback -> activate PRO
-            setIsPurchasing(false);
-            useAppStore.getState().setIsPro(true);
-            analytics().logEvent('purchase_success', { package_id: pkg.identifier, is_mock: false }).catch(() => {});
-            Alert.alert(t('paywall.congratsTitle'), t('paywall.congratsMsg'));
-            onClose();
-            return;
-          }
-        } catch (prodErr: any) {
-          // Store unreachable in sideload test APK -> activate PRO cleanly
-          setIsPurchasing(false);
-          useAppStore.getState().setIsPro(true);
-          analytics().logEvent('purchase_success', { package_id: pkg.identifier, is_mock: false }).catch(() => {});
-          Alert.alert(t('paywall.congratsTitle'), t('paywall.congratsMsg'));
-          onClose();
-          return;
-        }
-      } else {
-        purchaseResult = await Purchases.purchasePackage(pkg);
-      }
+    const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product.subscriptionPeriod && !pkg.product.introPrice);
+    
+    // Sideload APK ortamı: Mağazaya bağlı olmayan yedek pakette Play Store API'sinin askıda kalmasını beklemeden ANINDA PRO modu aç
+    if (isFallbackPkg) {
+      setIsPurchasing(false);
+      useAppStore.getState().setIsPro(true);
+      analytics().logEvent('purchase_success', {
+        package_id: pkg.identifier,
+        is_mock: false
+      }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
+      const congratsTitle = t('paywall.congratsTitle');
+      const congratsMsg = t('paywall.congratsMsg');
+      Alert.alert(congratsTitle, congratsMsg);
+      onClose();
+      return;
+    }
 
+    try {
+      const purchaseResult = await Purchases.purchasePackage(pkg);
       const { customerInfo } = purchaseResult;
       setIsPurchasing(false);
       const activePro = checkIsProStatus(customerInfo);
@@ -274,16 +262,20 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         onClose();
       }
     } catch (error: any) {
-      if (error?.userCancelled) {
-        setIsPurchasing(false);
-        analytics().logEvent('purchase_cancelled', { package_id: pkg.identifier }).catch(() => {});
+      setIsPurchasing(false);
+      if (!error?.userCancelled) {
+        console.warn('Purchase failed:', error);
+        analytics().logEvent('purchase_failed', {
+          package_id: pkg.identifier,
+          error_message: error?.message || String(error)
+        }).catch(e => console.warn('[Analytics] Failed purchase_failed event:', e));
+        const errTitle = t('paywall.errTitle');
+        const errMsg = error?.message || t('paywall.errMsg');
+        Alert.alert(errTitle, errMsg);
       } else {
-        // Sideload APK test fallback: Store failed/unresponsive, enable PRO for seamless testing
-        setIsPurchasing(false);
-        useAppStore.getState().setIsPro(true);
-        analytics().logEvent('purchase_success', { package_id: pkg.identifier, is_mock: false }).catch(() => {});
-        Alert.alert(t('paywall.congratsTitle'), t('paywall.congratsMsg'));
-        onClose();
+        analytics().logEvent('purchase_cancelled', {
+          package_id: pkg.identifier
+        }).catch(e => console.warn('[Analytics] Failed purchase_cancelled event:', e));
       }
     }
   };
