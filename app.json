@@ -3,7 +3,7 @@
     "name": "Cortex OBD2 Diagnostic Scanner",
     "displayName": "Cortex OBD2 Diagnostic Scanner",
     "slug": "MotoCortex-mobile",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -16,15 +16,15 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ismail.motocortexv2",
-      "buildNumber": "68",
+      "buildNumber": "69",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "UIBackgroundModes": [
           "bluetooth-central"
         ],
-        "NSBluetoothAlwaysUsageDescription": "Cortex OBD2 Diagnostic Scanner uses Bluetooth to maintain a constant diagnostic link with your vehicle's ECU via BLE adapters, enabling live performance monitoring and real-time alerts even when the app is in the background or the screen is off.",
-        "NSBluetoothPeripheralUsageDescription": "Cortex OBD2 Diagnostic Scanner requires access to discover and connect to your vehicle's ELM327/OBD2 diagnostic adapter for engine data streaming.",
+        "NSBluetoothAlwaysUsageDescription": "MotoCortex connects via Bluetooth to your ELM327 / OBD-II vehicle diagnostic adapter to monitor real-time engine telemetry (RPM, coolant temperature, boost, fuel trims) and read diagnostic trouble codes (DTCs), ensuring continuous vehicle monitoring even while the screen is locked.",
+        "NSBluetoothPeripheralUsageDescription": "Bluetooth access is required to discover, pair, and communicate with your wireless OBD2 / ELM327 vehicle scanner.",
         "CFBundleDevelopmentRegion": "en",
         "CFBundleLocalizations": [
           "en",
@@ -54,7 +54,7 @@
           "th",
           "hi"
         ],
-        "NSLocationWhenInUseUsageDescription": "iOS requires Location access to perform Bluetooth Low Energy (BLE) device scanning. Cortex OBD2 Diagnostic Scanner does NOT track, store, or share your movement data."
+        "NSLocationWhenInUseUsageDescription": "Location access is required by iOS core Bluetooth services to scan for nearby wireless OBD2 diagnostic adapters. MotoCortex does NOT track, store, or share your GPS location."
       }
     },
     "android": {
@@ -63,7 +63,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "versionCode": 72,
+      "versionCode": 73,
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",

@@ -84,11 +84,11 @@
       <true/>
     </dict>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>MotoCortex uses Bluetooth to maintain a constant diagnostic link with your vehicle's ECU for live performance monitoring.</string>
+    <string>MotoCortex connects via Bluetooth to your ELM327 / OBD-II vehicle diagnostic adapter to monitor real-time engine telemetry (RPM, coolant temperature, boost, fuel trims) and read diagnostic trouble codes (DTCs), ensuring continuous vehicle monitoring even while the screen is locked.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>MotoCortex requires access to discover and connect to your vehicle's diagnostic adapter.</string>
+    <string>Bluetooth access is required to discover, pair, and communicate with your wireless OBD2 / ELM327 vehicle scanner.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>MotoCortex uses location services when active for GPS telemetry and speed sensor fusion.</string>
+    <string>Location access is required by iOS core Bluetooth services to scan for nearby wireless OBD2 diagnostic adapters. MotoCortex does NOT track, store, or share your GPS location.</string>
     <key>UIBackgroundModes</key>
     <array>
       <string>bluetooth-central</string>
