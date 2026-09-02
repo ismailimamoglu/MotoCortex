@@ -17,7 +17,11 @@ export type AppLanguage = 'en' | 'de' | 'es' | 'tr' | 'id' | 'it' | 'ar' | 'zh' 
  * the custom non-renewing Weekly subscription (motocortex_pro_weekly_nonrenew) 
  * with a strict manual 7-day expiration check.
  */
-export const checkIsProStatus = (customerInfo: CustomerInfo): boolean => {
+export const checkIsProStatus = (customerInfo?: CustomerInfo | null): boolean => {
+  if (!customerInfo || !customerInfo.entitlements) {
+    return false;
+  }
+
   // Developer Backdoor check to bypass RevenueCat sandbox timeouts during local testing (DEV ONLY)
   try {
     if (__DEV__ && useAppStore.getState().isBackdoorPro) {
@@ -35,7 +39,7 @@ export const checkIsProStatus = (customerInfo: CustomerInfo): boolean => {
   } catch (e) {}
 
   // Strict expiration date check to prevent caching/clock exploit or offline loophole
-  const entitlement = customerInfo.entitlements.all['pro_access'] || customerInfo.entitlements.all['pro'];
+  const entitlement = customerInfo.entitlements.all?.['pro_access'] || customerInfo.entitlements.all?.['pro'];
   if (entitlement && entitlement.expirationDate) {
     const expirationTime = new Date(entitlement.expirationDate).getTime();
     if (expirationTime < Date.now()) {
@@ -45,8 +49,8 @@ export const checkIsProStatus = (customerInfo: CustomerInfo): boolean => {
 
   // 1. Direct active entitlement check (standard Monthly / Yearly Auto-Renewable subscriptions)
   const hasActiveEntitlement = 
-    typeof customerInfo.entitlements.active['pro_access'] !== 'undefined' ||
-    typeof customerInfo.entitlements.active['pro'] !== 'undefined';
+    typeof customerInfo.entitlements.active?.['pro_access'] !== 'undefined' ||
+    typeof customerInfo.entitlements.active?.['pro'] !== 'undefined';
   if (hasActiveEntitlement) {
     return true;
   }
@@ -455,7 +459,7 @@ export const useAppStore = create<AppState>()(
       loadOfferings: async () => {
         try {
           const offerings = await Purchases.getOfferings();
-          if (offerings.current !== null && offerings.current.availablePackages.length > 0) {
+          if (offerings?.current?.availablePackages && offerings.current.availablePackages.length > 0) {
             set({ packages: offerings.current.availablePackages });
           }
         } catch (error) {

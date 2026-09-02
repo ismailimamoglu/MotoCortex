@@ -147,7 +147,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('OFFERINGS_TIMEOUT')), 2500));
       
       const offerings: any = await Promise.race([offeringsPromise, timeoutPromise]);
-      if (offerings && offerings.current !== null && offerings.current.availablePackages.length > 0) {
+      if (offerings?.current?.availablePackages && offerings.current.availablePackages.length > 0) {
         const currentOffering = offerings.current;
         const customWeekly = currentOffering.availablePackages.find(
           (pkg: any) => pkg.identifier === 'weekly_single'
