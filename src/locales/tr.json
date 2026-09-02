@@ -408,6 +408,8 @@
         "checklistPrompt": "Aracınızın motor beyni tarafından desteklenen canlı sensör parametreleri aşağıda listelenmiştir. İşaretli olmayan sensör verileri aracınız tarafından desteklenmemektedir.",
         "supportedBadge": "DESTEKLENİYOR",
         "unsupportedBadge": "DESTEKLENMİYOR",
+        "saeMatrixHeader": "SAE J1979 / ISO 15031 DİYAGNOSTİK MATRİSİ",
+        "canTopologyHeader": "ÇOKLU-ECU CAN TOPOLOJİ HARİTASI (ISO 15765-4)",
         "tabHardware": "DONANIM",
         "tabModes": "MODLAR",
         "tabTopology": "ECU AĞI",
@@ -2048,32 +2050,32 @@
                 "desc": "Park halindeyken USB belleğe yüksek kaliteli çevre kamera kaydı yapılmasını sağlar."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Xiaomi SU7 HyperOS Sürücü Profili Ekosistem Senkronizasyonu",
-                "desc": "Koltuk, ayna ve klima ayarlarını Xiaomi telefon Bluetooth bağlantısıyla otomatik senkronize eder."
+                "name": "Xiaomi SU7 HyperOS Sürücü Profili Senkronizasyonu",
+                "desc": "Xiaomi telefon Bluetooth bağlantısıyla koltuk, ayna ve klima ayarlarını otomatik senkronize eder."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Boost Modu 20 Saniyelik Aşırı Güç Kilidi",
-                "desc": "Tam gaz hızlanmada maksimum elektrik motoru overboost süresini uzatır."
+                "name": "Boost Modu 20 Saniye Ekstra Güç Kilidi Açma",
+                "desc": "Tam gaz hızlanmada elektrik motorunun maksimum aşırı güç süresini 20 saniyeye uzatır."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Drift Modu Arka Tekerlek Tork Dağılımı",
+                "name": "Drift Modu Arkadan İtiş Tork Dağılımı",
                 "desc": "Çekiş kontrolü devre dışıyken motor torkunun %100'ünü arka aksa aktarır."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "ISA Akıllı Hız Asistanı Aşırı Hız Uyarı Sesini Kapatma",
-                "desc": "Tespit edilen hız sınırı aşıldığında çalan sürekli sesli ikazı devre dışı bırakır."
+                "name": "ISA Akıllı Hız Asistanı Sesli Uyarı Kapatma",
+                "desc": "Algılanan hız limiti aşıldığında sürekli çalan sesli ikazı kapatır."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "DMS Sürücü Yorgunluk İzleme Kamerası Hassasiyeti",
-                "desc": "İç izleme kamerasından kaynaklanan yanlış pozitif dikkat dağılımı uyarılarını azaltır."
+                "name": "DMS Sürücü Yorgunluk Kamerası Hassasiyeti",
+                "desc": "İç mekan izleme kamerasının gereksiz dikkat dağınıklığı uyarılarını azaltır."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Retrofit Ön/Arka Park Sensörü Kodlaması",
-                "desc": "Sonradan takılan park sensörü modülünü Canbus Gateway montaj listesine kaydeder."
+                "name": "Sonradan Eklenen Ön/Arka Park Sensörü Kodlaması",
+                "desc": "Yeni takılan park sensörü beynini Gateway montaj listesine kaydeder."
             },
             "retrofit_360_camera_activation": {
-                "name": "Retrofit 360° Çevre Görüş Kamera Sistemi",
-                "desc": "Çevre görüş kamera kontrolcüsünü etkinleştirir ve multimedyaya kamera görünümünü ekler."
+                "name": "Sonradan Eklenen 360° Çevre Görüş Kamera Sistemi",
+                "desc": "Çevre görüş kamera beynini aktifleştirir ve multimedya ekranına kamera menüsünü ekler."
             },
             "retrofit_led_license_plate_light_coding": {
                 "name": "Retrofit LED Plaka ve Stop Lambası Arıza İptali",
@@ -2708,7 +2710,7 @@
                 "desc": "Gösterge panelindeki yol bilgisayarı ekranına anlık sayısal dijital hız göstergesini ekler."
             },
             "bmw_acoustic_lock_chirp": {
-                "name": "Acoustic Alarm Chirp on Lock / Unlock",
+                "name": "Acoustic Alarm Chirp on Lock / Kilit Açma",
                 "desc": "Adds acoustic confirmation chirp via alarm siren with volume setting in iDrive menu."
             },
             "bmw_auto_mirror_fold_comfort_close": {
@@ -3183,11 +3185,11 @@
         "klineHeaderNotice": "K-Line protokolünde CAN header taraması desteklenmez."
     },
     "dtcRisk": {
-        "safeTitle": "SÜRÜŞ İÇİN GÜVENLİ",
+        "safeTitle": "🟢 SÜRÜŞ İÇİN GÜVENLİ",
         "safeDesc": "Bu arıza sürüş emniyetini doğrudan tehdit etmez. Aracı servise götürene kadar düşük hızda sürebilirsiniz.",
-        "warningTitle": "DİKKAT: SERVİS KONTROLÜ GEREKLİ",
+        "warningTitle": "🟡 DİKKAT: SERVİS KONTROLÜ GEREKLİ",
         "warningDesc": "Performans kayıpları ve emisyon yüksekliği oluşabilir. En kısa sürede yetkili servise başvurun.",
-        "criticalTitle": "ACİL: SÜRÜŞÜ DURDURUN / SERVİSE BAŞVURUN",
+        "criticalTitle": "🔴 ACİL: SÜRÜŞÜ DURDURUN / SERVİSE BAŞVURUN",
         "criticalDesc": "Kritik mekanik veya elektriksel risk! Motor veya güvenlik sistemleri hasar görebilir. Aracı derhal emniyetli alana çekin."
     },
     "dtcDetail": {

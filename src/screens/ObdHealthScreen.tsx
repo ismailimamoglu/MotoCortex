@@ -368,7 +368,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
           <View style={styles.sectionContainer}>
             <View style={[styles.panelCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
               <Text style={[styles.panelHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-                SAE J1979 / ISO 15031 DIAGNOSTIC MATRIX
+                {t('health.saeMatrixHeader', 'SAE J1979 / ISO 15031 DIAGNOSTIC MATRIX')}
               </Text>
               {diagnosticModes.map((dm, idx) => (
                 <View key={idx} style={[styles.modeRow, { borderBottomColor: colors.border }]}>
@@ -432,7 +432,7 @@ export default function ObdHealthScreen({ onBack }: ObdHealthScreenProps) {
           <View style={styles.sectionContainer}>
             <View style={[styles.panelCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
               <Text style={[styles.panelHeader, { color: colors.textSec, fontSize: fs(11), fontFamily: colors.mono }]}>
-                MULTI-ECU CAN TOPOLOGY MAP (ISO 15765-4)
+                {t('health.canTopologyHeader', 'MULTI-ECU CAN TOPOLOGY MAP (ISO 15765-4)')}
               </Text>
               {ecuTopologyNodes.map((node, idx) => (
                 <View key={idx} style={[styles.nodeRow, { borderBottomColor: colors.border }]}>

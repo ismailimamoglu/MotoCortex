@@ -408,6 +408,8 @@
         "checklistPrompt": "The standard live sensor parameters supported by your vehicle's ECU are listed below. Sensors without a checkmark are not supported by your vehicle.",
         "supportedBadge": "SUPPORTED",
         "unsupportedBadge": "UNSUPPORTED",
+        "saeMatrixHeader": "SAE J1979 / ISO 15031 DIAGNOSTIC MATRIX",
+        "canTopologyHeader": "MULTI-ECU CAN TOPOLOGY MAP (ISO 15765-4)",
         "tabHardware": "HARDWARE",
         "tabModes": "MODES",
         "tabTopology": "ECU NETWORK",
@@ -3183,11 +3185,11 @@
         "klineHeaderNotice": "CAN header targeting is not supported on K-Line legacy protocols."
     },
     "dtcRisk": {
-        "safeTitle": "SAFE FOR DRIVING",
+        "safeTitle": "🟢 SAFE FOR DRIVING",
         "safeDesc": "This fault does not directly threaten driving safety. You may drive at moderate speeds until servicing.",
-        "warningTitle": "WARNING: SERVICE INSPECTION REQUIRED",
+        "warningTitle": "🟡 WARNING: SERVICE INSPECTION REQUIRED",
         "warningDesc": "Performance losses and higher emissions may occur. Please visit an authorized service center soon.",
-        "criticalTitle": "CRITICAL: STOP DRIVING / SEEK SERVICE",
+        "criticalTitle": "🔴 CRITICAL: STOP DRIVING / SEEK SERVICE",
         "criticalDesc": "Critical mechanical or electrical risk! Engine or safety systems may be damaged. Pull over safely immediately."
     },
     "dtcDetail": {

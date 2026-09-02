@@ -1031,7 +1031,9 @@
         "catMotorcycle": "Motorcycle",
         "catTruck": "Heavy-Duty Commercial & Truck",
         "catEv": "Electric & Hybrid Vehicles",
-        "runBenchmarkBtn": "Kør hardware-sundhed og hastighedstest (15 kommandoer)"
+        "runBenchmarkBtn": "Kør hardware-sundhed og hastighedstest (15 kommandoer)",
+        "saeMatrixHeader": "SAE J1979 / ISO 15031 DIAGNOSTIC MATRIX",
+        "canTopologyHeader": "MULTI-ECU CAN TOPOLOGY MAP (ISO 15765-4)"
     },
     "sensor": {
         "oilTemp": "Motorolietemperatur",
@@ -1701,32 +1703,32 @@
                 "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
-                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
+                "name": "Xiaomi SU7 HyperOS Sürücü Profili Senkronizasyonu",
+                "desc": "Xiaomi telefon Bluetooth bağlantısıyla koltuk, ayna ve klima ayarlarını otomatik senkronize eder."
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Boost Mode 20-Second Overboost Power Unlock",
-                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
+                "name": "Boost Modu 20 Saniye Ekstra Güç Kilidi Açma",
+                "desc": "Tam gaz hızlanmada elektrik motorunun maksimum aşırı güç süresini 20 saniyeye uzatır."
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Drift Mode RWD Torque Vectoring Allocation",
-                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
+                "name": "Drift Modu Arkadan İtiş Tork Dağılımı",
+                "desc": "Çekiş kontrolü devre dışıyken motor torkunun %100'ünü arka aksa aktarır."
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
-                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
+                "name": "ISA Akıllı Hız Asistanı Sesli Uyarı Kapatma",
+                "desc": "Algılanan hız limiti aşıldığında sürekli çalan sesli ikazı kapatır."
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
-                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
+                "name": "DMS Sürücü Yorgunluk Kamerası Hassasiyeti",
+                "desc": "İç mekan izleme kamerasının gereksiz dikkat dağınıklığı uyarılarını azaltır."
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Retrofit Front/Rear Parking Distance Control Coding",
-                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
+                "name": "Sonradan Eklenen Ön/Arka Park Sensörü Kodlaması",
+                "desc": "Yeni takılan park sensörü beynini Gateway montaj listesine kaydeder."
             },
             "retrofit_360_camera_activation": {
-                "name": "Retrofit 360° Area View Surround Camera System",
-                "desc": "Activates surround view camera controller and adds camera view to infotainment."
+                "name": "Sonradan Eklenen 360° Çevre Görüş Kamera Sistemi",
+                "desc": "Çevre görüş kamera beynini aktifleştirir ve multimedya ekranına kamera menüsünü ekler."
             },
             "retrofit_led_license_plate_light_coding": {
                 "name": "Retrofit LED License Plate & Tail Light Error Cancel",
@@ -3418,11 +3420,11 @@
         "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
-        "safeTitle": "SIKKERT AT KØRE",
+        "safeTitle": "🟢 SIKKERT AT KØRE",
         "safeDesc": "Denne fejl truer ikke køresikkerheden direkte. Du kan køre med moderat hastighed til værkstedet.",
-        "warningTitle": "ADVARSEL: VÆRKSTEDSINSPEKTION PÅKRÆVET",
+        "warningTitle": "🟡 ADVARSEL: VÆRKSTEDSINSPEKTION PÅKRÆVET",
         "warningDesc": "Effekttab og højere emissioner kan forekomme. Besøg et autoriseret værksted hurtigst muligt.",
-        "criticalTitle": "KRITISK: STOP KØRSEL / VÆRKSTED HASTER",
+        "criticalTitle": "🔴 KRITISK: STOP KØRSEL / VÆRKSTED HASTER",
         "criticalDesc": "Kritisk mekanisk eller elektrisk risiko! Motor eller sikkerhedssystemer kan beskadiges. Stop straks sikkert."
     },
     "dtcDetail": {

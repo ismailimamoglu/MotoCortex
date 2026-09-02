@@ -1031,7 +1031,9 @@
         "catMotorcycle": "Motorcycle",
         "catTruck": "Heavy-Duty Commercial & Truck",
         "catEv": "Electric & Hybrid Vehicles",
-        "runBenchmarkBtn": "ハードウェアの健全性と速度ベンチマークを実行 (15コマンド)"
+        "runBenchmarkBtn": "ハードウェアの健全性と速度ベンチマークを実行 (15コマンド)",
+        "saeMatrixHeader": "SAE J1979 / ISO 15031 DIAGNOSTIC MATRIX",
+        "canTopologyHeader": "MULTI-ECU CAN TOPOLOGY MAP (ISO 15765-4)"
     },
     "sensor": {
         "oilTemp": "エンジンオイル温度",
@@ -1701,32 +1703,32 @@
                 "desc": "Enables high-bitrate surround camera recording to USB drive when parked."
             },
             "xiaomi_su7_hyperos_driver_profile_sync": {
-                "name": "Xiaomi SU7 HyperOS Driver Profile Ecosystem Sync",
-                "desc": "Synchronizes seat, mirror, and climate presets automatically via Xiaomi phone Bluetooth."
+                "name": "Xiaomi SU7 HyperOS ドライバープロファイル同期",
+                "desc": "XiaomiスマートフォンのBluetooth経由でシート、ミラー、エアコン設定を自動同期します。"
             },
             "xiaomi_su7_boost_mode_throttle_curve": {
-                "name": "Boost Mode 20-Second Overboost Power Unlock",
-                "desc": "Extends maximum electric motor overboost duration during full throttle acceleration."
+                "name": "ブーストモード 20秒オーバーブースト解除",
+                "desc": "フルスロットル加速時の電気モーターの最大オーバーブースト持続時間を延長します。"
             },
             "xiaomi_su7_drift_mode_torque_vectoring": {
-                "name": "Drift Mode RWD Torque Vectoring Allocation",
-                "desc": "Allocates 100% motor torque to rear axle with traction control disengaged."
+                "name": "ドリフトモード RWDトルクベクタリング配分",
+                "desc": "トラクションコントロールを無効化し、モーターのトルクを100%後輪に配分します。"
             },
             "chery_isa_overspeed_warning_chime_off": {
-                "name": "ISA Intelligent Speed Assist Warning Chime Mute",
-                "desc": "Disables persistent acoustic chime when exceeding detected speed limit."
+                "name": "ISA インテリジェントスピードアシスト警告音消音",
+                "desc": "検出された制限速度を超過した際の連続警告音を無効化します。"
             },
             "chery_driver_monitoring_camera_sensitivity": {
-                "name": "DMS Driver Fatigue Monitoring Camera Sensitivity",
-                "desc": "Reduces false-positive distraction alerts from interior monitoring camera."
+                "name": "DMS ドライバー疲労検知カメラ感度調整",
+                "desc": "車内モニタリングカメラによる誤作動の注意散漫アラートを軽減します。"
             },
             "retrofit_parking_sensor_coding": {
-                "name": "Retrofit Front/Rear Parking Distance Control Coding",
-                "desc": "Registers aftermarket or OEM parking sensor module in Gateway installation list."
+                "name": "後付けフロント/リアパークセンサー コーディング",
+                "desc": "後付けされたパークセンサーモジュールをGateway設置リストに登録します。"
             },
             "retrofit_360_camera_activation": {
-                "name": "Retrofit 360° Area View Surround Camera System",
-                "desc": "Activates surround view camera controller and adds camera view to infotainment."
+                "name": "後付け360°全周囲サラウンドカメラシステム有効化",
+                "desc": "サラウンドカメラコントローラーを有効化し、インフォテインメントにカメラ画面を追加します。"
             },
             "retrofit_led_license_plate_light_coding": {
                 "name": "Retrofit LED License Plate & Tail Light Error Cancel",
@@ -3418,11 +3420,11 @@
         "safetyModerateWarning": "Suitable for short distance driving. Monitor engine load and fuel consumption."
     },
     "dtcRisk": {
-        "safeTitle": "走行可能",
+        "safeTitle": "🟢 走行可能",
         "safeDesc": "この故障は走行安全に直接影響しません。整備工場まで控えめな速度で走行可能です。",
-        "warningTitle": "警告：整備工場での点検が必要です",
+        "warningTitle": "🟡 警告：整備工場での点検が必要です",
         "warningDesc": "出力低下や排気ガスの増加が発生する場合があります。お早めに認定整備工場へご相談ください。",
-        "criticalTitle": "危険：直ちに停車し整備工場へ連絡",
+        "criticalTitle": "🔴 危険：直ちに停車し整備工場へ連絡",
         "criticalDesc": "重大な機械的・電気的故障の危険性があります！エンジンや安全装置の損傷を防ぐため直ちに安全な場所に停車してください。"
     },
     "dtcDetail": {
