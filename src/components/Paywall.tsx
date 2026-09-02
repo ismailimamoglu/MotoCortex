@@ -227,53 +227,51 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
       return;
     }
 
-    const activateProMode = () => {
-      setIsPurchasing(false);
-      useAppStore.getState().setIsPro(true);
-      analytics().logEvent('purchase_success', {
-        package_id: pkg.identifier,
-        is_mock: false
-      }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
-      const congratsTitle = t('paywall.congratsTitle');
-      const congratsMsg = t('paywall.congratsMsg');
-      Alert.alert(congratsTitle, congratsMsg);
-      onClose();
-    };
-
     try {
-      const executeStorePurchase = async () => {
-        const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product.subscriptionPeriod && !pkg.product.introPrice);
-        if (isFallbackPkg) {
-          const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
-          if (storeProducts && storeProducts.length > 0) {
-            return await Purchases.purchaseStoreProduct(storeProducts[0]);
-          }
-          throw new Error('NO_STORE_PRODUCTS');
+      let purchaseResult;
+      const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product.subscriptionPeriod && !pkg.product.introPrice);
+      
+      if (isFallbackPkg) {
+        const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
+        if (storeProducts && storeProducts.length > 0) {
+          purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
+        } else {
+          throw new Error(t('paywall.errMsg'));
         }
-        return await Purchases.purchasePackage(pkg);
-      };
+      } else {
+        purchaseResult = await Purchases.purchasePackage(pkg);
+      }
 
-      // 2.5-second Timeout guard: if store does not respond (sideload APK environment), activate PRO test mode immediately!
-      const storeTimeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('STORE_UNRESPONSIVE')), 2500)
-      );
-
-      const purchaseResult: any = await Promise.race([executeStorePurchase(), storeTimeout]);
       const { customerInfo } = purchaseResult;
       setIsPurchasing(false);
       const activePro = checkIsProStatus(customerInfo);
       useAppStore.getState().setIsPro(activePro);
 
       if (activePro) {
-        activateProMode();
+        analytics().logEvent('purchase_success', {
+          package_id: pkg.identifier,
+          is_mock: false
+        }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
+        const congratsTitle = t('paywall.congratsTitle');
+        const congratsMsg = t('paywall.congratsMsg');
+        Alert.alert(congratsTitle, congratsMsg);
+        onClose();
       }
     } catch (error: any) {
-      if (error?.userCancelled) {
-        setIsPurchasing(false);
-        analytics().logEvent('purchase_cancelled', { package_id: pkg.identifier }).catch(() => {});
+      setIsPurchasing(false);
+      if (!error?.userCancelled) {
+        console.warn('Purchase failed:', error);
+        analytics().logEvent('purchase_failed', {
+          package_id: pkg.identifier,
+          error_message: error?.message || String(error)
+        }).catch(e => console.warn('[Analytics] Failed purchase_failed event:', e));
+        const errTitle = t('paywall.errTitle');
+        const errMsg = error?.message || t('paywall.errMsg');
+        Alert.alert(errTitle, errMsg);
       } else {
-        console.warn('[Paywall] Store unresponsive or failed, activating sideload PRO test mode:', error);
-        activateProMode();
+        analytics().logEvent('purchase_cancelled', {
+          package_id: pkg.identifier
+        }).catch(e => console.warn('[Analytics] Failed purchase_cancelled event:', e));
       }
     }
   };

@@ -106,7 +106,7 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
           </Text>
           <Text style={[s.stateLabel, { color: colors.textTertiary }]}>{t('bridge.state')}: {hardwareState}</Text>
 
-          {showSkip && (
+          {Platform.OS !== 'ios' && showSkip && (
             <TouchableOpacity 
               style={[s.skipBtn, { borderColor: colors.cyan }]} 
               onPress={() => setBridgeStatus('ready')}
@@ -129,21 +129,21 @@ export const BluetoothBridgeInitializer: React.FC<Props> = ({ children }) => {
             <Text style={[s.errorMsg, { color: colors.textPri }]}>{errorDetails}</Text>
           </View>
           
-          {bridgeStatus === 'unauthorized' && (
+          <TouchableOpacity 
+            style={[s.settingsBtn, { backgroundColor: colors.cyan }]}
+            onPress={() => Linking.openSettings()}
+          >
+            <Text style={[s.settingsBtnText, { color: colors.card }]}>{t('bridge.goToSettings')}</Text>
+          </TouchableOpacity>
+
+          {Platform.OS !== 'ios' && (
             <TouchableOpacity 
-              style={[s.settingsBtn, { backgroundColor: colors.cyan }]}
-              onPress={() => Linking.openSettings()}
+              style={[s.bypassBtn, { borderColor: colors.textSec }]}
+              onPress={() => setBridgeStatus('ready')}
             >
-              <Text style={[s.settingsBtnText, { color: colors.card }]}>{t('bridge.goToSettings')}</Text>
+              <Text style={[s.bypassBtnText, { color: colors.textSec }]}>{t('bridge.ignoreEnterApp')}</Text>
             </TouchableOpacity>
           )}
-
-          <TouchableOpacity 
-            style={[s.bypassBtn, { borderColor: colors.textSec }]}
-            onPress={() => setBridgeStatus('ready')}
-          >
-            <Text style={[s.bypassBtnText, { color: colors.textSec }]}>{t('bridge.ignoreEnterApp')}</Text>
-          </TouchableOpacity>
 
           <Text style={[s.errorAdvice, { color: colors.textSec }]}>
             {Platform.OS === 'ios' 

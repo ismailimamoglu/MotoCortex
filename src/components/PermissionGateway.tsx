@@ -109,27 +109,32 @@ export default function PermissionGateway({ children, onComplete }: PermissionGa
  setHasOnboarded(true);
  if (onComplete) onComplete();
  } else {
- Alert.alert(
- t('common.warning'),
- t('permissions.deniedDesc'),
- [
- { 
- text: t('permissions.proceedAnyway'), 
- onPress: () => {
- setIsTelemetryOptedIn(true);
- setHasOnboarded(true);
- if (onComplete) onComplete();
- } 
- },
- { 
- text: t('permissions.openSettings'), 
- onPress: () => {
- Linking.openSettings();
- }
- },
- { text: t('common.cancel'), style: 'cancel' }
- ]
- );
+      const alertButtons: any[] = [];
+      if (Platform.OS !== 'ios') {
+        alertButtons.push({
+          text: t('permissions.proceedAnyway'),
+          onPress: () => {
+            setIsTelemetryOptedIn(true);
+            setHasOnboarded(true);
+            if (onComplete) onComplete();
+          }
+        });
+      }
+      alertButtons.push(
+        { 
+          text: t('permissions.openSettings'), 
+          onPress: () => {
+            Linking.openSettings();
+          } 
+        },
+        { text: t('common.cancel'), style: 'cancel' }
+      );
+
+      Alert.alert(
+        t('common.warning'),
+        t('permissions.deniedDesc'),
+        alertButtons
+      );
  }
  } catch (error) {
  console.warn('Permission request error:', error);
