@@ -661,19 +661,21 @@ class BluetoothServiceAndroid implements IBluetoothService {
 
     async write(data: string): Promise<void> {
         const cleanCmd = data.replace(/[\r\n]/g, '').trim();
-        if (cleanCmd.length > 0) {
-            const { assertHardwareGate } = require('../core/security/CommandClassificationRegistry');
-            const { useAppStore } = require('../store/useAppStore');
-            const { useBluetoothStore } = require('../store/useBluetoothStore');
-            const appState = useAppStore?.getState?.() ?? {};
-            const isPro = appState.isPro ?? false;
-            const isFreeTrialAllowed = appState.activeFreeTrialExecution ?? false;
-            const btState = useBluetoothStore?.getState?.() ?? {};
-            const isMoving = (btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0;
-            assertHardwareGate(cleanCmd, isPro, isMoving, undefined, isFreeTrialAllowed);
+        if (cleanCmd.length === 0) {
+            // Boş komut gönderilmesini engelle (ELM327 klon kilitlenmelerini önler)
+            return;
         }
+        const { assertHardwareGate } = require('../core/security/CommandClassificationRegistry');
+        const { useAppStore } = require('../store/useAppStore');
+        const { useBluetoothStore } = require('../store/useBluetoothStore');
+        const appState = useAppStore?.getState?.() ?? {};
+        const isPro = appState.isPro ?? false;
+        const isFreeTrialAllowed = appState.activeFreeTrialExecution ?? false;
+        const btState = useBluetoothStore?.getState?.() ?? {};
+        const isMoving = (btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0;
+        assertHardwareGate(cleanCmd, isPro, isMoving, undefined, isFreeTrialAllowed);
 
-        const command = data.endsWith('\r') ? data : data + '\r';
+        const command = cleanCmd + '\r';
         if (this.wifiSocket) {
             Logger.log('WIFI_WRITE', command);
             this.wifiSocket.write(command);

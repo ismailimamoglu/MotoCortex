@@ -114,7 +114,6 @@ export class OBD2ProtocolEngine {
 
  private static readonly BANNED_COMMANDS_CRITICAL: Set<string> = new Set([
  '1101', // ECU Hard Reset
- 'ATZ', // Adapter Hard Reset
  '33', // Adaptation routine control / write
  '1002', // Diagnostic Session Control (Temporary block)
  '300000' // Security Access Write
@@ -197,7 +196,7 @@ export class OBD2ProtocolEngine {
  }); 
  
  AppLifecycleCoordinator.onForeground(() => { 
- BluetoothService.write('\r').catch(() => {}); 
+ this.flushRxBuffer();
  }); 
  }
 
@@ -299,19 +298,19 @@ export class OBD2ProtocolEngine {
 
  const cleanCmd = command.replace(/\s+/g, '').toUpperCase();
 
- // Sandbox Security Gate: Block dangerous commands when vehicle is in motion during active polling
- if (this.isPollingActive && isMoving) {
- const cmdClass = classifyCommand(command, isMoving);
- const isBanned = OBD2ProtocolEngine.BANNED_COMMANDS_CRITICAL.has(cleanCmd);
- const isDangerousClass = 
- cmdClass === CommandClass.SESSION_CONTROL || 
- cmdClass === CommandClass.HARD_MUTATION || 
- cmdClass === CommandClass.DANGEROUS;
+    // Sandbox Security Gate: Block dangerous commands when vehicle is in motion during active polling
+    if (this.isPollingActive && isMoving) {
+      const cmdClass = classifyCommand(command, isMoving);
+      const isDangerousMotionCmd = cleanCmd === 'ATZ' || cleanCmd === 'ATWS' || cleanCmd === '1101' || cleanCmd === '33' || cleanCmd === '1002' || cleanCmd === '300000';
+      const isDangerousClass = 
+        cmdClass === CommandClass.SESSION_CONTROL || 
+        cmdClass === CommandClass.HARD_MUTATION || 
+        cmdClass === CommandClass.DANGEROUS;
 
- if (isBanned || isDangerousClass) {
- throw wrapError(new Error('BLOCK_COMMAND_VEHICLE_IN_MOTION'), command);
- }
- }
+      if (isDangerousMotionCmd || isDangerousClass) {
+        throw wrapError(new Error('BLOCK_COMMAND_VEHICLE_IN_MOTION'), command);
+      }
+    }
 
  // Enforce an asynchronous drain/flush and 500ms cooldown delay post AT Z/reset commands
  if (this.lastCommandWasReset) {
@@ -360,17 +359,9 @@ export class OBD2ProtocolEngine {
  actualTimeoutMs = 4500;
  }
 
- this.commandTimeoutTimer = setTimeout(async () => { 
- this.lineState = LineState.INTERRUPTING; 
- try { 
- await BluetoothService.write('\r'); 
- const avgRtt = SessionHealthMonitor.getAverageRtt(); 
- await this.waitForPromptOrSilence(Math.max(200, Math.round(avgRtt * 1.5))); 
- } catch { 
- } finally { 
+ this.commandTimeoutTimer = setTimeout(() => { 
  BluetoothService.clearBuffer(); 
  this.lineState = LineState.READY; 
- } 
  this.finishCommand(new Error(`Timeout: ${command}`)); 
  }, actualTimeoutMs);
 
@@ -872,9 +863,10 @@ export class OBD2ProtocolEngine {
  const wrappedErr = wrapError(error, this.activeCommand);
  rejecter(wrappedErr); 
  } catch {} 
+    this.flushRxBuffer(); 
+    this.clearListeners.forEach(cb => { try { cb(); } catch {} }); 
  }
  this.flushRxBuffer(); 
- try { Promise.resolve(BluetoothService.write('\r')).catch(() => {}); } catch {}
  this.clearListeners.forEach(cb => { try { cb(); } catch {} }); 
  }
 
