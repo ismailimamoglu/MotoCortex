@@ -44,7 +44,7 @@ export const DpfMonitorModal: React.FC<DpfMonitorModalProps> = ({
   const ashDisplay = ashMassGrams !== undefined && analysis ? `%${analysis.ashPercentage}` : '--';
   const egtDisplay = egtTempC !== undefined ? `${egtTempC}°C` : '--';
   const diffDisplay = differentialPressureHpa !== undefined ? `${differentialPressureHpa} hPa` : '--';
-  const statusTitle = analysis ? t(analysis.stateTitleKey) : t('common.noData', { defaultValue: '--' });
+  const statusTitle = analysis ? t(analysis.stateTitleKey) : t('dpf.notSupportedMsg', { defaultValue: 'DPF Sensörü Bulunamadı (Benzinli veya Desteksiz Araç)' });
   const statusColor = analysis ? analysis.statusColor : tc.textSec;
   const sootWidth = analysis && sootMassGrams !== undefined ? `${analysis.sootPercentage}%` : '0%';
 

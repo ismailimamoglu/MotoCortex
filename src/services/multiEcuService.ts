@@ -198,15 +198,44 @@ export class MultiEcuService {
 
       // 3. Query Mode 03 (Stored DTCs)
       const res03 = await OBDCommandQueue.add('03', timeoutMs, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      let dtcs = MultiEcuService.parseDtcPayload(res03 || '');
+      let rawAggregated = res03 || '';
+      let isResponding = !res03?.includes('?') && !res03?.toUpperCase().includes('UNABLE') && !res03?.toUpperCase().includes('BUS ERROR');
+
+      // If Mode 03 had NO DATA or no DTCs, query UDS Service 19 (ReadDtcInformation 19 02 09)
+      // Non-engine ECUs (ABS, SRS, BCM) often only respond to UDS 19 02 09
+      if (dtcs.length === 0) {
+        const res19 = await OBDCommandQueue.add('19 02 09', timeoutMs, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        if (res19 && !res19.includes('?') && !res19.toUpperCase().includes('UNABLE')) {
+          isResponding = true;
+          rawAggregated += ' ' + res19;
+          const udsDtcs = MultiEcuService.parseDtcPayload(res19);
+          if (udsDtcs.length > 0) {
+            dtcs = Array.from(new Set([...dtcs, ...udsDtcs]));
+          }
+        }
+      }
+
+      // Also query Mode 07 (Pending DTCs) if module responded
+      if (isResponding) {
+        const res07 = await OBDCommandQueue.add('07', timeoutMs, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        if (res07 && !res07.includes('?')) {
+          rawAggregated += ' ' + res07;
+          const pendingDtcs = MultiEcuService.parseDtcPayload(res07);
+          if (pendingDtcs.length > 0) {
+            dtcs = Array.from(new Set([...dtcs, ...pendingDtcs]));
+          }
+        }
+      }
+
       const latencyMs = Date.now() - startTime;
-      const clean = sanitizeObdStream(res03 || '');
 
       // 4. Restore default ECM header (7E0)
       await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
       await preciseSleep(40);
 
-      // Check if response is empty, NO DATA, or error
-      if (!clean || res03?.toUpperCase().includes('NO DATA') || res03?.includes('?') || res03?.toUpperCase().includes('UNABLE')) {
+      // Check if response is completely empty or unresponsive
+      if (!isResponding || (!rawAggregated.trim() && dtcs.length === 0)) {
         return {
           module,
           isResponding: false,
@@ -214,11 +243,9 @@ export class MultiEcuService {
           dtcCodes: [],
           status: 'NO_RESPONSE',
           latencyMs,
-          rawResponse: res03 || '',
+          rawResponse: rawAggregated || '',
         };
       }
-
-      const dtcs = MultiEcuService.parseDtcPayload(res03);
 
       return {
         module,
@@ -227,7 +254,7 @@ export class MultiEcuService {
         dtcCodes: dtcs,
         status: dtcs.length > 0 ? 'FAULT_DETECTED' : 'CLEAN',
         latencyMs,
-        rawResponse: res03,
+        rawResponse: rawAggregated,
       };
     } catch (e: any) {
       try {

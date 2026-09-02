@@ -2986,7 +2986,7 @@
         "unsupportedTitle": "Vehicle Not Supported",
         "unsupportedMsg": "This feature is not supported by your vehicle's ECU hardware or software version.",
         "layoutChart": "CHART",
-        "codingFailed": "Coding failed.",
+        "codingFailed": "Operation Failed",
         "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "Safety Check",
+        "stepConnectingEcu": "Module Communication",
+        "stepDiagnosticSession": "Diagnostic Session",
+        "stepReadingConfig": "Reading Current State",
+        "stepWritingConfig": "Writing Configuration",
+        "stepCompleted": "Verification Successful",
+        "processingStatus": "Processing",
+        "lowVoltageAlert": "Battery voltage insufficient. Coding stopped.",
+        "vehicleMovingAlert": "Coding cannot be performed while vehicle is moving.",
+        "securityAccessDenied": "Security Access Denied."
     },
     "ignition": {
         "title": "Ignition Status Warning",
@@ -3148,7 +3158,8 @@
         "recommendNormal": "Filter state is optimal. Continue normal driving.",
         "recommendMonitor": "City driving accumulation. Keep monitoring.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
-        "recommendServiceRegen": "Filter clogged! Service regeneration or cleaning required."
+        "recommendServiceRegen": "Filter clogged! Service regeneration or cleaning required.",
+        "notSupportedMsg": "DPF Sensor Not Found (Gasoline or Unsupported Vehicle)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN MULTI-ECU SCAN",

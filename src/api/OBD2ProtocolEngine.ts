@@ -371,14 +371,6 @@ export class OBD2ProtocolEngine {
  this.currentProtocol.toUpperCase().includes('KWP') || 
  this.currentProtocol.includes('4') || 
  this.currentProtocol.includes('5') || 
- this.currentProtocol.toUpperCase().includes('J1850') ||
- this.currentProtocol.includes('1') || 
- this.currentProtocol.includes('2');
- const dynamicDebounceMs = isSlowOrUnknown ? 600 : 150;
-
- this.silenceTimeout = setTimeout(() => { 
- if (this.elmParser.getRawResponse().length > 0) this.completeCommandFlow(); 
- }, dynamicDebounceMs);
 
  BluetoothService.clearBuffer(); 
  this.lastWireActivityTimestamp = Date.now(); 
@@ -471,18 +463,15 @@ export class OBD2ProtocolEngine {
 
  const isKLineProtocol = this.currentProtocol.includes('4') || this.currentProtocol.includes('5') || this.currentProtocol.toUpperCase().includes('KWP');
 
- if (isCanMultiFrame) { 
- decoded = ISOTPDecoder.decode(uniqueTokens); 
- if (FlowControlManager.shouldInjectManualFlowControl(uniqueTokens)) { 
- BluetoothService.write("30 00 00\r").catch(() => {}); 
- } 
- } else if (isKLineProtocol) { 
- decoded = KWPFrameDecoder.decode(uniqueTokens); 
- } else { 
- try { decoded = this.isoTpDecoder(uniqueTokens, this.activeCommand); } catch { decoded = uniqueTokens.join(' '); } 
- } 
- this.finishCommand(null, decoded); 
- }
+  if (isCanMultiFrame) { 
+  decoded = ISOTPDecoder.decode(uniqueTokens); 
+  } else if (isKLineProtocol) { 
+  decoded = KWPFrameDecoder.decode(uniqueTokens); 
+  } else { 
+  try { decoded = this.isoTpDecoder(uniqueTokens, this.activeCommand); } catch { decoded = uniqueTokens.join(' '); } 
+  } 
+  this.finishCommand(null, decoded); 
+  }
 
  private structuralDeduplicate(rawResponse: string): string[] { 
  const lines = rawResponse.split(/[\r\n]+/); 

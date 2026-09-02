@@ -2951,7 +2951,7 @@
         "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
         "demoFeaturesCount": "{{count}} demo features listed",
         "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
-        "codingFailed": "Coding failed.",
+        "codingFailed": "작업 실패",
         "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "안전 점검",
+        "stepConnectingEcu": "모듈 통신",
+        "stepDiagnosticSession": "진단 세션",
+        "stepReadingConfig": "현재 상태 읽는 중",
+        "stepWritingConfig": "구성 쓰는 중",
+        "stepCompleted": "검증 성공",
+        "processingStatus": "처리 중",
+        "lowVoltageAlert": "배터리 전압이 부족합니다. 코딩이 중단되었습니다.",
+        "vehicleMovingAlert": "차량이 움직이는 동안에는 코딩을 진행할 수 없습니다.",
+        "securityAccessDenied": "보안 액세스가 거부되었습니다."
     },
     "ignition": {
         "title": "점화 상태 경고",
@@ -3148,7 +3158,8 @@
         "recommendMonitor": "시내주행 누적. 계속 모니터링하세요.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "필터가 막혔어요! 서비스 재생성 또는 청소가 필요합니다.",
-        "regenRecommendation": "시내주행 누적. 계속 모니터링하세요."
+        "regenRecommendation": "시내주행 누적. 계속 모니터링하세요.",
+        "notSupportedMsg": "DPF 센서를 찾을 수 없습니다 (가솔린 또는 미지원 차량)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",

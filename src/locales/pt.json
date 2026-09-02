@@ -2951,7 +2951,7 @@
         "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
         "demoFeaturesCount": "{{count}} demo features listed",
         "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
-        "codingFailed": "Coding failed.",
+        "codingFailed": "Operação falhou",
         "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "Verificação de segurança",
+        "stepConnectingEcu": "Comunicação do módulo",
+        "stepDiagnosticSession": "Sessão de diagnóstico",
+        "stepReadingConfig": "Lendo estado atual",
+        "stepWritingConfig": "Gravando configuração",
+        "stepCompleted": "Verificação bem-sucedida",
+        "processingStatus": "Processando",
+        "lowVoltageAlert": "Tensão da bateria insuficiente. Codificação interrompida.",
+        "vehicleMovingAlert": "Não é possível codificar com o veículo em movimento.",
+        "securityAccessDenied": "Acesso de segurança negado."
     },
     "ignition": {
         "title": "Aviso de status de ignição",
@@ -3148,7 +3158,8 @@
         "recommendMonitor": "Acumulação de condução na cidade. Continue monitorando.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "Filtro entupido! Regeneração de serviço ou limpeza necessária.",
-        "regenRecommendation": "Acumulação de condução na cidade. Continue monitorando."
+        "regenRecommendation": "Acumulação de condução na cidade. Continue monitorando.",
+        "notSupportedMsg": "Sensor DPF não encontrado (Gasolina ou veículo não compatível)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",

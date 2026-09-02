@@ -2951,7 +2951,7 @@
         "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
         "demoFeaturesCount": "{{count}} demo features listed",
         "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
-        "codingFailed": "Coding failed.",
+        "codingFailed": "Handlingen mislykkedes",
         "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "Sikkerhedskontrol",
+        "stepConnectingEcu": "Modulkommunikation",
+        "stepDiagnosticSession": "Diagnosesession",
+        "stepReadingConfig": "Læser aktuel tilstand",
+        "stepWritingConfig": "Skriver konfiguration",
+        "stepCompleted": "Verifikation lykkedes",
+        "processingStatus": "Behandler",
+        "lowVoltageAlert": "Utilstrækkelig batterispænding. Kodning stoppet.",
+        "vehicleMovingAlert": "Kodning kan ikke udføres, mens køretøjet bevæger sig.",
+        "securityAccessDenied": "Sikkerhedsadgang nægtet."
     },
     "ignition": {
         "title": "Advarsel om tændingsstatus",
@@ -3148,7 +3158,8 @@
         "recommendMonitor": "Bykørsel akkumulering. Bliv ved med at overvåge.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "Filter tilstoppet! Service regenerering eller rengøring påkrævet.",
-        "regenRecommendation": "Bykørsel akkumulering. Bliv ved med at overvåge."
+        "regenRecommendation": "Bykørsel akkumulering. Bliv ved med at overvåge.",
+        "notSupportedMsg": "DPF-sensor ikke fundet (Benzin eller ikke-understøttet køretøj)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",

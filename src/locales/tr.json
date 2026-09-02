@@ -2986,7 +2986,7 @@
         "unsupportedTitle": "Araç Desteklemiyor",
         "unsupportedMsg": "Bu özellik aracınızın ECU donanımı veya yazılım versiyonu tarafından desteklenmemektedir.",
         "layoutChart": "GRAFİK",
-        "codingFailed": "Kodlama başarısız oldu.",
+        "codingFailed": "İşlem Başarısız Oldu",
         "engineRunningMsg": "ECU kodlaması, alternatör voltaj dalgalanmalarını önlemek için Kontak AÇIK Motor KAPALI gerektirir.",
         "engineRunningTitle": "Motor Çalışıyor",
         "lowVoltageMsg": "Akü voltajı ECU yazma işlemleri için güvenli eşiğin altında. Devam etmeden önce aküyü şarj edin.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "PRO'YA GEÇ",
         "toastActivated": "Aktifleştirildi",
         "toastDeactivated": "Devre Dışı Bırakıldı",
-        "optionsBadge": "{{count}} SEÇENEK"
+        "optionsBadge": "{{count}} SEÇENEK",
+        "stepVerifying": "Güvenlik Kontrolü",
+        "stepConnectingEcu": "Modül İletişimi",
+        "stepDiagnosticSession": "Tanılama Oturumu",
+        "stepReadingConfig": "Mevcut Durum Okunuyor",
+        "stepWritingConfig": "Yapılandırma Yazılıyor",
+        "stepCompleted": "Doğrulama Başarılı",
+        "processingStatus": "İşlem Sürüyor",
+        "lowVoltageAlert": "Akü voltajı yetersiz. Kodlama durduruldu.",
+        "vehicleMovingAlert": "Araç hareket halindeyken kodlama yapılamaz.",
+        "securityAccessDenied": "Güvenlik kilidi açılamadı."
     },
     "ignition": {
         "title": "Kontak Durum Uyarısı",
@@ -3148,7 +3158,8 @@
         "recommendNormal": "Filtre durumu mükemmel. Normal sürüşe devam edin.",
         "recommendMonitor": "Şehir içi kullanım birikimi. Takip edin.",
         "recommendHighwayDrive": "Otoyola çıkarak 2000-2500 devirde 20 dk sürüş yapın.",
-        "recommendServiceRegen": "Filtre tıkalı! Servis rejenerasyonu veya temizlik gereklidir."
+        "recommendServiceRegen": "Filtre tıkalı! Servis rejenerasyonu veya temizlik gereklidir.",
+        "notSupportedMsg": "DPF Sensörü Bulunamadı (Benzinli veya Desteksiz Araç)"
     },
     "multiEcu": {
         "title": "TÜM SİSTEMLERİ TARA MULTI-ECU SCAN",

@@ -213,13 +213,18 @@ export const useBluetooth = () => {
             let ecuConnected = false;  
             let rpmRes = '';
 
+            // 0. Ön-temizlik: Klon adaptörlerin UART hattında kalan yarım komutları sıfırlama
+            await OBDCommandQueue.add("\r", 600).catch(() => '');
+            OBDCommandQueue.flushRxBuffer();
+            await preciseSleep(60);
+
             // 1. Temel Reset ve Gürültü Kapatma (Prompt Tabanlı + Adaptif Drain)
-            const atzRes = await OBDCommandQueue.add("ATZ", 2000).catch(() => '');
+            const atzRes = await OBDCommandQueue.add("ATZ", 2500).catch(() => '');
             
-            // Klon adaptör kontrolü ve adaptif drain süresi
+            // Klon adaptör kontrolü ve adaptif drain süresi (PIC18F25K80 için 450ms)
             const cleanAtz = (atzRes || '').toUpperCase();
             const isEarlyClone = cleanAtz.includes('V1.5') || cleanAtz.includes('1.5') || cleanAtz.length < 5;
-            const drainTime = isEarlyClone ? 400 : 250;
+            const drainTime = isEarlyClone ? 450 : 250;
             await preciseSleep(drainTime);
 
             // Buffer temizleme garantisi

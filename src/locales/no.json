@@ -2951,7 +2951,7 @@
         "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
         "demoFeaturesCount": "{{count}} demo features listed",
         "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
-        "codingFailed": "Coding failed.",
+        "codingFailed": "Operasjonen mislyktes",
         "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "Sikkerhetskontroll",
+        "stepConnectingEcu": "Modulkommunikasjon",
+        "stepDiagnosticSession": "Diagnoseøkt",
+        "stepReadingConfig": "Leser gjeldende tilstand",
+        "stepWritingConfig": "Skriver konfigurasjon",
+        "stepCompleted": "Verifisering vellykket",
+        "processingStatus": "Behandler",
+        "lowVoltageAlert": "Utilstrekkelig batterispenning. Koding stoppet.",
+        "vehicleMovingAlert": "Koding kan ikke utføres mens kjøretøyet er i bevegelse.",
+        "securityAccessDenied": "Sikkerhetstilgang avslått."
     },
     "ignition": {
         "title": "Advarsel om tenningsstatus",
@@ -3148,7 +3158,8 @@
         "recommendMonitor": "Akkumulering av bykjøring. Fortsett å overvåke.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "Filteret er tilstoppet! Serviceregenerering eller rengjøring kreves.",
-        "regenRecommendation": "Akkumulering av bykjøring. Fortsett å overvåke."
+        "regenRecommendation": "Akkumulering av bykjøring. Fortsett å overvåke.",
+        "notSupportedMsg": "DPF-sensor ikke funnet (Bensin eller ustøttet kjøretøy)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",

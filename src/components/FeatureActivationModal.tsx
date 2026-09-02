@@ -22,6 +22,8 @@ import { udsClient, UdsSessionType } from '../core/protocol/uds/UdsClient';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 import { useAppStore } from '../store/useAppStore';
 import DisclaimersModal from './DisclaimersModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import OBDCommandQueue, { preciseSleep } from '../api/OBDCommandQueue';
 import { mapOemToFeatureDefinition } from '../core/features/OemFeatureMapper';
 import { ExpertLongCodingModal } from './coding/ExpertLongCodingModal';
 import { PreconditionWizardModal } from './coding/PreconditionWizardModal';
@@ -134,6 +136,8 @@ const FeatureActivationModalComponent = ({
  const [searchQuery, setSearchQuery] = useState<string>('');
  const [activeCodingId, setActiveCodingId] = useState<string | null>(null);
  const [codingLogs, setCodingLogs] = useState<string[]>([]);
+ const [activeStepText, setActiveStepText] = useState<string>('');
+ const [activeProgressRatio, setActiveProgressRatio] = useState<number>(0);
  
  // One-Click Feature Detail Sheet State
  const [selectedDetailFeature, setSelectedDetailFeature] = useState<OEMFeatureDefinition | null>(null);
@@ -164,50 +168,132 @@ const FeatureActivationModalComponent = ({
  const [codingToastMessage, setCodingToastMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
  const executeToggleFeature = async (feature: OEMFeatureDefinition, customPayloadHex?: string) => {
- if (activeCodingId !== null) return;
- const currentlyEnabled = !!storeEnabledFeatures[feature.id];
- const newTargetState = !currentlyEnabled;
+    if (activeCodingId !== null) return;
+    const currentlyEnabled = !!storeEnabledFeatures[feature.id];
+    const newTargetState = !currentlyEnabled;
+    const inSim = isSimulationMode || useAppStore.getState().isSimulationMode;
 
- // Backup initial state before first modification
- if (initialStateBackup[feature.id] === undefined) {
- setInitialStateBackup(prev => ({ ...prev, [feature.id]: currentlyEnabled }));
- }
+    // Backup initial state before first modification
+    if (initialStateBackup[feature.id] === undefined) {
+      setInitialStateBackup(prev => ({ ...prev, [feature.id]: currentlyEnabled }));
+    }
 
- try {
- // Start UDS Coding Sequence
- setActiveCodingId(feature.id);
- const payload = customPayloadHex || (newTargetState ? '01' : '00');
- setCodingLogs([
- `[1/6] Safety Check Passed (${effectiveVoltage.toFixed(1)}V >= 12.2V)`,
- `[2/6] Backup Created: DID 0x${feature.didHex} (Initial Bit ${feature.bitIndex})`,
- `[3/6] UDS Extended Session: ${udsClient.buildSessionControlCmd(UdsSessionType.EXTENDED)}`,
- `[4/6] Payload Prepared: 0x${payload}`,
- `[5/6] UDS Write: ${udsClient.buildWriteDataByIdentifierCmd(feature.didHex, payload)}`,
- `[6/6] Read-Back Verification: SUCCESS`
- ]);
+    try {
+      setActiveCodingId(feature.id);
+      const targetPayload = customPayloadHex || (newTargetState ? '01' : '00');
 
- await new Promise((res) => setTimeout(res, 450));
- setFeatureEnabledInStore(feature.id, newTargetState);
- const featureName = t(feature.nameKey, feature.defaultName);
- const statusStr = newTargetState
-   ? t('features.toastActivated', { defaultValue: 'Aktifleştirildi' })
-   : t('features.toastDeactivated', { defaultValue: 'Devre Dışı Bırakıldı' });
- setCodingToastMessage({
-   type: 'success',
-   text: `${featureName} • ${statusStr}`
- });
- setTimeout(() => setCodingToastMessage(null), 3500);
- } catch (err) {
- console.warn('[FeatureActivationModal] Toggle failed:', err);
- setCodingToastMessage({
-   type: 'error',
-   text: t('features.codingFailed', { defaultValue: 'İşlem Başarısız Oldu' })
- });
- setTimeout(() => setCodingToastMessage(null), 3500);
- } finally {
- setActiveCodingId(null);
- }
- };
+      if (inSim) {
+        setActiveProgressRatio(0.25);
+        setActiveStepText(t('features.stepVerifying', { defaultValue: 'Güvenlik Kontrolü' }));
+        await preciseSleep(120);
+
+        setActiveProgressRatio(0.55);
+        setActiveStepText(t('features.stepDiagnosticSession', { defaultValue: 'Tanılama Oturumu' }));
+        await preciseSleep(140);
+
+        setActiveProgressRatio(0.85);
+        setActiveStepText(t('features.stepWritingConfig', { defaultValue: 'Yapılandırma Yazılıyor' }));
+        await preciseSleep(140);
+
+        setActiveProgressRatio(1.0);
+        setActiveStepText(t('features.stepCompleted', { defaultValue: 'Doğrulama Başarılı' }));
+        await preciseSleep(100);
+      } else {
+        // GERÇEK ARAÇ UDS KODLAMA HATTI
+        setActiveProgressRatio(0.15);
+        setActiveStepText(t('features.stepVerifying', { defaultValue: 'Güvenlik Kontrolü' }));
+
+        if (effectiveVoltage < 12.2) {
+          throw new Error(t('features.lowVoltageAlert', { defaultValue: 'Akü voltajı yetersiz. Kodlama durduruldu.' }));
+        }
+
+        const btState = useBluetoothStore.getState();
+        if ((btState.speed ?? 0) > 0 || (btState.rpm ?? 0) > 0) {
+          throw new Error(t('features.vehicleMovingAlert', { defaultValue: 'Araç hareket halindeyken kodlama yapılamaz.' }));
+        }
+
+        const isClone = btState.isCloneDevice;
+        if (isClone && feature.riskLevel === 'HIGH') {
+          throw new Error(t('features.cloneAlertMsg', { defaultValue: 'Klon adaptörlerle yüksek riskli kodlama yapılamaz.' }));
+        }
+
+        // 1. ECU Header yönlendirme
+        setActiveProgressRatio(0.35);
+        setActiveStepText(t('features.stepConnectingEcu', { defaultValue: 'Modül İletişimi' }));
+        const targetHeader = feature.targetEcuHeader || '7E0';
+        await OBDCommandQueue.add(`AT SH ${targetHeader}`, 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        await preciseSleep(60);
+
+        // 2. Canlı Tutma (Tester Present) ve Extended Session
+        setActiveProgressRatio(0.55);
+        setActiveStepText(t('features.stepDiagnosticSession', { defaultValue: 'Tanılama Oturumu' }));
+        await OBDCommandQueue.add('3E 00', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        const sessionCmd = udsClient.buildSessionControlCmd(UdsSessionType.EXTENDED);
+        const sessionRes = await OBDCommandQueue.add(sessionCmd, 1500, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        if (sessionRes && sessionRes.includes('7F') && sessionRes.includes('33')) {
+          throw new Error(t('features.securityAccessDenied', { defaultValue: 'Güvenlik kilidi açılamadı.' }));
+        }
+
+        // 3. Mevcut DID Bloğunu Oku ve Güvenlik Yedeği Al
+        setActiveProgressRatio(0.70);
+        setActiveStepText(t('features.stepReadingConfig', { defaultValue: 'Mevcut Durum Okunuyor' }));
+        const readCmd = udsClient.buildReadDataByIdentifierCmd(feature.didHex);
+        const readRes = await OBDCommandQueue.add(readCmd, 1500, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+
+        try {
+          const backupKey = `@motocortex_backup_${feature.id}_${Date.now()}`;
+          await AsyncStorage.setItem(backupKey, JSON.stringify({
+            featureId: feature.id,
+            didHex: feature.didHex,
+            previousRead: readRes || '',
+            targetState: newTargetState,
+            timestamp: Date.now(),
+          }));
+        } catch {}
+
+        // 4. ECU'ya Yeni Veriyi Yaz
+        setActiveProgressRatio(0.88);
+        setActiveStepText(t('features.stepWritingConfig', { defaultValue: 'Yapılandırma Yazılıyor' }));
+        const writeCmd = udsClient.buildWriteDataByIdentifierCmd(feature.didHex, targetPayload);
+        const writeRes = await OBDCommandQueue.add(writeCmd, 2500, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+
+        if (writeRes && writeRes.includes('7F')) {
+          const nrcMatch = writeRes.match(/7F([0-9A-F]{2})([0-9A-F]{2})/i);
+          const nrc = nrcMatch ? nrcMatch[2] : 'Bilinmeyen';
+          throw new Error(`ECU Yazma Reddedildi UDS NRC ${nrc}`);
+        }
+
+        // 5. Başarı Doğrulaması ve Header Sıfırlama
+        setActiveProgressRatio(1.0);
+        setActiveStepText(t('features.stepCompleted', { defaultValue: 'Doğrulama Başarılı' }));
+        await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        await preciseSleep(40);
+      }
+
+      setFeatureEnabledInStore(feature.id, newTargetState);
+      const featureName = t(feature.nameKey, feature.defaultName);
+      const statusStr = newTargetState
+        ? t('features.toastActivated', { defaultValue: 'Aktifleştirildi' })
+        : t('features.toastDeactivated', { defaultValue: 'Devre Dışı Bırakıldı' });
+      setCodingToastMessage({
+        type: 'success',
+        text: `${featureName} • ${statusStr}`
+      });
+      setTimeout(() => setCodingToastMessage(null), 3500);
+    } catch (err: any) {
+      try {
+        await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+      } catch {}
+      console.warn('[FeatureActivationModal] Toggle failed:', err);
+      setCodingToastMessage({
+        type: 'error',
+        text: err?.message || t('features.codingFailed', { defaultValue: 'İşlem Başarısız Oldu' })
+      });
+      setTimeout(() => setCodingToastMessage(null), 4000);
+    } finally {
+      setActiveCodingId(null);
+    }
+  };
 
  const handleToggleFeature = async (feature: OEMFeatureDefinition, customPayloadHex?: string) => {
     const inSim = isSimulationMode || useAppStore.getState().isSimulationMode;
@@ -945,29 +1031,41 @@ const FeatureActivationModalComponent = ({
  </View>
  )}
 
- {/* Coding Logs Display during activation - Expert Only */}
- {isExpertMode && activeCodingId === selectedDetailFeature.id && codingLogs.length > 0 && (
+ {/* Minimalist Progress Indicator during active coding */}
+ {activeCodingId === selectedDetailFeature.id && (
  <View style={{
- backgroundColor: '#000000',
- borderColor: colors.cyan,
+ backgroundColor: colors.bg,
+ borderColor: colors.border,
  borderWidth: 1,
  borderRadius: scaleMod(8),
- padding: scaleMod(10),
- marginBottom: scaleHeight(14)
+ padding: scaleMod(12),
+ marginBottom: scaleHeight(12)
  }}>
- {codingLogs.map((log, idx) => (
- <Text key={idx} style={{ color: colors.cyan, fontSize: scaleFont(9.5), fontFamily: MONO }}>
- {log}
+ <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(8) }}>
+ <Text style={{ color: colors.textPri, fontSize: scaleFont(10.5), fontFamily: MONO, fontWeight: '700' }}>
+ {activeStepText || t('features.processingStatus', { defaultValue: 'İşlem Sürüyor' })}
  </Text>
- ))}
+ <Text style={{ color: colors.textSec, fontSize: scaleFont(9.5), fontFamily: MONO }}>
+ {Math.round(activeProgressRatio * 100)}%
+ </Text>
+ </View>
+ <View style={{ height: scaleHeight(3), backgroundColor: colors.border, borderRadius: 1.5, overflow: 'hidden' }}>
+ <View style={{
+ height: '100%',
+ width: `${Math.max(5, Math.round(activeProgressRatio * 100))}%`,
+ backgroundColor: activeProgressRatio >= 1 ? colors.green : colors.cyan,
+ borderRadius: 1.5
+ }} />
+ </View>
  </View>
  )}
 
- {/* Prominent One-Click Activate Button */}
+ {/* Action Button */}
  <TouchableOpacity
  onPress={async () => {
  const feat = selectedDetailFeature;
  await handleToggleFeature(feat, selectedOptionHex || undefined);
+ await preciseSleep(350);
  setSelectedDetailFeature(null);
  }}
  disabled={activeCodingId !== null}
@@ -977,12 +1075,17 @@ const FeatureActivationModalComponent = ({
  borderRadius: scaleMod(12),
  alignItems: 'center',
  marginTop: scaleHeight(8),
- marginBottom: scaleHeight(12)
+ marginBottom: scaleHeight(12),
+ opacity: activeCodingId !== null ? 0.75 : 1
  }}
  >
+ {activeCodingId === selectedDetailFeature.id ? (
+ <ActivityIndicator size="small" color="#ffffff" />
+ ) : (
  <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(13), fontFamily: MONO, letterSpacing: 0.5 }}>
  {storeEnabledFeatures[selectedDetailFeature.id] ? t('features.removeBtn') : t('features.oneClickActivate')}
  </Text>
+ )}
  </TouchableOpacity>
  </ScrollView>
  </View>

@@ -2951,7 +2951,7 @@
         "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
         "demoFeaturesCount": "{{count}} demo features listed",
         "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
-        "codingFailed": "Codage failed.",
+        "codingFailed": "Opération échouée",
         "engineRunningMsg": "ECU Codage requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "Batterie voltage is below safe threshold for ECU write operations. Charge the Batterie before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "Contrôle de sécurité",
+        "stepConnectingEcu": "Communication du module",
+        "stepDiagnosticSession": "Session de diagnostic",
+        "stepReadingConfig": "Lecture de l'état actuel",
+        "stepWritingConfig": "Écriture de la configuration",
+        "stepCompleted": "Vérification réussie",
+        "processingStatus": "Traitement en cours",
+        "lowVoltageAlert": "Tension de batterie insuffisante. Codage interrompu.",
+        "vehicleMovingAlert": "Le codage ne peut pas être effectué pendant que le véhicule roule.",
+        "securityAccessDenied": "Accès de sécurité refusé."
     },
     "ignition": {
         "title": "Avertissement d'état d'allumage",
@@ -3148,7 +3158,8 @@
         "recommendMonitor": "Accumulation de conduite en ville. Continuez à surveiller.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "Filtre bouché ! Service de régénération ou de nettoyage requis.",
-        "regenRecommendation": "Accumulation de conduite en ville. Continuez à surveiller."
+        "regenRecommendation": "Accumulation de conduite en ville. Continuez à surveiller.",
+        "notSupportedMsg": "Capteur DPF non trouvé (Essence ou véhicule non pris en charge)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",

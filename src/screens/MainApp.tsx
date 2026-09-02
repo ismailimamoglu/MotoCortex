@@ -5,7 +5,7 @@ import * as Sharing from 'expo-sharing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
 import { useBluetooth } from '../hooks/useBluetooth';
-import OBDCommandQueue from '../api/OBDCommandQueue';
+import OBDCommandQueue, { preciseSleep } from '../api/OBDCommandQueue';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { ADAPTER_COMMANDS } from '../api/commands';
 import { lookupDTC, prefetchDtcChunksForCodes } from '../data/dtcDictionary';
@@ -60,6 +60,8 @@ import DctResetModal from '../components/DctResetModal';
 import FeatureActivationModal from '../components/FeatureActivationModal';
 import ObdService from '../services/obdService';
 import SupportModal, { SupportCategory } from '../components/SupportModal';
+import DctAdaptationService from '../services/dctAdaptationService';
+import PollingOrchestrator from '../core/connection/PollingOrchestrator';
 
 
 const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
@@ -769,14 +771,44 @@ export default function MainApp() {
  initializeRevenueCat();
  }, []);
 
+  const isCodingAllowed = useBluetoothStore((s) => s.isCodingAllowed);
+  const storeVoltage = useBluetoothStore((s) => s.voltage);
+  const storeSpeed = useBluetoothStore((s) => s.speed);
+  const storeRpm = useBluetoothStore((s) => s.rpm);
+  const engineLoad = useBluetoothStore((s) => s.engineLoad);
+  const oilTemp = useBluetoothStore((s) => s.oilTemp);
+  const mafFlow = useBluetoothStore((s) => s.mafFlow);
+  const shortFuelTrim1 = useBluetoothStore((s) => s.shortFuelTrim1);
+  const longFuelTrim1 = useBluetoothStore((s) => s.longFuelTrim1);
+  const fuelRailPressure = useBluetoothStore((s) => s.fuelRailPressure);
+  const dpfPressure = useBluetoothStore((s) => s.dpfPressure);
+  const egtTemp = useBluetoothStore((s) => s.egtTemp);
+  const actualTorque = useBluetoothStore((s) => s.actualTorque);
+  const driverTorque = useBluetoothStore((s) => s.driverTorque);
+  const transTemp = useBluetoothStore((s) => s.transTemp);
+
+  // Dynamic Priority Telemetry for Active Diagnostics Tools (HP, Fuel Trim, DPF, DCT)
+  useEffect(() => {
+    if (ecuStatus !== 'connected') return;
+    if (activeHubView === 'hp_gauge') {
+      PollingOrchestrator.stopPolling();
+      PollingOrchestrator.startPolling(['0C', '10', '04', '61', '62', '0D']);
+    } else if (activeHubView === 'fuel_trim') {
+      PollingOrchestrator.stopPolling();
+      PollingOrchestrator.startPolling(['06', '07', '22', '23', '0C', '04']);
+    } else if (activeHubView === 'dpf') {
+      PollingOrchestrator.stopPolling();
+      PollingOrchestrator.startPolling(['7A', '78', '0C', '05']);
+    } else if (activeHubView === 'dct') {
+      PollingOrchestrator.stopPolling();
+      PollingOrchestrator.startPolling(['7C', '05', '0C']);
+    } else if (activeHubView === 'hub') {
+      PollingOrchestrator.stopPolling();
+      PollingOrchestrator.startPolling();
+    }
+  }, [activeHubView, ecuStatus]);
+
  // Navigation Safety Gate: Auto Kick-out if clone device locks coding features
- const isCodingAllowed = useBluetoothStore((s) => s.isCodingAllowed);
- const storeVoltage = useBluetoothStore((s) => s.voltage);
- const storeSpeed = useBluetoothStore((s) => s.speed);
- const storeRpm = useBluetoothStore((s) => s.rpm);
- const engineLoad = useBluetoothStore((s) => s.engineLoad);
- const oilTemp = useBluetoothStore((s) => s.oilTemp);
- const mafFlow = useBluetoothStore((s) => s.mafFlow);
  useEffect(() => {
  if (!isCodingAllowed && isDiagVisible) {
  setIsDiagVisible(false);
@@ -2485,30 +2517,38 @@ ${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateStr
  onOpenPaywall={() => setIsPaywallVisible(true)}
  />
  )}
- {activeHubView === 'hp_gauge' && (
- <HorsepowerModal
- visible={true}
- onClose={() => setActiveHubView('hub')}
- rpm={storeRpm || 0}
- mafGps={mafFlow || 0}
- engineTorqueNm={useBluetoothStore.getState().actualTorque || useBluetoothStore.getState().driverTorque || 0}
- calculatedLoadPct={engineLoad || 0}
- />
- )}
- {activeHubView === 'fuel_trim' && (
- <FuelTrimModal
- visible={true}
- onClose={() => setActiveHubView('hub')}
- stftBank1Pct={0}
- ltftBank1Pct={0}
- />
- )}
- {activeHubView === 'dpf' && (
- <DpfMonitorModal
- visible={true}
- onClose={() => setActiveHubView('hub')}
- />
- )}
+  {activeHubView === 'hp_gauge' && (
+    <HorsepowerModal
+      visible={true}
+      onClose={() => setActiveHubView('hub')}
+      rpm={storeRpm || 0}
+      mafGps={mafFlow || 0}
+      engineTorqueNm={actualTorque || driverTorque || 0}
+      calculatedLoadPct={engineLoad || 0}
+      fuelType={activeSessionVehicle?.fuelType as any || 'gasoline'}
+    />
+  )}
+  {activeHubView === 'fuel_trim' && (
+    <FuelTrimModal
+      visible={true}
+      onClose={() => setActiveHubView('hub')}
+      stftBank1Pct={shortFuelTrim1 ?? (isSimulationMode ? 2.3 : 0)}
+      ltftBank1Pct={longFuelTrim1 ?? (isSimulationMode ? -1.5 : 0)}
+      fuelType={activeSessionVehicle?.fuelType as any || ((fuelRailPressure && fuelRailPressure > 100) ? 'diesel' : 'gasoline')}
+      railPressureBar={fuelRailPressure ?? (isSimulationMode ? 320 : (activeSessionVehicle?.fuelType === 'diesel' ? 320 : 45))}
+    />
+  )}
+  {activeHubView === 'dpf' && (
+    <DpfMonitorModal
+      visible={true}
+      onClose={() => setActiveHubView('hub')}
+      sootMassGrams={dpfPressure ? Math.min(55, Math.round(dpfPressure * 1.2)) : (isSimulationMode ? 18.5 : undefined)}
+      ashMassGrams={isSimulationMode ? 22 : undefined}
+      egtTempC={egtTemp ?? (isSimulationMode ? 340 : (oilTemp ? oilTemp + 150 : undefined))}
+      differentialPressureHpa={dpfPressure ?? (isSimulationMode ? 14.2 : undefined)}
+      isRegenActive={(egtTemp ?? 0) > 550}
+    />
+  )}
   {activeHubView === 'multi_ecu' && (
     <MultiEcuScanModal
       visible={true}
@@ -2517,13 +2557,27 @@ ${i18n.t('report.date', { defaultValue: 'Date' })}: ${new Date().toLocaleDateStr
       onClearModule={(headerHex) => MultiEcuService.clearHardwareModuleDtc(headerHex)}
     />
   )}
- {activeHubView === 'dct' && (
- <DctResetModal
- visible={true}
- onClose={() => setActiveHubView('hub')}
- transmissionOilTempC={oilTemp || 55}
- />
- )}
+  {activeHubView === 'dct' && (
+    <DctResetModal
+      visible={true}
+      onClose={() => setActiveHubView('hub')}
+      transmissionOilTempC={transTemp ?? (oilTemp ? Math.max(35, oilTemp - 15) : 55)}
+      onExecuteAdaptation={async () => {
+        if (isSimulationMode) return true;
+        const brand = (activeSessionBrand || '').toLowerCase();
+        const txType = (brand.includes('volkswagen') || brand.includes('audi') || brand.includes('seat') || brand.includes('skoda') || brand.includes('vag'))
+          ? 'dsg_dq200'
+          : (brand.includes('ford') ? 'powershift' : 'generic_dct');
+        const cmds = DctAdaptationService.getAdaptationCommands(txType);
+        for (const cmd of cmds) {
+          await OBDCommandQueue.add(cmd, 1500, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+          await preciseSleep(60);
+        }
+        await OBDCommandQueue.add('AT SH 7E0', 800, 'HIGH_PRIORITY_AD_HOC').catch(() => '');
+        return true;
+      }}
+    />
+  )}
  {activeHubView === 'connection_flow' && (
  <ConnectionFlowScreen
  onBack={() => setActiveHubView('hub')}

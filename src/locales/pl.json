@@ -2951,7 +2951,7 @@
         "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
         "demoFeaturesCount": "{{count}} demo features listed",
         "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
-        "codingFailed": "Coding failed.",
+        "codingFailed": "Operacja nie powiodła się",
         "engineRunningMsg": "ECU coding requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "Battery voltage is below safe threshold for ECU write operations. Charge the battery before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "Kontrola bezpieczeństwa",
+        "stepConnectingEcu": "Komunikacja z modułem",
+        "stepDiagnosticSession": "Sesja diagnostyczna",
+        "stepReadingConfig": "Odczyt bieżącego stanu",
+        "stepWritingConfig": "Zapisywanie konfiguracji",
+        "stepCompleted": "Weryfikacja zakończona sukcesem",
+        "processingStatus": "Przetwarzanie",
+        "lowVoltageAlert": "Niewystarczające napięcie akumulatora. Kodowanie zatrzymane.",
+        "vehicleMovingAlert": "Nie można kodować podczas jazdy pojazdu.",
+        "securityAccessDenied": "Odmowa dostępu bezpieczeństwa."
     },
     "ignition": {
         "title": "Ostrzeżenie o stanie zapłonu",
@@ -3148,7 +3158,8 @@
         "recommendMonitor": "Kumulacja jazdy po mieście. Kontynuuj monitorowanie.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "Filtr zatkany! Wymagana regeneracja serwisowa lub czyszczenie.",
-        "regenRecommendation": "Kumulacja jazdy po mieście. Kontynuuj monitorowanie."
+        "regenRecommendation": "Kumulacja jazdy po mieście. Kontynuuj monitorowanie.",
+        "notSupportedMsg": "Nie znaleziono czujnika DPF (Benzyna lub nieobsługiwany pojazd)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",

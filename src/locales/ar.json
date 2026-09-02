@@ -2951,7 +2951,7 @@
         "activeFeaturesCount": "{{count}} vehicle-specific OEM features active",
         "demoFeaturesCount": "{{count}} demo features listed",
         "connectForFeaturesNote": "Connect to an OBD2 device to list vehicle-specific features",
-        "codingFailed": "برمجة failed.",
+        "codingFailed": "فشلت العملية",
         "engineRunningMsg": "ECU برمجة requires Ignition ON with Engine OFF to prevent alternator voltage spikes.",
         "engineRunningTitle": "Engine Running",
         "lowVoltageMsg": "البطارية voltage is below safe threshold for ECU write operations. Charge the البطارية before proceeding.",
@@ -3055,7 +3055,17 @@
         "upgradeToPro": "UPGRADE TO PRO",
         "toastActivated": "Activated",
         "toastDeactivated": "Deactivated",
-        "optionsBadge": "{{count}} OPTIONS"
+        "optionsBadge": "{{count}} OPTIONS",
+        "stepVerifying": "فحص الأمان",
+        "stepConnectingEcu": "اتصال الوحدة",
+        "stepDiagnosticSession": "جلسة التشخيص",
+        "stepReadingConfig": "قراءة الحالة الحالية",
+        "stepWritingConfig": "كتابة الإعدادات",
+        "stepCompleted": "تم التحقق بنجاح",
+        "processingStatus": "جاري المعالجة",
+        "lowVoltageAlert": "جهد البطارية غير كافٍ. تم إيقاف البرمجة.",
+        "vehicleMovingAlert": "لا يمكن إجراء البرمجة أثناء حركة السيارة.",
+        "securityAccessDenied": "تم رفض الوصول الأمني."
     },
     "ignition": {
         "title": "تحذير حالة الإشعال",
@@ -3148,7 +3158,8 @@
         "recommendMonitor": "تراكم القيادة في المدينة. استمر في المراقبة.",
         "recommendHighwayDrive": "Drive on highway for 20 mins at 2000-2500 RPM.",
         "recommendServiceRegen": "الفلتر مسدود! تجديد الخدمة أو التنظيف المطلوبة.",
-        "regenRecommendation": "تراكم القيادة في المدينة. استمر في المراقبة."
+        "regenRecommendation": "تراكم القيادة في المدينة. استمر في المراقبة.",
+        "notSupportedMsg": "لم يتم العثور على مستشعر DPF (بنزين أو مركبة غير مدعومة)"
     },
     "multiEcu": {
         "title": "ALL-SYSTEM SCAN",
