@@ -996,6 +996,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  )}
  </View>
  </View>
+ </View>
  </Modal>
  );
 }
