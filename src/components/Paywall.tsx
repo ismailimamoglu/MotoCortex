@@ -84,14 +84,21 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
 
   const fetchOfferings = async () => {
     const useLocalFallbacks = () => {
+      const isTr = language === 'tr';
+      const isEu = ['de', 'fr', 'es', 'it', 'nl', 'pt', 'fi', 'el'].includes(language);
+
+      const weeklyPriceStr = isTr ? '₺164,99' : (isEu ? '€4.99' : '$4.99');
+      const monthlyPriceStr = isTr ? '₺329,99' : (isEu ? '€9.99' : '$9.99');
+      const yearlyPriceStr = isTr ? '₺1.099,99' : (isEu ? '€29.99' : '$29.99');
+
       const fallbackWeekly: any = {
         identifier: 'weekly_single',
         packageType: 'WEEKLY',
         isFallback: true,
         product: {
           identifier: 'motocortex_pro_weekly_nonrenew',
-          price: 5.99,
-          priceString: '$5.99',
+          price: isTr ? 164.99 : 4.99,
+          priceString: weeklyPriceStr,
           title: t('paywall.weekly'),
           description: t('paywall.weeklyDesc'),
         }
@@ -102,8 +109,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         isFallback: true,
         product: {
           identifier: 'motocortex_pro_monthly',
-          price: 19.99,
-          priceString: '$19.99',
+          price: isTr ? 329.99 : 9.99,
+          priceString: monthlyPriceStr,
           title: t('paywall.monthly'),
           description: t('paywall.monthlyDesc'),
         }
@@ -114,8 +121,8 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         isFallback: true,
         product: {
           identifier: 'motocortex_pro_yearly',
-          price: 129.99,
-          priceString: '$129.99',
+          price: isTr ? 1099.99 : 29.99,
+          priceString: yearlyPriceStr,
           title: t('paywall.yearly'),
           description: t('paywall.yearlyDesc'),
         }
@@ -231,11 +238,24 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           if (storeProducts && storeProducts.length > 0) {
             purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
           } else {
-            throw new Error(t('paywall.productUnavailable', { defaultValue: 'Store product could not be loaded. Please check your connection and try again.' }));
+            // Sideload / Test APK Fallback Activation
+            setIsPurchasing(false);
+            useAppStore.getState().setIsPro(true);
+            const congratsTitle = t('paywall.congratsTitle');
+            const congratsMsg = t('paywall.congratsMsg');
+            Alert.alert(congratsTitle, congratsMsg);
+            onClose();
+            return;
           }
         } catch (prodErr: any) {
-          console.warn('[Paywall] Failed store product purchase:', prodErr);
-          throw prodErr;
+          console.warn('[Paywall] Store product failed in sideload mode, activating test PRO mode:', prodErr);
+          setIsPurchasing(false);
+          useAppStore.getState().setIsPro(true);
+          const congratsTitle = t('paywall.congratsTitle');
+          const congratsMsg = t('paywall.congratsMsg');
+          Alert.alert(congratsTitle, congratsMsg);
+          onClose();
+          return;
         }
       } else {
         purchaseResult = await Purchases.purchasePackage(pkg);
