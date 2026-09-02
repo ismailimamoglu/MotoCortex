@@ -221,25 +221,29 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
     }
 
     try {
-      let purchaseResult;
-      const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product.subscriptionPeriod && !pkg.product.introPrice);
-      
-      if (isFallbackPkg) {
-        console.log('[Paywall] Fallback package purchase, querying store product for ID:', pkg.product.identifier);
-        try {
-          const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
-          if (storeProducts && storeProducts.length > 0) {
-            purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
-          } else {
-            purchaseResult = await Purchases.purchasePackage(pkg);
+      const executePurchase = async () => {
+        const isFallbackPkg = Boolean((pkg as any).isFallback) || (!pkg.presentedOfferingContext && !pkg.product.subscriptionPeriod && !pkg.product.introPrice);
+        
+        if (isFallbackPkg) {
+          console.log('[Paywall] Fallback package purchase, querying store product for ID:', pkg.product.identifier);
+          try {
+            const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
+            if (storeProducts && storeProducts.length > 0) {
+              return await Purchases.purchaseStoreProduct(storeProducts[0]);
+            }
+          } catch (prodErr) {
+            console.warn('[Paywall] Failed store product query, trying package directly:', prodErr);
           }
-        } catch (prodErr) {
-          console.warn('[Paywall] Failed store product query, trying package directly:', prodErr);
-          purchaseResult = await Purchases.purchasePackage(pkg);
         }
-      } else {
-        purchaseResult = await Purchases.purchasePackage(pkg);
-      }
+        return await Purchases.purchasePackage(pkg);
+      };
+
+      // 7-second Timeout guard to prevent hanging promise in case billing client is unresponsive
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('STORE_TIMEOUT')), 7000)
+      );
+
+      const purchaseResult: any = await Promise.race([executePurchase(), timeoutPromise]);
 
       const { customerInfo } = purchaseResult;
       setIsPurchasing(false);
@@ -264,8 +268,14 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
           package_id: pkg.identifier,
           error_message: error?.message || String(error)
         }).catch(e => console.warn('[Analytics] Failed purchase_failed event:', e));
+        
         const errTitle = t('paywall.errTitle');
-        const errMsg = error?.message || t('paywall.errMsg');
+        let errMsg = error?.message || t('paywall.errMsg');
+        if (error?.message === 'STORE_TIMEOUT') {
+          errMsg = t('paywall.storeUnavailable', {
+            defaultValue: 'Store payment service could not be reached. Please check your network and store account settings.'
+          });
+        }
         Alert.alert(errTitle, errMsg);
       } else {
         analytics().logEvent('purchase_cancelled', {
