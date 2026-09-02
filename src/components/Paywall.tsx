@@ -970,20 +970,19 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
  </TouchableOpacity>
 
  <View style={sDyn.legalSection}>
- <View style={sDyn.legalLinks}>
- <TouchableOpacity onPress={() => Linking.openURL(`https://motocortex-telemetry.vercel.app/?userId=${appUserId || ''}&lang=${language}#terms`)}>
- <Text style={[sDyn.legalLink, { color: colors.purple }]}>
- {t('paywall.terms')}
- </Text>
- </TouchableOpacity>
- <Text style={[sDyn.legalSep, { color: colors.textTertiary }]}>•</Text>
- <TouchableOpacity onPress={() => Linking.openURL(`https://motocortex-telemetry.vercel.app/?userId=${appUserId || ''}&lang=${language}#privacy`)}>
- <Text style={[sDyn.legalLink, { color: colors.purple }]}>
- {t('paywall.privacy')}
- </Text>
- </TouchableOpacity>
- </View>
- </View>
+  <View style={sDyn.legalLinks}>
+  <TouchableOpacity onPress={() => Linking.openURL(Platform.OS === 'ios' ? 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/' : `https://motocortex-telemetry.vercel.app/?userId=${appUserId || ''}&lang=${language}#terms`)}>
+  <Text style={[sDyn.legalLink, { color: colors.purple }]}>
+  {t('paywall.terms')} (EULA)
+  </Text>
+  </TouchableOpacity>
+  <Text style={[sDyn.legalSep, { color: colors.textTertiary }]}>•</Text>
+  <TouchableOpacity onPress={() => Linking.openURL(`https://motocortex-telemetry.vercel.app/?userId=${appUserId || ''}&lang=${language}#privacy`)}>
+  <Text style={[sDyn.legalLink, { color: colors.purple }]}>
+  {t('paywall.privacy')}
+  </Text>
+  </TouchableOpacity>
+  </View>
  </View>
 
  {/* Secure Purchase Loading Overlay */}

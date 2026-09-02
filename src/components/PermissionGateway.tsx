@@ -418,17 +418,6 @@ export default function PermissionGateway({ children, onComplete }: PermissionGa
  <Text style={[sDyn.actionBtnText, { color: colors.card }]}>{t('permissions.grantBtn')}</Text>
  )}
  </TouchableOpacity>
-
- <TouchableOpacity 
- onPress={() => {
- setIsTelemetryOptedIn(true);
- setHasOnboarded(true);
- if (onComplete) onComplete();
- }} 
- style={sDyn.skipLink}
- >
- <Text style={[sDyn.skipText, { color: colors.textSec }]}>{t('permissions.skipBtn')}</Text>
- </TouchableOpacity>
  </View>
  )}
  </View>
