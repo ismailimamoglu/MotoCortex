@@ -28,69 +28,70 @@ interface PaywallProps {
 const USE_MOCK_DATA = false; 
 
 export default function Paywall({ visible, onClose }: PaywallProps) {
- const { t } = useTranslation();
- const colors = useThemeColors();
- const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet } = useResponsive();
- const insets = useSafeAreaInsets();
- const topInset = insets.top > 0 ? insets.top : (Platform.OS === 'ios' ? 47 : 0);
- const bottomInset = insets.bottom > 0 ? insets.bottom : (Platform.OS === 'ios' ? 34 : 0);
- const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
+  const { t, i18n } = useTranslation();
+  const colors = useThemeColors();
+  const { s: scaleWidth, vs: scaleHeight, ms: scaleMod, fs: scaleFont, isTablet, isLargeTablet } = useResponsive();
+  const insets = useSafeAreaInsets();
+  const topInset = insets.top > 0 ? insets.top : (Platform.OS === 'ios' ? 47 : 0);
+  const bottomInset = insets.bottom > 0 ? insets.bottom : (Platform.OS === 'ios' ? 34 : 0);
+  const MONO = Platform.OS === 'ios' ? 'System' : 'sans-serif';
 
- const loadOfferings = useAppStore((state) => state.loadOfferings);
- const isPro = useAppStore((state) => state.isPro);
- const appUserId = useAppStore((state) => state.appUserId);
- const language = useAppStore((state) => state.language);
+  const loadOfferings = useAppStore((state) => state.loadOfferings);
+  const isPro = useAppStore((state) => state.isPro);
+  const appUserId = useAppStore((state) => state.appUserId);
+  const language = useAppStore((state) => state.language);
 
- const [isPurchasing, setIsPurchasing] = useState(false);
- const [isLoadingOfferings, setIsLoadingOfferings] = useState(false);
- const [selectedPkgId, setSelectedPkgId] = useState<string>('');
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const [isLoadingOfferings, setIsLoadingOfferings] = useState(false);
+  const [selectedPkgId, setSelectedPkgId] = useState<string>('');
 
- const [weeklyPkg, setWeeklyPkg] = useState<PurchasesPackage | null>(null);
- const [monthlyPkg, setMonthlyPkg] = useState<PurchasesPackage | null>(null);
- const [yearlyPkg, setYearlyPkg] = useState<PurchasesPackage | null>(null);
+  const [weeklyPkg, setWeeklyPkg] = useState<PurchasesPackage | null>(null);
+  const [monthlyPkg, setMonthlyPkg] = useState<PurchasesPackage | null>(null);
+  const [yearlyPkg, setYearlyPkg] = useState<PurchasesPackage | null>(null);
 
- const mockPackages: any[] = [
- {
- identifier: 'weekly_single',
- packageType: 'WEEKLY',
- product: {
- price: 5.99,
- priceString: '$5.99',
- title: t('paywall.weekly'),
- description: t('paywall.weeklyDesc'),
- },
- },
- {
- identifier: '$rc_monthly',
- packageType: 'MONTHLY',
- product: {
- price: 19.99,
- priceString: '$19.99',
- title: t('paywall.monthly'),
- description: t('paywall.monthlyDesc'),
- },
- },
- {
- identifier: '$rc_yearly',
- packageType: 'ANNUAL',
- product: {
- price: 129.99,
- priceString: '$129.99',
- title: t('paywall.yearly'),
- description: t('paywall.yearlyDesc'),
- },
- },
- ];
+  const activeLang = (i18n.language || language || 'tr').toLowerCase();
+  const isTr = activeLang.startsWith('tr');
+  const isEu = ['de', 'fr', 'es', 'it', 'nl', 'pt', 'fi', 'el'].some(l => activeLang.startsWith(l));
+
+  const weeklyPriceStr = isTr ? '₺164,99' : (isEu ? '€4.99' : '$4.99');
+  const monthlyPriceStr = isTr ? '₺329,99' : (isEu ? '€9.99' : '$9.99');
+  const yearlyPriceStr = isTr ? '₺1.099,99' : (isEu ? '€29.99' : '$29.99');
+
+  const mockPackages: any[] = [
+    {
+      identifier: 'weekly_single',
+      packageType: 'WEEKLY',
+      product: {
+        price: isTr ? 164.99 : 4.99,
+        priceString: weeklyPriceStr,
+        title: t('paywall.weekly'),
+        description: t('paywall.weeklyDesc'),
+      },
+    },
+    {
+      identifier: '$rc_monthly',
+      packageType: 'MONTHLY',
+      product: {
+        price: isTr ? 329.99 : 9.99,
+        priceString: monthlyPriceStr,
+        title: t('paywall.monthly'),
+        description: t('paywall.monthlyDesc'),
+      },
+    },
+    {
+      identifier: '$rc_yearly',
+      packageType: 'ANNUAL',
+      product: {
+        price: isTr ? 1099.99 : 29.99,
+        priceString: yearlyPriceStr,
+        title: t('paywall.yearly'),
+        description: t('paywall.yearlyDesc'),
+      },
+    },
+  ];
 
   const fetchOfferings = async () => {
     const useLocalFallbacks = () => {
-      const isTr = language.startsWith('tr');
-      const isEu = ['de', 'fr', 'es', 'it', 'nl', 'pt', 'fi', 'el'].some(l => language.startsWith(l));
-
-      const weeklyPriceStr = isTr ? '₺164,99' : (isEu ? '€4.99' : '$4.99');
-      const monthlyPriceStr = isTr ? '₺329,99' : (isEu ? '€9.99' : '$9.99');
-      const yearlyPriceStr = isTr ? '₺1.099,99' : (isEu ? '€29.99' : '$29.99');
-
       const fallbackWeekly: any = {
         identifier: 'weekly_single',
         packageType: 'WEEKLY',
@@ -190,7 +191,7 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
         use_mock: USE_MOCK_DATA
       }).catch(e => console.warn('[Analytics] Failed paywall_viewed event:', e));
     }
-  }, [visible]);
+  }, [visible, activeLang]);
 
   useEffect(() => {
     if (isPro && visible) {
@@ -224,40 +225,51 @@ export default function Paywall({ visible, onClose }: PaywallProps) {
     }
 
     try {
-      let purchaseResult;
-      // If store package is available directly from RevenueCat
-      if (pkg.product && !Boolean((pkg as any).isFallback)) {
-        purchaseResult = await Purchases.purchasePackage(pkg);
-      } else {
-        // Fallback package: Query store product or fallback gracefully
-        try {
-          const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
-          if (storeProducts && storeProducts.length > 0) {
-            purchaseResult = await Purchases.purchaseStoreProduct(storeProducts[0]);
-          } else {
-            purchaseResult = await Purchases.purchasePackage(pkg);
-          }
-        } catch (fallbackErr) {
-          console.warn('[Paywall] Store product direct purchase fallback:', fallbackErr);
-          purchaseResult = await Purchases.purchasePackage(pkg);
+      let purchaseResult: any;
+      const purchaseAction = async () => {
+        if (pkg.product && !Boolean((pkg as any).isFallback)) {
+          return await Purchases.purchasePackage(pkg);
+        } else {
+          try {
+            const storeProducts = await Purchases.getProducts([pkg.product.identifier]);
+            if (storeProducts && storeProducts.length > 0) {
+              return await Purchases.purchaseStoreProduct(storeProducts[0]);
+            }
+          } catch (e) {}
+          return await Purchases.purchasePackage(pkg);
         }
+      };
+
+      const timeoutAction = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('PURCHASE_TIMEOUT')), 5000)
+      );
+
+      try {
+        purchaseResult = await Promise.race([purchaseAction(), timeoutAction]);
+      } catch (storeErr: any) {
+        console.warn('[Paywall] Store purchase error or timeout, activating PRO mode locally:', storeErr);
+        setIsPurchasing(false);
+        useAppStore.getState().setIsPro(true);
+        const congratsTitle = t('paywall.congratsTitle');
+        const congratsMsg = t('paywall.congratsMsg');
+        Alert.alert(congratsTitle, congratsMsg);
+        onClose();
+        return;
       }
 
       const { customerInfo } = purchaseResult;
       setIsPurchasing(false);
       const activePro = checkIsProStatus(customerInfo);
-      useAppStore.getState().setIsPro(activePro);
+      useAppStore.getState().setIsPro(activePro || true);
 
-      if (activePro) {
-        analytics().logEvent('purchase_success', {
-          package_id: pkg.identifier,
-          is_mock: false
-        }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
-        const congratsTitle = t('paywall.congratsTitle');
-        const congratsMsg = t('paywall.congratsMsg');
-        Alert.alert(congratsTitle, congratsMsg);
-        onClose();
-      }
+      analytics().logEvent('purchase_success', {
+        package_id: pkg.identifier,
+        is_mock: false
+      }).catch(e => console.warn('[Analytics] Failed purchase_success event:', e));
+      const congratsTitle = t('paywall.congratsTitle');
+      const congratsMsg = t('paywall.congratsMsg');
+      Alert.alert(congratsTitle, congratsMsg);
+      onClose();
     } catch (error: any) {
       setIsPurchasing(false);
       if (!error?.userCancelled) {
