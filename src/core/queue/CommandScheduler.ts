@@ -97,11 +97,6 @@ export class CommandSchedulerClass {
 
             const item: QueueItem = { command, resolve, reject, priority, deadline, estimatedCostMs, timeoutMs: actualTimeoutMs };
             
-            if (this.mode === SchedulerMode.DEGRADED && priority === 'LOW') {
-                reject(new Error('CIRCUIT_BREAKER_ACTIVE: DEGRADED_MODE_BLOCK'));
-                return;
-            }
-
             // Drop oldest stale HIGH telemetry item if queue exceeds 50 items to eliminate latency
             if (this.queue.length >= 50 && priority === 'HIGH') {
                 const staleIdx = this.queue.findIndex(q => q.priority === 'HIGH');
@@ -125,15 +120,13 @@ export class CommandSchedulerClass {
     private async processLoop() {
         let lockWaitStartTime = 0;
         while (this.queue.length > 0) {
-            // Atomic Lock Guard: K-Line uyanma sinyali veya protokol taraması aktifse kuyruğu beklet
+            // Atomic Lock Guard: K-Line uyanma sinyali veya protokol taraması aktifse kuyruğu kısa süre beklet (max 500ms)
             if (this.checkLockFn && this.checkLockFn()) {
                 if (!lockWaitStartTime) lockWaitStartTime = Date.now();
-                if (Date.now() - lockWaitStartTime < 3000) {
-                    await new Promise(resolve => setTimeout(resolve, 50));
+                if (Date.now() - lockWaitStartTime < 500) {
+                    await new Promise(resolve => setTimeout(resolve, 30));
                     continue;
                 }
-                // Timeout guard: 3000ms max lock wait to prevent JS thread spin-lock deadlock
-                console.warn('[CommandScheduler] Lock wait timeout (3000ms) exceeded. Bypassing atomic lock guard.');
                 lockWaitStartTime = 0;
             } else {
                 lockWaitStartTime = 0;
