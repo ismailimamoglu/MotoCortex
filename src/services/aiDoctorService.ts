@@ -2,6 +2,9 @@ import i18n from '../i18n';
 
 export interface AiDiagnosticContext {
   dtcCodes: string[];
+  targetModuleId?: string;
+  targetModuleCategory?: string;
+  targetModuleName?: string;
   vehicleMake?: string;
   vehicleModel?: string;
   vehicleYear?: number;

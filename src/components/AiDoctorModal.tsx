@@ -15,7 +15,7 @@ import appI18n from '../i18n';
 import { useThemeColors } from '../theme';
 import { useResponsive } from '../hooks/useResponsive';
 import { AiDiagnosticContext } from '../services/aiDoctorService';
-import { getGuidedDiagnostics } from '../services/dtcIntelligenceService';
+import { getDeepDiagnosticDossier, DeepDiagnosticDossier } from '../services/dtcIntelligenceService';
 import { useAppStore } from '../store/useAppStore';
 import { useBluetoothStore } from '../store/useBluetoothStore';
 
@@ -39,10 +39,23 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
   const [selectedDtcIndex, setSelectedDtcIndex] = useState(0);
 
   const rawDtcs = context?.dtcCodes || [];
+  const allDtcs = context?.userQuery ? context.userQuery.split(',').filter(Boolean) : rawDtcs;
   const dtcList = rawDtcs.length > 0 ? rawDtcs : ['OBD-II'];
   const safeIndex = selectedDtcIndex < dtcList.length ? selectedDtcIndex : 0;
   const activeCode = (dtcList[safeIndex] || 'OBD-II').toUpperCase().trim();
-  const guided = getGuidedDiagnostics(activeCode);
+
+  const dossier: DeepDiagnosticDossier = getDeepDiagnosticDossier(activeCode, {
+    targetModuleId: context?.targetModuleId,
+    targetModuleCategory: context?.targetModuleCategory,
+    targetModuleName: context?.targetModuleName,
+    allDtcs: allDtcs.length > 0 ? allDtcs : dtcList,
+    vehicleMake: context?.vehicleMake,
+    vehicleModel: context?.vehicleModel,
+    vehicleYear: context?.vehicleYear,
+    engineVoltage: context?.engineVoltage,
+    coolantTemp: context?.coolantTemp,
+    rpm: context?.rpm,
+  });
 
   const dtcKey = dtcList.join(',');
   const contextKey = visible ? `${dtcKey}_${context?.vin || ''}` : '';
@@ -210,25 +223,31 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                 style={[
                   styles.healthScoreCard,
                   {
-                    backgroundColor: isOptimal ? '#0d331e' : '#3d1214',
-                    borderColor: isOptimal ? '#00cc66' : '#ff3344',
+                    backgroundColor: dossier.healthScore >= 50 ? '#0d331e' : '#3d1214',
+                    borderColor: dossier.healthScore >= 50 ? '#00cc66' : '#ff3344',
                     padding: scaleMod(12),
                   },
                 ]}
               >
-                <Text
-                  style={[
-                    styles.healthScoreTitle,
-                    { color: isOptimal ? '#00ee77' : '#ff5566', fontSize: scaleFont(11) },
-                  ]}
-                >
-                  {t('aiDoctor.healthImpactTitle', { defaultValue: 'MOTOR SAĞLIK ETKİ SKORU' }).toUpperCase()}
-                </Text>
-                <Text style={[styles.healthScoreValue, { fontSize: scaleFont(12) }]}>
-                  {healthScore} / 100
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={[
+                      styles.healthScoreTitle,
+                      { color: dossier.healthScore >= 50 ? '#00ee77' : '#ff5566', fontSize: scaleFont(11) },
+                    ]}
+                  >
+                    {dossier.systemTitle.toUpperCase()}
+                  </Text>
+                  <Text style={{ color: tc.textSec, fontSize: scaleFont(10), fontFamily: MONO, marginTop: scaleHeight(2) }}>
+                    {dossier.difficultyRating}
+                  </Text>
+                </View>
+                <Text style={[styles.healthScoreValue, { fontSize: scaleFont(13) }]}>
+                  {dossier.healthScore} / 100
                 </Text>
               </View>
 
+              {/* Driving Safety Guidance */}
               <View
                 style={[
                   styles.sectionCard,
@@ -249,12 +268,67 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                   {t('aiDoctor.drivingSafety', { defaultValue: 'SÜRÜŞ EMNİYETİ REHBERİ' }).toUpperCase()}
                 </Text>
                 <Text style={[styles.sectionBodyText, { color: tc.textPri, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
-                  {isCurrentCritical
-                    ? t('aiDoctor.criticalDrive', { defaultValue: 'Kritik arıza! Motor ve güvenlik sistemlerini korumak için en yakın servise sürün.' })
-                    : t('aiDoctor.warningDrive', { defaultValue: 'Düşük hızda servise kadar sürülmesi emniyetlidir.' })}
+                  {dossier.driveGuidance}
                 </Text>
               </View>
 
+              {/* Driver Symptoms */}
+              {dossier.symptoms && dossier.symptoms.length > 0 && (
+                <View
+                  style={[
+                    styles.sectionCard,
+                    {
+                      backgroundColor: tc.bg,
+                      borderColor: tc.border,
+                      padding: scaleMod(14),
+                      gap: scaleHeight(8),
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.sectionHeader,
+                      { color: tc.cyan, fontSize: scaleFont(10) },
+                    ]}
+                  >
+                    {t('aiDoctor.symptomsTitle', { defaultValue: 'HİSSEDİLEN ARIZA BELİRTİLERİ (SEMPTOMLAR)' }).toUpperCase()}
+                  </Text>
+                  {dossier.symptoms.map((sym, idx) => (
+                    <Text key={idx} style={[styles.causeText, { color: tc.textPri, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
+                      • {sym}
+                    </Text>
+                  ))}
+                </View>
+              )}
+
+              {/* Cross DTC Analysis */}
+              {dossier.crossDtcAnalysis && (
+                <View
+                  style={[
+                    styles.sectionCard,
+                    {
+                      backgroundColor: `${tc.cyan}0F`,
+                      borderColor: tc.cyan,
+                      padding: scaleMod(14),
+                      gap: scaleHeight(6),
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.sectionHeader,
+                      { color: tc.cyan, fontSize: scaleFont(10) },
+                    ]}
+                  >
+                    {t('aiDoctor.crossDtcTitle', { defaultValue: 'ÇOKLU ARIZA ÇAPRAZ ANALİZİ' }).toUpperCase()}
+                  </Text>
+                  <Text style={{ color: tc.textPri, fontSize: scaleFont(11), fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                    {dossier.crossDtcAnalysis}
+                  </Text>
+                </View>
+              )}
+
+              {/* Probable Causes */}
               <View
                 style={[
                   styles.sectionCard,
@@ -274,7 +348,7 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                 >
                   {t('aiDoctor.causes', { defaultValue: 'OLASI KÖK NEDENLER' }).toUpperCase()}
                 </Text>
-                {guided.probableCauses.map((pc, idx) => (
+                {dossier.probableCauses.map((pc, idx) => (
                   <View key={idx} style={styles.causeRow}>
                     <Text style={[styles.causeText, { color: tc.textPri, fontSize: scaleFont(11) }]}>
                       • {pc.cause}
@@ -291,34 +365,36 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                 ))}
               </View>
 
-              <View
-                style={[
-                  styles.sectionCard,
-                  {
-                    backgroundColor: tc.bg,
-                    borderColor: tc.border,
-                    padding: scaleMod(14),
-                    gap: scaleHeight(8),
-                  },
-                ]}
-              >
-                <Text
+              {/* Component Testing Steps */}
+              {dossier.componentTestingSteps && dossier.componentTestingSteps.length > 0 && (
+                <View
                   style={[
-                    styles.sectionHeader,
-                    { color: tc.cyan, fontSize: scaleFont(10) },
+                    styles.sectionCard,
+                    {
+                      backgroundColor: tc.bg,
+                      borderColor: tc.border,
+                      padding: scaleMod(14),
+                      gap: scaleHeight(8),
+                    },
                   ]}
                 >
-                  {t('aiDoctor.recommendedAction', { defaultValue: 'TAVSİYE EDİLEN MEKANİK İŞLEM' }).toUpperCase()}
-                </Text>
-                <Text style={[styles.stepText, { color: tc.textPri, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
-                  1. {guided.recommendedAction}
-                </Text>
-                <Text style={[styles.stepText, { color: tc.textSec, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
-                  2. {t('aiDoctor.stepGeneric2', { defaultValue: 'Tesisat konnektörlerini inceledikten sonra DTC kodlarını silin.' })}
-                </Text>
-              </View>
+                  <Text
+                    style={[
+                      styles.sectionHeader,
+                      { color: tc.cyan, fontSize: scaleFont(10) },
+                    ]}
+                  >
+                    {t('aiDoctor.componentTestingTitle', { defaultValue: 'ADIM ADIM KOMPONENT & MULTİMETRE TESTİ' }).toUpperCase()}
+                  </Text>
+                  {dossier.componentTestingSteps.map((step, idx) => (
+                    <Text key={idx} style={[styles.stepText, { color: tc.textPri, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
+                      {idx + 1}. {step}
+                    </Text>
+                  ))}
+                </View>
+              )}
 
-              {guided.tsbSummary && (
+              {dossier.tsbSummary && (
                 <View
                   style={[
                     styles.sectionCard,
@@ -339,7 +415,7 @@ export default function AiDoctorModal({ visible, onClose, context, onClearDtc }:
                     {t('reportExport.technicalTsb', { defaultValue: 'TEKNİK TSB BÜLTENİ' }).toUpperCase()}
                   </Text>
                   <Text style={[styles.sectionBodyText, { color: tc.textPri, fontSize: scaleFont(11), lineHeight: scaleFont(16) }]}>
-                    {guided.tsbSummary}
+                    {dossier.tsbSummary}
                   </Text>
                 </View>
               )}

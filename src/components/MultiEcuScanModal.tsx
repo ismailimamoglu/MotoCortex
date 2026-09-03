@@ -126,13 +126,18 @@ export const MultiEcuScanModal: React.FC<MultiEcuScanModalProps> = ({
 
   const handleOpenAiDoctor = (code: string, mod: EcuModuleTarget) => {
     const btState = useBluetoothStore.getState();
+    const allDetectedCodes = results.flatMap((r) => r.dtcCodes);
     setActiveDoctorModule(mod);
     setAiDoctorContext({
       dtcCodes: [code],
+      targetModuleId: mod.id,
+      targetModuleCategory: mod.category,
+      targetModuleName: t(mod.nameKey),
       vin: btState.vin || undefined,
       rpm: btState.rpm || undefined,
       coolantTemp: btState.coolant || undefined,
       engineVoltage: btState.voltage ? parseFloat(btState.voltage) || undefined : undefined,
+      userQuery: allDetectedCodes.join(','),
     });
     setAiDoctorVisible(true);
   };

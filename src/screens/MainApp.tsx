@@ -9,7 +9,7 @@ import OBDCommandQueue, { preciseSleep } from '../api/OBDCommandQueue';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { ADAPTER_COMMANDS } from '../api/commands';
 import { lookupDTC, prefetchDtcChunksForCodes } from '../data/dtcDictionary';
-import { getGuidedDiagnostics } from '../services/dtcIntelligenceService';
+import { getGuidedDiagnostics, getDeepDiagnosticDossier, DeepDiagnosticDossier } from '../services/dtcIntelligenceService';
 import BatteryTestModal from '../components/BatteryTestModal';
 import FreezeFrameModal from '../components/FreezeFrameModal';
 import PerformanceModal from '../components/PerformanceModal';
@@ -184,231 +184,276 @@ export default function MainApp() {
  categoryColor = tc.purple;
  }
 
- if (isAiDoctorAnalysisActive) {
- const guided = getGuidedDiagnostics(code);
- return (
- <Modal
- visible={isDtcModalOpen}
- animationType="fade"
- transparent={true}
- onRequestClose={() => setIsDtcModalOpen(false)}
- >
- <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'flex-end' }}>
- <View style={{
- backgroundColor: tc.card,
- borderTopLeftRadius: 20,
- borderTopRightRadius: 20,
- borderWidth: 1,
- borderColor: tc.cyan,
- padding: scaleMod(20),
- maxHeight: '85%',
- }}>
- <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(16) }}>
- <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
- <View style={{ backgroundColor: `${tc.cyan}20`, borderWidth: 1, borderColor: tc.cyan, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
- <Text style={{ color: tc.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>{t('errorBoundary.aiDoctor')}</Text>
- </View>
- <Text style={{ color: tc.textPri, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>{code} {t('aiDoctor.reportTitle')}</Text>
- </View>
- <TouchableOpacity onPress={() => setIsDtcModalOpen(false)} style={{ padding: scaleMod(6) }}>
- <Text style={{ color: tc.textPri, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO }}>✕</Text>
- </TouchableOpacity>
- </View>
+    if (isAiDoctorAnalysisActive) {
+      const btState = useBluetoothStore.getState();
+      const dossier: DeepDiagnosticDossier = getDeepDiagnosticDossier(code, {
+        targetModuleId: 'ecm',
+        targetModuleCategory: 'powertrain',
+        targetModuleName: t('multiEcu.ecmName', { defaultValue: 'Motor Kontrol Ünitesi' }),
+        allDtcs: dtcs,
+        vin: btState.vin || undefined,
+        rpm: btState.rpm || undefined,
+        coolantTemp: btState.coolant || undefined,
+        engineVoltage: btState.voltage ? parseFloat(btState.voltage) || undefined : undefined,
+      });
 
- <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleHeight(14), paddingBottom: scaleHeight(20) }}>
- {/* Health Score Impact Card */}
- <View style={{ backgroundColor: '#0d331e', borderWidth: 1, borderColor: '#00cc66', borderRadius: 12, padding: scaleMod(12), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
- <Text style={{ color: '#00ee77', fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
- {t('aiDoctor.healthImpactTitle').toUpperCase()}
- </Text>
- <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO }}>75 / 100</Text>
- </View>
+      return (
+        <Modal
+          visible={isDtcModalOpen}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setIsDtcModalOpen(false)}
+        >
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'flex-end' }}>
+            <View style={{
+              backgroundColor: tc.card,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              borderWidth: 1,
+              borderColor: tc.cyan,
+              padding: scaleMod(20),
+              maxHeight: '85%',
+            }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(16) }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
+                  <View style={{ backgroundColor: `${tc.cyan}20`, borderWidth: 1, borderColor: tc.cyan, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
+                    <Text style={{ color: tc.cyan, fontSize: scaleFont(13), fontWeight: '900', fontFamily: MONO }}>{t('errorBoundary.aiDoctor')}</Text>
+                  </View>
+                  <Text style={{ color: tc.textPri, fontSize: scaleFont(12), fontWeight: '900', fontFamily: MONO }}>{code} {t('aiDoctor.reportTitle')}</Text>
+                </View>
+                <TouchableOpacity onPress={() => setIsDtcModalOpen(false)} style={{ padding: scaleMod(6) }}>
+                  <Text style={{ color: tc.textPri, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO }}>✕</Text>
+                </TouchableOpacity>
+              </View>
 
- {/* Driving Safety Guidance */}
- <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(6) }}>
- <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
- {t('aiDoctor.drivingSafety').toUpperCase()}
- </Text>
- <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
- {t('aiDoctor.warningDrive')}
- </Text>
- </View>
+              <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleHeight(14), paddingBottom: scaleHeight(20) }}>
+                {/* Dynamic Health Score Impact Card */}
+                <View style={{
+                  backgroundColor: dossier.healthScore >= 50 ? '#0d331e' : '#3d1214',
+                  borderWidth: 1,
+                  borderColor: dossier.healthScore >= 50 ? '#00cc66' : '#ff3344',
+                  borderRadius: 12,
+                  padding: scaleMod(12),
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ color: dossier.healthScore >= 50 ? '#00ee77' : '#ff5566', fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
+                      {dossier.systemTitle.toUpperCase()}
+                    </Text>
+                    <Text style={{ color: tc.textSec, fontSize: scaleFont(10), fontFamily: MONO, marginTop: scaleHeight(2) }}>
+                      {dossier.difficultyRating}
+                    </Text>
+                  </View>
+                  <Text style={{ color: '#ffffff', fontWeight: '900', fontSize: scaleFont(13), fontFamily: MONO }}>
+                    {dossier.healthScore} / 100
+                  </Text>
+                </View>
 
- {/* Probable Causes */}
- <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
- <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
- {t('aiDoctor.causes').toUpperCase()}
- </Text>
- {guided.probableCauses.map((pc, idx) => (
- <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
- <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, flex: 1 }}>• {pc.cause}</Text>
- <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', marginLeft: scaleWidth(8) }}>%{pc.probability}</Text>
- </View>
- ))}
- </View>
+                {/* Driving Safety Guidance */}
+                <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(6) }}>
+                  <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                    {t('aiDoctor.drivingSafety').toUpperCase()}
+                  </Text>
+                  <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                    {dossier.driveGuidance}
+                  </Text>
+                </View>
 
- {/* Mechanical Steps */}
- <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
- <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
- {t('aiDoctor.recommendedAction').toUpperCase()}
- </Text>
- <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
- 1. {guided.recommendedAction}
- </Text>
- <Text style={{ fontSize: scaleFont(11), color: tc.textSec, fontFamily: MONO, lineHeight: scaleFont(16) }}>
- 2. {t('aiDoctor.stepGeneric2')}
- </Text>
- </View>
+                {/* Driver Symptoms */}
+                {dossier.symptoms && dossier.symptoms.length > 0 && (
+                  <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
+                    <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                      {t('aiDoctor.symptomsTitle', { defaultValue: 'HİSSEDİLEN ARIZA BELİRTİLERİ (SEMPTOMLAR)' }).toUpperCase()}
+                    </Text>
+                    {dossier.symptoms.map((sym, idx) => (
+                      <Text key={idx} style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                        • {sym}
+                      </Text>
+                    ))}
+                  </View>
+                )}
 
- <View style={{ gap: scaleHeight(10), marginTop: scaleHeight(4) }}>
- <TouchableOpacity
- style={{ backgroundColor: tc.bg, borderWidth: 1, borderColor: tc.cyan, borderRadius: 10, paddingVertical: scaleHeight(12), alignItems: 'center' }}
- onPress={() => setIsAiDoctorAnalysisActive(false)}
- >
- <Text style={{ color: tc.cyan, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, letterSpacing: 1 }}>
- {t('dtcDetail.backToDetail').toUpperCase()}
- </Text>
- </TouchableOpacity>
+                {/* Cross DTC Correlation */}
+                {dossier.crossDtcAnalysis && (
+                  <View style={{ backgroundColor: `${tc.cyan}0F`, borderWidth: 1, borderColor: tc.cyan, borderRadius: 12, padding: scaleMod(14), gap: scaleHeight(6) }}>
+                    <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                      {t('aiDoctor.crossDtcTitle', { defaultValue: 'ÇOKLU ARIZA ÇAPRAZ ANALİZİ' }).toUpperCase()}
+                    </Text>
+                    <Text style={{ color: tc.textPri, fontSize: scaleFont(11), fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                      {dossier.crossDtcAnalysis}
+                    </Text>
+                  </View>
+                )}
 
- <TouchableOpacity
- style={{ backgroundColor: `${tc.red}18`, borderWidth: 1, borderColor: tc.red, borderRadius: 10, paddingVertical: scaleHeight(10), alignItems: 'center' }}
- onPress={() => {
- setIsDtcModalOpen(false);
- clearDiagnostics();
- }}
- >
- <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
- {t('service.clearCodes').toUpperCase()}
- </Text>
- </TouchableOpacity>
- </View>
- </ScrollView>
- </View>
- </View>
- </Modal>
- );
- }
+                {/* Probable Causes */}
+                <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
+                  <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                    {t('aiDoctor.causes').toUpperCase()}
+                  </Text>
+                  {dossier.probableCauses.map((pc, idx) => (
+                    <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, flex: 1 }}>• {pc.cause}</Text>
+                      <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', marginLeft: scaleWidth(8) }}>
+                        %{pc.probability}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
 
- return (
- <Modal
- visible={isDtcModalOpen}
- animationType="slide"
- transparent={true}
- onRequestClose={() => setIsDtcModalOpen(false)}
- >
- <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.75)', justifyContent: 'flex-end' }}>
- <View style={{
- backgroundColor: tc.card,
- borderTopLeftRadius: 20,
- borderTopRightRadius: 20,
- borderWidth: 1,
- borderColor: tc.border,
- padding: scaleMod(20),
- maxHeight: '85%',
- }}>
- <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(16) }}>
- <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
- <View style={{ backgroundColor: `${categoryColor}20`, borderWidth: 1, borderColor: categoryColor, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
- <Text style={{ color: categoryColor, fontSize: scaleFont(14), fontWeight: '900', fontFamily: MONO }}>{code}</Text>
- </View>
- <Text style={{ color: tc.textSec, fontSize: scaleFont(10), fontWeight: '800', fontFamily: MONO, letterSpacing: 1 }}>{categoryName}</Text>
- </View>
- <TouchableOpacity onPress={() => setIsDtcModalOpen(false)} style={{ padding: scaleMod(6) }}>
- <Text style={{ color: tc.textPri, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO }}>✕</Text>
- </TouchableOpacity>
- </View>
+                {/* Component Testing Steps */}
+                {dossier.componentTestingSteps && dossier.componentTestingSteps.length > 0 && (
+                  <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
+                    <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                      {t('aiDoctor.componentTestingTitle', { defaultValue: 'ADIM ADIM KOMPONENT & MULTİMETRE TESTİ' }).toUpperCase()}
+                    </Text>
+                    {dossier.componentTestingSteps.map((step, idx) => (
+                      <Text key={idx} style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                        {idx + 1}. {step}
+                      </Text>
+                    ))}
+                  </View>
+                )}
 
- <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleHeight(16), paddingBottom: scaleHeight(20) }}>
- <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border }}>
- <Text style={{ fontSize: scaleFont(10), color: tc.textSec, fontFamily: MONO, fontWeight: '800', letterSpacing: 1, marginBottom: scaleHeight(6) }}>
- {t('dtcDetail.descTitle').toUpperCase()}
- </Text>
- <Text style={{ fontSize: scaleFont(13), color: tc.textPri, fontFamily: MONO, fontWeight: '700', lineHeight: scaleFont(18) }}>
- {desc}
- </Text>
- </View>
+                {/* Technical Service Bulletin */}
+                {dossier.tsbSummary && (
+                  <View style={{ backgroundColor: `${tc.purple}15`, borderWidth: 1, borderColor: tc.purple, borderRadius: 12, padding: scaleMod(12) }}>
+                    <Text style={{ fontSize: scaleFont(10), color: tc.purple, fontFamily: MONO, fontWeight: '900', letterSpacing: 1, marginBottom: scaleHeight(4) }}>
+                      {t('dtcDetail.tsbTitle')}
+                    </Text>
+                    <Text style={{ fontSize: scaleFont(10), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(14) }}>
+                      {dossier.tsbSummary}
+                    </Text>
+                  </View>
+                )}
 
- {/* Smart Driving Safety Risk Assessment */}
- {(() => {
- let riskBadge = { color: tc.green, title: t('dtcRisk.safeTitle'), desc: t('dtcRisk.safeDesc') };
- if (['P0300', 'P0700', 'C0110', 'B0001', 'P0AA6', 'P0562', 'P0115'].includes(code)) {
- riskBadge = { color: tc.red, title: t('dtcRisk.criticalTitle'), desc: t('dtcRisk.criticalDesc') };
- } else if (prefix === 'P' || prefix === 'C' || prefix === 'B') {
- riskBadge = { color: tc.amber, title: t('dtcRisk.warningTitle'), desc: t('dtcRisk.warningDesc') };
- }
- return (
- <View style={{ backgroundColor: `${riskBadge.color}15`, borderRadius: 12, padding: scaleMod(12), borderWidth: 1, borderColor: riskBadge.color }}>
- <Text style={{ fontSize: scaleFont(11), color: riskBadge.color, fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5, marginBottom: scaleHeight(4) }}>
- {riskBadge.title}
- </Text>
- <Text style={{ fontSize: scaleFont(10), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(14) }}>
- {riskBadge.desc}
- </Text>
- </View>
- );
- })()}
+                <View style={{ gap: scaleHeight(10), marginTop: scaleHeight(4) }}>
+                  <TouchableOpacity
+                    style={{ backgroundColor: tc.bg, borderWidth: 1, borderColor: tc.cyan, borderRadius: 10, paddingVertical: scaleHeight(12), alignItems: 'center' }}
+                    onPress={() => setIsAiDoctorAnalysisActive(false)}
+                  >
+                    <Text style={{ color: tc.cyan, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO, letterSpacing: 1 }}>
+                      {t('dtcDetail.backToDetail').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
 
- {(() => {
- const guided = getGuidedDiagnostics(code);
- return (
- <View style={{ gap: scaleHeight(12) }}>
- <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(8) }}>
- <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', letterSpacing: 1 }}>
- {t('dtcDetail.possibleCausesTitle').toUpperCase()}
- </Text>
- {guided.probableCauses.map((pc, idx) => (
- <View key={idx} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
- <Text style={{ fontSize: scaleFont(11), color: tc.textPri, fontFamily: MONO, flex: 1 }}>• {pc.cause}</Text>
- <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '800', marginLeft: scaleWidth(8) }}>%{pc.probability}</Text>
- </View>
- ))}
- <Text style={{ fontSize: scaleFont(10), color: tc.textSec, fontFamily: MONO, marginTop: scaleHeight(4), fontStyle: 'italic' }}>
- {t('dtcDetail.recommendedAction')}: {guided.recommendedAction}
- </Text>
- </View>
+                  <TouchableOpacity
+                    style={{ backgroundColor: `${tc.red}18`, borderWidth: 1, borderColor: tc.red, borderRadius: 10, paddingVertical: scaleHeight(10), alignItems: 'center' }}
+                    onPress={() => {
+                      setIsDtcModalOpen(false);
+                      clearDiagnostics();
+                    }}
+                  >
+                    <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
+                      {t('service.clearCodes').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
+      );
+    }
 
- {guided.tsbSummary && (
- <View style={{ backgroundColor: `${tc.purple}15`, borderWidth: 1, borderColor: tc.purple, borderRadius: 12, padding: scaleMod(12) }}>
- <Text style={{ fontSize: scaleFont(10), color: tc.purple, fontFamily: MONO, fontWeight: '900', letterSpacing: 1, marginBottom: scaleHeight(4) }}>
- {t('dtcDetail.tsbTitle')}
- </Text>
- <Text style={{ fontSize: scaleFont(10), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(14) }}>
- {guided.tsbSummary}
- </Text>
- </View>
- )}
- </View>
- );
- })()}
+    return (
+      <Modal
+        visible={isDtcModalOpen}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setIsDtcModalOpen(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'flex-end' }}>
+          <View style={{
+            backgroundColor: tc.card,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderWidth: 1,
+            borderColor: tc.border,
+            padding: scaleMod(20),
+            maxHeight: '80%',
+          }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: scaleHeight(16) }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: scaleWidth(10) }}>
+                <View style={{ backgroundColor: `${categoryColor}20`, borderWidth: 1, borderColor: categoryColor, borderRadius: 8, paddingHorizontal: scaleWidth(10), paddingVertical: scaleHeight(4) }}>
+                  <Text style={{ color: categoryColor, fontSize: scaleFont(14), fontWeight: '900', fontFamily: MONO }}>{code}</Text>
+                </View>
+                <Text style={{ color: tc.textSec, fontSize: scaleFont(10), fontWeight: '800', fontFamily: MONO, letterSpacing: 1 }}>{categoryName}</Text>
+              </View>
+              <TouchableOpacity onPress={() => setIsDtcModalOpen(false)} style={{ padding: scaleMod(6) }}>
+                <Text style={{ color: tc.textPri, fontSize: scaleFont(16), fontWeight: '900', fontFamily: MONO }}>✕</Text>
+              </TouchableOpacity>
+            </View>
 
- <View style={{ gap: scaleHeight(10), marginTop: scaleHeight(4) }}>
- <TouchableOpacity
- style={{ backgroundColor: tc.cyan, borderRadius: 10, paddingVertical: scaleHeight(12), alignItems: 'center' }}
- onPress={() => setIsAiDoctorAnalysisActive(true)}
- >
- <Text style={{ color: tc.card, fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO, letterSpacing: 1 }}>
- {t('dtcDetail.aiDoctorBtn').toUpperCase()}
- </Text>
- </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: scaleHeight(16), paddingBottom: scaleHeight(20) }}>
+              <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border }}>
+                <Text style={{ fontSize: scaleFont(10), color: tc.textSec, fontFamily: MONO, fontWeight: '800', letterSpacing: 1, marginBottom: scaleHeight(6) }}>
+                  {t('dtcDetail.descTitle').toUpperCase()}
+                </Text>
+                <Text style={{ fontSize: scaleFont(13), color: tc.textPri, fontFamily: MONO, fontWeight: '700', lineHeight: scaleFont(18) }}>
+                  {desc}
+                </Text>
+              </View>
 
- <TouchableOpacity
- style={{ backgroundColor: `${tc.red}18`, borderWidth: 1, borderColor: tc.red, borderRadius: 10, paddingVertical: scaleHeight(10), alignItems: 'center' }}
- onPress={() => {
- setIsDtcModalOpen(false);
- clearDiagnostics();
- }}
- >
- <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
- {t('service.clearCodes').toUpperCase()}
- </Text>
- </TouchableOpacity>
- </View>
- </ScrollView>
- </View>
- </View>
- </Modal>
- );
- };
+              {/* Smart Driving Safety Risk Assessment */}
+              {(() => {
+                let riskBadge = { color: tc.green, title: t('dtcRisk.safeTitle'), desc: t('dtcRisk.safeDesc') };
+                if (['P0300', 'P0700', 'C0110', 'B0001', 'P0AA6', 'P0562', 'P0115'].includes(code)) {
+                  riskBadge = { color: tc.red, title: t('dtcRisk.criticalTitle'), desc: t('dtcRisk.criticalDesc') };
+                } else if (prefix === 'P' || prefix === 'C' || prefix === 'B') {
+                  riskBadge = { color: tc.amber, title: t('dtcRisk.warningTitle'), desc: t('dtcRisk.warningDesc') };
+                }
+                return (
+                  <View style={{ backgroundColor: `${riskBadge.color}15`, borderRadius: 12, padding: scaleMod(12), borderWidth: 1, borderColor: riskBadge.color }}>
+                    <Text style={{ fontSize: scaleFont(11), color: riskBadge.color, fontFamily: MONO, fontWeight: '900', letterSpacing: 0.5, marginBottom: scaleHeight(4) }}>
+                      {riskBadge.title}
+                    </Text>
+                    <Text style={{ fontSize: scaleFont(10), color: tc.textPri, fontFamily: MONO, lineHeight: scaleFont(14) }}>
+                      {riskBadge.desc}
+                    </Text>
+                  </View>
+                );
+              })()}
+
+              {/* Quick Guidance Overview Card */}
+              <View style={{ backgroundColor: tc.bg, borderRadius: 12, padding: scaleMod(14), borderWidth: 1, borderColor: tc.border, gap: scaleHeight(6) }}>
+                <Text style={{ fontSize: scaleFont(10), color: tc.cyan, fontFamily: MONO, fontWeight: '900', letterSpacing: 1 }}>
+                  {t('dtcDetail.quickAdviceTitle', { defaultValue: 'HIZLI TAVSİYE' }).toUpperCase()}
+                </Text>
+                <Text style={{ fontSize: scaleFont(11), color: tc.textSec, fontFamily: MONO, lineHeight: scaleFont(16) }}>
+                  {t('dtcDetail.quickAdviceText', { defaultValue: 'Bu arıza kodu aracınızın güç ve emisyon sistemlerini etkileyebilir. Detaylı kök nedenler, belirtiler, sürüş güvenliği ve multimetre test adımları için AI Doctor analizini başlatın.' })}
+                </Text>
+              </View>
+
+              <View style={{ gap: scaleHeight(10), marginTop: scaleHeight(4) }}>
+                <TouchableOpacity
+                  style={{ backgroundColor: tc.cyan, borderRadius: 10, paddingVertical: scaleHeight(12), alignItems: 'center' }}
+                  onPress={() => setIsAiDoctorAnalysisActive(true)}
+                >
+                  <Text style={{ color: tc.card, fontWeight: '900', fontSize: scaleFont(12), fontFamily: MONO, letterSpacing: 1 }}>
+                    {t('dtcDetail.aiDoctorBtn').toUpperCase()}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ backgroundColor: `${tc.red}18`, borderWidth: 1, borderColor: tc.red, borderRadius: 10, paddingVertical: scaleHeight(10), alignItems: 'center' }}
+                  onPress={() => {
+                    setIsDtcModalOpen(false);
+                    clearDiagnostics();
+                  }}
+                >
+                  <Text style={{ color: tc.red, fontWeight: '900', fontSize: scaleFont(11), fontFamily: MONO }}>
+                    {t('service.clearCodes').toUpperCase()}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
  // Sync language selection to i18n instance on rehydration and updates with session protection
  useEffect(() => {
