@@ -1,10 +1,10 @@
 import { oemDatabaseProvider } from '../OemDatabaseProvider';
 
-describe('OEM Feature Catalog & UDS Integrity Audit (453 Features)', () => {
+describe('OEM Feature Catalog & UDS Integrity Audit (513 Features)', () => {
   const allFeatures = oemDatabaseProvider.getFeaturesForMake();
 
-  it('contains exactly 453 total OEM feature definitions across all brands', () => {
-    expect(allFeatures.length).toBe(453);
+  it('contains exactly 513 total OEM feature definitions across all brands', () => {
+    expect(allFeatures.length).toBe(513);
   });
 
   it('ensures all 453 features have unique IDs and valid metadata', () => {

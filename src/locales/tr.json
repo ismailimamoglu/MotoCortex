@@ -2964,6 +2964,246 @@
             "cummins_ecm_fleet_speed_limiter": {
                 "name": "Cummins Motor Filo Hız Sınırlandırıcı Tablosu",
                 "desc": "Cummins motor beyninde izin verilen maksimum yol hızını programlar."
+            },
+            "vag_brake_disc_drying_abs": {
+                "name": "Fren Diski Kurulama (BDD)",
+                "desc": "Yağmurlu ve ıslak sürüşte fren balatalarını diske hafifçe yaklaştırarak su filmini temizler ve ıslak zemin durma mesafesini kısaltır."
+            },
+            "vag_hill_hold_assist_response": {
+                "name": "Yokuş Kalkış Asistanı (HHC) Bırakma Zamanlaması",
+                "desc": "Yokuşta kalkış yaparken Hill Hold Control freninin devreden çıkma bırakma eşiğini (Erken, Normal, Geç) ayarlar."
+            },
+            "vag_seat_heating_memory": {
+                "name": "Koltuk Isıtma Kademe Hafızası",
+                "desc": "Kontak kapatılıp açıldığında sürücü ve ön yolcu koltuk ısıtma kademesini en son bırakılan ayarda korur."
+            },
+            "vag_soundaktor_volume": {
+                "name": "Soundaktor Kabin İçi Motor Sesi Seviyesi",
+                "desc": "Hoparlör ve cam altı akustik aktüatörden gelen yapay motor sesi şiddetini %0 (tamamen sessiz), %50 veya %100 yapar."
+            },
+            "vag_rear_tear_wiping": {
+                "name": "Arka Silecek Damla Silme (Tear Wiping)",
+                "desc": "Arka cama su fışkırtıldıktan 5 saniye sonra camdan aşağı süzülen son damlayı otomatik tek tur daha siler."
+            },
+            "vag_pace_car_blinkers": {
+                "name": "Pace-Car Çapraz Fazlı Sinyaller",
+                "desc": "Dörtlü flaşör açıkken iç ve dış arka sinyal lambalarının çapraz ve sıralı yanıp sönmesini sağlar."
+            },
+            "vag_cornering_lights_speed_threshold": {
+                "name": "Viraj Sis Farı Devreye Girme Hız Eşiği",
+                "desc": "Direksiyon çevrildiğinde sis farlarının viraj aydınlatması olarak devreye girme üst sınırını 40 km/h'den 60 km/h'ye yükseltir."
+            },
+            "vag_reverse_rear_wiper_disable": {
+                "name": "Geri Viteste Arka Silecek Otomatik Çalışmasını Kapatma",
+                "desc": "Ön silecek açıkken geri vitese takıldığında kuru veya buzlu arka sileceğin camı çizmesini önler."
+            },
+            "vag_coming_home_fog_lights": {
+                "name": "Coming Home Sis Farları ile Çalıştırma",
+                "desc": "Araçtan inerken karşılama aydınlatmasını ana farlar yerine sis farlarından yakarak ampul ve akü ömrünü korur."
+            },
+            "vag_refuel_gallons_display": {
+                "name": "Depo Alınabilir Yakıt Litresi Gösterimi",
+                "desc": "Yol bilgisayarı ekranında depoya tam kaç litre daha yakıt konulabileceğini sayısal olarak gösterir."
+            },
+            "vag_seatbelt_warning_chime": {
+                "name": "Emniyet Kemeri Sesli İkazı İptali",
+                "desc": "Kemer takılmadığında öten kesintisiz sesli ikaz zilini susturur; gösterge panelindeki görsel ışık uyarısını korur."
+            },
+            "vag_sunroof_comfort_mode": {
+                "name": "Panoramik Cam Tavan Konfor Açılma Modu",
+                "desc": "Uzaktan kumanda kilit açma tuşuna uzun basıldığında cam tavanın yukarı kalkması (Tilt) veya tam kayarak açılması (Slide) ayarı."
+            },
+            "vag_scandinavian_rear_drl": {
+                "name": "İskandinav Tipi Gündüz Açık Arka LED Stoplar",
+                "desc": "Gündüz sürüş farları (DRL) devredeyken arka stop lambalarının da sürekli yanmasını sağlayarak arkadan görünürlüğü artırır."
+            },
+            "vag_xds_differential_strength": {
+                "name": "XDS Elektronik Diferansiyel Kilidi Müdahale Gücü",
+                "desc": "Sert virajlarda iç tekerleğe uygulanan fren torku hassasiyetini (Standart, Güçlü) ayarlayarak kafadan kaymayı azaltır."
+            },
+            "bmw_easy_entry_exit_seat": {
+                "name": "Kolay Giriş/Çıkış Koltuk Geri Kaydırma",
+                "desc": "Kapı açıldığında sürücü koltuğunu otomatik geriye kaydırır, motor çalıştığında kayıtlı sürüş pozisyonuna getirir."
+            },
+            "bmw_bowers_wilkins_sound_profiles": {
+                "name": "Bowers & Wilkins High-End Ses Profilleri",
+                "desc": "Fabrika çıkışlı Harman Kardon ses sistemine Studio, Concert, On Stage ve Lounge surround ses profillerini ekler."
+            },
+            "bmw_fog_lights_with_high_beams": {
+                "name": "Uzun Farlar Açıkken Sis Farlarının Sönmemesi",
+                "desc": "Selektör yapıldığında veya uzun farlar açıkken ön sis farlarının açık kalmasını sağlayarak maksimum gece görüşü sunar."
+            },
+            "bmw_alpina_instrument_cluster": {
+                "name": "Alpina Mavi Kadran Gösterge Tasarımı",
+                "desc": "Dijital gösterge panelini ikonik Alpina mavisi zemin ve yeşil ibre tasarımına dönüştürür."
+            },
+            "bmw_angel_eyes_brightness_max": {
+                "name": "Angel Eyes Halka Far Parlaklığını Artırma (%100)",
+                "desc": "Gündüz ve park aydınlatmasında kısık çalışan LED halo Angel Eyes halkalarının parlaklığını tam güç (%100 PWM) seviyesine çıkarır."
+            },
+            "bmw_custom_dual_ambient_lighting": {
+                "name": "Çift Renkli Özel Ambiyans Aydınlatma",
+                "desc": "Ön göğüs ve ayak bölgesi aydınlatmasını iki farklı özel renk tonuna (Camgöbeği üst / Turuncu alt) ayırır."
+            },
+            "bmw_tailgate_close_single_click": {
+                "name": "Elektrikli Bagajı Kumandadan Tek Basışla Kapatma",
+                "desc": "Elektrikli bagaj kapağını kapatmak için kumanda butonuna basılı tutma zorunluluğunu kaldırır; tek basışta kapatır."
+            },
+            "bmw_window_up_door_open_continue": {
+                "name": "Kapı Açıkken Cam Kapanmasının Devam Etmesi",
+                "desc": "Otomatik cam kapanırken kapı açıldığında camın durmasını engeller; tam kapanma hareketini tamamlar."
+            },
+            "bmw_trailer_camera_zoom_mode": {
+                "name": "Römork Çeki Demiri Yakınlaştırma (Zoom) Kamerası",
+                "desc": "Geri görüş kamerasına çeki demiri ve römork kancasına milimetrik yanaşmayı sağlayan dik açı yakınlaştırma düğmesi ekler."
+            },
+            "bmw_sport_displays_power_units": {
+                "name": "Spor Göstergelerde Beygir (HP) ve Tork (Nm) Birimleri",
+                "desc": "iDrive ekranındaki spor göstergeleri kW yerine Beygir Gücü (HP) ve lb-ft yerine Newton Metre (Nm) olarak gösterir."
+            },
+            "bmw_ac_last_state_memory": {
+                "name": "Klima Son Durum Hafızası",
+                "desc": "Araç her çalıştığında klimanın otomatik olarak açılmasını engeller; en son kapatılan durumu hatırlar."
+            },
+            "bmw_mirror_fold_instant_close": {
+                "name": "Ayna Katlama Gecikme Süresini Sıfırlama (0.0s)",
+                "desc": "Kumandadan kilit tuşuna 1.5 saniye basılı tutma şartını kaldırır; tek tıkta kilitlenir kilitlenmez aynaları anında katlar."
+            },
+            "fiat_egea_cornering_fog_lights": {
+                "name": "Viraj İçi Sis Farı Aydınlatma Desteği",
+                "desc": "Düşük hızlarda direksiyon çevrildiğinde veya sinyal verildiğinde ilgili ön sis farını otomatik yakarak viraj içini aydınlatır."
+            },
+            "ford_global_windows_open_close": {
+                "name": "Tek Dokunuş Kumandadan 4 Cam Açma/Kapama",
+                "desc": "Anahtar kumandasında kilit veya açma tuşuna basılı tutarak 4 elektrikli camın birden otomatik açılıp kapanmasını sağlar."
+            },
+            "ford_sync3_climate_screen": {
+                "name": "SYNC 3 Dokunmatik Ekranında Klima Menüsü",
+                "desc": "Klima sıcaklık, yönlendirme ve fan ayarlarını dokunmatik multimedya ana ekranına taşır."
+            },
+            "ford_digital_speedometer_ipc": {
+                "name": "Kadrana Sayısal Dijital Hız Göstergesi",
+                "desc": "Direksiyon arkasındaki 4.2 inç renkli ekranda büyük punto ile sayısal dijital hız (km/h) menüsünü açar."
+            },
+            "ford_bambi_mode_fog_highbeam": {
+                "name": "Bambi Modu (Uzun Farlarda Sislerin Yanık Kalması)",
+                "desc": "Fabrika çıkışında uzun far yakılınca otomatik kapanan ön sis farlarının yanmaya devam etmesini sağlar."
+            },
+            "ford_auto_idle_shutdown_disable": {
+                "name": "Rölanti Otomatik Motor Kapatma İptali (AEIS)",
+                "desc": "Park halinde 30 dakika bekleyince aracın kendini korumak için stop etmesini iptal eder veya süresini uzatır."
+            },
+            "ford_tpms_numeric_pressure_display": {
+                "name": "TPMS Sayısal Lastik Basıncı Gösterimi",
+                "desc": "Yalnızca lamba yakmak yerine 4 lastiğin anlık bar/psi basınç değerlerini tek tek ekranda listeler."
+            },
+            "ford_rear_tail_lights_with_drl": {
+                "name": "Gündüz Sürüş Farı ile Arka LED Stopların Yanması",
+                "desc": "Gündüz aydınlatması devredeyken arka stopların da sürekli açık kalmasını sağlayarak tünel güvenliğini artırır."
+            },
+            "ford_lock_acoustic_horn_chirp": {
+                "name": "Kumandadan Kilitlemede Kısa Korna Onayı",
+                "desc": "Kapılar kumandadan çift kilitlendiğinde kornadan kısa tek bip çalarak kilitlendiğini doğrular."
+            },
+            "renault_cornering_fog_lights": {
+                "name": "Viraj Sis Farı Aydınlatması",
+                "desc": "Direksiyon çevrildiğinde veya sinyal verildiğinde ilgili ön sis farını otomatik yakarak viraj içini aydınlatır."
+            },
+            "renault_overspeed_buzzer_disable": {
+                "name": "120 km/h Hız Aşımı Sesli İkazını Kapatma",
+                "desc": "Körfez ülkeleri ve bazı serilerde 120 km/h üstü hızlarda çalan sürekli sesli uyarıyı susturur."
+            },
+            "renault_clock_temp_cluster_display": {
+                "name": "Kadranda Saat ve Dış Sıcaklık Gösterimi",
+                "desc": "Gösterge ekranında fabrika çıkışı gizli olan dijital saat ve dış ortam sıcaklık (°C) verisini açar."
+            },
+            "renault_camera_dynamic_guidelines": {
+                "name": "Geri Görüş Kamerasında Dinamik Kılavuz Çizgileri",
+                "desc": "R-Link 2 ekranında direksiyon açısına göre kavis alan dinamik park rotası çizgilerini etkinleştirir."
+            },
+            "renault_gear_shift_indicator_calib": {
+                "name": "Vites Değiştirme Göstergesi (GSI) Aktivasyonu",
+                "desc": "Yakıt tasarrufu için ekranda vites yükseltme/düşürme ok işaretlerini aktifleştirir."
+            },
+            "renault_coolant_temp_bar_unlock": {
+                "name": "Motor Hararet Gösterge Çubuğunu Açma",
+                "desc": "Gösterge panelinde gizlenmiş olan dijital motor soğutma suyu hararet gösterge çubuğunu açar."
+            },
+            "renault_walkaway_lock_acoustic": {
+                "name": "Kartla Uzaklaşınca Otomatik Korna Bip Onayı",
+                "desc": "Eller serbest kartla araçtan uzaklaşıldığında kapılar kilitlenirken kornadan onay sesi verir."
+            },
+            "toyota_wireless_window_roll_down": {
+                "name": "Kumandadan Uzaktan Camları İndirme",
+                "desc": "Yaz aylarında araca binmeden önce kumanda açma tuşuna uzun basarak camları uzaktan indirir ve kabini havalandırır."
+            },
+            "toyota_auto_headlight_sensitivity_5step": {
+                "name": "Otomatik Far Sensörü 5 Kademeli Hassasiyet Ayarı",
+                "desc": "Köprü altlarında veya alacakaranlıkta otomatik farların devreye girme eşiğini hassaslaştırır."
+            },
+            "toyota_lane_change_flashes_count": {
+                "name": "Konfor Sinyali Yanıp Sönme Sayısı (5 veya 7 Kırpma)",
+                "desc": "Şerit değiştirirken tek dokunuşta sinyal yanıp sönme adedini standart 3'ten 5 veya 7'ye çıkarır."
+            },
+            "toyota_interior_light_illumination_timer": {
+                "name": "İç Aydınlatma Otomatik Kapanma Gecikmesi",
+                "desc": "Kapılar kapatıldıktan sonra iç tavan aydınlatmasının açık kalma süresini (7.5 sn, 15 sn, 30 sn) ayarlar."
+            },
+            "toyota_seatbelt_buzzer_mute_driver_pass": {
+                "name": "Sürücü ve Ön Yolcu Kemer İkaz Sesini Kapatma",
+                "desc": "Arazide veya kapalı alanda ön koltuk emniyet kemeri sesli bip ikazını susturur; gösterge ikaz ışığını korur."
+            },
+            "toyota_d_mode_auto_door_lock": {
+                "name": "Vites D Konumunda Otomatik Kapı Kilitleme",
+                "desc": "Vites D (Drive) konumuna alındığında tüm kapıları kilitler; P (Park) konumuna alınınca kilitleri açar."
+            },
+            "moto_bmw_quickshifter_pro_calibration": {
+                "name": "Shift Assistant Pro (Quickshifter) Sıfırlama ve Öğrenme",
+                "desc": "Debriyajsız vites geçişlerindeki sertlik ve boşa düşmeleri gidermek için yük hücresi sensörünü kalibre eder."
+            },
+            "moto_service_interval_km_date_reset": {
+                "name": "Motosiklet Servis Sayacı ve Tarih Sıfırlama",
+                "desc": "Göstergedeki SERVICE uyarısını siler ve sonraki periyodik bakımı 10.000 km / 365 güne kurar."
+            },
+            "moto_ktm_wheel_circumference_calibration": {
+                "name": "Lastik Yuvarlanma Çevresi Ebat Kalibrasyonu",
+                "desc": "Pist tipi veya farklı yanak lastik takıldığında hız ve çekiş kontrol (TC) sapmasını düzeltir."
+            },
+            "moto_ducati_drl_auto_switch_sensitivity": {
+                "name": "Ducati DRL Işık Sensörü Otomatik Geçiş Hassasiyeti",
+                "desc": "Gündüz nalı DRL LED ile ana projektör far arasındaki otomatik optik geçiş eşiğini kalibre eder."
+            },
+            "moto_yamaha_cluster_units_conversion": {
+                "name": "Gösterge Birim Dönüşümü (km/mi, °C/°F, L/100km)",
+                "desc": "Motosiklet dijital göstergesindeki hız, sıcaklık ve yakıt tüketim metriklerini Metrik ve İngiliz birimleri arasında dönüştürür."
+            },
+            "moto_heated_grips_seat_retrofit_unlock": {
+                "name": "Isıtmalı Elcik ve Koltuk Retrofit Aktivasyonu",
+                "desc": "Sonradan takılan orijinal ısıtmalı elcik ve selelerin gösterge panelindeki kademe menülerini açar."
+            },
+            "ev_manual_battery_preconditioning": {
+                "name": "Yüksek Voltaj Batarya Manuel Ön Isıtma",
+                "desc": "DC hızlı şarj istasyonuna varmadan önce bataryayı optimum 32°C sıcaklığa ısıtarak tepe şarj hızına ulaşmasını sağlar."
+            },
+            "ev_v2l_vehicle_to_load_outlet_enable": {
+                "name": "Vehicle-to-Load (V2L) 220V Şebeke Prizi Çıkışı",
+                "desc": "Kamp ekipmanı veya elektrikli cihazları çalıştırmak için bataryadan 220V/16A alternatif akım çıkışını aktifleştirir."
+            },
+            "ev_winter_regen_braking_reduction": {
+                "name": "Kış Modu Düşük Tutunma Rejeneratif Fren Eğrisi",
+                "desc": "Buzlu ve karlı zeminlerde ani tek pedal rejenerasyonunun tekerlek kilitlemesini önlemek için yavaşlama torkunu yumuşatır."
+            },
+            "ev_scheduled_cabin_climate_timer": {
+                "name": "Zaman Ayarlı Kabin Ön Isıtma / Soğutma",
+                "desc": "Araç prize takılıyken hareket saati öncesi kabini ısıtır veya soğutur; menzil kaybını önler."
+            },
+            "ev_charge_port_auto_unlock_completion": {
+                "name": "Şarj %100 Tamamlanınca Soket Kilidini Otomatik Bırakma",
+                "desc": "Ortak şarj istasyonlarında şarj tamamlandığında kablo kilidini serbest bırakır."
+            },
+            "ev_throttle_pedal_curve_calibration": {
+                "name": "Gaz Pedalı Tepki Eğrisi (Chill / Sport Tork)",
+                "desc": "Elektrik motorunun ani tork tepkisini konforlu kademeli veya anlık patlayıcı mod olarak ayarlar."
             }
         },
         "codeBtn": "KODLA",

@@ -48,7 +48,7 @@ export interface OEMFeatureDefinition {
     requiresSecurityAccess: boolean;
     securityLevel?: number;
     requiresExtendedSession: boolean;
-    safetyLevel: 'LEVEL_0_READ_ONLY' | 'LEVEL_1_CLEAR_DTC' | 'LEVEL_2_ADAPTATION';
+    safetyLevel: 'LEVEL_0_READ_ONLY' | 'LEVEL_1_CLEAR_DTC' | 'LEVEL_1_CODING' | 'LEVEL_2_ADAPTATION';
     riskLevel: FeatureRiskLevel;
     sfdProtected?: boolean;
     streetLegalNoteKey?: string;

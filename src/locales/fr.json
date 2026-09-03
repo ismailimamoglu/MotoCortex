@@ -2913,6 +2913,246 @@
             "generic_window_calibrate": {
                 "name": "Calibration Universelle Lève-Vitre Électrique",
                 "desc": "Calibre les limites de course automatique et le seuil de sécurité anti-pincement."
+            },
+            "vag_brake_disc_drying_abs": {
+                "name": "Brake Disc Drying (BDD)",
+                "desc": "Periodically applies light brake pad pressure in wet conditions to remove water film and improve wet stopping distance."
+            },
+            "vag_hill_hold_assist_response": {
+                "name": "Hill Hold Assist (HHC) Release Timing",
+                "desc": "Adjusts release timing threshold of Hill Hold Control when accelerating from an incline."
+            },
+            "vag_seat_heating_memory": {
+                "name": "Seat Heating Level Memory",
+                "desc": "Retains driver and front passenger seat heater level setting across ignition off and on cycles."
+            },
+            "vag_soundaktor_volume": {
+                "name": "Soundaktor Interior Engine Sound Volume",
+                "desc": "Adjusts volume percentage of synthetic engine cabin acoustic actuator from completely silent to full throttle."
+            },
+            "vag_rear_tear_wiping": {
+                "name": "Rear Wiper Tear Drop Wiping",
+                "desc": "Executes one final wipe 5 seconds after rear washer spray to clear residual dripping water."
+            },
+            "vag_pace_car_blinkers": {
+                "name": "Pace-Car Alternating Turn Signals",
+                "desc": "Alternates inner and outer rear indicator lighting in counter-phase during hazard flashers."
+            },
+            "vag_cornering_lights_speed_threshold": {
+                "name": "Cornering Fog Light Speed Threshold",
+                "desc": "Increases maximum speed threshold for fog light cornering assist illumination from 40 to 60 km/h."
+            },
+            "vag_reverse_rear_wiper_disable": {
+                "name": "Reverse Gear Automatic Rear Wipe Disable",
+                "desc": "Prevents rear wiper from automatically wiping a dry or iced window when engaging reverse gear."
+            },
+            "vag_coming_home_fog_lights": {
+                "name": "Coming Home via Fog Lights",
+                "desc": "Illuminates front fog lights instead of low beam headlights for Coming Home welcome exterior lighting."
+            },
+            "vag_refuel_gallons_display": {
+                "name": "Volume to be Replenished (Refuel Liters)",
+                "desc": "Displays exact liters of fuel required to top off fuel tank on instrument cluster MFD screen."
+            },
+            "vag_seatbelt_warning_chime": {
+                "name": "Seatbelt Acoustic Warning Chime",
+                "desc": "Mutes persistent audible seatbelt chime while preserving instrument cluster visual warning icon."
+            },
+            "vag_sunroof_comfort_mode": {
+                "name": "Panoramic Sunroof Comfort Opening Mode",
+                "desc": "Configures remote key fob long-press action to either tilt or fully slide open panoramic sunroof."
+            },
+            "vag_scandinavian_rear_drl": {
+                "name": "Scandinavian Daytime Running Tail Lights",
+                "desc": "Keeps rear tail lights active alongside daytime running lights for enhanced rear visibility in tunnels."
+            },
+            "vag_xds_differential_strength": {
+                "name": "XDS Electronic Differential Lock Strength",
+                "desc": "Adjusts brake-based torque vectoring aggressiveness on inner drive wheels to reduce understeer in sharp corners."
+            },
+            "bmw_easy_entry_exit_seat": {
+                "name": "Easy Entry / Exit Seat Motion",
+                "desc": "Moves electric driver seat backwards when opening door and returns to drive position upon engine start."
+            },
+            "bmw_bowers_wilkins_sound_profiles": {
+                "name": "Bowers & Wilkins High-End Sound Profiles",
+                "desc": "Enables Studio, Concert, On Stage, and Lounge audio surround profiles on factory Harman Kardon sound systems."
+            },
+            "bmw_fog_lights_with_high_beams": {
+                "name": "Fog Lights Active with High Beams",
+                "desc": "Keeps front fog lights illuminated when flashing or turning on high beam headlights."
+            },
+            "bmw_alpina_instrument_cluster": {
+                "name": "Alpina Blue Instrument Cluster Display",
+                "desc": "Switches digital instrument cluster theme to classic Alpina signature blue dials and green needles."
+            },
+            "bmw_angel_eyes_brightness_max": {
+                "name": "Angel Eyes Full DRL Brightness (100%)",
+                "desc": "Forces corona ring Angel Eyes LED halo brightness to 100% duty cycle in low beam parking light mode."
+            },
+            "bmw_custom_dual_ambient_lighting": {
+                "name": "Dual-Color Custom Ambient Lighting",
+                "desc": "Splits dashboard and footwell ambient lighting into custom dual colors (Cyan upper / Orange lower)."
+            },
+            "bmw_tailgate_close_single_click": {
+                "name": "Electric Tailgate Remote Single-Click Close",
+                "desc": "Closes motorized rear liftgate with a single short press of key fob trunk button without continuous hold."
+            },
+            "bmw_window_up_door_open_continue": {
+                "name": "Continuous Window Roll-Up with Door Open",
+                "desc": "Allows power windows to complete one-touch closing cycle even if a vehicle door is opened."
+            },
+            "bmw_trailer_camera_zoom_mode": {
+                "name": "Trailer Hitch Camera Zoom View",
+                "desc": "Adds dedicated top-down zoom button to rear camera screen for precise tow bar and trailer alignment."
+            },
+            "bmw_sport_displays_power_units": {
+                "name": "Sport Displays HP & Nm Units",
+                "desc": "Switches digital live engine telemetry gauges on iDrive display to Horsepower (hp) and Torque (Nm)."
+            },
+            "bmw_ac_last_state_memory": {
+                "name": "Air Conditioning Last State Memory",
+                "desc": "Prevents air conditioning compressor from automatically activating on every vehicle start."
+            },
+            "bmw_mirror_fold_instant_close": {
+                "name": "Instant Mirror Fold Delay Elimination (0.0s)",
+                "desc": "Folds side view mirrors instantly upon single key fob lock press by setting comfort close delay to 0 ms."
+            },
+            "fiat_egea_cornering_fog_lights": {
+                "name": "Cornering Fog Light Illumination Assist",
+                "desc": "Automatically activates corresponding front fog light when steering wheel is turned or turn indicator is active."
+            },
+            "ford_global_windows_open_close": {
+                "name": "Global Windows Remote Open & Close",
+                "desc": "Enables one-touch opening and closing of all 4 power windows by holding remote key fob lock/unlock buttons."
+            },
+            "ford_sync3_climate_screen": {
+                "name": "SYNC 3 Climate Control Touchscreen Menu",
+                "desc": "Adds dedicated climate control interface to SYNC 3 touchscreen display for temperature and blower adjustment."
+            },
+            "ford_digital_speedometer_ipc": {
+                "name": "Digital Speedometer in Instrument Cluster",
+                "desc": "Unlocks large digital numeric vehicle speed display on 4.2-inch center instrument cluster display screen."
+            },
+            "ford_bambi_mode_fog_highbeam": {
+                "name": "Bambi Mode (High Beams with Fog Lights)",
+                "desc": "Prevents front fog lights from automatically switching off when high beam headlights are activated."
+            },
+            "ford_auto_idle_shutdown_disable": {
+                "name": "Automatic Engine Idle Shutdown Disable (AEIS)",
+                "desc": "Disables 30-minute automatic engine shutdown timer while vehicle is parked in neutral or park with engine running."
+            },
+            "ford_tpms_numeric_pressure_display": {
+                "name": "TPMS Numeric Tire Pressure Display",
+                "desc": "Displays exact tire pressure values for all 4 individual wheels in Bar or PSI on instrument cluster screen."
+            },
+            "ford_rear_tail_lights_with_drl": {
+                "name": "Rear Position Tail Lights Active with DRL",
+                "desc": "Keeps rear LED position lamps turned on during daytime running light mode for enhanced highway visibility."
+            },
+            "ford_lock_acoustic_horn_chirp": {
+                "name": "Remote Lock Acoustic Horn Chirp",
+                "desc": "Emits a short single horn chirp when vehicle doors are successfully double-locked via remote key fob."
+            },
+            "renault_cornering_fog_lights": {
+                "name": "Cornering Fog Lights Activation",
+                "desc": "Automatically activates corresponding front fog light when steering wheel is turned or turn indicator is active."
+            },
+            "renault_overspeed_buzzer_disable": {
+                "name": "120 km/h Overspeed Acoustic Buzzer Mute",
+                "desc": "Disables the continuous audible speed chime that triggers when driving over 120 km/h in Middle East spec vehicles."
+            },
+            "renault_clock_temp_cluster_display": {
+                "name": "Instrument Cluster Clock & Ambient Temperature",
+                "desc": "Enables external temperature and digital clock readout directly on center instrument cluster screen."
+            },
+            "renault_camera_dynamic_guidelines": {
+                "name": "Reverse Camera Dynamic Trajectory Guidelines",
+                "desc": "Overlays steering-angle responsive dynamic curved trajectory guide lines on R-Link 2 rear camera screen."
+            },
+            "renault_gear_shift_indicator_calib": {
+                "name": "Gear Shift Indicator (GSI) Activation",
+                "desc": "Enables dashboard upshift and downshift arrows for optimized fuel consumption and engine efficiency."
+            },
+            "renault_coolant_temp_bar_unlock": {
+                "name": "Engine Coolant Temperature Bar Gauge Unlock",
+                "desc": "Unlocks digital engine coolant temperature bar graph on instrument clusters where it was factory hidden."
+            },
+            "renault_walkaway_lock_acoustic": {
+                "name": "Hands-Free Card Walk-Away Acoustic Horn Beep",
+                "desc": "Provides audible single horn confirmation when walking away from vehicle with Hands-Free key card."
+            },
+            "toyota_wireless_window_roll_down": {
+                "name": "Wireless Key Fob Window Roll-Down",
+                "desc": "Enables remote power window lowering by holding key fob unlock button for summer cabin ventilation."
+            },
+            "toyota_auto_headlight_sensitivity_5step": {
+                "name": "Automatic Headlight Optical Sensor Sensitivity",
+                "desc": "Calibrates 5-step ambient light sensor sensitivity for earlier automatic headlight activation under bridges."
+            },
+            "toyota_lane_change_flashes_count": {
+                "name": "Lane Change Flasher Blink Cycle Count",
+                "desc": "Extends one-touch turn indicator blinks from standard 3 pulses to 5 or 7 pulses for safe highway lane changes."
+            },
+            "toyota_interior_light_illumination_timer": {
+                "name": "Interior Ambient Illumination Auto-Off Timer",
+                "desc": "Sets delay duration before interior cabin dome light turns off after closing doors."
+            },
+            "toyota_seatbelt_buzzer_mute_driver_pass": {
+                "name": "Seatbelt Acoustic Reminder Chime Mute",
+                "desc": "Mutes persistent seatbelt acoustic beeping chime for off-road or track use while preserving visual dashboard indicator."
+            },
+            "toyota_d_mode_auto_door_lock": {
+                "name": "Speed / Shift Position Automatic Door Lock",
+                "desc": "Locks all vehicle doors automatically when shifting into Drive (D) and unlocks when shifting into Park (P)."
+            },
+            "moto_bmw_quickshifter_pro_calibration": {
+                "name": "Shift Assistant Pro (Quickshifter) Relearn",
+                "desc": "Performs clutchless upshift/downshift load cell sensor zero-point relearn to eliminate false neutrals and notchiness."
+            },
+            "moto_service_interval_km_date_reset": {
+                "name": "Motorcycle Service Countdown & Date Reset",
+                "desc": "Clears SERVICE warning indicator and programs next scheduled oil service interval to 10,000 km / 365 days."
+            },
+            "moto_ktm_wheel_circumference_calibration": {
+                "name": "Tire Rolling Circumference Calibration",
+                "desc": "Adjusts ABS tone ring pulse ratio for track slick or non-OEM tire aspect profiles to maintain traction control accuracy."
+            },
+            "moto_ducati_drl_auto_switch_sensitivity": {
+                "name": "Ducati DRL Light Sensor Transition Sensitivity",
+                "desc": "Calibrates automatic optical switching threshold between daytime horseshoe DRL and low beam projector headlight."
+            },
+            "moto_yamaha_cluster_units_conversion": {
+                "name": "Instrument Cluster Units Conversion (°C/°F, km/mi)",
+                "desc": "Toggles instrument cluster digital display metrics between Metric (km/h, L/100km, °C) and Imperial (mph, MPG, °F)."
+            },
+            "moto_heated_grips_seat_retrofit_unlock": {
+                "name": "OEM Heated Grips & Seat Retrofit Activation",
+                "desc": "Unlocks multi-level heated handlebar grips and heated saddle menu controls in instrument cluster for retrofitted accessories."
+            },
+            "ev_manual_battery_preconditioning": {
+                "name": "Manual High-Voltage Battery Preconditioning",
+                "desc": "Triggers high-voltage PTC coolant heater to warm traction pack to optimal 32°C for peak DC fast charging speed."
+            },
+            "ev_v2l_vehicle_to_load_outlet_enable": {
+                "name": "Vehicle-to-Load (V2L) 220V Inverter Output",
+                "desc": "Enables external 220V/16A AC power discharge from high-voltage battery to power camping gear or appliances."
+            },
+            "ev_winter_regen_braking_reduction": {
+                "name": "Winter Low-Traction Regenerative Braking Curve",
+                "desc": "Softens sudden one-pedal regen deceleration on ice or snow to prevent drive wheel lockup and maintain stability."
+            },
+            "ev_scheduled_cabin_climate_timer": {
+                "name": "Scheduled Cabin Departure Pre-Conditioning",
+                "desc": "Pre-heats or cools vehicle interior while plugged in to preserve driving range from high-voltage battery."
+            },
+            "ev_charge_port_auto_unlock_completion": {
+                "name": "Auto-Unlock Charge Port Latch Upon 100% Full",
+                "desc": "Releases motorized charging connector lock automatically once battery reaches target charge limit for shared charging stations."
+            },
+            "ev_throttle_pedal_curve_calibration": {
+                "name": "Accelerator Pedal Response Curve (Linear / Sport)",
+                "desc": "Configures drive-by-wire pedal tip-in torque mapping between relaxed linear response and instant torque punch."
             }
         },
         "codeBtn": "CODE",

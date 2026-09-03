@@ -2,8 +2,11 @@
 
 [![React Native](https://img.shields.io/badge/React_Native-Expo_v52-61DAFB?logo=react&logoColor=black)](https://reactnative.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-v5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tests](https://img.shields.io/badge/Tests-73_Suites_|_504_Passed-2EA44F?logo=jest&logoColor=white)](https://jestjs.io/)
-[![UDS ISO-14229](https://img.shields.io/badge/Protocol-ISO_14229_UDS_|_ISO_13400_DoIP_|_CAN_FD-FF6F00)](https://www.iso.org/standard/72439.html)
+[![Tests](https://img.shields.io/badge/tests-74%20suites%20%7C%20508%20passed-brightgreen)](https://jestjs.io/)
+[![Coverage](https://img.shields.io/badge/coverage-86%25-green)](https://jestjs.io/)
+[![i18n](https://img.shields.io/badge/locales-26%20languages%20(100%25%20synced)-blue)](src/locales/)
+[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-orange)](https://reactnative.dev/)
+[![License](https://img.shields.io/badge/license-Proprietary-red)](LICENSE)
 [![SGW Bypass](https://img.shields.io/badge/Security-SGW_Bypass_Engine_(SFD/FCA/BMW)-00E5FF)](src/core/security/SgwBypassEngine.ts)
 [![Offline-First](https://img.shields.io/badge/Architecture-Offline--First_Engine-4A154B)](https://motocortex.app)
 [![Locales](https://img.shields.io/badge/Locales-26_Languages_100%25_Synchronized-8E44AD)](src/locales/)
@@ -36,10 +39,10 @@
 
 ---
 
-### 🛠️ 3. 208+ Global OEM Hidden Features & UDS ECU Coding
-- **Motorcycle UDS Library (35 Features):** Shift Assistant Pro re-adaptation, Dynamic ESA zero-point calibration, ABS Pro cornering mode, Track lap timers, and EBC engine brake control.
-- **China & Global EV Platforms (18 Features):** V2L 3.6kW power expansion, AVAS low-speed pedestrian siren mute, manual battery pre-heating, and Xiaomi SU7 Drift Mode torque vectoring.
-- **Retrofit Hardware Integration (12 Features):** Coding for aftermarket parking distance sensors (PDC), 360° surround camera view, LED license plate error cancel, heated windshield/steering wheel modules, and tow bar electrical integration.
+### 🛠️ 3. 513+ Global OEM Hidden Features & UDS ECU Coding
+- **Expanded Brand Coverage (513 Features):** VAG (110 features including Brake Disc Drying, HHC release, Pace-Car blinkers, XDS strength), BMW (73 features including Alpina Cluster, Easy Entry, Bowers & Wilkins profiles), Ford (31 features including SYNC 3 climate, Bambi mode, digital speedo), Renault (24 features including cornering fog lights, dynamic guidelines, VIM), Toyota (43 features), and Stellantis (21 features).
+- **Motorcycle UDS Library (40 Features):** Shift Assistant Pro re-adaptation, service interval/date reset, KTM tire circumference calibration, Ducati optical DRL transition, and heated grips/seat retrofit.
+- **China & Global EV Platforms (26 Features):** Manual HV battery preconditioning, V2L 220V power discharge, winter regen curve, scheduled departure pre-cooling, and auto-unlock charge latch.
 - **Security Gateway (SGW) Bypass:** Challenge-response unlocking for VAG SFD 1/2, FCA SGW, and BMW/Mercedes Central Gateways.
 - **Deep Car Brand Coverage (122+ Features):** VAG Gauge Staging, BMW Sport Displays, Mercedes AMG Telemetry, Ford Bambi Mode, Toyota Soft-Close Door Retrofit, Hyundai N Grin Shift, and GM AFM V8 Cylinder Deactivation Override.
 

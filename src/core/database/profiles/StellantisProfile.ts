@@ -142,5 +142,23 @@ export const STELLANTIS_OEM_FEATURES: OEMFeatureDefinition[] = [
         requiresExtendedSession: true,
         safetyLevel: 'LEVEL_2_ADAPTATION',
         riskLevel: 'LOW'
+    },
+    {
+        id: 'fiat_egea_cornering_fog_lights',
+        nameKey: 'features.items.fiat_egea_cornering_fog_lights.name',
+        descKey: 'features.items.fiat_egea_cornering_fog_lights.desc',
+        defaultName: 'Cornering Fog Light Illumination Assist',
+        defaultDesc: 'Automatically activates corresponding front fog light when steering wheel is turned or turn indicator is active.',
+        make: 'Fiat',
+        category: 'LIGHTING',
+        targetEcuHeader: '7E0',
+        didHex: '0140',
+        byteIndex: 1,
+        bitIndex: 4,
+        requiresSecurityAccess: false,
+        requiresExtendedSession: true,
+        safetyLevel: 'LEVEL_1_CODING',
+        riskLevel: 'LOW'
     }
 ];
+
