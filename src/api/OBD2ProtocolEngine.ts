@@ -322,13 +322,31 @@ export class OBD2ProtocolEngine {
  this.lastCommandWasReset = true;
  }
 
- await TransportRateLimiter.acquireToken(); 
- this.activeSessionId = this.currentSessionId; 
- return new Promise<string>((resolve, reject) => { 
- if (this.currentSessionId !== this.activeSessionId) { 
- reject(wrapError(new Error('SESSION_CANCELLED'), command)); 
- return; 
- }
+  const isHandshakeInitCmd = 
+    cleanCmd === 'ATZ' || 
+    cleanCmd.startsWith('ATSP') || 
+    cleanCmd.startsWith('ATDP') ||
+    cleanCmd.startsWith('ATE') ||
+    cleanCmd.startsWith('ATL') ||
+    cleanCmd.startsWith('ATS') ||
+    cleanCmd.startsWith('ATH') ||
+    cleanCmd.startsWith('ATAT') ||
+    cleanCmd.startsWith('ATST') ||
+    cleanCmd.startsWith('ATIIA') ||
+    cleanCmd.startsWith('ATIB') ||
+    cleanCmd === 'ATSI' ||
+    cleanCmd === '0100';
+
+  if (!isHandshakeInitCmd) {
+    await TransportRateLimiter.acquireToken();
+  }
+  
+  this.activeSessionId = this.currentSessionId; 
+  return new Promise<string>((resolve, reject) => { 
+  if (this.currentSessionId !== this.activeSessionId) { 
+  reject(wrapError(new Error('SESSION_CANCELLED'), command)); 
+  return; 
+  }
 
  this.activeResolver = resolve; 
  this.activeRejecter = reject; 
@@ -343,21 +361,11 @@ export class OBD2ProtocolEngine {
  let actualTimeoutMs = timeoutMs ?? this.DEFAULT_TIMEOUT_MS; 
  
  // Loosen Handshake Timeout Tolerances specifically for ATZ and initial protocol initialization gates to 3500ms
- const isHandshakeInitCmd = 
- cleanCmd === 'ATZ' || 
- cleanCmd.startsWith('ATSP') || 
- cleanCmd.startsWith('ATDP') ||
- cleanCmd.startsWith('ATE0') ||
- cleanCmd.startsWith('ATE1') ||
- cleanCmd.startsWith('ATST') ||
- cleanCmd.startsWith('ATIIA') ||
- cleanCmd.startsWith('ATIB') ||
- cleanCmd === 'ATSI' ||
- cleanCmd === '0100';
-
- if (isHandshakeInitCmd && actualTimeoutMs < 4500) {
- actualTimeoutMs = 4500;
- }
+  if (cleanCmd === '0100' && actualTimeoutMs < 8000) {
+    actualTimeoutMs = 8000;
+  } else if (isHandshakeInitCmd && actualTimeoutMs < 4500) {
+    actualTimeoutMs = 4500;
+  }
 
  this.commandTimeoutTimer = setTimeout(() => { 
  BluetoothService.clearBuffer(); 
@@ -406,22 +414,22 @@ export class OBD2ProtocolEngine {
  const trimmed = this.elmParser.getRawResponse().trim(); 
  const assemblerState = this.fragmentBuffer.getState();
 
- if (assemblerState === 'COMPLETE' || rxState === RxState.PROMPT_RECEIVED || trimmed.endsWith('>')) { 
- this.completeCommandFlow(); } else { 
- const isSlowOrUnknown = !this.currentProtocol || 
- this.currentProtocol.toUpperCase().includes('KWP') || 
- this.currentProtocol.includes('4') || 
- this.currentProtocol.includes('5') || 
- this.currentProtocol.toUpperCase().includes('J1850') ||
- this.currentProtocol.includes('1') || 
- this.currentProtocol.includes('2'); 
- const dynamicDebounceMs = isSlowOrUnknown ? 600 : 150; 
- 
- this.silenceTimeout = setTimeout(() => { 
- if (this.elmParser.getRawResponse().length > 0) this.completeCommandFlow(); 
- }, dynamicDebounceMs); 
- } 
- }
+ if (assemblerState === 'COMPLETE' || rxState === RxState.PROMPT_RECEIVED || trimmed.endsWith('>') || chunk.includes('>')) { 
+    this.completeCommandFlow(); 
+  } else { 
+    // Do NOT cut off active SEARCHING or BUS INIT states with premature 600ms debounce!
+    // The ELM327 requires 2-6 seconds to scan CAN/K-Line pins during protocol search.
+    const isSearchingState = rxState === RxState.SEARCHING || 
+      trimmed.toUpperCase().includes('SEARCHING') || 
+      trimmed.toUpperCase().includes('BUSINIT');
+
+    if (!isSearchingState) {
+      this.silenceTimeout = setTimeout(() => { 
+        if (this.elmParser.getRawResponse().length > 0) this.completeCommandFlow(); 
+      }, 3500); 
+    }
+  } 
+  }
 
  public async completeCommandFlow() { 
  if (this.isProcessingFlow) return; 

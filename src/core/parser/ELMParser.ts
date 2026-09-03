@@ -6,7 +6,7 @@ export enum RxState {
 }
 
 export const TERMINAL_TOKENS = [
-    "OK", "?", ">", "NO DATA", "STOPPED",
+    "?", ">", "NO DATA", "STOPPED",
     "CAN ERROR", "BUS ERROR", "BUFFER FULL",
     "UNABLE TO CONNECT", "ERROR",
     "BUS INIT...ERROR", "LV RESET", "FB ERROR",
@@ -57,27 +57,31 @@ export class ELMParser {
         const trimmed = this.rawResponseBuffer.trim();
         const uppercase = trimmed.toUpperCase().replace(/\s+/g, '');
 
+        // Prompt symbol '>' is the canonical ELM327 completion delimiter
+        if (chunk.includes('>') || trimmed.endsWith('>')) {
+            this.state = RxState.PROMPT_RECEIVED;
+            return this.state;
+        }
+
+        // Active intermediate states: SEARCHING or BUS INIT in progress
         if (uppercase.includes('SEARCHING') && !uppercase.includes('SEARCHING...DONE')) {
             this.state = RxState.SEARCHING;
             return this.state;
         }
 
-        let foundTerminal = false;
-        let highestPriority = -1;
-
-        for (const token of TERMINAL_TOKENS) {
-            const tokenClean = token.toUpperCase().replace(/\s+/g, '');
-            if (uppercase.includes(tokenClean)) {
-                foundTerminal = true;
-                const priority = TOKEN_PRIORITIES[token] || 0;
-                if (priority > highestPriority) {
-                    highestPriority = priority;
-                }
-            }
+        if (uppercase.includes('BUSINIT')) {
+            this.state = RxState.SEARCHING;
+            return this.state;
         }
 
-        if (foundTerminal || trimmed.endsWith('>')) {
-            this.state = RxState.PROMPT_RECEIVED;
+        // Terminal error tokens (e.g. UNABLE TO CONNECT, NO DATA) followed by newline
+        for (const token of TERMINAL_TOKENS) {
+            if (token === ">") continue;
+            const tokenClean = token.toUpperCase().replace(/\s+/g, '');
+            if (uppercase.includes(tokenClean) && (chunk.includes('\r') || chunk.includes('\n'))) {
+                this.state = RxState.PROMPT_RECEIVED;
+                return this.state;
+            }
         }
 
         return this.state;

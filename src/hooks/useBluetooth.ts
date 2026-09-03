@@ -275,52 +275,44 @@ export const useBluetooth = () => {
                 activeYear,
                 activeFuel
             );
-            const targetProtocol = profile?.protocol || '6';
-            const isKLine = targetProtocol === '3' || targetProtocol === '4' || targetProtocol === '5' ||
-                            activeBrand.toLowerCase().includes('dacia') ||
-                            (activeBrand.toLowerCase().includes('renault') && activeYear <= 2014);
-            const targetSp = isKLine ? 'ATSP5' : (targetProtocol === '6' ? 'ATSP6' : `ATSP${targetProtocol}`);
+            const targetProtocol = profile?.protocol;
+            // Eğer bilinen özel bir K-Line/J1850 protokolü yoksa varsayılan olarak ELM327 ATSP0 (Otomatik Arama) kullanılır
+            const initialSp = (targetProtocol && targetProtocol !== '0') ? `ATSP${targetProtocol}` : 'ATSP0';
 
-            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Probing target SP [${targetSp}] for ${profile.make} ${profile.model} (Brand: ${activeBrand || 'Default'})...`);
+            useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE: Probing SP [${initialSp}] for ${profile?.make || activeBrand || 'Universal'} ${profile?.model || activeModel || ''}...`);
 
-            // ADIM 1: HEDEFLENEN PROTOKOL İLE HIZLI SORGULAMA (1-2 Saniye)
-            await OBDCommandQueue.add(targetSp, 1500).catch(() => '');
-            if (isKLine) {
-                await OBDCommandQueue.add("ATST FF", 1000).catch(() => '');
-            }
+            // ADIM 1: Belirlenen veya Otomatik Protokol ile 01 00 Sorgulama (ELM327'ye arama için tam tolerans tanınır)
+            await OBDCommandQueue.add(initialSp, 1500).catch(() => '');
             await preciseSleep(isClone ? 150 : 80);
-            OBDCommandQueue.flushRxBuffer(); // Önceki AT komutundan kalan OK yanıtını süpür
+            OBDCommandQueue.flushRxBuffer();
 
-            let res = await OBDCommandQueue.add("01 00", 3000).catch(() => '');
+            let res = await OBDCommandQueue.add("01 00", 8000).catch(() => '');
             ecuConnected = verifyHandshakeResponse(res, "01 00");
 
-            if (!ecuConnected) {
-                // İkincil hızlı sorgu: Devir (01 0C)
-                OBDCommandQueue.flushRxBuffer();
-                const rpmProbe = await OBDCommandQueue.add("01 0C", 2500).catch(() => '');
-                ecuConnected = verifyHandshakeResponse(rpmProbe, "01 0C");
-            }
-
-            // ADIM 2: HEDEF YANIT VERMEZSE DOĞRUDAN DAHİLİ ATSP0 (OTOMATİK ARAMA) DEVREYE GİRER
-            if (!ecuConnected) {
-                useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: Primary target unconfirmed. Engaging ELM327 Native Auto-Search (ATSP0)...');
+            // ADIM 2: İlk deneme başarısızsa ve ATSP0 denenmediyse doğrudan Dahili ATSP0 ile tüm veri yolunu tara
+            if (!ecuConnected && initialSp !== 'ATSP0') {
+                useBluetoothStore.getState().addLog('PROTOCOL_ENGINE: Targeted protocol unconfirmed. Engaging ELM327 Native Auto-Search (ATSP0)...');
                 await OBDCommandQueue.add("ATSP0", 1500).catch(() => '');
                 await preciseSleep(isClone ? 150 : 80);
                 OBDCommandQueue.flushRxBuffer();
 
-                let autoRes = await OBDCommandQueue.add("01 00", 4000).catch(() => '');
+                let autoRes = await OBDCommandQueue.add("01 00", 8000).catch(() => '');
                 ecuConnected = verifyHandshakeResponse(autoRes, "01 00");
-
-                if (!ecuConnected) {
-                    OBDCommandQueue.flushRxBuffer();
-                    const rpmAuto = await OBDCommandQueue.add("01 0C", 3000).catch(() => '');
-                    ecuConnected = verifyHandshakeResponse(rpmAuto, "01 0C");
-                }
             }
 
-            // ADIM 3: BAĞLANTI DURUMUNUN KAYDI VE TELEMETRİYE GEÇİŞ
+            // ADIM 3: Nadir PID 00 desteklemeyen özel ECU'lar için son çare olarak tekil devir (01 0C) sorgusu
+            if (!ecuConnected) {
+                OBDCommandQueue.flushRxBuffer();
+                await preciseSleep(100);
+                const rpmFallback = await OBDCommandQueue.add("01 0C", 3500).catch(() => '');
+                ecuConnected = verifyHandshakeResponse(rpmFallback, "01 0C");
+            }
+
+            // ADIM 4: BAĞLANTI DURUMUNUN KAYDI VE TELEMETRİYE GEÇİŞ
             if (ecuConnected) {
-                const protocolName = `OBD-II Standard [Protocol ${targetProtocol}]`;
+                const dpRes = await OBDCommandQueue.add("ATDP", 1200).catch(() => '');
+                const cleanDp = (dpRes || '').replace(/[\r\n>]/g, '').trim();
+                const protocolName = cleanDp || `OBD-II Standard [Protocol ${targetProtocol || 'AUTO'}]`;
                 useBluetoothStore.getState().setProtocol(protocolName);
                 useBluetoothStore.getState().addLog(`PROTOCOL_ENGINE_SUCCESS: Connected via ${protocolName}`);
             } else {
