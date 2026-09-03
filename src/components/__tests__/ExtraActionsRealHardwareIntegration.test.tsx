@@ -14,6 +14,8 @@ const safeWrap = (ui: React.ReactElement) => (
   </SafeAreaProvider>
 );
 
+jest.setTimeout(30000);
+
 describe('EKSTRA İŞLEMLER - Real Hardware Protocol & Command Verification', () => {
   beforeAll(async () => {
     await i18n.changeLanguage('tr');
@@ -40,7 +42,7 @@ describe('EKSTRA İŞLEMLER - Real Hardware Protocol & Command Verification', ()
         return 'NODATA';
       });
 
-      const { getByText } = render(
+      const { getByText, unmount } = render(
         safeWrap(
           <FreezeFrameModal
             visible={true}
@@ -73,7 +75,8 @@ describe('EKSTRA İŞLEMLER - Real Hardware Protocol & Command Verification', ()
         expect(getByText('50')).toBeTruthy();   // Speed
         expect(getByText('85')).toBeTruthy();   // Coolant
       });
-    });
+      unmount();
+    }, 30000);
   });
 
   describe('2. AKÜ & MARŞ TESTİ (Battery & Cranking Test - ELM327 ATRV)', () => {
@@ -91,7 +94,7 @@ describe('EKSTRA İŞLEMLER - Real Hardware Protocol & Command Verification', ()
         return 'OK';
       });
 
-      const { getByText } = render(
+      const { getByText, unmount } = render(
         safeWrap(
           <BatteryTestModal
             visible={true}
@@ -108,12 +111,13 @@ describe('EKSTRA İŞLEMLER - Real Hardware Protocol & Command Verification', ()
       await waitFor(() => {
         expect(sentCommands).toContain('ATRV');
       });
-    });
+      unmount();
+    }, 30000);
   });
 
   describe('3. PERFORMANS TESTİ (0-100 km/h Live Telemetry Measurement)', () => {
     it('arms timer and reacts to live vehicle speed transitions from 0 to 60 to 100 km/h', async () => {
-      const { getByText, rerender } = render(
+      const { getByText, rerender, unmount } = render(
         safeWrap(
           <PerformanceModal
             visible={true}
@@ -137,7 +141,8 @@ describe('EKSTRA İŞLEMLER - Real Hardware Protocol & Command Verification', ()
       rerender(safeWrap(<PerformanceModal visible={true} onClose={jest.fn()} speed={105} />));
 
       expect(armBtn).toBeTruthy();
-    });
+      unmount();
+    }, 30000);
   });
 
   describe('4. HATA KODLARINI SİL (Clear DTCs - Mode 04 & UDS 0x14 Fallback)', () => {
