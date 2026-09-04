@@ -17,7 +17,8 @@ export class VehicleIdentityEngine {
     public parseVinResponse(rawResponse: string): string | null {
         if (!rawResponse) return null;
 
-        const clean = rawResponse.replace(/[\r\n>]/g, ' ').toUpperCase().trim();
+        const lines = rawResponse.split(/[\r\n]+/).map(l => l.replace(/>/g, '').trim()).filter(Boolean);
+        const clean = lines.join(' ').toUpperCase();
 
         // 1. Check for UDS 22 F1 90 Positive Response (62 F1 90 ...)
         const udsIdx = clean.replace(/\s+/g, '').indexOf('62F190');
@@ -34,39 +35,69 @@ export class VehicleIdentityEngine {
             }
         }
 
-        // 2. Multi-Frame OBD-II Mode 09 PID 02 parsing (J1979 / ISO 15765-4)
-        // Look for frame segments: (49|09) 02 01, (49|09) 02 02, etc.
-        const frameMatches = Array.from(clean.matchAll(/(?:49|09)\s*02\s*0([1-5])\s*([0-9A-F\s]+)/gi));
-        if (frameMatches.length >= 2) {
-            const frames: Record<number, string> = {};
-            for (const match of frameMatches) {
-                const frameIndex = parseInt(match[1], 10);
-                const rawData = match[2].replace(/\s+/g, '');
-                frames[frameIndex] = rawData;
+        // 2. Line-by-line ELM327 CAN Multi-Frame format: "0: 49 02 01 ... \n 1: ... \n 2: ..."
+        const canFrames: Record<number, string> = {};
+        for (const line of lines) {
+            const m = line.match(/^([0-9]):\s*([0-9A-F\s]+)$/i);
+            if (m) {
+                const idx = parseInt(m[1], 10);
+                canFrames[idx] = m[2].replace(/[^0-9A-F]/gi, '').toUpperCase();
             }
+        }
+        if (canFrames[0] !== undefined && canFrames[1] !== undefined) {
+            let canAssembledHex = '';
+            const f0 = canFrames[0];
+            const headerIdx = f0.indexOf('490201') !== -1 ? f0.indexOf('490201') : f0.indexOf('090201');
+            if (headerIdx !== -1) {
+                canAssembledHex += f0.substring(headerIdx + 6);
+            } else {
+                canAssembledHex += f0.slice(-6);
+            }
+            if (canFrames[1]) canAssembledHex += canFrames[1];
+            if (canFrames[2]) canAssembledHex += canFrames[2];
+            if (canFrames[3]) canAssembledHex += canFrames[3];
 
-            // Frame 1: ends with 1 data byte (2 hex chars) of VIN
-            // Frame 2..5: 4 data bytes (8 hex chars) each
-            let assembledHex = '';
-            if (frames[1]) {
-                assembledHex += frames[1].slice(-2); // Last byte of frame 1
-            }
-            for (let i = 2; i <= 5; i++) {
-                if (frames[i]) {
-                    // Take first 8 hex characters (4 bytes)
-                    assembledHex += frames[i].substring(0, 8);
-                }
-            }
-
-            if (assembledHex.length === 34) {
+            if (canAssembledHex.length >= 34) {
                 let asciiVin = '';
-                for (let i = 0; i < assembledHex.length; i += 2) {
-                    const code = parseInt(assembledHex.slice(i, i + 2), 16);
+                for (let i = 0; i < 34; i += 2) {
+                    const code = parseInt(canAssembledHex.slice(i, i + 2), 16);
                     if (code >= 32 && code <= 126) asciiVin += String.fromCharCode(code);
                 }
                 if (asciiVin.length === 17 && isValidVin(asciiVin)) {
                     return asciiVin;
                 }
+            }
+        }
+
+        // 3. Line-by-line J1979 Multi-Frame segments (49 02 01 ..., 49 02 02 ..., etc.)
+        const j1979Frames: Record<number, string> = {};
+        for (const line of lines) {
+            const m = line.match(/(?:49|09)\s*02\s*0([1-5])\s*([0-9A-F\s]+)/i);
+            if (m) {
+                const idx = parseInt(m[1], 10);
+                j1979Frames[idx] = m[2].replace(/[^0-9A-F]/gi, '').toUpperCase();
+            }
+        }
+        if (j1979Frames[1] && j1979Frames[2]) {
+            let assembledHex = '';
+            if (j1979Frames[1].length >= 6) {
+                assembledHex += j1979Frames[1].slice(-6);
+            } else {
+                assembledHex += j1979Frames[1].slice(-2);
+            }
+            for (let i = 2; i <= 5; i++) {
+                if (j1979Frames[i]) {
+                    assembledHex += j1979Frames[i].substring(0, 8);
+                }
+            }
+            let asciiVin = '';
+            for (let i = 0; i < assembledHex.length - 1; i += 2) {
+                const code = parseInt(assembledHex.slice(i, i + 2), 16);
+                if (code >= 32 && code <= 126) asciiVin += String.fromCharCode(code);
+            }
+            const vinMatch = asciiVin.match(/[A-HJ-NPR-Z0-9]{17}/);
+            if (vinMatch && isValidVin(vinMatch[0])) {
+                return vinMatch[0];
             }
         }
 

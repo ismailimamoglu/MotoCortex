@@ -835,23 +835,25 @@ export default function MainApp() {
   // Dynamic Priority Telemetry for Active Diagnostics Tools (HP, Fuel Trim, DPF, DCT)
   useEffect(() => {
     if (ecuStatus !== 'connected') return;
+    const isDiesel = activeSessionVehicle?.fuelType === 'diesel';
+
     if (activeHubView === 'hp_gauge') {
-      PollingOrchestrator.stopPolling();
-      PollingOrchestrator.startPolling(['0C', '10', '04', '61', '62', '0D']);
+      PollingOrchestrator.setActiveScreenPids(['0C', '10', '04', '61', '62', '0D']);
     } else if (activeHubView === 'fuel_trim') {
-      PollingOrchestrator.stopPolling();
-      PollingOrchestrator.startPolling(['06', '07', '22', '23', '0C', '04']);
+      PollingOrchestrator.setActiveScreenPids(isDiesel ? ['22', '23', '0C', '04'] : ['06', '07', '0C', '04']);
     } else if (activeHubView === 'dpf') {
-      PollingOrchestrator.stopPolling();
-      PollingOrchestrator.startPolling(['7A', '78', '0C', '05']);
+      PollingOrchestrator.setActiveScreenPids(['7A', '78', '7C', '0C', '05']);
     } else if (activeHubView === 'dct') {
-      PollingOrchestrator.stopPolling();
-      PollingOrchestrator.startPolling(['7C', '05', '0C']);
-    } else if (activeHubView === 'hub') {
-      PollingOrchestrator.stopPolling();
-      PollingOrchestrator.startPolling();
+      PollingOrchestrator.setActiveScreenPids(['7C', '05', '0C']);
+    } else if (activeHubView === 'sensors' || activeHubView === 'hub') {
+      PollingOrchestrator.setActiveScreenPids(['0C', '0D', '05', isDiesel ? '49' : '11', '04']);
+    } else if (activeHubView === 'settings' || activeHubView === 'vehicle' || activeHubView === 'info') {
+      // Idle / static modal: Only battery voltage and adapter health checked in background
+      PollingOrchestrator.setActiveScreenPids([]);
+    } else {
+      PollingOrchestrator.setActiveScreenPids(null);
     }
-  }, [activeHubView, ecuStatus]);
+  }, [activeHubView, ecuStatus, activeSessionVehicle?.fuelType]);
 
  // Navigation Safety Gate: Auto Kick-out if clone device locks coding features
  useEffect(() => {

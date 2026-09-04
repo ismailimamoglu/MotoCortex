@@ -7,11 +7,34 @@ import { useBluetoothStore } from '../../store/useBluetoothStore';
 export class PollingOrchestrator {
     private static isPollingActive = false;
     private static isPerformanceMode = false;
+    private static activeScreenPids: string[] | null = null;
 
     public static setPerformanceModePriority(active: boolean): void {
         this.isPerformanceMode = active;
         const store = useBluetoothStore.getState();
         store.addLog(`POLLING_ORCHESTRATOR: Performance Mode Priority ${active ? 'ENABLED (Speed PID 010D)' : 'DISABLED'}`);
+    }
+
+    /**
+     * Sets dynamic PIDs requested by active UI screen or modal.
+     * Passing [] sets the polling loop to IDLE (background voltage & heartbeat only).
+     * Passing null resets back to default dashboard PIDs.
+     */
+    public static setActiveScreenPids(pids: string[] | null): void {
+        const STATIC_PIDS_TO_EXCLUDE = new Set(['00', '20', '40', '60', '80', 'A0', 'C0', '1C', '0100', '0120', '0140', '0160', '011C', 'ATRV', 'VOLTAGE']);
+        if (pids === null) {
+            this.activeScreenPids = null;
+        } else {
+            this.activeScreenPids = pids
+                .map(k => k.split('@')[0].trim().replace(/^01\s*/i, '').toUpperCase())
+                .filter(p => !STATIC_PIDS_TO_EXCLUDE.has(p) && p.length > 0);
+        }
+        const store = useBluetoothStore.getState();
+        store.addLog(`POLLING_ORCHESTRATOR: Screen PIDs updated: [${(this.activeScreenPids || []).join(', ')}]`);
+    }
+
+    public static getActiveScreenPids(): string[] | null {
+        return this.activeScreenPids;
     }
 
     /**
@@ -34,20 +57,20 @@ export class PollingOrchestrator {
         const activeUserPids = store.activeGaugePids || ['0C', '0D', '05', '11', '04'];
         const STATIC_PIDS_TO_EXCLUDE = new Set(['00', '20', '40', '60', '80', 'A0', 'C0', '1C', '0100', '0120', '0140', '0160', '011C', 'ATRV', 'VOLTAGE']);
 
-        let targetPids: string[] = [];
+        let defaultTargetPids: string[] = [];
 
         if (requestedKeys && requestedKeys.length > 0) {
-            targetPids = requestedKeys
+            defaultTargetPids = requestedKeys
                 .map(k => k.split('@')[0].trim().replace(/^01\s*/i, '').toUpperCase())
                 .filter(p => !STATIC_PIDS_TO_EXCLUDE.has(p) && p.length > 0);
         } else {
-            targetPids = activeUserPids
+            defaultTargetPids = activeUserPids
                 .map(k => k.trim().replace(/^01\s*/i, '').toUpperCase())
                 .filter(p => !STATIC_PIDS_TO_EXCLUDE.has(p) && p.length > 0);
         }
 
-        if (targetPids.length === 0) {
-            targetPids = ['0C', '0D', '05', '11', '04'];
+        if (defaultTargetPids.length === 0) {
+            defaultTargetPids = ['0C', '0D', '05', '11', '04'];
         }
 
         // Protokol hızına göre güvenli pacing (gecikme) hesaplama
@@ -77,16 +100,28 @@ export class PollingOrchestrator {
 
                 const now = Date.now();
 
-                // Periyodik Akü Voltajı (Her 4 saniyede bir ATRV)
+                // Periyodik Akü Voltajı ve Adaptör Kalp Atışı (Her 4 saniyede bir ATRV)
                 if (now - lastVoltageReadTime > 4000) {
                     try {
                         await OBDCommandQueue.add('ATRV', cmdTimeout);
                         lastVoltageReadTime = now;
-                    } catch {}
+                        consecutiveFailures = 0;
+                    } catch {
+                        consecutiveFailures++;
+                    }
+                }
+
+                // Dinamik PID Listesi (Aktif ekranın istediği PID'ler)
+                const currentPids = this.activeScreenPids !== null ? this.activeScreenPids : defaultTargetPids;
+
+                // Boşta (Idle) Durumu: Eğer ekran açık değilse sadece voltaj izlenir
+                if (currentPids.length === 0) {
+                    await preciseSleep(150);
+                    continue;
                 }
 
                 // Canlı Sensörleri Sırayla Oku (Asla karalisteye alma, sürekli akıt)
-                for (const pid of targetPids) {
+                for (const pid of currentPids) {
                     if (!this.isPollingActive) break;
 
                     try {
@@ -101,7 +136,7 @@ export class PollingOrchestrator {
                     }
                 }
 
-                // Devre Kesici (Circuit Breaker): 5 ardışık döngü boyunca bağlantı yoksa döngüyü durdur
+                // Devre Kesici (Circuit Breaker): 10 ardışık döngü boyunca bağlantı yoksa döngüyü durdur
                 if (consecutiveFailures >= 10 && store.connectionState === 'DISCONNECTED') {
                     store.addLog('POLLING_ORCHESTRATOR: Connection lost - stopping polling loop cleanly.');
                     this.isPollingActive = false;
@@ -121,6 +156,7 @@ export class PollingOrchestrator {
 
     public static stopPolling(): void {
         this.isPollingActive = false;
+        this.activeScreenPids = null;
         OBDCommandQueue.setPollingActive(false);
         OBDCommandQueue.clear(new Error('POLLING_STOPPED'));
     }

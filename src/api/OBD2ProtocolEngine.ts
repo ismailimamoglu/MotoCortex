@@ -461,23 +461,27 @@ export class OBD2ProtocolEngine {
 
   const cleanRawResponse = rawResponse.replace(/STOPPED/gi, ' ');
   const sanitized = this.elmParser.sanitize(cleanRawResponse, this.activeCommand); 
- const uniqueTokens = this.structuralDeduplicate(sanitized);
+  const uniqueTokens = this.structuralDeduplicate(sanitized);
 
- let decoded = ''; 
- const isCanMultiFrame = uniqueTokens.some(line => { 
- const clean = line.toUpperCase().replace(/\s+/g, ''); 
- return /(7E810|18DAF11010|7E82[0-9A-F]|18DAF1102[0-9A-F])/.test(clean); 
- });
+  let decoded = ''; 
+  if (this.activeCommand.toUpperCase().startsWith('AT')) {
+      decoded = uniqueTokens.join(' ').trim();
+  } else {
+      const isCanMultiFrame = uniqueTokens.some(line => { 
+          const clean = line.toUpperCase().replace(/\s+/g, ''); 
+          return /(7E810|18DAF11010|7E82[0-9A-F]|18DAF1102[0-9A-F])/.test(clean); 
+      });
 
- const isKLineProtocol = this.currentProtocol.includes('4') || this.currentProtocol.includes('5') || this.currentProtocol.toUpperCase().includes('KWP');
+      const isKLineProtocol = this.currentProtocol.includes('4') || this.currentProtocol.includes('5') || this.currentProtocol.toUpperCase().includes('KWP');
 
-  if (isCanMultiFrame) { 
-  decoded = ISOTPDecoder.decode(uniqueTokens); 
-  } else if (isKLineProtocol) { 
-  decoded = KWPFrameDecoder.decode(uniqueTokens); 
-  } else { 
-  try { decoded = this.isoTpDecoder(uniqueTokens, this.activeCommand); } catch { decoded = uniqueTokens.join(' '); } 
-  } 
+      if (isCanMultiFrame) { 
+          decoded = ISOTPDecoder.decode(uniqueTokens); 
+      } else if (isKLineProtocol) { 
+          decoded = KWPFrameDecoder.decode(uniqueTokens); 
+      } else { 
+          try { decoded = this.isoTpDecoder(uniqueTokens, this.activeCommand); } catch { decoded = uniqueTokens.join(' '); } 
+      } 
+  }
   this.finishCommand(null, decoded); 
   }
 
@@ -725,7 +729,10 @@ export class OBD2ProtocolEngine {
  if (!isNaN(a)) telemetryBuffer.pushTelemetry({ ambientTemp: a - 40 }, '0146');
  break;
  case '49':
- if (!isNaN(a)) telemetryBuffer.pushTelemetry({ pedalPosD: Math.round((a * 100) / 255) }, '0149');
+ if (!isNaN(a)) {
+ const pedal = Math.round((a * 100) / 255);
+ telemetryBuffer.pushTelemetry({ pedalPosD: pedal, throttle: pedal }, '0149');
+ }
  break;
  case '4A':
  if (!isNaN(a)) telemetryBuffer.pushTelemetry({ pedalPosE: Math.round((a * 100) / 255) }, '014A');

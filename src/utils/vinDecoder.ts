@@ -55,8 +55,8 @@ const SKODA_REGEX = /^(TMB)/i;
 const BMW_REGEX = /^(WBA|WBS|5UX|4US|WBY|WCH|NC0|LBV|LMV|MMF|MDF)/i;
 const MERCEDES_REGEX = /^(WDB|WDD|WDY|WD3|WD4|WD8|W1K|4JG|5XX|9BM|8AC|NMB|LE4|VS9)/i;
 const FORD_REGEX = /^(1FA|1FT|1FM|2FM|2FT|3FA|3FT|WF0|SFA|VS6|UN1|LF0|MP1|NM0)/i;
-const PEUGEOT_REGEX = /^(VF3)/i;
-const CITROEN_REGEX = /^(VF7)/i;
+const PEUGEOT_REGEX = /^(VF3|VR3)/i;
+const CITROEN_REGEX = /^(VF7|VR7)/i;
 const OPEL_REGEX = /^(W0L|W0V|VN1)/i;
 const FIAT_REGEX = /^(ZFA|FA1|3FE|9BD)/i;
 const ALFA_ROMEO_REGEX = /^(ZAR)/i;
@@ -171,3 +171,50 @@ export function getYearFromVin(vin: string): number {
     
     return yearsMap[char] || new Date().getFullYear();
 }
+
+export interface DecodedVinInfo {
+    make: VehicleMake;
+    year: number;
+    wmi: string;
+    model?: string;
+    fuelType?: 'gasoline' | 'diesel' | 'hybrid' | 'electric';
+}
+
+/**
+ * Decodes basic vehicle metadata from VIN synchronously.
+ */
+export function decodeVin(vin: string): DecodedVinInfo {
+    if (!vin || vin.length < 3) {
+        return {
+            make: 'GENERIC',
+            year: new Date().getFullYear(),
+            wmi: '',
+            model: 'Vehicle',
+            fuelType: 'gasoline'
+        };
+    }
+
+    const clean = vin.trim().toUpperCase();
+    const make = getMakeFromVin(clean);
+    const year = getYearFromVin(clean);
+    const wmi = clean.substring(0, 3);
+
+    let fuelType: 'gasoline' | 'diesel' | 'hybrid' | 'electric' = 'gasoline';
+    // Dacia/Renault dCi detection: e.g. UU1KSD8KJ... (K9K diesel)
+    if (make === 'DACIA' && (clean.includes('KSD') || clean.includes('K9K') || clean.charAt(3) === 'K' || clean.charAt(3) === 'B')) {
+        fuelType = 'diesel';
+    }
+    // PSA/Stellantis BlueHDi detection: e.g. VR3EFYHZ... (DV5RD / YHZ is 1.5 BlueHDi diesel)
+    if ((make === 'PEUGEOT' || make === 'CITROEN') && (clean.includes('YHZ') || clean.includes('YH01') || clean.includes('BHY') || clean.includes('BHZ'))) {
+        fuelType = 'diesel';
+    }
+
+    return {
+        make,
+        year,
+        wmi,
+        model: make !== 'GENERIC' ? `${make}` : 'Vehicle',
+        fuelType
+    };
+}
+

@@ -77,4 +77,14 @@ describe('KWPFrameDecoder Unit Tests', () => {
         const response = KWPFrameDecoder.decode(['82 41 0C']);
         expect(response).toBe('');
     });
+
+    test('11. Preserves ATH0 application responses (e.g. 41 0C 0C 6C RPM 795 on K-Line)', () => {
+        const response = KWPFrameDecoder.decode(['41 0C 0C 6C']);
+        expect(response).toBe('41 0C 0C 6C');
+    });
+
+    test('12. Preserves UDS application responses (e.g. 62 F1 90 ...)', () => {
+        const response = KWPFrameDecoder.decode(['62 F1 90 55 55 31']);
+        expect(response).toBe('62 F1 90 55 55 31');
+    });
 });

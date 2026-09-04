@@ -148,18 +148,38 @@ export const useBluetooth = () => {
         useBluetoothStore.getState().setSensorData({ vin });  
         try {  
             const { decodeVin } = require('../utils/vinDecoder');
+            const { VehicleIdentityService } = require('../services/VehicleIdentityService');
             const { GarageVehicleRegistry } = require('../store/garageStore');
-            const info = decodeVin(vin);  
-            if (info && info.make) {  
-                useBluetoothStore.getState().setSensorData({ ecuId: `${info.make}_${info.year || ''}` });  
-            }  
-            await GarageVehicleRegistry.saveRegisteredVehicle({
-                brand: info.make || 'Unknown',
-                model: info.model || 'Unknown',
-                year: info.year || 2024,
+            const { useTelemetryStore } = require('../store/useTelemetryStore');
+
+            const localInfo = decodeVin(vin);
+            let profile: any = null;
+            try {
+                profile = await VehicleIdentityService.decodeVehicleFromVin(vin);
+            } catch {}
+
+            const brand = (profile?.make && profile.make !== 'GENERIC' ? profile.make : localInfo.make) || 'Unknown';
+            const model = (profile?.model && profile.model !== 'UNKNOWN' ? profile.model : localInfo.model) || 'Unknown';
+            const year = profile?.year || localInfo.year || new Date().getFullYear();
+            const rawFuel = profile?.fuelType || localInfo.fuelType || 'gasoline';
+            const fuelType = String(rawFuel).toLowerCase();
+
+            useBluetoothStore.getState().setSensorData({ ecuId: `${brand}_${year}` });  
+            useTelemetryStore.getState().setActiveSessionVehicle({
+                brand,
+                model,
+                year,
+                fuelType,
                 vin,
-                wmi: info.wmi || vin.substring(0, 3),
-                fuelType: info.fuelType || 'gasoline',
+            });
+
+            await GarageVehicleRegistry.saveRegisteredVehicle({
+                brand,
+                model,
+                year,
+                vin,
+                wmi: localInfo.wmi || vin.substring(0, 3),
+                fuelType,
                 batteryHealthPct: null,
                 dpfSootLevelPct: null,
                 savedAt: new Date().toISOString(),

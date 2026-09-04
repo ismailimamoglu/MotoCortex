@@ -67,7 +67,9 @@ const WMI_MAP: Record<string, { make: string; country: string }> = {
     'ZFA': { make: 'Fiat', country: 'Italy' },
     'NM4': { make: 'Tofaş / Fiat', country: 'Turkey' },
     'VF3': { make: 'Peugeot', country: 'France' },
+    'VR3': { make: 'Peugeot', country: 'Spain' },
     'VF7': { make: 'Citroen', country: 'France' },
+    'VR7': { make: 'Citroen', country: 'Spain' },
     '1C3': { make: 'Chrysler / Jeep', country: 'USA' },
 
     // Toyota / Lexus
